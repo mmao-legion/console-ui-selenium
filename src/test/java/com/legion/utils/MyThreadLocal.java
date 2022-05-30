@@ -543,6 +543,7 @@ public class MyThreadLocal {
 	public static String getConsoleWindowHandle() { return consoleHandle.get();}
 	public static void setWFSStatus(Boolean value) { isWFSEnabled.set(value);}
 	public static Boolean getWFSStatus() { return  isWFSEnabled.get();}
+	//True- assign TM, False - offer TM
 	public static void setAssignTMStatus(Boolean value) { isAssignTM.set(value);}
 	public static Boolean getAssignTMStatus() { return  isAssignTM.get();}
 	public static void setMessageOfTMScheduledStatus(String value) { messageOfTMScheduledStatus.set(value);}

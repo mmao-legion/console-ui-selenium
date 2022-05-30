@@ -754,7 +754,6 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 } else
                     lastName = "open";
                 String jobTitle = "";
-                String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
                 WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
                 clickTheElement(infoIcon);
                 String workRole = shiftJobTitleAsWorkRole.getText().trim();
@@ -766,7 +765,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     shiftInfo.add(jobTitle);
                     shiftInfo.add(workRole);
                     shiftInfo.add(lastName);
-                    shiftInfo.add(shiftTimeWeekView);
+                    shiftInfo.add(shiftTotalHrs.getText());
                 }
                 //To close the info popup
                 clickTheElement(weekShifts.get(index));
@@ -1059,7 +1058,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             shift = MyThreadLocal.getDriver().findElement(By.cssSelector(css));
             if (isElementLoaded(shift, 5) && areListElementVisible(weekShifts,10)) {
                 for (WebElement element: weekShifts){
-                    if (element.getText().equalsIgnoreCase(shift.getText())){
+                    if (element.findElement(By.cssSelector(".week-schedule-shift div.week-schedule-shift-wrapper")).getAttribute("id").equalsIgnoreCase(id)){
                         return index;
                     }
                     index++;
@@ -2302,7 +2301,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 clickTheElement(shift.findElement(By.className("week-schedule-shit-open-popover")));
                 String shiftName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
 //                WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
-                if (shiftName != "" && shiftName.split(" ")[0].equalsIgnoreCase(name)) {
+                if (!shiftName.equals("") && shiftName.split(" ")[0].equalsIgnoreCase(name)) {
                     shiftsOfOneTM.add(shift);
                     SimpleUtils.pass("shift exists on this day!");
                     count++;

@@ -8,6 +8,7 @@ import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
@@ -3117,6 +3118,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public List<HashMap<String, String>> getLocationTemplateInfoInLocationLevel() {
 		List<HashMap<String, String>> templateInfo = new ArrayList<>();
+		MyThreadLocal.getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]"));
 		if (areListElementVisible(templateRows, 5)) {
 			for (WebElement s : templateRows) {
 				HashMap<String, String> templateInfoInEachRow = new HashMap<>();
