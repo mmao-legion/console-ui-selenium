@@ -707,6 +707,7 @@ public class SplitAndSpreadTest extends TestBase {
                     shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Will trigger spread of hours"), false);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(tmFirstName);
             //check the message in warning mode
+            Thread.sleep(5000);
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage1 = tmFirstName + " will incur spread of hours.";
                 String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
