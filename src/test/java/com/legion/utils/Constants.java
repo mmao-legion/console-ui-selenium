@@ -39,4 +39,8 @@ public class Constants {
 
     //copyWorkRolesFromControlsToOP
     public static final String copyWorkRole ="https://rc-enterprise.dev.legion.work/legion/configTemplate/copyWorkRolesFromControlsToOP";
+
+    //uploadFiscalCalendar
+    public static final String uploadFiscalCalendar ="https://rc-enterprise.dev.legion.work/legion/fiscalCalendars/upload";
+
 }

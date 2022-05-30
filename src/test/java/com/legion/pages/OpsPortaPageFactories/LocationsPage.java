@@ -274,4 +274,8 @@ public interface LocationsPage {
     public void verifyUploadTransaltionsButtonisClicked() throws Exception;
 
     public void resetLaborModel() throws Exception;
-}
+
+    public void verifyUploadFiscalCalendarButtonisClicked() throws Exception;
+
+    public void downloadFiscalCalendar(String fiscalYear,String startDayOfWeek) throws Exception;
+    }
