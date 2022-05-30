@@ -3293,7 +3293,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css = "div:nth-child(9) > ng-include > lg-dynamic-table > div > table")
+	@FindBy(css = "table.lg-table.ng-scope tbody")
 	private List<WebElement> workRolesInSchedulingRulesInLocationLevel;
 
 	@FindBy(css = "input[placeholder=\"Search by Work Role\"]")

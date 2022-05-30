@@ -1117,5 +1117,39 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Create future published version template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMultipleVersionTemplateCreationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType="Operating Hours";
+            String templateName = "ForMultipleAutoFutureCreation";
+            String dynamicGpName = "MultipleTemplateAutoUsing1";
+            String button1 = "publish at different time";
+            String button2 ="save as draft";
+            int date = 14;
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            //create Operating Hour template and published it
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Create one current published version template
+//            configurationPage.publishNewTemplate(templateName,dynamicGpName,"Custom","AutoCreatedDynamic---Format Script");
+//            //Create future publish version based on current published version
+//            configurationPage.createFutureTemplateBasedOnExistingTemplate(templateName,button1,date,"edit");
+            //Create draft version for current published version template and then create future publish template based on it
+
+            //Verify it will replace itself when click 'Publish at different time' button in future template
+
+            //Verify user can create draft template for each published version template
+            configurationPage.createDraftForEachPublishInMultipleTemplate(templateName,button2,"edit");
+
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
 
