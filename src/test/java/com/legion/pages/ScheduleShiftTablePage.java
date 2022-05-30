@@ -130,4 +130,5 @@ public interface ScheduleShiftTablePage {
     public void verifyTheContentOnBulkActionMenu(int selectedShiftCount) throws Exception;
     public void clickOnBtnOnBulkActionMenuByText(String action) throws Exception;
     public void verifySelectedShiftsAreMarkedWithX(HashSet<Integer> selectedIndexes) throws Exception;
+    public void getWeekDayAndDate() throws Exception;
 }

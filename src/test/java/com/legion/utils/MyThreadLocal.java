@@ -99,6 +99,7 @@ public class MyThreadLocal {
 	public static final ThreadLocal<Boolean> isWFSEnabled = new ThreadLocal<>();
 	public static final ThreadLocal<Boolean> isAssignTM = new ThreadLocal<>();
 	public static final ThreadLocal<String> messageOfTMScheduledStatus = new ThreadLocal<>();
+	public static final ThreadLocal<HashMap<String, Integer>> weekDaysNDates = new ThreadLocal<>();
 
 	public static void setIsNeedEditingOperatingHours(Boolean value) { isNeedUpdateOperatingHours.set(value); }
 
@@ -546,4 +547,6 @@ public class MyThreadLocal {
 	public static Boolean getAssignTMStatus() { return  isAssignTM.get();}
 	public static void setMessageOfTMScheduledStatus(String value) { messageOfTMScheduledStatus.set(value);}
 	public static String getMessageOfTMScheduledStatus() { return messageOfTMScheduledStatus.get();}
+	public static void setWeekDaysNDates(HashMap<String, Integer> value) {weekDaysNDates.set(value);}
+	public static HashMap<String, Integer> getWeekDaysNDates() { return weekDaysNDates.get();}
 }

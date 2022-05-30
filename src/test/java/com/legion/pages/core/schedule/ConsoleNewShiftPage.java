@@ -1768,7 +1768,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                         selectedCount++;
                         indexes.add(i);
                     } else {
-                        int date = Integer.parseInt(weekDaysInNewCreateShiftPage.get(i).getText().substring(weekDaysInNewCreateShiftPage.get(i).getText().length() - 2).trim());
+                        int date = getWeekDaysNDates().get(weekDaysInNewCreateShiftPage.get(i).getText().substring(0, 3));
                         int cannotDate = Integer.parseInt(cannotSelectedDate.substring(cannotSelectedDate.length() - 2).trim());
                         if (date != cannotDate) {
                             if (!weekDaysInNewCreateShiftPage.get(i).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
@@ -1793,7 +1793,6 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         }
         return indexes;
     }
-
 
     @Override
     public void selectWeekDaysByDayName(String dayName) throws Exception {

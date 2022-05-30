@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.setWeekDaysNDates;
 
 public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleShiftTablePage {
     public ConsoleScheduleShiftTablePage() {
@@ -274,6 +275,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @FindBy(css = "div.sch-calendar-date-label>span")
     private List<WebElement> schCalendarDateLabel;
+    @FindBy(className = "sch-calendar-day-label")
+    private List<WebElement> schWeekDayLabels;
+
     public String getScheduleDayRange() throws Exception {
         SmartCardPage smartCardPage = new ConsoleSmartCardPage();
         String dayRangeText = "";
@@ -297,6 +301,16 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         return dayRangeText;
     }
 
+    @Override
+    public void getWeekDayAndDate() throws Exception {
+        HashMap<String, Integer> weekDayNDates = new HashMap<>();
+        if (areListElementVisible(schCalendarDateLabel, 10) && areListElementVisible(schWeekDayLabels, 10)) {
+            for (int i = 0; i < schCalendarDateLabel.size(); i++) {
+                weekDayNDates.put(schWeekDayLabels.get(i).getText().trim(), Integer.parseInt(schCalendarDateLabel.get(i).getText().trim()));
+            }
+            setWeekDaysNDates(weekDayNDates);
+        }
+    }
 
     @FindBy(css = "div.sch-calendar-day-dimension")
     private List<WebElement> weekViewDaysAndDates;

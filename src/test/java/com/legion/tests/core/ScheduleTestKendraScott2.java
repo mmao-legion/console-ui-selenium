@@ -5578,6 +5578,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			if (!isWeekGenerated) {
 				createSchedulePage.createScheduleForNonDGFlowNewUI();
 			}
+			scheduleShiftTablePage.getWeekDayAndDate();
 
 			String workRole = shiftOperatePage.getRandomWorkRole();
 			scheduleMainPage.clickOnOpenSearchBoxButton();
