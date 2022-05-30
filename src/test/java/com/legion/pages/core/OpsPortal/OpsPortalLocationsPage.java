@@ -4083,5 +4083,68 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}else
 			SimpleUtils.fail("Labor model reset button loaded failed",false);
 	}
+
+	@FindBy(css = "lg-button[label='Upload Fiscal Calendar'] button")
+	private WebElement uploadFiscalCalendarButton;
+
+	public void verifyUploadFiscalCalendarButtonisClicked() throws Exception {
+		editOnGlobalConfigPage.click();
+		BasePage.scrollToBottom();
+		if (isElementLoaded(uploadFiscalCalendarButton, 10)) {
+			if (isClickable(uploadFiscalCalendarButton, 10)) {
+				SimpleUtils.pass("Upload FiscalCalendar button is clickable");
+			} else {
+				SimpleUtils.fail("Upload FiscalCalendar button is not clickable", false);
+			}
+		} else {
+			SimpleUtils.fail("Upload FiscalCalendar button loaded failed", false);
+		}
+	}
+
+	@FindBy(css = "lg-button[label='Download Fiscal Calendar'] button")
+	private WebElement downloadFiscalCalendarButton;
+	@FindBy(css = "select[aria-label=\"Fiscal Year\"]")
+	private WebElement fiscalYearSelect;
+	@FindBy(css = "select[aria-label=\"Fiscal Year\"] option")
+	private List<WebElement> fiscalYearOption;
+	@FindBy(css = "select[aria-label=\"Start Day of Week\"]")
+	private WebElement startDayOfWeekSelect;
+	@FindBy(css = "select[aria-label=\"Start Day of Week\"] option")
+	private List<WebElement> startDayOfWeekOption;
+	@FindBy(css = "lg-button[label='Download'] button")
+	private WebElement downloadButton;
+	@FindBy(css = "span.lg-toast__simple-text")
+	private WebElement errorMessage;
+
+	public void downloadFiscalCalendar(String fiscalYear, String startDayOfWeek) throws Exception {
+		if (isElementLoaded(downloadFiscalCalendarButton, 10)) {
+			if (isClickable(downloadFiscalCalendarButton, 10)) {
+				SimpleUtils.pass("download FiscalCalendar button is clickable");
+				click(downloadFiscalCalendarButton);
+				click(fiscalYearSelect);
+				for (WebElement element : fiscalYearOption) {
+					if (element.getText().contains(fiscalYear)) {
+						click(element);
+					}
+				}
+				click(startDayOfWeekSelect);
+				for (WebElement element : startDayOfWeekOption) {
+					if (element.getText().contains(startDayOfWeek)) {
+						click(element);
+					}
+				}
+				click(downloadButton);
+				if (!isElementLoaded(errorMessage, 10)) {
+					SimpleUtils.pass("download FiscalCalendar successfully");
+				} else {
+					SimpleUtils.fail("download FiscalCalendar failed", false);
+				}
+			} else {
+				SimpleUtils.fail("download FiscalCalendar button is not clickable", false);
+			}
+		} else {
+			SimpleUtils.fail("download FiscalCalendar button loaded failed", false);
+		}
+	}
 }
 

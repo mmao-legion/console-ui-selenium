@@ -2110,4 +2110,29 @@ public class LocationsTest extends TestBase {
 
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Fiscal calendar configuration")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyUserCanUploadFiscalCalendarOfSM(String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsGroupTestInOP.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            locationsPage.verifyUploadFiscalCalendarButtonisClicked();
+            //upload valid fiscal calender file
+            String sessionId = logIn();
+            String reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadFiscalCalendar, sessionId, "\\console-ui-selenium\\src\\test\\resources\\uploadFile\\FisaclCalendarFiles\\FiscalCalendar-2022-2.csv");
+            //download the uploaded fiscal calendar file
+            locationsPage.downloadFiscalCalendar("2022", "Monday");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
