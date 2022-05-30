@@ -2062,7 +2062,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                             waitForSeconds(3);
                             if (isElementLoaded(deleteShift, 10)) {
                                 clickTheElement(deleteShift);
-                                waitForSeconds(8);
+                                waitForSeconds(10);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 40)) {
                                     clickTheElement(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
