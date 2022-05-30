@@ -166,7 +166,7 @@ public class AbsentManagePage extends BasePage {
     @FindBy(css = "div.lg-single-calendar-date-wrapper>div:nth-child(20)")
     private WebElement dayChosen;
     //
-    @FindBy(css = "form-buttons:nth-child(2)>div:nth-child(2)>lg-button:nth-child(2)>button.ng-scope.pre-saveas")
+    @FindBy(css = "button.pre-saveas")
     private WebElement saveTemplate;
 
     //template association
