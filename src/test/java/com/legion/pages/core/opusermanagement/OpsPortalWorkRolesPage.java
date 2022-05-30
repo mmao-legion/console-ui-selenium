@@ -125,18 +125,10 @@ public class OpsPortalWorkRolesPage extends BasePage {
     }
 
     public void save() throws Exception {
-        if (isElementLoaded(saveButton, 10)) {
+        if(isElementDisplayed(saveButton)&&isClickable(saveButton,5)){
             saveButton.click();
-            if (isElementLoaded(popUpMsg, 5) ) {
-                String successMessage = popUpMsg.getText();
-                if (successMessage.contains("Success")) {
-                    SimpleUtils.pass("Work Role Page: Click on Save button successfully!");
-                } else
-                    SimpleUtils.fail("The Success message display incorrectly! the actual message is: " + successMessage, false);
-            } else {
-                SimpleUtils.fail("Work Role Page: Failed to Save!", false);
-            }
-        } else {
+            SimpleUtils.pass("Work Role Page: Click on Save button successfully!");
+        }else{
             SimpleUtils.fail("Work Role Page: Save button failed to load!", false);
         }
     }

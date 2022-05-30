@@ -186,7 +186,6 @@ public class UserManagementTest extends TestBase {
             OpsPortalUserManagementPanelPage panelPage = new OpsPortalUserManagementPanelPage();
             panelPage.goToWorkRolesPage();
             OpsPortalWorkRolesPage workRolesPage = new OpsPortalWorkRolesPage();
-
             //add a new work role and save it
             workRolesPage.addNewWorkRole();
             WorkRoleDetailsPage workRoleDetailsPage = new WorkRoleDetailsPage();

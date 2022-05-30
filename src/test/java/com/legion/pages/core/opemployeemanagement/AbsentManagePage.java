@@ -166,7 +166,7 @@ public class AbsentManagePage extends BasePage {
     @FindBy(css = "div.lg-single-calendar-date-wrapper>div:nth-child(20)")
     private WebElement dayChosen;
     //
-    @FindBy(css = "form-buttons:nth-child(2)>div:nth-child(2)>lg-button:nth-child(2)>button.ng-scope.pre-saveas")
+    @FindBy(css = "button.pre-saveas")
     private WebElement saveTemplate;
 
     //template association
@@ -223,9 +223,15 @@ public class AbsentManagePage extends BasePage {
     @FindBy(css = "input-field[label='Promotion Name'] input")
     private WebElement promotionNameInput;
     @FindBy(css = "lg-select[label='Criteria'] ng-form")
-    private WebElement promotionCriteriaTypeSelect;
-    @FindBy(css = "lg-multiple-select[label='Before'] input-field[label='Before']>ng-form>input")
+    private WebElement promotionCriteriaType;
+    @FindBy(css = "lg-picker-input[label='Criteria'] div[title='Job Title']")
+    private WebElement criteriaByJobTitle;
+    @FindBy(css = "lg-picker-input[label='Criteria'] div[title='Engagement Status']")
+    private WebElement criteriaByEngagementStatus;
+    @FindBy(css = "lg-multiple-select[label='Before'] lg-picker-input")
     private WebElement criteriaBefore;
+    @FindBy(css = "input[aria-label='Before']+label+div.input-faked")
+    private WebElement multiSelectPlaceHolder;
     @FindBy(css = "lg-multiple-select lg-search input")
     private WebElement criteriaBeforeSearchInput;
     @FindBy(css = "lg-select[label='After'] lg-search input")
@@ -234,26 +240,44 @@ public class AbsentManagePage extends BasePage {
     private WebElement jobTitleAsSeniorAmbassador;
     @FindBy(css = "div.select-list-item input-field[label='WA Ambassador']>ng-form")
     private WebElement jobTitleAsWAAmbassador;
-    @FindBy(css = "lg-select[label='After'] input-field[label='After']>ng-form")
+    @FindBy(css = "lg-select[label='After'] lg-picker-input")
     private WebElement criteriaAfter;
     @FindBy(css = "lg-picker-input[label='After'] div.lg-search-options__scroller>div:nth-child(1)>div")
-    private WebElement jobTitleSelectedBefore;
+    private WebElement jobTitleAfterPromotion;
     @FindBy(css = "inline-input+div>lg-button[label='Add More']>button")
     private WebElement criteriaAddMoreButton;
-    @FindBy(css = "input-field[label='Balance before promotion'] input")
-    private WebElement timeOffBeforePromotion;
-    @FindBy(css = "input-field[label='Balance after promotion'] input")
-    private WebElement timeOffAfterPromotion;
     @FindBy(css = "div.promotion-action+div>lg-button[label='Add More']>button")
     private WebElement transferAddMoreButton;
-    @FindBy(css = "input-field[label='Before'] input")
+    @FindBy(css = "lg-picker-input [label='Before']")
     private WebElement engagementBefore;
-    @FindBy(css = "input-field[label='After'] input")
+    @FindBy(css = "lg-picker-input[label='Before'] div[title='PartTime']")
+    private WebElement partTimeBefore;
+    @FindBy(css = "lg-picker-input [label='After']")
     private WebElement engagementAfter;
-    @FindBy(css = "input-field[label='Before'] input")
+    @FindBy(css = "lg-picker-input[label='After'] div[title='FullTime']")
+    private WebElement fullTimeAfter;
+    @FindBy(css = "input-field[label='Balance before promotion']")
     private WebElement balanceBeforePromotion;
-    @FindBy(css = "input-field[label='After'] input")
+    @FindBy(css = "input-field[label='Balance after promotion']")
     private WebElement balanceAfterPromotion;
+    @FindBy(css = "lg-select[label='Balance before promotion'] lg-search input")
+    private WebElement balanceSearchInputB;
+    @FindBy(css = "lg-select[label='Balance before promotion'] div.lg-search-options__scroller>div>div")
+    private WebElement balanceSearchResultB;
+    @FindBy(css = "lg-select[label='Balance after promotion'] lg-search input")
+    private WebElement balanceSearchInputA;
+    @FindBy(css = "lg-select[label='Balance after promotion'] div.lg-search-options__scroller>div>div")
+    private WebElement balanceSearchResultA;
+    @FindBy(css = "div.promotion-setting table.lg-table tr>td:nth-child(1)")
+    private List<WebElement> promotionRuleNames;
+    @FindBy(css = "div.promotion-setting table tr:nth-child(2)>td:nth-child(2)>lg-button[label='Edit']")
+    private WebElement promotionEditButton;
+    @FindBy(css = "div.promotion-setting table tr:nth-child(2)>td:nth-child(2)>lg-button[label='Remove']")
+    private WebElement promotionRemoveButton;
+    @FindBy(css = "modal[modal-title='Remove Accrual Promotion'] h1.lg-modal__title")
+    private WebElement removeModalTitle;
+    @FindBy(css = "modal[modal-title='Remove Accrual Promotion'] general-form p")
+    private WebElement removeModalContent;
 
     //home page methods
     public void back() {
@@ -742,6 +766,20 @@ public class AbsentManagePage extends BasePage {
     }
 
     //promotion part
+    public String getPromotionSettingTitle() {
+        scrollToBottom();
+        return promotionTitle.getText();
+    }
+
+    public boolean isAddButtonDisplayedAndClickable() {
+        return isElementDisplayed(promotionRuleAddButton) && isButtonClickable(promotionRuleAddButton);
+    }
+
+    public void addPromotionRule() {
+        promotionRuleAddButton.click();
+        waitForSeconds(3);
+    }
+
     public String getPromotionModalTitle() {
         return promotionModalTitle.getText();
     }
@@ -752,47 +790,81 @@ public class AbsentManagePage extends BasePage {
     }
 
     public void addCriteriaByJobTitle() {//Job Title & Engagement Status
-        Select promotionType = new Select(promotionCriteriaTypeSelect);
-        promotionType.selectByVisibleText("Job Title");
+        promotionCriteriaType.click();
+        criteriaByJobTitle.click();
         criteriaBefore.click();
         criteriaBeforeSearchInput.clear();
         criteriaBeforeSearchInput.sendKeys("Senior Ambassador");
         jobTitleAsSeniorAmbassador.click();
+        criteriaBeforeSearchInput.clear();
         criteriaBeforeSearchInput.sendKeys("WA Ambassador");
+        waitForSeconds(3);
         jobTitleAsWAAmbassador.click();
         criteriaAfter.click();
         criteriaAfterSearchInput.clear();
         criteriaAfterSearchInput.sendKeys("General Manager");
+        jobTitleAfterPromotion.click();
     }
 
     public void addCriteriaByEngagementStatus() {
-        Select promotionType = new Select(promotionCriteriaTypeSelect);
-        promotionType.selectByVisibleText("Engagement Status");
-        Select before = new Select(engagementBefore);
-        before.selectByVisibleText("PartTime");
-        Select after = new Select(engagementAfter);
-        after.selectByVisibleText("FullTime");
+        promotionCriteriaType.click();
+        criteriaByEngagementStatus.click();
+        engagementBefore.click();
+        partTimeBefore.click();
+        engagementAfter.click();
+        fullTimeAfter.click();
     }
 
-    public String getPlaceholder() {
-        return criteriaBefore.getAttribute("ng-attr-placeholder");
+    public String getJobTitleSelectedBeforePromotion() {
+        return multiSelectPlaceHolder.getText();
     }
 
     public boolean verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion(String jobTitleSelectBefore) {
         criteriaAfter.click();
         criteriaAfterSearchInput.clear();
         criteriaAfterSearchInput.sendKeys(jobTitleSelectBefore);
-        return jobTitleSelectedBefore.isEnabled();
+        return jobTitleAfterPromotion.isEnabled();
     }
 
-    public void setPromotionAction() {
-        Select balanceBefore = new Select(balanceBeforePromotion);
-        balanceBefore.selectByVisibleText("Annual Leave");
-        Select balanceAfter = new Select(balanceAfterPromotion);
-        balanceAfter.selectByVisibleText("Floating Holiday");
+    public void setPromotionAction(String balanceB, String balanceA) {
+        //before
+        balanceBeforePromotion.click();
+        balanceSearchInputB.clear();
+        balanceSearchInputB.sendKeys(balanceB);
+        balanceSearchResultB.click();
+        //after
+        balanceAfterPromotion.click();
+        balanceSearchInputA.clear();
+        balanceSearchInputA.sendKeys(balanceA);
+        balanceSearchResultA.click();
     }
 
-    public void addPromotionRule() {
-        promotionRuleAddButton.click();
+    public ArrayList getPromotionRuleName() {
+        return getWebElementsLabels(promotionRuleNames);
     }
+
+    public void EditPromotionRule() {
+        promotionEditButton.click();
+    }
+
+    public void removePromotionRule() {
+        promotionRemoveButton.click();
+    }
+
+    public String getRemovePromotionRuleModalTitle() {
+        return removeModalTitle.getText();
+    }
+
+    public String getRemovePromotionRuleModalContent() {
+        return removeModalContent.getText();
+    }
+
+    public boolean isTherePromotionRule(){
+        Boolean hasPromotionRule=true;
+        if(!isElementDisplayed(promotionEditButton)){
+            hasPromotionRule=false;
+        }
+     return hasPromotionRule;
+    }
+
 }
