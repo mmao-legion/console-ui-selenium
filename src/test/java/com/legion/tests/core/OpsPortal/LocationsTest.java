@@ -1056,13 +1056,13 @@ public class LocationsTest extends TestBase {
             //get template level info of Operation hours
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(1).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(1).get("Template Name"), "view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get(7).get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(7).get("Template Name"), "view");
             String specificOHInTemplateLevel = locationsPage.getOHTemplateValueInLocationLevel();
             //get template level info of Scheduling rules
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(2).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(2).get("Template Name"), "view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get(5).get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(5).get("Template Name"), "view");
             List<HashMap<String, String>> specificSchRolesInTemplateLevel = locationsPage.getScheRulesTemplateValueInLocationLevel();
 
             //get template level info of Scheduling collaboration
@@ -1079,21 +1079,21 @@ public class LocationsTest extends TestBase {
 
             //get template level info of Schedule policy
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(5).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(5).get("Template Name"), "view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get(1).get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(1).get("Template Name"), "view");
             String specificSchPolicyInTemplateLevel = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
 
             //get template level info of Compliance
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(6).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(6).get("Template Name"), "view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get(2).get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(2).get("Template Name"), "view");
             String specificComplianceInTemplateLevel = locationsPage.getTATemplateValueInLocationLevel();
 
             //go to labor model tab to get specific template value
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
             laborModelPage.clickOnLaborModelTab();
             laborModelPage.goToLaborModelTile();
-            laborModelPage.clickOnSpecifyTemplateName(templateInfo.get(7).get("Template Name"), "view");
+            laborModelPage.clickOnSpecifyTemplateName(templateInfo.get(6).get("Template Name"), "view");
             List<HashMap<String, String>> workRolesListInLaborModelTemplateLevel = laborModelPage.getLaborModelInTemplateLevel();
 
             //compare location level value with template level

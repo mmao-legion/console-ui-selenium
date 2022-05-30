@@ -3345,7 +3345,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void canGoToOperationHoursViaTemNameInLocationLevel() {
 		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
 		if (areListElementVisible(templateNameLinks, 5)) {
-			click(templateNameLinks.get(1));
+			click(templateNameLinks.get(7));
 			if (isElementEnabled(opContainer, 5)) {
 				SimpleUtils.pass("Go to Operating hours in locations level successfully");
 			} else
@@ -3369,7 +3369,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void canGoToSchedulingRulesViaTemNameInLocationLevel() {
 		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
 		if (areListElementVisible(templateNameLinks, 5)) {
-			click(templateNameLinks.get(2));
+			click(templateNameLinks.get(5));
 			if (areListElementVisible(workRolesInSchedulingRulesInLocationLevel, 5)) {
 				SimpleUtils.pass("Go to Scheduling Rules in locations level successfully");
 			} else
@@ -3451,7 +3451,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void canGoToSchedulingPoliciesViaTemNameInLocationLevel() {
 		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
 		if (areListElementVisible(templateNameLinks, 5)) {
-			click(templateNameLinks.get(5));
+			click(templateNameLinks.get(1));
 			if (isElementEnabled(schedulingCollaborationContainer, 5)) {
 				SimpleUtils.pass("Go to Scheduling Policies in locations level successfully");
 			} else
@@ -3475,7 +3475,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void canGoToComplianceViaTemNameInLocationLevel() {
 		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
 		if (areListElementVisible(templateNameLinks, 5)) {
-			click(templateNameLinks.get(6));
+			click(templateNameLinks.get(2));
 			if (isElementEnabled(schedulingCollaborationContainer, 5)) {
 				SimpleUtils.pass("Go to Compliance in locations level successfully");
 			} else
@@ -3502,7 +3502,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void canGoToLaborModelViaTemNameInLocationLevel() {
 		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
 		if (areListElementVisible(templateNameLinks, 10)) {
-			click(templateNameLinks.get(7));
+			click(templateNameLinks.get(6));
 			if (areListElementVisible(workRoleList, 5)){
 				SimpleUtils.pass("Go to Labor model in locations level successfully");
 			} else
