@@ -1,6 +1,7 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -368,9 +369,10 @@ public class TimeOffPage extends BasePage {
 
     public void verifyTimeOffStatus() throws Exception{
         waitForSeconds(5);
-        Assert.assertEquals(timeOffStatus.get(2).getAttribute("innerText").toUpperCase(),"CANCELLED");
-        Assert.assertEquals(timeOffStatus.get(3).getAttribute("innerText").toUpperCase(),"REJECTED");
-        Assert.assertEquals(timeOffStatus.get(4).getAttribute("innerText").toUpperCase(),"APPROVED");
+        if(timeOffStatus.get(2).getAttribute("innerText").toUpperCase().equals("CANCELLED") && timeOffStatus.get(3).getAttribute("innerText").toUpperCase().equals("REJECTED") && timeOffStatus.get(4).getAttribute("innerText").toUpperCase().equals("APPROVED")){
+            SimpleUtils.pass("Time off status is correct");
+        }else
+            SimpleUtils.fail("Time off status is wrong",false);
     }
 
     public String getWorkerId() {
