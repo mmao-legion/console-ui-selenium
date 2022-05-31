@@ -77,6 +77,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "div.modal-dialog")
 	private WebElement newTermsOfServicePopUpWindow;
 
+	@FindBy(css = "lg-policies-form-template-details.mt-15.ng-scope.ng-isolate-scope")
+	private WebElement schedulingCollaborationContainer;
 
 	@Override
 	public void setLaborBudgetLevel(boolean isCentral,String level) {
@@ -667,6 +669,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (locationRowsInSelectLocation.size() > 0) {
 				WebElement firstRow = locationRowsInSelectLocation.get(index).findElement(By.cssSelector("input[type=\"checkbox\"]"));
 				click(firstRow);
+				scrollToElement(okBtnInSelectLocation);
 				click(okBtnInSelectLocation);
 			} else
 				SimpleUtils.report("Search location result is 0");
@@ -3338,6 +3341,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "div.center.ng-scope")
 	private WebElement opContainer;
+	@FindBy(css = "general-form[on-submit = 'submit(label)']")
+	private WebElement configurationOpContainer;
+	@FindBy(css = "lg-template-operating-hours")
+	private WebElement locationOpContainer;
 
 	//	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
 //	private List<WebElement> workRolesInLocationLevel;
@@ -3346,7 +3353,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
 		if (areListElementVisible(templateNameLinks, 5)) {
 			click(templateNameLinks.get(7));
-			if (isElementEnabled(opContainer, 5)) {
+			if (isElementEnabled(locationOpContainer, 5)) {
 				SimpleUtils.pass("Go to Operating hours in locations level successfully");
 			} else
 				SimpleUtils.fail("Failed go to  Operating hours in locations page ", false);
@@ -3357,8 +3364,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public String getOHTemplateValueInLocationLevel() {
 		String templateValue = "";
-		if (isElementEnabled(opContainer, 5)) {
-			templateValue = opContainer.getText();
+		if (isElementEnabled(locationOpContainer, 5)) {
+			templateValue = locationOpContainer.getText();
 			return templateValue;
 		} else
 			SimpleUtils.fail("Go to operating hours template failed in location level via template name link", false);
@@ -3378,6 +3385,26 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Configuration tab in locations level page load failed ", false);
 	}
 
+	@FindBy(css = "table.lg-table.ng-scope")
+	private List<WebElement> workRolesInSchedulingRulesInConfigurationLevel;
+
+	@Override
+	public List<HashMap<String, String>> getScheRulesTemplateValueInConfigurationLevel() {
+		List<HashMap<String, String>> schedulingRulesInfo = new ArrayList<>();
+		if (areListElementVisible(workRolesInSchedulingRulesInConfigurationLevel, 5)) {
+			for (WebElement s : workRolesInSchedulingRulesInConfigurationLevel) {
+				HashMap<String, String> workRoleInfoInEachRow = new HashMap<>();
+				workRoleInfoInEachRow.put("WorkRole Name", s.findElement(By.cssSelector("tr>td:nth-child(1)")).getText().trim());
+				workRoleInfoInEachRow.put("Staffing Rules", s.findElement(By.cssSelector("tr>td:nth-child(2)")).getText().trim());
+				schedulingRulesInfo.add(workRoleInfoInEachRow);
+			}
+
+			return schedulingRulesInfo;
+		} else
+			SimpleUtils.fail("Failed go to scheduling rules in configuration level ", false);
+		return null;
+	}
+
 	@Override
 	public List<HashMap<String, String>> getScheRulesTemplateValueInLocationLevel() {
 		List<HashMap<String, String>> schedulingRulesInfo = new ArrayList<>();
@@ -3394,9 +3421,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Failed go to scheduling rules in locations level ", false);
 		return null;
 	}
-
-	@FindBy(css = "form[name=\"$ctrl.generalForm\"]")
-	private WebElement schedulingCollaborationContainer;
 
 	@Override
 	public void canGoToScheduleCollaborationViaTemNameInLocationLevel() {
