@@ -3,6 +3,7 @@ package com.legion.pages.core;
 import com.legion.pages.BasePage;
 import com.legion.pages.PlanPage;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.Scenario;
 import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -74,7 +75,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
     private WebElement forecastReRunDialog;
     @FindBy(css = "lg-button[label=\"Generate\"]")
     private WebElement forecastGenerateBTNOnDialog;
-    @FindBy(css = "a[href*='DemandForecastSample']")
+    @FindBy(css = "lg-button[label=\"Download CSV\"] button")
     private WebElement forecastDownloadCSVLink;
     @FindBy(css = "a[href*='BudgetSample']")
     private WebElement budgetDownloadCSVLink;
@@ -547,7 +548,9 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
         WebElement planName = planSearchedResults.get(0).findElement(By.cssSelector("div[ng-click=\"expandScenario(plan)\"]"));
         if (isElementLoaded(planName, 5)) {
             SimpleUtils.pass("plan name loaded successfully!");
-            clickTheElement(planName);
+            if (!areListElementVisible(scenarioPlans, 5)){
+                clickTheElement(planName);
+            }
             //find the scenario plan to view
             if (scenarioPlans.size() > 0) {
                 SimpleUtils.pass("Scenario plan loaded successfully");
@@ -576,7 +579,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                                 {
                                     //wait until the download csv for generate forecast button is displayed
                                     waitUntilElementIsInVisible(forecastDownloadCSVLink);
-                                    if (scenarioPlanNameInDeatil.getText().equals("In Progress"))
+                                    if (scenarioPlanStatusInDetail.getText().equals("In Progress"))
                                         SimpleUtils.pass("Scenario plan changed to in progress from not started!");
                                     else
                                         SimpleUtils.fail("Scenario plan not changed to in progress status", false);
@@ -754,7 +757,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                 if (isElementLoaded(errorToast, 5)) {
                     if (errorToast.getText().contains("cannot archive scenario while it is in progress")) {
                         archiveAct = false;
-                        SimpleUtils.pass("User Can not archive a plan which is in progress!");
+                        SimpleUtils.fail("User failed to archive a plan!", false);
                     }
                 }
                 else {
@@ -903,7 +906,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                         if (isElementLoaded(budgetRunDialog) && isElementLoaded(budgetRunBTNOnDialog)) {
                             clickTheElement(budgetRunBTNOnDialog);
                             //check the budget result
-                            if (isElementLoaded(budgetValue,300) && Integer.parseInt(budgetValue.getText().split("\\$")[1].trim()) > 0) {
+                            if (isElementLoaded(budgetValue,300) && Integer.parseInt(budgetValue.getText().split("\\$")[1].trim().replace(",", "")) > 0) {
                                 SimpleUtils.pass("Budget job run complete and get the result budget hours on UI!");
                                 // send for review for the plan
                                 sendForReviewAplan();
@@ -979,7 +982,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
             clickTheElement(scenarioPlanApproveBTN);
             if(isElementLoaded(scenarioPlanApproveBTN,5)){
                 SimpleUtils.pass("Approve budget plan dialog pops up successfully!");
-                clickTheElement(scenarioPlanApproveBTN.findElement(By.cssSelector("lg-button[label=\"Approve\"] button")));
+                clickTheElement(scenarioPlanApproveBTN);
                 waitForSeconds(2);
 
             }
