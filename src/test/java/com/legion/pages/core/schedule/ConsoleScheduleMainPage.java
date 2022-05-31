@@ -1800,6 +1800,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     @Override
     public void verifyTheContentOnDeleteScheduleDialog(String confirmMessage, String week) throws Exception {
+        waitForSeconds(2);
         if (isElementLoaded(deleteSchedulePopup, 30)) {
             if (isElementLoaded(deleteScheduleIcon, 5) && isElementLoaded(deleteScheduleTitle, 5)
                     && deleteScheduleTitle.getText().equalsIgnoreCase("Delete Schedule") && isElementLoaded(deleteScheduleTitle, 5)
