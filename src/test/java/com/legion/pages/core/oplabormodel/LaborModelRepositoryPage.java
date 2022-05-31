@@ -109,6 +109,7 @@ public class LaborModelRepositoryPage extends BasePage {
     //save
     public void save() {
         saveButton.click();
+        waitForSeconds(3);
     }
 
     //search a task or label

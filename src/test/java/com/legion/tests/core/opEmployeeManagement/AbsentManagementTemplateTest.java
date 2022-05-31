@@ -620,6 +620,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         distribution.add("Weekly");
         distribution.add("Worked Hours");
         distribution.add("Lump Sum");
+        distribution.add("Specified Date");
         distribution.add("None");
         return distribution;
     }

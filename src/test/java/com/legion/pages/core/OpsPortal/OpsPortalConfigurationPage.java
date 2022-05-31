@@ -3282,6 +3282,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement cancelButtonOnManageDynamicGroupPopup;
 	@Override
 	public void createDynamicGroup(String name,String criteria,String formula) throws Exception{
+		waitForSeconds(3);
 		clickOnAssociationTabOnTemplateDetailsPage();
 		clickTheElement(addDynamicGroupButton);
 		if(isElementEnabled(manageDynamicGroupPopupTitle,5)){
@@ -4127,13 +4128,15 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	//Added by Fiona
 	@FindBy(tagName="lg-eg-status")
-	private List<WebElement> templateStatus;
+	private List<WebElement> allTemplateStatus;
+	@FindBy(css="lg-eg-status[type=\"Published\"]")
+	private List<WebElement> publishedTemplateStatus;
 
 	private boolean isMultiplePublishVersion() {
 		String classValue = templatesList.get(0).getAttribute("class");
 		if (classValue != null && classValue.contains("hasChildren")) {
 			expandTemplate();
-			if(areListElementVisible(templateStatus,3) && templateStatus.size()>=3){
+			if(areListElementVisible(allTemplateStatus,3) && publishedTemplateStatus.size()>=2){
 				SimpleUtils.pass("This is a multiple version template");
 			}
 			return true;
@@ -4265,4 +4268,98 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("User can't add new template successfully",false);
 		}
 	}
+
+	public int getPublishedTemplateCountInMultipleVersion(){
+		int count =0;
+		if(areListElementVisible(templatesList,2)){
+			count = publishedTemplateStatus.size();
+		}
+		return count;
+	}
+
+	public int getAllTemplateCountInMultipleVersion(){
+		int count =0;
+		if(areListElementVisible(templatesList,2)){
+			count = allTemplateStatus.size();
+		}
+		return count;
+	}
+
+	@Override
+	public void createFutureTemplateBasedOnExistingTemplate(String templateName,String button,int date,String editOrViewMode) throws Exception{
+		int beforeCount =0;
+		int afterCount =0;
+		waitForSeconds(2);
+		//create future published version template
+		if(areListElementVisible(templateNameList,3)){
+			beforeCount = publishedTemplateStatus.size();
+			clickOnSpecifyTemplateName(templateName,editOrViewMode);
+			clickOnEditButtonOnTemplateDetailsPage();
+			scrollToBottom();
+			chooseSaveOrPublishBtnAndClickOnTheBtn(button);
+			if(isElementLoaded(dateOfPublishPopup,2)){
+				clickTheElement(effectiveDate);
+				setEffectiveDate(date);
+				clickTheElement(okButtonOnFuturePublishConfirmDialog);
+			}else {
+				SimpleUtils.fail("The future publish template confirm dialog is not displayed.",false);
+			}
+		}else {
+			SimpleUtils.fail("Template list is not displayed!",false);
+		}
+		//Check whether the future template is created successfully or not?
+		expandMultipleVersionTemplate(templateName);
+		afterCount = publishedTemplateStatus.size();
+
+		if(afterCount-beforeCount==1){
+			SimpleUtils.pass("User create new future template successfully!");
+		}else {
+			SimpleUtils.fail("User failed to create new future template!",false);
+		}
+	}
+
+	public void expandMultipleVersionTemplate(String templateName) throws Exception{
+		waitForSeconds(2);
+		searchTemplate(templateName);
+		if (isMultiplePublishVersion()) {
+			//expand all future template that has draft template
+			if(areListElementVisible(multipleTemplateList,2)){
+				List<String> effectiveDates = new ArrayList<>();
+				//expand template with multiple version
+				for(WebElement multipleTemplate:multipleTemplateList){
+					WebElement toggleBTN = multipleTemplate.findElement(By.cssSelector(".toggle i"));
+					if(toggleBTN.getAttribute("class").trim().equals("fa fa-caret-right")){
+						clickTheElement(toggleBTN);
+					}
+				}
+			}
+		}
+}
+
+	@Override
+	public void createDraftForEachPublishInMultipleTemplate(String templateName,String button,String editOrViewMode) throws Exception{
+		expandMultipleVersionTemplate(templateName);
+		if(areListElementVisible(multipleTemplateList,2)){
+			for(WebElement multipleTemplate:multipleTemplateList){
+				int beforeCount = getAllTemplateCountInMultipleVersion();
+				String tempName = multipleTemplate.findElement(By.cssSelector("div:nth-child(2) button span.ng-binding")).getText().trim();
+				clickOnSpecifyTemplateName(tempName,editOrViewMode);
+				clickOnEditButtonOnTemplateDetailsPage();
+				scrollToBottom();
+				chooseSaveOrPublishBtnAndClickOnTheBtn(button);
+				waitForSeconds(2);
+				expandMultipleVersionTemplate(templateName);
+				int afterCount = getAllTemplateCountInMultipleVersion();
+				if(afterCount-beforeCount==1){
+					SimpleUtils.pass("User create draft version template successfully!");
+				}else {
+					SimpleUtils.fail("User failed to create draft version template!",false);
+				}
+			}
+		}
+	}
+
+
+
+
 }

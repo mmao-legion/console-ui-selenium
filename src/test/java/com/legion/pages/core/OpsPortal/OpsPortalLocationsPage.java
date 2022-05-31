@@ -3293,7 +3293,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css = "tbody[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
+	@FindBy(css = "table.lg-table.ng-scope tbody")
 	private List<WebElement> workRolesInSchedulingRulesInLocationLevel;
 
 	@FindBy(css = "input[placeholder=\"Search by Work Role\"]")
@@ -3336,7 +3336,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return null;
 	}
 
-	@FindBy(css = "div.collapse-container")
+	@FindBy(css = "div.center.ng-scope")
 	private WebElement opContainer;
 
 	//	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
@@ -3564,10 +3564,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				templateInfoInEachRow.put("Template Type", s.findElement(By.cssSelector("td:nth-child(1)")).getText());
 				templateInfoInEachRow.put("Template Name", s.findElement(By.cssSelector("td:nth-child(2)")).getText());
 				String actions = s.findElement(By.cssSelector("td:nth-child(6)")).getText();
-				if (!actions.contains("Reset") && !isExist(overRiddenIcon)) {
-					templateInfoInEachRow.put("Overridden", "No");
-				} else
+				if (isExist(overRiddenIcon)) {
 					templateInfoInEachRow.put("Overridden", "Yes");
+				} else
+					templateInfoInEachRow.put("Overridden", "No");
 
 				templateInfo.add(templateInfoInEachRow);
 			}
@@ -3661,7 +3661,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					}
 					break;
 				case "Operating Hours":
-					List<WebElement> actionsForOH = templateRows.get(1).findElements(By.cssSelector(" td:nth-child(6)>span"));
+					List<WebElement> actionsForOH = templateRows.get(7).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForOH) {
 						if (s.getText().contains(action)&& action.equals("View")) {
 							clickTheElement(s);
@@ -3681,7 +3681,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					}
 					break;
 				case "Scheduling Rules":
-					List<WebElement> actionsForSchRules = templateRows.get(2).findElements(By.cssSelector(" td:nth-child(6)>span"));
+					List<WebElement> actionsForSchRules = templateRows.get(5).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForSchRules) {
 						if (s.getText().contains(action)&& action.equals("View")) {
 							clickTheElement(s);
@@ -3741,7 +3741,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					}
 					break;
 				case "Scheduling Policies":
-					List<WebElement> actionsForSchPolicy = templateRows.get(5).findElements(By.cssSelector(" td:nth-child(6)>span"));
+					List<WebElement> actionsForSchPolicy = templateRows.get(1).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForSchPolicy) {
 						if (s.getText().contains(action)&& action.equals("View")) {
 							clickTheElement(s);
@@ -3761,7 +3761,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					}
 					break;
 				case "Compliance":
-					List<WebElement> actionsForCompliance = templateRows.get(6).findElements(By.cssSelector(" td:nth-child(6)>span"));
+					List<WebElement> actionsForCompliance = templateRows.get(2).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForCompliance) {
 						if (s.getText().contains(action)&& action.equals("View")) {
 							clickTheElement(s);
@@ -3781,7 +3781,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					}
 					break;
 				case "Labor Model":
-					List<WebElement> actionsForLaborModel = templateRows.get(7).findElements(By.cssSelector(" td:nth-child(6)>span"));
+					List<WebElement> actionsForLaborModel = templateRows.get(6).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForLaborModel) {
 						if (s.getText().contains(action)&& action.equals("View")) {
 							clickTheElement(s);
@@ -3864,9 +3864,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
-	@FindBy(css = "lg-button[label=\"Edit\"]")
+	@FindBy(css = "lg-button[label = 'Edit']>button")
 	private List<WebElement> editBtnsInOH;
-	@FindBy(css = ".modal-content>div.location-working-hours.modal-body")
+	@FindBy(css = "table.lg-table.ng-scope")
 	private WebElement workingHoursModalBody;
 	@FindBy(css = ".each-day-selector>input-field>ng-form>input[type=\"checkbox\"]")
 	private List<WebElement> checkBoxOfEachDay;
@@ -4082,6 +4082,69 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.pass("Labor model reset button is clickable");
 		}else
 			SimpleUtils.fail("Labor model reset button loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label='Upload Fiscal Calendar'] button")
+	private WebElement uploadFiscalCalendarButton;
+
+	public void verifyUploadFiscalCalendarButtonisClicked() throws Exception {
+		editOnGlobalConfigPage.click();
+		BasePage.scrollToBottom();
+		if (isElementLoaded(uploadFiscalCalendarButton, 10)) {
+			if (isClickable(uploadFiscalCalendarButton, 10)) {
+				SimpleUtils.pass("Upload FiscalCalendar button is clickable");
+			} else {
+				SimpleUtils.fail("Upload FiscalCalendar button is not clickable", false);
+			}
+		} else {
+			SimpleUtils.fail("Upload FiscalCalendar button loaded failed", false);
+		}
+	}
+
+	@FindBy(css = "lg-button[label='Download Fiscal Calendar'] button")
+	private WebElement downloadFiscalCalendarButton;
+	@FindBy(css = "select[aria-label=\"Fiscal Year\"]")
+	private WebElement fiscalYearSelect;
+	@FindBy(css = "select[aria-label=\"Fiscal Year\"] option")
+	private List<WebElement> fiscalYearOption;
+	@FindBy(css = "select[aria-label=\"Start Day of Week\"]")
+	private WebElement startDayOfWeekSelect;
+	@FindBy(css = "select[aria-label=\"Start Day of Week\"] option")
+	private List<WebElement> startDayOfWeekOption;
+	@FindBy(css = "lg-button[label='Download'] button")
+	private WebElement downloadButton;
+	@FindBy(css = "span.lg-toast__simple-text")
+	private WebElement errorMessage;
+
+	public void downloadFiscalCalendar(String fiscalYear, String startDayOfWeek) throws Exception {
+		if (isElementLoaded(downloadFiscalCalendarButton, 10)) {
+			if (isClickable(downloadFiscalCalendarButton, 10)) {
+				SimpleUtils.pass("download FiscalCalendar button is clickable");
+				click(downloadFiscalCalendarButton);
+				click(fiscalYearSelect);
+				for (WebElement element : fiscalYearOption) {
+					if (element.getText().contains(fiscalYear)) {
+						click(element);
+					}
+				}
+				click(startDayOfWeekSelect);
+				for (WebElement element : startDayOfWeekOption) {
+					if (element.getText().contains(startDayOfWeek)) {
+						click(element);
+					}
+				}
+				click(downloadButton);
+				if (!isElementLoaded(errorMessage, 10)) {
+					SimpleUtils.pass("download FiscalCalendar successfully");
+				} else {
+					SimpleUtils.fail("download FiscalCalendar failed", false);
+				}
+			} else {
+				SimpleUtils.fail("download FiscalCalendar button is not clickable", false);
+			}
+		} else {
+			SimpleUtils.fail("download FiscalCalendar button loaded failed", false);
+		}
 	}
 }
 

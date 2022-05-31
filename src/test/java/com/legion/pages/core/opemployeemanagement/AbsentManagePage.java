@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,7 +166,7 @@ public class AbsentManagePage extends BasePage {
     @FindBy(css = "div.lg-single-calendar-date-wrapper>div:nth-child(20)")
     private WebElement dayChosen;
     //
-    @FindBy(css = "form-buttons:nth-child(2)>div:nth-child(2)>lg-button:nth-child(2)>button.ng-scope.pre-saveas")
+    @FindBy(css = "button.pre-saveas")
     private WebElement saveTemplate;
 
     //template association
@@ -212,6 +213,71 @@ public class AbsentManagePage extends BasePage {
     @FindBy(css = "lg-search[placeholder='You can search by name, label and description']>input-field input")
     private WebElement associateSearch;
 
+    //Promotion part
+    @FindBy(css = "div.promotion-setting h1")
+    private WebElement promotionTitle;
+    @FindBy(css = "div.promotion-setting lg-button>button")
+    private WebElement promotionRuleAddButton;
+    @FindBy(css = "modal[modal-title='Create New Accrual Promotion'] h1")
+    private WebElement promotionModalTitle;
+    @FindBy(css = "input-field[label='Promotion Name'] input")
+    private WebElement promotionNameInput;
+    @FindBy(css = "lg-select[label='Criteria'] ng-form")
+    private WebElement promotionCriteriaType;
+    @FindBy(css = "lg-picker-input[label='Criteria'] div[title='Job Title']")
+    private WebElement criteriaByJobTitle;
+    @FindBy(css = "lg-picker-input[label='Criteria'] div[title='Engagement Status']")
+    private WebElement criteriaByEngagementStatus;
+    @FindBy(css = "lg-multiple-select[label='Before'] lg-picker-input")
+    private WebElement criteriaBefore;
+    @FindBy(css = "input[aria-label='Before']+label+div.input-faked")
+    private WebElement multiSelectPlaceHolder;
+    @FindBy(css = "lg-multiple-select lg-search input")
+    private WebElement criteriaBeforeSearchInput;
+    @FindBy(css = "lg-select[label='After'] lg-search input")
+    private WebElement criteriaAfterSearchInput;
+    @FindBy(css = "div.select-list-item input-field[label='Senior Ambassador']>ng-form")
+    private WebElement jobTitleAsSeniorAmbassador;
+    @FindBy(css = "div.select-list-item input-field[label='WA Ambassador']>ng-form")
+    private WebElement jobTitleAsWAAmbassador;
+    @FindBy(css = "lg-select[label='After'] lg-picker-input")
+    private WebElement criteriaAfter;
+    @FindBy(css = "lg-picker-input[label='After'] div.lg-search-options__scroller>div:nth-child(1)>div")
+    private WebElement jobTitleAfterPromotion;
+    @FindBy(css = "inline-input+div>lg-button[label='Add More']>button")
+    private WebElement criteriaAddMoreButton;
+    @FindBy(css = "div.promotion-action+div>lg-button[label='Add More']>button")
+    private WebElement transferAddMoreButton;
+    @FindBy(css = "lg-picker-input [label='Before']")
+    private WebElement engagementBefore;
+    @FindBy(css = "lg-picker-input[label='Before'] div[title='PartTime']")
+    private WebElement partTimeBefore;
+    @FindBy(css = "lg-picker-input [label='After']")
+    private WebElement engagementAfter;
+    @FindBy(css = "lg-picker-input[label='After'] div[title='FullTime']")
+    private WebElement fullTimeAfter;
+    @FindBy(css = "input-field[label='Balance before promotion']")
+    private WebElement balanceBeforePromotion;
+    @FindBy(css = "input-field[label='Balance after promotion']")
+    private WebElement balanceAfterPromotion;
+    @FindBy(css = "lg-select[label='Balance before promotion'] lg-search input")
+    private WebElement balanceSearchInputB;
+    @FindBy(css = "lg-select[label='Balance before promotion'] div.lg-search-options__scroller>div>div")
+    private WebElement balanceSearchResultB;
+    @FindBy(css = "lg-select[label='Balance after promotion'] lg-search input")
+    private WebElement balanceSearchInputA;
+    @FindBy(css = "lg-select[label='Balance after promotion'] div.lg-search-options__scroller>div>div")
+    private WebElement balanceSearchResultA;
+    @FindBy(css = "div.promotion-setting table.lg-table tr>td:nth-child(1)")
+    private List<WebElement> promotionRuleNames;
+    @FindBy(css = "div.promotion-setting table tr:nth-child(2)>td:nth-child(2)>lg-button[label='Edit']")
+    private WebElement promotionEditButton;
+    @FindBy(css = "div.promotion-setting table tr:nth-child(2)>td:nth-child(2)>lg-button[label='Remove']")
+    private WebElement promotionRemoveButton;
+    @FindBy(css = "modal[modal-title='Remove Accrual Promotion'] h1.lg-modal__title")
+    private WebElement removeModalTitle;
+    @FindBy(css = "modal[modal-title='Remove Accrual Promotion'] general-form p")
+    private WebElement removeModalContent;
 
     //home page methods
     public void back() {
@@ -265,11 +331,13 @@ public class AbsentManagePage extends BasePage {
     public void cancel() {
         cancelCreatingTemp.click();
     }
+
     @FindBy(css = ".walkme-action-destroy-1.wm-close-link")
     private WebElement closeWakeme;
+
     public void submit() throws Exception {
         continueCreatingTemp.click();
-        if (isElementLoaded(closeWakeme,10)){
+        if (isElementLoaded(closeWakeme, 10)) {
             click(closeWakeme);
         }
     }
@@ -286,22 +354,22 @@ public class AbsentManagePage extends BasePage {
         return getWebElementsLabels(templateTableHeaders);
     }
 
-    public void search(String searchText){
-            templateSearchBox.clear();
-            templateSearchBox.sendKeys(searchText);
-            //searchIcon.click();
-            waitForSeconds(3);
+    public void search(String searchText) {
+        templateSearchBox.clear();
+        templateSearchBox.sendKeys(searchText);
+        //searchIcon.click();
+        waitForSeconds(3);
     }
 
     public String noMatch() {
         return noMatchMessage.getText();
     }
 
-    public boolean isNoMatchMessageDisplayed(){
+    public boolean isNoMatchMessageDisplayed() {
         return isElementDisplayed(noMatchMessage);
     }
 
-    public int templateNumber(){
+    public int templateNumber() {
         return templateNameOfSearchResult.size();
     }
 
@@ -682,10 +750,11 @@ public class AbsentManagePage extends BasePage {
 
     @FindBy(css = ".time-off-reason-setting tr.ng-scope")
     private List<WebElement> timeOffReasons;
+
     public void removeTimeOffReasons(String timeOffReasonName) {
-        if (areListElementVisible(timeOffReasons, 10) && timeOffReasons.size()>0) {
-            for (WebElement reason: timeOffReasons) {
-                if (reason.findElement(By.cssSelector(".one-line-overflow")).getText().equalsIgnoreCase(timeOffReasonName)){
+        if (areListElementVisible(timeOffReasons, 10) && timeOffReasons.size() > 0) {
+            for (WebElement reason : timeOffReasons) {
+                if (reason.findElement(By.cssSelector(".one-line-overflow")).getText().equalsIgnoreCase(timeOffReasonName)) {
                     clickTheElement(reason.findElement(By.cssSelector("[label=\"Remove\"]")));
                     okCreatingTimeOff();
                     System.out.println("Delete the time off reason successfull!");
@@ -695,4 +764,107 @@ public class AbsentManagePage extends BasePage {
         } else
             System.out.println("There is no time off reason been listed!");
     }
+
+    //promotion part
+    public String getPromotionSettingTitle() {
+        scrollToBottom();
+        return promotionTitle.getText();
+    }
+
+    public boolean isAddButtonDisplayedAndClickable() {
+        return isElementDisplayed(promotionRuleAddButton) && isButtonClickable(promotionRuleAddButton);
+    }
+
+    public void addPromotionRule() {
+        promotionRuleAddButton.click();
+        waitForSeconds(3);
+    }
+
+    public String getPromotionModalTitle() {
+        return promotionModalTitle.getText();
+    }
+
+    public void setPromotionName(String promotionName) {
+        promotionNameInput.clear();
+        promotionNameInput.sendKeys(promotionName);
+    }
+
+    public void addCriteriaByJobTitle() {//Job Title & Engagement Status
+        promotionCriteriaType.click();
+        criteriaByJobTitle.click();
+        criteriaBefore.click();
+        criteriaBeforeSearchInput.clear();
+        criteriaBeforeSearchInput.sendKeys("Senior Ambassador");
+        jobTitleAsSeniorAmbassador.click();
+        criteriaBeforeSearchInput.clear();
+        criteriaBeforeSearchInput.sendKeys("WA Ambassador");
+        waitForSeconds(3);
+        jobTitleAsWAAmbassador.click();
+        criteriaAfter.click();
+        criteriaAfterSearchInput.clear();
+        criteriaAfterSearchInput.sendKeys("General Manager");
+        jobTitleAfterPromotion.click();
+    }
+
+    public void addCriteriaByEngagementStatus() {
+        promotionCriteriaType.click();
+        criteriaByEngagementStatus.click();
+        engagementBefore.click();
+        partTimeBefore.click();
+        engagementAfter.click();
+        fullTimeAfter.click();
+    }
+
+    public String getJobTitleSelectedBeforePromotion() {
+        return multiSelectPlaceHolder.getText();
+    }
+
+    public boolean verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion(String jobTitleSelectBefore) {
+        criteriaAfter.click();
+        criteriaAfterSearchInput.clear();
+        criteriaAfterSearchInput.sendKeys(jobTitleSelectBefore);
+        return jobTitleAfterPromotion.isEnabled();
+    }
+
+    public void setPromotionAction(String balanceB, String balanceA) {
+        //before
+        balanceBeforePromotion.click();
+        balanceSearchInputB.clear();
+        balanceSearchInputB.sendKeys(balanceB);
+        balanceSearchResultB.click();
+        //after
+        balanceAfterPromotion.click();
+        balanceSearchInputA.clear();
+        balanceSearchInputA.sendKeys(balanceA);
+        balanceSearchResultA.click();
+    }
+
+    public ArrayList getPromotionRuleName() {
+        return getWebElementsLabels(promotionRuleNames);
+    }
+
+    public void EditPromotionRule() {
+        promotionEditButton.click();
+    }
+
+    public void removePromotionRule() {
+        promotionRemoveButton.click();
+    }
+
+    public String getRemovePromotionRuleModalTitle() {
+        return removeModalTitle.getText();
+    }
+
+    public String getRemovePromotionRuleModalContent() {
+        return removeModalContent.getText();
+    }
+
+    public boolean isTherePromotionRule(){
+        Boolean hasPromotionRule=true;
+        if(!isElementDisplayed(promotionEditButton)){
+            hasPromotionRule=false;
+        }
+     return hasPromotionRule;
+    }
+
 }

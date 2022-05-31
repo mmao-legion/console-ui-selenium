@@ -70,7 +70,7 @@ public class LaborModelTemplateDetailPage extends BasePage {
     private WebElement publishNow;
     @FindBy(css = "div.saveas-list.ng-scope>h3:nth-child(3)")
     private WebElement publishLater;
-    @FindBy(css = "lg-button[label='Save as draft']>button.ng-scope.pre-saveas")
+    @FindBy(css = "button.pre-saveas")
     private WebElement preSaveAs;
 
     @FindBy(css = "lg-tab[tab-title='Details'] lg-button[label='Cancel']>button")
@@ -159,6 +159,7 @@ public class LaborModelTemplateDetailPage extends BasePage {
     public void save(String Patter) {
         scrollToElement(saveDropsButton);
         saveDropsButton.click();
+        waitForSeconds(3);
         switch (Patter) {
             case "Save as draft":
                 saveAsDraft.click();
@@ -170,6 +171,7 @@ public class LaborModelTemplateDetailPage extends BasePage {
                 publishLater.click();
                 break;
         }
+        waitForSeconds(3);
         preSaveAs.click();
     }
 

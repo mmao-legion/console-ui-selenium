@@ -26,7 +26,7 @@ public class OpsPortalWorkRolesPage extends BasePage {
     private WebElement searchButton;
     @FindBy(css = "table.lg-table.ng-scope>tbody>tr>td:first-child>lg-button")
     private List<WebElement> workRoleList;
-    @FindBy(css = "table.lg-table.ng-scope>tbody>tr:first-child>td:first-child>lg-button")
+    @FindBy(css = "table.lg-table.ng-scope>tbody>tr>td:first-child>lg-button")
     private WebElement theFirstWorkRoleInTheList;
     @FindBy(css = "div.lg-work-roles__placeholder-content.ng-binding")
     private WebElement noResultNotice;
@@ -125,18 +125,10 @@ public class OpsPortalWorkRolesPage extends BasePage {
     }
 
     public void save() throws Exception {
-        if (isElementLoaded(saveButton, 10)) {
+        if(isElementDisplayed(saveButton)&&isClickable(saveButton,5)){
             saveButton.click();
-            if (isElementLoaded(popUpMsg, 5) ) {
-                String successMessage = popUpMsg.getText();
-                if (successMessage.contains("Success")) {
-                    SimpleUtils.pass("Work Role Page: Click on Save button successfully!");
-                } else
-                    SimpleUtils.fail("The Success message display incorrectly! the actual message is: " + successMessage, false);
-            } else {
-                SimpleUtils.fail("Work Role Page: Failed to Save!", false);
-            }
-        } else {
+            SimpleUtils.pass("Work Role Page: Click on Save button successfully!");
+        }else{
             SimpleUtils.fail("Work Role Page: Save button failed to load!", false);
         }
     }

@@ -186,7 +186,6 @@ public class UserManagementTest extends TestBase {
             OpsPortalUserManagementPanelPage panelPage = new OpsPortalUserManagementPanelPage();
             panelPage.goToWorkRolesPage();
             OpsPortalWorkRolesPage workRolesPage = new OpsPortalWorkRolesPage();
-
             //add a new work role and save it
             workRolesPage.addNewWorkRole();
             WorkRoleDetailsPage workRoleDetailsPage = new WorkRoleDetailsPage();
@@ -532,7 +531,7 @@ public class UserManagementTest extends TestBase {
             rightHeaderBarPage.switchToConsole();
             ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
             consoleNavigationPage.searchLocation("ClearDistrict");
-            consoleNavigationPage.navigateTo("Controls");
+            consoleNavigationPage.navigateTo("ControlsCustomer");
 
             //go to job title page
             userManagementPage.goToUserAndRoles();
@@ -765,6 +764,124 @@ public class UserManagementTest extends TestBase {
             else
                 SimpleUtils.fail("Hourly rate display",false);
         }catch(Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Permission to view employee contact info in profile")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyViewEmployeeContactInfoPermissionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try{
+            //go to User Management Access Role table
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+
+            boolean profilePermission, profileViewPermision;
+            String user1 = "Nancy Profile";
+            String user2 = "Test ProfilePermission";
+            userManagementPage.goToUserDetailPage(user1);
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == true){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+
+            userManagementPage.goBack();
+            userManagementPage.goToAccessRolesTab();
+
+            //check view contact permission
+            userManagementPage.clickProfile();
+            profileViewPermision = userManagementPage.profileViewPermissionExist();
+
+            if(profileViewPermision == true){
+                SimpleUtils.pass("View profile permission is exist");
+            }else
+                SimpleUtils.fail("View profile permission is not exist",false);
+
+            switchToNewWindow();
+
+            ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+            consoleNavigationPage.searchLocation("verifyMock");
+            consoleNavigationPage.navigateTo("Team");
+
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(user1);
+
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == true){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+
+            ConsoleControlsNewUIPage consoleControlsNewUIPage = new ConsoleControlsNewUIPage();
+
+            consoleNavigationPage.navigateTo("Controls");
+            consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            consoleControlsNewUIPage.searchAndSelectTeamMemberByName(user1);
+
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == true){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+
+            //logout
+            OpsPortalNavigationPage opsPortalNavigationPage = new OpsPortalNavigationPage();
+            opsPortalNavigationPage.logout();
+
+            //log in with user has no view hourly rate job title permission
+            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+nocontact@legion.co", "admin11.a","verifyMock");
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.verifyNewTermsOfServicePopUp();
+            //go to team
+            consoleNavigationPage.searchLocation("FionaUsingLocation");
+            consoleNavigationPage.navigateTo("Team");
+
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(user2);
+
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == false){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+
+            consoleNavigationPage.navigateTo("ControlsCustomer");
+            consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            consoleControlsNewUIPage.searchAndSelectTeamMemberByName(user2);
+
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == false){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+
+            RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
+            rightHeaderBarPage.switchToOpsPortal();
+            loginPage.verifyNewTermsOfServicePopUp();
+
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+
+            userManagementPage.goToUserDetailPage(user2);
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == false){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+        }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }

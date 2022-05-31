@@ -24,6 +24,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AccrualEngineTest extends TestBase {
@@ -43,7 +44,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine Distribution Types")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualEngineWorksAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
@@ -198,6 +199,8 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance0907 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory0907 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance0907);
+        System.out.println(expectedTOBalance);
         String verification4 = validateTheAccrualResults(accrualBalance0907, expectedTOBalance);
         Assert.assertTrue(verification4.contains("Succeeded in validating"), verification4);
 
@@ -215,6 +218,8 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance1230 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory1230 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance1230);
+        System.out.println(expectedTOBalance);
         String verification5 = validateTheAccrualResults(accrualBalance1230, expectedTOBalance);
         Assert.assertTrue(verification5.contains("Succeeded in validating"), verification5);
 
@@ -228,15 +233,17 @@ public class AccrualEngineTest extends TestBase {
         //expected accrual
         expectedTOBalance.put("Annual Leave3", "2");// balance 7  max carryover: 2
         expectedTOBalance.put("Bereavement3", "3");// balance 33  max carryover: 2   +1hour accrued
-        //expectedTOBalance.put("Grandparents Day Off3", "2");//balance 8  max carryover: 2  //HireDate~Specified/lump-sum
+        expectedTOBalance.put("Grandparents Day Off3", "2");//balance 8  max carryover: 2  //HireDate~Specified/lump-sum
         expectedTOBalance.put("Pandemic1", "2");//7 hours  max carryover: 2  //Specified~Specified/Monthly /calendar month/begin /allowance in days 126(out of)
         expectedTOBalance.put("Pandemic2", "2");//52 hours  max carryover: 2 //Specified~Specified/weekly /allowance in days 127(in)
-        //expectedTOBalance.put("Pandemic4", "2");//8 hours  max carryover: 2  //Specified~Specified/lump-sum /allowance in days 127(in)
+        expectedTOBalance.put("Pandemic4", "2");//8 hours  max carryover: 2  //Specified~Specified/lump-sum /allowance in days 127(in)
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance1231 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory1231 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance1231);
+        System.out.println(expectedTOBalance);
         String verification6 = validateTheAccrualResults(accrualBalance1231, expectedTOBalance);
         Assert.assertTrue(verification6.contains("Succeeded in validating"), verification6);
 
@@ -246,8 +253,7 @@ public class AccrualEngineTest extends TestBase {
         Assert.assertEquals(getHttpStatusCode(accrualResponse7), 200, "Failed to run accrual job!");
         //expected accrual
         expectedTOBalance.put("Annual Leave2", "8");//5 +3hours(newly accrued)
-        //expectedTOBalance.put("Grandparents Day Off3", "10");//2(max carryover)+8(newly accrued)//HireDate~Specified/lump-sum
-        //not granted 8 hours on Jan-1st
+        expectedTOBalance.put("Grandparents Day Off3", "10");//2(max carryover)+8(newly accrued)//HireDate~Specified/lump-sum
         expectedTOBalance.put("Pandemic1", "3");//2(max carryover)+1(newly accrued) //Specified~Specified/Monthly /calendar month/begin /allowance in days 126(out of)
         expectedTOBalance.put("Pandemic4", "10");//2(max carryover)+8(newly accrued) //Specified~Specified/lump-sum /allowance in days 127(in)
         //and verify the result in UI
@@ -255,6 +261,8 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance0101 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory0101 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance0101);
+        System.out.println(expectedTOBalance);
         String verification7 = validateTheAccrualResults(accrualBalance0101, expectedTOBalance);
         Assert.assertTrue(verification7.contains("Succeeded in validating"), verification7);
 
@@ -262,9 +270,10 @@ public class AccrualEngineTest extends TestBase {
         String[] accrualResponse8 = runAccrualJobToSimulateDate(workerId, date8, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse8), 200, "Failed to run accrual job!");
         //expected accrual
-        expectedTOBalance.put("Annual Leave3", "3");//2 +1hours(newly accrued)
+        expectedTOBalance.put("Annual Leave3", "3");//2 +1=3hours(newly accrued)
         expectedTOBalance.put("Bereavement3", "7");//3 +4hours(newly accrued)
-        expectedTOBalance.put("Pandemic2", "6");//2 +4hours
+        expectedTOBalance.put("Pandemic2", "6");//2 +4=6 hours
+
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
@@ -280,15 +289,17 @@ public class AccrualEngineTest extends TestBase {
         Assert.assertEquals(getHttpStatusCode(accrualResponse9), 200, "Failed to run accrual job!");
         //expected accrual
         expectedTOBalance.put("Annual Leave2", "12");//8 +4hours(newly accrued)
-        expectedTOBalance.put("Annual Leave3", "7");//3 +4hours(newly accrued)
+        expectedTOBalance.put("Annual Leave3", "7");//3 +4=7hours(newly accrued)
         expectedTOBalance.put("Bereavement3", "21");//7+14hours(newly accrued)
         expectedTOBalance.put("Pandemic1", "7");//3 +4hours
-        expectedTOBalance.put("Pandemic2", "20");//6 +14hours
+        expectedTOBalance.put("Pandemic2", "20");//6 +14=20hours
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance050722 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory050722 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance050722);
+        System.out.println(expectedTOBalance);
         String verification9 = validateTheAccrualResults(accrualBalance050722, expectedTOBalance);
         Assert.assertTrue(verification9.contains("Succeeded in validating"), verification9);
 
@@ -300,12 +311,14 @@ public class AccrualEngineTest extends TestBase {
         Assert.assertEquals(getHttpStatusCode(accrualResponse10), 200, "Failed to run accrual job!");
         //expected accrual
         expectedTOBalance.put("Annual Leave2", "2");//max carryover
-        expectedTOBalance.put("Grandparents Day Off2", "10");//2 max carryover+ 8 new accrual
+        expectedTOBalance.put("Grandparents Day Off2", "10");//2 max carryover+ 8 new accrual=10 hours
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance050822 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory050822 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance050822);
+        System.out.println(expectedTOBalance);
         String verification10 = validateTheAccrualResults(accrualBalance050822, expectedTOBalance);
         Assert.assertTrue(verification10.contains("Succeeded in validating"), verification10);
 
@@ -317,12 +330,14 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Annual Leave3", "12");//7 +5hours(newly accrued)
         expectedTOBalance.put("Bereavement3", "46");//21+25
         expectedTOBalance.put("Pandemic1", "12");//7 +5hours
-        expectedTOBalance.put("Pandemic2", "45");//20 +25hours
+        expectedTOBalance.put("Pandemic2", "45");//20 +25=45hours
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance103122 = timeOffPage.getTimeOffBalance();
         //HashMap<String, String> accrualHistory103122 = timeOffPage.getAccrualHistory();
+        System.out.println(accrualBalance103122);
+        System.out.println(expectedTOBalance);
         String verification11 = validateTheAccrualResults(accrualBalance103122, expectedTOBalance);
         Assert.assertTrue(verification11.contains("Succeeded in validating"), verification11);
     }
@@ -664,10 +679,10 @@ public class AccrualEngineTest extends TestBase {
         //1-31  -4hours  edit from 840 to 600
         //2-1 approved
         //2-4   +5 hours (13+5)*60=1080  edit from 780 to 1080
-        String sql130Approved="update legionrc.TimeSheet set status='Approved' where dayOfTheYear='30' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
-        String sql131Minus4Hrs="update legionrc.TimeSheet set totalMinutes='600' where dayOfTheYear='31' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
-        String sql201Approved="update legionrc.TimeSheet set status='Approved' where dayOfTheYear='32' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
-        String sql204Add5Hrs="update legionrc.TimeSheet set totalMinutes='1080' where dayOfTheYear='35' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql130Approved = "update legionrc.TimeSheet set status='Approved' where dayOfTheYear='30' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql131Minus4Hrs = "update legionrc.TimeSheet set totalMinutes='600' where dayOfTheYear='31' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql201Approved = "update legionrc.TimeSheet set status='Approved' where dayOfTheYear='32' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql204Add5Hrs = "update legionrc.TimeSheet set totalMinutes='1080' where dayOfTheYear='35' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
         DBConnection.updateDB(sql130Approved);
         DBConnection.updateDB(sql131Minus4Hrs);
         DBConnection.updateDB(sql201Approved);
@@ -697,11 +712,12 @@ public class AccrualEngineTest extends TestBase {
 
     }
 
+
     public void resetTheTimeClocksDataForLookBack() {
-        String sql130R="update legionrc.TimeSheet set status='Pending' where dayOfTheYear='30' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
-        String sql131Minus4HrsR="update legionrc.TimeSheet set totalMinutes='840' where dayOfTheYear='31' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
-        String sql201AR="update legionrc.TimeSheet set status='Pending' where dayOfTheYear='32' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
-        String sql204Add5HrsR="update legionrc.TimeSheet set totalMinutes='780' where dayOfTheYear='35' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql130R = "update legionrc.TimeSheet set status='Pending' where dayOfTheYear='30' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql131Minus4HrsR = "update legionrc.TimeSheet set totalMinutes='840' where dayOfTheYear='31' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql201AR = "update legionrc.TimeSheet set status='Pending' where dayOfTheYear='32' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql204Add5HrsR = "update legionrc.TimeSheet set totalMinutes='780' where dayOfTheYear='35' and year='2022' and workerId='b5b707c9-c0c1-4505-82be-d4e944a3e35e' and enterpriseId='aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
         DBConnection.updateDB(sql130R);
         DBConnection.updateDB(sql131Minus4HrsR);
         DBConnection.updateDB(sql201AR);
@@ -812,8 +828,8 @@ public class AccrualEngineTest extends TestBase {
         expectedAccrualHistory.put("Bereavement3 Accrued + 20 hours", "Accrued hours on Sep 24, 2021");
         expectedAccrualHistory.put("Annual Leave3 Accrued + 4 hours", "Accrued hours on Sep 7, 2021");
 
-        HashMap<String, String>actualHistory=timeOffPage.getAccrualHistory();
-        Assert.assertEquals(actualHistory,expectedAccrualHistory, "Something wrong with the accrual history!");
+        HashMap<String, String> actualHistory = timeOffPage.getAccrualHistory();
+        Assert.assertEquals(actualHistory, expectedAccrualHistory, "Something wrong with the accrual history!");
     }
 
     @Automated(automated = "Automated")
@@ -942,9 +958,88 @@ public class AccrualEngineTest extends TestBase {
 
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Accrual Engine Distribution Types")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAccrualPromotionWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        //verify that employee management is enabled.
+        navigationPage.navigateToEmployeeManagement();
+        SimpleUtils.pass("EmployeeManagement Module is enabled!");
+        //go to the time off management page
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToTimeOffManagementPage();
+        //go to setting page
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        absentManagePage.switchToSettings();
+        //1: verify Promotion was added in global settings
+        String settingTitle = absentManagePage.getPromotionSettingTitle();
+        Assert.assertEquals("Accrual Promotions", settingTitle, "Failed to get the Promotion setting title!");
+        SimpleUtils.pass("Succeeded in getting the Promotion setting title!");
+        //2: There is an add button in this page and it's clickable
+        Assert.assertTrue(absentManagePage.isAddButtonDisplayedAndClickable(), "Failed to assert the promotion rule add button displayed and clickable!");
+        SimpleUtils.pass("Succeeded in validating the promotion rule add button was displayed and clickable!");
+        //3: "Create new promotion" modal will be popup when clicking add button.
+        absentManagePage.addPromotionRule();
+        Assert.assertEquals("Create New Accrual Promotion", absentManagePage.getPromotionModalTitle(), "Failed to popup create new promotion modal!");
+        SimpleUtils.pass("Succeeded in popping up the create new accrual promotion modal!");
+        //4: add a promotion rule--JOb title
+        absentManagePage.setPromotionName("AmbassadorToManager");
+        absentManagePage.addCriteriaByJobTitle();
+        //4.1 verify the job title before promotion is muti-select
+        //Assert.assertEquals("2 Job Title Selected", absentManagePage.getJobTitleSelectedBeforePromotion(), "Failed to select 2 job titles!");
+        SimpleUtils.pass("Succeeded in Validating job title before promotion is muti-select!");
+        //4.2 job title selected before promotion should be disabled in after promotion.
+        //Assert.assertFalse(absentManagePage.verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion("Senior Ambassador") && absentManagePage.verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion("WA Ambassador"), "Failed to assert job title selected before promotion are disabled in after promotion!");
+        SimpleUtils.pass("Succeeded in Validating job title selected before promotion are disabled in after promotion!");
+        //5: Add promotion actions
+        absentManagePage.setPromotionAction("Annual Leave", "Floating Holiday");
+        OpsCommonComponents commonComponents = new OpsCommonComponents();
+        commonComponents.okToActionInModal(true);
+
+        //6: add another promotion rule--Engagement status.
+        absentManagePage.addPromotionRule();
+        absentManagePage.setPromotionName("PartTimeToFullTime");
+        absentManagePage.addCriteriaByEngagementStatus();
+        absentManagePage.setPromotionAction("Sick", "PTO");
+        commonComponents.okToActionInModal(true);
+
+        List<String> promotionRN = absentManagePage.getPromotionRuleName();
+        Assert.assertTrue(promotionRN.size() == 2 && promotionRN.get(0).equals("AmbassadorToManager") && promotionRN.get(1).equals("PartTimeToFullTime"), "Failed to assert adding promotion rule successfully!");
+        SimpleUtils.pass("Succeeded in adding promotion rules!");
+
+        //Edit promotion rule---rename it,
+        absentManagePage.EditPromotionRule();
+        absentManagePage.setPromotionName("AmbassadorToManager--V2");
+        commonComponents.okToActionInModal(true);
+        Assert.assertTrue(absentManagePage.getPromotionRuleName().get(0).equals("AmbassadorToManager--V2"), "Failed to assert editing promotion rule successfully!");
+        SimpleUtils.pass("Succeeded in editing promotion rule!");
+
+        //Remove promotion rules just Created.
+        absentManagePage.removePromotionRule();
+        //verify remove promotion rule Modal opened.--verify title
+        Assert.assertEquals("Remove Accrual Promotion", absentManagePage.getRemovePromotionRuleModalTitle(), "Failed to open remove promotion rule Modal!");
+        SimpleUtils.pass("Succeeded in opening remove promotion rule Modal!");
+        //verify remove promotion rule Modal content.
+        Assert.assertEquals("Are you sure you want to remove this accrual promotion?", absentManagePage.getRemovePromotionRuleModalContent(), "Failed to assert remove promotion rule Modal content!");
+        SimpleUtils.pass("Succeeded in validating remove promotion rule Modal Content!");
+        //cancel remove
+        commonComponents.okToActionInModal(false);
+        //remove promotion rule successfully
+        while (absentManagePage.getPromotionRuleName().size() != 0) {
+            absentManagePage.removePromotionRule();
+            commonComponents.okToActionInModal(true);
+        }
+        Assert.assertFalse(absentManagePage.isTherePromotionRule(), "Failed to assert there is no promotion rules!");
+        SimpleUtils.pass("Succeeded in removing all the promotion rules just created!");
+    }
+
+
     public void importAccrualBalance(String sessionId) {
-        String url="https://rc-enterprise.dev.legion.work/legion/integration/testUploadAccrualLedgerData?isTest=false&fileName=/Users/sophiazhang/Desktop/AccrualLedger_auto.csv&encrypted=false";
-        String filePath = "/Users/sophiazhang/Desktop/AccrualLedger_auto.csv";
+        String url = "https://rc-enterprise.dev.legion.work/legion/integration/testUploadAccrualLedgerData?isTest=false&fileName=src/test/resources/uploadFile/AccrualLedger_auto.csv&encrypted=false";
+        String filePath = "src/test/resources/uploadFile/AccrualLedger_auto.csv";
         String responseInfo = HttpUtil.fileUploadByHttpPost(url, sessionId, filePath);
         if (StringUtils.isNotBlank(responseInfo)) {
             //转json数据
