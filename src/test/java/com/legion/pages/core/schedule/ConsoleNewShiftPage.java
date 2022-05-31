@@ -671,7 +671,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @Override
     public boolean ifWarningModeDisplay() throws Exception {
-        if(isElementLoaded(warningMode, 15)) {
+        if(isElementLoaded(warningMode, 25)) {
             SimpleUtils.pass("Warning mode is loaded successfully");
             return true;
         } else if (isElementLoaded(warningModeOnNewCreateShiftModal, 5)) {
@@ -708,13 +708,13 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = ".MuiGrid-container .MuiFormHelperText-root")
     private WebElement warningMessageForSelectDays;
     public void clearAllSelectedDays() throws Exception {
-        if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+        if (areListElementVisible(weekDays, 15) && weekDays.size() == 7) {
             for (WebElement weekDay : weekDays) {
                 if (weekDay.getAttribute("class").contains("week-day-multi-picker-day-selected")) {
                     click(weekDay);
                 }
             }
-        } else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5)
+        } else if (areListElementVisible(weekDaysInNewCreateShiftPage, 15)
                 && weekDaysInNewCreateShiftPage.size() == 7) {
             for (WebElement weekDay : weekDaysInNewCreateShiftPage) {
                 if (weekDay.findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("Mui-checked")) {
@@ -1917,7 +1917,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public void clickOnOkButtonOnWarningModal () throws Exception {
         if (isElementLoaded(okBtnInWarningMode, 5)) {
             clickTheElement(okBtnInWarningMode);
-        } if (areListElementVisible(buttonsOnWarningMode, 5)) {
+        }else if (areListElementVisible(buttonsOnWarningMode, 5)) {
             clickTheElement(buttonsOnWarningMode.get(0));
         }else
             SimpleUtils.fail("The OK button fail to load! ", false);

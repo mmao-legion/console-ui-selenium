@@ -2521,8 +2521,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         WebElement shift = null;
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
             shift = weekShifts.get(index);
+            SimpleUtils.pass("Get the "+index+" shift in week view successfully! ");
         } else if (areListElementVisible(shiftsInDayView, 20) && index < shiftsInDayView.size()) {
             shift = shiftsInDayView.get(index);
+            SimpleUtils.pass("Get the "+index+" shift in day view successfully! ");
         } else
             SimpleUtils.fail("Schedule Page: week or day shifts not loaded successfully!", false);
         return shift;

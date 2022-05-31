@@ -1897,7 +1897,7 @@ public class ActivityTest extends TestBase {
             if(isActiveWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             //Get work role by job title
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectJobTitleFilterByText(jobTitle);
@@ -2020,6 +2020,7 @@ public class ActivityTest extends TestBase {
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftOffer.getValue(), indexOfActivityType.ShiftOffer.name());
             activityPage.approveOrRejectMultipleShiftOfferRequestOnActivity(teamMemberName1, ActivityTest.approveRejectAction.Approve.getValue(), 1);
+            Thread.sleep(3000);
             String expectedTopMessage = "Error!Alert is already expired";
             activityPage.verifyApproveShiftOfferRequestAndGetErrorOnActivity(teamMemberName2, expectedTopMessage);
 

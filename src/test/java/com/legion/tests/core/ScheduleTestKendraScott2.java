@@ -5002,6 +5002,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 								&& startAndEndHrsOnEditShiftPage.get(1).equalsIgnoreCase("11"),false);
 			}
 			shiftOperatePage.clickOnCancelEditShiftTimeButton();
+			Thread.sleep(5000);
 			scheduleMainPage.clickOnCancelButtonOnEditMode();
 
 			scheduleCommonPage.clickOnDayView();

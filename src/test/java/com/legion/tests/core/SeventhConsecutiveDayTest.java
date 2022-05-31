@@ -248,7 +248,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
         newShiftPage.searchTeamMemberByName(firstName+ " "+lastName);
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
-
+        Thread.sleep(5000);
         for (int j=0; j< 7; j++) {
             List<WebElement> shiftsOfSevenDays = scheduleShiftTablePage.getOneDayShiftByName(j, firstName);
             if (j==6) {

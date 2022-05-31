@@ -693,6 +693,7 @@ public class SplitAndSpreadTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
+            Thread.sleep(3000);
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(1);
             newShiftPage.moveSliderAtCertainPoint("10:00pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
@@ -804,6 +805,7 @@ public class SplitAndSpreadTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
+            MyThreadLocal.setAssignTMStatus(true);
             newShiftPage.searchTeamMemberByName(tmFirstName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();

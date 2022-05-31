@@ -1248,6 +1248,7 @@ public class CinemarkMinorTest extends TestBase {
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
                 shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
+        Thread.sleep(5000);
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+" should be scheduled from "+ scheduleFromToTime;
@@ -1264,7 +1265,7 @@ public class CinemarkMinorTest extends TestBase {
 
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
-
+        Thread.sleep(5000);
         //check the compliance smart card
         SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
                 smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
@@ -1374,6 +1375,7 @@ public class CinemarkMinorTest extends TestBase {
         Thread.sleep(5000);
         //check the violation in i icon popup of new create shift
         newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1.split(" ")[0]).get(0));
+        Thread.sleep(3000);
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("There should no minor warning message display on the i icon when shift is not avoid the minor setting! ",
                     !scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor"), false);
@@ -1911,12 +1913,13 @@ public class CinemarkMinorTest extends TestBase {
             String minor15Name = cinemarkMinors.get("Minor15");
             String minor16Name = cinemarkMinors.get("Minor16");
             String minor17Name = cinemarkMinors.get("Minor17");
-
+            verifyTemplateNameOnProfilePage(minor17Name, minor17TemplateName);
+            verifyTemplateNameOnProfilePage(minor14Name, minor14TemplateName);
             verifyTemplateNameOnProfilePage(minor13Name, minor13TemplateName);
 //            teamPage.searchAndSelectTeamMemberByName(minor13Name);
 //            SimpleUtils.assertOnFail("The minor rule template name of Minor 13 display incorrectly! ",
 //                    profileNewUIPage.getMinorRuleTemplateName().equals(minor13TemplateName), false);
-            verifyTemplateNameOnProfilePage(minor14Name, minor14TemplateName);
+
 //            teamPage.goToTeam();
 //            teamPage.searchAndSelectTeamMemberByName(minor14Name);
 //            SimpleUtils.assertOnFail("The minor rule template name of Minor 14 display incorrectly! ",
@@ -1931,7 +1934,7 @@ public class CinemarkMinorTest extends TestBase {
 //            teamPage.searchAndSelectTeamMemberByName(minor16Name);
 //            SimpleUtils.assertOnFail("The minor rule template name of Minor 16 display incorrectly! ",
 //                    profileNewUIPage.getMinorRuleTemplateName().equals(minor16TemplateName), false);
-            verifyTemplateNameOnProfilePage(minor17Name, minor17TemplateName);
+
 //            teamPage.goToTeam();
 //            teamPage.searchAndSelectTeamMemberByName(minor17Name);
 //            SimpleUtils.assertOnFail("The minor rule template name of Minor 17 display incorrectly! ",
