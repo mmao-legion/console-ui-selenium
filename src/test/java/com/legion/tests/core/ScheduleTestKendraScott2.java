@@ -6628,10 +6628,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
 
 			//Go to the schedule view table
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -6654,9 +6655,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Create a new open shift
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
-			if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))) {
+			if (isLocationUsingControlsConfiguration) {
 				newShiftPage.addOpenShiftWithDefaultTime("Training");
-			}else if(getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
+			}else{
 				newShiftPage.addOpenShiftWithDefaultTime("AM SERVER");
 			}
 			scheduleMainPage.saveSchedule();
