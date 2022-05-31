@@ -3376,7 +3376,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void canGoToSchedulingRulesViaTemNameInLocationLevel() {
 		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
 		if (areListElementVisible(templateNameLinks, 5)) {
-			click(templateNameLinks.get(1));
+			click(templateNameLinks.get(5));
 			if (areListElementVisible(workRolesInSchedulingRulesInLocationLevel, 5)) {
 				SimpleUtils.pass("Go to Scheduling Rules in locations level successfully");
 			} else
