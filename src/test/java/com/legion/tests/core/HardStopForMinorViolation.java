@@ -71,7 +71,7 @@ public class HardStopForMinorViolation extends TestBase {
             configurationPage.createNewTemplate(templateName);
             configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-
+            Thread.sleep(5000);
             //Check the setting "Strictly enforce minor violations?", the default value is No
             SimpleUtils.assertOnFail("The 'Strictly enforce minor violations?' should be setting as No by default! ",
                     !configurationPage.isStrictlyEnforceMinorViolationSettingEnabled(), false);
@@ -565,6 +565,18 @@ public class HardStopForMinorViolation extends TestBase {
             List<WebElement> minorShifts = scheduleShiftTablePage.getAllShiftsOfOneTM(minorName.split(" ")[0]);
             shiftOperatePage.editTheShiftTimeForSpecificShift(minorShifts.get(0), "8am", "8pm");
             scheduleMainPage.saveSchedule();
+            int i=0;
+            while (i<5 && smartCardPage.isRequiredActionSmartCardLoaded()) {
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+                SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+                scheduleCommonPage.navigateToNextWeek();
+                Thread.sleep(10000);
+                i++;
+            }
             SimpleUtils.assertOnFail("The action required smart card should not display! ",
                     !smartCardPage.isRequiredActionSmartCardLoaded(), false);
 
