@@ -274,4 +274,6 @@ public interface LocationsPage {
     public void verifyUploadTransaltionsButtonisClicked() throws Exception;
 
     public void resetLaborModel() throws Exception;
+
+    public List<HashMap<String, String>> getScheRulesTemplateValueInConfigurationLevel();
 }

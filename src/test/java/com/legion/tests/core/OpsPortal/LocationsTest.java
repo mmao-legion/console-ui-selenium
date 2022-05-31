@@ -1063,7 +1063,7 @@ public class LocationsTest extends TestBase {
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(templateInfo.get(5).get("Template Type"));
             configurationPage.clickOnSpecifyTemplateName(templateInfo.get(5).get("Template Name"), "view");
-            List<HashMap<String, String>> specificSchRolesInTemplateLevel = locationsPage.getScheRulesTemplateValueInLocationLevel();
+            List<HashMap<String, String>> specificSchRolesInTemplateLevel = locationsPage.getScheRulesTemplateValueInConfigurationLevel();
 
             //get template level info of Scheduling collaboration
             configurationPage.goToConfigurationPage();
