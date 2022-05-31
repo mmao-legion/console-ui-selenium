@@ -469,12 +469,12 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
     @Override
     public void clickOnFinishButtonOnCreateSchedulePage() throws Exception {
-        if (isElementLoaded(nextButtonOnCreateSchedule, 5)) {
+        if (isElementLoaded(nextButtonOnCreateSchedule, 5) && isClickable(nextButtonOnCreateSchedule, 5)) {
             clickTheElement(nextButtonOnCreateSchedule);
             WebElement element = (new WebDriverWait(getDriver(), 120))
                     .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
             waitForSeconds(3);
-            if (isElementLoaded(element, 5)) {
+            if (isElementLoaded(element, 10)) {
                 checkoutSchedule();
                 SimpleUtils.pass("Schedule Page: Schedule is generated within 2 minutes successfully");
             } else {
@@ -482,15 +482,20 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
             }
             if (areListElementVisible(shiftsWeekView, 60) && shiftsWeekView.size() > 0) {
                 SimpleUtils.pass("Create the schedule successfully!");
-            }else {
+            } else if (!areListElementVisible(shiftsWeekView, 30) && isClickable(getDriver().findElement(By.cssSelector("lg-button[ng-click=\"controlPanel.fns.editAction($event)\"]")), 15)) {
+                SimpleUtils.pass("Create the schedule successfully but no shift was auto created!");
+            } else {
                 SimpleUtils.fail("Not able to generate the schedule successfully!", false);
             }
         }
     }
 
     public void checkoutSchedule() {
-        clickTheElement(checkOutTheScheduleButton);
-        SimpleUtils.pass("Schedule Generated Successfuly!");
+        if (isClickable(checkOutTheScheduleButton, 10)) {
+            clickTheElement(checkOutTheScheduleButton);
+            SimpleUtils.pass("Schedule Generated Successfuly!");
+        } else
+            SimpleUtils.fail("Check out schedule failed!, Schedule creation failed!", false);
     }
 
     public void updateAndGenerateSchedule() {

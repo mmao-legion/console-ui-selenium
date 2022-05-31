@@ -84,6 +84,12 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     @FindBy(css = "[ng-click=\"controlPanel.fns.publishConfirmation($event, false)\"]")
     private WebElement publishButton;
 
+    @FindBy(css = "[ng-click=\"controlPanel.fns.publishConfirmation($event, true)\"]")
+    private WebElement republishButton;
+
+    @FindBy(css = ".sch-publish-confirm-btn")
+    private WebElement confirmPublishBtn;
+
     @FindBy(css = "select.ng-valid-required")
     private WebElement scheduleGroupByButton;
 
@@ -365,6 +371,35 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         else {
             SimpleUtils.report("Publish button is not loaded on screen, Hence We have to expect Alert Popup.  ");
             return true;  }
+    }
+
+    @Override
+    public void publishOrRepublishSchedule() throws Exception {
+        if (isClickable(publishButton, 20)) {
+            click(publishButton);
+            if (isElementLoaded(confirmPublishBtn, 20)) {
+                click(confirmPublishBtn);
+                waitForSeconds(20);
+                if (!isElementLoaded(publishButton, 10)) {
+                    SimpleUtils.pass("Schedule successfully published!");
+                } else {
+                    SimpleUtils.fail("Schedule publish filed!", false);
+                }
+            }
+        }
+
+        if (isClickable(republishButton, 20)) {
+            click(republishButton);
+            if (isElementLoaded(confirmPublishBtn, 20)) {
+                click(confirmPublishBtn);
+                waitForSeconds(20);
+                if (!isElementLoaded(republishButton, 10)) {
+                    SimpleUtils.pass("Schedule successfully republished!");
+                } else {
+                    SimpleUtils.fail("Schedule republish filed!", false);
+                }
+            }
+        }
     }
 
     @Override

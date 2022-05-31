@@ -21,6 +21,7 @@ public interface NewShiftPage {
     public void clearAllSelectedDays() throws Exception;
     public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception;
     public void addNewShiftsByNames(List<String> names, String workRole) throws Exception;
+    public void searchTeamMemberByNameAndAssignOrOfferShift(String name, Boolean isOffering) throws Exception;
     public void clickOnDayViewAddNewShiftButton() throws Exception;
     public void selectDaysByIndex(int index1, int index2, int index3) throws Exception;
     public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception;

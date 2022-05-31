@@ -19,6 +19,7 @@ public interface ScheduleMainPage {
     public boolean checkCancelButton() throws Exception;
     public void verifyEditButtonFuntionality() throws Exception;
     public boolean isScheduleFinalized() throws Exception;
+    public void publishOrRepublishSchedule() throws Exception;
     public void selectCancelButton() throws Exception;
     public void selectSaveButton() throws Exception;
     public Boolean isAddNewDayViewShiftButtonLoaded() throws Exception;
