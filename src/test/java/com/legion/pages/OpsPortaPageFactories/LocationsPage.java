@@ -276,4 +276,8 @@ public interface LocationsPage {
     public void resetLaborModel() throws Exception;
 
     public List<HashMap<String, String>> getScheRulesTemplateValueInConfigurationLevel();
+
+    public void verifyUploadFiscalCalendarButtonisClicked() throws Exception;
+
+    public void downloadFiscalCalendar(String fiscalYear, String startDayOfWeek) throws Exception;
 }
