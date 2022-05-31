@@ -6650,13 +6650,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.validateGroupBySelectorSchedulePage(false);
 			//Selecting any of them, check the schedule table
 			scheduleMainPage.validateScheduleTableWhenSelectAnyOfGroupByOptions(false);
-			//Edit button should be clickable
-			//While click on edit button,if Schedule is finalized then prompt is available and Prompt is in proper alignment and correct msg info.
-			//Edit anyway and cancel button is clickable
-			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
 			//Create a new open shift
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
-			newShiftPage.addOpenShiftWithDefaultTime("Training");
+			if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))) {
+				newShiftPage.addOpenShiftWithDefaultTime("Training");
+			}else if(getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
+				newShiftPage.addOpenShiftWithDefaultTime("AM SERVER");
+			}
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
 
 			//Check the Open Shift in the WeekView
 			scheduleMainPage.selectGroupByFilter("Group by Job Title");
@@ -6666,6 +6670,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			} else {
 				SimpleUtils.fail("Schedule page: The Schedule WeekView doesn't includes 'OPEN SHIFT'!", false);
 			}
+
 			//Check the Open Shift in the DayView
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.selectGroupByFilter("Group by Job Title");
@@ -6675,9 +6680,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			} else {
 				SimpleUtils.fail("Schedule page: The Schedule DayView doesn't includes 'OPEN SHIFT'!", false);
 			}
+
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
+
 
 }
