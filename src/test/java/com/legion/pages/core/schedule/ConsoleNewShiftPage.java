@@ -1819,6 +1819,37 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     }
 
     @Override
+    public void selectMultipleOrSpecificWorkDay(int dayCountInOneWeek, Boolean isSingleDay) {
+        if (isSingleDay) {
+            if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+                if (!weekDays.get(dayCountInOneWeek).getAttribute("class").contains("selected")) {
+                    click(weekDays.get(dayCountInOneWeek));
+                }
+            } else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5) && weekDaysInNewCreateShiftPage.size() == 7) {
+                if (!weekDaysInNewCreateShiftPage.get(dayCountInOneWeek).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("checked")) {
+                    click(weekDaysInNewCreateShiftPage.get(dayCountInOneWeek).findElement(By.cssSelector(".MuiButtonBase-root")));
+                }
+            } else
+                SimpleUtils.fail("week days load failed",true);
+        } else {
+                if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+                    for (int i = 0; i < dayCountInOneWeek; i++) {
+                        if (!weekDays.get(i).getAttribute("class").contains("selected")) {
+                            click(weekDays.get(i));
+                        }
+                    }
+                } else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5) && weekDaysInNewCreateShiftPage.size() == 7) {
+                    for (int i = 0; i < dayCountInOneWeek; i++) {
+                        if (!weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("checked")) {
+                            click(weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")));
+                        }
+                    }
+                } else
+                    SimpleUtils.fail("week days load failed",true);
+            }
+        }
+
+    @Override
     public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception {
         List<Integer> indexes = new ArrayList<>();
         int selectedCount = 0;

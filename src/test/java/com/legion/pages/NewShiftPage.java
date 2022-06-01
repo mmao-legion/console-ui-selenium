@@ -42,6 +42,7 @@ public interface NewShiftPage {
     public void selectDaysFromCurrentDay(String currentDay) throws Exception;
     public String getTimeDurationWhenCreateNewShift() throws Exception;
     public void selectSpecificWorkDay(int dayCountInOneWeek);
+    public void selectMultipleOrSpecificWorkDay(int dayCountInOneWeek, Boolean isSingleDay);
     public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception;
     public void selectWeekDaysByDayName(String dayName) throws Exception;
     public List<String> getAllOperatingHrsOnCreateShiftPage() throws Exception;

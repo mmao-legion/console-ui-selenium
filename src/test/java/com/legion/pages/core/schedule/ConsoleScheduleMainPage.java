@@ -375,12 +375,12 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     @Override
     public void publishOrRepublishSchedule() throws Exception {
-        if (isClickable(publishButton, 20)) {
+        if (isClickable(publishButton, 15)) {
             click(publishButton);
-            if (isElementLoaded(confirmPublishBtn, 20)) {
+            if (isElementLoaded(confirmPublishBtn, 15)) {
                 click(confirmPublishBtn);
-                waitForSeconds(20);
-                if (!isElementLoaded(publishButton, 10)) {
+                waitForSeconds(15);
+                if (!isElementLoaded(publishButton, 5)) {
                     SimpleUtils.pass("Schedule successfully published!");
                 } else {
                     SimpleUtils.fail("Schedule publish filed!", false);
@@ -388,12 +388,12 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             }
         }
 
-        if (isClickable(republishButton, 20)) {
+        if (isClickable(republishButton, 15)) {
             click(republishButton);
-            if (isElementLoaded(confirmPublishBtn, 20)) {
+            if (isElementLoaded(confirmPublishBtn, 15)) {
                 click(confirmPublishBtn);
-                waitForSeconds(20);
-                if (!isElementLoaded(republishButton, 10)) {
+                waitForSeconds(15);
+                if (!isElementLoaded(republishButton, 5)) {
                     SimpleUtils.pass("Schedule successfully republished!");
                 } else {
                     SimpleUtils.fail("Schedule republish filed!", false);

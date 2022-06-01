@@ -2522,6 +2522,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public void clickOnOfferTMOption() throws Exception{
         if(isElementLoaded(OfferTMS,5)) {
             clickTheElement(OfferTMS);
+            waitForSeconds(3);
             SimpleUtils.pass("Clicked on Offer Team Members ");
         } else {
             SimpleUtils.fail("Offer Team Members is disabled or not available to Click ", false);
