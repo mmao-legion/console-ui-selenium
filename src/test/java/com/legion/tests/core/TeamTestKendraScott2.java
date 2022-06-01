@@ -1542,6 +1542,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.clickAvailabilityEditButton();
 			profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
 			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+			Thread.sleep(5000);
 			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 			locationSelectorPage.refreshTheBrowser();
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);

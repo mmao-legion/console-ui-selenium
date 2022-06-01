@@ -1250,7 +1250,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     public void unGenerateActiveScheduleScheduleWeek() throws Exception {
 
         if(isElementLoaded(deleteScheduleButton, 60)){
-            click(deleteScheduleButton);
+            clickTheElement(deleteScheduleButton);
             waitForSeconds(10);
             if(isElementLoaded(deleteSchedulePopup, 25)
                     && isElementLoaded(deleteScheduleCheckBox, 25)

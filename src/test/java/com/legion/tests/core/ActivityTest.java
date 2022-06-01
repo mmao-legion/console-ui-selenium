@@ -1909,8 +1909,11 @@ public class ActivityTest extends TestBase {
             //Delete the TM1 and TM2
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            Thread.sleep(5000);
             shiftOperatePage.deleteTMShiftInWeekView(teamMemberName1);
+            Thread.sleep(5000);
             shiftOperatePage.deleteTMShiftInWeekView(teamMemberName2);
+            Thread.sleep(5000);
             shiftOperatePage.deleteTMShiftInWeekView("Open");
             scheduleMainPage.saveSchedule();
 
