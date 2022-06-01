@@ -4994,6 +4994,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			shiftOperatePage.clickOnProfileIcon();
 			shiftOperatePage.clickOnEditShiftTime();
+			Thread.sleep(5000);
 			shiftOperatePage.verifyEditShiftTimePopUpDisplay();
 			if (!shiftOperatePage.isEditShiftTimeNewUIDisplay()) {
 				List<String> startAndEndHrsOnEditShiftPage = shiftOperatePage.getStartAndEndOperatingHrsOnEditShiftPage();

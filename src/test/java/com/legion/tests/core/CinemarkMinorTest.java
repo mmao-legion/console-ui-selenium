@@ -1207,6 +1207,7 @@ public class CinemarkMinorTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();
         }
+        Thread.sleep(5000);
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated){
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -1247,6 +1248,7 @@ public class CinemarkMinorTest extends TestBase {
         //check the violation message in Status column
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
                 shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
+        Thread.sleep(5000);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         Thread.sleep(5000);
         //check the message in warning mode

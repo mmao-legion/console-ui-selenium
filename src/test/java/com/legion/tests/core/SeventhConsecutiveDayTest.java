@@ -361,6 +361,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectJobTitleFilterByText(jobTitle);
+            Thread.sleep(3000);
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();

@@ -942,9 +942,11 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                 if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
                                     if (MyThreadLocal.getAssignTMStatus()) {
                                         clickTheElement(assignButton);
-                                    } else
+                                        SimpleUtils.report("Assign Team Member: " + name + " Successfully!");
+                                    } else {
                                         clickTheElement(offerButton);
-                                    SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                                        SimpleUtils.report("Offer Team Member: " + name + " Successfully!");
+                                    }
                                     waitForSeconds(2);
                                     if (areListElementVisible(buttonsOnWarningMode, 5)) {
                                         if (buttonsOnWarningMode.size()==2) {

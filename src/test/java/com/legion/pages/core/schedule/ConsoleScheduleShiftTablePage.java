@@ -1145,8 +1145,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         List<String> complianceMessages = new ArrayList<>();
         if (isElementLoaded(shift, 5)){
-            waitForSeconds(3);
             scrollToElement(shift);
+            waitForSeconds(3);
             if (isElementLoaded(popOverContent, 5)) {
                 //To close the i icon popup
                 clickTheElement(shift);
