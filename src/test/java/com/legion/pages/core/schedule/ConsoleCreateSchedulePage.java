@@ -374,7 +374,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 switchToManagerViewToCheckForSecondGenerate();
             }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
-                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                if (isElementEnabled(checkOutTheScheduleButton, 30)) {
                     checkoutSchedule();
                     switchToManagerViewToCheckForSecondGenerate();
                 } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
@@ -474,7 +474,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
             WebElement element = (new WebDriverWait(getDriver(), 120))
                     .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
             waitForSeconds(3);
-            if (isElementLoaded(element, 10)) {
+            if (isElementLoaded(element, 15) && isClickable(element, 15)) {
                 checkoutSchedule();
                 SimpleUtils.pass("Schedule Page: Schedule is generated within 2 minutes successfully");
             } else {

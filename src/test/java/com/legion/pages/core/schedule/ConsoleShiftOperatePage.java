@@ -1280,6 +1280,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
 
         clickOnViewProfile();
+        waitForSeconds(2);
         if (isElementEnabled(tmpProfileContainer, 15)) {
             if (isElementEnabled(personalDetailsName, 15)) {
                 tmDetailName = personalDetailsName.getText();
@@ -2058,12 +2059,15 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                         if (workerName.getText().toLowerCase().trim().contains(teamMemberName.toLowerCase().trim())) {
                             WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized span"));
                             //WebElement image = shiftWeekView.findElement(By.cssSelector(".sch-day-view-shift-worker-detail"));
+                            scrollToElement(image);
                             clickTheElement(image);
                             waitForSeconds(3);
                             if (isElementLoaded(deleteShift, 10)) {
+                                scrollToElement(deleteShift);
                                 clickTheElement(deleteShift);
-                                waitForSeconds(10);
+                                waitForSeconds(5);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 40)) {
+                                    scrollToElement(deleteBtnInDeleteWindows);
                                     clickTheElement(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
                                     waitForSeconds(2);

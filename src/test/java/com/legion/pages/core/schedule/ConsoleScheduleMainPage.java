@@ -1605,7 +1605,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     }
 
     public void clickOnOpenSearchBoxButton() throws Exception {
-        if (isElementEnabled(openSearchBoxButton, 5)) {
+        if (isElementEnabled(openSearchBoxButton, 5) && isClickable(openSearchBoxButton, 5)) {
             click(openSearchBoxButton);
             if (isElementLoaded(searchBox, 15)) {
                 SimpleUtils.pass("Search box is opened successfully");
