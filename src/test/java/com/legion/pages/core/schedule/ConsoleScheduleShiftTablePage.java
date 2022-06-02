@@ -720,16 +720,22 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
             if (firstName.equals("") || firstName == null) {
                 SimpleUtils.fail("Failed for getting user first name from shift info", false);
-            }
+            }else
+                SimpleUtils.pass("Get user first name successfully! The first name is: "+firstName);
 //            String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText().split(" ")[0];
             if (!firstName.equalsIgnoreCase("Open") && !firstName.equalsIgnoreCase("Unassigned")) {
                 String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
+                SimpleUtils.pass("Get shift day index successfully! The day index is: "+ dayIndex);
                 String lastName = shiftOperatePage.getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
+                SimpleUtils.pass("Get user last name successfully! The last name is: "+ lastName);
                 String jobTitle = weekShifts.get(index).findElement(By.cssSelector(".rows .week-schedule-role-name")).getText();
+                SimpleUtils.pass("Get user job title successfully! The job tile is: "+ jobTitle);
                 String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
+                SimpleUtils.pass("Get shift time in shift card successfully! The shift time is: "+ shiftTimeWeekView);
                 WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
                 clickTheElement(infoIcon);
-                String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
+                String workRole = shiftJobTitleAsWorkRole.getText().split(" as ")[1].trim();
+                SimpleUtils.pass("Get shift work role successfully! The work role is: "+ workRole);
                 if (areListElementVisible(infoContainers, 5) && infoContainers.size() >= 3) {
                     String shiftTime = infoContainers.get(infoContainers.size() - 2).getText().split("\n")[0];
                     String totalHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\\|")[1];

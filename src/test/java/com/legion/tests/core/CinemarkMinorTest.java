@@ -1919,8 +1919,8 @@ public class CinemarkMinorTest extends TestBase {
             verifyTemplateNameOnProfilePage(minor17Name, minor17TemplateName);
             verifyTemplateNameOnProfilePage(minor14Name, minor14TemplateName);
             verifyTemplateNameOnProfilePage(minor13Name, minor13TemplateName);
-            verifyTemplateNameOnProfilePage(minor15Name, minor15TemplateName);
-            verifyTemplateNameOnProfilePage(minor16Name, minor16TemplateName);
+//            verifyTemplateNameOnProfilePage(minor15Name, minor15TemplateName);
+//            verifyTemplateNameOnProfilePage(minor16Name, minor16TemplateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }

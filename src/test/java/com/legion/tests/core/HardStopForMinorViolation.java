@@ -634,7 +634,8 @@ public class HardStopForMinorViolation extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
             scheduleCommonPage.navigateToNextWeek();
             i=0;
-            while (i<5 && !smartCardPage.isRequiredActionSmartCardLoaded()) {
+            String tooltip = scheduleMainPage.getTooltipOfPublishButton();
+            while (i < 5 && (!smartCardPage.isRequiredActionSmartCardLoaded() || tooltip.equals(""))) {
                 Thread.sleep(10000);
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -643,11 +644,12 @@ public class HardStopForMinorViolation extends TestBase {
                 SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
                 scheduleCommonPage.navigateToNextWeek();
+                tooltip = scheduleMainPage.getTooltipOfPublishButton();
                 i++;
             }
             SimpleUtils.assertOnFail("The action required smart card should not display! ",
                     smartCardPage.isRequiredActionSmartCardLoaded(), false);
-            String tooltip = scheduleMainPage.getTooltipOfPublishButton();
+            tooltip = scheduleMainPage.getTooltipOfPublishButton();
             SimpleUtils.assertOnFail("The tooltip of publish button should display as: Please address required action(s)! But the actual tooltip is: "+ tooltip,
                     tooltip.equalsIgnoreCase("Please address required action(s)"), false);
 
