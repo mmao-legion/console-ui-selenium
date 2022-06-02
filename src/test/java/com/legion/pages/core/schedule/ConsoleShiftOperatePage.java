@@ -2058,12 +2058,15 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                         if (workerName.getText().toLowerCase().trim().contains(teamMemberName.toLowerCase().trim())) {
                             WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized span"));
                             //WebElement image = shiftWeekView.findElement(By.cssSelector(".sch-day-view-shift-worker-detail"));
+                            scrollToElement(image);
                             clickTheElement(image);
                             waitForSeconds(3);
                             if (isElementLoaded(deleteShift, 10)) {
+                                scrollToElement(deleteShift);
                                 clickTheElement(deleteShift);
                                 waitForSeconds(10);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 40)) {
+                                    scrollToElement(deleteBtnInDeleteWindows);
                                     clickTheElement(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
                                     waitForSeconds(2);
