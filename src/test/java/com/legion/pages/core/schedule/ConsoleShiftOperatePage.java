@@ -1280,6 +1280,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
 
         clickOnViewProfile();
+        waitForSeconds(2);
         if (isElementEnabled(tmpProfileContainer, 15)) {
             if (isElementEnabled(personalDetailsName, 15)) {
                 tmDetailName = personalDetailsName.getText();
@@ -2064,7 +2065,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                             if (isElementLoaded(deleteShift, 10)) {
                                 scrollToElement(deleteShift);
                                 clickTheElement(deleteShift);
-                                waitForSeconds(10);
+                                waitForSeconds(5);
                                 if (isElementLoaded(deleteBtnInDeleteWindows, 40)) {
                                     scrollToElement(deleteBtnInDeleteWindows);
                                     clickTheElement(deleteBtnInDeleteWindows);

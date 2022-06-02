@@ -319,6 +319,7 @@ public class ConsolidatingFiltersTest extends TestBase {
 
             // Create schedule if it is not created
             scheduleCommonPage.navigateToNextWeek();
+            Thread.sleep(3000);
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
