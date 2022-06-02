@@ -482,13 +482,19 @@ public class HardStopForMinorViolation extends TestBase {
 
             //Change the setting "Strictly enforce minor violations?" from Yes to No
             setStrictlyEnforceMinorViolationSetting("No");
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
-            scheduleCommonPage.navigateToNextWeek();
-            minorMessage = smartCardPage.getMessageFromActionRequiredSmartCard().get("minorViolation");
+            int i = 0;
+            while (i<5 && !minorMessage.equals("")){
+                Thread.sleep(10000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+                SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+                scheduleCommonPage.navigateToNextWeek();
+                minorMessage = smartCardPage.getMessageFromActionRequiredSmartCard().get("minorViolation");
+                i++;
+            }
             SimpleUtils.assertOnFail("The minor violation message display incorrect! The expected is empty"
                             + " The actual is : " + minorMessage,
                     minorMessage.equals(""), false);
@@ -630,6 +636,7 @@ public class HardStopForMinorViolation extends TestBase {
             i=0;
             while (i<5 && !smartCardPage.isRequiredActionSmartCardLoaded()) {
                 Thread.sleep(10000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
                 scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());

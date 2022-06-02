@@ -1341,6 +1341,7 @@ public class CinemarkMinorTest extends TestBase {
         scheduleMainPage.clickOnFilterBtn();
         //Create new shift that not avoid the minor settings for TM1
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        Thread.sleep(3000);
         shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1.split(" ")[0]);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
@@ -1918,30 +1919,8 @@ public class CinemarkMinorTest extends TestBase {
             verifyTemplateNameOnProfilePage(minor17Name, minor17TemplateName);
             verifyTemplateNameOnProfilePage(minor14Name, minor14TemplateName);
             verifyTemplateNameOnProfilePage(minor13Name, minor13TemplateName);
-//            teamPage.searchAndSelectTeamMemberByName(minor13Name);
-//            SimpleUtils.assertOnFail("The minor rule template name of Minor 13 display incorrectly! ",
-//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor13TemplateName), false);
-
-//            teamPage.goToTeam();
-//            teamPage.searchAndSelectTeamMemberByName(minor14Name);
-//            SimpleUtils.assertOnFail("The minor rule template name of Minor 14 display incorrectly! ",
-//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor14TemplateName), false);
             verifyTemplateNameOnProfilePage(minor15Name, minor15TemplateName);
-//            teamPage.goToTeam();
-//            teamPage.searchAndSelectTeamMemberByName(minor15Name);
-//            SimpleUtils.assertOnFail("The minor rule template name of Minor 15 display incorrectly! ",
-//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor15TemplateName), false);
             verifyTemplateNameOnProfilePage(minor16Name, minor16TemplateName);
-//            teamPage.goToTeam();
-//            teamPage.searchAndSelectTeamMemberByName(minor16Name);
-//            SimpleUtils.assertOnFail("The minor rule template name of Minor 16 display incorrectly! ",
-//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor16TemplateName), false);
-
-//            teamPage.goToTeam();
-//            teamPage.searchAndSelectTeamMemberByName(minor17Name);
-//            SimpleUtils.assertOnFail("The minor rule template name of Minor 17 display incorrectly! ",
-//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor17TemplateName), false);
-
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }
@@ -2002,7 +1981,7 @@ public class CinemarkMinorTest extends TestBase {
             CacheAPI.refreshTemplateCache("stoneman@legion.co", "admin11.a");
             i++;
         }
-        SimpleUtils.assertOnFail("The minor rule template name of "+templateName+" display incorrectly! ",
+        SimpleUtils.assertOnFail("The minor rule template name of "+templateName+" display incorrectly! The actual is: "+name,
                 name.equalsIgnoreCase(templateName), false);
 
     }

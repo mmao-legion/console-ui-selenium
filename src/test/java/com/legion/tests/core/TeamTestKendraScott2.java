@@ -1350,6 +1350,7 @@ public class TeamTestKendraScott2 extends TestBase{
 //			SimpleUtils.assertOnFail("The total and remaining hrs should be 168, but the actual are: "
 //							+ totalHoursValue +" and "+ remainingHoursValue,
 //					totalHoursValue.equals("168.0")&&remainingHoursValue.equals("168.0"), false);
+			Thread.sleep(3000);
 			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
 			locationSelectorPage.refreshTheBrowser();
