@@ -467,6 +467,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }
         if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
             click(filterButton);
+        waitForSeconds(10);
     }
 
     public HashMap<String, ArrayList<WebElement>> getAvailableFilters() {
