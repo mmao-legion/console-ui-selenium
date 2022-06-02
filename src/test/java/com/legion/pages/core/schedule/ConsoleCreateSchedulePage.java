@@ -491,7 +491,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     }
 
     public void checkoutSchedule() {
-        if (isClickable(checkOutTheScheduleButton, 15)) {
+        if (isClickable(checkOutTheScheduleButton, 120)) {
             clickTheElement(checkOutTheScheduleButton);
             SimpleUtils.pass("Schedule Generated Successfuly!");
         } else
