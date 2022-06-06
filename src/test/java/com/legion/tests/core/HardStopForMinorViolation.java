@@ -635,7 +635,7 @@ public class HardStopForMinorViolation extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             i=0;
             String tooltip = scheduleMainPage.getTooltipOfPublishButton();
-            while (i < 5 && (!smartCardPage.isRequiredActionSmartCardLoaded() || tooltip.equals(""))) {
+            while (i < 10 && (!smartCardPage.isRequiredActionSmartCardLoaded() || tooltip.equals(""))) {
                 Thread.sleep(10000);
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
