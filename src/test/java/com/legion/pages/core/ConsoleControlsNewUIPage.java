@@ -5847,6 +5847,25 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Clopening Hours selector load fail", false);
 	}
 
+	@FindBy(css = "[question-title=\"Minimum number of hours of rest between consecutive closing and opening shifts (clopening).\"]")
+	private WebElement clopeningHoursSectionOP;
+	@FindBy(css = "[question-title=\"Minimum number of hours of rest between consecutive closing and opening shifts (clopening).\"] [ng-attr-name]")
+	private WebElement clopeningHourOP;
+
+	@Override
+	public void selectClopeningHoursOP(String clopeningHour) throws Exception {
+//		String test = clopeningHours.getAttribute("value");
+		if (isElementLoaded(clopeningHoursSectionOP, 5)) {
+			if(isElementLoaded(clopeningHourOP, 5)){
+				clopeningHourOP.clear();
+				clopeningHourOP.sendKeys(clopeningHour);
+			}
+			else{
+				SimpleUtils.fail("Clopening Hours input field load fail", false);
+			}
+		} else
+			SimpleUtils.fail("Clopening Hours section load fail", false);
+	}
 
 	@FindBy(css = "question-input[question-title=\"Can a manager add another locations' employee in schedule before the employee's home location has published the schedule?\"] input-field")
 	private WebElement canManagerAddAnotherLocationsEmployeeInSchedule;

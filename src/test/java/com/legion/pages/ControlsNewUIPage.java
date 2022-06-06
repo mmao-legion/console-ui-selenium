@@ -362,5 +362,6 @@ public interface ControlsNewUIPage {
 	public boolean checkDailyOTEnabledOrNot() throws Exception;
 	public boolean checkIfTheLocationUsingControlsConfiguration() throws Exception;
 	public boolean checkIfEmployeeCanClaimOTOpenShift() throws Exception;
+	public void selectClopeningHoursOP(String clopeningHour) throws Exception;
 
 }
