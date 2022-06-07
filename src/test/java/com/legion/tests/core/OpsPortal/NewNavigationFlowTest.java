@@ -687,7 +687,7 @@ public class NewNavigationFlowTest extends TestBase {
 
         List<String> searchDistrictsList = new ArrayList<String>(){{
             add("Fiona");
-            add("FromRegionToDistrict1223212405");
+            add("NavigationTest");
             add("ClearDistrict");
             add("DistrictNavigation1");
             add("DistrictNavigation2");
