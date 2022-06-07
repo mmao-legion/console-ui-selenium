@@ -948,19 +948,19 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	}
 
 	@FindBy(css = "div.table-row:nth-child(2)>div:nth-child(1)")
-	private WebElement createBudgetPlanScenario;
-	@FindBy(css = "div.table-row:nth-child(3)>div:nth-child(1)")
 	private WebElement archiveBudgetPlanScenario;
-	@FindBy(css = "div.table-row:nth-child(4)>div:nth-child(1)")
+	@FindBy(css = "div.table-row:nth-child(3)>div:nth-child(1)")
 	private WebElement viewBudgetPlan;
-	@FindBy(css = "div.table-row:nth-child(5)>div:nth-child(1)")
+	@FindBy(css = "div.table-row:nth-child(4)>div:nth-child(1)")
 	private WebElement setBudgetPlanInEffect;
-	@FindBy(css = "div.table-row:nth-child(6)>div:nth-child(1)")
-	private WebElement createBudgetPlan;
-	@FindBy(css = "div.table-row:nth-child(7)>div:nth-child(1)")
+	@FindBy(css = "div.table-row:nth-child(5)>div:nth-child(1)")
 	private WebElement approveBudgetPlan;
-	@FindBy(css = "div.table-row:nth-child(8)>div:nth-child(1)")
+	@FindBy(css = "div.table-row:nth-child(6)>div:nth-child(1)")
 	private WebElement submitForReview;
+	@FindBy(css = "div.table-row:nth-child(7)>div:nth-child(1)")
+	private WebElement createBudgetPlanScenario;
+	@FindBy(css = "div.table-row:nth-child(8)>div:nth-child(1)")
+	private WebElement createBudgetPlan;
 	@FindBy(css="div.table-row:nth-child(1)>div[ng-repeat]")
 	private List<WebElement> accessRolesList;
 	@FindBy(css="div.table-container.ng-scope div[ng-repeat=\"permission in value\"]")

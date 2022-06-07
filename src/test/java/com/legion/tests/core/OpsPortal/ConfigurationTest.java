@@ -1075,7 +1075,7 @@ public class ConfigurationTest extends TestBase {
         try{
 
             String templateType = "Operating Hours";
-            String templateName = "ForMultipleAuto";
+            String templateName = "ForMultipleAutoUITesting";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
@@ -1136,9 +1136,9 @@ public class ConfigurationTest extends TestBase {
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(templateType);
             //Create one current published version template
-//            configurationPage.publishNewTemplate(templateName,dynamicGpName,"Custom","AutoCreatedDynamic---Format Script");
-//            //Create future publish version based on current published version
-//            configurationPage.createFutureTemplateBasedOnExistingTemplate(templateName,button1,date,"edit");
+            configurationPage.publishNewTemplate(templateName,dynamicGpName,"Custom","AutoCreatedDynamic---Format Script");
+            //Create future publish version based on current published version
+            configurationPage.createFutureTemplateBasedOnExistingTemplate(templateName,button1,date,"edit");
             //Create draft version for current published version template and then create future publish template based on it
 
             //Verify it will replace itself when click 'Publish at different time' button in future template
