@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.sql.Array;
@@ -917,6 +918,185 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
     }
 
 
+    @FindBy(css = "[form-title=\"Overtime Pay\"] [question-title*=\"a single workweek.\"]")
+    private WebElement weeklyOTSection;
+    @FindBy(css = "[form-title=\"Overtime Pay\"] [question-title*=\"In excess of how many hours an employee will receive Overtime Pay for hours worked within a single workweek?\"]")
+    private WebElement weeklyOTSectionOP;
+    @FindBy(css = "[form-title=\"Overtime Pay\"] [class=\"select-wrapper ng-scope\"] [ng-required=\"$ctrl.required\"]")
+    private WebElement weeklyOTEditList;
+    @FindBy(css = "[form-title=\"Overtime Pay\"] [question-title*=\"In excess of how many hours an employee will receive Overtime Pay for hours worked within a single workweek?\"] [ng-attr-name = \"{{$ctrl.inputName}}\"]")
+    private WebElement weeklyOTEditOP;
+
+    @Override
+    public String getWeeklyOTSettingContent() throws Exception{
+        if (isElementLoaded(weeklyOTSection, 10)){
+            return weeklyOTSection.findElement(By.cssSelector(".lg-question-input__text")).getText();
+        }else if(isElementLoaded(weeklyOTSectionOP, 10)){
+            return weeklyOTSectionOP.findElement(By.cssSelector(".lg-question-input__text")).getText();
+        }else{
+            return "";
+        }
+    }
+
+    @Override
+    public void turnOnOrTurnOffWeeklyOTToggle(boolean action) throws Exception {
+        String content = getWeeklyOTSettingContent();
+        if (isElementLoaded(weeklyOTSection, 10)
+                && ((content.contains("An employee will receive Overtime Pay for hours worked in excess of") &&content.contains("within a single workweek")))){
+            if (isElementLoaded(weeklyOTSection.findElement(By.cssSelector(".lg-question-input__toggle")),10)){
+                if (action && weeklyOTSection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+                    scrollToElement(weeklyOTSection.findElement(By.cssSelector(".lg-question-input__toggle")));
+                    clickTheElement(weeklyOTSection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+                    displaySuccessMessage();
+                    SimpleUtils.pass("Toggle is turned on!");
+                } else if (!action && !weeklyOTSection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+                    clickTheElement(weeklyOTSection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+                    displaySuccessMessage();
+                    SimpleUtils.pass("Toggle is turned off!");
+                } else {
+                    SimpleUtils.pass("Toggle status is expected!");
+                }
+            } else {
+                SimpleUtils.fail("Toggle fail to load!", false);
+            }
+        } else if(isElementLoaded(weeklyOTSectionOP, 10)&&(content.contains("In excess of how many hours an employee will receive Overtime Pay for hours worked within a single workweek?"))){
+            if (isElementLoaded(weeklyOTSectionOP.findElement(By.cssSelector(".lg-question-input__toggle")),10)){
+                if (action && weeklyOTSectionOP.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+                    scrollToElement(weeklyOTSectionOP.findElement(By.cssSelector(".lg-question-input__toggle")));
+                    clickTheElement(weeklyOTSectionOP.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+                    displaySuccessMessage();
+                    SimpleUtils.pass("Toggle is turned on!");
+                } else if (!action && !weeklyOTSectionOP.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+                    clickTheElement(weeklyOTSectionOP.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+                    displaySuccessMessage();
+                    SimpleUtils.pass("Toggle is turned off!");
+                } else {
+                    SimpleUtils.pass("Toggle status is expected!");
+                }
+            } else {
+                SimpleUtils.fail("Toggle fail to load!", false);
+            }
+        }else{
+            SimpleUtils.fail("Week OT section fail to load!", false);
+        }
+    }
+
+    @Override
+    public void editWeeklyOTSetting(String optionVisibleText) throws Exception {
+        String content = getWeeklyOTSettingContent();
+        if (isElementLoaded(weeklyOTSection, 10)
+                && ((content.contains("An employee will receive Overtime Pay for hours worked in excess of") &&content.contains("within a single workweek")))) {
+            Select weekOTSelectElements = new Select(weeklyOTEditList);
+            weekOTSelectElements.selectByVisibleText(optionVisibleText);
+//            List<WebElement> weekOTSelectableOptions = weekOTSelectElements.getOptions();
+//            weekOTSelectElements.selectByIndex(1);
+//            for (WebElement weekOTSelectableOption : weekOTSelectableOptions) {
+//                if (weekOTSelectableOption.getText().toLowerCase().contains(optionVisibleText.toLowerCase())) {
+//                    weekOTSelectElements.selectByIndex(weekOTSelectableOptions.indexOf(weekOTSelectableOption));
+            displaySuccessMessage();
+            SimpleUtils.report("Select '" + optionVisibleText + "' as the WeekOT");
+            waitForSeconds(2);
+            SimpleUtils.assertOnFail("Setting is saved successfully!", getWeeklyOTSettingContent().contains(optionVisibleText), false);
+//                }}
+        }
+        else if(isElementLoaded(weeklyOTSectionOP, 10) && (content.contains("In excess of how many hours an employee will receive Overtime Pay for hours worked within a single workweek?"))) {
+            if (isElementLoaded(weeklyOTEditOP)) {
+                weeklyOTEditOP.clear();
+                weeklyOTEditOP.sendKeys(optionVisibleText);
+            }
+        }else{
+            SimpleUtils.fail("Weekly OT section fail to load!", false);
+        }
+    }
+
+
+    @FindBy(css = "[form-title=\"Overtime Pay\"] [question-title*=\"</b> in a <b>\"]")
+    private WebElement dayOTSection;
+    @FindBy(css = "[form-title=\"Overtime Pay\"] [ng-click*=\"openDailyOvertimeConfigDialog()\"]")
+    private WebElement dayOTEditBtn;
+
+    @Override
+    public String getDayOTSettingContent() throws Exception{
+        if (isElementLoaded(dayOTSection, 10)){
+            return dayOTSection.findElement(By.cssSelector(".lg-question-input__text")).getText();
+        }
+        return "";
+    }
+
+    @Override
+    public void turnOnOrTurnOffDayOTToggle(boolean action) throws Exception {
+        String content = getDayOTSettingContent();
+        if (isElementLoaded(dayOTSection, 10)
+                && ((content.contains("An employee will receive Overtime Pay for hours worked in excess of") &&content.contains("in a")))){
+            if (isElementLoaded(dayOTSection.findElement(By.cssSelector(".lg-question-input__toggle")),10)){
+                if (action && dayOTSection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+                    scrollToElement(dayOTSection.findElement(By.cssSelector(".lg-question-input__toggle")));
+                    clickTheElement(dayOTSection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+                    displaySuccessMessage();
+                    SimpleUtils.pass("Toggle is turned on!");
+                } else if (!action && !dayOTSection.findElement(By.cssSelector(".lg-question-input")).getAttribute("class").contains("off")){
+                    clickTheElement(dayOTSection.findElement(By.cssSelector(".lg-question-input__toggle .slider")));
+                    displaySuccessMessage();
+                    SimpleUtils.pass("Toggle is turned off!");
+                } else {
+                    SimpleUtils.pass("Toggle status is expected!");
+                }
+            } else {
+                SimpleUtils.fail("Toggle fail to load!", false);
+            }
+        } else {
+            SimpleUtils.fail("Day OT section fail to load!", false);
+        }
+    }
+
+    @Override
+    public void editDayOTSetting(String dailyHours, String workDayType, boolean saveOrNot) throws Exception {
+        if (isElementLoaded(dayOTEditBtn, 5)){
+            String contentBefore = getConsecutiveOTSettingContent();
+            clickTheElement(dayOTEditBtn);
+            if (isElementLoaded(moodalDialog, 10)){
+                //check the title.
+                if (moodalDialog.findElement(By.cssSelector(".lg-modal__title")).getText().trim().equalsIgnoreCase("Edit Daily Overtime")){
+                    SimpleUtils.pass("Dialog title is expected!");
+                } else {
+                    SimpleUtils.fail("Dialog title is not correct", false);
+                }
+                //Check setting content.
+                if(moodalDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("An employee will receive Overtime Pay for hours worked in excess of")
+                        &&moodalDialog.findElement(By.cssSelector(".lg-modal__body")).getText().contains("in a")){
+                    SimpleUtils.pass("Setting content in the dialog is expected!");
+                } else {
+                    SimpleUtils.fail("Setting content is not expected!", false);
+                }
+                //edit the content, input the parameters.
+                if (moodalDialog.findElements(By.cssSelector("select")).size() == 2){
+                    selectByVisibleText(moodalDialog.findElements(By.cssSelector("select")).get(0), dailyHours);
+                    selectByVisibleText(moodalDialog.findElements(By.cssSelector("select")).get(1), workDayType);
+                } else {
+                    SimpleUtils.fail("Selects are not shown as expected!", false);
+                }
+                //save or cancel.
+                if (isElementLoaded(moodalDialog.findElement(By.cssSelector("[label=\"Cancel\"]")), 5)
+                        &&isElementLoaded(moodalDialog.findElement(By.cssSelector("[label=\"Save\"]")), 5)){
+                    if (saveOrNot){
+                        clickTheElement(moodalDialog.findElement(By.cssSelector("[label=\"Save\"] button")));
+                        waitForSeconds(2);
+                        SimpleUtils.assertOnFail("Setting is not saved successfully!", getDayOTSettingContent().contains(dailyHours)&&getDayOTSettingContent().contains(workDayType), false);
+                    } else {
+                        clickTheElement(moodalDialog.findElement(By.cssSelector("[label=\"Cancel\"] button")));
+                        waitForSeconds(2);
+                        SimpleUtils.assertOnFail("Setting should the same as before!", contentBefore.equalsIgnoreCase(getDayOTSettingContent()), false);
+                    }
+                } else {
+                    SimpleUtils.fail("Save or Cancel button fail to load!", false);
+                }
+            } else {
+                SimpleUtils.fail("Dialog fail to load!", false);
+            }
+        } else {
+            SimpleUtils.fail("Edit Day OT button is not loaded!", false);
+        }
+    }
 
     @FindBy(css = "[form-title=\"Doubletime Pay\"] [question-title*=\"consecutive \"]")
     private WebElement consecutiveDTSection;
