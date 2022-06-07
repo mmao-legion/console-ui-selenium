@@ -1909,11 +1909,8 @@ public class ActivityTest extends TestBase {
             //Delete the TM1 and TM2
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-            Thread.sleep(5000);
             shiftOperatePage.deleteTMShiftInWeekView(teamMemberName1);
-            Thread.sleep(5000);
             shiftOperatePage.deleteTMShiftInWeekView(teamMemberName2);
-            Thread.sleep(5000);
             shiftOperatePage.deleteTMShiftInWeekView("Open");
             scheduleMainPage.saveSchedule();
 
@@ -2036,7 +2033,7 @@ public class ActivityTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
-            Thread.sleep(3000);
+            Thread.sleep(5000);
             SimpleUtils.assertOnFail("The first approved TM's offer should be assigned! ",
                     scheduleShiftTablePage.getAllShiftsOfOneTM(teamMemberName1).size()==1, false);
 

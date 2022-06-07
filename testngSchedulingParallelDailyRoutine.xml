@@ -100,12 +100,12 @@
                     <include name="verifyExcessOf10HrsInA24HrsPeriodAsInternalAdmin" />
                     <include name="verifyExcessOf12HrsInA24HrsPeriodAsInternalAdmin" />
                     <!--                    <include name="verifyExcessOf8HrsInASingleWorkDayAsInternalAdmin" />  SCH-2411  -->
-                    <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" />
                     <include name="verifyTheShiftTimesConsistentOnInputAndShiftCardAsInternalAdmin" />
                     <include name="verifyTheShiftTimeCanBeSetMoreThan24HrsThatSetByShiftTimeInputAsInternalAdmin" />
                     <!--                    <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" /> need disable Continuous Operation-->
                     <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
+                    <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" />
                                    </methods>
                                </class>
                            </classes>

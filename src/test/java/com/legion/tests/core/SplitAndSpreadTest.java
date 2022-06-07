@@ -672,8 +672,10 @@ public class SplitAndSpreadTest extends TestBase {
             shiftOperatePage.deleteTMShiftInWeekView(tmFirstName);
             shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            scheduleMainPage.saveSchedule();
 
             //Create first shift for tm
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
@@ -683,7 +685,6 @@ public class SplitAndSpreadTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            MyThreadLocal.setAssignTMStatus(true);
             newShiftPage.searchTeamMemberByName(tmFirstName+ " "+tmLastName);
             newShiftPage.clickOnOfferOrAssignBtn();
             Thread.sleep(3000);
