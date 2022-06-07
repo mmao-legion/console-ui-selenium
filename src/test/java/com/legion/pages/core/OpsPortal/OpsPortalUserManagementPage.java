@@ -1328,5 +1328,48 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		}
 	}
 
+	@FindBy(css = "div.group.ng-scope:nth-child(7)")
+	private WebElement manage;
+
+	public void clickManage() throws Exception{
+		if(isElementLoaded(manage,5)){
+			click(manage);
+			SimpleUtils.pass("Click manage successfully");
+		}else{
+			SimpleUtils.fail("manage loaded failed",false);
+		}
+	}
+
+	@FindBy(css = "div[title = ' Recalculate Accrual Balance']")
+	private WebElement recalculatePermission;
+
+	public void verifyRecalculatePermission() throws Exception{
+		if(isElementLoaded(recalculatePermission,5)){
+			if(recalculatePermission.getText().equals("Recalculate Accrual Balance"))
+				SimpleUtils.pass("Recalculate Accrual Balance text is correct");
+			else
+				SimpleUtils.fail("Recalculate Accrual Balance text is wrong",false);
+		}else
+			SimpleUtils.fail("Recalculate Accrual Balance display failed",false);
+	}
+
+	@FindBy(css = "lg-button[label = 'Refresh Balances']>button")
+	private WebElement refreshBalances;
+
+	public void clickRefreshBalances() throws Exception{
+		if(isElementLoaded(refreshBalances,5)){
+			click(refreshBalances);
+			SimpleUtils.pass("Click Refresh Balances successfully");
+		}else
+			SimpleUtils.fail("Refresh Balances display failed",false);
+	}
+
+	public void isRefreshBalancesDisplayed() throws Exception{
+		if(!isElementLoaded(refreshBalances,5)){
+			SimpleUtils.pass("Refresh Balances button doesn't display");
+		}else{
+			SimpleUtils.fail("Refresh Balances button display",false);
+		}
+	}
 }
 
