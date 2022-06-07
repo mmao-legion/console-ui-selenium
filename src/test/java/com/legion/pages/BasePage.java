@@ -967,6 +967,21 @@ public class BasePage {
         }
     }
 
+    public static boolean isElementExist(String cssLocator)
+    {
+        boolean flag;
+        try {
+            if(getDriver().findElements(By.cssSelector(cssLocator)).size()>0){
+                flag = true;
+            }else {
+                flag = false;
+            }
+        } catch (NoSuchElementException e) {
+            flag = false;
+        }
+        return flag;
+    }
+
 //
 //
 //     public void assertIsDisplay(Map<String,String> map){

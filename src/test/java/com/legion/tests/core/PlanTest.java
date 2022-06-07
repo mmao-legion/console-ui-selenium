@@ -336,7 +336,7 @@ public class PlanTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyScenarioDetailAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            String planName = "checkPlanCount";
+            String planName = "testPlan-Not Delete";
             String scPlanName = "TestCompletePlan-not delete";
             String regionName="RegionForPlan_Auto";
             String scToTestArchiveInprogress="check archive-not delete";
@@ -350,12 +350,14 @@ public class PlanTest extends TestBase {
             planPage.clickOnPlanConsoleMenuItem();
             //check the created scenario plan detail UI
             planPage.verifyPlanDetail(planName,scPlanName);
-            //check user can not archive an in-progress plan
+            //check user can archive an in-progress plan
+            planPage.verifyScenarioPlanAutoCreated(planName, scToTestArchiveInprogress);
+            planPage.takeOperationToPlan(planName, scToTestArchiveInprogress, "Not Started");
             boolean arch=planPage.archiveAPlan(planName,scToTestArchiveInprogress);
-            if(!arch)
-                SimpleUtils.pass("User can not archive a plan which is in progress status!");
+            if(arch)
+                SimpleUtils.pass("User can archive a plan which is in progress status!");
             else
-                SimpleUtils.fail("User can archive a plan which is in progress status!",false);
+                SimpleUtils.fail("User failed to archive a plan which is in progress status!",false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

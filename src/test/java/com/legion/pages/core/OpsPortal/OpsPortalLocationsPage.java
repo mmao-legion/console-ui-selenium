@@ -2,6 +2,7 @@ package com.legion.pages.core.OpsPortal;
 
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
+import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
@@ -3376,7 +3377,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void canGoToSchedulingRulesViaTemNameInLocationLevel() {
 		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
 		if (areListElementVisible(templateNameLinks, 5)) {
-			click(templateNameLinks.get(1));
+			click(templateNameLinks.get(5));
 			if (areListElementVisible(workRolesInSchedulingRulesInLocationLevel, 5)) {
 				SimpleUtils.pass("Go to Scheduling Rules in locations level successfully");
 			} else
@@ -3602,6 +3603,29 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return null;
 	}
 
+	@Override
+	public List<HashMap<String, String>> getLocationTemplateInfosInLocationLevel() {
+		List<HashMap<String, String>> templateInfo = new ArrayList<>();
+		if (areListElementVisible(templateRows, 5)) {
+			for (int i = 0; i<templateRows.size(); i++) {
+				HashMap<String, String> templateInfoInEachRow = new HashMap<>();
+				templateInfoInEachRow.put("Template Type", templateRows.get(i).findElement(By.cssSelector("td:nth-child(1)")).getText());
+				templateInfoInEachRow.put("Template Name", templateRows.get(i).findElement(By.cssSelector("td:nth-child(2)")).getText());
+				String actions = templateRows.get(i).findElement(By.cssSelector("td:nth-child(6)")).getText();
+				if (isElementExist("tbody tr:nth-child(" + (i+2) + ") td.tc span")) {
+					templateInfoInEachRow.put("Overridden", "Yes");
+				} else{
+					templateInfoInEachRow.put("Overridden", "No");
+				}
+				templateInfo.add(templateInfoInEachRow);
+			}
+			return templateInfo;
+		} else
+			SimpleUtils.fail("Location configuration tab load failed", false);
+
+		return null;
+	}
+
 	@FindBy(css = "tr[ng-repeat=\"(key,value) in $ctrl.templates\"]> td:nth-child(6) > span:nth-child(2)")
 	private List<WebElement> editBtns;
 	@Override
@@ -3815,10 +3839,18 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 							clickTheElement(s.findElement(By.cssSelector("span.action.ng-binding")));
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if(s.getText().contains(action)&& action.equals("Reset")) {
-							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
-							verifyResetWindowDisplay();
-							click(okBtnInSelectLocation);
+						}
+						else if(action.equals("Reset")) {
+							try {
+								clickTheElement(editButtonOfLocationLevelLaborModelTemplate);
+								waitForSeconds(3);
+								resetLocationLevelExternalAttributesInLaborModelTemplate();
+								clickTheElement(editButtonOfLocationLevelLaborModelTemplate);
+								waitForSeconds(3);
+								resetLocationLevelWorkRolesInLaborModelTemplate();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
 						}
@@ -3827,10 +3859,43 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				default:
 					ExtentTestManager.getTest().log(Status.FAIL, "Unable to do the actions of each type of template in location level");
 			}
-
 		} else
 			SimpleUtils.fail("Template info for this location load failed", false);
 
+	}
+
+// added by Fiona
+	@FindBy(css="tbody tr:nth-child(8) td:nth-child(6) span[ng-click=\"$ctrl.editing && $ctrl.getTemplateDetails(value,'edit')\"]")
+	private WebElement editButtonOfLocationLevelLaborModelTemplate;
+	@FindBy(css="lg-button[label=\"Reset\"] button")
+	private WebElement resetButton;
+
+	public void resetLocationLevelExternalAttributesInLaborModelTemplate() throws Exception {
+		LaborModelPage laborModelPage = new OpsPortalLaborModelPage();
+		laborModelPage.selectLaborStandardRepositorySubTabByLabel("External Attributes");
+		waitForSeconds(2);
+		scrollToBottom();
+		if(isElementLoaded(resetButton,3)){
+			clickTheElement(resetButton);
+			verifyResetWindowDisplay();
+			click(okBtnInSelectLocation);
+		}else {
+			SimpleUtils.report("Location level External Attributes is not overridden");
+		}
+	}
+
+	public void resetLocationLevelWorkRolesInLaborModelTemplate() throws Exception {
+		LaborModelPage laborModelPage = new OpsPortalLaborModelPage();
+		laborModelPage.selectLaborStandardRepositorySubTabByLabel("Work Roles");
+		waitForSeconds(2);
+		scrollToBottom();
+		if(isElementLoaded(resetButton,3)){
+			clickTheElement(resetButton);
+			verifyResetWindowDisplay();
+			click(okBtnInSelectLocation);
+		}else {
+			SimpleUtils.report("Location level External Attributes is not overridden");
+		}
 	}
 
 	private void verifyResetWindowDisplay() {
