@@ -1199,7 +1199,7 @@ public class LocationsTest extends TestBase {
             locationsPage.backToConfigurationTabInLocationLevel();
 
             //get template level info of Compliance
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"), "View");
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(2).get("Template Type"), "View");
             String contextInComplianceTemplate = locationsPage.getComplianceTemplateValueInLocationLevel();
             if (!(contextInComplianceTemplate == null)) {
                 SimpleUtils.pass("Can view Compliance successfully via view button in location level");
