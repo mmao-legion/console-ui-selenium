@@ -644,6 +644,7 @@ public class HardStopForMinorViolation extends TestBase {
                 SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
                 scheduleCommonPage.navigateToNextWeek();
+                Thread.sleep(5000);
                 tooltip = scheduleMainPage.getTooltipOfPublishButton();
                 i++;
             }

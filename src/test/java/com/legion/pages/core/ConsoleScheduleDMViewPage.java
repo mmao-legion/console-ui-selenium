@@ -1423,7 +1423,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     @Override
     public boolean isScheduleDMView() throws Exception {
         boolean result = false;
-        if (isElementLoaded(analyticsTableInScheduleDMViewPage, 60)) {
+        if (isElementLoaded(analyticsTableInScheduleDMViewPage, 120)) {
             result = true;
         }
         return result;
