@@ -2064,7 +2064,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                             waitForSeconds(3);
                             if (isElementLoaded(deleteShift, 10)) {
                                 scrollToElement(deleteShift);
-                                click(deleteShift);
+                                clickTheElement(deleteShift);
                                 waitForSeconds(5);
                                 if (isElementLoaded(deleteBtnInDeleteWindows)) {
                                     scrollToElement(deleteBtnInDeleteWindows);
