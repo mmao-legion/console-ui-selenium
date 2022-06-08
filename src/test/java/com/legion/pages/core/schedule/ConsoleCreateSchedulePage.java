@@ -801,7 +801,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception {
         String subTitle = "Confirm Operating Hours";
         if (isElementLoaded(generateSheduleButton,10)) {
-            moveToElementAndClick(generateSheduleButton);
+            waitForSeconds(5);
+            click(generateSheduleButton);
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
