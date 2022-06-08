@@ -528,6 +528,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
             for (WebElement cardLink : cardLinks) {
                 if (cardLink.getText().equalsIgnoreCase(linkName)) {
                     clickTheElement(cardLink);
+                    waitForSeconds(2);
                     SimpleUtils.pass("Click the link: " + linkName + " Successfully!");
                     break;
                 }

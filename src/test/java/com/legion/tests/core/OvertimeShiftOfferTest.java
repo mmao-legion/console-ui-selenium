@@ -85,8 +85,8 @@ public class OvertimeShiftOfferTest extends TestBase {
 
             // Create and assign shift to consume the available shift hours for the TM
             String workRoleOfTM = "Retail Associate";
-            String enterprise = SimpleUtils.getEnterprise(this.enterpriseName).toLowerCase();
-            if (enterprise.equalsIgnoreCase("legioncoffee2")) {
+            String enterprise = System.getProperty("enterprise").toLowerCase();
+            if (enterprise.equalsIgnoreCase("cinemark-wkdy")) {
                 workRoleOfTM = "Team Member Corporate-Theatre";
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
