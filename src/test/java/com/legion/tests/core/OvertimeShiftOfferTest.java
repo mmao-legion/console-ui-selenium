@@ -31,7 +31,7 @@ public class OvertimeShiftOfferTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Ting")
-    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "")
     @TestName(description = "Should be able to claim the over time shift offer by TM")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAllowClaimOvertimeShiftOfferAsTeamMember(String browser, String username, String password, String location) throws Exception {
@@ -79,9 +79,17 @@ public class OvertimeShiftOfferTest extends TestBase {
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.clickOnFilterBtn();
+            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.publishOrRepublishSchedule();
 
             // Create and assign shift to consume the available shift hours for the TM
             String workRoleOfTM = "Retail Associate";
+            String enterprise = SimpleUtils.getEnterprise(this.enterpriseName).toLowerCase();
+            if (enterprise.equalsIgnoreCase("legioncoffee2")) {
+                workRoleOfTM = "Team Member Corporate-Theatre";
+            }
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
@@ -133,6 +141,17 @@ public class OvertimeShiftOfferTest extends TestBase {
             // Claim overtime shift
             mySchedulePage.clickOnShiftByIndex(0);
             mySchedulePage.claimTheOfferedOpenShift("View Offer");
+            loginPage.logOut();
+
+            // Login as SM and approve claim request from TM
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+            activityPage.verifyActivityBellIconLoaded();
+            activityPage.verifyClickOnActivityIcon();
+            activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
+            activityPage.verifyActivityOfShiftOffer(firstNameOfTM, location);
+            activityPage.approveOrRejectShiftOfferRequestOnActivity(firstNameOfTM, ActivityTest.approveRejectAction.Approve.getValue());
+            activityPage.closeActivityWindow();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

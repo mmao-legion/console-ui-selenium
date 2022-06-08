@@ -590,6 +590,8 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
             } else {
                 SimpleUtils.fail("Failed for claim the overtime open shift offer", false);
             }
+        } else {
+            SimpleUtils.fail("The confirm claim shift offer popup is not displayed", false);
         }
     }
 
