@@ -359,7 +359,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     @Override
     public void createScheduleForNonDGFlowNewUI() throws Exception {
         String subTitle = "Confirm Operating Hours";
-        if (isElementLoaded(generateSheduleButton,120)) {
+        if (isElementLoaded(generateSheduleButton,240)) {
             waitForSeconds(3);
             clickTheElement(generateSheduleButton);
             openBudgetPopUp();
@@ -800,7 +800,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     @Override
     public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception {
         String subTitle = "Confirm Operating Hours";
-        if (isElementLoaded(generateSheduleButton,50)) {
+        if (isElementLoaded(generateSheduleButton,240)) {
             waitForSeconds(3);
             click(generateSheduleButton);
             openBudgetPopUp();
