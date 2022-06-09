@@ -74,22 +74,22 @@ public class OvertimeShiftOfferTest extends TestBase {
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");
             shiftOperatePage.deleteTMShiftInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.selectShiftTypeFilterByText("Open");
             shiftOperatePage.deleteTMShiftInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.clickOnFilterBtn();
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
-            scheduleMainPage.saveSchedule();
-            scheduleMainPage.publishOrRepublishSchedule();
 
-            // Create and assign shift to consume the available shift hours for the TM
+            // Modify corresponding work role by enterprise
             String workRoleOfTM = "Retail Associate";
             String enterprise = System.getProperty("enterprise").toLowerCase();
             if (enterprise.equalsIgnoreCase("cinemark-wkdy")) {
                 workRoleOfTM = "Team Member Corporate-Theatre";
             }
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Create and assign shift to consume the available shift hours for the TM
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
@@ -103,6 +103,7 @@ public class OvertimeShiftOfferTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
             scheduleMainPage.publishOrRepublishSchedule();
+            int shiftsCountBefore = shiftOperatePage.countShiftsByUserName(firstNameOfTM);
 
             //create an overtime shift
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -152,6 +153,12 @@ public class OvertimeShiftOfferTest extends TestBase {
             activityPage.verifyActivityOfShiftOffer(firstNameOfTM, location);
             activityPage.approveOrRejectShiftOfferRequestOnActivity(firstNameOfTM, ActivityTest.approveRejectAction.Approve.getValue());
             activityPage.closeActivityWindow();
+
+            // Double check if the approved shift off has been assigned to the TM
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.navigateToNextWeek();
+            int shiftsCountAfter = shiftOperatePage.countShiftsByUserName(firstNameOfTM);
+            SimpleUtils.assertOnFail("Failed for approving overtime shift offer shift!", (shiftsCountAfter - shiftsCountBefore) == 1, false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -69,6 +69,7 @@ public interface ShiftOperatePage {
     public void closeViewProfileContainer() throws Exception;
     public void verifyChangeRoleFunctionality() throws Exception;
     public void deleteTMShiftInWeekView(String teamMemberName) throws Exception;
+    public int countShiftsByUserName(String teamMemberName) throws Exception;
     public boolean verifyConvertToOpenPopUpDisplay(String firstNameOfTM) throws Exception;
     void convertToOpenShiftDirectly();
     public void verifyMessageIsExpected(String messageExpected) throws Exception;

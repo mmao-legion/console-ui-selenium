@@ -376,11 +376,12 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     @Override
     public void publishOrRepublishSchedule() throws Exception {
         if (isClickable(publishButton, 15)) {
+            scrollToElement(publishButton);
             click(publishButton);
             if (isElementLoaded(confirmPublishBtn, 15)) {
                 click(confirmPublishBtn);
-                waitForSeconds(15);
-                if (!isElementLoaded(publishButton, 5)) {
+                waitForSeconds(50);
+                if (!isElementLoaded(publishButton, 10)) {
                     SimpleUtils.pass("Schedule successfully published!");
                 } else {
                     SimpleUtils.fail("Schedule publish filed!", false);
@@ -389,10 +390,11 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }
 
         if (isClickable(republishButton, 15)) {
+            scrollToElement(republishButton);
             click(republishButton);
             if (isElementLoaded(confirmPublishBtn, 15)) {
                 click(confirmPublishBtn);
-                waitForSeconds(15);
+                waitForSeconds(30);
                 if (!isElementLoaded(republishButton, 5)) {
                     SimpleUtils.pass("Schedule successfully republished!");
                 } else {
@@ -535,16 +537,16 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     private WebElement msgOnTop;
 
     public void saveSchedule() throws Exception {
-        if (isElementEnabled(scheduleSaveBtn, 10)) {
-            scrollToTop();
-            waitForSeconds(3);
+        if (isElementEnabled(scheduleSaveBtn, 10) && isClickable(scheduleSaveBtn, 10)) {
+            scrollToElement(scheduleSaveBtn);
             clickTheElement(scheduleSaveBtn);
+            waitForSeconds(3);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        if (isElementEnabled(saveOnSaveConfirmationPopup, 3)) {
+        if (isClickable(saveOnSaveConfirmationPopup, 15)) {
             clickTheElement(saveOnSaveConfirmationPopup);
-//            waitForSeconds(3);
+            waitForSeconds(5);
             try{
 //                if (isElementLoaded(msgOnTop, 20)) {
 //                    if (msgOnTop.getText().contains("Success")){
@@ -559,7 +561,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             } catch(StaleElementReferenceException e){
                 SimpleUtils.report("stale element reference: element is not attached to the page document");
             }
-            waitForSeconds(3);
+            waitForSeconds(5);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }

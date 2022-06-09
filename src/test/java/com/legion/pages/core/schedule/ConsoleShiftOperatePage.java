@@ -2085,6 +2085,32 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.report("Schedule Week View: shifts load failed or there is no shift in this week");
     }
 
+    @Override
+    public int countShiftsByUserName(String teamMemberName) throws Exception {
+        int numberOfShifts = 0;
+        if (areListElementVisible(shiftsWeekView, 15)) {
+            for (WebElement shiftWeekView : shiftsWeekView) {
+                try {
+                    WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
+                    if (workerName != null) {
+                        if (workerName.getText().toLowerCase().trim().contains(teamMemberName.toLowerCase().trim())) {
+                            WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized span"));
+                            scrollToElement(image);
+                            numberOfShifts = numberOfShifts + 1;
+                        }
+                    }
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+        }
+//        if (numberOfShifts > 0) {
+//            SimpleUtils.pass("Number of shifts counted: " + numberOfShifts);
+//        } else {
+//            SimpleUtils.fail("No shifts found by first name: " + teamMemberName, false);
+//        }
+        return numberOfShifts;
+    }
 
     @FindBy(css = "tr.table-row.ng-scope:nth-child(1)")
     private WebElement firstTableRow;
