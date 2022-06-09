@@ -3360,6 +3360,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else if (areListElementVisible(namesDayView, 10)) {
             names = namesDayView;
         }
+        scrollToBottom();
+        waitForSeconds(2);
         if (names.size() >= shiftCount) {
             SimpleUtils.randomSet(0, names.size(), shiftCount, set);
             Actions action = new Actions(getDriver());
