@@ -31,7 +31,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     private static HashMap<String, String> propertyOperatingHoursLG = JsonUtil.getPropertiesFromJsonFile("src/test/resources/operatingHoursLG.json");
     private static HashMap<String, String> propertyOperatingHours = JsonUtil.getPropertiesFromJsonFile("src/test/resources/operatingHours.json");
 
-    @FindBy(css = "[label=\"Create schedule\"] button")
+    @FindBy(css = "[label=\"Create schedule\"] button:not([disabled])")
     private WebElement generateSheduleButton;
     @FindBy(css = "lg-button[label=\"Generate schedule\"]")
     private WebElement generateScheduleBtn;
@@ -668,7 +668,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                     // Nothing
                 }
 //                waitForSeconds(10);
-                if (isElementLoaded(nextButtonOnCreateSchedule, 100)) {
+                if (isElementLoaded(nextButtonOnCreateSchedule, 120)) {
                     clickTheElement(nextButtonOnCreateSchedule);
                 } else
                     SimpleUtils.fail("Next button on Enter budget page fail to load! ", false);
@@ -800,8 +800,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     @Override
     public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception {
         String subTitle = "Confirm Operating Hours";
-        if (isElementLoaded(generateSheduleButton,10)) {
-            waitForSeconds(5);
+        if (isElementLoaded(generateSheduleButton,50)) {
+            waitForSeconds(3);
             click(generateSheduleButton);
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())

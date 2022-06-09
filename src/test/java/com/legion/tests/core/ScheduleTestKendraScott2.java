@@ -762,6 +762,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			selectedShift = shiftOperatePage.clickOnProfileIcon();
 			selectedShiftId2  = selectedShift.getAttribute("id").toString();
 			shiftOperatePage.clickonAssignTM();
+			Thread.sleep(2000);
 			shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
 			firstNameOfSelectedTM2 = newShiftPage.selectTeamMembers().split(" ")[0];
 			i++;

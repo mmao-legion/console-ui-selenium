@@ -727,6 +727,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
                 SimpleUtils.pass("Get shift day index successfully! The day index is: "+ dayIndex);
                 String lastName = shiftOperatePage.getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
+                Thread.sleep(3000);
                 SimpleUtils.pass("Get user last name successfully! The last name is: "+ lastName);
                 String jobTitle = weekShifts.get(index).findElement(By.cssSelector(".rows .week-schedule-role-name")).getText();
                 SimpleUtils.pass("Get user job title successfully! The job tile is: "+ jobTitle);

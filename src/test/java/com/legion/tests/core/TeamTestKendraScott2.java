@@ -2052,35 +2052,36 @@ public class TeamTestKendraScott2 extends TestBase{
 			while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
 				profileNewUIPage.clickNextWeek();
 			}
+
 			String firstWeek = profileNewUIPage.getAvailabilityWeek();
 			String repeatChanges = "This week only";
 			String leftOrRightDuration = "Right";
 			String hoursType = "Preferred";
 			HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
-			if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
+//			if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
 				int sliderIndex = 1;
 				double hours = -0.5;//move 1 metric 0.5h left
 				profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
 						hours, repeatChanges);
-			} else {
-				profileNewUIPage.clickAvailabilityEditButton();
-				profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
-				profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
-			}
+//			} else {
+//				profileNewUIPage.clickAvailabilityEditButton();
+//				profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
+//				profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
+//			}
 
 			profileNewUIPage.clickNextWeek();
 			String secondWeek = profileNewUIPage.getAvailabilityWeek();
 			myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
-			if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
-				int sliderIndex = 1;
-				double hours = -0.5;//move 1 metric 0.5h left
+//			if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
+				sliderIndex = 1;
+				hours = -0.5;//move 1 metric 0.5h left
 				profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
 						hours, repeatChanges);
-			} else {
-				profileNewUIPage.clickAvailabilityEditButton();
-				profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
-				profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
-			}
+//			} else {
+//				profileNewUIPage.clickAvailabilityEditButton();
+//				profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
+//				profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
+//			}
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 

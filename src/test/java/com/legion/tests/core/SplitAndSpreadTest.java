@@ -1113,7 +1113,7 @@ public class SplitAndSpreadTest extends TestBase {
                 i++;
                 Thread.sleep(2000);
             }
-            String warningMessage = firstNameOfTM1 + " is scheduled 9am - 11am on Monday. This will trigger spread hours.";
+            String warningMessage = firstNameOfTM1 + " is scheduled 9:00 AM - 11:00 AM on Monday. This will trigger spread hours.";
             scheduleShiftTablePage.verifyMessageOnCopyMoveConfirmPage(warningMessage,warningMessage);
 
             // Swap TM1 and TM2, check the TMs been swapped successfully

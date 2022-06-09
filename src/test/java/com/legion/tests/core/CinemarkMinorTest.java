@@ -1275,9 +1275,12 @@ public class CinemarkMinorTest extends TestBase {
         //check the violation in i icon popup of new create shift
         WebElement newAddedShift = scheduleShiftTablePage.
                 getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1.split(" ")[0]).get(0));
+        String expectMessage = "Minor hrs "+ scheduleFromToTime;
+        String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString();
         if (newAddedShift != null) {
-            SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
-                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor hrs "+ scheduleFromToTime), false);
+            SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! the expect is: "+expectMessage
+                            +" the actual is:"+actualMessage,
+                    actualMessage.contains(expectMessage), false);
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
 

@@ -355,7 +355,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             int inProgressScheduleAccount = 0;
             int publishedScheduleAccount = 0;
 
-            if(areListElementVisible(scheduleStatusOnScheduleDMViewPage, 10) && scheduleStatusOnScheduleDMViewPage.size()!=0) {
+            if(areListElementVisible(scheduleStatusOnScheduleDMViewPage, 20) && scheduleStatusOnScheduleDMViewPage.size()!=0) {
                 for (int i = 0; i< scheduleStatusOnScheduleDMViewPage.size(); i++){
                     switch(scheduleStatusOnScheduleDMViewPage.get(i).getText()){
                         case "Not Started" :

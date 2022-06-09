@@ -3809,7 +3809,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		WebElement rightCell = dayRow.findElement(By.cssSelector("div.cursor-resizableE"));
 		int i=0;
 
-		while (!availabilityToolTip.getText().contains("12:00am - 12:00am") && i<5){
+		while (!availabilityToolTip.getText().toLowerCase().replace(" ", "").contains("12:00am-12:00am") && i<5){
 			//Drag the availability to the end of the day
 			scrollToElement(rightCell);
 			mouseHoverDragandDrop(rightCell,emptyAvailabilitiesInTheDay.get(emptyAvailabilitiesInTheDay.size()-1));
@@ -3817,7 +3817,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			waitForSeconds(2);
 		}
 
-		if (!availabilityToolTip.getText().contains("12:00am - 12:00am")) {
+		if (!availabilityToolTip.getText().toLowerCase().replace(" ", "").contains("12:00am-12:00am")) {
 //			mouseHoverDragandDrop(rightCell,emptyAvailabilitiesInTheDay.get(emptyAvailabilitiesInTheDay.size()-1));
 			SimpleUtils.fail("Update availabilities fail! ", false);
 		} else
