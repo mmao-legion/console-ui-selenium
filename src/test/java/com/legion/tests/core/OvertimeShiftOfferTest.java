@@ -102,7 +102,6 @@ public class OvertimeShiftOfferTest extends TestBase {
             newShiftPage.searchTeamMemberByName(firstNameOfTM);
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
-            scheduleMainPage.publishOrRepublishSchedule();
             int shiftsCountBefore = shiftOperatePage.countShiftsByUserName(firstNameOfTM);
 
             //create an overtime shift
@@ -118,7 +117,6 @@ public class OvertimeShiftOfferTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
-//            scheduleMainPage.publishOrRepublishSchedule();
 
             // Offer overtime shift in non-edit mode
             shiftOperatePage.clickOnProfileIconOfOpenShift();
@@ -164,7 +162,7 @@ public class OvertimeShiftOfferTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             scheduleCommonPage.navigateToNextWeek();
             int shiftsCountAfter = shiftOperatePage.countShiftsByUserName(firstNameOfTM);
-            SimpleUtils.assertOnFail("Failed for approving overtime shift offer shift!", (shiftsCountAfter - shiftsCountBefore) == 1, false);
+            SimpleUtils.assertOnFail("Failed for approving overtime shift offer!", (shiftsCountAfter - shiftsCountBefore) == 1, false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
