@@ -1286,9 +1286,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public int getShiftsCount() throws Exception {
         int count = 0;
-        if (areListElementVisible(wholeWeekShifts, 5)) {
+        waitForSeconds(5);
+        if (areListElementVisible(wholeWeekShifts, 10)) {
             count = wholeWeekShifts.size();
-        } else if (areListElementVisible(dayViewAvailableShifts, 5)){
+        } else if (areListElementVisible(dayViewAvailableShifts, 10)){
             count = dayViewAvailableShifts.size();
         }
         return count;

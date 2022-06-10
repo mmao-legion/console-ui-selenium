@@ -118,7 +118,7 @@ public class OvertimeShiftOfferTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
-            scheduleMainPage.publishOrRepublishSchedule();
+//            scheduleMainPage.publishOrRepublishSchedule();
 
             // Offer overtime shift in non-edit mode
             shiftOperatePage.clickOnProfileIconOfOpenShift();
@@ -146,6 +146,7 @@ public class OvertimeShiftOfferTest extends TestBase {
 
             // Login as SM and approve claim request from TM
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ActivityPage activityPage = pageFactory.createConsoleActivityPage();
             activityPage.verifyActivityBellIconLoaded();
             activityPage.verifyClickOnActivityIcon();
@@ -154,8 +155,13 @@ public class OvertimeShiftOfferTest extends TestBase {
             activityPage.approveOrRejectShiftOfferRequestOnActivity(firstNameOfTM, ActivityTest.approveRejectAction.Approve.getValue());
             activityPage.closeActivityWindow();
 
-            // Double check if the approved shift off has been assigned to the TM
+            // Double check if the approved shift offer has been assigned to the TM
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             scheduleCommonPage.navigateToNextWeek();
             int shiftsCountAfter = shiftOperatePage.countShiftsByUserName(firstNameOfTM);
             SimpleUtils.assertOnFail("Failed for approving overtime shift offer shift!", (shiftsCountAfter - shiftsCountBefore) == 1, false);

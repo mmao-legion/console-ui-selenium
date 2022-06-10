@@ -2104,11 +2104,6 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 }
             }
         }
-//        if (numberOfShifts > 0) {
-//            SimpleUtils.pass("Number of shifts counted: " + numberOfShifts);
-//        } else {
-//            SimpleUtils.fail("No shifts found by first name: " + teamMemberName, false);
-//        }
         return numberOfShifts;
     }
 
