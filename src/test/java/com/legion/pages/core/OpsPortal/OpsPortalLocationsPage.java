@@ -3686,6 +3686,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void actionsForEachTypeOfTemplate(String template_type, String action) {
+		waitForSeconds(5);
 		if (templateRows.size() > 0) {
 			switch (template_type) {
 				case "Assignment Rules":
@@ -3842,9 +3843,12 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 						}
 						else if(action.equals("Reset")) {
 							try {
+								LocationsPage locationsPage= new OpsPortalLocationsPage();
 								clickTheElement(editButtonOfLocationLevelLaborModelTemplate);
 								waitForSeconds(3);
 								resetLocationLevelExternalAttributesInLaborModelTemplate();
+								waitForSeconds(3);
+								locationsPage.editLocationBtnIsClickableInLocationDetails();
 								clickTheElement(editButtonOfLocationLevelLaborModelTemplate);
 								waitForSeconds(3);
 								resetLocationLevelWorkRolesInLaborModelTemplate();
@@ -3869,6 +3873,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement editButtonOfLocationLevelLaborModelTemplate;
 	@FindBy(css="lg-button[label=\"Reset\"] button")
 	private WebElement resetButton;
+	@FindBy(css = "lg-button[label=\"Cancel\"] button")
+	private WebElement cancelBTNOnLocationLevelTemplateDetailsPage;
+
 
 	public void resetLocationLevelExternalAttributesInLaborModelTemplate() throws Exception {
 		LaborModelPage laborModelPage = new OpsPortalLaborModelPage();
@@ -3881,6 +3888,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(okBtnInSelectLocation);
 		}else {
 			SimpleUtils.report("Location level External Attributes is not overridden");
+			clickTheElement(cancelBTNOnLocationLevelTemplateDetailsPage);
 		}
 	}
 
@@ -3894,7 +3902,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			verifyResetWindowDisplay();
 			click(okBtnInSelectLocation);
 		}else {
-			SimpleUtils.report("Location level External Attributes is not overridden");
+			SimpleUtils.report("Location level Work Roles is not overridden");
+			clickTheElement(cancelBTNOnLocationLevelTemplateDetailsPage);
 		}
 	}
 
