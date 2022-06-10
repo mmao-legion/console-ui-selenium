@@ -42,6 +42,8 @@ public class OvertimeShiftOfferTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -68,7 +70,19 @@ public class OvertimeShiftOfferTest extends TestBase {
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //delete unassigned shifts and open shifts.
+            // Make sure the access for allow TM to claim overtime shift rate was set
+            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+            if (isLocationUsingControlsConfiguration){
+                controlsPage.gotoControlsPage();
+                SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+                controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+                SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+                controlsPage.clickGlobalSettings();
+                controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
+                controlsNewUIPage.allowEmployeesClaimOpenShift();
+            }
+
+            // Delete unassigned shifts and open shifts.
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");

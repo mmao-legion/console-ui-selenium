@@ -2888,6 +2888,51 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Controls Page: - Schedule Collaboration section: 'Open Shift' form section not loaded.", false);
 	}
 
+	@FindBy(xpath = "//*[text()=\"Allow employees claim open shift at overtime rate?\"]")
+	private WebElement allowEmployeesClaimOpenShiftOption;
+
+	@FindBy(css = "[question-title=\"Allow employees claim open shift at overtime rate?\"] .lg-button-group-first")
+	private WebElement allowEmployeesClaimOpenShiftOptionYesBtn;
+
+	@FindBy(css = "[question-title=\"Allow employees claim open shift at overtime rate?\"] .lg-button-group-last")
+	private WebElement allowEmployeesClaimOpenShiftOptionNoBtn;
+
+	@Override
+	public void allowEmployeesClaimOpenShift() throws Exception {
+		if (isElementLoaded(allowEmployeesClaimOpenShiftOption, 5)) {
+			scrollToElement(allowEmployeesClaimOpenShiftOption);
+			if (isElementLoaded(allowEmployeesClaimOpenShiftOptionYesBtn, 5)) {
+				click(allowEmployeesClaimOpenShiftOptionYesBtn);
+				waitForSeconds(3);
+				if (allowEmployeesClaimOpenShiftOptionYesBtn.getAttribute("class").contains("lg-button-group-selected")) {
+					SimpleUtils.pass("Claim overtime shift access is enabled!");
+				} else {
+					SimpleUtils.fail("Failed for enable claim overtime shift access!", false);
+				}
+			}
+		} else {
+			SimpleUtils.fail("No option found for: Allow employees claim open shift at overtime rate?", false);
+		}
+	}
+
+	@Override
+	public void notAllowEmployeesClaimOpenShift() throws Exception {
+		if (isElementLoaded(allowEmployeesClaimOpenShiftOption, 5)) {
+			scrollToElement(allowEmployeesClaimOpenShiftOption);
+			if (isElementLoaded(allowEmployeesClaimOpenShiftOptionNoBtn, 5)) {
+				click(allowEmployeesClaimOpenShiftOptionNoBtn);
+				waitForSeconds(3);
+				if (allowEmployeesClaimOpenShiftOptionNoBtn.getAttribute("class").contains("lg-button-group-selected")) {
+					SimpleUtils.pass("Claim overtime shift access is disabled!");
+				} else {
+					SimpleUtils.fail("Failed for disable claim overtime shift access!", false);
+				}
+			}
+		} else {
+			SimpleUtils.fail("No option found for: Allow employees claim open shift at overtime rate?", false);
+		}
+	}
+
 	@FindBy(css = "input-field[value=\"cl.minorSchedulingPolicy.scheduleStartMin\"]")
 	private WebElement minorSchTimeLabelFromField;
 

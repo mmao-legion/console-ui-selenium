@@ -199,6 +199,8 @@ public interface ControlsNewUIPage {
 	public HashMap<String, ArrayList<String>> getScheduleCollaborationEditableOrNonEditableFields() throws Exception;
 
 	public void clickOnScheduleCollaborationOpenShiftAdvanceBtn() throws Exception;
+	public void allowEmployeesClaimOpenShift() throws Exception;
+	public void notAllowEmployeesClaimOpenShift() throws Exception;
 
 	public HashMap<String, ArrayList<String>> getComplianceEditableOrNonEditableFields() throws Exception;
 
