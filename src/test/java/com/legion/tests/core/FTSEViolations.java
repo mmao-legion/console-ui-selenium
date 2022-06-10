@@ -365,9 +365,13 @@ public class FTSEViolations extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //Create a new shift and assign it to the FTSE employee
+            //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("FTSE T.");
+            scheduleMainPage.saveSchedule();
+
+            //Create a new shift and assign it to the FTSE employee
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -461,9 +465,13 @@ public class FTSEViolations extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //Create a new shift and assign it to the FTSE employee
+            //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("FTSE T.");
+            scheduleMainPage.saveSchedule();
+
+            //Create a new shift and assign it to the FTSE employee
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -559,9 +567,13 @@ public class FTSEViolations extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //Create multiple shifts and assign them to the FTSE employee
+            //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("FTSE T.");
+            scheduleMainPage.saveSchedule();
+
+            //Create multiple shifts and assign them to the FTSE employee
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -657,9 +669,13 @@ public class FTSEViolations extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //Create a new shift and assign it to the FTSE employee
+            //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("FTSE T.");
+            scheduleMainPage.saveSchedule();
+
+            //Create a new shift and assign it to the FTSE employee
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -753,9 +769,13 @@ public class FTSEViolations extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //Create a new shift and assign it to the FTSE employee
+            //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("FTSE T.");
+            scheduleMainPage.saveSchedule();
+
+            //Create a new shift and assign it to the FTSE employee
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -822,9 +842,13 @@ public class FTSEViolations extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //Create multiple shifts and assign them to the same FTSE employee
+            //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("FTSE T.");
+            scheduleMainPage.saveSchedule();
+
+            //Create multiple shifts and assign them to the same FTSE employee
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -892,9 +916,13 @@ public class FTSEViolations extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //Create one shift and assign it to the FTSE employee
+            //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("FTSE T.");
+            scheduleMainPage.saveSchedule();
+
+            //Create one shift and assign it to the FTSE employee
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -959,9 +987,13 @@ public class FTSEViolations extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //Create multiple shifts and assign them to the FTSE employee
+            //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("FTSE T.");
+            scheduleMainPage.saveSchedule();
+
+            //Create multiple shifts and assign them to the FTSE employee
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -1027,10 +1059,14 @@ public class FTSEViolations extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //Create multiple shifts and assign them to the FTSE employee
+            //Delete all auto-generated shifts for the FTSE employee
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("FTSE T.");
+            scheduleMainPage.saveSchedule();
+
+            //Create multiple shifts and assign them to the FTSE employee
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
@@ -1095,9 +1131,13 @@ public class FTSEViolations extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //Create multiple shifts and assign them to the FTSE employee
+            //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("FTSE T.");
+            scheduleMainPage.saveSchedule();
+
+            //Create multiple shifts and assign them to the FTSE employee
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -1163,10 +1203,14 @@ public class FTSEViolations extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //Create multiple shifts and assign them to the FTSE employee
+            //Delete all auto-generated shifts for the FTSE employee
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("FTSE T.");
+            scheduleMainPage.saveSchedule();
+
+            //Create multiple shifts and assign them to the FTSE employee
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
@@ -1233,10 +1277,14 @@ public class FTSEViolations extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //Create multiple shifts and assign them to the FTSE employee
+            //Delete all auto-generated shifts for the FTSE employee
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("FTSE T.");
+            scheduleMainPage.saveSchedule();
+
+            //Create multiple shifts and assign them to the FTSE employee
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
@@ -1301,10 +1349,14 @@ public class FTSEViolations extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //Create multiple shifts and assign them to the FTSE employee
+            //Delete all auto-generated shifts for the FTSE employee
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("FTSE T.");
+            scheduleMainPage.saveSchedule();
+
+            //Create multiple shifts and assign them to the FTSE employee
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
