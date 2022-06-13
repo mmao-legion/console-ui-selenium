@@ -281,5 +281,7 @@ public interface LocationsPage {
 
     public void downloadFiscalCalendar(String fiscalYear, String startDayOfWeek) throws Exception;
     public List<HashMap<String, String>> getLocationTemplateInfosInLocationLevel();
+    public void verifyActionsForTemplate(String templateName, String[] action) ;
+
     }
 

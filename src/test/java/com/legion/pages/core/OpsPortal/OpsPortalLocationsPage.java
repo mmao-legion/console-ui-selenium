@@ -4244,5 +4244,24 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("download FiscalCalendar button loaded failed", false);
 		}
 	}
+
+
+	public void verifyActionsForTemplate(String templateName, String[] action) {
+		List<WebElement> actions = getDriver().findElements(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span"));
+		for (int i = 0; i < actions.size(); i++) {
+			if (actions.get(0).getText().contains(action[0]) && action[0].equals("View")) {
+				SimpleUtils.pass(templateName + " has " + action[0] + " permission");
+			} else {
+				SimpleUtils.fail(templateName + " don't has " + action + "permission", false);
+			}
+			if (i > 0) {
+				if (actions.get(1).findElement(By.cssSelector("span.action.ng-binding")).getText().contains(action[1]) && action[1].equals("Edit")) {
+					SimpleUtils.pass(templateName + " has " + action[1] + " permission");
+				} else {
+					SimpleUtils.fail(templateName + " don't has " + action[1] + "permission", false);
+				}
+			}
+		}
+	}
 }
 

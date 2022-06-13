@@ -2138,4 +2138,37 @@ public class LocationsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Template localization permission")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyTemplateLocalizationPermissionOfDM(String username, String password, String browser, String location) throws Exception {
+        try {
+
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            //Assignment Rules
+            String[] action = {"View"};
+            locationsPage.verifyActionsForTemplate("Assignment Rules", action);
+            //Scheduling Rules
+            locationsPage.verifyActionsForTemplate("Scheduling Rules", action);
+            //Labor Model
+            String[] actions = {"View", "Edit"};
+            locationsPage.verifyActionsForTemplate("Labor Model", actions);
+            //Operating Hours
+            locationsPage.verifyActionsForTemplate("Operating Hours", actions);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
