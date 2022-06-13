@@ -36,32 +36,6 @@ public class DashboardTestKendraScott2 extends TestBase {
 		}
 	}
 
-	@Automated(automated = "Manual")
-	@Owner(owner = "Gunjan")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "LEG-4961: Should be able to set Location at Global Level")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void navigateToDashboardFromGlobalSetting(String username, String password, String browser, String location) throws Exception {
-		SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
-		SimpleUtils.pass("Click on Settings menu");
-		SimpleUtils.pass("Go back to Dashboard assert Dashboard loaded Successfully");
-		SimpleUtils.pass("Click on Settings menu again");
-		SimpleUtils.pass("Click on Global icon present next to Settings at top left section");
-		SimpleUtils.pass("Navigate back to Dashboard Page");
-		SimpleUtils.pass("assert Dashboard page is Loaded Successfully!");
-	}
-
-	@Automated(automated = "Manual")
-	@Owner(owner = "Gunjan")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "LEG-5231: Team Lead Should not see Today's Forecast and Projected Demand Graph present in Dashboard Section")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void todayForecastAndProjectedDemandGraphTeamLead(String username, String password, String browser, String location) throws Exception {
-		SimpleUtils.pass("Login into LegionCooffee2 Application Successfully!");
-		SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
-		SimpleUtils.fail("assert Today's Forecast and Projected Demand Graph should not be present for Team lead and Team member", false);
-	}
-
 	@Automated(automated = "Automated")
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
