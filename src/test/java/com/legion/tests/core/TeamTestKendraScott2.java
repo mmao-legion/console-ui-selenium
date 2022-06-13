@@ -1527,12 +1527,14 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.clickNextWeek();
 			profileNewUIPage.clickAvailabilityEditButton();
 			profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
+			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+			profileNewUIPage.clickAvailabilityEditButton();
 			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
 			Thread.sleep(5000);
 			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
-			locationSelectorPage.refreshTheBrowser();
-			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
-			profileNewUIPage.clickNextWeek();
+//			locationSelectorPage.refreshTheBrowser();
+//			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+//			profileNewUIPage.clickNextWeek();
 			//The message should display as '18 of 24 Available hrs left'
 			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
 			String totalHoursValue = availabilityData.get("totalHoursValue").toString();
@@ -1557,9 +1559,9 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.clickAvailabilityEditButton();
 			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
 			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
-			locationSelectorPage.refreshTheBrowser();
-			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
-			profileNewUIPage.clickNextWeek();
+//			locationSelectorPage.refreshTheBrowser();
+//			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+//			profileNewUIPage.clickNextWeek();
 			//The message should display as '18 of 24 Available hrs left'
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
 			totalHoursValue = availabilityData.get("totalHoursValue").toString();
@@ -1583,7 +1585,9 @@ public class TeamTestKendraScott2 extends TestBase{
 			teamPage.goToTeam();
 			teamPage.searchAndSelectTeamMemberByName(tmFullName);
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			Thread.sleep(10000);
 			profileNewUIPage.clickNextWeek();
+			Thread.sleep(5000);
 			//The message should display as '24 of 24 Available hrs left'
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
 			totalHoursValue = availabilityData.get("totalHoursValue").toString();

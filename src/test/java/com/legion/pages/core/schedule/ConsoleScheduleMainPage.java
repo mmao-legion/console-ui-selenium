@@ -210,7 +210,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             // Validate what happens next to the Edit!
             // When Status is finalized, look for extra popup.
             clickTheElement(editScheduleButton);
-            waitForSeconds(3);
+            waitForSeconds(5);
             if(isElementLoaded(popupAlertPremiumPay,10) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
                 // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
