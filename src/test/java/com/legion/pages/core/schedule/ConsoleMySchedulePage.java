@@ -586,6 +586,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         if (isElementLoaded(claimConfirmPopup, 5)) {
             if (isClickable(acceptBtn, 5)) {
                 click(acceptBtn);
+                waitForSeconds(5);
                 SimpleUtils.pass("Successfully claimed the overtime open shift offer");
             } else {
                 SimpleUtils.fail("Failed for claim the overtime open shift offer", false);

@@ -2898,7 +2898,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement allowEmployeesClaimOpenShiftOptionNoBtn;
 
 	@Override
-	public void allowEmployeesClaimOpenShift() throws Exception {
+	public void allowEmployeesClaimOvertimeShiftOffer() throws Exception {
 		if (isElementLoaded(allowEmployeesClaimOpenShiftOption, 5)) {
 			scrollToElement(allowEmployeesClaimOpenShiftOption);
 			if (isElementLoaded(allowEmployeesClaimOpenShiftOptionYesBtn, 5)) {
@@ -2916,7 +2916,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 	@Override
-	public void notAllowEmployeesClaimOpenShift() throws Exception {
+	public void notAllowEmployeesClaimOvertimeShiftOffer() throws Exception {
 		if (isElementLoaded(allowEmployeesClaimOpenShiftOption, 5)) {
 			scrollToElement(allowEmployeesClaimOpenShiftOption);
 			if (isElementLoaded(allowEmployeesClaimOpenShiftOptionNoBtn, 5)) {
