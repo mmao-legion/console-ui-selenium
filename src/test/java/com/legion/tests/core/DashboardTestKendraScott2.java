@@ -238,16 +238,9 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify Dashboard functionality")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyDashboardFunctionality(String browser, String username, String password, String location) throws Exception {
-		HashMap<String, String> upComingShifts = new HashMap<>();
-		HashMap<String, String> fourShifts = new HashMap<>();
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyDashboardFunctionalityAsTeamLead(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-
-		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
-		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 		dashboardPage.verifyDashboardPageLoadedProperly();
 		// Verify the Welcome section
 		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -255,71 +248,6 @@ public class DashboardTestKendraScott2 extends TestBase {
 		dashboardPage.verifyTheWelcomeMessage(nickName);
 		// Verify Today's forecast section > Projected Demand graph is present
 		dashboardPage.isProjectedDemandGraphShown();
-
-		// Make sure schedule is published
-		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
-		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-		boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-		if (isActiveWeekGenerated) {
-			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-		}
-		createSchedulePage.createScheduleForNonDGFlowNewUI();
-		createSchedulePage.publishActiveSchedule();
-		dashboardPage.navigateToDashboard();
-
-		HashMap<String, String> hoursOnDashboard = dashboardPage.getHoursFromDashboardPage();
-		String dateFromDashboard = dashboardPage.getCurrentDateFromDashboard();
-		String timeFromDashboard = dashboardPage.getCurrentTimeFromDashboard();
-
-
-		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(
-				ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
-		// Verify View Today's schedule button is working and navigating to the schedule page[Current date in day view]
-		scheduleCommonPage.isScheduleForCurrentDayInDayView(dateFromDashboard);
-		HashMap<String, String> hoursOnSchedule = smartCardPage.getHoursFromSchedulePage();
-		// Verify scheduled and other hours are matching with the Schedule smart card of Schedule page
-		if (hoursOnDashboard != null && hoursOnSchedule != null) {
-			if (hoursOnDashboard.equals(hoursOnSchedule)) {
-				SimpleUtils.pass("Data Source for Budget, Scheduled and Other are consistent with the data on schedule page!");
-			} else {
-				SimpleUtils.fail("Data Source for Budget, Scheduled and Other are inconsistent with the data " +
-						"on schedule page!", false);
-			}
-		} else {
-			SimpleUtils.fail("Failed to get the hours!", false);
-		}
-		// Verify that Starting soon shifts and Scheduled hours are not showing when current week's schedule is in Guidance or Draft
-		if (!createSchedulePage.isGenerateButtonLoaded()) {
-			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-			createSchedulePage.isGenerateButtonLoaded();
-		}
-		dashboardPage.navigateToDashboard();
-		boolean startingSoonLoaded = dashboardPage.isStartingSoonLoaded();
-		HashMap<String, String> hours = dashboardPage.getHoursFromDashboardPage();
-		// LEG-8474: When schedule of Current week is in Guidance, still data is showing on Dashboard
-		// TODO: following check will fail since LEG-8474
-		dashboardPage.verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(startingSoonLoaded, hours.get("Scheduled"));
-		// Verify starting soon section
-
-		scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-		if (!createSchedulePage.isPublishButtonLoaded()) {
-			createSchedulePage.createScheduleForNonDGFlowNewUI();
-		}
-		createSchedulePage.publishActiveSchedule();
-		dashboardPage.navigateToDashboard();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		startingSoonLoaded = dashboardPage.isStartingSoonLoaded();
-		boolean isStartingTomorrow = dashboardPage.isStartingTomorrow();
-		if (startingSoonLoaded) {
-			upComingShifts = dashboardPage.getUpComingShifts();
-
-			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-			fourShifts = scheduleShiftTablePage.getFourUpComingShifts(isStartingTomorrow, timeFromDashboard);
-			scheduleShiftTablePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
-		} else {
-			SimpleUtils.fail("Shifts failed to load on Dashboard when the schedule is published!", false);
-		}
 	}
 
 	@Automated(automated = "Automated")
