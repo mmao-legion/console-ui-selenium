@@ -117,7 +117,7 @@ public interface ScheduleShiftTablePage {
     public void clickTheDeleteImgForSpecifyShiftByIndex (int index) throws Exception;
     public void clickOnEditedOrDeletedImgForShiftInDayViewByIndex (int index) throws Exception;
     public void moveShiftByIndexInDayView (int index, boolean moveForeward) throws Exception;
-    public ArrayList<HashMap<String,String>> getGroupByWorkRoleStyleInfo() throws Exception;
+    public ArrayList<HashMap<String,String>> getGroupByOptionsStyleInfo() throws Exception;
     public void verifyComplianceForShiftByIndex(String violation, int index) throws Exception;
     public String getTheTooltipOfClockImgsByIndex (int index) throws Exception;
     public String getTheTooltipOfScheduleSummaryHoursByIndex (int index) throws Exception;

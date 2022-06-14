@@ -18,6 +18,7 @@ import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import sun.rmi.runtime.Log;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -525,8 +526,8 @@ public class CreateShiftNewUITest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    //@Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate Assign shifts for each day switch")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateAssignShiftsForEachDaySwitchAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -706,9 +707,18 @@ public class CreateShiftNewUITest extends TestBase {
                     newShiftPage.getShiftOffersOnShiftAssignedSection().get(0).contains(firstNameOfSelectedTM2), false);
 
             //Check assign for all days warning
+            String message1 = "Assign for All Days";
+            String message2 = "If you switch to assigning all days at once all your current assignments and offers will be lost";
             newShiftPage.clickAssignShiftsForEachDaySwitch();
             SimpleUtils.assertOnFail("The assign for all days popup should display! ",
                     newShiftPage.checkConfirmPopupIsLoaded(), false);
+            SimpleUtils.assertOnFail("The title and message on confirm popup display incorrectly, " +
+                    "the expected title is: "+ message1
+                    +"the actual title is"+newShiftPage.getTitleOfConfirmPopup()
+                    + " the expect message is: "+message2
+                    + " the actual message is: "+ newShiftPage.getMessageOfConfirmPopup(),
+                    message1.equals(newShiftPage.getTitleOfConfirmPopup())
+                            && message2.equals(newShiftPage.getMessageOfConfirmPopup()), false);
             newShiftPage.clickOkBtnOnConfirmPopup();
             SimpleUtils.assertOnFail("‘Assign or offer shifts for each day’ option should be disabled! ",
                     !newShiftPage.checkAssignShiftsForEachDaySwitchIfEnabled(), false);
@@ -886,7 +896,7 @@ public class CreateShiftNewUITest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("open");
             scheduleMainPage.saveSchedule();
-            scheduleMainPage.clickOnFilterBtn();
+//            scheduleMainPage.clickOnFilterBtn();
             String workRole = shiftOperatePage.getRandomWorkRole();
 
             //Verify the auto assignment workflow with one shift for one days
@@ -907,6 +917,10 @@ public class CreateShiftNewUITest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             int dayCount = 1;
             newShiftPage.selectSpecificWorkDay(dayCount);
+            String shiftName = "ShiftNameForBulkCreateShiftUIAuto";
+            String shiftNotes = "Shift Notes For Bulk Create Shift UI Auto";
+            newShiftPage.setShiftNameOnNewCreateShiftPage(shiftName);
+            newShiftPage.setShiftNotesOnNewCreateShiftPage(shiftNotes);
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
             SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
@@ -915,6 +929,8 @@ public class CreateShiftNewUITest extends TestBase {
             String shiftTime = shiftInfo.get(2);
             String workRoleOfNewShift = shiftInfo.get(4);
             String shiftHrs = shiftInfo.get(6);
+            String shiftNameOfNewShift = shiftInfo.get(7);
+            String shiftNotesOfNewShift = shiftInfo.get(8);
             SimpleUtils.assertOnFail("The new shift's shift time display incorrectly, the expected is:"+shiftStartTime+"-"+shiftEndTime
                     + " the actual is: "+ shiftTime,
                     shiftTime.equalsIgnoreCase(shiftStartTime+"-"+shiftEndTime), false);
@@ -924,6 +940,12 @@ public class CreateShiftNewUITest extends TestBase {
             SimpleUtils.assertOnFail("The new shift's hrs display incorrectly, the expected is:"+ totalHrs
                             + " the actual is: "+ shiftHrs,
                     totalHrs.equalsIgnoreCase(shiftHrs), false);
+            SimpleUtils.assertOnFail("The new shift's name display incorrectly, the expected is:"+ shiftName
+                            + " the actual is: "+ shiftNameOfNewShift,
+                    shiftName.equals(shiftNameOfNewShift), false);
+            SimpleUtils.assertOnFail("The new shift's notes display incorrectly, the expected is:"+ shiftNotes
+                            + " the actual is: "+ shiftNotesOfNewShift,
+                    shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
 
             //Verify the auto assignment workflow with more than one shift for more than one days
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -944,6 +966,8 @@ public class CreateShiftNewUITest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             dayCount = 3;
             newShiftPage.selectSpecificWorkDay(dayCount);
+            newShiftPage.setShiftNameOnNewCreateShiftPage(shiftName);
+            newShiftPage.setShiftNotesOnNewCreateShiftPage(shiftNotes);
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
             Thread.sleep(5000);
@@ -958,6 +982,8 @@ public class CreateShiftNewUITest extends TestBase {
                     shiftTime = shiftInfo.get(2);
                     workRoleOfNewShift = shiftInfo.get(4);
                     shiftHrs = shiftInfo.get(6);
+                    shiftNameOfNewShift = shiftInfo.get(7);
+                    shiftNotesOfNewShift = shiftInfo.get(8);
                     SimpleUtils.assertOnFail("The new shift's shift time display incorrectly, the expected is:"+shiftStartTime+"-"+shiftEndTime
                                     + " the actual is: "+ shiftTime,
                             shiftTime.equalsIgnoreCase(shiftStartTime+"-"+shiftEndTime), false);
@@ -967,6 +993,12 @@ public class CreateShiftNewUITest extends TestBase {
                     SimpleUtils.assertOnFail("The new shift's hrs display incorrectly, the expected is:"+ totalHrs
                                     + " the actual is: "+ shiftHrs,
                             totalHrs.equalsIgnoreCase(shiftHrs), false);
+                    SimpleUtils.assertOnFail("The new shift's name display incorrectly, the expected is:"+ shiftName
+                                    + " the actual is: "+ shiftNameOfNewShift,
+                            shiftName.equals(shiftNameOfNewShift), false);
+                    SimpleUtils.assertOnFail("The new shift's notes display incorrectly, the expected is:"+ shiftNotes
+                                    + " the actual is: "+ shiftNotesOfNewShift,
+                            shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
                 }
             }
         } catch (Exception e) {
@@ -1018,8 +1050,8 @@ public class CreateShiftNewUITest extends TestBase {
                     newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
             //Fill the required option
             newShiftPage.selectWorkRole(workRole);
-            String shiftStartTime = "11:00am";
-            String shiftEndTime = "2:00pm";
+            String shiftStartTime = "8:00am";
+            String shiftEndTime = "11:00am";
             String totalHrs = "3 Hrs";
             newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
@@ -1029,6 +1061,10 @@ public class CreateShiftNewUITest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             int dayCount = 1;
             newShiftPage.selectSpecificWorkDay(dayCount);
+            String shiftName = "ShiftNameForBulkCreateShiftUIAuto";
+            String shiftNotes = "Shift Notes For Bulk Create Shift UI Auto";
+            newShiftPage.setShiftNameOnNewCreateShiftPage(shiftName);
+            newShiftPage.setShiftNotesOnNewCreateShiftPage(shiftNotes);
             newShiftPage.clickOnCreateOrNextBtn();
             //Select 3 TMs to offer and click Create button
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
@@ -1038,7 +1074,7 @@ public class CreateShiftNewUITest extends TestBase {
             String selectedTM3 = newShiftPage.selectTeamMembers();
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
-
+            Thread.sleep(5000);
             //There are 1 open shift been created and shift offer will been sent to the multiple TMs
             SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
                     scheduleShiftTablePage.getOneDayShiftByName(0, "Open").size()==1, false);
@@ -1059,6 +1095,8 @@ public class CreateShiftNewUITest extends TestBase {
             String shiftTime = shiftInfo.get(2);
             String workRoleOfNewShift = shiftInfo.get(4);
             String shiftHrs = shiftInfo.get(6);
+            String shiftNameOfNewShift = shiftInfo.get(7);
+            String shiftNotesOfNewShift = shiftInfo.get(8);
             SimpleUtils.assertOnFail("The new shift's shift time display incorrectly, the expected is:"+shiftStartTime+"-"+shiftEndTime
                             + " the actual is: "+ shiftTime,
                     shiftTime.equalsIgnoreCase(shiftStartTime+"-"+shiftEndTime), false);
@@ -1068,7 +1106,12 @@ public class CreateShiftNewUITest extends TestBase {
             SimpleUtils.assertOnFail("The new shift's hrs display incorrectly, the expected is:"+ totalHrs
                             + " the actual is: "+ shiftHrs,
                     totalHrs.equalsIgnoreCase(shiftHrs), false);
-
+            SimpleUtils.assertOnFail("The new shift's name display incorrectly, the expected is:"+ shiftName
+                            + " the actual is: "+ shiftNameOfNewShift,
+                    shiftName.equals(shiftNameOfNewShift), false);
+            SimpleUtils.assertOnFail("The new shift's notes display incorrectly, the expected is:"+ shiftNotes
+                            + " the actual is: "+ shiftNotesOfNewShift,
+                    shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
 
 
             //Verify the auto offer workflow with multiple shifts for multiple days without offer TMs
@@ -1090,6 +1133,8 @@ public class CreateShiftNewUITest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             dayCount = 3;
             newShiftPage.selectSpecificWorkDay(dayCount);
+            newShiftPage.setShiftNameOnNewCreateShiftPage(shiftName);
+            newShiftPage.setShiftNotesOnNewCreateShiftPage(shiftNotes);
             newShiftPage.clickOnCreateOrNextBtn();
             //Don't select TMs to offer and click Create button
             newShiftPage.clickOnCreateOrNextBtn();
@@ -1107,6 +1152,8 @@ public class CreateShiftNewUITest extends TestBase {
                     shiftTime = shiftInfo.get(2);
                     workRoleOfNewShift = shiftInfo.get(4);
                     shiftHrs = shiftInfo.get(6);
+                    shiftNameOfNewShift = shiftInfo.get(7);
+                    shiftNotesOfNewShift = shiftInfo.get(8);
                     SimpleUtils.assertOnFail("The new shift's shift time display incorrectly, the expected is:"+shiftStartTime+"-"+shiftEndTime
                                     + " the actual is: "+ shiftTime,
                             shiftTime.equalsIgnoreCase(shiftStartTime+"-"+shiftEndTime), false);
@@ -1116,7 +1163,12 @@ public class CreateShiftNewUITest extends TestBase {
                     SimpleUtils.assertOnFail("The new shift's hrs display incorrectly, the expected is:"+ totalHrs
                                     + " the actual is: "+ shiftHrs,
                             totalHrs.equalsIgnoreCase(shiftHrs), false);
-
+                    SimpleUtils.assertOnFail("The new shift's name display incorrectly, the expected is:"+ shiftName
+                                    + " the actual is: "+ shiftNameOfNewShift,
+                            shiftName.equals(shiftNameOfNewShift), false);
+                    SimpleUtils.assertOnFail("The new shift's notes display incorrectly, the expected is:"+ shiftNotes
+                                    + " the actual is: "+ shiftNotesOfNewShift,
+                            shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
                     scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
                     scheduleShiftTablePage.clickViewStatusBtn();
                     SimpleUtils.assertOnFail("It should has no offers in the offer list! ",
@@ -1305,7 +1357,7 @@ public class CreateShiftNewUITest extends TestBase {
             newShiftPage.selectSpecificWorkDay(dayCount);
             newShiftPage.clickOnCreateOrNextBtn();
 
-            //Verify the offer all days shifts by each days
+            //Assign TM for one shift and offer TM for another shifts
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             MyThreadLocal.setAssignTMStatus(true);
             String assignedTM = newShiftPage.selectTeamMembers();
@@ -1334,7 +1386,6 @@ public class CreateShiftNewUITest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("Open");
             scheduleMainPage.saveSchedule();
-
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -1372,8 +1423,8 @@ public class CreateShiftNewUITest extends TestBase {
                 scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
                 scheduleShiftTablePage.clickViewStatusBtn();
                 for (int j=0;j< offeredTMs.size();j++){
-                    SimpleUtils.assertOnFail("The "+offeredTM+" should display on the offer list! ",
-                            !shiftOperatePage.getOfferStatusFromOpenShiftStatusList(offeredTM.split(" ")[0]).equals(""), false);
+                    SimpleUtils.assertOnFail("The "+offeredTMs.get(j)+" should display on the offer list! ",
+                            !shiftOperatePage.getOfferStatusFromOpenShiftStatusList(offeredTMs.get(j).split(" ")[0]).equals(""), false);
                 }
                 shiftOperatePage.closeViewStatusContainer();
             }
@@ -1414,24 +1465,26 @@ public class CreateShiftNewUITest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             scheduleCommonPage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isWeekGenerated) {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             scheduleMainPage.clickOnFilterBtn();
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
             shiftOperatePage.deleteTMShiftInWeekView("open");
             scheduleMainPage.saveSchedule();
-            //Verify the auto offer workflow with one shift for one days
+            //Verify the assign workflow with one shift for one days
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             SimpleUtils.assertOnFail("New create shift page is not display! ",
                     newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
             //Fill the required option
             newShiftPage.selectWorkRole(workRole);
-            String shiftStartTime = "11:00am";
-            String shiftEndTime = "2:00pm";
+            String shiftStartTime = "8:00am";
+            String shiftEndTime = "11:00am";
+            String totalHrs = "3 Hrs";
             newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
@@ -1440,8 +1493,12 @@ public class CreateShiftNewUITest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             int dayCount = 1;
             newShiftPage.selectSpecificWorkDay(dayCount);
+            String shiftName = "ShiftNameForBulkCreateShiftUIAuto";
+            String shiftNotes = "Shift Notes For Bulk Create Shift UI Auto";
+            newShiftPage.setShiftNameOnNewCreateShiftPage(shiftName);
+            newShiftPage.setShiftNotesOnNewCreateShiftPage(shiftNotes);
             newShiftPage.clickOnCreateOrNextBtn();
-            //Select 3 TMs to offer and click Create button
+            //Select 3 TMs to assign and click Create button
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             MyThreadLocal.setAssignTMStatus(true);
             String selectedTM1 = newShiftPage.selectTeamMembers();
@@ -1459,23 +1516,51 @@ public class CreateShiftNewUITest extends TestBase {
             SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
                     shiftsOfOneDay.size()==1, false);
 
+            String shiftId = shiftsOfOneDay.get(0).getAttribute("id").toString();
+            int index = scheduleShiftTablePage.getShiftIndexById(shiftId);
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
+            String shiftTime = shiftInfo.get(2);
+            String workRoleOfNewShift = shiftInfo.get(4);
+            String shiftHrs = shiftInfo.get(8);
+            String shiftNameOfNewShift = shiftInfo.get(9);
+            String shiftNotesOfNewShift = shiftInfo.get(10);
+            SimpleUtils.assertOnFail("The new shift's shift time display incorrectly, the expected is:"+shiftStartTime+"-"+shiftEndTime
+                            + " the actual is: "+ shiftTime,
+                    shiftTime.equalsIgnoreCase(shiftStartTime+"-"+shiftEndTime), false);
+            SimpleUtils.assertOnFail("The new shift's work role display incorrectly, the expected is:"+ workRole
+                            + " the actual is: "+ workRoleOfNewShift,
+                    workRoleOfNewShift.equalsIgnoreCase(workRole), false);
+            SimpleUtils.assertOnFail("The new shift's hrs display incorrectly, the expected is:"+ totalHrs
+                            + " the actual is: "+ shiftHrs,
+                    totalHrs.equalsIgnoreCase(shiftHrs), false);
+            SimpleUtils.assertOnFail("The new shift's name display incorrectly, the expected is:"+ shiftName
+                            + " the actual is: "+ shiftNameOfNewShift,
+                    shiftName.equals(shiftNameOfNewShift), false);
+            SimpleUtils.assertOnFail("The new shift's notes display incorrectly, the expected is:"+ shiftNotes
+                            + " the actual is: "+ shiftNotesOfNewShift,
+                    shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
+
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView(selectedTM1.split(" ")[0]);
             scheduleMainPage.saveSchedule();
 
-
+            //Verify the assign TMs workflow with multiple shifts for multiple days
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             SimpleUtils.assertOnFail("New create shift page is not display! ",
                     newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
             //Fill the required option
             newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             count =5;
             newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
             newShiftPage.clearAllSelectedDays();
             dayCount = 7;
             newShiftPage.selectSpecificWorkDay(dayCount);
+            newShiftPage.setShiftNameOnNewCreateShiftPage(shiftName);
+            newShiftPage.setShiftNotesOnNewCreateShiftPage(shiftNotes);
             newShiftPage.clickOnCreateOrNextBtn();
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             selectedTM1 = newShiftPage.selectTeamMembers();
@@ -1497,10 +1582,385 @@ public class CreateShiftNewUITest extends TestBase {
                     shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(i, selectedTMs.get(j).split(" ")[0]);
                     SimpleUtils.assertOnFail("The "+selectedTMs.get(j)+" shift is not exist on the "+i+" day! ",
                             shiftsOfOneDay.size()==1, false);
+
+                    shiftId = shiftsOfOneDay.get(0).getAttribute("id").toString();
+                    index = scheduleShiftTablePage.getShiftIndexById(shiftId);
+                    shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
+                    shiftTime = shiftInfo.get(2);
+                    workRoleOfNewShift = shiftInfo.get(4);
+                    shiftHrs = shiftInfo.get(8);
+                    shiftNameOfNewShift = shiftInfo.get(9);
+                    shiftNotesOfNewShift = shiftInfo.get(10);
+                    SimpleUtils.assertOnFail("The new shift's shift time display incorrectly, the expected is:"+shiftStartTime+"-"+shiftEndTime
+                                    + " the actual is: "+ shiftTime,
+                            shiftTime.equalsIgnoreCase(shiftStartTime+"-"+shiftEndTime), false);
+                    SimpleUtils.assertOnFail("The new shift's work role display incorrectly, the expected is:"+ workRole
+                                    + " the actual is: "+ workRoleOfNewShift,
+                            workRoleOfNewShift.equalsIgnoreCase(workRole), false);
+                    SimpleUtils.assertOnFail("The new shift's hrs display incorrectly, the expected is:"+ totalHrs
+                                    + " the actual is: "+ shiftHrs,
+                            totalHrs.equalsIgnoreCase(shiftHrs), false);
+                    SimpleUtils.assertOnFail("The new shift's name display incorrectly, the expected is:"+ shiftName
+                                    + " the actual is: "+ shiftNameOfNewShift,
+                            shiftName.equals(shiftNameOfNewShift), false);
+                    SimpleUtils.assertOnFail("The new shift's notes display incorrectly, the expected is:"+ shiftNotes
+                                    + " the actual is: "+ shiftNotesOfNewShift,
+                            shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
                 }
             }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate the shifts can be created after update shift info")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateTheShiftsCanBeCreatedAfterUpdateShiftInfoAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            String workRole = shiftOperatePage.getRandomWorkRole();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            SimpleUtils.assertOnFail("New create shift page is not display! ",
+                    newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
+            //Fill the required option
+            newShiftPage.selectWorkRole(workRole);
+            String shiftStartTime = "8:00am";
+            String shiftEndTime = "11:00am";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            int count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            int dayCount = 1;
+            newShiftPage.selectSpecificWorkDay(dayCount);
+            String shiftName = "ShiftNameForBulkCreateShiftUIAuto";
+            String shiftNotes = "Shift Notes For Bulk Create Shift UI Auto";
+            newShiftPage.setShiftNameOnNewCreateShiftPage(shiftName);
+            newShiftPage.setShiftNotesOnNewCreateShiftPage(shiftNotes);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.selectTeamMembers();
+            //Click Back button and update the shift info
+            newShiftPage.clickOnBackButton();
+            //Update the shift times, shift per day and select days check boxes
+            shiftStartTime = "9:00am";
+            shiftEndTime = "2:00pm";
+            String totalHrs = "4.5 Hrs";
+            String totalWeekHrs = "31.5 Hrs this week";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            count =5;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            dayCount = 7;
+            newShiftPage.selectSpecificWorkDay(dayCount);
+            newShiftPage.clickOnCreateOrNextBtn();
+            shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
+            String selectedTM1 = newShiftPage.selectTeamMembers();
+            String selectedTM2 = newShiftPage.selectTeamMembers();
+            String selectedTM3 = newShiftPage.selectTeamMembers();
+            String selectedTM4 = newShiftPage.selectTeamMembers();
+            String selectedTM5 = newShiftPage.selectTeamMembers();
+            List<String> selectedTMs = new ArrayList<>();
+            selectedTMs.add(selectedTM1);
+            selectedTMs.add(selectedTM2);
+            selectedTMs.add(selectedTM3);
+            selectedTMs.add(selectedTM4);
+            selectedTMs.add(selectedTM5);
+            newShiftPage.clickOnCreateOrNextBtn();
+            scheduleMainPage.saveSchedule();
+            Thread.sleep(5000);
+            for (int i =0; i<dayCount; i++) {
+                for (int j=0;j<selectedTMs.size();j++) {
+                    List<WebElement> shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(i, selectedTMs.get(j).split(" ")[0]);
+                    SimpleUtils.assertOnFail("The "+selectedTMs.get(j)+" shift is not exist on the "+i+" day! ",
+                            shiftsOfOneDay.size()==1, false);
+
+                    String shiftId = shiftsOfOneDay.get(0).getAttribute("id").toString();
+                    int index = scheduleShiftTablePage.getShiftIndexById(shiftId);
+                    List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
+                    String shiftTime = shiftInfo.get(2);
+                    String workRoleOfNewShift = shiftInfo.get(4);
+                    String shiftHrs = shiftInfo.get(8);
+                    String shiftNameOfNewShift = shiftInfo.get(9);
+                    String shiftNotesOfNewShift = shiftInfo.get(10);
+                    String weeklyHrs = shiftInfo.get(7);
+                    SimpleUtils.assertOnFail("The new shift's shift time display incorrectly, the expected is:"+shiftStartTime+"-"+shiftEndTime
+                                    + " the actual is: "+ shiftTime,
+                            shiftTime.equalsIgnoreCase(shiftStartTime+"-"+shiftEndTime), false);
+                    SimpleUtils.assertOnFail("The new shift's work role display incorrectly, the expected is:"+ workRole
+                                    + " the actual is: "+ workRoleOfNewShift,
+                            workRoleOfNewShift.equalsIgnoreCase(workRole), false);
+                    SimpleUtils.assertOnFail("The new shift's hrs display incorrectly, the expected is:"+ totalHrs
+                                    + " the actual is: "+ shiftHrs,
+                            totalHrs.equalsIgnoreCase(shiftHrs), false);
+                    SimpleUtils.assertOnFail("The new shift's name display incorrectly, the expected is:"+ shiftName
+                                    + " the actual is: "+ shiftNameOfNewShift,
+                            shiftName.equals(shiftNameOfNewShift), false);
+                    SimpleUtils.assertOnFail("The new shift's notes display incorrectly, the expected is:"+ shiftNotes
+                                    + " the actual is: "+ shiftNotesOfNewShift,
+                            shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
+                    SimpleUtils.assertOnFail("The TM's week hrs display incorrectly, the expected is:"+ totalWeekHrs
+                                    + " the actual is: "+ weeklyHrs,
+                            totalWeekHrs.equalsIgnoreCase(weeklyHrs), false);
+                }
+            }
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate the Next day check box on create shift modal")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateTheNextDayCheckBoxOnCreateShiftModalAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00AM");
+            String workRole = shiftOperatePage.getRandomWorkRole();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Click New shift button to open create shift modal
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            SimpleUtils.assertOnFail("New create shift page is not display! ",
+                    newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
+            //Fill the required option
+            newShiftPage.selectWorkRole(workRole);
+            int count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(1,1,1);
+            String shiftStartTime = "8:00am";
+            String shiftEndTime = "9:00am";
+            String shiftHrs = "25 Hrs";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            String shiftInfoOnShiftCard = newShiftPage.getShiftCardInfoOnSearchTMPage();
+            SimpleUtils.assertOnFail("The next day shift hrs display incorrectly! the expected is: "+shiftHrs
+                            +" the actual is: "+ newShiftPage.getShiftCardInfoOnSearchTMPage(),
+                    shiftInfoOnShiftCard.contains(shiftHrs), false);
+            String selectedTM = newShiftPage.selectTeamMembers();
+            newShiftPage.clickOnCreateOrNextBtn();
+            scheduleMainPage.saveSchedule();
+            Thread.sleep(5000);
+                List<WebElement> shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(1, selectedTM.split(" ")[0]);
+                SimpleUtils.assertOnFail("The "+selectedTM+" shift is not exist on the "+1+" day! ",
+                        shiftsOfOneDay.size()==1, false);
+
+                String shiftId = shiftsOfOneDay.get(0).getAttribute("id").toString();
+                int index = scheduleShiftTablePage.getShiftIndexById(shiftId);
+                List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
+                String shiftTime = shiftInfo.get(2);
+                String workRoleOfNewShift = shiftInfo.get(4);
+                String shiftHrsOfNewShift = shiftInfo.get(8);
+                SimpleUtils.assertOnFail("The new shift's shift time display incorrectly, the expected is:"+shiftStartTime+"-"+shiftEndTime
+                                + " the actual is: "+ shiftTime,
+                        shiftTime.equalsIgnoreCase(shiftStartTime+"-"+shiftEndTime), false);
+                SimpleUtils.assertOnFail("The new shift's work role display incorrectly, the expected is:"+ workRole
+                                + " the actual is: "+ workRoleOfNewShift,
+                        workRoleOfNewShift.equalsIgnoreCase(workRole), false);
+                SimpleUtils.assertOnFail("The new shift's hrs display incorrectly, the expected is:"+ shiftHrsOfNewShift
+                                + " the actual is: "+ shiftHrs,
+                        shiftHrsOfNewShift.equalsIgnoreCase(shiftHrs) || shiftHrsOfNewShift.equalsIgnoreCase("24.5 Hrs"), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate shifts can be created by new UI by different access roles")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateShiftsCanBeCreatedByNewUIByDifferentAccessRolesAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try {
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            //Verify the shifts can be created by new UI by original SM access role
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            createShiftsByDifferentAccessRoles(false);
+            loginPage.logOut();
+
+            //Verify the shifts can be created by new UI by custom SM access role
+            loginAsDifferentRole(AccessRoles.StoreManager2.getValue());
+            createShiftsByDifferentAccessRoles(false);
+            loginPage.logOut();
+
+            //Verify the shifts can be created by new UI by original TL access role
+            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
+            createShiftsByDifferentAccessRoles(true);
+            loginPage.logOut();
+
+            //Verify the shifts can be created by new UI by custom TL access role
+            loginAsDifferentRole(AccessRoles.TeamLead2.getValue());
+            createShiftsByDifferentAccessRoles(true);
+            loginPage.logOut();
+
+            //Verify the shifts can be created by new UI by original DM access role
+            loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
+            createShiftsByDifferentAccessRoles(false);
+            loginPage.logOut();
+
+            //Verify the shifts can be created by new UI by custom DM access role
+            loginAsDifferentRole(AccessRoles.DistrictManager2.getValue());
+            createShiftsByDifferentAccessRoles(false);
+            loginPage.logOut();
+
+            //Verify the shifts can be created by new UI by original CA access role
+            loginAsDifferentRole(AccessRoles.CustomerAdmin.getValue());
+            createShiftsByDifferentAccessRoles(false);
+            loginPage.logOut();
+
+            //Verify the shifts can be created by new UI by custom CA access role
+            loginAsDifferentRole(AccessRoles.CustomerAdmin2.getValue());
+            createShiftsByDifferentAccessRoles(false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    private void createShiftsByDifferentAccessRoles (boolean isTL) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        if (!isTL) {
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+        }
+        scheduleCommonPage.navigateToNextWeek();
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (isWeekGenerated) {
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
+        createSchedulePage.createScheduleForNonDGFlowNewUI();
+        //Verify the assign workflow with one shift for one days
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        SimpleUtils.assertOnFail("New create shift page is not display! ",
+                newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
+        //Fill the required option
+        newShiftPage.selectWorkRole(workRole);
+        String shiftStartTime = "8:00am";
+        String shiftEndTime = "11:00am";
+        String totalHrs = "3 Hrs";
+        newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+        int count = 1;
+        newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+        newShiftPage.clearAllSelectedDays();
+        int dayCount = 1;
+        newShiftPage.selectSpecificWorkDay(dayCount);
+        String shiftName = "ShiftNameForBulkCreateShiftUIAuto";
+        String shiftNotes = "Shift Notes For Bulk Create Shift UI Auto";
+        newShiftPage.setShiftNameOnNewCreateShiftPage(shiftName);
+        newShiftPage.setShiftNotesOnNewCreateShiftPage(shiftNotes);
+        newShiftPage.clickOnCreateOrNextBtn();
+        //Select 3 TMs to assign and click Create button
+        shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
+        MyThreadLocal.setAssignTMStatus(true);
+        String selectedTM1 = newShiftPage.selectTeamMembers();
+        newShiftPage.clickOnCreateOrNextBtn();
+        List<WebElement> shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
+        SimpleUtils.assertOnFail("The "+selectedTM1+ "shift is not exist on the first day! ",
+                shiftsOfOneDay.size()==1, false);
+        scheduleMainPage.saveSchedule();
+        Thread.sleep(5000);
+        shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
+        SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
+                shiftsOfOneDay.size()==1, false);
+        createSchedulePage.publishActiveSchedule();
+        shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
+        SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
+                shiftsOfOneDay.size()==1, false);
+
+        String shiftId = shiftsOfOneDay.get(0).getAttribute("id").toString();
+        int index = scheduleShiftTablePage.getShiftIndexById(shiftId);
+        List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
+        String shiftTime = shiftInfo.get(2);
+        String workRoleOfNewShift = shiftInfo.get(4);
+        String shiftHrs = shiftInfo.get(8);
+        String shiftNameOfNewShift = shiftInfo.get(9);
+        String shiftNotesOfNewShift = shiftInfo.get(10);
+        SimpleUtils.assertOnFail("The new shift's shift time display incorrectly, the expected is:"+shiftStartTime+"-"+shiftEndTime
+                        + " the actual is: "+ shiftTime,
+                shiftTime.equalsIgnoreCase(shiftStartTime+"-"+shiftEndTime), false);
+        SimpleUtils.assertOnFail("The new shift's work role display incorrectly, the expected is:"+ workRole
+                        + " the actual is: "+ workRoleOfNewShift,
+                workRoleOfNewShift.equalsIgnoreCase(workRole), false);
+        SimpleUtils.assertOnFail("The new shift's hrs display incorrectly, the expected is:"+ totalHrs
+                        + " the actual is: "+ shiftHrs,
+                totalHrs.equalsIgnoreCase(shiftHrs), false);
+        SimpleUtils.assertOnFail("The new shift's name display incorrectly, the expected is:"+ shiftName
+                        + " the actual is: "+ shiftNameOfNewShift,
+                shiftName.equals(shiftNameOfNewShift), false);
+        SimpleUtils.assertOnFail("The new shift's notes display incorrectly, the expected is:"+ shiftNotes
+                        + " the actual is: "+ shiftNotesOfNewShift,
+                shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
     }
 }

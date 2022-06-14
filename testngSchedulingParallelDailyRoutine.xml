@@ -584,4 +584,25 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
             </class>
         </classes>
     </test>
+
+    <test name="Create Shift New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.CreateShiftNewUITest">
+                <methods>
+                    <include name="validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin" />
+                    <include name="validateTheWarningMessageOfTheItemsOnFirstPageOfCreateShiftModalAsInternalAdmin" />
+                    <include name="validateAssignOrOfferTMsInSearchAndRecommendedTabsAsInternalAdmin" />
+                    <include name="validateAssignShiftsForEachDaySwitchAsInternalAdmin" />
+                    <include name="verifyAssignShiftByEachDaysAsInternalAdmin" />
+                    <include name="validateTheAutoAssignmentWorkFlowAsInternalAdmin" />
+                    <include name="validateTheOfferTMsWorkFlowAsInternalAdmin" />
+                    <include name="validateOfferShiftByEachDaysAsInternalAdmin" />
+                    <include name="validateTheAssignAndOfferWorkFlowAsInternalAdmin" />
+                    <include name="validateTheAssignShiftsWorkFlowAsInternalAdmin" />
+                    <include name="validateTheShiftsCanBeCreatedAfterUpdateShiftInfoAsInternalAdmin" />
+                    <include name="validateTheNextDayCheckBoxOnCreateShiftModalAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

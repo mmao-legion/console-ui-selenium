@@ -687,7 +687,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
         ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
         scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-        ArrayList<HashMap<String,String>> workRoleInfoInGroupBySection  = scheduleShiftTablePage.getGroupByWorkRoleStyleInfo();
+        ArrayList<HashMap<String,String>> workRoleInfoInGroupBySection  = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
 
         //Go to OP page
         dashboardPage.navigateToDashboard();
@@ -700,8 +700,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
         userManagementPage.goToWorkRolesTile();
 
         if (!workRoleInfoInGroupBySection.isEmpty()){
-            HashMap<String,String> workRoleInfoInConfiguration  = userManagementPage.getAllWorkRoleStyleInfo(workRoleInfoInGroupBySection.get(0).get("WorkRoleName"));
-            if (workRoleInfoInGroupBySection.get(0).get("WorkRoleStyle").replace("background-color", "background").equalsIgnoreCase(workRoleInfoInConfiguration.get(workRoleInfoInGroupBySection.get(0).get("WorkRoleName")))){
+            HashMap<String,String> workRoleInfoInConfiguration  = userManagementPage.getAllWorkRoleStyleInfo(workRoleInfoInGroupBySection.get(0).get("optionName"));
+            if (workRoleInfoInGroupBySection.get(0).get("optionStyle").replace("background-color", "background").equalsIgnoreCase(workRoleInfoInConfiguration.get(workRoleInfoInGroupBySection.get(0).get("WorkRoleName")))){
                 SimpleUtils.pass("Work Role color match!");
             }  else {
                 SimpleUtils.fail("Work role color don't match!", false);

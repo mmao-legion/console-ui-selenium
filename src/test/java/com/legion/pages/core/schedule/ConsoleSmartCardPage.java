@@ -796,4 +796,22 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
             SimpleUtils.fail("Required Action smart card fail to load! ", false);
         return messageOnSmartCard;
     }
+
+
+    @FindBy (css = "div.card-carousel-card-blue")
+    private WebElement masterTemplateSmartCard;
+    @FindBy (css = "[ng-click=\"toggleTemplateView()\"]")
+    private WebElement viewTemplateLinkOnMasterTemplateSmartCard;
+
+    public void clickViewTemplateLinkOnMasterTemplateSmartCard() throws Exception {
+        if (isElementLoaded(masterTemplateSmartCard, 10)) {
+            if (isElementLoaded(viewTemplateLinkOnMasterTemplateSmartCard, 5)) {
+                clickTheElement(viewTemplateLinkOnMasterTemplateSmartCard);
+                SimpleUtils.pass("Click View Template link successfully! ");
+            } else
+                SimpleUtils.fail("The View Template link on Master Template smard card fail to load! ", false);
+        } else
+            SimpleUtils.fail("The Master Template smart card fail to load! ", false);
+    }
+
 }

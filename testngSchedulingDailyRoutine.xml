@@ -57,9 +57,9 @@
         </classes>
     </test>
 
-    <test name="Location Group Test">
+    <test name="Parent Child LG Test">
         <classes>
-            <class name="com.legion.tests.core.LocationGroupTest">
+            <class name="com.legion.tests.core.ParentChildLGTest">
                 <methods>
                     <include name="validateTheLocationFilterOnDemandTabAsInternalAdmin" />
                     <include name="validateTheLocationFilterOnLabelTabAsInternalAdmin" />

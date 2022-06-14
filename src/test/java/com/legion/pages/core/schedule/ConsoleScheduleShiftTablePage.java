@@ -706,8 +706,12 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private WebElement shiftTotalHrs;
     @FindBy(css = ".week-schedule-shift-place-pto")
     private List<WebElement> ptoPlaces;
-    @FindBy (css = ".hover-sub-container")
+    @FindBy (css = "[class=\"hover-sub-container\"]")
     private List<WebElement> infoContainers;
+    @FindBy (css = "[ng-if-start=\"shift.name\"]")
+    private WebElement shiftName;
+    @FindBy (xpath = "//div[contains(@ng-if-start,'shift.notes')]/following-sibling::div/div")
+    private WebElement shiftNotes;
 
     @Override
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
@@ -716,7 +720,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
             clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover")));
-            String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
+            String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
 //            String firstName = weekShifts.get(index).findElement(By.className("week-schedule-worker-name")).getText().split(" ")[0];
             if (!firstName.equalsIgnoreCase("Open") && !firstName.equalsIgnoreCase("Unassigned")) {
                 String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
@@ -726,21 +730,34 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
                 WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
                 clickTheElement(infoIcon);
-                String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
-                if (areListElementVisible(infoContainers, 5) && infoContainers.size() >= 3) {
-                    String shiftTime = infoContainers.get(infoContainers.size() - 2).getText().split("\n")[0];
-                    String totalHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\\|")[1];
-                    String shiftHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\\|")[0];
-                    shiftInfo.add(firstName);
-                    shiftInfo.add(dayIndex);
-                    shiftInfo.add(shiftTime);
-                    shiftInfo.add(jobTitle);
-                    shiftInfo.add(workRole);
-                    shiftInfo.add(lastName);
-                    shiftInfo.add(shiftTimeWeekView);
-                    shiftInfo.add(totalHrs);
-                    shiftInfo.add(shiftHrs);
+                String workRole = shiftJobTitleAsWorkRole.getText().split("as ")[1].trim();
+                String shiftNameOnIIconPopUp = "";
+                String shiftNotesOnIIconPopUp = "";
+                if (isElementLoaded(shiftName, 5)){
+                    shiftNameOnIIconPopUp = shiftName.getText();
                 }
+                if (isElementLoaded(shiftNotes, 5)) {
+                    shiftNotesOnIIconPopUp = shiftNotes.getText();
+                }
+                String shiftTime = "";
+                String totalHrs = "";
+                String shiftHrs = "";
+                if (areListElementVisible(infoContainers, 5) && infoContainers.size() == 3) {
+                    shiftTime = infoContainers.get(infoContainers.size() - 2).getText().split("\n")[0].trim().replace(" ", "");
+                    totalHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\n")[0].split("\\|")[1].trim();
+                    shiftHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\n")[0].split("\\|")[0].trim();
+                }
+                shiftInfo.add(firstName); //Index 0
+                shiftInfo.add(dayIndex); //Index 1
+                shiftInfo.add(shiftTime); //Index 2
+                shiftInfo.add(jobTitle); //Index 3
+                shiftInfo.add(workRole); //Index 4
+                shiftInfo.add(lastName); //Index 5
+                shiftInfo.add(shiftTimeWeekView); //Index 6
+                shiftInfo.add(totalHrs); //Index 7
+                shiftInfo.add(shiftHrs); //Index 8
+                shiftInfo.add(shiftNameOnIIconPopUp); //Index 9
+                shiftInfo.add(shiftNotesOnIIconPopUp); //Index 10
                 //To close the info popup
                 clickTheElement(weekShifts.get(index));
             } else {
@@ -757,16 +774,28 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
                 clickTheElement(infoIcon);
                 String workRole = shiftJobTitleAsWorkRole.getText().trim();
-                if (isElementLoaded(shiftDuration, 10)) {
-                    String shiftTime = shiftDuration.getText();
-                    shiftInfo.add(firstName);
-                    shiftInfo.add(dayIndex);
-                    shiftInfo.add(shiftTime);
-                    shiftInfo.add(jobTitle);
-                    shiftInfo.add(workRole);
-                    shiftInfo.add(lastName);
-                    shiftInfo.add(shiftTotalHrs.getText());
+                String shiftTime = "";
+                if (areListElementVisible(infoContainers, 10)) {
+                    shiftTime = infoContainers.get(infoContainers.size() - 2).getText().split("\n")[0].trim().replace(" ", "");
                 }
+                String shiftNameOnIIconPopUp = "";
+                String shiftNotesOnIIconPopUp = "";
+                if (isElementLoaded(shiftName, 5)){
+                    shiftNameOnIIconPopUp = shiftName.getText();
+                }
+                if (isElementLoaded(shiftNotes, 5)) {
+                    shiftNotesOnIIconPopUp = shiftNotes.getText();
+                }
+                String shiftHours = infoContainers.get(infoContainers.size() - 1).getText();
+                shiftInfo.add(firstName); //Index 0
+                shiftInfo.add(dayIndex); //Index 1
+                shiftInfo.add(shiftTime); //Index 2
+                shiftInfo.add(jobTitle); //Index 3
+                shiftInfo.add(workRole); //Index 4
+                shiftInfo.add(lastName); //Index 5
+                shiftInfo.add(shiftHours);//Index 6
+                shiftInfo.add(shiftNameOnIIconPopUp); //Index 7
+                shiftInfo.add(shiftNotesOnIIconPopUp); //Index 8
                 //To close the info popup
                 clickTheElement(weekShifts.get(index));
             }
@@ -837,7 +866,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
             WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
             clickTheElement(infoIcon);
-            String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
+            String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
 //            String firstName = dayViewAvailableShifts.get(index).
 //                    findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ")[0];
             if (!firstName.equalsIgnoreCase("Open") && !firstName.equalsIgnoreCase("Unassigned") ) {
@@ -998,7 +1027,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             SimpleUtils.fail("Selected shift is null!",true);
         }
         if (isElementEnabled(popOverContent, 5)) {
-            String shiftName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
+            String shiftName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
             shiftInfo.put("shiftName", shiftName);
             String[] jobTitleAndWorkRole = popOverContent.findElement(By.cssSelector(".shift-hover-subheading.ng-binding")).getText().split("as");
             if (jobTitleAndWorkRole.length==1){
@@ -2299,7 +2328,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (areListElementVisible(shifts, 5) && shifts != null && shifts.size() > 0) {
             for (WebElement shift : shifts) {
                 clickTheElement(shift.findElement(By.className("week-schedule-shit-open-popover")));
-                String shiftName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
+                String shiftName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
 //                WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
                 if (!shiftName.equals("") && shiftName.split(" ")[0].equalsIgnoreCase(name)) {
                     shiftsOfOneTM.add(shift);
@@ -2925,7 +2954,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     }
 
     @Override
-    public ArrayList<HashMap<String,String>> getGroupByWorkRoleStyleInfo() throws Exception{
+    public ArrayList<HashMap<String,String>> getGroupByOptionsStyleInfo() throws Exception{
         ArrayList<HashMap<String,String>> results = new ArrayList<>();
         List<WebElement> groupTitles;
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
@@ -2936,8 +2965,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (areListElementVisible(groupTitles, 10)){
             for (WebElement element: groupTitles){
                 HashMap<String, String> workRoleStyleInfo = new HashMap<>();
-                workRoleStyleInfo.put("WorkRoleName",element.findElement(By.cssSelector(".week-schedule-shift-title")).getText().toLowerCase());
-                workRoleStyleInfo.put("WorkRoleStyle", element.findElement(By.cssSelector(".week-schedule-shift-color")).getAttribute("style"));
+                workRoleStyleInfo.put("optionName",element.findElement(By.cssSelector(".week-schedule-shift-title")).getText().toLowerCase());
+                workRoleStyleInfo.put("optionStyle", element.findElement(By.cssSelector(".week-schedule-shift-color")).getAttribute("style"));
                 results.add(workRoleStyleInfo);
             }
         } else {

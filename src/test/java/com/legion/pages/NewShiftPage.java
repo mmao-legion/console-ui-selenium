@@ -96,8 +96,13 @@ public interface NewShiftPage {
     public void removeAllAssignedShiftByClickRemoveIcon();
     public void removeAllOfferedShiftByClickRemoveIcon();
     public boolean checkConfirmPopupIsLoaded() throws Exception;
+    public String getTitleOfConfirmPopup() throws Exception;
+    public String getMessageOfConfirmPopup() throws Exception;
     public void clickOkBtnOnConfirmPopup() throws Exception;
     public void selectAssignShiftDaysByIndex(int index);
     public void selectAssignShiftDaysByDayName(String dayName);
     public void clickAssignShiftsForEachDaySwitch() throws Exception;
+    public void setShiftNotesOnNewCreateShiftPage (String shiftNotes) throws Exception;
+    public void setShiftNameOnNewCreateShiftPage (String shiftName) throws Exception;
+
 }
