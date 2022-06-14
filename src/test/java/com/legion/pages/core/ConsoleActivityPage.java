@@ -33,6 +33,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	private WebElement filterTitle;
 	@FindBy (className = "notification-container")
 	private List<WebElement> activityCards;
+
 	@FindBy (css = "[ng-click=\"close()\"]")
 	private WebElement closeActivityFeedBtn;
 	@FindBy (className = "notification-bell-popup-container")
@@ -121,7 +122,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	public void verifyClickOnActivityIcon() throws Exception {
 		if (isElementLoaded(activityBell, 10)) {
 			clickTheElement(activityBell);
-			waitForSeconds(2);
+			waitForSeconds(3);
 			if (areListElementVisible(activityFilters, 10)) {
 				SimpleUtils.pass("Click on Activity Bell icon Successfully!");
 			}else {
@@ -289,8 +290,16 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		}
 	}
 
+	@FindBy (css = ".notification-approved")
+	private List<WebElement> approvedSignature;
+
 	@Override
 	public void approveOrRejectShiftOfferRequestOnActivity(String requestUserName, String action) throws Exception {
+		if (areListElementVisible(activityCards, 15)) {
+			SimpleUtils.pass("The request was received by SM!");
+		} else {
+			SimpleUtils.fail("There's no approve request found!", false);
+		}
 		WebElement shiftSwapCard = activityCards.get(0);
 		if (shiftSwapCard != null) {
 			List<WebElement> actionButtons = shiftSwapCard.findElements(By.className("notification-buttons-button"));
@@ -303,7 +312,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 				}
 				// Wait for the card to change the status message, such as approved or rejected
 				waitForSeconds(5);
-				if (areListElementVisible(activityCards, 15)) {
+				if (areListElementVisible(activityCards, 15) && areListElementVisible(approvedSignature, 15)) {
 					WebElement approveOrRejectMessage = activityCards.get(0).findElement(By.className("notification-approved"));
 					if (approveOrRejectMessage != null && approveOrRejectMessage.getText().toLowerCase().contains(action.toLowerCase())) {
 						SimpleUtils.pass(action + " the shift offer request for: " + requestUserName +  " Successfully!");
