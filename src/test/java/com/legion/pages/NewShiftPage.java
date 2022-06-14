@@ -21,6 +21,7 @@ public interface NewShiftPage {
     public void clearAllSelectedDays() throws Exception;
     public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception;
     public void addNewShiftsByNames(List<String> names, String workRole) throws Exception;
+    public void searchTeamMemberByNameAndAssignOrOfferShift(String name, Boolean isOffering) throws Exception;
     public void clickOnDayViewAddNewShiftButton() throws Exception;
     public void selectDaysByIndex(int index1, int index2, int index3) throws Exception;
     public void selectWorkingDaysOnNewShiftPageByIndex(int index) throws Exception;
@@ -41,6 +42,7 @@ public interface NewShiftPage {
     public void selectDaysFromCurrentDay(String currentDay) throws Exception;
     public String getTimeDurationWhenCreateNewShift() throws Exception;
     public void selectSpecificWorkDay(int dayCountInOneWeek);
+    public void selectMultipleOrSpecificWorkDay(int dayCountInOneWeek, Boolean isSingleDay);
     public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception;
     public void selectWeekDaysByDayName(String dayName) throws Exception;
     public List<String> getAllOperatingHrsOnCreateShiftPage() throws Exception;

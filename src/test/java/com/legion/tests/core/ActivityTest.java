@@ -1897,7 +1897,7 @@ public class ActivityTest extends TestBase {
             if(isActiveWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             //Get work role by job title
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectJobTitleFilterByText(jobTitle);
@@ -2020,6 +2020,7 @@ public class ActivityTest extends TestBase {
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftOffer.getValue(), indexOfActivityType.ShiftOffer.name());
             activityPage.approveOrRejectMultipleShiftOfferRequestOnActivity(teamMemberName1, ActivityTest.approveRejectAction.Approve.getValue(), 1);
+            Thread.sleep(3000);
             String expectedTopMessage = "Error!Alert is already expired";
             activityPage.verifyApproveShiftOfferRequestAndGetErrorOnActivity(teamMemberName2, expectedTopMessage);
 
@@ -2032,7 +2033,7 @@ public class ActivityTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
-            Thread.sleep(3000);
+            Thread.sleep(5000);
             SimpleUtils.assertOnFail("The first approved TM's offer should be assigned! ",
                     scheduleShiftTablePage.getAllShiftsOfOneTM(teamMemberName1).size()==1, false);
 

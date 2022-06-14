@@ -348,8 +348,6 @@ public class ScheduleCopyImprovementTest extends TestBase {
         // For copy schedule, select one TM -> create time off for TM -> create schedule by copy last week schedule
         if (isCopySchedule){
             // Delete all the shifts that are assigned to the team member
-            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
-            Thread.sleep(3000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
             shiftOperatePage.deleteTMShiftInWeekView("open");

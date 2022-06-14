@@ -248,7 +248,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
         newShiftPage.searchTeamMemberByName(firstName+ " "+lastName);
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
-
+        Thread.sleep(5000);
         for (int j=0; j< 7; j++) {
             List<WebElement> shiftsOfSevenDays = scheduleShiftTablePage.getOneDayShiftByName(j, firstName);
             if (j==6) {
@@ -361,6 +361,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectJobTitleFilterByText(jobTitle);
+            Thread.sleep(3000);
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();

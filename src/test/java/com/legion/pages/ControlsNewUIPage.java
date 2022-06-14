@@ -199,6 +199,8 @@ public interface ControlsNewUIPage {
 	public HashMap<String, ArrayList<String>> getScheduleCollaborationEditableOrNonEditableFields() throws Exception;
 
 	public void clickOnScheduleCollaborationOpenShiftAdvanceBtn() throws Exception;
+	public void allowEmployeesClaimOvertimeShiftOffer() throws Exception;
+	public void notAllowEmployeesClaimOvertimeShiftOffer() throws Exception;
 
 	public HashMap<String, ArrayList<String>> getComplianceEditableOrNonEditableFields() throws Exception;
 
@@ -362,5 +364,6 @@ public interface ControlsNewUIPage {
 	public boolean checkDailyOTEnabledOrNot() throws Exception;
 	public boolean checkIfTheLocationUsingControlsConfiguration() throws Exception;
 	public boolean checkIfEmployeeCanClaimOTOpenShift() throws Exception;
+	public void selectClopeningHoursOP(String clopeningHour) throws Exception;
 
 }

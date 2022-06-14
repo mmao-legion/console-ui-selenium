@@ -48,4 +48,10 @@ public interface CompliancePage {
     public String getWeeklyDTSettingContent() throws Exception;
     public void turnOnOrTurnOffDailyDTToggle(boolean action) throws Exception;
     public String getDailyDTSettingContent() throws Exception;
+    public String getDayOTSettingContent() throws Exception;
+    public String getWeeklyOTSettingContent() throws Exception;
+    public void turnOnOrTurnOffWeeklyOTToggle(boolean action) throws Exception;
+    public void editWeeklyOTSetting(String optionVisibleText) throws Exception;
+    public void turnOnOrTurnOffDayOTToggle(boolean action) throws Exception;
+    public void editDayOTSetting(String dailyHours, String workDayType, boolean saveOrNot) throws Exception;
 }

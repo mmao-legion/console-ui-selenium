@@ -202,7 +202,7 @@ public class DeleteScheduleTest extends TestBase {
     @Owner(owner = "Nora")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify Store Manager cannot see the Delete button when schedule is not pulished")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class, enabled = false)
     public void verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -284,7 +284,7 @@ public class DeleteScheduleTest extends TestBase {
     @Owner(owner = "Nora")
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify Store Manger can publish schedule if schedule is not published")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class, enabled = false)
     public void verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

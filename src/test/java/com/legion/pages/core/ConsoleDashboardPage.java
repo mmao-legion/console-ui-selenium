@@ -97,7 +97,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     @FindBy(css = ".col-sm-6.text-right")
     private WebElement currentTime;
 
-	@FindBy(css = ".sc-lgWdIC.cRRXke")
+	@FindBy(css = ".sc-jNHgKk.hqnPlN div")
 	private List<WebElement> districtTimeOnDashboard;
 
 	@FindBy(css = ".sc-ksPmiX.erKuMX")

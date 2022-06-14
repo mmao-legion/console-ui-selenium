@@ -715,7 +715,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @Override
     public boolean ifWarningModeDisplay() throws Exception {
-        if(isElementLoaded(warningMode, 15)) {
+        if(isElementLoaded(warningMode, 25)) {
             SimpleUtils.pass("Warning mode is loaded successfully");
             return true;
         } else if (isElementLoaded(warningModeOnNewCreateShiftModal, 5)) {
@@ -781,7 +781,6 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 SimpleUtils.fail("Weeks Days failed to load!", true);
             }
         }
-
     }
 
     @FindBy(css = "div.lgn-time-slider-notch-label")
@@ -933,7 +932,6 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(xpath = "//div[contains(@class,'MuiGrid-grid-xs-3')]/div[1]/p")
     private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
-    @Override
     public void searchTeamMemberByName(String name) throws Exception {
         if (MyThreadLocal.getNewCreateShiftUIStatus()) {
             if (areListElementVisible(searchAndRecommendedTMTabs, 10)) {
@@ -961,9 +959,11 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                     if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
                                         if (MyThreadLocal.getAssignTMStatus()) {
                                             clickTheElement(assignButton);
-                                        } else
+                                            SimpleUtils.report("Assign Team Member: " + name + " Successfully!");
+                                        } else {
                                             clickTheElement(offerButton);
-                                        SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                                            SimpleUtils.report("Offer Team Member: " + name + " Successfully!");
+                                        }
                                         waitForSeconds(2);
                                         if (areListElementVisible(buttonsOnWarningMode, 5)) {
                                             if (buttonsOnWarningMode.size()==2) {
@@ -1029,7 +1029,111 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             } else
                 SimpleUtils.fail("Search team member tab fail to load! ", false);
         }
+    }
 
+    @FindBy(css = ".MuiDialogContent-root")
+    private WebElement overtimeWarningPopup;
+
+    @FindBy(linkText = "Offer anyway")
+    private WebElement offerAnywayBtn;
+
+    @Override
+    public void searchTeamMemberByNameAndAssignOrOfferShift(String name, Boolean isOffering) throws Exception {
+        if(areListElementVisible(btnSearchteamMember,10)) {
+            if (btnSearchteamMember.size() == 2) {
+                //click(btnSearchteamMember.get(1));
+                if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
+                    textSearch.clear();
+                    textSearch.sendKeys(name);
+                    click(searchIcon);
+                    if (areListElementVisible(searchResults, 30)) {
+                        for (WebElement searchResult : searchResults) {
+                            WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-name"));
+                            WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
+                            if (workerName != null && optionCircle != null) {
+                                if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                                    clickTheElement(optionCircle);
+                                    SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                                    waitForSeconds(2);
+                                    if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().toLowerCase().equalsIgnoreCase("assign anyway")) {
+                                        clickTheElement(btnAssignAnyway);
+                                        SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+                                    }
+                                    break;
+                                }
+                            }else {
+                                SimpleUtils.fail("Worker name or option circle not loaded Successfully!", false);
+                            }
+                        }
+                    }else {
+                        SimpleUtils.fail("Failed to find the team member!", false);
+                    }
+                }else {
+                    SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+                }
+            }else {
+                SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
+            }
+        } else if (areListElementVisible(searchAndRecommendedTMTabs, 10)) {
+            if (searchAndRecommendedTMTabs.size() == 2) {
+                //click(btnSearchteamMember.get(1));
+                if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+                    textSearchOnNewCreateShiftPage.clear();
+                    textSearchOnNewCreateShiftPage.sendKeys(name);
+                    waitForSeconds(3);
+                    if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
+                        for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
+                            if (areListElementVisible(tmScheduledStatusOnNewCreateShiftPage, 5)) {
+                                String statusMessage = "";
+                                for (WebElement status: tmScheduledStatusOnNewCreateShiftPage) {
+                                    statusMessage = statusMessage + status.getText() + "\n";
+                                }
+                                MyThreadLocal.setMessageOfTMScheduledStatus(statusMessage);
+                            }
+                            List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                            String tmName = tmInfo.get(0).getText();
+                            List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
+                            WebElement assignButton = assignAndOfferButtons.get(0);
+                            WebElement offerButton = assignAndOfferButtons.get(1);
+                            if (tmName != null && assignButton != null && offerButton != null) {
+                                if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                                    if (isOffering) {
+                                        clickTheElement(offerButton);
+                                        if (isElementLoaded(overtimeWarningPopup, 10)) {
+                                            if (isElementLoaded(offerAnywayBtn, 5)) {
+                                                click(offerAnywayBtn);
+                                            }
+                                        }
+                                    } else {
+                                        clickTheElement(assignButton);
+                                    }
+                                    SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                                    waitForSeconds(2);
+                                    if (areListElementVisible(buttonsOnWarningMode, 5)) {
+                                        if (buttonsOnWarningMode.size()==2) {
+                                            if (buttonsOnWarningMode.get(1).getText().toLowerCase().equalsIgnoreCase("assign anyway")){
+                                                clickTheElement(buttonsOnWarningMode.get(1));
+                                                SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }else {
+                                SimpleUtils.fail("Worker name or buttons not loaded Successfully!", false);
+                            }
+                        }
+                    }else {
+                        SimpleUtils.fail("Failed to find the team member!", false);
+                    }
+                }else {
+                    SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+                }
+            }else {
+                SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
+            }
+        } else
+            SimpleUtils.fail("Search team member tab fail to load! ", false);
     }
 
 
@@ -1827,6 +1931,37 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     }
 
     @Override
+    public void selectMultipleOrSpecificWorkDay(int dayCountInOneWeek, Boolean isSingleDay) {
+        if (isSingleDay) {
+            if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+                if (!weekDays.get(dayCountInOneWeek).getAttribute("class").contains("selected")) {
+                    click(weekDays.get(dayCountInOneWeek));
+                }
+            } else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5) && weekDaysInNewCreateShiftPage.size() == 7) {
+                if (!weekDaysInNewCreateShiftPage.get(dayCountInOneWeek).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("checked")) {
+                    click(weekDaysInNewCreateShiftPage.get(dayCountInOneWeek).findElement(By.cssSelector(".MuiButtonBase-root")));
+                }
+            } else
+                SimpleUtils.fail("week days load failed",true);
+        } else {
+                if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+                    for (int i = 0; i < dayCountInOneWeek; i++) {
+                        if (!weekDays.get(i).getAttribute("class").contains("selected")) {
+                            click(weekDays.get(i));
+                        }
+                    }
+                } else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5) && weekDaysInNewCreateShiftPage.size() == 7) {
+                    for (int i = 0; i < dayCountInOneWeek; i++) {
+                        if (!weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("checked")) {
+                            click(weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")));
+                        }
+                    }
+                } else
+                    SimpleUtils.fail("week days load failed",true);
+            }
+        }
+
+    @Override
     public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception {
         List<Integer> indexes = new ArrayList<>();
         int selectedCount = 0;
@@ -2066,7 +2201,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public void clickOnOkButtonOnWarningModal () throws Exception {
         if (isElementLoaded(okBtnInWarningMode, 5)) {
             clickTheElement(okBtnInWarningMode);
-        } if (areListElementVisible(buttonsOnWarningMode, 5)) {
+        }else if (areListElementVisible(buttonsOnWarningMode, 5)) {
             clickTheElement(buttonsOnWarningMode.get(0));
         }else
             SimpleUtils.fail("The OK button fail to load! ", false);

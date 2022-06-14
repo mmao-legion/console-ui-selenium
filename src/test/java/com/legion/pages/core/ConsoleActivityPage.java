@@ -137,7 +137,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		if (areListElementVisible(activityFilters, 10)) {
 			if (index < activityFilters.size()) {
 				clickTheElement(activityFilters.get(index));
-				waitForSeconds(3);
+				waitForSeconds(5);
 				if (isElementLoaded(filterTitle, 10)) {
 					if (filterName.equalsIgnoreCase(filterTitle.getText().replaceAll("\\s*", ""))) {
 						SimpleUtils.pass("Switch to :" + filterTitle.getText() + " tab Successfully!");
@@ -285,7 +285,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 						+ ", " + expectedMessage + "! Actual card is: " + messageText, false);
 			}
 		}else {
-			SimpleUtils.fail("Shift Offer Activity failed to Load1", false);
+			SimpleUtils.fail("Shift Offer Activity failed to Load!", false);
 		}
 	}
 
@@ -302,7 +302,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 					}
 				}
 				// Wait for the card to change the status message, such as approved or rejected
-				waitForSeconds(3);
+				waitForSeconds(5);
 				if (areListElementVisible(activityCards, 15)) {
 					WebElement approveOrRejectMessage = activityCards.get(0).findElement(By.className("notification-approved"));
 					if (approveOrRejectMessage != null && approveOrRejectMessage.getText().toLowerCase().contains(action.toLowerCase())) {

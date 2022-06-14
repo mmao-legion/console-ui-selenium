@@ -2888,6 +2888,51 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Controls Page: - Schedule Collaboration section: 'Open Shift' form section not loaded.", false);
 	}
 
+	@FindBy(xpath = "//*[text()=\"Allow employees claim open shift at overtime rate?\"]")
+	private WebElement allowEmployeesClaimOpenShiftOption;
+
+	@FindBy(css = "[question-title=\"Allow employees claim open shift at overtime rate?\"] .lg-button-group-first")
+	private WebElement allowEmployeesClaimOpenShiftOptionYesBtn;
+
+	@FindBy(css = "[question-title=\"Allow employees claim open shift at overtime rate?\"] .lg-button-group-last")
+	private WebElement allowEmployeesClaimOpenShiftOptionNoBtn;
+
+	@Override
+	public void allowEmployeesClaimOvertimeShiftOffer() throws Exception {
+		if (isElementLoaded(allowEmployeesClaimOpenShiftOption, 5)) {
+			scrollToElement(allowEmployeesClaimOpenShiftOption);
+			if (isElementLoaded(allowEmployeesClaimOpenShiftOptionYesBtn, 5)) {
+				click(allowEmployeesClaimOpenShiftOptionYesBtn);
+				waitForSeconds(3);
+				if (allowEmployeesClaimOpenShiftOptionYesBtn.getAttribute("class").contains("lg-button-group-selected")) {
+					SimpleUtils.pass("Claim overtime shift access is enabled!");
+				} else {
+					SimpleUtils.fail("Failed for enable claim overtime shift access!", false);
+				}
+			}
+		} else {
+			SimpleUtils.fail("No option found for: Allow employees claim open shift at overtime rate?", false);
+		}
+	}
+
+	@Override
+	public void notAllowEmployeesClaimOvertimeShiftOffer() throws Exception {
+		if (isElementLoaded(allowEmployeesClaimOpenShiftOption, 5)) {
+			scrollToElement(allowEmployeesClaimOpenShiftOption);
+			if (isElementLoaded(allowEmployeesClaimOpenShiftOptionNoBtn, 5)) {
+				click(allowEmployeesClaimOpenShiftOptionNoBtn);
+				waitForSeconds(3);
+				if (allowEmployeesClaimOpenShiftOptionNoBtn.getAttribute("class").contains("lg-button-group-selected")) {
+					SimpleUtils.pass("Claim overtime shift access is disabled!");
+				} else {
+					SimpleUtils.fail("Failed for disable claim overtime shift access!", false);
+				}
+			}
+		} else {
+			SimpleUtils.fail("No option found for: Allow employees claim open shift at overtime rate?", false);
+		}
+	}
+
 	@FindBy(css = "input-field[value=\"cl.minorSchedulingPolicy.scheduleStartMin\"]")
 	private WebElement minorSchTimeLabelFromField;
 
@@ -5847,6 +5892,25 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Clopening Hours selector load fail", false);
 	}
 
+	@FindBy(css = "[question-title=\"Minimum number of hours of rest between consecutive closing and opening shifts (clopening).\"]")
+	private WebElement clopeningHoursSectionOP;
+	@FindBy(css = "[question-title=\"Minimum number of hours of rest between consecutive closing and opening shifts (clopening).\"] [ng-attr-name]")
+	private WebElement clopeningHourOP;
+
+	@Override
+	public void selectClopeningHoursOP(String clopeningHour) throws Exception {
+//		String test = clopeningHours.getAttribute("value");
+		if (isElementLoaded(clopeningHoursSectionOP, 5)) {
+			if(isElementLoaded(clopeningHourOP, 5)){
+				clopeningHourOP.clear();
+				clopeningHourOP.sendKeys(clopeningHour);
+			}
+			else{
+				SimpleUtils.fail("Clopening Hours input field load fail", false);
+			}
+		} else
+			SimpleUtils.fail("Clopening Hours section load fail", false);
+	}
 
 	@FindBy(css = "question-input[question-title=\"Can a manager add another locations' employee in schedule before the employee's home location has published the schedule?\"] input-field")
 	private WebElement canManagerAddAnotherLocationsEmployeeInSchedule;

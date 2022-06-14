@@ -87,6 +87,7 @@ public class BulkDeleteTest extends TestBase {
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             scheduleShiftTablePage.verifySelectedShiftsAreMarkedWithX(set);
             scheduleMainPage.saveSchedule();
+            Thread.sleep(10000);
             int currentShiftCount = scheduleShiftTablePage.getShiftsCount();
             if (currentShiftCount == previousShiftCount - selectedShiftCount) {
                 SimpleUtils.pass("Selected shifts are deleted successfully!");

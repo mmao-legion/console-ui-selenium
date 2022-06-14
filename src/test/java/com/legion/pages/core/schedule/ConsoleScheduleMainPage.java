@@ -84,6 +84,12 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     @FindBy(css = "[ng-click=\"controlPanel.fns.publishConfirmation($event, false)\"]")
     private WebElement publishButton;
 
+    @FindBy(css = "[ng-click=\"controlPanel.fns.publishConfirmation($event, true)\"]")
+    private WebElement republishButton;
+
+    @FindBy(css = ".sch-publish-confirm-btn")
+    private WebElement confirmPublishBtn;
+
     @FindBy(css = "select.ng-valid-required")
     private WebElement scheduleGroupByButton;
 
@@ -204,7 +210,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             // Validate what happens next to the Edit!
             // When Status is finalized, look for extra popup.
             clickTheElement(editScheduleButton);
-            waitForSeconds(3);
+            waitForSeconds(5);
             if(isElementLoaded(popupAlertPremiumPay,10) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
                 // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
@@ -368,6 +374,37 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     }
 
     @Override
+    public void publishOrRepublishSchedule() throws Exception {
+        if (isClickable(publishButton, 15)) {
+            scrollToElement(publishButton);
+            click(publishButton);
+            if (isElementLoaded(confirmPublishBtn, 15)) {
+                click(confirmPublishBtn);
+                waitForSeconds(50);
+                if (!isElementLoaded(publishButton, 10)) {
+                    SimpleUtils.pass("Schedule successfully published!");
+                } else {
+                    SimpleUtils.fail("Schedule publish filed!", false);
+                }
+            }
+        }
+
+        if (isClickable(republishButton, 15)) {
+            scrollToElement(republishButton);
+            click(republishButton);
+            if (isElementLoaded(confirmPublishBtn, 15)) {
+                click(confirmPublishBtn);
+                waitForSeconds(30);
+                if (!isElementLoaded(republishButton, 5)) {
+                    SimpleUtils.pass("Schedule successfully republished!");
+                } else {
+                    SimpleUtils.fail("Schedule republish filed!", false);
+                }
+            }
+        }
+    }
+
+    @Override
     public void selectCancelButton() throws Exception {
         if(checkCancelButton())
         {
@@ -432,6 +469,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }
         if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
             click(filterButton);
+        waitForSeconds(10);
     }
 
     public HashMap<String, ArrayList<WebElement>> getAvailableFilters() {
@@ -499,16 +537,16 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     private WebElement msgOnTop;
 
     public void saveSchedule() throws Exception {
-        if (isElementEnabled(scheduleSaveBtn, 10)) {
-            scrollToTop();
-            waitForSeconds(3);
+        if (isElementEnabled(scheduleSaveBtn, 10) && isClickable(scheduleSaveBtn, 10)) {
+            scrollToElement(scheduleSaveBtn);
             clickTheElement(scheduleSaveBtn);
+            waitForSeconds(3);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        if (isElementEnabled(saveOnSaveConfirmationPopup, 3)) {
+        if (isClickable(saveOnSaveConfirmationPopup, 15)) {
             clickTheElement(saveOnSaveConfirmationPopup);
-            waitForSeconds(3);
+            waitForSeconds(5);
             try{
 //                if (isElementLoaded(msgOnTop, 20)) {
 //                    if (msgOnTop.getText().contains("Success")){
@@ -523,7 +561,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             } catch(StaleElementReferenceException e){
                 SimpleUtils.report("stale element reference: element is not attached to the page document");
             }
-            waitForSeconds(3);
+            waitForSeconds(5);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
@@ -1570,7 +1608,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     }
 
     public void clickOnOpenSearchBoxButton() throws Exception {
-        if (isElementEnabled(openSearchBoxButton, 5)) {
+        if (isElementEnabled(openSearchBoxButton, 5) && isClickable(openSearchBoxButton, 5)) {
             click(openSearchBoxButton);
             if (isElementLoaded(searchBox, 15)) {
                 SimpleUtils.pass("Search box is opened successfully");
@@ -1800,6 +1838,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     @Override
     public void verifyTheContentOnDeleteScheduleDialog(String confirmMessage, String week) throws Exception {
+        waitForSeconds(2);
         if (isElementLoaded(deleteSchedulePopup, 30)) {
             if (isElementLoaded(deleteScheduleIcon, 5) && isElementLoaded(deleteScheduleTitle, 5)
                     && deleteScheduleTitle.getText().equalsIgnoreCase("Delete Schedule") && isElementLoaded(deleteScheduleTitle, 5)

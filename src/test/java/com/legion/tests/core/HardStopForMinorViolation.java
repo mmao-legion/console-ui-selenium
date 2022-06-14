@@ -71,7 +71,7 @@ public class HardStopForMinorViolation extends TestBase {
             configurationPage.createNewTemplate(templateName);
             configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-
+            Thread.sleep(5000);
             //Check the setting "Strictly enforce minor violations?", the default value is No
             SimpleUtils.assertOnFail("The 'Strictly enforce minor violations?' should be setting as No by default! ",
                     !configurationPage.isStrictlyEnforceMinorViolationSettingEnabled(), false);
@@ -482,13 +482,19 @@ public class HardStopForMinorViolation extends TestBase {
 
             //Change the setting "Strictly enforce minor violations?" from Yes to No
             setStrictlyEnforceMinorViolationSetting("No");
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
-            scheduleCommonPage.navigateToNextWeek();
-            minorMessage = smartCardPage.getMessageFromActionRequiredSmartCard().get("minorViolation");
+            int i = 0;
+            while (i<5 && !minorMessage.equals("")){
+                Thread.sleep(10000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+                SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+                scheduleCommonPage.navigateToNextWeek();
+                minorMessage = smartCardPage.getMessageFromActionRequiredSmartCard().get("minorViolation");
+                i++;
+            }
             SimpleUtils.assertOnFail("The minor violation message display incorrect! The expected is empty"
                             + " The actual is : " + minorMessage,
                     minorMessage.equals(""), false);
@@ -565,6 +571,18 @@ public class HardStopForMinorViolation extends TestBase {
             List<WebElement> minorShifts = scheduleShiftTablePage.getAllShiftsOfOneTM(minorName.split(" ")[0]);
             shiftOperatePage.editTheShiftTimeForSpecificShift(minorShifts.get(0), "8am", "8pm");
             scheduleMainPage.saveSchedule();
+            int i=0;
+            while (i<5 && smartCardPage.isRequiredActionSmartCardLoaded()) {
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+                SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+                scheduleCommonPage.navigateToNextWeek();
+                Thread.sleep(10000);
+                i++;
+            }
             SimpleUtils.assertOnFail("The action required smart card should not display! ",
                     !smartCardPage.isRequiredActionSmartCardLoaded(), false);
 
@@ -615,9 +633,24 @@ public class HardStopForMinorViolation extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
             scheduleCommonPage.navigateToNextWeek();
+            i=0;
+            String tooltip = scheduleMainPage.getTooltipOfPublishButton();
+            while (i < 10 && (!smartCardPage.isRequiredActionSmartCardLoaded() || tooltip.equals(""))) {
+                Thread.sleep(10000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+                SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+                scheduleCommonPage.navigateToNextWeek();
+                Thread.sleep(5000);
+                tooltip = scheduleMainPage.getTooltipOfPublishButton();
+                i++;
+            }
             SimpleUtils.assertOnFail("The action required smart card should not display! ",
                     smartCardPage.isRequiredActionSmartCardLoaded(), false);
-            String tooltip = scheduleMainPage.getTooltipOfPublishButton();
+            tooltip = scheduleMainPage.getTooltipOfPublishButton();
             SimpleUtils.assertOnFail("The tooltip of publish button should display as: Please address required action(s)! But the actual tooltip is: "+ tooltip,
                     tooltip.equalsIgnoreCase("Please address required action(s)"), false);
 

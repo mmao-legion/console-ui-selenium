@@ -1648,7 +1648,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				moveElement(hourCellsResizableCursorsRight.get(rowIndex), xOffSet);
 				SimpleUtils.pass("My Availability Edit Mode - '"+hoursType+"' Hours Row updated with index - '"+rowIndex+"'.");
 			} else if (areListElementVisible(availabilityGrid, 10) && availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).size()==48) {
-				clickTheElement(availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).get(23));
+				click(availabilityGrid.get(rowIndex).findElements(By.cssSelector(".hour-cell.hour-cell-ghost")).get(23));
 			} else{
 					SimpleUtils.fail("My Availability Edit Mode - '"+hoursType+"' Hours Row not loaded with index - '"+rowIndex+"'.", false);
 			}
@@ -1740,7 +1740,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					click(myAvailabilityConfirmSubmitBtn);
 				}
 			}
-			waitForSeconds(5);
+			waitForSeconds(10);
 			if(isElementLoaded(editBtn, 25)||isElementLoaded(lockIcon, 10))
 				SimpleUtils.pass("Profile Page: 'My Availability section' edit mode Saved successfully.");
 			else
@@ -3809,7 +3809,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		WebElement rightCell = dayRow.findElement(By.cssSelector("div.cursor-resizableE"));
 		int i=0;
 
-		while (!availabilityToolTip.getText().contains("12:00am - 12:00am") && i<5){
+		while (!availabilityToolTip.getText().toLowerCase().replace(" ", "").contains("12:00am-12:00am") && i<5){
 			//Drag the availability to the end of the day
 			scrollToElement(rightCell);
 			mouseHoverDragandDrop(rightCell,emptyAvailabilitiesInTheDay.get(emptyAvailabilitiesInTheDay.size()-1));
@@ -3817,7 +3817,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			waitForSeconds(2);
 		}
 
-		if (!availabilityToolTip.getText().contains("12:00am - 12:00am")) {
+		if (!availabilityToolTip.getText().toLowerCase().replace(" ", "").contains("12:00am-12:00am")) {
 //			mouseHoverDragandDrop(rightCell,emptyAvailabilitiesInTheDay.get(emptyAvailabilitiesInTheDay.size()-1));
 			SimpleUtils.fail("Update availabilities fail! ", false);
 		} else

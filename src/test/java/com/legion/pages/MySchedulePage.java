@@ -21,6 +21,7 @@ public interface MySchedulePage {
     public int selectOneShiftIsClaimShift(List<String> claimShift) throws Exception;
     public void validateProfilePictureInAShiftClickable() throws Exception;
     public void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception;
+    public void claimTheOfferedOpenShift(String requestName) throws Exception;
     public void verifyTheRedirectionOfBackButton() throws Exception;
     public void verifyBackNSubmitBtnLoaded() throws Exception;
     public void verifyClickAcceptSwapButton() throws Exception;

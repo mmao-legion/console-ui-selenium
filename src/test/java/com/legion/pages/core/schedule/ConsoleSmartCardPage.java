@@ -522,18 +522,28 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     private List<WebElement> smartCards;
     @FindBy (className = "card-carousel-link")
     private List<WebElement> cardLinks;
+
+    @FindBy (css = ".sch-grid-container")
+    private WebElement shiftGrid;
+
     @Override
     public void clickLinkOnSmartCardByName(String linkName) throws Exception {
-        if (areListElementVisible(cardLinks, 5)) {
-            for (WebElement cardLink : cardLinks) {
-                if (cardLink.getText().equalsIgnoreCase(linkName)) {
-                    clickTheElement(cardLink);
-                    SimpleUtils.pass("Click the link: " + linkName + " Successfully!");
-                    break;
+        if (isElementLoaded(shiftGrid, 20)) {
+            waitForSeconds(3);
+            if (areListElementVisible(cardLinks, 10)) {
+                for (WebElement cardLink : cardLinks) {
+                    if (cardLink.getText().equalsIgnoreCase(linkName)) {
+                        clickTheElement(cardLink);
+                        waitForSeconds(2);
+                        SimpleUtils.pass("Click the link: " + linkName + " Successfully!");
+                        break;
+                    }
                 }
+            }else {
+                SimpleUtils.report("There are no smart card links!");
             }
-        }else {
-            SimpleUtils.report("There are no smart card links!");
+        } else {
+            SimpleUtils.fail("Failed for loading shift grid view!", false);
         }
     }
 

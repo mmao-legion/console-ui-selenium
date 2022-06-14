@@ -1711,6 +1711,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			click(publishTemplateButton);
 			if(isElementLoaded(publishTemplateConfirmModal, 5)){
 				click(okButtonOnPublishTemplateConfirmModal);
+				waitForSeconds(3);
 				displaySuccessMessage();
 			} else
 				SimpleUtils.fail("Publish template confirm modal fail to load", false);
@@ -3720,12 +3721,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public boolean isStrictlyEnforceMinorViolationSettingEnabled() throws Exception {
 		boolean isStrictlyEnforceMinorViolationSettingEnabled = false;
-		if (isElementLoaded(yesNoForStrictlyEnforceMinorViolations, 5)) {
+		if (isElementLoaded(yesNoForStrictlyEnforceMinorViolations, 25)) {
 			if (yesNoForStrictlyEnforceMinorViolations.
 					findElement(By.cssSelector(".lg-button-group-first")).getAttribute("class").contains("selected")){
 				isStrictlyEnforceMinorViolationSettingEnabled = true;
 			}
-		}
+		}else
+			SimpleUtils.fail("Strictly enforce minor violation setting fail to load! ", false);
 		return isStrictlyEnforceMinorViolationSettingEnabled;
 	}
 

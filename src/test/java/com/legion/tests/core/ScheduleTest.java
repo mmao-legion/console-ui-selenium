@@ -103,203 +103,203 @@ public class ScheduleTest extends TestBase{
 		}
 
 
-		@Automated(automated = "Automated")
-		@Owner(owner = "Naval")
-		@Enterprise(name = "Coffee2_Enterprise")
-	    @TestName(description = "TP-33: Hours and Wage calculation on Console-UI")
-	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	    public void hoursAndWagesCalculationOnSchedulePage(String username, String password, String browser, String location)
-	    		throws Exception {
-//	        loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
-	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-	        SchedulePage schedulePage = dashboardPage.goToToday();
-			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
-	        SimpleUtils.assertOnFail("Today's Schedule not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
-	        //get Week view Hours & Wages
-			scheduleCommonPage.clickOnWeekView();
-	        HashMap<String, Float> scheduleWeekViewLabelData = smartCardPage.getScheduleLabelHoursAndWages();
-	        Float scheduleWeekScheduledHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.scheduledHours.getValue());
-	        Float scheduleWeekBudgetedHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.budgetedHours.getValue());
-	        Float scheduleWeekOtherHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.otherHours.getValue());
-	        Float scheduleWeekWagesBudgetedCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesBudgetedCount.getValue());
-	        Float scheduleWeekWagesScheduledCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());
-
-	        //get days hours & Wages for current week
-			scheduleCommonPage.clickOnDayView();
-	        List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = smartCardPage.getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek();
-	        Float scheduleDaysScheduledHoursTotal = (float) 0;
-	        Float scheduleDaysBudgetedHoursTotal = (float) 0;
-	        Float scheduleDaysOtherHoursTotal = (float) 0;
-	        Float scheduleDaysWagesBudgetedCountTotal = (float) 0;
-	        Float scheduleDaysWagesScheduledCountTotal = (float) 0;
-	        for(HashMap<String, Float> scheduleDaysViewLabelDataForWeekDay : scheduleDaysViewLabelDataForWeekDays)
-	        {
-	        	scheduleDaysScheduledHoursTotal = scheduleDaysScheduledHoursTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.scheduledHours.getValue());
-	        	scheduleDaysBudgetedHoursTotal = scheduleDaysBudgetedHoursTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.budgetedHours.getValue());
-	        	scheduleDaysOtherHoursTotal = scheduleDaysOtherHoursTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.otherHours.getValue());
-	        	scheduleDaysWagesBudgetedCountTotal = scheduleDaysWagesBudgetedCountTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.wagesBudgetedCount.getValue());
-	        	scheduleDaysWagesScheduledCountTotal = scheduleDaysWagesScheduledCountTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());
-	        }
-
-	        // Week Summary = Sum of Day Summary
-
-	        // Comparing Week Scheduled Hours and Sum of Days Scheduled Hours
-
-
-	       /* if(scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal)) {
-	        	SimpleUtils.pass("Week Scheduled Hours are matched with Sum of Days Scheduled Hours ("+scheduleWeekScheduledHours+"/"
-	        			+scheduleDaysScheduledHoursTotal+")");
-	        }
-	        else {
-		        SimpleUtils.assertOnFail("Week Scheduled Hours not matched with Sum of Days Scheduled Hours (" +scheduleWeekScheduledHours+"/"
-		        		+scheduleDaysScheduledHoursTotal+ ")", scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal), true);
-	        }
-
-	        if(scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal)) {
-	        	SimpleUtils.pass("Week Scheduled Hours are matched with Sum of Days Scheduled Hours ("+scheduleWeekBudgetedHours+"/"
-	        			+scheduleDaysBudgetedHoursTotal);
-	        }
-	        else {
-		        SimpleUtils.assertOnFail("Week Budgeted Hours not matched with Sum of Days Budgeted Hours (" +scheduleWeekScheduledHours+ "/"
-		        		+ scheduleDaysBudgetedHoursTotal + ")", scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal), true);
-	        }*/
-
-	        if(scheduleWeekScheduledHours != null && scheduleDaysScheduledHoursTotal != null)
-	           {
-	        	   if(scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal)) {
-	   	        	SimpleUtils.pass("Schedule Page: Week Scheduled Hours matched with Sum of Days Scheduled Hours ("+scheduleWeekScheduledHours+"/"
-	   	        			+scheduleDaysScheduledHoursTotal+")");
-	        	   }
-	        	   else {
-	   		        SimpleUtils.assertOnFail("Schedule Page: Week Scheduled Hours not matched with Sum of Days Scheduled Hours (" +scheduleWeekScheduledHours+"/"
-	   		        		+scheduleDaysScheduledHoursTotal+ ")", scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal), true);
-	        	   }
-	           }
-
-	           if(scheduleWeekBudgetedHours != null && scheduleDaysBudgetedHoursTotal != null)
-	           {
-	        	   if(scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal)) {
-	   	        	SimpleUtils.pass("Schedule Page: Week Budgeted Hours matched with Sum of Days Budgeted Hours ("+scheduleWeekBudgetedHours+"/"
-	   	        			+scheduleDaysBudgetedHoursTotal);
-		   	        }
-		   	        else {
-//		   		        SimpleUtils.assertOnFail("Schedule Page: Week Budgeted Hours not matched with Sum of Days Budgeted Hours (" +scheduleWeekBudgetedHours+ "/"
-//		   		        		+ scheduleDaysBudgetedHoursTotal + ")", scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal), true);
-		   		        SimpleUtils.report("Schedule Page: Week Budgeted Hours not matched with Sum of Days Budgeted Hours (" +scheduleWeekBudgetedHours+ "/"
-		   		        		+ scheduleDaysBudgetedHoursTotal + ")");
-		   	        }
-	           }
-
-	           if(scheduleWeekOtherHours != null && scheduleDaysOtherHoursTotal != null)
-	           {
-	        	   if(scheduleWeekOtherHours.equals(scheduleDaysOtherHoursTotal)) {
-	   	        	SimpleUtils.pass("Schedule Page: Week Other Hours matched with Sum of Days Other Hours ("+scheduleWeekOtherHours+"/"
-	   	        			+scheduleDaysOtherHoursTotal+")");
-	        	   }
-	        	   else {
-	   		        SimpleUtils.assertOnFail("Schedule Page: Week Other Hours not matched with Sum of Days Other Hours (" +scheduleWeekOtherHours+"/"
-	   		        		+scheduleDaysOtherHoursTotal+ ")", scheduleWeekOtherHours.equals(scheduleDaysOtherHoursTotal), true);
-	        	   }
-	           }
-
-	           if(scheduleWeekWagesBudgetedCount != null && scheduleDaysWagesBudgetedCountTotal != null)
-	           {
-	        	   if(scheduleWeekWagesBudgetedCount.equals(scheduleDaysWagesBudgetedCountTotal)) {
-	   	        	SimpleUtils.pass("Schedule Page: Week Budgeted Wages matched with Sum of Days Budgeted Wages ("+scheduleWeekWagesBudgetedCount+"/"
-	   	        			+scheduleDaysWagesBudgetedCountTotal);
-		   	        }
-		   	        else {
-//		   		        SimpleUtils.assertOnFail("Schedule Page: Week Budgeted Wages not matched with Sum of Days Budgeted Wages (" +scheduleWeekWagesBudgetedCount+ "/"
-//		   		        		+ scheduleDaysWagesBudgetedCountTotal + ")", scheduleWeekWagesBudgetedCount.equals(scheduleDaysWagesBudgetedCountTotal), true);
-		   		        SimpleUtils.report("Schedule Page: Week Budgeted Wages not matched with Sum of Days Budgeted Wages (" +scheduleWeekWagesBudgetedCount+ "/"
-		   		        		+ scheduleDaysWagesBudgetedCountTotal + ")");
-		   	        }
-	           }
-
-	           if(scheduleWeekWagesScheduledCount != null && scheduleDaysWagesScheduledCountTotal != null)
-	           {
-	        	   if(scheduleWeekWagesScheduledCount.equals(scheduleDaysWagesScheduledCountTotal)) {
-	   	        	SimpleUtils.pass("Schedule Page: Week Scheduled Wages matched with Sum of Days Scheduled Wages ("+scheduleWeekWagesScheduledCount+"/"
-	   	        			+scheduleDaysWagesScheduledCountTotal);
-		   	        }
-		   	        else {
-		   		        SimpleUtils.assertOnFail("Schedule Page: Week Scheduled Wages not matched with Sum of Days Scheduled Wages (" +scheduleWeekWagesScheduledCount+ "/"
-		   		        		+ scheduleDaysWagesScheduledCountTotal + ")", scheduleWeekWagesScheduledCount.equals(scheduleDaysWagesScheduledCountTotal), true);
-		   	        }
-	           }
-
-	  }
-
-	    @Automated(automated =  "Automated")
-		@Owner(owner = "Naval")
-	    @Enterprise(name = "Coffee2_Enterprise")
-	    @TestName(description = "LEG-2424: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
-	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	    public void reviewPastGenerateCurrentAndFutureWeekSchedule(String username, String password, String browser, String location)
-	    		throws Exception {
-	    	int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
-//	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
-	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-
-			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-	        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-	        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
-	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
-	        //Schedule overview should show 5 week's schedule
-	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-	        List<String> scheduleOverviewWeeksStatus = scheduleOverviewPage.getScheduleWeeksStatus();
-	        int overviewWeeksStatusCount = scheduleOverviewWeeksStatus.size();
-	        SimpleUtils.assertOnFail("Schedule overview Page not displaying upcoming 5 weeks",(overviewWeeksStatusCount == overviewTotalWeekCount) , true);
-	        System.out.println("overviewWeeksStatusCount: "+overviewWeeksStatusCount);
-	        for(String overviewWeeksStatusText: scheduleOverviewWeeksStatus)
-	        {
-	        	int index = scheduleOverviewWeeksStatus.indexOf(overviewWeeksStatusText);
-//		        SimpleUtils.assertOnFail("Schedule overview Page upcoming week on index '"+index+"' is 'Not Available'",(! overviewWeeksStatusText.contains(overviewWeeksStatus.NotAvailable.getValue())) , true);
-		        SimpleUtils.report("Schedule overview Page upcoming week on index '"+index+"' is 'Not Available'");
-
-	        	System.out.println("overviewWeeksStatus: "+overviewWeeksStatusText);
-	        }
-
-
-	        //Must have at least "Past Week" schedule published
-	        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
-	        SimpleUtils.assertOnFail("Schedule Page: Past week not generated!",createSchedulePage.isWeekGenerated() , true);
-	        SimpleUtils.assertOnFail("Schedule Page: Past week not Published!",createSchedulePage.isWeekPublished() , true);
-
-	        //The schedules that are already published should remain unchanged
-			scheduleCommonPage.clickOnDayView();
-	        scheduleMainPage.clickOnEditButton();
-	        SimpleUtils.assertOnFail("User can add new shift for past week", (! scheduleMainPage.isAddNewDayViewShiftButtonLoaded()) , true);
-	        scheduleMainPage.clickOnCancelButtonOnEditMode();
-
-	        // No generate button for Past Week
-	        SimpleUtils.assertOnFail("Generate Button displaying for Past week", (! createSchedulePage.isGenerateButtonLoaded()) , true);
-
-
-	        //there are at least one week in the future where schedule has not yet been published
-			scheduleCommonPage.clickOnWeekView();
-	        scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
-
-	        // to do -
-	        for(int index = 1; index < weekCount.values().length; index++)
-	        {
-	        	scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
-	        	if(! createSchedulePage.isWeekGenerated()){
-        			ExtentTestManager.getTest().log(Status.INFO, "Schedule Page: Future week '"+ scheduleCommonPage.getScheduleWeekStartDayMonthDate()+"' not Generated!");
-	        	}
-	        	else {
-	        		if(! createSchedulePage.isWeekPublished()){
-	        			ExtentTestManager.getTest().log(Status.INFO, "Schedule Page: Future week '"+ scheduleCommonPage.getScheduleWeekStartDayMonthDate()+"' not Published!");
-	        		}
-	        	}
-	        }
-	    }
+//		@Automated(automated = "Automated")
+//		@Owner(owner = "Naval")
+//		@Enterprise(name = "Coffee2_Enterprise")
+//	    @TestName(description = "TP-33: Hours and Wage calculation on Console-UI")
+//	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+//	    public void hoursAndWagesCalculationOnSchedulePage(String username, String password, String browser, String location)
+//	    		throws Exception {
+////	        loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
+//	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+//	        SchedulePage schedulePage = dashboardPage.goToToday();
+//			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+//			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+//	        SimpleUtils.assertOnFail("Today's Schedule not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()) , true);
+//	        //get Week view Hours & Wages
+//			scheduleCommonPage.clickOnWeekView();
+//	        HashMap<String, Float> scheduleWeekViewLabelData = smartCardPage.getScheduleLabelHoursAndWages();
+//	        Float scheduleWeekScheduledHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.scheduledHours.getValue());
+//	        Float scheduleWeekBudgetedHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.budgetedHours.getValue());
+//	        Float scheduleWeekOtherHours = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.otherHours.getValue());
+//	        Float scheduleWeekWagesBudgetedCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesBudgetedCount.getValue());
+//	        Float scheduleWeekWagesScheduledCount = scheduleWeekViewLabelData.get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());
+//
+//	        //get days hours & Wages for current week
+//			scheduleCommonPage.clickOnDayView();
+//	        List<HashMap<String, Float>>  scheduleDaysViewLabelDataForWeekDays = smartCardPage.getScheduleLabelHoursAndWagesDataForEveryDayInCurrentWeek();
+//	        Float scheduleDaysScheduledHoursTotal = (float) 0;
+//	        Float scheduleDaysBudgetedHoursTotal = (float) 0;
+//	        Float scheduleDaysOtherHoursTotal = (float) 0;
+//	        Float scheduleDaysWagesBudgetedCountTotal = (float) 0;
+//	        Float scheduleDaysWagesScheduledCountTotal = (float) 0;
+//	        for(HashMap<String, Float> scheduleDaysViewLabelDataForWeekDay : scheduleDaysViewLabelDataForWeekDays)
+//	        {
+//	        	scheduleDaysScheduledHoursTotal = scheduleDaysScheduledHoursTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.scheduledHours.getValue());
+//	        	scheduleDaysBudgetedHoursTotal = scheduleDaysBudgetedHoursTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.budgetedHours.getValue());
+//	        	scheduleDaysOtherHoursTotal = scheduleDaysOtherHoursTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.otherHours.getValue());
+//	        	scheduleDaysWagesBudgetedCountTotal = scheduleDaysWagesBudgetedCountTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.wagesBudgetedCount.getValue());
+//	        	scheduleDaysWagesScheduledCountTotal = scheduleDaysWagesScheduledCountTotal + scheduleDaysViewLabelDataForWeekDay.get(scheduleHoursAndWagesData.wagesScheduledCount.getValue());
+//	        }
+//
+//	        // Week Summary = Sum of Day Summary
+//
+//	        // Comparing Week Scheduled Hours and Sum of Days Scheduled Hours
+//
+//
+//	       /* if(scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal)) {
+//	        	SimpleUtils.pass("Week Scheduled Hours are matched with Sum of Days Scheduled Hours ("+scheduleWeekScheduledHours+"/"
+//	        			+scheduleDaysScheduledHoursTotal+")");
+//	        }
+//	        else {
+//		        SimpleUtils.assertOnFail("Week Scheduled Hours not matched with Sum of Days Scheduled Hours (" +scheduleWeekScheduledHours+"/"
+//		        		+scheduleDaysScheduledHoursTotal+ ")", scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal), true);
+//	        }
+//
+//	        if(scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal)) {
+//	        	SimpleUtils.pass("Week Scheduled Hours are matched with Sum of Days Scheduled Hours ("+scheduleWeekBudgetedHours+"/"
+//	        			+scheduleDaysBudgetedHoursTotal);
+//	        }
+//	        else {
+//		        SimpleUtils.assertOnFail("Week Budgeted Hours not matched with Sum of Days Budgeted Hours (" +scheduleWeekScheduledHours+ "/"
+//		        		+ scheduleDaysBudgetedHoursTotal + ")", scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal), true);
+//	        }*/
+//
+//	        if(scheduleWeekScheduledHours != null && scheduleDaysScheduledHoursTotal != null)
+//	           {
+//	        	   if(scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal)) {
+//	   	        	SimpleUtils.pass("Schedule Page: Week Scheduled Hours matched with Sum of Days Scheduled Hours ("+scheduleWeekScheduledHours+"/"
+//	   	        			+scheduleDaysScheduledHoursTotal+")");
+//	        	   }
+//	        	   else {
+//	   		        SimpleUtils.assertOnFail("Schedule Page: Week Scheduled Hours not matched with Sum of Days Scheduled Hours (" +scheduleWeekScheduledHours+"/"
+//	   		        		+scheduleDaysScheduledHoursTotal+ ")", scheduleWeekScheduledHours.equals(scheduleDaysScheduledHoursTotal), true);
+//	        	   }
+//	           }
+//
+//	           if(scheduleWeekBudgetedHours != null && scheduleDaysBudgetedHoursTotal != null)
+//	           {
+//	        	   if(scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal)) {
+//	   	        	SimpleUtils.pass("Schedule Page: Week Budgeted Hours matched with Sum of Days Budgeted Hours ("+scheduleWeekBudgetedHours+"/"
+//	   	        			+scheduleDaysBudgetedHoursTotal);
+//		   	        }
+//		   	        else {
+////		   		        SimpleUtils.assertOnFail("Schedule Page: Week Budgeted Hours not matched with Sum of Days Budgeted Hours (" +scheduleWeekBudgetedHours+ "/"
+////		   		        		+ scheduleDaysBudgetedHoursTotal + ")", scheduleWeekBudgetedHours.equals(scheduleDaysBudgetedHoursTotal), true);
+//		   		        SimpleUtils.report("Schedule Page: Week Budgeted Hours not matched with Sum of Days Budgeted Hours (" +scheduleWeekBudgetedHours+ "/"
+//		   		        		+ scheduleDaysBudgetedHoursTotal + ")");
+//		   	        }
+//	           }
+//
+//	           if(scheduleWeekOtherHours != null && scheduleDaysOtherHoursTotal != null)
+//	           {
+//	        	   if(scheduleWeekOtherHours.equals(scheduleDaysOtherHoursTotal)) {
+//	   	        	SimpleUtils.pass("Schedule Page: Week Other Hours matched with Sum of Days Other Hours ("+scheduleWeekOtherHours+"/"
+//	   	        			+scheduleDaysOtherHoursTotal+")");
+//	        	   }
+//	        	   else {
+//	   		        SimpleUtils.assertOnFail("Schedule Page: Week Other Hours not matched with Sum of Days Other Hours (" +scheduleWeekOtherHours+"/"
+//	   		        		+scheduleDaysOtherHoursTotal+ ")", scheduleWeekOtherHours.equals(scheduleDaysOtherHoursTotal), true);
+//	        	   }
+//	           }
+//
+//	           if(scheduleWeekWagesBudgetedCount != null && scheduleDaysWagesBudgetedCountTotal != null)
+//	           {
+//	        	   if(scheduleWeekWagesBudgetedCount.equals(scheduleDaysWagesBudgetedCountTotal)) {
+//	   	        	SimpleUtils.pass("Schedule Page: Week Budgeted Wages matched with Sum of Days Budgeted Wages ("+scheduleWeekWagesBudgetedCount+"/"
+//	   	        			+scheduleDaysWagesBudgetedCountTotal);
+//		   	        }
+//		   	        else {
+////		   		        SimpleUtils.assertOnFail("Schedule Page: Week Budgeted Wages not matched with Sum of Days Budgeted Wages (" +scheduleWeekWagesBudgetedCount+ "/"
+////		   		        		+ scheduleDaysWagesBudgetedCountTotal + ")", scheduleWeekWagesBudgetedCount.equals(scheduleDaysWagesBudgetedCountTotal), true);
+//		   		        SimpleUtils.report("Schedule Page: Week Budgeted Wages not matched with Sum of Days Budgeted Wages (" +scheduleWeekWagesBudgetedCount+ "/"
+//		   		        		+ scheduleDaysWagesBudgetedCountTotal + ")");
+//		   	        }
+//	           }
+//
+//	           if(scheduleWeekWagesScheduledCount != null && scheduleDaysWagesScheduledCountTotal != null)
+//	           {
+//	        	   if(scheduleWeekWagesScheduledCount.equals(scheduleDaysWagesScheduledCountTotal)) {
+//	   	        	SimpleUtils.pass("Schedule Page: Week Scheduled Wages matched with Sum of Days Scheduled Wages ("+scheduleWeekWagesScheduledCount+"/"
+//	   	        			+scheduleDaysWagesScheduledCountTotal);
+//		   	        }
+//		   	        else {
+//		   		        SimpleUtils.assertOnFail("Schedule Page: Week Scheduled Wages not matched with Sum of Days Scheduled Wages (" +scheduleWeekWagesScheduledCount+ "/"
+//		   		        		+ scheduleDaysWagesScheduledCountTotal + ")", scheduleWeekWagesScheduledCount.equals(scheduleDaysWagesScheduledCountTotal), true);
+//		   	        }
+//	           }
+//
+//	  }
+//
+//	    @Automated(automated =  "Automated")
+//		@Owner(owner = "Naval")
+//	    @Enterprise(name = "Coffee2_Enterprise")
+//	    @TestName(description = "LEG-2424: As a store manager, should be able to review past week's schedule and generate this week or next week's schedule")
+//	    @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+//	    public void reviewPastGenerateCurrentAndFutureWeekSchedule(String username, String password, String browser, String location)
+//	    		throws Exception {
+//	    	int overviewTotalWeekCount = Integer.parseInt(propertyMap.get("scheduleWeekCount"));
+////	    	loginToLegionAndVerifyIsLoginDone(propertyMap.get("DEFAULT_USERNAME"),propertyMap.get("DEFAULT_PASSWORD"));
+//	        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+//			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+//	        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+//
+//			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+//	        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//	        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+//	        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()) , true);
+//	        //Schedule overview should show 5 week's schedule
+//	        ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+//	        List<String> scheduleOverviewWeeksStatus = scheduleOverviewPage.getScheduleWeeksStatus();
+//	        int overviewWeeksStatusCount = scheduleOverviewWeeksStatus.size();
+//	        SimpleUtils.assertOnFail("Schedule overview Page not displaying upcoming 5 weeks",(overviewWeeksStatusCount == overviewTotalWeekCount) , true);
+//	        System.out.println("overviewWeeksStatusCount: "+overviewWeeksStatusCount);
+//	        for(String overviewWeeksStatusText: scheduleOverviewWeeksStatus)
+//	        {
+//	        	int index = scheduleOverviewWeeksStatus.indexOf(overviewWeeksStatusText);
+////		        SimpleUtils.assertOnFail("Schedule overview Page upcoming week on index '"+index+"' is 'Not Available'",(! overviewWeeksStatusText.contains(overviewWeeksStatus.NotAvailable.getValue())) , true);
+//		        SimpleUtils.report("Schedule overview Page upcoming week on index '"+index+"' is 'Not Available'");
+//
+//	        	System.out.println("overviewWeeksStatus: "+overviewWeeksStatusText);
+//	        }
+//
+//
+//	        //Must have at least "Past Week" schedule published
+//	        scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+//			scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Previous.getValue(), weekCount.One.getValue());
+//	        SimpleUtils.assertOnFail("Schedule Page: Past week not generated!",createSchedulePage.isWeekGenerated() , true);
+//	        SimpleUtils.assertOnFail("Schedule Page: Past week not Published!",createSchedulePage.isWeekPublished() , true);
+//
+//	        //The schedules that are already published should remain unchanged
+//			scheduleCommonPage.clickOnDayView();
+//	        scheduleMainPage.clickOnEditButton();
+//	        SimpleUtils.assertOnFail("User can add new shift for past week", (! scheduleMainPage.isAddNewDayViewShiftButtonLoaded()) , true);
+//	        scheduleMainPage.clickOnCancelButtonOnEditMode();
+//
+//	        // No generate button for Past Week
+//	        SimpleUtils.assertOnFail("Generate Button displaying for Past week", (! createSchedulePage.isGenerateButtonLoaded()) , true);
+//
+//
+//	        //there are at least one week in the future where schedule has not yet been published
+//			scheduleCommonPage.clickOnWeekView();
+//	        scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+//
+//	        // to do -
+//	        for(int index = 1; index < weekCount.values().length; index++)
+//	        {
+//	        	scheduleCommonPage.navigateWeekViewOrDayViewToPastOrFuture(weekViewType.Next.getValue(), weekCount.One.getValue());
+//	        	if(! createSchedulePage.isWeekGenerated()){
+//        			ExtentTestManager.getTest().log(Status.INFO, "Schedule Page: Future week '"+ scheduleCommonPage.getScheduleWeekStartDayMonthDate()+"' not Generated!");
+//	        	}
+//	        	else {
+//	        		if(! createSchedulePage.isWeekPublished()){
+//	        			ExtentTestManager.getTest().log(Status.INFO, "Schedule Page: Future week '"+ scheduleCommonPage.getScheduleWeekStartDayMonthDate()+"' not Published!");
+//	        		}
+//	        	}
+//	        }
+//	    }
 
 //	    @Automated(automated ="Automated")
 //		@Owner(owner = "Gunjan")

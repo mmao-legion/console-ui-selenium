@@ -186,6 +186,13 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
 
     @FindBy(className = "sch-worker-popover")
     private WebElement popOverLayout;
+
+    @FindBy(className = "modal-dialog")
+    private WebElement claimConfirmPopup;
+
+    @FindBy(css = "[ng-click=\"accept()\"]")
+    private WebElement acceptBtn;
+
     @Override
     public void verifyTheAvailabilityOfClaimOpenShiftPopup() throws Exception {
         SmartCardPage smartCardPage = new ConsoleSmartCardPage();
@@ -562,6 +569,30 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
             }
         } else {
             SimpleUtils.fail("Team Members' Icons not loaded", false);
+        }
+    }
+
+    @Override
+    public void claimTheOfferedOpenShift(String requestName) throws Exception {
+        if (isPopOverLayoutLoaded()) {
+            if (popOverLayout.getText().contains(requestName)) {
+                clickTheElement(popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")));
+                SimpleUtils.pass("Click " + requestName + " button Successfully!");
+            }
+        } else {
+            SimpleUtils.fail("Team Members' shift view popup is not displayed", false);
+        }
+
+        if (isElementLoaded(claimConfirmPopup, 5)) {
+            if (isClickable(acceptBtn, 5)) {
+                click(acceptBtn);
+                waitForSeconds(5);
+                SimpleUtils.pass("Successfully claimed the overtime open shift offer");
+            } else {
+                SimpleUtils.fail("Failed for claim the overtime open shift offer", false);
+            }
+        } else {
+            SimpleUtils.fail("The confirm claim shift offer popup is not displayed", false);
         }
     }
 

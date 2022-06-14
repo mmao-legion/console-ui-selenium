@@ -672,8 +672,10 @@ public class SplitAndSpreadTest extends TestBase {
             shiftOperatePage.deleteTMShiftInWeekView(tmFirstName);
             shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            scheduleMainPage.saveSchedule();
 
             //Create first shift for tm
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
@@ -683,8 +685,7 @@ public class SplitAndSpreadTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            MyThreadLocal.setAssignTMStatus(true);
-            newShiftPage.searchTeamMemberByName(tmFirstName);
+            newShiftPage.searchTeamMemberByName(tmFirstName+ " "+tmLastName);
             newShiftPage.clickOnOfferOrAssignBtn();
             Thread.sleep(3000);
             scheduleMainPage.saveSchedule();
@@ -693,6 +694,7 @@ public class SplitAndSpreadTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
+            Thread.sleep(3000);
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(1);
             newShiftPage.moveSliderAtCertainPoint("10:00pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
@@ -728,21 +730,16 @@ public class SplitAndSpreadTest extends TestBase {
             SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
                     smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
             //check the violation in i icon popup of new create shift
-            WebElement newAddedShift = scheduleShiftTablePage.getOneDayShiftByName(0, tmFirstName).get(0);
+            List<WebElement> newAddedShift = scheduleShiftTablePage.getOneDayShiftByName(0, tmFirstName);
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("The spread of hours violation message display incorrectly in i icon popup! ",
-                        !scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Spread of hours"), false);
+                        !scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift.get(0)).contains("Spread of hours"), false);
             } else
                 SimpleUtils.fail("Get new added shift failed! ", false);
 
-
-            newAddedShift = scheduleShiftTablePage.getOneDayShiftByName(0, tmFirstName).get(1);
-            List<String> messageFromInfoIconPopup = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift);
-            if (newAddedShift != null) {
-                SimpleUtils.assertOnFail("The spread of hours violation message display incorrectly in i icon popup! The actual message is: "+ messageFromInfoIconPopup,
-                        messageFromInfoIconPopup.contains("Spread of hours"), false);
-            } else
-                SimpleUtils.fail("Get new added shift failed! ", false);
+            List<String> messageFromInfoIconPopup = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift.get(1));
+            SimpleUtils.assertOnFail("The spread of hours violation message display incorrectly in i icon popup! The actual message is: "+ messageFromInfoIconPopup,
+                    messageFromInfoIconPopup.contains("Spread of hours"), false);
 
 
         } catch (Exception e) {
@@ -774,7 +771,6 @@ public class SplitAndSpreadTest extends TestBase {
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
             }
-
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             int index = scheduleShiftTablePage.getRandomIndexOfShift();
             List<String> shiftInfo =  scheduleShiftTablePage.getTheShiftInfoByIndex(index);
@@ -793,7 +789,8 @@ public class SplitAndSpreadTest extends TestBase {
             shiftOperatePage.deleteTMShiftInWeekView(tmFirstName);
             shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //Create first shift for tm
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
@@ -810,10 +807,8 @@ public class SplitAndSpreadTest extends TestBase {
             createSchedulePage.publishActiveSchedule();
 
             //check the violation in i icon popup of new create shift
-            Thread.sleep(10000);
             List<WebElement> newShifts = scheduleShiftTablePage.getOneDayShiftByName(0, tmFirstName);
-            SimpleUtils.assertOnFail("The new shift fail to created! ",
-                    newShifts.size()>0, false);
+            SimpleUtils.assertOnFail("The new shift fail to created! ",newShifts.size()>0, false);
             WebElement newAddedShift = newShifts.get(0);
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("The spread of hours violation message display incorrectly in i icon popup! ",
@@ -1118,7 +1113,7 @@ public class SplitAndSpreadTest extends TestBase {
                 i++;
                 Thread.sleep(2000);
             }
-            String warningMessage = firstNameOfTM1 + " is scheduled 9am - 11am on Monday. This will trigger spread hours.";
+            String warningMessage = firstNameOfTM1 + " is scheduled 9:00 AM - 11:00 AM on Monday. This will trigger spread hours.";
             scheduleShiftTablePage.verifyMessageOnCopyMoveConfirmPage(warningMessage,warningMessage);
 
             // Swap TM1 and TM2, check the TMs been swapped successfully
