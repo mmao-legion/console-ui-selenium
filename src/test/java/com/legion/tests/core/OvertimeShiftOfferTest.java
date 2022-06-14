@@ -128,7 +128,7 @@ public class OvertimeShiftOfferTest extends TestBase {
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
-            newShiftPage.selectMultipleOrSpecificWorkDay(3, true);
+            newShiftPage.selectMultipleOrSpecificWorkDay(4, true);
             newShiftPage.moveSliderAtCertainPoint("9am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint("8pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.selectWorkRole(workRoleOfTM);
