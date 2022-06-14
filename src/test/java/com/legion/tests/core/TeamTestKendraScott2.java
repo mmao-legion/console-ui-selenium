@@ -1233,7 +1233,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
 					dashboardPage.isDashboardPageLoaded() , false);
@@ -1297,7 +1297,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
 					dashboardPage.isDashboardPageLoaded() , false);
@@ -1382,7 +1382,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
 					dashboardPage.isDashboardPageLoaded() , false);
@@ -1734,7 +1734,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
 					dashboardPage.isDashboardPageLoaded() , false);
@@ -1849,7 +1849,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
 					dashboardPage.isDashboardPageLoaded() , false);
@@ -1959,7 +1959,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
 					dashboardPage.isDashboardPageLoaded() , false);
