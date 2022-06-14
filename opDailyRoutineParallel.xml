@@ -21,6 +21,7 @@
             <class name="com.legion.tests.core.opUserManagement.AccessRoleTest"/>
             <class name="com.legion.tests.core.opEmployeeManagement.AbsentManagementTemplateTest"/>
             <class name="com.legion.tests.core.opEmployeeManagement.AccrualEngineTest"/>
+            <class name="com.legion.tests.core.opEmployeeManagement.TimeOffRequestTest"/>
         </classes>
     </test>
 </suite>

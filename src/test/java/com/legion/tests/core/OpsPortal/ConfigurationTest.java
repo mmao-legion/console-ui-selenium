@@ -15,6 +15,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -848,7 +849,7 @@ public class ConfigurationTest extends TestBase {
     public void timeOfDayInADVRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
-            String shiftTime = "8:30am - 4pm";
+            String shiftTime = "8:30 am - 4:00 pm";
             List<String> indexes = new ArrayList<String>();
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -895,8 +896,8 @@ public class ConfigurationTest extends TestBase {
     public void mealAndRestBreakInADVRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
-            String mealBreakTime = "1:30pm - 2:15pm";
-            String restBreakTime = "2:30pm - 3:15pm";
+            String mealBreakTime = "1:30 pm - 2:15 pm";
+            String restBreakTime = "2:30 pm - 3:15 pm";
             HashMap<String,String> mealRestBreaks= new HashMap<String,String>();
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1125,9 +1126,11 @@ public class ConfigurationTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMultipleVersionTemplateCreationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime =dfs.format(new Date()).trim();
             String templateType="Operating Hours";
-            String templateName = "ForMultipleAutoFutureCreation";
-            String dynamicGpName = "MultipleTemplateAutoUsing1";
+            String templateName = "MultipleTemplate" + currentTime;
+            String dynamicGpName = "MultipleTemplate" + currentTime;
             String button1 = "publish at different time";
             String button2 ="save as draft";
             int date = 14;
@@ -1147,6 +1150,77 @@ public class ConfigurationTest extends TestBase {
             configurationPage.createDraftForEachPublishInMultipleTemplate(templateName,button2,"edit");
 
 
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify menu list for multiple version template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMenuListForMultipleVersionTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType="Operating Hours";
+            String templateName = "MultipleTemplateMenuListCheckingAutoUsing";
+            List<String> current =new ArrayList<>(Arrays.asList("Save as draft","Publish now","Publish at different time"));
+            List<String> future =new ArrayList<>(Arrays.asList("Save as draft","replacing","Publish at different time"));
+            List<String> current1= new ArrayList<String>();
+            List<String> future1= new ArrayList<String>();
+            HashMap<String, List<String>> allMenuInfo= new HashMap<>();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+
+            //get menu list for current template and future template
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            allMenuInfo = configurationPage.verifyMenuListForMultipleTemplate(templateName);
+            current1 = allMenuInfo.get("current");
+            future1 = allMenuInfo.get("future");
+            //Verify menu list of current template
+            for(String menuName:current1){
+                for(String menu:current){
+                    if(menuName.contains(menu)){
+                        SimpleUtils.pass(menuName + " is showing for current template");
+                        break;
+                    }
+                }
+            }
+            //Verify menu list of future template
+            for(String menuName:future1){
+                for(String menu:future){
+                    if(menuName.contains(menu)){
+                        SimpleUtils.pass(menuName + " is showing for future template");
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify buttons showing for multiple template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyButtonsShowingForMultipleTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType="Operating Hours";
+            String templateName = "MultipleTemplateMenuListCheckingAutoUsing";
+            //Go to OH template list page
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Expand multiple version template
+            configurationPage.expandMultipleVersionTemplate(templateName);
+            //Verify buttons on published template details page
+            configurationPage.verifyButtonsShowingOnPublishedTemplateDetailsPage();
+            //Expand multiple version template
+            configurationPage.expandMultipleVersionTemplate(templateName);
+            //Verify buttons on draft template details page
+            configurationPage.verifyButtonsShowingOnDraftTemplateDetailsPage();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

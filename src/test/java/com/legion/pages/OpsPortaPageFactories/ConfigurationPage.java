@@ -128,4 +128,9 @@ public interface ConfigurationPage {
     public void publishAtDifferentTimeTemplate(String templateName,String dynamicGName,String criteria,String formula,String button,int effectiveDate) throws Exception;
     public void createFutureTemplateBasedOnExistingTemplate(String templateName,String button,int date,String editOrViewMode) throws Exception;
     public void createDraftForEachPublishInMultipleTemplate(String templateName,String button,String editOrViewMode) throws Exception;
+    public HashMap<String, List<String>> verifyMenuListForMultipleTemplate(String templateName) throws Exception;
+    public void expandMultipleVersionTemplate(String templateName) throws Exception;
+    public void verifyButtonsShowingOnPublishedTemplateDetailsPage() throws Exception;
+    public void verifyButtonsShowingOnDraftTemplateDetailsPage() throws Exception;
+
 }

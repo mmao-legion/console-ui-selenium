@@ -383,7 +383,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
-	public void clickOnConfigurationCrad(String templateType) throws Exception {
+	public void  clickOnConfigurationCrad(String templateType) throws Exception {
 		if(templateType!=null){
 			waitForSeconds(10);
 			if(configurationCardsList.size()!=0) {
@@ -2179,6 +2179,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Publish template dropdown button load failed",false);
 	}
 
+	@FindBy(css="lg-button[label=\"Save as draft\"] h3[ng-click*= publishReplace]")
+	private WebElement publishReplaceButton;
+
 	@Override
 	public void chooseSaveOrPublishBtnAndClickOnTheBtn(String button) throws Exception {
 		if (isElementLoaded(dropdownArrowButton,5)) {
@@ -2190,8 +2193,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				clickTheElement(publishNowButton);
 			} else if (button.toLowerCase().contains("different time")){
 				clickTheElement(publishLaterButton);
-			} else {
-
+			} else if (button.toLowerCase().contains("replacing")){
+				clickTheElement(publishReplaceButton);
 			}
 			click(publishTemplateButton);
 		}else{
@@ -4318,6 +4321,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@Override
 	public void expandMultipleVersionTemplate(String templateName) throws Exception{
 		waitForSeconds(2);
 		searchTemplate(templateName);
@@ -4359,7 +4363,131 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@FindBy(css="div.lg-templates-table-improved__grid-row.ng-scope.hasChildren")
+	private WebElement currentPublishedTemplate;
+	@FindBy(css="div[ng-repeat=\"child in item.childTemplate\"] div.child-row:nth-child(1) lg-eg-status[type=\"Draft\"]")
+	private WebElement draftFromCurrentPublished;
+	@FindBy(css="div.lg-templates-table-improved__grid-row.ng-scope.hasChildren+div[ng-repeat*=\"childTemplate\"] div.ml-25 button")
+	private WebElement draftTemNameFromCurrentPublished;
+	@FindBy(css="div.lg-templates-table-improved__grid-row.child-row")
+	private List<WebElement> allFutureTemplatesList;
+	@FindBy(css="div[ng-repeat=\"child in item.childTemplate\"] div.child-row:nth-child(1) lg-eg-status[type=\"Published\"]")
+	private List<WebElement> allFuturePublishedTemplatesList;
+	@FindBy(css="div.lg-templates-table-improved__grid-row.child-row.ng-scope")
+	private List<WebElement> allFutureDraftTemplatesList;
+	@FindBy(css="lg-button[is-save-as=\"$ctrl.isSaveAs\"] h3")
+	private List<WebElement> menusList;
+	@FindBy(css="lg-button[label=\"Yes\"] button")
+	private WebElement yesButtonOnCancelEditPopup;
+	@FindBy(css="modal[modal-title=\"Cancel Editing?\"]")
+	private WebElement cancelEditPopup;
 
+	public List<String> getMenuListOnTemplateDetailsPage() throws Exception{
+		List<String> MenuList = new ArrayList<String>();
+		try {
+			clickOnEditButtonOnTemplateDetailsPage();
+			clickTheElement(dropdownArrowButton);
+			for(WebElement menu:menusList){
+				String name = menu.getText().trim();
+				MenuList.add(name);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return MenuList;
+	}
 
+	@Override
+	public HashMap<String, List<String>> verifyMenuListForMultipleTemplate(String templateName) throws Exception{
+		HashMap<String, List<String>> allMenuInfo= new HashMap<>();
+		List<String> currentTemplateMenuNameList = new ArrayList<String>();
+		List<String> futureTemplateMenuNameList = new ArrayList<String>();
+		expandMultipleVersionTemplate(templateName);
+		//Open the draft template that from current published
+		if(isElementLoaded(draftFromCurrentPublished,3)){
+			clickTheElement(draftTemNameFromCurrentPublished);
+			waitForSeconds(5);
+			currentTemplateMenuNameList = getMenuListOnTemplateDetailsPage();
+			allMenuInfo.put("current",currentTemplateMenuNameList);
+			clickTheElement(cancelButton);
+			if(isElementLoaded(cancelEditPopup,3)){
+				clickTheElement(yesButtonOnCancelEditPopup);
+			}
+		}else {
+			SimpleUtils.fail("draft template From Current Published is not loaded",false);
+		}
+		expandMultipleVersionTemplate(templateName);
+		////Open the draft template that from future published
+		if(areListElementVisible(allFutureDraftTemplatesList,3)){
+			WebElement draftNameFromFuture = allFutureDraftTemplatesList.get(0).findElement(By.cssSelector("div.childrenName button"));
+			clickTheElement(draftNameFromFuture);
+			waitForSeconds(5);
+			futureTemplateMenuNameList = getMenuListOnTemplateDetailsPage();
+			allMenuInfo.put("future",futureTemplateMenuNameList);
+		}else {
+			SimpleUtils.fail("draft template From Current Published is not loaded",false);
+		}
+		return allMenuInfo;
+	}
 
+//	@FindBy(css="lg-button[label=\"History\"] button")
+//	private WebElement historyButton;
+	@FindBy(css="lg-button[label=\"Archive\"] button")
+	private WebElement archiveButton;
+	@FindBy(css="lg-button[ng-click=\"editTemplate()\"] button")
+	private WebElement editTemplateButton;
+	@FindBy(css="lg-button[label=\"Close\"] button")
+	private WebElement closeButton;
+
+	@Override
+	public void verifyButtonsShowingOnPublishedTemplateDetailsPage() throws Exception{
+		String draftOfCurrentPublishLocator = "div[ng-repeat=\"child in item.childTemplate\"] div.child-row:nth-child(1) lg-eg-status[type=\"Draft\"]";
+		String editLocator = "lg-button[ng-click=\"editTemplate()\"] button";
+		//Check the buttons on current published template
+		if(isElementExist(draftOfCurrentPublishLocator)){
+			clickTheElement(currentPublishedTemplate.findElement(By.cssSelector("button")));
+			waitForSeconds(5);
+			if(isElementLoaded(historyButton,2) && isElementLoaded(archiveButton) && !isElementExist(editLocator)){
+				SimpleUtils.pass("Buttons on Published template details page can show well.");
+			}else {
+				SimpleUtils.fail("Buttons on Published template details page is not correctly!",false);
+			}
+		}else {
+			clickTheElement(currentPublishedTemplate.findElement(By.cssSelector("button")));
+			waitForSeconds(5);
+			if(isElementLoaded(historyButton,2) && isElementLoaded(archiveButton) && isElementLoaded(editTemplateButton)){
+				SimpleUtils.pass("Buttons on Published template details page can show well.");
+			}else {
+				SimpleUtils.fail("Buttons on Published template details page is not correctly!",false);
+			}
+		}
+		clickTheElement(closeButton);
+		waitForSeconds(5);
+	}
+
+	@Override
+	public void verifyButtonsShowingOnDraftTemplateDetailsPage() throws Exception{
+		String draftOfCurrentPublishLocator = "div[ng-repeat=\"child in item.childTemplate\"] div.child-row:nth-child(1) lg-eg-status[type=\"Draft\"]";
+		String futureDraftTemplate ="div.lg-templates-table-improved__grid-row.child-row.ng-scope";
+		//Check the buttons on draft status
+		if(isElementExist(draftOfCurrentPublishLocator)){
+			clickTheElement(draftTemNameFromCurrentPublished);
+			waitForSeconds(5);
+			if(isElementLoaded(historyButton,2) && isElementLoaded(deleteTemplateButton) && isElementLoaded(editTemplateButton)){
+				SimpleUtils.pass("Buttons on draft template details page can show well.");
+			}else {
+				SimpleUtils.fail("Buttons on draft template details page is not correct.",false);
+			}
+		}else if(isElementExist(futureDraftTemplate)){
+			clickTheElement(allFutureDraftTemplatesList.get(0).findElement(By.cssSelector("button")));
+			waitForSeconds(5);
+			if(isElementLoaded(historyButton,2) && isElementLoaded(deleteTemplateButton) && isElementLoaded(editTemplateButton)){
+				SimpleUtils.pass("Buttons on draft template details page can show well.");
+			}else {
+				SimpleUtils.fail("Buttons on draft template details page is not correct.",false);
+			}
+		}else {
+			SimpleUtils.fail("There are no any draft template showing",false);
+		}
+	}
 }

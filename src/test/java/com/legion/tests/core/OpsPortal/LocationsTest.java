@@ -1199,7 +1199,7 @@ public class LocationsTest extends TestBase {
             locationsPage.backToConfigurationTabInLocationLevel();
 
             //get template level info of Compliance
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"), "View");
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(2).get("Template Type"), "View");
             String contextInComplianceTemplate = locationsPage.getComplianceTemplateValueInLocationLevel();
             if (!(contextInComplianceTemplate == null)) {
                 SimpleUtils.pass("Can view Compliance successfully via view button in location level");
@@ -2134,6 +2134,39 @@ public class LocationsTest extends TestBase {
             String reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadFiscalCalendar, sessionId, "\\console-ui-selenium\\src\\test\\resources\\uploadFile\\FisaclCalendarFiles\\FiscalCalendar-2022-2.csv");
             //download the uploaded fiscal calendar file
             locationsPage.downloadFiscalCalendar("2022", "Monday");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Template localization permission")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyTemplateLocalizationPermissionOfDM(String username, String password, String browser, String location) throws Exception {
+        try {
+
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            //Assignment Rules
+            String[] action = {"View"};
+            locationsPage.verifyActionsForTemplate("Assignment Rules", action);
+            //Scheduling Rules
+            locationsPage.verifyActionsForTemplate("Scheduling Rules", action);
+            //Labor Model
+            String[] actions = {"View", "Edit"};
+            locationsPage.verifyActionsForTemplate("Labor Model", actions);
+            //Operating Hours
+            locationsPage.verifyActionsForTemplate("Operating Hours", actions);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
