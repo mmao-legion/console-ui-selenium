@@ -4321,6 +4321,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@Override
 	public void expandMultipleVersionTemplate(String templateName) throws Exception{
 		waitForSeconds(2);
 		searchTemplate(templateName);
@@ -4427,5 +4428,66 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("draft template From Current Published is not loaded",false);
 		}
 		return allMenuInfo;
+	}
+
+//	@FindBy(css="lg-button[label=\"History\"] button")
+//	private WebElement historyButton;
+	@FindBy(css="lg-button[label=\"Archive\"] button")
+	private WebElement archiveButton;
+	@FindBy(css="lg-button[ng-click=\"editTemplate()\"] button")
+	private WebElement editTemplateButton;
+	@FindBy(css="lg-button[label=\"Close\"] button")
+	private WebElement closeButton;
+
+	@Override
+	public void verifyButtonsShowingOnPublishedTemplateDetailsPage() throws Exception{
+		String draftOfCurrentPublishLocator = "div[ng-repeat=\"child in item.childTemplate\"] div.child-row:nth-child(1) lg-eg-status[type=\"Draft\"]";
+		String editLocator = "lg-button[ng-click=\"editTemplate()\"] button";
+		//Check the buttons on current published template
+		if(isElementExist(draftOfCurrentPublishLocator)){
+			clickTheElement(currentPublishedTemplate.findElement(By.cssSelector("button")));
+			waitForSeconds(5);
+			if(isElementLoaded(historyButton,2) && isElementLoaded(archiveButton) && !isElementExist(editLocator)){
+				SimpleUtils.pass("Buttons on Published template details page can show well.");
+			}else {
+				SimpleUtils.fail("Buttons on Published template details page is not correctly!",false);
+			}
+		}else {
+			clickTheElement(currentPublishedTemplate.findElement(By.cssSelector("button")));
+			waitForSeconds(5);
+			if(isElementLoaded(historyButton,2) && isElementLoaded(archiveButton) && isElementLoaded(editTemplateButton)){
+				SimpleUtils.pass("Buttons on Published template details page can show well.");
+			}else {
+				SimpleUtils.fail("Buttons on Published template details page is not correctly!",false);
+			}
+		}
+		clickTheElement(closeButton);
+		waitForSeconds(5);
+	}
+
+	@Override
+	public void verifyButtonsShowingOnDraftTemplateDetailsPage() throws Exception{
+		String draftOfCurrentPublishLocator = "div[ng-repeat=\"child in item.childTemplate\"] div.child-row:nth-child(1) lg-eg-status[type=\"Draft\"]";
+		String futureDraftTemplate ="div.lg-templates-table-improved__grid-row.child-row.ng-scope";
+		//Check the buttons on draft status
+		if(isElementExist(draftOfCurrentPublishLocator)){
+			clickTheElement(draftTemNameFromCurrentPublished);
+			waitForSeconds(5);
+			if(isElementLoaded(historyButton,2) && isElementLoaded(deleteTemplateButton) && isElementLoaded(editTemplateButton)){
+				SimpleUtils.pass("Buttons on draft template details page can show well.");
+			}else {
+				SimpleUtils.fail("Buttons on draft template details page is not correct.",false);
+			}
+		}else if(isElementExist(futureDraftTemplate)){
+			clickTheElement(allFutureDraftTemplatesList.get(0).findElement(By.cssSelector("button")));
+			waitForSeconds(5);
+			if(isElementLoaded(historyButton,2) && isElementLoaded(deleteTemplateButton) && isElementLoaded(editTemplateButton)){
+				SimpleUtils.pass("Buttons on draft template details page can show well.");
+			}else {
+				SimpleUtils.fail("Buttons on draft template details page is not correct.",false);
+			}
+		}else {
+			SimpleUtils.fail("There are no any draft template showing",false);
+		}
 	}
 }

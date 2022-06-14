@@ -1199,5 +1199,31 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify buttons showing for multiple template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyButtonsShowingForMultipleTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType="Operating Hours";
+            String templateName = "MultipleTemplateMenuListCheckingAutoUsing";
+            //Go to OH template list page
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Expand multiple version template
+            configurationPage.expandMultipleVersionTemplate(templateName);
+            //Verify buttons on published template details page
+            configurationPage.verifyButtonsShowingOnPublishedTemplateDetailsPage();
+            //Expand multiple version template
+            configurationPage.expandMultipleVersionTemplate(templateName);
+            //Verify buttons on draft template details page
+            configurationPage.verifyButtonsShowingOnDraftTemplateDetailsPage();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
 
