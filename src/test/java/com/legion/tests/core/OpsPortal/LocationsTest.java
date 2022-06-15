@@ -2117,7 +2117,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Yang")
     @Enterprise(name = "opauto")
     @TestName(description = "Fiscal calendar configuration")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
     public void verifyUserCanUploadFiscalCalendarOfSM(String username, String password, String browser, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -2171,4 +2171,65 @@ public class LocationsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Override Advance staffing rule in location level")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOverriddenAdvanceStaffingRuleInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.clickActionsForTemplate("Scheduling Rules", "Edit");
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.selectWorkRoleToEdit("AMBASSADOR");
+            //Verify location level advance staffing rules should be aligned with template level
+            List<String> advanceStaffRuleStatues = new ArrayList<>();
+            advanceStaffRuleStatues.add("Start at 0 minutes at Opening Business Hours, end at 0 minutes at Closing Business Hours, 1 of AMBASSADOR shift should be scheduled per Sun, Mon, Tue, Wed, Thu, Fri, Sat .");
+            configurationPage.verifyAdvanceStaffRuleFromLocationLevel(advanceStaffRuleStatues);
+            //Verify location level advance staffing rules should be enabled by default
+            advanceStaffRuleStatues = new ArrayList<>();
+            advanceStaffRuleStatues.add("This rule is enabled for this location.");
+            configurationPage.verifyAdvanceStaffRuleStatusFromLocationLevel(advanceStaffRuleStatues);
+            //Verify user can't add location level advance staffing rules.
+            configurationPage.verifyCanNotAddAdvancedStaffingRuleFromTemplateLevel();
+            //Verify user can't edit/delete location level location level advance staffing rules.
+            configurationPage.verifyCanNotEditDeleteAdvancedStaffingRuleFromTemplateLevel();
+            //Verify user can disable location level location level advance staffing rules.
+            configurationPage.changeAdvanceStaffRuleStatusFromLocationLevel(0);
+            advanceStaffRuleStatues.clear();
+            advanceStaffRuleStatues.add("This rule is disabled for this location.");
+            configurationPage.verifyAdvanceStaffRuleStatusFromLocationLevel(advanceStaffRuleStatues);
+            //Verify user can enable location level location level advance staffing rules.
+            //Verify the template level advance staffing Rules should not be changed after disable/enable location level advance staffing Rules.
+            configurationPage.changeAdvanceStaffRuleStatusFromLocationLevel(0);
+            advanceStaffRuleStatues.clear();
+            advanceStaffRuleStatues.add("This rule is enabled for this location.");
+            configurationPage.verifyAdvanceStaffRuleStatusFromLocationLevel(advanceStaffRuleStatues);
+            //Verify user can reset location level advance staffing rule successfully.
+            configurationPage.changeAdvanceStaffRuleStatusFromLocationLevel(0);
+            configurationPage.saveBtnIsClickable();
+            configurationPage.saveBtnIsClickable();
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.clickActionsForTemplate("Scheduling Rules", "Reset");
+            //Verify schdule can be generated correctly according to location level advance staffing rule which has been overridden.
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }
