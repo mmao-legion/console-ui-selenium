@@ -85,5 +85,6 @@ public interface ScheduleMainPage {
     public void selectJobTitleFilterByText(String filterText) throws Exception;
     public boolean verifyDisplayOrderWhenGroupingByWorkRole(HashMap<String, Integer> workRoleNOrders) throws Exception;
     public boolean areDisplayOrderCorrectOnFilterPopup(HashMap<String, Integer> workRoleNOrders) throws Exception;
+    public List<String> getStaffWorkRoles ();
 }
 

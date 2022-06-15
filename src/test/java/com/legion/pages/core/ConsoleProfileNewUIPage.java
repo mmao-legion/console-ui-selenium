@@ -1740,7 +1740,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					click(myAvailabilityConfirmSubmitBtn);
 				}
 			}
-			waitForSeconds(5);
+			waitForSeconds(10);
 			if(isElementLoaded(editBtn, 25)||isElementLoaded(lockIcon, 10))
 				SimpleUtils.pass("Profile Page: 'My Availability section' edit mode Saved successfully.");
 			else

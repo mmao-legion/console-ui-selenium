@@ -478,11 +478,65 @@ SCH-5862-->
         </classes>
     </test>
 
+    <test name="Create Shift New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.CreateShiftNewUITest">
+                <methods>
+                    <include name="validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin" />
+                    <include name="validateAllItemsOnTheSelectTMPageAsInternalAdmin" /> <!--  need run on 24hrs ops env-->
+                    <include name="validateTheWarningMessageOfTheItemsOnFirstPageOfCreateShiftModalAsInternalAdmin" />
+                    <include name="validateAssignOrOfferTMsInSearchAndRecommendedTabsAsInternalAdmin" />
+                    <include name="validateAssignShiftsForEachDaySwitchAsInternalAdmin" />
+                    <include name="verifyAssignShiftByEachDaysAsInternalAdmin" />
+                    <include name="validateTheAutoAssignmentWorkFlowAsInternalAdmin" />
+                    <include name="validateTheOfferTMsWorkFlowAsInternalAdmin" />
+                    <include name="validateOfferShiftByEachDaysAsInternalAdmin" />
+                    <include name="validateTheAssignAndOfferWorkFlowAsInternalAdmin" />
+                    <include name="validateTheAssignShiftsWorkFlowAsInternalAdmin" />
+                    <include name="validateTheShiftsCanBeCreatedAfterUpdateShiftInfoAsInternalAdmin" />
+                    <include name="validateTheNextDayCheckBoxOnCreateShiftModalAsInternalAdmin" />
+                    <include name="validateShiftsCanBeCreatedByNewUIByDifferentAccessRolesAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
     <test name="Overtime Rate Shift Offer Claim Test">
         <classes>
             <class name="com.legion.tests.core.OvertimeShiftOfferTest">
                 <methods>
                     <include name="verifyAllowClaimOvertimeShiftOfferAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
+    <test name="Schedule Template Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTemplateTest">
+                <methods>
+                    <include name="validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="P2P LG Test">
+        <classes>
+            <class name="com.legion.tests.core.P2PLGTest">
+                <methods>
+                    <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                    <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                    <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnP2PLGAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Parent Child LG Test">
+        <classes>
+            <class name="com.legion.tests.core.ParentChildLGTest">
+                <methods>
+                    <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                    <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                    <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

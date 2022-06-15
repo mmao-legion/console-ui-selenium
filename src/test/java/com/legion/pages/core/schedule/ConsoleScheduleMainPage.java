@@ -210,7 +210,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             // Validate what happens next to the Edit!
             // When Status is finalized, look for extra popup.
             clickTheElement(editScheduleButton);
-            waitForSeconds(3);
+            waitForSeconds(5);
             if(isElementLoaded(popupAlertPremiumPay,10) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
                 // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
@@ -1911,6 +1911,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                 randomIndex = (new Random()).nextInt(availableFilters.get("location").size());
                 randomLocation = availableFilters.get("location").get(randomIndex).getText();
                 randomLocation = randomLocation.contains(" ")? randomLocation.split(" ")[0]: "";
+                selectLocationFilterByText(randomLocation);
             } else
                 SimpleUtils.report("Schedule Page: 'LOCATION' isn't one label currently");
         } else
@@ -2117,5 +2118,20 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             }
         }
         return isConsistent;
+    }
+    
+    @FindBy(css = "[ng-repeat=\"r in summary.staffingGuidance.roleHours\"] [class=\"ng-binding\"]")
+    private List<WebElement> staffWorkRoles;
+    public List<String> getStaffWorkRoles () {
+        List<String> workRoles = new ArrayList<>();
+        if (areListElementVisible(staffWorkRoles, 10) && staffWorkRoles.size()>0) {
+            for (int i=0;i<staffWorkRoles.size(); i++) {
+                String workRole = staffWorkRoles.get(i).getText();
+                workRoles.add(workRole);
+                SimpleUtils.pass("Get staff work role "+workRole+" successfully!");
+            }
+        } else
+            SimpleUtils.fail("Staff work roles fail to load! ", false);
+        return workRoles;
     }
 }

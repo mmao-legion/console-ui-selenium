@@ -39,4 +39,5 @@ public interface SmartCardPage {
     public boolean isScheduleNotPublishedSmartCardLoaded() throws Exception;
     public String getWholeMessageFromActionRequiredSmartCard() throws Exception;
     public HashMap<String, String> getMessageFromActionRequiredSmartCard() throws Exception;
+    public void clickViewTemplateLinkOnMasterTemplateSmartCard() throws Exception;
 }

@@ -47,9 +47,9 @@ public class CinemarkMinorTest extends TestBase {
             this.createDriver((String) params[0], "69", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
-            if (MyThreadLocal.getCurrentComplianceTemplate()==null || MyThreadLocal.getCurrentComplianceTemplate().equals("")){
-                getAndSetDefaultTemplate((String) params[3]);
-            }
+//            if (MyThreadLocal.getCurrentComplianceTemplate()==null || MyThreadLocal.getCurrentComplianceTemplate().equals("")){
+//                getAndSetDefaultTemplate((String) params[3]);
+//            }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -657,6 +657,15 @@ public class CinemarkMinorTest extends TestBase {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            MyThreadLocal.setCurrentComplianceTemplate(templateTypeAndName.get("Compliance"));
+
             //go to Configuration
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsComplianceSection();
@@ -738,6 +747,14 @@ public class CinemarkMinorTest extends TestBase {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            MyThreadLocal.setCurrentComplianceTemplate(templateTypeAndName.get("Compliance"));
             //go to Configuration
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsComplianceSection();
@@ -895,6 +912,14 @@ public class CinemarkMinorTest extends TestBase {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            MyThreadLocal.setCurrentComplianceTemplate(templateTypeAndName.get("Compliance"));
             //go to Configuration
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsComplianceSection();
@@ -1226,6 +1251,7 @@ public class CinemarkMinorTest extends TestBase {
             shiftOperatePage.deleteAllOOOHShiftInWeekView();
             scheduleMainPage.saveSchedule();
         }
+        Thread.sleep(5000);
         createSchedulePage.publishActiveSchedule();
 
         //Create new shift with shift time is not during the minor setting for TM
@@ -1844,84 +1870,86 @@ public class CinemarkMinorTest extends TestBase {
             configurationPage.goToUserManagementPage();
             configurationPage.goToDynamicEmployeeGroupPage();
             //delete all dynamic employee group
-            configurationPage.deleteSpecifyDynamicEmployeeGroupsInList("Group-ForAuto");
+            String minor15GroupTitle = "Minor15Group-ForAuto";
+            configurationPage.deleteSpecifyDynamicEmployeeGroupsInList(minor15GroupTitle);
             //create a User Group for 13 year old minors
             List<String> groupCriteriaList = new ArrayList<>();
-            groupCriteriaList.clear();
-            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
-                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.LessThan14.getValue());
-            String minor13GroupTitle = "Minor13Group-ForAuto";
-            String minor13GroupDescription = "Minor13-Description-ForAuto";
-            configurationPage.createNewDynamicEmployeeGroup(minor13GroupTitle, minor13GroupDescription,
-                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            Thread.sleep(10000);
-            String minor14GroupTitle = "Minor14Group-ForAuto";
-            String minor14GroupDescription = "Minor14-Description-ForAuto";
-            groupCriteriaList.clear();
-            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
-                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals14.getValue());
-            configurationPage.createNewDynamicEmployeeGroup(minor14GroupTitle, minor14GroupDescription,
-                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            Thread.sleep(10000);
-            String minor15GroupTitle = "Minor15Group-ForAuto";
+//            groupCriteriaList.clear();
+//            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+//                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.LessThan14.getValue());
+//            String minor13GroupTitle = "Minor13Group-ForAuto";
+//            String minor13GroupDescription = "Minor13-Description-ForAuto";
+//            configurationPage.createNewDynamicEmployeeGroup(minor13GroupTitle, minor13GroupDescription,
+//                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+//            Thread.sleep(10000);
+//            String minor14GroupTitle = "Minor14Group-ForAuto";
+//            String minor14GroupDescription = "Minor14-Description-ForAuto";
+//            groupCriteriaList.clear();
+//            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+//                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals14.getValue());
+//            configurationPage.createNewDynamicEmployeeGroup(minor14GroupTitle, minor14GroupDescription,
+//                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+//            Thread.sleep(10000);
+
             String minor15GroupDescription = "Minor15-Description-ForAuto";
             groupCriteriaList.clear();
             groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
                     +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals15.getValue());
             configurationPage.createNewDynamicEmployeeGroup(minor15GroupTitle, minor15GroupDescription,
                     OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            Thread.sleep(10000);
-            String minor16GroupTitle = "Minor16Group-ForAuto";
-            String minor16GroupDescription = "Minor16-Description-ForAuto";
-            groupCriteriaList.clear();
-            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
-                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals16.getValue());
-            configurationPage.createNewDynamicEmployeeGroup(minor16GroupTitle, minor16GroupDescription,
-                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            Thread.sleep(10000);
-            String minor17GroupTitle = "Minor17Group-ForAuto";
-            String minor17GroupDescription = "Minor17-Description-ForAuto";
-            groupCriteriaList.clear();
-            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
-                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals17.getValue());
-            configurationPage.createNewDynamicEmployeeGroup(minor17GroupTitle, minor17GroupDescription,
-                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            Thread.sleep(10000);
+//            Thread.sleep(10000);
+//            String minor16GroupTitle = "Minor16Group-ForAuto";
+//            String minor16GroupDescription = "Minor16-Description-ForAuto";
+//            groupCriteriaList.clear();
+//            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+//                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals16.getValue());
+//            configurationPage.createNewDynamicEmployeeGroup(minor16GroupTitle, minor16GroupDescription,
+//                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+//            Thread.sleep(10000);
+//            String minor17GroupTitle = "Minor17Group-ForAuto";
+//            String minor17GroupDescription = "Minor17-Description-ForAuto";
+//            groupCriteriaList.clear();
+//            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+//                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals17.getValue());
+//            configurationPage.createNewDynamicEmployeeGroup(minor17GroupTitle, minor17GroupDescription,
+//                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+//            Thread.sleep(10000);
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
-            configurationPage.archiveOrDeleteAllTemplates();
-            String minor17TemplateName = "Minor17Template-ForAuto";
-            createMinor16N17TemplateAndSetMinorSettings(minor17TemplateName, minor17GroupTitle);
-            String minor14TemplateName = "Minor14Template-ForAuto";
-            createMinor13N14N15TemplateAndSetMinorSettings(minor14TemplateName, minor14GroupTitle);
-            String minor13TemplateName = "Minor13Template-ForAuto";
-            createMinor13N14N15TemplateAndSetMinorSettings(minor13TemplateName, minor13GroupTitle);
             String minor15TemplateName = "Minor15Template-ForAuto";
-            createMinor13N14N15TemplateAndSetMinorSettings(minor15TemplateName, minor15GroupTitle);
-            String minor16TemplateName = "Minor16Template-ForAuto";
-            createMinor16N17TemplateAndSetMinorSettings(minor16TemplateName, minor16GroupTitle);
+            configurationPage.archiveOrDeleteTemplate(minor15TemplateName);
+//            String minor17TemplateName = "Minor17Template-ForAuto";
+//            createMinor16N17TemplateAndSetMinorSettings(minor17TemplateName, minor17GroupTitle);
+//            String minor14TemplateName = "Minor14Template-ForAuto";
+//            createMinor13N14N15TemplateAndSetMinorSettings(minor14TemplateName, minor14GroupTitle);
+//            String minor13TemplateName = "Minor13Template-ForAuto";
+//            createMinor13N14N15TemplateAndSetMinorSettings(minor13TemplateName, minor13GroupTitle);
 
-            Thread.sleep(3000);
-            switchToConsoleWindow();
-            LoginPage loginPage = new ConsoleLoginPage();
-            loginPage.verifyNewTermsOfServicePopUp();
-            //wait for 5 mins for catch
-            TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            for (int i = 0; i< 10; i++) {
-                teamPage.goToTeam();
-                teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-                Thread.sleep(60000);
-            }
-            //refresh cache
-            CacheAPI.refreshTemplateCache("stoneman@legion.co", "admin11.a");
-            String minor13Name = cinemarkMinors.get("Minor13");
-            String minor14Name = cinemarkMinors.get("Minor14");
-            String minor15Name = cinemarkMinors.get("Minor15");
-            String minor16Name = cinemarkMinors.get("Minor16");
-            String minor17Name = cinemarkMinors.get("Minor17");
-            verifyTemplateNameOnProfilePage(minor17Name, minor17TemplateName);
-            verifyTemplateNameOnProfilePage(minor14Name, minor14TemplateName);
-            verifyTemplateNameOnProfilePage(minor13Name, minor13TemplateName);
+            createMinor13N14N15TemplateAndSetMinorSettings(minor15TemplateName, minor15GroupTitle);
+//            String minor16TemplateName = "Minor16Template-ForAuto";
+//            createMinor16N17TemplateAndSetMinorSettings(minor16TemplateName, minor16GroupTitle);
+
+//            Thread.sleep(3000);
+//            switchToConsoleWindow();
+//            LoginPage loginPage = new ConsoleLoginPage();
+//            loginPage.verifyNewTermsOfServicePopUp();
+//            //wait for 5 mins for catch
+//            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+//            for (int i = 0; i< 10; i++) {
+//                teamPage.goToTeam();
+//                teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+//                Thread.sleep(60000);
+//            }
+//            //refresh cache
+//            CacheAPI.refreshTemplateCache("stoneman@legion.co", "admin11.a");
+//            String minor13Name = cinemarkMinors.get("Minor13");
+//            String minor14Name = cinemarkMinors.get("Minor14");
+//            String minor15Name = cinemarkMinors.get("Minor15");
+//            String minor16Name = cinemarkMinors.get("Minor16");
+//            String minor17Name = cinemarkMinors.get("Minor17");
+//            verifyTemplateNameOnProfilePage(minor17Name, minor17TemplateName);
+//            verifyTemplateNameOnProfilePage(minor14Name, minor14TemplateName);
+//            verifyTemplateNameOnProfilePage(minor13Name, minor13TemplateName);
 //            verifyTemplateNameOnProfilePage(minor15Name, minor15TemplateName);
 //            verifyTemplateNameOnProfilePage(minor16Name, minor16TemplateName);
         } catch (Exception e) {

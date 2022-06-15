@@ -106,14 +106,18 @@ public abstract class TestBase {
     public enum AccessRoles {
         InternalAdmin("InternalAdmin"),
         StoreManager("StoreManager"),
+        StoreManager2("StoreManager2"),
         StoreManagerOtherLocation1("StoreManagerOtherLocation1"),
         TeamLead("TeamLead"),
+        TeamLead2("TeamLead2"),
         TeamMember("TeamMember"),
         TeamMemberOtherLocation1("TeamMemberOtherLocation1"),
         TeamMember2("TeamMember2"),
         StoreManagerLG("StoreManagerLG"),
         DistrictManager("DistrictManager"),
-        CustomerAdmin("CustomerAdmin");
+        DistrictManager2("DistrictManager2"),
+        CustomerAdmin("CustomerAdmin"),
+        CustomerAdmin2("CustomerAdmin2");
         private final String role;
         AccessRoles(final String accessRole) {
             role = accessRole;

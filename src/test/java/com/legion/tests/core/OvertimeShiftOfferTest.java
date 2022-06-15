@@ -42,6 +42,8 @@ public class OvertimeShiftOfferTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -52,8 +54,24 @@ public class OvertimeShiftOfferTest extends TestBase {
             loginPage.logOut();
 
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+
+            // Make sure the access for allow TM to claim overtime shift rate was set
+            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+            if (isLocationUsingControlsConfiguration){
+                controlsPage.gotoControlsPage();
+                SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+                controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+                SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+                controlsPage.clickGlobalSettings();
+                controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
+                controlsNewUIPage.allowEmployeesClaimOvertimeShiftOffer();
+            }
+
+            // Start to check and generate target schedule
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -62,13 +80,14 @@ public class OvertimeShiftOfferTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
             scheduleCommonPage.navigateToNextWeek();
+
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            //delete unassigned shifts and open shifts.
+            // Delete unassigned shifts and open shifts.
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");
@@ -102,7 +121,6 @@ public class OvertimeShiftOfferTest extends TestBase {
             newShiftPage.searchTeamMemberByName(firstNameOfTM);
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
-            scheduleMainPage.publishOrRepublishSchedule();
             int shiftsCountBefore = shiftOperatePage.countShiftsByUserName(firstNameOfTM);
 
             //create an overtime shift
@@ -110,7 +128,7 @@ public class OvertimeShiftOfferTest extends TestBase {
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
-            newShiftPage.selectMultipleOrSpecificWorkDay(3, true);
+            newShiftPage.selectMultipleOrSpecificWorkDay(4, true);
             newShiftPage.moveSliderAtCertainPoint("9am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint("8pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.selectWorkRole(workRoleOfTM);
@@ -118,7 +136,6 @@ public class OvertimeShiftOfferTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
-//            scheduleMainPage.publishOrRepublishSchedule();
 
             // Offer overtime shift in non-edit mode
             shiftOperatePage.clickOnProfileIconOfOpenShift();
@@ -164,7 +181,7 @@ public class OvertimeShiftOfferTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             scheduleCommonPage.navigateToNextWeek();
             int shiftsCountAfter = shiftOperatePage.countShiftsByUserName(firstNameOfTM);
-            SimpleUtils.assertOnFail("Failed for approving overtime shift offer shift!", (shiftsCountAfter - shiftsCountBefore) == 1, false);
+            SimpleUtils.assertOnFail("Failed for approving overtime shift offer!", (shiftsCountAfter - shiftsCountBefore) == 1, false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

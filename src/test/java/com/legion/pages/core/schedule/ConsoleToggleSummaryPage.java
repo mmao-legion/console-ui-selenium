@@ -83,24 +83,24 @@ public class ConsoleToggleSummaryPage extends BasePage implements ToggleSummaryP
                 day = operatingHoursScheduleDay.get(i).getText().substring(0, 3);
                 activeDayAndOperatingHrs = getOperatingHrsValue(day);
                 shiftStartTime = (activeDayAndOperatingHrs.get("ScheduleOperatingHrs").split("-"))[1];
-                if (shiftStartTime.endsWith("pm"))
+                if (shiftStartTime.toLowerCase().endsWith("pm"))
                     continue;
                 shiftEndTime = (activeDayAndOperatingHrs.get("ScheduleOperatingHrs").split("-"))[2];
                 if (shiftStartTime.contains(":"))
                     shiftStartTime = shiftStartTime.replace(":", ".");
                 if (shiftEndTime.contains(":"))
                     shiftEndTime = shiftEndTime.replace(":", ".");
-                if (shiftStartTime.contains("am") && shiftStartTime.startsWith("12"))
+                if (shiftStartTime.toLowerCase().contains("am") && shiftStartTime.startsWith("12"))
                     shiftStartTime = shiftStartTime.replace("12", "0").replaceAll("[a-zA-Z]", "");
-                if (shiftStartTime.contains("am") && !shiftStartTime.startsWith("12"))
+                if (shiftStartTime.toLowerCase().contains("am") && !shiftStartTime.startsWith("12"))
                     shiftStartTime = shiftStartTime.replaceAll("[a-zA-Z]", "");
-                if (shiftStartTime.contains("pm") && shiftStartTime.startsWith("12"))
+                if (shiftStartTime.toLowerCase().contains("pm") && shiftStartTime.startsWith("12"))
                     shiftStartTime = shiftStartTime.replaceAll("[a-zA-Z]", "");
-                if (shiftStartTime.contains("pm") && !shiftStartTime.startsWith("12"))
+                if (shiftStartTime.toLowerCase().contains("pm") && !shiftStartTime.startsWith("12"))
                     shiftStartTime = String.valueOf(Double.valueOf(shiftEndTime.replaceAll("[a-zA-Z]", "")) + 12);
-                if (shiftEndTime.contains("am"))
+                if (shiftEndTime.toLowerCase().contains("am"))
                     shiftEndTime = shiftEndTime.replaceAll("[a-zA-Z]", "");
-                if (shiftEndTime.contains("pm") && !shiftEndTime.startsWith("12"))
+                if (shiftEndTime.toLowerCase().contains("pm") && !shiftEndTime.startsWith("12"))
                     shiftEndTime = String.valueOf(Double.valueOf(shiftEndTime.replaceAll("[a-zA-Z]", "")) + 12);
                 if (shiftStartTimeDouble > Double.valueOf(shiftStartTime))
                     shiftStartTimeDouble = Double.valueOf(shiftStartTime);

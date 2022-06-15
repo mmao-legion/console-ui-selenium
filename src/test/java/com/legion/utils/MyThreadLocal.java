@@ -100,6 +100,7 @@ public class MyThreadLocal {
 	public static final ThreadLocal<Boolean> isAssignTM = new ThreadLocal<>();
 	public static final ThreadLocal<String> messageOfTMScheduledStatus = new ThreadLocal<>();
 	public static final ThreadLocal<HashMap<String, Integer>> weekDaysNDates = new ThreadLocal<>();
+	public static final ThreadLocal<Boolean> isNewCreateShiftUIEnabled = new ThreadLocal<>();
 
 	public static void setIsNeedEditingOperatingHours(Boolean value) { isNeedUpdateOperatingHours.set(value); }
 
@@ -543,10 +544,13 @@ public class MyThreadLocal {
 	public static String getConsoleWindowHandle() { return consoleHandle.get();}
 	public static void setWFSStatus(Boolean value) { isWFSEnabled.set(value);}
 	public static Boolean getWFSStatus() { return  isWFSEnabled.get();}
+	//True- assign TM, False - offer TM
 	public static void setAssignTMStatus(Boolean value) { isAssignTM.set(value);}
 	public static Boolean getAssignTMStatus() { return  isAssignTM.get();}
 	public static void setMessageOfTMScheduledStatus(String value) { messageOfTMScheduledStatus.set(value);}
 	public static String getMessageOfTMScheduledStatus() { return messageOfTMScheduledStatus.get();}
 	public static void setWeekDaysNDates(HashMap<String, Integer> value) {weekDaysNDates.set(value);}
 	public static HashMap<String, Integer> getWeekDaysNDates() { return weekDaysNDates.get();}
+	public static void setNewCreateShiftUIStatus(Boolean value) { isNewCreateShiftUIEnabled.set(value);}
+	public static Boolean getNewCreateShiftUIStatus() { return  isNewCreateShiftUIEnabled.get();}
 }

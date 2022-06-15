@@ -41,33 +41,33 @@ public class ForecastTest extends TestBase{
 	  }
 
 
-	@Automated(automated ="Automated")
-	@Owner(owner = "Gunjan")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate navigation and data loading in Day/Week view for Shoppers Subtab Of Forecast Tab ")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void forecastShoppersSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
-		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-		scheduleOverviewPage.loadScheduleOverview();
-		ForecastPage ForecastPage = pageFactory.createForecastPage();
-		ForecastPage.loadShoppersForecastforPastWeek(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.One.getValue());
-		scheduleOverviewPage.loadScheduleOverview();
-		ForecastPage.loadShoppersForecastforCurrentNFutureWeek(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.Two.getValue());
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Gunjan")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate navigation and data loading in Day/Week view for Labor Subtab Of Forecast Tab")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void forecastLaborSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
-		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
-		scheduleOverviewPage.loadScheduleOverview();
-		ForecastPage ForecastPage = pageFactory.createForecastPage();
-		ForecastPage.loadLaborForecastforPastWeek(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.One.getValue());
-		scheduleOverviewPage.loadScheduleOverview();
-		ForecastPage.loadLaborForecastforCurrentNFutureWeek(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.Two.getValue());
-	}
+//	@Automated(automated ="Automated")
+//	@Owner(owner = "Gunjan")
+//	@Enterprise(name = "KendraScott2_Enterprise")
+//	@TestName(description = "Validate navigation and data loading in Day/Week view for Shoppers Subtab Of Forecast Tab ")
+//	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+//	public void forecastShoppersSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
+//		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+//		scheduleOverviewPage.loadScheduleOverview();
+//		ForecastPage ForecastPage = pageFactory.createForecastPage();
+//		ForecastPage.loadShoppersForecastforPastWeek(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.One.getValue());
+//		scheduleOverviewPage.loadScheduleOverview();
+//		ForecastPage.loadShoppersForecastforCurrentNFutureWeek(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.Two.getValue());
+//	}
+//
+//	@Automated(automated ="Automated")
+//	@Owner(owner = "Gunjan")
+//	@Enterprise(name = "KendraScott2_Enterprise")
+//	@TestName(description = "Validate navigation and data loading in Day/Week view for Labor Subtab Of Forecast Tab")
+//	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+//	public void forecastLaborSubTabNavigationStoreManager(String username, String password, String browser, String location) throws Exception {
+//		ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+//		scheduleOverviewPage.loadScheduleOverview();
+//		ForecastPage ForecastPage = pageFactory.createForecastPage();
+//		ForecastPage.loadLaborForecastforPastWeek(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.One.getValue());
+//		scheduleOverviewPage.loadScheduleOverview();
+//		ForecastPage.loadLaborForecastforCurrentNFutureWeek(ScheduleTestKendraScott2.weekViewType.Next.getValue(), ScheduleTestKendraScott2.weekCount.Two.getValue());
+//	}
 
 
 
