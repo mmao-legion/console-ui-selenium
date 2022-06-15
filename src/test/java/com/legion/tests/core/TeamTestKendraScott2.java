@@ -1233,7 +1233,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			Thread.sleep(5000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
 					dashboardPage.isDashboardPageLoaded() , false);
@@ -1270,6 +1270,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Work Preferences");
 			Thread.sleep(5000);
 			profileNewUIPage.clickNextWeek();
+			Thread.sleep(5000);
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
 			totalHoursValue = availabilityData.get("totalHoursValue").toString();
 			remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
@@ -1297,7 +1298,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
 					dashboardPage.isDashboardPageLoaded() , false);
@@ -1382,7 +1383,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
 					dashboardPage.isDashboardPageLoaded() , false);
@@ -1734,7 +1735,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
 					dashboardPage.isDashboardPageLoaded() , false);
@@ -1849,7 +1850,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
 					dashboardPage.isDashboardPageLoaded() , false);
@@ -1959,7 +1960,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			Thread.sleep(3000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
 					dashboardPage.isDashboardPageLoaded() , false);

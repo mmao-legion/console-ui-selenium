@@ -167,7 +167,9 @@ public enum AbSwitches {
 
     LocationStat("LocationStat"),
 
-    ScheduleEditShiftTimeNew( "ScheduleEditShiftTimeNew");
+    ScheduleEditShiftTimeNew( "ScheduleEditShiftTimeNew"),
+
+    NewCreateShift("NewCreateShift");
     private final String value;
 
     AbSwitches(final String newValue) {

@@ -579,12 +579,6 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         try{
             if (isElementLoaded(operatingHoursEditBtn, 10)) {
                 clickTheElement(operatingHoursEditBtn);
-                if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)
-                        && areListElementVisible(locationsInLocationSelectorOnCreateSchedulePage, 5)
-                        && locationsInLocationSelectorOnCreateSchedulePage.size() > 0) {
-                    click(locationSelectorOnCreateSchedulePage);
-                    selectRandomLocationOnCreateScheduleEditOperatingHoursPage();
-                }
                 if (isElementLoaded(operatingHoursCancelBtn, 10) && isElementLoaded(operatingHoursSaveBtn, 10)) {
                     SimpleUtils.pass("Click on Operating Hours Edit button Successfully!");
                     if (areListElementVisible(operatingHoursDayLists, 15)) {
@@ -806,13 +800,6 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
             openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
-//                editOperatingHoursWithGivingPrameters("Sunday", startTime, endTime);
-//                editOperatingHoursWithGivingPrameters("Monday", startTime, endTime);
-//                editOperatingHoursWithGivingPrameters("Tuesday", startTime, endTime);
-//                editOperatingHoursWithGivingPrameters("Wednesday", startTime, endTime);
-//                editOperatingHoursWithGivingPrameters("Thursday", startTime, endTime);
-//                editOperatingHoursWithGivingPrameters("Friday", startTime, endTime);
-//                editOperatingHoursWithGivingPrameters("Saturday", startTime, endTime);
                 editOperatingHoursWithGivingPrameters(startTime, endTime);
                 waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
