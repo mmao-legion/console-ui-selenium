@@ -64,7 +64,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="div[class=\"lg-modal\"]")
 	private WebElement editTemplatePopupPage;
 
-	@FindBy(css="lg-button[label=\"OK\"]")
+	@FindBy(css="lg-button[label=\"OK\"] button")
 	private WebElement okButton;
 
 	@FindBy(css="lg-button[label=\"Cancel\"]")
@@ -3279,7 +3279,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement dynamicGroupTestInfo;
 	@FindBy(css="div.CodeMirror textarea")
 	private WebElement formulaTextAreaOfDynamicGroup;
-	@FindBy(css="lg-button[label=\"OK\"]")
+	@FindBy(css="lg-button[label=\"OK\"] button")
 	private WebElement okButtonOnManageDynamicGroupPopup;
 	@FindBy(css="modal[modal-title=\"Manage Dynamic Location Group\"] lg-button[label=\"Cancel\"]")
 	private WebElement cancelButtonOnManageDynamicGroupPopup;
@@ -4488,6 +4488,63 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}else {
 			SimpleUtils.fail("There are no any draft template showing",false);
+		}
+	}
+
+	@Override
+	public void createMultipleTemplateForAllTypeOfTemplate(String templateName,String dynamicGpName,String criteriaType,String criteriaValue,String button,int date,String editOrViewMode) throws Exception {
+		for(int i =0; i< 6;i++){
+			clickTheElement(configurationCardsList.get(i));
+			waitForSeconds(3);
+			publishNewTemplate(templateName,dynamicGpName,criteriaType,criteriaValue);
+			createFutureTemplateBasedOnExistingTemplate(templateName,button,date,editOrViewMode);
+			archiveMultipleTemplate(templateName);
+			goToConfigurationPage();
+		}
+	}
+
+	@Override
+	public void archiveMultipleTemplate(String templateName) throws Exception{
+		if(areListElementVisible(multipleTemplateList,3)){
+			for(WebElement multipleTemplate:multipleTemplateList){
+				SimpleUtils.report("1111");
+				WebElement templateNameButton = multipleTemplate.findElement(By.cssSelector("button"));
+				SimpleUtils.report("222");
+				String templateStatus = multipleTemplate.findElement(By.cssSelector("lg-eg-status")).getAttribute("type").trim();
+				if(templateStatus.equalsIgnoreCase("Published")){
+					clickTheElement(templateNameButton);
+					waitForSeconds(5);
+					if(isElementLoaded(archiveButton,2)){
+						clickTheElement(archiveButton);
+						waitForSeconds(2);
+						if(isElementLoaded(okButton)){
+							clickTheElement(okButton);
+						}else {
+							SimpleUtils.fail("archive/delete template popup is not showing",false);
+						}
+
+					}else {
+						SimpleUtils.fail("Template details page doesn't show well",false);
+					}
+				}else {
+					clickTheElement(templateNameButton);
+					waitForSeconds(5);
+					if(isElementLoaded(deleteTemplateButton,2)){
+						clickTheElement(deleteTemplateButton);
+						waitForSeconds(2);
+						if(isElementLoaded(okButton)){
+							clickTheElement(okButton);
+						}else {
+							SimpleUtils.fail("archive/delete template popup is not showing",false);
+						}
+
+					}else {
+						SimpleUtils.fail("Template details page doesn't show well",false);
+					}
+				}
+				searchTemplate(templateName);
+				List<WebElement> multipleTemplateList = getDriver().findElements(By.cssSelector(".lg-templates-table-improved__grid-row--header~div"));
+			}
 		}
 	}
 }

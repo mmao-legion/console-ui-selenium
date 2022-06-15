@@ -1225,5 +1225,31 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "User can create/archive multiple template for all template type")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUserCanCreateMultipleTemplateForAllTemplateTypeAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime =dfs.format(new Date()).trim();
+            String templateName = "MultipleTemplate" + currentTime;
+            String dynamicGpName = "MultipleTemplate" + currentTime;
+            String button = "publish at different time";
+            String criteriaType ="Custom";
+            String criteriaValue="AutoCreatedDynamic---Format Script" + currentTime;
+            int date = 14;
+            String editOrViewMode = "Edit";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.createMultipleTemplateForAllTypeOfTemplate(templateName,dynamicGpName,criteriaType,criteriaValue,button,date,editOrViewMode);
+            configurationPage.archiveMultipleTemplate(templateName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
 

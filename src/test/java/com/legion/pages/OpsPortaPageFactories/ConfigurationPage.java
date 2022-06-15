@@ -132,5 +132,6 @@ public interface ConfigurationPage {
     public void expandMultipleVersionTemplate(String templateName) throws Exception;
     public void verifyButtonsShowingOnPublishedTemplateDetailsPage() throws Exception;
     public void verifyButtonsShowingOnDraftTemplateDetailsPage() throws Exception;
-
+    public void createMultipleTemplateForAllTypeOfTemplate(String templateName,String dynamicGpName,String criteriaType,String criteriaValue,String button,int date,String editOrViewMode) throws Exception;
+    public void archiveMultipleTemplate(String templateName) throws Exception;
 }
