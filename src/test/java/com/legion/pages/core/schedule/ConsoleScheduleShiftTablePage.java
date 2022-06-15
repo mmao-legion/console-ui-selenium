@@ -3438,6 +3438,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             }
             Actions action = new Actions(getDriver());
             for (int i : selectedIndex) {
+                scrollToElement(names.get(i));
                 action.contextClick(names.get(i)).build().perform();
                 if (isBulkActionMenuPopup()) {
                     SimpleUtils.pass("Right Click on the Selected Shifts successfully!");
@@ -3528,10 +3529,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             }
             if (shiftIndexes.size()>0) {
                 //Select the shifts
-//                waitForSeconds(2);
                 Actions action = new Actions(getDriver());
                 for (int i : shiftIndexes) {
                     scrollToElement(shiftsWeekView.get(i));
+                    waitForSeconds(1);
                     action.keyDown(Keys.CONTROL).build().perform();
                     action.click(shiftsWeekView.get(i).findElement(By.className("week-schedule-worker-name")));
                     action.keyUp(Keys.CONTROL).build().perform();
@@ -3542,9 +3543,11 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 }else
                     SimpleUtils.fail("Bulk delete: Fail to select shift! ", false);
                 //Right click the selected shifts
+                waitForSeconds(2);
                 rightClickOnSelectedShifts(shiftIndexes);
                 // Verify the Delete button on Bulk Action Menu is clickable
                 clickOnBtnOnBulkActionMenuByText("Delete");
+                waitForSeconds(3);
                 // Verify the shifts are marked as X after clicking on Delete button
                 verifySelectedShiftsAreMarkedWithX(shiftIndexes);
             } else
