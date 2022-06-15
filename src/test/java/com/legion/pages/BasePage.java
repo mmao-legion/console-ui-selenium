@@ -276,6 +276,19 @@ public class BasePage {
     	}
     	
     }
+
+    public boolean waitForNotExists(WebElement element, long timeOutInSeconds) throws Exception
+    {
+        WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), timeOutInSeconds);
+
+        try {
+            tempWait.until(ExpectedConditions.invisibilityOf(element));
+            return true;
+        }
+        catch (NoSuchElementException | TimeoutException te) {
+            return false;
+        }
+    }
     
     
     public static void waitUntilElementIsVisible(final WebElement element) {

@@ -98,7 +98,6 @@ public class OvertimeShiftOfferTest extends TestBase {
             shiftOperatePage.deleteTMShiftInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
-            scheduleMainPage.clickOnFilterBtn();
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
 
             // Modify corresponding work role by enterprise
