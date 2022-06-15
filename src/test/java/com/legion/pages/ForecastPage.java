@@ -3,7 +3,7 @@ package com.legion.pages;
 import java.util.HashMap;
 import java.util.List;
 
-public interface ForecastPage<pubic> {
+public interface ForecastPage {
 
 	public void loadShoppersForecastforCurrentNFutureWeek(String nextWeekView, int weekCount) throws Exception;
 	public void loadShoppersForecastforPastWeek(String nextWeekView, int weekCount) throws Exception;
@@ -32,7 +32,7 @@ public interface ForecastPage<pubic> {
 
 	public HashMap<String, Float> getSummaryLaborHoursAndWages()  throws Exception;
 
-	public HashMap<String, String> getHoursBySelectedWorkRoleInLaborWeek(String workRole)  throws Exception;
+	public HashMap<String, Float> getHoursBySelectedWorkRoleInLaborWeek(String workRole)  throws Exception;
 
 	public void verifyBudgetedHoursInLaborSummaryWhileSelectDifferentWorkRole() throws Exception;
 
@@ -99,4 +99,5 @@ public interface ForecastPage<pubic> {
 	public List<String> getAllLocationsFromFilter () throws Exception;
 	public HashMap<String, List<String>> getLaborChartCoordinateAxisData();
 	public void selectWorkRoleFilterByText(String workRoleLabel) throws Exception;
+	public boolean areWorkRoleDisplayOrderCorrectOnLaborForecast(HashMap<String, Integer> workRoleNOrders) throws Exception;
 }

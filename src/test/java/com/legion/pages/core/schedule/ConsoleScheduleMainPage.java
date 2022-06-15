@@ -1212,6 +1212,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     @FindBy(css = "[class=\"week-schedule-shift-title\"]")
     private List<WebElement> scheduleShiftTitles;
+    @FindBy(css = ".sch-group-label")
+    private List<WebElement> scheduleShiftTitlesDayView;
     @Override
     public void verifyShiftsDisplayThroughLocationFilter(String childLocation) throws Exception {
         String locationFilterKey = "location";
@@ -2088,6 +2090,50 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             click(filterButton);
     }
 
+    @Override
+    public boolean verifyDisplayOrderWhenGroupingByWorkRole(HashMap<String, Integer> workRoleNOrders) throws Exception {
+        boolean isConsistent = true;
+        if (areListElementVisible(scheduleShiftTitles, 3)) {
+            for (int i = 0; i < scheduleShiftTitles.size() - 1; i++) {
+                int order1 = workRoleNOrders.get(scheduleShiftTitles.get(i).getText().toLowerCase());
+                int order2 = workRoleNOrders.get(scheduleShiftTitles.get(i + 1).getText().toLowerCase());
+                if (order1 > order2) {
+                    isConsistent = false;
+                    break;
+                }
+            }
+        } else if (areListElementVisible(scheduleShiftTitlesDayView, 3)) {
+            for (int i = 0; i < scheduleShiftTitlesDayView.size() - 1; i++) {
+                int order1 = workRoleNOrders.get(scheduleShiftTitlesDayView.get(i).getText().toLowerCase());
+                int order2 = workRoleNOrders.get(scheduleShiftTitlesDayView.get(i + 1).getText().toLowerCase());
+                if (order1 > order2) {
+                    isConsistent = false;
+                    break;
+                }
+            }
+        } else {
+            isConsistent = false;
+        }
+        return isConsistent;
+    }
+
+    @Override
+    public boolean areDisplayOrderCorrectOnFilterPopup(HashMap<String, Integer> workRoleNOrders) throws Exception {
+        boolean isConsistent = true;
+        ArrayList<WebElement> availableWorkRoleFilters = getAvailableFilters().get("workrole");
+        for (int i = 0; i < availableWorkRoleFilters.size() - 1; i++) {
+            int order1 = workRoleNOrders.get(availableWorkRoleFilters.get(i).getText().toLowerCase().
+                    substring(0, availableWorkRoleFilters.get(i).getText().toLowerCase().indexOf('(')).trim());
+            int order2 = workRoleNOrders.get(availableWorkRoleFilters.get(i + 1).getText().toLowerCase().
+                    substring(0, availableWorkRoleFilters.get(i + 1).getText().toLowerCase().indexOf('(')).trim());
+            if (order1 > order2) {
+                isConsistent = false;
+                break;
+            }
+        }
+        return isConsistent;
+    }
+    
     @FindBy(css = "[ng-repeat=\"r in summary.staffingGuidance.roleHours\"] [class=\"ng-binding\"]")
     private List<WebElement> staffWorkRoles;
     public List<String> getStaffWorkRoles () {
