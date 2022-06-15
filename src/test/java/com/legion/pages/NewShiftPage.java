@@ -2,6 +2,7 @@ package com.legion.pages;
 
 import org.openqa.selenium.WebElement;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface NewShiftPage {
@@ -56,4 +57,5 @@ public interface NewShiftPage {
     public void searchWithOutSelectTM(String tmName) throws Exception;
     public void checkOrUnCheckNextDayOnCreateShiftModal(boolean toCheck) throws Exception;
     public void clickClearAssignmentsLink() throws Exception;
+    public boolean areWorkRoleDisplayOrderCorrect(HashMap<String, Integer> workRoleNOrders) throws Exception;
 }

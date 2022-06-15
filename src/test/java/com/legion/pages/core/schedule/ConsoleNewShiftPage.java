@@ -2142,4 +2142,46 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         } else
             SimpleUtils.report("The clear assignments link fail to load! ");
     }
+
+    @Override
+    public boolean areWorkRoleDisplayOrderCorrect(HashMap<String, Integer> workRoleNOrders) throws Exception {
+        boolean isConsistent = true;
+        if (isElementLoaded(btnWorkRole, 10)) {
+            clickTheElement(btnWorkRole);
+            SimpleUtils.pass("Work Role button clicked Successfully");
+            if (listWorkRoles.size() > 0) {
+                for (int i = 0; i < listWorkRoles.size() - 1; i++) {
+                    int order1 = workRoleNOrders.get(listWorkRoles.get(i).getText().toLowerCase());
+                    int order2 = workRoleNOrders.get(listWorkRoles.get(i + 1).getText().toLowerCase());
+                    if (order1 > order2) {
+                        isConsistent = false;
+                        break;
+                    }
+                }
+            } else {
+                isConsistent = false;
+                SimpleUtils.fail("Work Roles size are empty", false);
+            }
+        } else if (isElementLoaded(workRoleOnNewShiftPage, 5)) {
+            click(workRoleOnNewShiftPage);
+            SimpleUtils.pass("Work Role button clicked Successfully");
+            if (dropDownListOnNewCreateShiftPage.size() > 0) {
+                for (int i = 0; i < dropDownListOnNewCreateShiftPage.size() - 1; i++) {
+                    int order1 = workRoleNOrders.get(dropDownListOnNewCreateShiftPage.get(i).getText().toLowerCase());
+                    int order2 = workRoleNOrders.get(dropDownListOnNewCreateShiftPage.get(i + 1).getText().toLowerCase());
+                    if (order1 > order2) {
+                        isConsistent = false;
+                        break;
+                    }
+                }
+            } else {
+                isConsistent = false;
+                SimpleUtils.fail("Work Roles size are empty", false);
+            }
+        } else {
+            isConsistent = false;
+            SimpleUtils.fail("Work Role button is not clickable", false);
+        }
+        return isConsistent;
+    }
 }

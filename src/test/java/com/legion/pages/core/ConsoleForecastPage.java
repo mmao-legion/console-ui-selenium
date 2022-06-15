@@ -2294,7 +2294,6 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public void selectWorkRoleFilterByText(String workRoleLabel) throws Exception {
 		verifyWorkRoleSelection();
-		String filterType = "workrole";
 		for (WebElement availableWorkRoleFilter : workRoleList) {
 			if (availableWorkRoleFilter.getText().equalsIgnoreCase(workRoleLabel)) {
 				click(availableWorkRoleFilter);
@@ -2304,5 +2303,35 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		}
 		if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
 			click(filterButton);
+	}
+
+	@Override
+	public boolean areWorkRoleDisplayOrderCorrectOnLaborForecast(HashMap<String, Integer> workRoleNOrders) throws Exception {
+		boolean isConsistent = true;
+		try {
+			if (isElementLoaded(filterButton, 10)) {
+				clickTheElement(filterButton.findElement(By.tagName("input")));
+				waitForSeconds(1);
+				if (areListElementVisible(workRoleList, 3)) {
+					for (int i = 0; i < workRoleList.size() - 1; i++) {
+						System.out.println(workRoleList.get(i).findElement(By.cssSelector(".input-label")).getText().toLowerCase().trim());
+						int order1 = workRoleNOrders.get(workRoleList.get(i).findElement(By.cssSelector(".input-label")).getText().toLowerCase().trim());
+						int order2 = workRoleNOrders.get(workRoleList.get(i + 1).findElement(By.cssSelector(".input-label")).getText().toLowerCase().trim());
+						if (order1 > order2) {
+							isConsistent = false;
+							break;
+						}
+					}
+				} else {
+					isConsistent = false;
+				}
+			} else {
+				isConsistent = false;
+				SimpleUtils.fail("Work role filter load failed", false);
+			}
+		} catch (Exception e) {
+			isConsistent = false;
+		}
+		return isConsistent;
 	}
 }
