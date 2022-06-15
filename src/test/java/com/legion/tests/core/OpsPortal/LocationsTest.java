@@ -2117,7 +2117,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Yang")
     @Enterprise(name = "opauto")
     @TestName(description = "Fiscal calendar configuration")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyUserCanUploadFiscalCalendarOfSM(String username, String password, String browser, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
