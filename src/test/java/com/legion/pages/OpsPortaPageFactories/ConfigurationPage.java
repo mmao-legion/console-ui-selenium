@@ -134,4 +134,10 @@ public interface ConfigurationPage {
     public void verifyButtonsShowingOnDraftTemplateDetailsPage() throws Exception;
     public void createMultipleTemplateForAllTypeOfTemplate(String templateName,String dynamicGpName,String criteriaType,String criteriaValue,String button,int date,String editOrViewMode) throws Exception;
     public void archiveMultipleTemplate(String templateName) throws Exception;
+    public void verifyAdvanceStaffRuleFromLocationLevel(List<String> advanceStaffingRule) throws Exception;
+    public void verifyAdvanceStaffRuleStatusFromLocationLevel(List<String> advanceStaffingRuleStatus) throws Exception;
+    public void changeAdvanceStaffRuleStatusFromLocationLevel(int i) throws Exception;
+    public void verifyCanNotAddAdvancedStaffingRuleFromTemplateLevel() throws Exception;
+    public void verifyCanNotEditDeleteAdvancedStaffingRuleFromTemplateLevel() throws Exception;
+
 }

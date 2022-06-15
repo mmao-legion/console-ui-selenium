@@ -4547,4 +4547,87 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}
 	}
+
+	@FindBy(xpath = "//*[@type=\"'AdvancedStaffingRule'\"]")
+	private List<WebElement> advanceStaffRules;
+	@FindBy(css = "lg-template-advanced-staffing-rule div.settings-work-rule-number")
+	private WebElement advanceStaffRulesStatus;
+	@Override
+	public void verifyAdvanceStaffRuleFromLocationLevel(List<String> advanceStaffingRule) throws Exception{
+		if(advanceStaffRules.size() != 0)
+			for(WebElement advanceStaffRule: advanceStaffRules){
+				List<WebElement> advanceStaffRuleContent = advanceStaffRule.findElements(By.xpath("//*[@class=\"highlight\"]"));
+				for(WebElement content: advanceStaffRuleContent){
+					if(advanceStaffingRule.get(advanceStaffRules.indexOf(advanceStaffRule)).contains(content.getText())){
+						SimpleUtils.pass("AdvancedStaffingRule aligned with template level" );
+					}else {
+						SimpleUtils.fail("AdvancedStaffingRule does not aligned with template level",false);
+					}
+				}
+			}else{
+			SimpleUtils.fail("no AdvancedStaffingRule in the template",false);
+		}
+	}
+	@FindBy(css = "lg-template-advanced-staffing-rule div.settings-work-rule-number")
+	private List<WebElement> advanceStaffRuleStatues;
+	@Override
+	public void verifyAdvanceStaffRuleStatusFromLocationLevel(List<String> advanceStaffingRuleStatus) throws Exception{
+		if(advanceStaffRuleStatues.size() != 0)
+			for(WebElement statues: advanceStaffRuleStatues){
+				if(advanceStaffingRuleStatus.get(advanceStaffRuleStatues.indexOf(statues)).equalsIgnoreCase(statues.getAttribute("data-tootik")))
+				{
+					SimpleUtils.pass("This rule is enabled/disable for this location" );
+				}else {
+					SimpleUtils.fail("This rule status is not exist",false);
+				}
+			}else{
+			SimpleUtils.fail("no AdvancedStaffingRule in the template",false);
+		}
+	}
+
+
+	@FindBy(css = "lg-template-advanced-staffing-rule div.settings-work-rule-assignment-container")
+	private WebElement advanceStaffRuleEditStatues;
+	@Override
+	public void changeAdvanceStaffRuleStatusFromLocationLevel(int i) throws Exception{
+		if(isElementLoaded(advanceStaffRuleStatues.get(i),3)){
+			if(!isElementLoaded(advanceStaffRuleEditStatues)){
+				advanceStaffRuleStatues.get(i).click();
+			}
+			advanceStaffRuleStatues.get(i).click();
+		}
+		else{
+			SimpleUtils.fail("no AdvancedStaffingRule in the template",false);
+		}
+	}
+
+	@Override
+	public void verifyCanNotAddAdvancedStaffingRuleFromTemplateLevel() throws Exception {
+		if(isElementLoaded(addIconOnRulesListPage)){
+			clickTheElement(addIconOnRulesListPage);
+			if(isElementLoaded(addAdvancedStaffingRuleButton)){
+				SimpleUtils.fail("Advance staffing rules tab is show",false);
+			}else {
+				SimpleUtils.pass("Advance staffing rules tab is NOT show");
+			}
+		}else{
+			SimpleUtils.fail("Work role's staffing rules list page was loaded failed",false);
+		}
+	}
+
+	@Override
+	public void verifyCanNotEditDeleteAdvancedStaffingRuleFromTemplateLevel() throws Exception {
+		List<WebElement> advancedStaffingRules= getDriver().findElements(By.cssSelector("lg-template-advanced-staffing-rule"));
+		if(advancedStaffingRules.size() != 0)
+			for(WebElement advancedStaffingRule: advancedStaffingRules){
+				if((advancedStaffingRule.findElements(By.cssSelector("span.settings-work-rule-edit-edit-icon")).size() > 0
+						|| (advancedStaffingRule.findElements(By.cssSelector("span.settings-work-rule-edit-delete-icon")).size() > 0))){
+					SimpleUtils.fail("This AdvancedStaffingRule can be edited/deleted",false);
+				}else {
+					SimpleUtils.pass("This AdvancedStaffingRule cannot be edited/deleted" );
+				}
+			}else{
+			SimpleUtils.fail("no AdvancedStaffingRule in the template",false);
+		}
+	}
 }

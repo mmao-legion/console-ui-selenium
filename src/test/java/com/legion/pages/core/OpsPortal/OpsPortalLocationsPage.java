@@ -4245,7 +4245,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
-
+	@Override
 	public void verifyActionsForTemplate(String templateName, String[] action) {
 		List<WebElement> actions = getDriver().findElements(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span"));
 		for (int i = 0; i < actions.size(); i++) {
@@ -4263,5 +4263,23 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}
 		}
 	}
+	@Override
+	public void clickActionsForTemplate(String templateName, String action) {
+		List<WebElement> actions = getDriver().findElements(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span"));
+			for (int i = 0; i < actions.size(); i++) {
+				if (actions.get(i).getText().contains(action)) {
+					actions.get(i).click();
+					SimpleUtils.pass(templateName + " click " + action);
+				}
+			}
+		if (action.equalsIgnoreCase("reset")){
+			click(okBtnInSelectLocation);
+		}
+	}
+	@Override
+	public void clickRestForTemplate(String templateName){
+
+	}
+
 }
 
