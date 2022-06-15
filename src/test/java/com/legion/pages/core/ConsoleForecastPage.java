@@ -2310,8 +2310,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		boolean isConsistent = true;
 		try {
 			if (isElementLoaded(filterButton, 10)) {
-				clickTheElement(filterButton.findElement(By.tagName("input")));
-				waitForSeconds(1);
+				clickTheElement(filterButton);
 				if (areListElementVisible(workRoleList, 3)) {
 					for (int i = 0; i < workRoleList.size() - 1; i++) {
 						System.out.println(workRoleList.get(i).findElement(By.cssSelector(".input-label")).getText().toLowerCase().trim());

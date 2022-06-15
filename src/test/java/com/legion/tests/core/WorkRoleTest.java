@@ -180,6 +180,7 @@ public class WorkRoleTest extends TestBase {
             SimpleUtils.assertOnFail("Work Role order is incorrect on Create New Shift page", newShiftPage.areWorkRoleDisplayOrderCorrect(workRoleNOrders), false);
             newShiftPage.clickOnBackButton();
             scheduleMainPage.clickOnCancelButtonOnEditMode();
+            scheduleCommonPage.clickOnWeekView();
 
             // Go to Forecast page
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());

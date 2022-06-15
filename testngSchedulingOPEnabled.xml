@@ -542,6 +542,17 @@ SCH-5862-->
         </classes>
     </test>
 
+    <test name="Work Role Test">
+        <classes>
+            <class name="com.legion.tests.core.WorkRoleTest">
+                <methods>
+                    <include name="verifyFunctionalityOfDisplayOrderAsInternalAdmin" />
+                    <include name="verifyWorkRoleDisplayOrderInConsoleAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
     <test name="FTSE Support Variant Violations Except OT Ones">
         <classes>
             <class name="com.legion.tests.core.FTSEViolations">
