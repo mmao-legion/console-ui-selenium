@@ -456,7 +456,10 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     }
 
     public void selectShiftTypeFilterByText(String filterText) throws Exception {
-        waitForSeconds(3);
+        if (areListElementVisible(wholeWeekShifts, 20)) {
+            SimpleUtils.pass("Shifts list grid has been loaded!");
+        }
+
         String shiftTypeFilterKey = "shifttype";
         ArrayList<WebElement> shiftTypeFilters = getAvailableFilters().get(shiftTypeFilterKey);
         unCheckFilters(shiftTypeFilters);
@@ -467,9 +470,14 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                 break;
             }
         }
+
         if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
             click(filterButton);
-        waitForSeconds(10);
+        waitForSeconds(5);
+
+        if (areListElementVisible(wholeWeekShifts, 20)) {
+            SimpleUtils.pass("Shifts list grid has been loaded!");
+        }
     }
 
     public HashMap<String, ArrayList<WebElement>> getAvailableFilters() {
@@ -1693,6 +1701,12 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                 waitForSeconds(2);
                 SimpleUtils.report("Clear filter button is disabled because there is no filters been selected! ");
             }
+
+            if (areListElementVisible(wholeWeekShifts, 20)) {
+                SimpleUtils.pass("Shifts list grid has been loaded!");
+            } else {
+                SimpleUtils.fail("Shifts list grid loading failed!", false);
+            }
         } else
             SimpleUtils.fail("Clear Filter button loaded fail! ", false);
     }
@@ -2007,17 +2021,17 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     @Override
     public void closeShiftInfoPopup() throws Exception {
-        if (isElementLoaded(shiftInfoPopup, 10)) {
-            click(shiftInfoIcon);
-            waitForSeconds(5);
+        if (areListElementVisible(wholeWeekShifts,15)) {
+            if (isElementLoaded(shiftInfoPopup, 5)) {
+                click(shiftInfoIcon);
+                waitForSeconds(3);
+            }
         }
     }
 
     @Override
     public void clickOnFilterBtn() throws Exception {
-        waitForSeconds(10);
-        // handle If the shift info pop covered the shift filter input box
-        closeShiftInfoPopup();
+        closeShiftInfoPopup(); // handle If the shift info pop covered the shift filter input box
         if (isElementLoaded(filterButton,30)) {
             clickTheElement(filterButton);
             waitForSeconds(2);

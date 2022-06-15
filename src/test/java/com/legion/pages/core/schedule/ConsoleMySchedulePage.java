@@ -580,16 +580,20 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
                 SimpleUtils.pass("Click " + requestName + " button Successfully!");
             }
         } else {
-            SimpleUtils.fail("Team Members' shift view popup is not displayed", false);
+            SimpleUtils.fail("Team Member's shift view popup is not displayed", false);
         }
 
         if (isElementLoaded(claimConfirmPopup, 5)) {
             if (isClickable(acceptBtn, 5)) {
                 click(acceptBtn);
-                waitForSeconds(5);
-                SimpleUtils.pass("Successfully claimed the overtime open shift offer");
+                waitForSeconds(3);
+                if (waitForNotExists(claimConfirmPopup, 40)) {
+                    SimpleUtils.pass("Claim request done!");
+                } else {
+                    SimpleUtils.fail("Accept request takes more than 40 seconds!", false);
+                }
             } else {
-                SimpleUtils.fail("Failed for claim the overtime open shift offer", false);
+                SimpleUtils.fail("Accept button is not clickable!", false);
             }
         } else {
             SimpleUtils.fail("The confirm claim shift offer popup is not displayed", false);
