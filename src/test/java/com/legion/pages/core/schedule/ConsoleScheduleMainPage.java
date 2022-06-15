@@ -1909,6 +1909,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                 randomIndex = (new Random()).nextInt(availableFilters.get("location").size());
                 randomLocation = availableFilters.get("location").get(randomIndex).getText();
                 randomLocation = randomLocation.contains(" ")? randomLocation.split(" ")[0]: "";
+                selectLocationFilterByText(randomLocation);
             } else
                 SimpleUtils.report("Schedule Page: 'LOCATION' isn't one label currently");
         } else
@@ -2071,5 +2072,20 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }
         if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
             click(filterButton);
+    }
+
+    @FindBy(css = "[ng-repeat=\"r in summary.staffingGuidance.roleHours\"] [class=\"ng-binding\"]")
+    private List<WebElement> staffWorkRoles;
+    public List<String> getStaffWorkRoles () {
+        List<String> workRoles = new ArrayList<>();
+        if (areListElementVisible(staffWorkRoles, 10) && staffWorkRoles.size()>0) {
+            for (int i=0;i<staffWorkRoles.size(); i++) {
+                String workRole = staffWorkRoles.get(i).getText();
+                workRoles.add(workRole);
+                SimpleUtils.pass("Get staff work role "+workRole+" successfully!");
+            }
+        } else
+            SimpleUtils.fail("Staff work roles fail to load! ", false);
+        return workRoles;
     }
 }
