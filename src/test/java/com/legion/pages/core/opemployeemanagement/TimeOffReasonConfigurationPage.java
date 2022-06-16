@@ -1,15 +1,13 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -190,12 +188,37 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     @FindBy(css = "table.lg-table.service-level td>div>span.remove")
     private WebElement removeButtonForServiceLever;
 
+    //GM holiday part
+    @FindBy(css = "div.table-wrapper.ng-scope>table.lg-table tr:nth-child(1)>th:nth-child(1)")
+    private WebElement gMHolidayDate;
+    @FindBy(css = "div.table-wrapper.ng-scope td.add-button>lg-button>button")
+    private WebElement addButtonForDistribution;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(2) input-field[placeholder='Select...']")
+    private WebElement dateSelect;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(2) input-field[placeholder='Search']>ng-form>input")
+    private WebElement dateSearch;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(2) div.lg-search-options__scroller>div>div")
+    private WebElement dateSearchResult;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(2)>td:nth-child(2) input")
+    private WebElement firstHourInput;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-last-child(2) span.remove.ng-binding")
+    private WebElement lastRemoveButton;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(3) input-field[placeholder='Select...']")
+    private WebElement dateSelect2;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(3) input-field[placeholder='Search']>ng-form>input")
+    private WebElement dateSearch2;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(3) div.lg-search-options__scroller>div>div")
+    private WebElement dateSearchResult2;
+    @FindBy(css = "div.error-msg.ng-binding")
+    private WebElement errorMes;
+    @FindBy(css = "table.lg-table.service-level tr:nth-child(2)>td:nth-child(1) input")
+    private WebElement serviceLever0;
+
     //submit
     @FindBy(css = "lg-button[label='Cancel']>button")
     private WebElement cancelButton;
     @FindBy(css = "lg-button[label='Save']>button")
     private WebElement saveButton;
-
 
     //back
     public void back() {
@@ -394,6 +417,7 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     }
 
     public void setAccrualPeriod(String startDateType, String endDateType, String sMonth, String sDate, String eMonth, String eDate) {
+        scrollToBottom();
         Select startType = new Select(accrualStartDate.get(0));
         startType.selectByVisibleText(startDateType);//"Hire Date","Specified Date"
         if (startDateType.contains("Specified")) {
@@ -494,6 +518,47 @@ public class TimeOffReasonConfigurationPage extends BasePage {
             cancelButton.click();
         }
         waitForSeconds(5);
+    }
+
+    public String getDistributionType(){
+        return gMHolidayDate.getText();
+    }
+
+    public void setDateDistribution(String holiday, String hour){
+        dateSelect.click();
+        dateSearch.clear();
+        dateSearch.sendKeys(holiday);
+        dateSearchResult.click();
+        firstHourInput.clear();
+        firstHourInput.sendKeys(hour);
+    }
+
+    public void removeHolidayFromTheDistribution(){
+        scrollToBottom();
+        waitForSeconds(3);
+        lastRemoveButton.click();
+    }
+
+    public boolean verifyHolidayUsedCanNotBeSelectedAgain(String holiday){
+        boolean canNotSelect=false;
+        addButtonForDistribution.click();
+        dateSelect2.click();
+        dateSearch2.clear();
+        dateSearch2.sendKeys(holiday);
+        try {
+            dateSearchResult2.click();
+        } catch (ElementNotInteractableException exception) {
+            canNotSelect=true;
+        } ;
+        return canNotSelect;
+    }
+
+    public String getErrorMessage(){
+        return errorMes.getText();
+    }
+
+    public void showDistributionOfSpecifiedServiceLever0(){
+        serviceLever0.click();
     }
 
 }

@@ -9,6 +9,7 @@ import com.legion.pages.core.OpCommons.RightHeaderBarPage;
 import com.legion.pages.core.opemployeemanagement.AbsentManagePage;
 import com.legion.pages.core.opemployeemanagement.EmployeeManagementPanelPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffPage;
+import com.legion.pages.core.opemployeemanagement.TimeOffReasonConfigurationPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -1034,6 +1035,256 @@ public class AccrualEngineTest extends TestBase {
         }
         Assert.assertFalse(absentManagePage.isTherePromotionRule(), "Failed to assert there is no promotion rules!");
         SimpleUtils.pass("Succeeded in removing all the promotion rules just created!");
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "OPS-4071 GM Holiday.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAccrualGMHolidayUIAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        //verify that employee management is enabled.
+        navigationPage.navigateToEmployeeManagement();
+        SimpleUtils.pass("EmployeeManagement Module is enabled!");
+        //go to the time off management page
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToTimeOffManagementPage();
+        //verify that the target template is here.
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        String targetTemplate = "Accrual Auto GM Holiday";
+        absentManagePage.search(targetTemplate);
+        Assert.assertTrue(absentManagePage.getResult().equals(targetTemplate), "Failed the find the target template!");
+        SimpleUtils.pass("Succeeded in finding the target template!");
+
+        absentManagePage.configureTemplate("Accrual Auto GM Holiday");
+        absentManagePage.configureTimeOffRules("Sick");
+        //set accrual period
+        TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
+        configurationPage.setAccrualPeriod("Specified Date", "Specified Date", "January", "1", "December", "31");
+        SimpleUtils.pass("Succeeded in setting accrual period!");
+        //verify new distribution method (Specified Date)has been added.
+        Assert.assertTrue(configurationPage.getDistributionOptions().contains("Specified Date"));
+        SimpleUtils.pass("Succeeded in validating new distribution method---Specified Date was added!");
+        //verify the new distribution method can be selected.
+        configurationPage.setDistributionMethod("Specified Date");
+        SimpleUtils.pass("Succeeded in validating new distribution method---Specified Date can be selected!");
+        //verify the distribution switch to the Specified one.
+        configurationPage.addSpecifiedServiceLever(0, "25", "0", "25");
+        Assert.assertEquals(configurationPage.getDistributionType(), "Date", "Failed to assert the Distribution Switch to the Specified date!");
+        SimpleUtils.pass("Succeeded in switching to the Specified date distribution!");
+        //add new holidays
+        //search a holiday
+        configurationPage.setDateDistribution("Labor Day", "8");
+        //selected holidays can't be chose again
+        Assert.assertFalse(configurationPage.verifyHolidayUsedCanNotBeSelectedAgain("Labor Day"), "Failed to assert that selected holidays can't be chose again!");
+        SimpleUtils.pass("Succeeded in validating selected holidays can't be chose again!");
+        //save
+        configurationPage.removeHolidayFromTheDistribution();
+        configurationPage.saveTimeOffConfiguration(true);
+        SimpleUtils.pass("Succeeded in saving GMHoliday setting!");
+        //remove an existing holiday from the setting.
+        absentManagePage.configureTimeOffRules("Sick");
+        configurationPage.showDistributionOfSpecifiedServiceLever0();
+        configurationPage.removeHolidayFromTheDistribution();
+        Assert.assertEquals(configurationPage.getErrorMessage(), "At least one holiday is required.", "Failed to remove the existing holiday");
+        SimpleUtils.pass("Succeeded in removing an existing Holiday!");
+        // roll back the settings
+        configurationPage.saveTimeOffConfiguration(false);
+        SimpleUtils.pass("Succeeded in canceling GMHoliday changes!");
+        absentManagePage.removeTimeOffRules("Sick");
+        OpsCommonComponents components = new OpsCommonComponents();
+        components.saveTemplateAs("Save as draft");
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "OPS-4071 GM Holiday.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAccrualGMHolidayWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        //verify that employee management is enabled.
+        navigationPage.navigateToEmployeeManagement();
+        SimpleUtils.pass("EmployeeManagement Module is enabled!");
+        //go to the time off management page
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToTimeOffManagementPage();
+        //verify that the target template is here.
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        String targetTemplate = "Accrual Auto GM Holiday";
+        absentManagePage.search(targetTemplate);
+        Assert.assertTrue(absentManagePage.getResult().equals(targetTemplate), "Failed the find the target template!");
+        SimpleUtils.pass("Succeeded in finding the target template!");
+
+        //switch to console
+        RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        modelSwitchPage.switchToNewTab();
+        //search and go to the target location
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("OMLocation16 -NO touch!!!");
+        //go to team member details and switch to the time off tab.
+        consoleNavigationPage.navigateTo("Team");
+        TimeOffPage timeOffPage = new TimeOffPage();
+        String teamMemName = "Amir Lemke";
+        timeOffPage.goToTeamMemberDetail(teamMemName);
+        timeOffPage.switchToTimeOffTab();
+
+        //get session id via login
+        String sessionId = logIn();
+        //set UseAbsenceMgmtConfiguration Toggle On
+        if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
+            String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
+            Assert.assertEquals(getHttpStatusCode(toggleResponse), 200, "Failed to get the user's template!");
+        }
+        //confirm template
+        String workerId = "3b947a79-07c8-4851-8838-9387d3886c7b";
+        String tempName = getUserTemplate(workerId, sessionId);
+        Assert.assertEquals(tempName, targetTemplate, "The user wasn't associated to this Template!!! ");
+        SimpleUtils.pass("Succeeded in validating employee was associated to the target template!");
+
+        //create a time off balance map to store the expected time off balances.
+        HashMap<String, String> expectedTOBalance = new HashMap<>();
+        expectedTOBalance.put("Annual Leave", "0");//Hire Date 6/25 ~ SpecifiedDate 12/31
+        expectedTOBalance.put("Floating Holiday", "0");//SpecifiedDate 01/01 ~ SpecifiedDate 12/31 //in allowance days(175)
+        expectedTOBalance.put("PTO", "0");//out of allowance days(174)
+        SimpleUtils.pass("Succeeded in validating employee was associated to the target template!");
+
+        //Delete the worker's accrual balance
+        String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
+        Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
+        System.out.println("Delete worker's accrual balance successfully!");
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> actualTOB = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(actualTOB, expectedTOBalance, "Failed to clear the employee's accrual balance!");
+        SimpleUtils.pass("Succeeded in clearing employee's accrual balance!");
+
+        //New Years Day: 2022-01-01
+        //Dr. Martin Luther King,:  2022-01-17
+        //President’s Day:  2022-02-21
+        //Labor Day: 2022-09-05
+        //Christmas Day:  2022-12-25
+
+        String newYearsDay = "2021-01-01";//on holiday
+        String beforeDrMartinLutherKing = "2021-01-17";//holiday（2021-01-18）
+        //String afterPresidentDay = "2021-03-01";//holiday(2021-02-15)
+        String afterMemorialDay = "2021-06-01";//holiday(2021-05-31)
+        String laborDay = "2021-09-06";
+        String christmasDay = "2021-12-25";
+        String expireDate = "2021-12-31";//
+
+        //Run engine to the New Years Day:
+        String[] accrualResponse1 = runAccrualJobToSimulateDate(workerId, newYearsDay, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse1), 200, "Failed to run accrual job!");
+        //expected accrual
+        expectedTOBalance.put("Floating Holiday", "1");//SpecifiedDate 01/01 ~ SpecifiedDate 12/31
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance1 = timeOffPage.getTimeOffBalance();
+        String verification1 = validateTheAccrualResults(accrualBalance1, expectedTOBalance);
+        Assert.assertTrue(verification1.contains("Succeeded in validating"), verification1);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //Run engine to Dr. Martin Luther King,
+        String[] accrualResponse2 = runAccrualJobToSimulateDate(workerId, beforeDrMartinLutherKing, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse2), 200, "Failed to run accrual job!");
+        //expected accrual
+        expectedTOBalance.put("Floating Holiday", "1");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance2 = timeOffPage.getTimeOffBalance();
+        String verification2 = validateTheAccrualResults(accrualBalance2, expectedTOBalance);
+        Assert.assertTrue(verification2.contains("Succeeded in validating"), verification2);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //Run engine to the President’s Day.
+        String[] accrualResponse3 = runAccrualJobToSimulateDate(workerId, afterMemorialDay, sessionId);//2021-06-01
+        Assert.assertEquals(getHttpStatusCode(accrualResponse3), 200, "Failed to run accrual job!");
+        //expected accrual
+        expectedTOBalance.put("Floating Holiday", "9");//SpecifiedDate 01/01 ~ SpecifiedDate 12/31
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance3 = timeOffPage.getTimeOffBalance();
+        String verification3 = validateTheAccrualResults(accrualBalance3, expectedTOBalance);
+        Assert.assertTrue(verification3.contains("Succeeded in validating"), verification3);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //Run engine to the Labor Day.
+        String[] accrualResponse4 = runAccrualJobToSimulateDate(workerId, laborDay, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse4), 200, "Failed to run accrual job!");
+        //expected accrual
+        expectedTOBalance.put("Annual Leave", "8");//Hire Date ~ SpecifiedDate 12/31 (2/4/6/8/10)
+        expectedTOBalance.put("Floating Holiday", "16");//SpecifiedDate 01/01 ~ SpecifiedDate 12/31 (1/3/5/7/9)
+        expectedTOBalance.put("PTO", "7");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance4 = timeOffPage.getTimeOffBalance();
+        String verification4 = validateTheAccrualResults(accrualBalance4, expectedTOBalance);
+        Assert.assertTrue(verification4.contains("Succeeded in validating"), verification4);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //Run engine to the Christmas Day.
+        String[] accrualResponse5 = runAccrualJobToSimulateDate(workerId, christmasDay, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse5), 200, "Failed to run accrual job!");
+        //expected accrual
+        expectedTOBalance.put("Annual Leave", "18");//Hire Date ~ SpecifiedDate 12/31 (2/4/6/8/10)
+        expectedTOBalance.put("Floating Holiday", "25");//SpecifiedDate 01/01 ~ SpecifiedDate 12/31 (1/3/5/7/9)
+        expectedTOBalance.put("PTO", "16");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance5 = timeOffPage.getTimeOffBalance();
+        String verification5 = validateTheAccrualResults(accrualBalance5, expectedTOBalance);
+        Assert.assertTrue(verification5.contains("Succeeded in validating"), verification5);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //Run engine to the expire Date.
+        //expired on the end of the year
+        String[] accrualResponse6 = runAccrualJobToSimulateDate(workerId, expireDate, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse6), 200, "Failed to run accrual job!");
+        //expected accrual
+        expectedTOBalance.put("Annual Leave", "0");//Hire Date ~ SpecifiedDate 12/31 (2/4/6/8/10)
+        expectedTOBalance.put("Floating Holiday", "0");//SpecifiedDate 01/01 ~ SpecifiedDate 12/31 (1/3/5/7/9)
+        expectedTOBalance.put("PTO", "0");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance6 = timeOffPage.getTimeOffBalance();
+        String verification6 = validateTheAccrualResults(accrualBalance6, expectedTOBalance);
+        Assert.assertTrue(verification6.contains("Succeeded in validating"), verification6);
+        SimpleUtils.pass("Succeeded in validating GM holiday balance expired at the end of the year!");
+        //crossing the service lever: run engine to the next year.
+        //PTO
+        /*
+         * New Years Day: 2022-01-01, service lever 0    +1hour
+         * Dr. Martin Luther King,: 2022-01-17, service lever 0    +3hour
+         * Memorial Day: 2022-05-30, service lever 0    +5hour  //President’s Day: 2022-02-21, service lever 0    +5hour
+         * ----------------service lever1 2022-06-25--------------
+         * Independence Day: 2022-07-04, service lever 1 +8hours
+         * Labor Day: 2022-09-05, service lever 1     +8hours
+         * Christmas Day: 2022-12-25, service lever 1 +8hours
+         * */
+        String acrossServiceleverDate = "2022-09-06";
+        String[] accrualResponse7 = runAccrualJobToSimulateDate(workerId, acrossServiceleverDate, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse7), 200, "Failed to run accrual job!");
+        //expected accrual
+        expectedTOBalance.put("Annual Leave", "20");//Hire Date ~ SpecifiedDate 12/31 (2/4/6/8/10)
+        expectedTOBalance.put("Floating Holiday", "16");//SpecifiedDate 01/01 ~ SpecifiedDate 12/31 (1/3/5/7/9)
+        expectedTOBalance.put("PTO", "25");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance7 = timeOffPage.getTimeOffBalance();
+        String verification7 = validateTheAccrualResults(accrualBalance7, expectedTOBalance);
+        Assert.assertTrue(verification7.contains("Succeeded in validating"), verification7);
+        SimpleUtils.pass("Succeeded in validating GM holiday accrued correctly when across the service lever!");
     }
 
 
