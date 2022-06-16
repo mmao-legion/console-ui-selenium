@@ -15,6 +15,7 @@ public interface NewShiftPage {
     public void searchText(String searchInput) throws Exception;
     public void clickOnOfferOrAssignBtn() throws Exception;
     public void selectWorkRole(String workRoles) throws Exception;
+    public void setShiftsPerDay(int numberOfShiftPerDay) throws Exception;
     public void addOpenShiftWithDefaultTime(String workRole) throws Exception;
     public void addOpenShiftWithDefaultTime(String workRole, String location) throws Exception;
     public boolean ifWarningModeDisplay() throws Exception;

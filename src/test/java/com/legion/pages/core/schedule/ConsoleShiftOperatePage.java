@@ -1262,6 +1262,25 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         return selectedShift;
     }
 
+    @Override
+    public void offerOpenShiftToSpecificTMByIndex( int indexOfOpenShift) throws Exception {
+        if(isProfileIconsEnable() && areListElementVisible(shifts, 10)) {
+            if (profileIcons.get(indexOfOpenShift).getAttribute("src").contains("openShiftImage")){
+                if (isElementLoaded(profileIcons.get(indexOfOpenShift), 5)) {
+                    scrollToElement(profileIcons.get(indexOfOpenShift));
+                    clickTheElement(profileIcons.get(indexOfOpenShift));
+                }
+            }
+        } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
+            if (dayViewAvailableShifts.get(indexOfOpenShift).findElement(By.className("sch-day-view-shift-worker-name")).getText().contains("Open")){
+                scrollToElement(scheduleTableWeekViewWorkerDetail.get(indexOfOpenShift));
+                clickTheElement(scheduleTableWeekViewWorkerDetail.get(indexOfOpenShift));
+            }
+        } else {
+            SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
+        }
+    }
+
     @FindBy(css="div.tmprofile.profile-container.ng-scope")
     private WebElement tmpProfileContainer;
 

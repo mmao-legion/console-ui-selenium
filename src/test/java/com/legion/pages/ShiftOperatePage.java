@@ -46,6 +46,7 @@ public interface ShiftOperatePage {
     public boolean isOfferTMOptionVisible() throws Exception;
     public boolean isOfferTMOptionEnabled() throws Exception;
     public WebElement clickOnProfileIconOfOpenShift() throws Exception;
+    public void offerOpenShiftToSpecificTMByIndex(int indexOfOpenShift) throws Exception;
     public String getTMDetailNameFromProfilePage(WebElement shift) throws Exception;
     public List<String> verifyEditBreaks() throws Exception;
     public void changeWorkRoleInPromptOfAShift(boolean isApplyChange, WebElement shift) throws Exception;
