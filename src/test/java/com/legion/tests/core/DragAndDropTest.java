@@ -661,7 +661,8 @@ public class DragAndDropTest extends TestBase {
             List<String> shiftInfoAfterDrag = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(1));
             List<String> openShiftInfoAfterDrag = scheduleShiftTablePage.getOpenShiftInfoByIndex(openShiftIndexes.get(0));
 
-            if (shiftInfoAfterDrag.get(2).equals(openShiftInfo.get(0)) && shiftInfoAfterDrag.get(4).equals(openShiftInfo.get(1)) && openShiftInfoAfterDrag.get(0).equals(shiftInfo.get(2)))
+            if (shiftInfoAfterDrag.get(2).replaceAll(" ", "").equals(openShiftInfo.get(0).replaceAll(" ", ""))
+                    && shiftInfoAfterDrag.get(4).equals(openShiftInfo.get(1)) && openShiftInfoAfterDrag.get(0).replaceAll(" ", "").equals(shiftInfo.get(2).replaceAll(" ", "")))
                 SimpleUtils.pass("Assign a TM to an open shift that overlaps a time TM is already assigned to successfully!");
             else
                 SimpleUtils.fail("Failed to assign a TM to an open shift that overlaps a time TM is already assigned to",false);
