@@ -2303,42 +2303,36 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css = "div.tab.ng-scope")
     private List<WebElement> selectTeamMembersOption;
     public void switchSearchTMAndRecommendedTMsTab() {
-        if (MyThreadLocal.getNewCreateShiftUIStatus()) {
-            if (areListElementVisible(searchAndRecommendedTMTabs, 10)) {
-                if (searchAndRecommendedTMTabs.get(0).getAttribute("class").contains("selected")) {
-                    click(searchAndRecommendedTMTabs.get(1));
-                    if (searchAndRecommendedTMTabs.get(1).getAttribute("class").contains("select")) {
-                        SimpleUtils.pass("Recommended TMs tab been selected");
-                    } else
-                        SimpleUtils.fail("Recommended TMs tab fail been selected", false);
-                } else {
-                    click(searchAndRecommendedTMTabs.get(0));
-                    if (searchAndRecommendedTMTabs.get(0).getAttribute("class").contains("select")) {
-                        SimpleUtils.pass("Search Team Members tab been selected");
-                    } else
-                        SimpleUtils.fail("Search Team Members tab fail been selected", false);
-                }
+        if (areListElementVisible(searchAndRecommendedTMTabs, 10)) {
+            if (searchAndRecommendedTMTabs.get(0).getAttribute("class").contains("selected")) {
+                click(searchAndRecommendedTMTabs.get(1));
+                if (searchAndRecommendedTMTabs.get(1).getAttribute("class").contains("select")) {
+                    SimpleUtils.pass("Recommended TMs tab been selected");
+                } else
+                    SimpleUtils.fail("Recommended TMs tab fail been selected", false);
             } else {
-                SimpleUtils.fail("Select Team Member options are not available", false);
+                click(searchAndRecommendedTMTabs.get(0));
+                if (searchAndRecommendedTMTabs.get(0).getAttribute("class").contains("select")) {
+                    SimpleUtils.pass("Search Team Members tab been selected");
+                } else
+                    SimpleUtils.fail("Search Team Members tab fail been selected", false);
+            }
+        } else if (areListElementVisible(selectTeamMembersOption, 10)) {
+            if (selectTeamMembersOption.get(0).getAttribute("class").contains("select")) {
+                click(selectTeamMembersOption.get(1));
+                if (selectTeamMembersOption.get(1).getAttribute("class").contains("select")) {
+                    SimpleUtils.pass("Recommended TMs tab been selected");
+                } else
+                    SimpleUtils.fail("Recommended TMs tab fail been selected", false);
+            } else {
+                click(selectTeamMembersOption.get(0));
+                if (selectTeamMembersOption.get(0).getAttribute("class").contains("select")) {
+                    SimpleUtils.pass("Search Team Members tab been selected");
+                } else
+                    SimpleUtils.fail("Search Team Members tab fail been selected", false);
             }
         } else {
-            if (areListElementVisible(selectTeamMembersOption, 10)) {
-                if (selectTeamMembersOption.get(0).getAttribute("class").contains("select")) {
-                    click(selectTeamMembersOption.get(1));
-                    if (selectTeamMembersOption.get(1).getAttribute("class").contains("select")) {
-                        SimpleUtils.pass("Recommended TMs tab been selected");
-                    } else
-                        SimpleUtils.fail("Recommended TMs tab fail been selected", false);
-                } else {
-                    click(selectTeamMembersOption.get(0));
-                    if (selectTeamMembersOption.get(0).getAttribute("class").contains("select")) {
-                        SimpleUtils.pass("Search Team Members tab been selected");
-                    } else
-                        SimpleUtils.fail("Search Team Members tab fail been selected", false);
-                }
-            } else {
-                SimpleUtils.fail("Select Team Member options are not available", false);
-            }
+            SimpleUtils.fail("Select Team Member options are not available", false);
         }
     }
 

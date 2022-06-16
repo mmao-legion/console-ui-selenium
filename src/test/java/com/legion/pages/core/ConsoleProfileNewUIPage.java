@@ -3168,10 +3168,11 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		boolean isTimeSheetTabLoaded = isTimeSheetLoaded();
 		if (isTimeSheetTabLoaded) {
 			if (areListElementVisible(fieldsInLegionInformationSection, 5)
-					&& fieldsInLegionInformationSection.size() == 3
+					&& fieldsInLegionInformationSection.size() == 4
 					&& fieldsInLegionInformationSection.get(0).getText().equalsIgnoreCase("STATUS")
 					&& fieldsInLegionInformationSection.get(1).getText().equalsIgnoreCase("SCHEDULING POLICY GROUP")
-					&& fieldsInLegionInformationSection.get(2).findElement(By.cssSelector(".highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("TIMECLOCK PIN")
+					&& fieldsInLegionInformationSection.get(2).getText().equalsIgnoreCase("ONBOARDING STATUS")
+					&& fieldsInLegionInformationSection.get(3).findElement(By.cssSelector(".highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("TIMECLOCK PIN")
 					&& isElementLoaded(badgesSectionInLegionInformationSection, 5)
 					&& badgesSectionInLegionInformationSection.getText().equalsIgnoreCase("Badges")) {
 				SimpleUtils.pass("User Profile page: The fields in Legion Information section display correctly! ");

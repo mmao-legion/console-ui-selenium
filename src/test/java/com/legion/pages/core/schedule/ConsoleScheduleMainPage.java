@@ -1704,7 +1704,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                 SimpleUtils.report("Clear filter button is disabled because there is no filters been selected! ");
             }
 
-            if (areListElementVisible(wholeWeekShifts, 20)) {
+            if (areListElementVisible(wholeWeekShifts, 20) || areListElementVisible(dayViewAvailableShifts, 5)) {
                 SimpleUtils.pass("Shifts list grid has been loaded!");
             } else {
                 SimpleUtils.fail("Shifts list grid loading failed!", false);
