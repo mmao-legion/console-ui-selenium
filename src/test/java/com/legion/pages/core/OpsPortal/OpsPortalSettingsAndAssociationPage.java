@@ -4,6 +4,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.SettingsAndAssociationPage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -401,6 +402,116 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             SimpleUtils.pass("Cancel button is clicked!");
         } else {
             SimpleUtils.fail("Input string is not expected or buttons are not loaded!", false);
+        }
+    }
+
+    @FindBy(css = "div.setting-group")
+    private List<WebElement> settingsTypes;
+    @FindBy(css = "div.modal-dialog")
+    private WebElement popUpWindow;
+    @FindBy(css = "div.modal-content input-field")
+    private List<WebElement> fieldsInput;
+    @FindBy(css = "lg-button[label=\"OK\"] button")
+    private WebElement okBtnToSave;
+    @FindBy(css = "label.use-in-reporting input")
+    private WebElement useInReportCheckbox;
+    @Override
+    public void createNewChannelOrCategory(String type, String displayName, String description) throws Exception {
+        WebElement displayNameInput;
+        WebElement NameOrSourceTypeInput;
+        boolean isExisting = false;
+        if (areListElementVisible(settingsTypes, 5)) {
+            for (WebElement settingsType : settingsTypes) {
+                if (settingsType.findElement(By.cssSelector("lg-paged-search")).getAttribute("placeholder").contains(type)) {
+                    clickTheElement(settingsType.findElement(By.cssSelector("div.header-add-icon button")));
+                    if (isElementLoaded(popUpWindow, 3)) {
+                        displayNameInput = fieldsInput.get(0).findElement(By.cssSelector("input[aria-label=\"Display Name\"]"));
+                        NameOrSourceTypeInput = fieldsInput.get(1).findElement(By.cssSelector("input"));
+                        displayNameInput.sendKeys(displayName);
+                        if (NameOrSourceTypeInput.getText().equals(displayNameInput.getText())) {
+                            fieldsInput.get(2).findElement(By.cssSelector("textarea[ng-if=\"$ctrl.type === 'textarea'\"]")).sendKeys(description);
+                            if ("Category".equalsIgnoreCase(type) && isElementLoaded(useInReportCheckbox) &&
+                                    !useInReportCheckbox.getAttribute("checked").equalsIgnoreCase("checked")) {
+                                useInReportCheckbox.click();
+                            }
+                            clickTheElement(okBtnToSave);
+                            isExisting = true;
+                            break;
+                        }else{
+                            SimpleUtils.fail("Name/Source Type not equals to Display Name!", false);
+                        }
+                    } else {
+                        SimpleUtils.fail("The creation window not show up after clicking add button!", false);
+                    }
+                }
+            }
+            if (!isExisting){
+                SimpleUtils.fail("Can not find the setting type you want to add!", false);
+            }
+        } else{
+            SimpleUtils.fail("No content in Settings page!", false);
+        }
+    }
+
+    @FindBy(css = "lg-paged-search")
+    private List<WebElement> searchContents;
+    @Override
+    public WebElement searchSettingsForDemandDriver(String verifyType, String Name) throws Exception {
+        WebElement searchResult = null;
+        WebElement searchInput = null;
+        List<WebElement> searchResultList = null;
+        if (areListElementVisible(searchContents, 5)) {
+            for (WebElement searchContent : searchContents) {
+                if (searchContent.getAttribute("placeholder").contains(verifyType)) {
+                    searchInput = searchContent.findElement(By.cssSelector("div.lg-paged-search input"));
+                    searchInput.clear();
+                    searchInput.sendKeys(Name);
+                    searchInput.sendKeys(Keys.ENTER);
+                    waitForSeconds(2);
+                    searchResultList = searchContent.findElements(By.cssSelector("table.lg-table tr[ng-repeat*=\"item in $ctrl\"]"));
+                    if (searchResultList.size() > 0){
+                        searchResult = searchResultList.get(0);
+                        break;
+                    }
+                }
+            }
+        }
+        return searchResult;
+    }
+
+    @Override
+    public void clickOnEditBtnInSettings(String verifyType, String Name, String NewName) throws Exception {
+        WebElement searchResult = searchSettingsForDemandDriver(verifyType, Name);
+        if(searchResult != null){
+            clickTheElement(searchResult.findElement(By.cssSelector("lg-button[label=\"Edit\"] button")));
+            if (isElementLoaded(popUpWindow) && popUpWindow.findElement(By.cssSelector("modal")).getAttribute("modal-title").toLowerCase().contains(verifyType)){
+                fieldsInput.get(0).findElement(By.cssSelector("input[aria-label=\"Display Name\"]")).clear();
+                fieldsInput.get(0).findElement(By.cssSelector("input[aria-label=\"Display Name\"]")).sendKeys(NewName);
+                clickTheElement(okBtnToSave);
+            }else {
+                SimpleUtils.fail("The edit pop up window not show up!", false);
+            }
+        }else {
+            SimpleUtils.fail("The item does not exist in the result list!", false);
+        }
+    }
+
+    @Override
+    public void clickOnRemoveBtnInSettings(String verifyType, String Name) throws Exception {
+        if(searchSettingsForDemandDriver(verifyType, Name) != null){
+            clickTheElement(searchSettingsForDemandDriver(verifyType, Name).findElement(By.cssSelector("lg-button[label=\"Remove\"] button")));
+            if (isElementLoaded(popUpWindow.findElement(By.cssSelector("modal[modal-title*=\"Remove\"]")))){
+                clickTheElement(popUpWindow.findElement(By.cssSelector("lg-button[label=\"OK\"] button")));
+            }else{
+                SimpleUtils.fail("There should pop up a confirmation window!", false);
+            }
+            if (searchSettingsForDemandDriver(verifyType, Name) == null){
+                SimpleUtils.pass("The item is remove successfully!");
+            }else {
+                SimpleUtils.fail("The item is not removed failed!", false);
+            }
+        }else {
+            SimpleUtils.fail("The item you want to remove does not exist in the result list!", false);
         }
     }
 }
