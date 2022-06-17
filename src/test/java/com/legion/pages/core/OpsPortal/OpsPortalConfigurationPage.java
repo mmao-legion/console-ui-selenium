@@ -64,7 +64,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="div[class=\"lg-modal\"]")
 	private WebElement editTemplatePopupPage;
 
-	@FindBy(css="lg-button[label=\"OK\"]")
+	@FindBy(css="lg-button[label=\"OK\"] button")
 	private WebElement okButton;
 
 	@FindBy(css="lg-button[label=\"Cancel\"]")
@@ -3279,7 +3279,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement dynamicGroupTestInfo;
 	@FindBy(css="div.CodeMirror textarea")
 	private WebElement formulaTextAreaOfDynamicGroup;
-	@FindBy(css="lg-button[label=\"OK\"]")
+	@FindBy(css="lg-button[label=\"OK\"] button")
 	private WebElement okButtonOnManageDynamicGroupPopup;
 	@FindBy(css="modal[modal-title=\"Manage Dynamic Location Group\"] lg-button[label=\"Cancel\"]")
 	private WebElement cancelButtonOnManageDynamicGroupPopup;
@@ -4488,6 +4488,146 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}else {
 			SimpleUtils.fail("There are no any draft template showing",false);
+		}
+	}
+
+	@Override
+	public void createMultipleTemplateForAllTypeOfTemplate(String templateName,String dynamicGpName,String criteriaType,String criteriaValue,String button,int date,String editOrViewMode) throws Exception {
+		for(int i =0; i< 6;i++){
+			clickTheElement(configurationCardsList.get(i));
+			waitForSeconds(3);
+			publishNewTemplate(templateName,dynamicGpName,criteriaType,criteriaValue);
+			createFutureTemplateBasedOnExistingTemplate(templateName,button,date,editOrViewMode);
+			archiveMultipleTemplate(templateName);
+			goToConfigurationPage();
+		}
+	}
+
+	@Override
+	public void archiveMultipleTemplate(String templateName) throws Exception{
+		if(areListElementVisible(multipleTemplateList,3)){
+			for(WebElement multipleTemplate:multipleTemplateList){
+				SimpleUtils.report("1111");
+				WebElement templateNameButton = multipleTemplate.findElement(By.cssSelector("button"));
+				SimpleUtils.report("222");
+				String templateStatus = multipleTemplate.findElement(By.cssSelector("lg-eg-status")).getAttribute("type").trim();
+				if(templateStatus.equalsIgnoreCase("Published")){
+					clickTheElement(templateNameButton);
+					waitForSeconds(5);
+					if(isElementLoaded(archiveButton,2)){
+						clickTheElement(archiveButton);
+						waitForSeconds(2);
+						if(isElementLoaded(okButton)){
+							clickTheElement(okButton);
+						}else {
+							SimpleUtils.fail("archive/delete template popup is not showing",false);
+						}
+
+					}else {
+						SimpleUtils.fail("Template details page doesn't show well",false);
+					}
+				}else {
+					clickTheElement(templateNameButton);
+					waitForSeconds(5);
+					if(isElementLoaded(deleteTemplateButton,2)){
+						clickTheElement(deleteTemplateButton);
+						waitForSeconds(2);
+						if(isElementLoaded(okButton)){
+							clickTheElement(okButton);
+						}else {
+							SimpleUtils.fail("archive/delete template popup is not showing",false);
+						}
+
+					}else {
+						SimpleUtils.fail("Template details page doesn't show well",false);
+					}
+				}
+				searchTemplate(templateName);
+				List<WebElement> multipleTemplateList = getDriver().findElements(By.cssSelector(".lg-templates-table-improved__grid-row--header~div"));
+			}
+		}
+	}
+
+	@FindBy(xpath = "//*[@type=\"'AdvancedStaffingRule'\"]")
+	private List<WebElement> advanceStaffRules;
+	@FindBy(css = "lg-template-advanced-staffing-rule div.settings-work-rule-number")
+	private WebElement advanceStaffRulesStatus;
+	@Override
+	public void verifyAdvanceStaffRuleFromLocationLevel(List<String> advanceStaffingRule) throws Exception{
+		if(advanceStaffRules.size() != 0)
+			for(WebElement advanceStaffRule: advanceStaffRules){
+				List<WebElement> advanceStaffRuleContent = advanceStaffRule.findElements(By.xpath("//*[@class=\"highlight\"]"));
+				for(WebElement content: advanceStaffRuleContent){
+					if(advanceStaffingRule.get(advanceStaffRules.indexOf(advanceStaffRule)).contains(content.getText())){
+						SimpleUtils.pass("AdvancedStaffingRule aligned with template level" );
+					}else {
+						SimpleUtils.fail("AdvancedStaffingRule does not aligned with template level",false);
+					}
+				}
+			}else{
+			SimpleUtils.fail("no AdvancedStaffingRule in the template",false);
+		}
+	}
+	@FindBy(css = "lg-template-advanced-staffing-rule div.settings-work-rule-number")
+	private List<WebElement> advanceStaffRuleStatues;
+	@Override
+	public void verifyAdvanceStaffRuleStatusFromLocationLevel(List<String> advanceStaffingRuleStatus) throws Exception{
+		if(advanceStaffRuleStatues.size() != 0)
+			for(WebElement statues: advanceStaffRuleStatues){
+				if(advanceStaffingRuleStatus.get(advanceStaffRuleStatues.indexOf(statues)).equalsIgnoreCase(statues.getAttribute("data-tootik")))
+				{
+					SimpleUtils.pass("This rule is enabled/disable for this location" );
+				}else {
+					SimpleUtils.fail("This rule status is not exist",false);
+				}
+			}else{
+			SimpleUtils.fail("no AdvancedStaffingRule in the template",false);
+		}
+	}
+
+
+	@FindBy(css = "lg-template-advanced-staffing-rule div.settings-work-rule-assignment-container")
+	private WebElement advanceStaffRuleEditStatues;
+	@Override
+	public void changeAdvanceStaffRuleStatusFromLocationLevel(int i) throws Exception{
+		if(isElementLoaded(advanceStaffRuleStatues.get(i),3)){
+			if(!isElementLoaded(advanceStaffRuleEditStatues)){
+				advanceStaffRuleStatues.get(i).click();
+			}
+			advanceStaffRuleStatues.get(i).click();
+		}
+		else{
+			SimpleUtils.fail("no AdvancedStaffingRule in the template",false);
+		}
+	}
+
+	@Override
+	public void verifyCanNotAddAdvancedStaffingRuleFromTemplateLevel() throws Exception {
+		if(isElementLoaded(addIconOnRulesListPage)){
+			clickTheElement(addIconOnRulesListPage);
+			if(isElementLoaded(addAdvancedStaffingRuleButton)){
+				SimpleUtils.fail("Advance staffing rules tab is show",false);
+			}else {
+				SimpleUtils.pass("Advance staffing rules tab is NOT show");
+			}
+		}else{
+			SimpleUtils.fail("Work role's staffing rules list page was loaded failed",false);
+		}
+	}
+
+	@Override
+	public void verifyCanNotEditDeleteAdvancedStaffingRuleFromTemplateLevel() throws Exception {
+		List<WebElement> advancedStaffingRules= getDriver().findElements(By.cssSelector("lg-template-advanced-staffing-rule"));
+		if(advancedStaffingRules.size() != 0)
+			for(WebElement advancedStaffingRule: advancedStaffingRules){
+				if((advancedStaffingRule.findElements(By.cssSelector("span.settings-work-rule-edit-edit-icon")).size() > 0
+						|| (advancedStaffingRule.findElements(By.cssSelector("span.settings-work-rule-edit-delete-icon")).size() > 0))){
+					SimpleUtils.fail("This AdvancedStaffingRule can be edited/deleted",false);
+				}else {
+					SimpleUtils.pass("This AdvancedStaffingRule cannot be edited/deleted" );
+				}
+			}else{
+			SimpleUtils.fail("no AdvancedStaffingRule in the template",false);
 		}
 	}
 }
