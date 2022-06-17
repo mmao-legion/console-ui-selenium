@@ -780,13 +780,14 @@ public class UserManagementTest extends TestBase {
             userManagementPage.clickOnUserManagementTab();
             userManagementPage.goToUserAndRoles();
 
-            boolean profilePermission, profileViewPermision;
+            boolean profileViewPermision;
+            Integer profilePermission;
             String user1 = "Nancy Profile";
             String user2 = "Test ProfilePermission";
             userManagementPage.goToUserDetailPage(user1);
             profilePermission = userManagementPage.verifyProfilePermission();
 
-            if(profilePermission == true){
+            if(profilePermission == 0){
                 SimpleUtils.pass("Profile permission is correct");
             }else
                 SimpleUtils.fail("Profile permission is wrong",false);
@@ -816,7 +817,7 @@ public class UserManagementTest extends TestBase {
 
             profilePermission = userManagementPage.verifyProfilePermission();
 
-            if(profilePermission == true){
+            if(profilePermission == 0){
                 SimpleUtils.pass("Profile permission is correct");
             }else
                 SimpleUtils.fail("Profile permission is wrong",false);
@@ -829,7 +830,7 @@ public class UserManagementTest extends TestBase {
 
             profilePermission = userManagementPage.verifyProfilePermission();
 
-            if(profilePermission == true){
+            if(profilePermission == 0){
                 SimpleUtils.pass("Profile permission is correct");
             }else
                 SimpleUtils.fail("Profile permission is wrong",false);
@@ -838,8 +839,8 @@ public class UserManagementTest extends TestBase {
             OpsPortalNavigationPage opsPortalNavigationPage = new OpsPortalNavigationPage();
             opsPortalNavigationPage.logout();
 
-            //log in with user has no view hourly rate job title permission
-            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+nocontact@legion.co", "admin11.a","verifyMock");
+            //log in with user has no view contact info job title permission
+            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+nocontact01@legion.co", "admin11.a","verifyMock");
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.verifyNewTermsOfServicePopUp();
             //go to team
@@ -851,7 +852,7 @@ public class UserManagementTest extends TestBase {
 
             profilePermission = userManagementPage.verifyProfilePermission();
 
-            if(profilePermission == false){
+            if(profilePermission == 3){
                 SimpleUtils.pass("Profile permission is correct");
             }else
                 SimpleUtils.fail("Profile permission is wrong",false);
@@ -862,7 +863,7 @@ public class UserManagementTest extends TestBase {
 
             profilePermission = userManagementPage.verifyProfilePermission();
 
-            if(profilePermission == false){
+            if(profilePermission == 3){
                 SimpleUtils.pass("Profile permission is correct");
             }else
                 SimpleUtils.fail("Profile permission is wrong",false);
@@ -877,7 +878,52 @@ public class UserManagementTest extends TestBase {
             userManagementPage.goToUserDetailPage(user2);
             profilePermission = userManagementPage.verifyProfilePermission();
 
-            if(profilePermission == false){
+            if(profilePermission == 3){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+
+            //logout
+            opsPortalNavigationPage.logout();
+
+            //log in with user has no view contact info job title permission
+            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+nocreate01@legion.co", "admin11.a","verifyMock");
+            loginPage.verifyNewTermsOfServicePopUp();
+            //go to team
+            consoleNavigationPage.searchLocation("VerifyMock");
+            consoleNavigationPage.navigateTo("Team");
+
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(user1);
+
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == 3){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+
+            consoleNavigationPage.navigateTo("ControlsCustomer");
+            consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
+            consoleControlsNewUIPage.searchAndSelectTeamMemberByName(user2);
+
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == 3){
+                SimpleUtils.pass("Profile permission is correct");
+            }else
+                SimpleUtils.fail("Profile permission is wrong",false);
+
+            rightHeaderBarPage.switchToOpsPortal();
+            loginPage.verifyNewTermsOfServicePopUp();
+
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+
+            userManagementPage.goToUserDetailPage(user2);
+            profilePermission = userManagementPage.verifyProfilePermission();
+
+            if(profilePermission == 3){
                 SimpleUtils.pass("Profile permission is correct");
             }else
                 SimpleUtils.fail("Profile permission is wrong",false);
