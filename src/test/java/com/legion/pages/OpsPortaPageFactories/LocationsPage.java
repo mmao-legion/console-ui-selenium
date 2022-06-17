@@ -283,6 +283,10 @@ public interface LocationsPage {
     public List<HashMap<String, String>> getLocationTemplateInfosInLocationLevel();
     public void verifyActionsForTemplate(String templateName, String[] action) ;
     public void clickActionsForTemplate(String templateName, String action);
-    public void clickRestForTemplate(String templateName);
-}
+    public void searchWorkRoleInAssignmentRuleTemplate(String workRole) throws Exception;
+    public void verifyAssignmentRulesFromLocationLevel(String assignmentRule) throws Exception;
+    public void changeAssignmentRuleStatusFromLocationLevel(String status) throws Exception;
+    public void addBadgeAssignmentRuleStatusFromLocationLevel(String badgeName) throws Exception;
+
+    }
 
