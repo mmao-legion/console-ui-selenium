@@ -2232,4 +2232,41 @@ public class LocationsTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Assignment Rules content and enable/disable rule/add Badge")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAssignmentRulesInLocationLevelAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try {
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            //Validate location - configuration tab should have assignment rules template.
+            //Validate user can view location level assignment rules template
+            locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
+            //Validate location level assignment rules template should be aligned with global level by default.
+            locationsPage.searchWorkRoleInAssignmentRuleTemplate("AMBASSADOR");
+            String assignmentRule = "Ambassador should be assigned to AMBASSADOR at all hours . with priority 0 .";
+            //locationsPage.verifyAssignmentRulesFromLocationLevel(assignmentRule);
+            //Validate user can enable location level assignment rules template.
+            //Validate user can disable location level assignment rules template.
+            locationsPage.changeAssignmentRuleStatusFromLocationLevel("disable");
+            locationsPage.changeAssignmentRuleStatusFromLocationLevel("enable");
+            //Validate user can update badges at location level assignment rules template.;
+            locationsPage.addBadgeAssignmentRuleStatusFromLocationLevel("20210713152098");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
