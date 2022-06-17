@@ -2235,7 +2235,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Yang")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Assignment Rules at location level")
+    @TestName(description = "Verify Assignment Rules content and enable/disable rule/add Badge")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAssignmentRulesInLocationLevelAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
