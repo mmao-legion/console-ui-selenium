@@ -2663,8 +2663,10 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         try {
             if (isElementLoaded(shiftInfoContainer, 10)) {
                 String actualShiftInfo = shiftInfoContainer.getText();
-                if (actualShiftInfo.contains(expectedShiftInfo.get(0)) && actualShiftInfo.contains(expectedShiftInfo.get(3)) &&
-                        actualShiftInfo.contains(expectedShiftInfo.get(4)) && actualShiftInfo.contains(expectedShiftInfo.get(2))) {
+                if (actualShiftInfo.replaceAll(" ", "").contains(expectedShiftInfo.get(0).replaceAll(" ", ""))
+                        && actualShiftInfo.replaceAll(" ", "").contains(expectedShiftInfo.get(3).replaceAll(" ", "")) &&
+                        actualShiftInfo.replaceAll(" ", "").contains(expectedShiftInfo.get(4).replaceAll(" ", ""))
+                        && actualShiftInfo.replaceAll(" ", "").contains(expectedShiftInfo.get(2).replaceAll(" ", ""))) {
                     SimpleUtils.pass("Shift info on the Meal Break pop up is correct!");
                 } else {
                     SimpleUtils.fail("Shift info on the Meal Break pop up is correct!", false);
