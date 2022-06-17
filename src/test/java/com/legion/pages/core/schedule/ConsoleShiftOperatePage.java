@@ -1225,7 +1225,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @Override
     public boolean isOfferTMOptionEnabled() throws Exception {
-        if(isElementEnabled(OfferTMS,5) && !OfferTMS.getAttribute("class").toLowerCase().contains("graded-out")){
+        if(isElementEnabled(OfferTMS,10) && !OfferTMS.getAttribute("class").toLowerCase().contains("graded-out")){
             return true;
         } else{
             return false;
@@ -1262,22 +1262,153 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         return selectedShift;
     }
 
+    @FindBy(xpath = "//span[text()=\"View Status\"]")
+    private WebElement viewStatusBtn;
+
     @Override
-    public void offerOpenShiftToSpecificTMByIndex( int indexOfOpenShift) throws Exception {
-        if(isProfileIconsEnable() && areListElementVisible(shifts, 10)) {
-            if (profileIcons.get(indexOfOpenShift).getAttribute("src").contains("openShiftImage")){
-                if (isElementLoaded(profileIcons.get(indexOfOpenShift), 5)) {
-                    scrollToElement(profileIcons.get(indexOfOpenShift));
-                    clickTheElement(profileIcons.get(indexOfOpenShift));
+    public void offerTMByOpenShiftsCount( int openShiftsCount, String firstNameOfTM, String location) throws Exception {
+        if (isProfileIconsEnable() && areListElementVisible(shifts, 15)) {
+            if (openShiftsCount == profileIcons.size()){
+                for (WebElement elm : profileIcons) {
+                    scrollToElement(elm);
+                    clickTheElement(elm);
+                    waitForSeconds(2);
+                    if (isOfferTMOptionEnabled()) {
+                        SimpleUtils.pass("Offer TM option is enabled!");
+                    } else {
+                        SimpleUtils.fail("Offer TM  is not enabled!", false);
+                    }
+                    clickOnOfferTMOption();
+                    searchTeamMemberByNameNLocation(firstNameOfTM, location);
+                    clickOnOfferOrAssignBtn();
+                    scrollToElement(elm);
+                    clickTheElement(elm);
+                    if(isElementLoaded(viewStatusBtn,15)){
+                        clickTheElement(viewStatusBtn);
+                        waitForSeconds(2);
+                        SimpleUtils.pass("clicked view status button!");
+                    } else {
+                        SimpleUtils.fail("view status button is not loaded!",false);
+                    }
+                    verifyTMInTheOfferList(firstNameOfTM, "offered");
+                    closeViewStatusContainer();
                 }
-            }
-        } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
-            if (dayViewAvailableShifts.get(indexOfOpenShift).findElement(By.className("sch-day-view-shift-worker-name")).getText().contains("Open")){
-                scrollToElement(scheduleTableWeekViewWorkerDetail.get(indexOfOpenShift));
-                clickTheElement(scheduleTableWeekViewWorkerDetail.get(indexOfOpenShift));
+            } else {
+                SimpleUtils.fail("The open shifts count doesn't match the count in list grid!", false);
             }
         } else {
             SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
+        }
+    }
+
+    public void searchTeamMemberByNameNLocation(String name, String location) throws Exception {
+        if (areListElementVisible(searchAndRecommendedTMTabs, 5)) {
+            if (searchAndRecommendedTMTabs.size() == 2) {
+                //click(btnSearchteamMember.get(1));
+                if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+                    textSearchOnNewCreateShiftPage.clear();
+                    textSearchOnNewCreateShiftPage.sendKeys(name);
+                    waitForSeconds(3);
+                    if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
+                        for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
+                            List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                            String tmName = tmInfo.get(0).getText();
+                            String locationName = tmInfo.get(2).getText();
+                            List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
+                            WebElement assignButton = assignAndOfferButtons.get(0);
+                            WebElement offerButton = assignAndOfferButtons.get(1);
+                            if (tmName != null && locationName!=null && assignButton != null && offerButton != null) {
+                                if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())
+                                        && locationName.toLowerCase().trim().replaceAll("\n"," ").contains(location.trim().toLowerCase())) {
+                                    if (MyThreadLocal.getAssignTMStatus()) {
+                                        clickTheElement(assignButton);
+                                    } else
+                                        clickTheElement(offerButton);
+                                    SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                                    waitForSeconds(2);
+                                    if (areListElementVisible(buttonsOnWarningMode, 5) && buttonsOnWarningMode.get(1).getText().toLowerCase().equalsIgnoreCase("assign anyway")) {
+                                        clickTheElement(buttonsOnWarningMode.get(1));
+                                        SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+                                    }
+                                    break;
+                                }
+                            }else {
+                                SimpleUtils.fail("Worker name or buttons not loaded Successfully!", false);
+                            }
+                        }
+                    }else {
+                        SimpleUtils.fail("Failed to find the team member!", false);
+                    }
+                }else {
+                    SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+                }
+            }else {
+                SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
+            }
+        } else if(areListElementVisible(btnSearchteamMember,15)) {
+            if (btnSearchteamMember.size() == 2) {
+                //click(btnSearchteamMember.get(1));
+                if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 15)) {
+                    textSearch.clear();
+                    textSearch.sendKeys(name);
+                    click(searchIcon);
+                    if (areListElementVisible(searchResults, 15)) {
+                        for (WebElement searchResult : searchResults) {
+                            WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-name"));
+                            WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
+                            WebElement locationInfo = searchResult.findElement(By.className("tma-description-fields"));
+                            if (workerName != null && optionCircle != null) {
+                                if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.trim().toLowerCase()) && locationInfo.getText().toLowerCase().trim().replaceAll("\n"," ").contains(location.trim().toLowerCase())) {
+                                    click(optionCircle);
+                                    SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                                    waitForSeconds(2);
+                                    if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().equalsIgnoreCase("ASSIGN ANYWAY")) {
+                                        click(btnAssignAnyway);
+                                        SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+                                    }
+                                    break;
+                                }
+                            }else {
+                                SimpleUtils.fail("Worker name or option circle not loaded Successfully!", false);
+                            }
+                        }
+                    }else {
+                        SimpleUtils.fail("Failed to find the team member!", false);
+                    }
+                }else {
+                    SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+                }
+            }else {
+                SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
+            }
+        } else
+            SimpleUtils.fail("Search team member tab fail to load! ", false);
+    }
+
+    @FindBy(css="button.tma-action.sch-save")
+    private WebElement btnOffer;
+
+    @FindBy(css = "[ng-click=\"handleNext()\"]")
+    private WebElement btnSaveOnNewCreateShiftPage;
+
+    public void clickOnOfferOrAssignBtn() throws Exception{
+        if(isElementLoaded(btnOffer,5)){
+            scrollToElement(btnOffer);
+            waitForSeconds(3);
+            clickTheElement(btnOffer);
+            if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().toUpperCase().equals("ASSIGN ANYWAY")) {
+                clickTheElement(btnAssignAnyway);
+            }
+        }else if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
+            scrollToElement(btnSaveOnNewCreateShiftPage);
+            waitForSeconds(3);
+            clickTheElement(btnSaveOnNewCreateShiftPage);
+            SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
+            if (areListElementVisible(buttonsOnWarningMode, 10)) {
+                click(buttonsOnWarningMode.get(1));
+            }
+        }else{
+            SimpleUtils.fail("Offer Or Assign Button is not clickable", false);
         }
     }
 
@@ -2080,12 +2211,12 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                             //WebElement image = shiftWeekView.findElement(By.cssSelector(".sch-day-view-shift-worker-detail"));
                             scrollToElement(image);
                             click(image);
-                            waitForSeconds(3);
+                            waitForSeconds(2);
                             if (isElementLoaded(deleteShift, 10)) {
                                 scrollToElement(deleteShift);
                                 clickTheElement(deleteShift);
-                                waitForSeconds(5);
-                                if (isElementLoaded(deleteBtnInDeleteWindows)) {
+                                waitForSeconds(3);
+                                if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
                                     scrollToElement(deleteBtnInDeleteWindows);
                                     clickTheElement(deleteBtnInDeleteWindows);
                                     SimpleUtils.pass("Schedule Week View: Existing shift: " + teamMemberName + " delete successfully");
@@ -2105,7 +2236,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     }
 
     @Override
-    public int countShiftsByUserName(String teamMemberName) throws Exception {
+    public synchronized int countShiftsByUserName(String teamMemberName) throws Exception {
         int numberOfShifts = 0;
         if (areListElementVisible(shiftsWeekView, 15)) {
             for (WebElement shiftWeekView : shiftsWeekView) {

@@ -546,6 +546,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }
         if (isClickable(saveOnSaveConfirmationPopup, 15)) {
             clickTheElement(saveOnSaveConfirmationPopup);
+            waitForNotExists(saveOnSaveConfirmationPopup, 30);
             waitForSeconds(5);
             try{
 //                if (isElementLoaded(msgOnTop, 20)) {
@@ -561,7 +562,6 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             } catch(StaleElementReferenceException e){
                 SimpleUtils.report("stale element reference: element is not attached to the page document");
             }
-            waitForSeconds(5);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }

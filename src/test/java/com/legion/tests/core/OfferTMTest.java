@@ -1801,15 +1801,8 @@ public class OfferTMTest extends TestBase {
             // Delete unassigned shifts and open shifts.
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
-            scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-            shiftOperatePage.deleteTMShiftInWeekView("");
-            scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
-            scheduleMainPage.selectShiftTypeFilterByText("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("");
-            scheduleMainPage.clickOnFilterBtn();
-            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+            shiftOperatePage.deleteAllShiftsInWeekView();
 
             // Modify corresponding work role by enterprise
             String workRoleOfTM = "Retail Associate";
@@ -1824,9 +1817,9 @@ public class OfferTMTest extends TestBase {
             newShiftPage.selectWorkRole(workRoleOfTM);
             newShiftPage.moveSliderAtCertainPoint("9am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint("3pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.setShiftsPerDay(3);
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectMultipleOrSpecificWorkDay(3, true);
-            newShiftPage.setShiftsPerDay(5);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
@@ -1834,17 +1827,7 @@ public class OfferTMTest extends TestBase {
             // Offer TM in non-edit mode to make sure the TM will be offered with multiple shifts
             String shiftType = "Open";
             int openShiftCount = shiftOperatePage.countShiftsByUserName(shiftType);
-            for (int i=0; i<openShiftCount; i++) {
-                shiftOperatePage.offerOpenShiftToSpecificTMByIndex(i);
-                SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
-                shiftOperatePage.clickOnOfferTMOption();
-                newShiftPage.searchTeamMemberByNameNLocation(firstNameOfTM, location);
-                newShiftPage.clickOnOfferOrAssignBtn();
-                shiftOperatePage.offerOpenShiftToSpecificTMByIndex(i);
-                scheduleShiftTablePage.clickViewStatusBtn();
-                shiftOperatePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
-                shiftOperatePage.closeViewStatusContainer();
-            }
+            shiftOperatePage.offerTMByOpenShiftsCount(openShiftCount, firstNameOfTM, location);
 
             // Publish schedule
             scheduleMainPage.publishOrRepublishSchedule();
@@ -1855,7 +1838,7 @@ public class OfferTMTest extends TestBase {
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.navigateToNextWeek();
             smartCardPage.clickLinkOnSmartCardByName("View Shifts");
-            SimpleUtils.assertOnFail("Didn't get open shift offer!", scheduleShiftTablePage.getShiftsCount()==1, false);
+            SimpleUtils.assertOnFail("Didn't get open shift offer!", scheduleShiftTablePage.getShiftsCount() == 1, false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2007,7 +1990,7 @@ public class OfferTMTest extends TestBase {
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.navigateToNextWeek();
             smartCardPage.clickLinkOnSmartCardByName("View Shifts");
-            SimpleUtils.assertOnFail("Didn't get open shift offer!", scheduleShiftTablePage.getShiftsCount()==1, false);
+            SimpleUtils.assertOnFail("Didn't get open shift offer!", scheduleShiftTablePage.getShiftsCount() == 2, false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

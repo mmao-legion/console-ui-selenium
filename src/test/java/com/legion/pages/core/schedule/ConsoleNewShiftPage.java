@@ -574,7 +574,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @Override
     public void setShiftsPerDay(int numberOfShiftPerDay) throws Exception {
         if (isElementLoaded(shiftsPerDay, 5)) {
-            shiftsPerDay.clear();
+            doubleClick(shiftsPerDay);
+            waitForSeconds(2);
             shiftsPerDay.sendKeys(Integer.toString(numberOfShiftPerDay));
             SimpleUtils.pass("Number of shifts per day have been set!");
         } else {
