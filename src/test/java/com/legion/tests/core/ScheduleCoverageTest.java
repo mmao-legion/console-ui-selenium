@@ -704,7 +704,7 @@ public class ScheduleCoverageTest extends TestBase {
         scheduleCommonPage.clickOnWeekView();
         String shiftTime = shiftInfo.get(2);
         String shiftStartTime = shiftTime.split("-")[0];
-        String shiftEndTime = shiftTime.split("-")[1].replace("am","").replace("pm","");
+        String shiftEndTime = shiftTime.split("-")[1].replace("am","").replace("pm","").replace("00 ", "");
         int shiftEndTimeHour = Integer.parseInt(shiftEndTime.split(":")[0])- decreaseHrs;
         int shiftEndTimeMins = Integer.parseInt(shiftEndTime.split(":")[1])- decreaseMins;
         if (shiftEndTimeMins< 0) {

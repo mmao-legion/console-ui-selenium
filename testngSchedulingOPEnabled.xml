@@ -457,7 +457,7 @@ SCH-5862-->
                     <!-- select Continuous Operation -->
                     <include name="verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin" />
                     <include name="verifyShiftWhenEnableContinuousOperationOptionAsInternalAdmin" />
-                    <include name="verifyTheShiftThatOverlappingWithPreviousWeekShiftCannotBeCreatedAsInternalAdmin" />
+        <!--            <include name="verifyTheShiftThatOverlappingWithPreviousWeekShiftCannotBeCreatedAsInternalAdmin" /> SCH-6732-->
                     <!-- unselect Continuous Operation -->
                     <include name="verifyShiftWhenDisableContinuousOperationOptionAsInternalAdmin" />
                     <include name="verifyTMWithOutBadgeCannotClaimTheShiftWithWorkRoleThatRequiredBadgeAsTeamMember" />
