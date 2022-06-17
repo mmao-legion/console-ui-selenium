@@ -3988,7 +3988,7 @@ private List<WebElement> locationColumn;
 	private WebElement saveSchoolSessionBtn;
 	@FindBy(css = "div[ng-click=\"dismissPopup()\"]")
 	private WebElement cancelSchoolSessionBtn;
-	@FindBy(css = "[label=\"Delete\"]")
+	@FindBy(css = "[label=\"Delete\"] span.ng-binding")
 	private WebElement deleteCalendarBtn;
 	@FindBy(css = "[label=\"Edit\"]")
 	private WebElement editCalendarBtn;
@@ -4221,6 +4221,7 @@ private List<WebElement> locationColumn;
 			for (WebElement title : calendarTitles) {
 				if (title.getText().trim().equalsIgnoreCase(calendarName)) {
 					clickTheElement(title);
+					waitForSeconds(3);
 					if (areListElementVisible(calendarCells,  10) && isElementLoaded(deleteCalendarBtn, 10)) {
 						waitForSeconds(3);
 						clickTheElement(deleteCalendarBtn);
