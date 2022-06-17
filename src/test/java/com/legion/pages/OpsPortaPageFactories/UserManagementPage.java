@@ -126,7 +126,7 @@ public interface UserManagementPage {
 
     public boolean profileViewPermissionExist() throws Exception;
 
-    public boolean verifyProfilePermission() throws Exception;
+    public Integer verifyProfilePermission() throws Exception;
 
     public void clickManage() throws Exception;
 
@@ -134,5 +134,5 @@ public interface UserManagementPage {
 
     public void clickRefreshBalances() throws Exception;
 
-    public void isRefreshBalancesDisplayed() throws Exception;
+    public void verifyRefreshBalancesNotDisplayed() throws Exception;
 }
