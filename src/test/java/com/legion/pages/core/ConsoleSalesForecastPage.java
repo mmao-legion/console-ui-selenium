@@ -431,6 +431,37 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 				SimpleUtils.fail("Projected Traffic Sub Menu Tab Not Found", false);
 			}
 		}
+
+	@FindBy(css = "[ng-click=\"$ctrl.openFilter()\"]")
+	private WebElement filterButton;
+	@FindBy(css = "div.lg-filter__wrapper")
+	private WebElement filterPopup;
+	@FindBy(css = "[ng-repeat=\"(key, opts) in $ctrl.displayFilters\"]")
+	private List<WebElement> FilterElements;
+	@Override
+	public boolean verifyChannelOrCategoryExistInForecastPage(String filterType, String filteryName) throws Exception {
+		WebElement filterLabel;
+		boolean isExisting = false;
+		if (isElementLoaded(filterButton,10)) {
+			if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+				click(filterButton);
+			for (WebElement FilterElement : FilterElements) {
+				if (FilterElement.findElement(By.cssSelector("div")).getText().equalsIgnoreCase(filterType)){
+					List<WebElement> filters = FilterElement.findElements(By.cssSelector("input-field[type=\"checkbox\"]"));
+					for (WebElement filter : filters) {
+						filterLabel = filter.findElement(By.cssSelector("label"));
+						if (filterLabel != null && filterLabel.getText().equalsIgnoreCase(filteryName)) {
+							isExisting =  true;
+							break;
+						}
+					}
+				}
+			}
+		} else {
+			SimpleUtils.fail("Filters button not found on forcast page!", false);
+		}
+		return isExisting;
+	}
 }
 	
 
