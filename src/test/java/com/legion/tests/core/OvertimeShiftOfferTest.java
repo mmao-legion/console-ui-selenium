@@ -87,11 +87,8 @@ public class OvertimeShiftOfferTest extends TestBase {
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-            // Delete unassigned shifts and open shifts.
+            // Delete open shifts.
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleMainPage.clickOnFilterBtn();
-            scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-            shiftOperatePage.deleteTMShiftInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.selectShiftTypeFilterByText("Open");
