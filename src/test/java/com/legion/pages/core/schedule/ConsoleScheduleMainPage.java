@@ -380,12 +380,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             click(publishButton);
             if (isElementLoaded(confirmPublishBtn, 15)) {
                 click(confirmPublishBtn);
-                waitForSeconds(50);
-                if (!isElementLoaded(publishButton, 10)) {
-                    SimpleUtils.pass("Schedule successfully published!");
-                } else {
-                    SimpleUtils.fail("Schedule publish filed!", false);
-                }
+                waitForSeconds(5);
+                waitForNotExists(publishButton, 60);
             }
         }
 
@@ -394,12 +390,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             click(republishButton);
             if (isElementLoaded(confirmPublishBtn, 15)) {
                 click(confirmPublishBtn);
-                waitForSeconds(30);
-                if (!isElementLoaded(republishButton, 5)) {
-                    SimpleUtils.pass("Schedule successfully republished!");
-                } else {
-                    SimpleUtils.fail("Schedule republish filed!", false);
-                }
+                waitForSeconds(5);
+                waitForNotExists(republishButton, 60);
             }
         }
     }
@@ -554,6 +546,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }
         if (isClickable(saveOnSaveConfirmationPopup, 15)) {
             clickTheElement(saveOnSaveConfirmationPopup);
+            waitForNotExists(saveOnSaveConfirmationPopup, 30);
             waitForSeconds(5);
             try{
 //                if (isElementLoaded(msgOnTop, 20)) {
@@ -569,7 +562,6 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             } catch(StaleElementReferenceException e){
                 SimpleUtils.report("stale element reference: element is not attached to the page document");
             }
-            waitForSeconds(5);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
