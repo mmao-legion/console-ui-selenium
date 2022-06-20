@@ -3438,7 +3438,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             }
             Actions action = new Actions(getDriver());
             for (int i : selectedIndex) {
-                scrollToBottom();
+                scrollToElement(names.get(i));
                 waitForSeconds(1);
                 action.contextClick(names.get(i)).build().perform();
                 if (isBulkActionMenuPopup()) {
