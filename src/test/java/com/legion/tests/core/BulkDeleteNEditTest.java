@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
-public class BulkDeleteTest extends TestBase {
+public class BulkDeleteNEditTest extends TestBase {
     private DashboardPage dashboardPage;
     private CreateSchedulePage createSchedulePage;
     private ScheduleMainPage scheduleMainPage;

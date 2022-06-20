@@ -467,9 +467,9 @@ SCH-5862-->
         </classes>
     </test>
 
-    <test name="Bulk Delete Test">
+    <test name="Bulk Delete and Edit Test">
         <classes>
-            <class name="com.legion.tests.core.BulkDeleteTest">
+            <class name="com.legion.tests.core.BulkDeleteNEditTest">
                 <methods>
                     <include name="verifyDeleteMultipleShiftsInWeekViewAsInternalAdmin" />
                     <include name="verifyDeleteMultipleShiftsInDayViewAsInternalAdmin" />
