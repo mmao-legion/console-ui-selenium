@@ -701,7 +701,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 
         if (!workRoleInfoInGroupBySection.isEmpty()){
             HashMap<String,String> workRoleInfoInConfiguration  = userManagementPage.getAllWorkRoleStyleInfo(workRoleInfoInGroupBySection.get(0).get("optionName"));
-            if (workRoleInfoInGroupBySection.get(0).get("optionStyle").replace("background-color", "background").equalsIgnoreCase(workRoleInfoInConfiguration.get(workRoleInfoInGroupBySection.get(0).get("WorkRoleName")))){
+            if (workRoleInfoInGroupBySection.get(0).get("optionStyle").replace("background-color", "background").equalsIgnoreCase(workRoleInfoInConfiguration.get(workRoleInfoInGroupBySection.get(0).get("optionName")))){
                 SimpleUtils.pass("Work Role color match!");
             }  else {
                 SimpleUtils.fail("Work role color don't match!", false);
