@@ -1465,7 +1465,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 						SimpleUtils.fail("badge is not exist",false);
 					};
 				}else {
-					SimpleUtils.fail("badge is not exist",falsegitgit);
+					SimpleUtils.fail("badge is not exist",false);
 				}
 			}else{
 				SimpleUtils.fail("assignment Rule not exist",false);
