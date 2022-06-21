@@ -8,7 +8,6 @@ import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.an.E;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -768,7 +767,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
     }
 
     @Override
-    public String convertDateStringFormat(String dateString) throws Exception{
+    public String convertDateStringFormat(String dateString) throws Exception {
         String result = dateString;
         // dateString format: JAN 2 - JAN 9, will convert 2 to 02, 9 to 09, return JAN 02 - JAN 09
         String[] items = dateString.split(" ");
@@ -858,38 +857,17 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
         }
     }
 
-    @Override
-    public void clickOnFirstWeekInWeekPicker() throws Exception {
-        WebElement scheduleCalendarActiveWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
-        if (isElementLoaded(scheduleCalendarActiveWeek)){
-            clickTheElement(scheduleCalendarActiveWeek);
+    @FindBy(xpath = "//table[@class='generate-schedule-staffing']//tr[@class]/td[2]")
+    private List<WebElement> staffNameList;
+
+    public void VerifyStaffListInSchedule(String name) throws Exception {
+        for (int i = 0; i < staffNameList.size(); i++) {
+            if (staffNameList.get(i).getText().contains(name)) {
+                SimpleUtils.pass("Staff name is showing");
+                break;
+            } else {
+                SimpleUtils.fail("Staff name is not showing", true);
+            }
         }
     }
-
-    public Map<String, String> getSelectedWeekInfo() throws Exception{
-        Map<String, String> dayInfo = new HashMap<>();
-        WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active"));
-        String[] activeDay = activeWeek.getText().replace("\n", " ").split(" ");
-
-        dayInfo.put("weekDay", activeDay[0].substring(0, 3));
-        dayInfo.put("month", activeDay[3]);
-        dayInfo.put("day", activeDay[4]);
-        dayInfo.put("year", getYearsFromCalendarMonthYearText().get(0));
-
-        return dayInfo;
-    }
-
-    @Override
-    public boolean isSpecifyDayEqualWithFirstDayOfActivateWeek(String day) throws Exception{
-        boolean flag =true;
-        String date = getSelectedWeekInfo().get("day");
-        if(Integer.parseInt(day) == Integer.parseInt(date)){
-            SimpleUtils.pass("Template effective day is the first day of selected week.");
-        }else {
-            flag = false;
-            SimpleUtils.fail("Template effective day is the first day of selected week.",true);
-        }
-        return flag;
-    }
-
 }

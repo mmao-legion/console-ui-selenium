@@ -4263,29 +4263,31 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}
 		}
 	}
+
 	@Override
 	public void clickActionsForTemplate(String templateName, String action) {
-		List<WebElement> actions = getDriver().findElements(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span"));
-			for (int i = 0; i < actions.size(); i++) {
-				if (actions.get(i).getText().contains(action)) {
-					actions.get(i).click();
-					SimpleUtils.pass(templateName + " click " + action);
-				}
+		List<WebElement> actions = getDriver().findElements(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span/span[2]"));
+		actions.add(getDriver().findElement(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span[1]")));
+		for (int i = 0; i < actions.size(); i++) {
+			if (actions.get(i).getText().contains(action)) {
+				actions.get(i).click();
+				SimpleUtils.pass(templateName + " click " + action);
+				break;
 			}
-		if (action.equalsIgnoreCase("reset")){
+		}
+		if (action.equalsIgnoreCase("reset")) {
 			click(okBtnInSelectLocation);
 		}
 	}
 
 	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
 	private List<WebElement> workRoleListInAssignmentRuleTemplate;
+
 	@Override
 	public void searchWorkRoleInAssignmentRuleTemplate(String workRole) throws Exception {
 		if (isElementLoaded(searchByWorkRoleInput, 5)) {
 			searchByWorkRoleInput.clear();
 			searchByWorkRoleInput.sendKeys(workRole);
-			waitForSeconds(2);
-
 			if (areListElementVisible(workRoleListInAssignmentRuleTemplate, 5)) {
 				for (WebElement s : workRoleListInAssignmentRuleTemplate) {
 					String workRoleName = s.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
@@ -4301,18 +4303,22 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "location-level-assignment-rule.ng-isolate-scope")
 	private List<WebElement> assignmentRules;
-	@FindBy(css = "(//location-level-assignment-rule)[1]//div[@class='settings-work-rule-assignment-string-format']/span[not(contains(@ng-show,'isExtendedCondition'))]")
-	private List<WebElement> assignmentRuleContent;
 
-	public void verifyAssignmentRulesFromLocationLevel(String assignmentRule) throws Exception {
+	@FindBy(xpath = "//span[contains(@class,'setting-work-rule-assignment-title')]")
+	private List<WebElement> assignmentConditionList;
 
+	public void verifyAssignmentRulesFromLocationLevel(String assignmentRuleTitle) throws Exception {
+		boolean isAssignmentRuleExit = false;
 		if (assignmentRules.size() != 0) {
-			for (WebElement content : assignmentRuleContent) {
-				if (assignmentRule.contains(content.getText())) {
-					SimpleUtils.pass("AssignmentRules aligned with template level");
-				} else {
-					SimpleUtils.fail("AssignmentRules does not aligned with template level", false);
+			for (WebElement title : assignmentConditionList) {
+				if (title.getText().contains(assignmentRuleTitle)) {
+					SimpleUtils.pass("assignment Rule add successfully");
+					isAssignmentRuleExit = true;
+					break;
 				}
+			}
+			if (!isAssignmentRuleExit) {
+				SimpleUtils.fail("assignment Rule add failed", false);
 			}
 		} else {
 			SimpleUtils.fail("no assignment role", false);
@@ -4350,6 +4356,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private List<WebElement> badgeListInAssignmentRuleTemplate;
 	@FindBy(xpath = "//work-role-badges-list/div")
 	private List<WebElement> addedBadges;
+	@FindBy(css = "lg-button[label=\"Save\"]")
+	private WebElement saveBtn;
 
 	public void addBadgeAssignmentRuleStatusFromLocationLevel(String badgeName) throws Exception {
 		assignmentRuleEditStatues.get(0).click();
@@ -4377,6 +4385,50 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			} else {
 				SimpleUtils.fail("Badge is added failed", false);
 			}
+		}
+		click(saveBtn);
+		click(saveBtn);
+	}
+
+	@FindBy(xpath = "//input[contains(@ng-change,'onRulePriorityChange()')]")
+	private List<WebElement> assignmentRulePriorityList;
+
+	public void verifyAssignmentRulePriorityCannotBeEdit(String assignmentRuleTitle) throws Exception {
+		for (WebElement title : assignmentConditionList) {
+			if (title.getText().contains(assignmentRuleTitle)) {
+				title.click();
+				SimpleUtils.pass("click assignment Rulesuccessfully");
+				break;
+			}
+		}
+		if (assignmentRulePriorityList.size() > 0) {
+			for (WebElement priority : assignmentRulePriorityList) {
+				if (priority.getAttribute("ng-disabled").contains("true")) {
+					SimpleUtils.pass("assignmentRulePriority can not be edit");
+				} else {
+					SimpleUtils.fail("assignmentRulePriority can be edit", false);
+				}
+				;
+			}
+		} else {
+			SimpleUtils.fail("no priority est", false);
+		}
+	}
+
+	public void verifyOverrideStatusAtLocationLevel(String templateName) throws Exception {
+		if (isExist(getDriver().findElement(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/span")))) {
+			SimpleUtils.pass("template is overrided");
+		} else {
+			SimpleUtils.fail("Tatemplate isnot overrided", false);
+		}
+	}
+
+	public void verifyModifiedByAtLocationLevel(String templateName, String user) throws Exception {
+		WebElement modifiedBy = getDriver().findElement(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[4]"));
+		if (modifiedBy.getText().contains(user)) {
+			SimpleUtils.pass("" + templateName + "template is modified by " + user + "");
+		} else {
+			SimpleUtils.fail("" + templateName + "template is not modified by " + user + "", false);
 		}
 	}
 }

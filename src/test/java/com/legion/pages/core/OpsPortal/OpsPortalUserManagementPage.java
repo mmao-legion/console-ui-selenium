@@ -1371,5 +1371,143 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			SimpleUtils.fail("Refresh Balances button display",false);
 		}
 	}
+
+	@FindBy(css = "span.settings-work-role-details-edit-add-icon")
+	private WebElement addAssignmentRuleIcon;
+	@FindBy(xpath = "//div[contains(@class, 'settings-work-rule-save-icon settings-work-rule-save-icon-enabled')]")
+	private WebElement assignmentRuleSaveIcon;
+	@FindBy(xpath = "//div[@class = 'settings-work-rule-add-assignment-definition-selector row']//button")
+	private WebElement  teamMemberTitleButton;
+	@FindBy(xpath = "//div[@class = 'settings-work-rule-add-assignment-definition-selector row']//a")
+	private List<WebElement>  teamMemberTitleList;
+	@FindBy(xpath = "//div[@class = 'row settings-work-rule-add-staffing-definition-selector']//button")
+	private WebElement  assignmentRuleTimeButton;
+	@FindBy(xpath = "//div[@class = 'row settings-work-rule-add-staffing-definition-selector']//a")
+	private List<WebElement>  assignmentRuleTimeList;
+	@FindBy(xpath = "//div[@class = 'row settings-work-rule-add-assignment-definition-selector']//button")
+	private WebElement  assignmentConditionButton;
+	@FindBy(xpath = "//div[@class = 'row settings-work-rule-add-assignment-definition-selector']//a")
+	private List<WebElement>  assignmentConditionList;
+	@FindBy(xpath = "//input[contains(@class, 'setting-work-rule-staffing-numeric-value-edit')]")
+	private List<WebElement>  assignmentRuleInput;
+	@FindBy(xpath = "//lg-template-assignment-rule//span[contains(@class, 'setting-work-rule-assignment-title')]")
+	private List<WebElement>  assignmentRulesTitle;
+	public void addAssignmentRule(String teamMemberTitle, String assignmentRuleTime, String assignmentCondition, int staffingNumericValue, int priority, String badge) throws Exception{
+		addAssignmentRuleIcon.click();
+		teamMemberTitleButton.click();
+		if(teamMemberTitleList.size()>0){
+		for(WebElement tMTitle: teamMemberTitleList ){
+			if(tMTitle.getText().contains(teamMemberTitle)){
+				tMTitle.click();
+				break;
+			}
+		}}
+		assignmentRuleTimeButton.click();
+		if(assignmentRuleTimeList.size()>0){
+		for(WebElement aMTime: assignmentRuleTimeList ){
+			if(aMTime.getText().contains(assignmentRuleTime)){
+				aMTime.click();
+				break;
+			}
+		}}
+		assignmentConditionButton.click();
+		if(assignmentConditionList.size()>0){
+			for(WebElement aMCondition: assignmentConditionList ){
+			if(aMCondition.getText().contains(assignmentCondition)){
+				aMCondition.click();
+				break;
+			}
+		}}
+		assignmentRuleInput.get(0).sendKeys(String.valueOf(staffingNumericValue));
+		assignmentRuleInput.get(1).sendKeys(String.valueOf(priority));
+		addBadgeAssignmentRule(badge);
+		boolean isAssignmentRuleExit = false;
+		for(WebElement title: assignmentRulesTitle ){
+			if(title.getText().contains(teamMemberTitle)){
+				SimpleUtils.pass("assignment Rule add successfully");
+				isAssignmentRuleExit = true;
+				break;
+			}
+		}
+		if (!isAssignmentRuleExit){
+			SimpleUtils.fail("assignment Rule add failed",false);
+		}
+		click(saveBtn);
+		click(saveBtn);
+	}
+
+	@FindBy(xpath = "//button[@ng-click='confirmDeleteAction()']")
+	private WebElement  deleteConfirmButton;
+	public void deleteAssignmentRule(String teamMemberTitle) throws Exception {
+		WebElement title = getDriver().findElement(By.xpath("//lg-template-assignment-rule//span[contains(text(), '" + teamMemberTitle + "')]/parent::div/following::div[1]//span[2]"));
+		if (isExist(getDriver().findElement(By.xpath("//lg-template-assignment-rule//span[contains(text(), '" + teamMemberTitle + "')]/parent::div/following::div[1]//span[2]")))) {
+			getDriver().findElement(By.xpath("//lg-template-assignment-rule//span[contains(text(), '" + teamMemberTitle + "')]/parent::div/following::div[1]//span[2]")).click();
+			SimpleUtils.pass("assignment Rule exist");
+			if(isElementLoaded(deleteConfirmButton)){
+				deleteConfirmButton.click();
+			}
+			click(saveBtn);
+			click(saveBtn);
+		}else{
+			SimpleUtils.pass("assignment Rule not exist");
+		}
+
+	}
+
+	public void verifyAssignmentRuleBadge(String teamMemberTitle, String badge) throws Exception{
+		for(WebElement title: assignmentRulesTitle ){
+			if(title.getText().contains(teamMemberTitle)){
+				SimpleUtils.pass("assignment Rule exist");
+				if(isExist(title.findElement(By.xpath("/parent::*/work-role-badges-list/div']")))){
+					if(title.findElement(By.xpath("/parent::*/work-role-badges-list/div']")).getAttribute("data-tootik").trim().contains(badge)){
+						SimpleUtils.pass("badge is exist");
+					}else{
+						SimpleUtils.fail("badge is not exist",false);
+					};
+				}else {
+					SimpleUtils.pass("badge is not exist");
+				}
+			}else{
+				SimpleUtils.fail("assignment Rule not exist",false);
+			}
+		}
+	}
+
+	@FindBy(xpath = "//span[contains(text(),'Badge required')]//parent::div")
+	private WebElement badgeRequiredButton;
+	@FindBy(xpath = "//lg-search/input-field//input")
+	private WebElement badgeSearchInput;
+	@FindBy(css = "tr[ng-repeat=\"badge in filteredAndSortedBadges() track by badge.name\"]")
+	private List<WebElement> badgeListInAssignmentRuleTemplate;
+	@FindBy(xpath = "//work-role-badges-list/div")
+	private List<WebElement> addedBadges;
+
+	public void addBadgeAssignmentRule(String badgeName) throws Exception {
+		badgeRequiredButton.click();
+		if (isElementLoaded(badgeSearchInput, 5)) {
+			badgeSearchInput.clear();
+			badgeSearchInput.sendKeys(badgeName);
+			waitForSeconds(2);
+
+			if (areListElementVisible(badgeListInAssignmentRuleTemplate, 5)) {
+				for (WebElement s : badgeListInAssignmentRuleTemplate) {
+					String workRoleName = s.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+					if (workRoleName.contains(badgeName)) {
+						s.findElement(By.cssSelector("td input-field")).click();
+						waitForSeconds(2);
+						break;
+					}
+				}
+			}
+		}
+		assignmentRuleSaveIcon.click();
+		if (addedBadges.size() > 0) {
+			if (addedBadges.get(0).getAttribute("data-tootik").trim().contains(badgeName)) {
+				SimpleUtils.pass("Badge is added");
+			} else {
+				SimpleUtils.fail("Badge is added failed", false);
+			}
+		}
+	}
 }
 
