@@ -213,6 +213,8 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     private WebElement errorMes;
     @FindBy(css = "table.lg-table.service-level tr:nth-child(2)>td:nth-child(1) input")
     private WebElement serviceLever0;
+    @FindBy(css = "div.lg-search-options__scroller>div>div")
+    private List<WebElement> holidayList;
 
     //submit
     @FindBy(css = "lg-button[label='Cancel']>button")
@@ -525,7 +527,6 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     }
 
     public void setDateDistribution(String holiday, String hour){
-        dateSelect.click();
         dateSearch.clear();
         dateSearch.sendKeys(holiday);
         dateSearchResult.click();
@@ -559,6 +560,11 @@ public class TimeOffReasonConfigurationPage extends BasePage {
 
     public void showDistributionOfSpecifiedServiceLever0(){
         serviceLever0.click();
+    }
+
+    public ArrayList<String> getHolidayList() {
+        dateSelect.click();
+        return getWebElementsText(holidayList);
     }
 
 }

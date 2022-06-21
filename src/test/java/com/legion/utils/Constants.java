@@ -27,6 +27,7 @@ public class Constants {
     public static final String deleteAccrualByWorkerId ="https://rc-enterprise.dev.legion.work/legion/accrual/deleteAccrualByWorkerId";
     public static final String runAccrualJobWithSimulateDateAndWorkerId="https://rc-enterprise.dev.legion.work/legion/accrual/runAccrualJobWithSimulateDateAndWorkerId";
     public static final String toggles ="https://rc-enterprise.dev.legion.work/legion/toggles";
+    public static final String getHoliday ="https://rc-enterprise.dev.legion.work/legion/metadata/getHolidays";
 
     //downloadTranslation
     public static final String downloadTransation1 ="https://rc-enterprise.dev.legion.work/legion/translation/downloadTranslations";
