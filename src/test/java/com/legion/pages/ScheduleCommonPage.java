@@ -46,4 +46,6 @@ public interface ScheduleCommonPage {
     public void verifyHeaderOnSchedule() throws Exception;
     public List<String> getYearsFromCalendarMonthYearText() throws Exception;
     public void goToSchedule() throws Exception;
+    public boolean isSpecifyDayEqualWithFirstDayOfActivateWeek(String date) throws Exception;
+    public void clickOnFirstWeekInWeekPicker() throws Exception;
 }
