@@ -1309,22 +1309,22 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	@FindBy(css = "div[ng-if = 'canViewEmployeeAddress']>div.value.ng-binding")
 	private WebElement HRFileAddress;
 
-	public boolean verifyProfilePermission() throws Exception {
+	public Integer verifyProfilePermission() throws Exception {
 		waitForSeconds(3);
 		if (isElementDisplayed(HRFileAddress) && isElementDisplayed(profileAddress) && isElementDisplayed(profileEmail) && isElementDisplayed(profilePhone) && isElementDisplayed(workPreferences) && isElementDisplayed(timeOff)) {
 			click(workPreferences);
 			if (isExist(createWorkPreferences)) {
 				click(timeOff);
 				if (isExist(createTimeOff)) {
-					return true;
+					return 0;
 				} else {
-					return false;
+					return 1;
 				}
 			} else {
-				return false;
+				return 2;
 			}
 		}else{
-			return false;
+			return 3;
 		}
 	}
 
@@ -1364,7 +1364,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			SimpleUtils.fail("Refresh Balances display failed",false);
 	}
 
-	public void isRefreshBalancesDisplayed() throws Exception{
+	public void verifyRefreshBalancesNotDisplayed() throws Exception{
 		if(!isElementLoaded(refreshBalances,5)){
 			SimpleUtils.pass("Refresh Balances button doesn't display");
 		}else{

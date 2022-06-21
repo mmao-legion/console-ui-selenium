@@ -5,8 +5,12 @@ import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.OpsPortaPageFactories.SettingsAndAssociationPage;
+import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.pages.core.OpCommons.OpsCommonComponents;
 import com.legion.pages.core.opemployeemanagement.TimeOffPage;
+import com.legion.pages.core.schedule.ConsoleScheduleCommonPage;
+import com.legion.pages.core.schedule.ConsoleToggleSummaryPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -22,6 +26,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -46,6 +53,7 @@ public class ConfigurationTest extends TestBase {
 
         this.createDriver((String)params[0],"83","Window");
         ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
+        ToggleAPI.enableToggle(Toggles.EnableDemandDriverTemplate.getValue(), "stoneman@legion.co", "admin11.a");
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1251,5 +1259,268 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
-}
+    
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify category configuration in settings")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCategoryConfigurationInSettingsForDemandDriverTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String categoryName = "CategoryTest";
+            String categoryEditName = "CategoryTest-Update";
+            String description = "This is a test for Category configuration!";
+            String verifyType = "category";
 
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Settings tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+            //Add new category in settings.
+            settingsAndAssociationPage.createNewChannelOrCategory(verifyType, categoryName, description);
+            //Verify newly added category is in Forecast page
+            SimpleUtils.switchToPreviousWindow();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+            scheduleCommonPage.goToSchedulePage();
+            forecastPage.clickForecast();
+            salesForecastPage.navigateToSalesForecastTab();
+            SimpleUtils.assertOnFail("The newly added category not exist in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", "Enrollments"), false);
+
+            //edit the category in settings
+            SimpleUtils.switchToPreviousWindow();
+            settingsAndAssociationPage.clickOnEditBtnInSettings(verifyType, categoryName, categoryEditName);
+            //verify edited category is in Forecast page
+            SimpleUtils.switchToPreviousWindow();
+            refreshPage();
+            SimpleUtils.assertOnFail("The edited category not exist in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", "Enrollments"), false);
+
+            //remove the category in settings
+            SimpleUtils.switchToPreviousWindow();
+            settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, categoryEditName);
+            //verify the removed category not show up in forecast page.
+            SimpleUtils.switchToPreviousWindow();
+            refreshPage();
+            SimpleUtils.assertOnFail("The removed edited category should not display in forecast page!",
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryEditName), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Multiple Template E2E flow")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMultipleTemplateE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType="Operating Hours";
+            String templateName ="MultipleTemplateE2EUsing";
+            String button = "publish at different time";
+            int date = 14;
+            String locationName="MultipleTemplateE2EUsing";
+            HashMap<String, String> activeDayAndOperatingHrs = new HashMap<>();
+            String currentOperatingHour = "6AM-12AM";
+            String futureOperatingHour = "7AM-12AM";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //get the future template's effective date, such as Jun 15, 2022
+            String[] effectiveDate = configurationPage.updateEffectiveDateOfFutureTemplate(templateName,button,date).split(",");
+            Collections.reverse(Arrays.asList(effectiveDate));
+            //2022 Jun 15
+            String effectiveDate1 = String.join(" ", effectiveDate).trim();
+            String day = effectiveDate1.split(" ")[2];
+
+            // go to console side to check the result
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            LocationSelectorPage locationSelectorPage= new ConsoleLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+            //go to schedule function
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            // Navigate to the specified week
+            scheduleCommonPage.goToSpecificWeekByDate(effectiveDate1);
+            scheduleCommonPage.clickOnFirstWeekInWeekPicker();
+
+            // Ungenerate and create the schedule
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+
+            ToggleSummaryPage consoleToggleSummaryPage = pageFactory.createToggleSummaryPage();
+            //Check future template can show well or not
+            if(!scheduleCommonPage.isSpecifyDayEqualWithFirstDayOfActivateWeek(day)){
+                //go to next week
+                scheduleCommonPage.navigateToNextWeek();
+            }
+            activeDayAndOperatingHrs = consoleToggleSummaryPage.getOperatingHrsValue("Sun");
+            String futureOH = activeDayAndOperatingHrs.get("ScheduleOperatingHrs");
+            if(futureOH.contains(futureOperatingHour)){
+                SimpleUtils.pass("Future template can work well");
+            }else {
+                SimpleUtils.fail("Future template can NOT work well",false);
+            }
+            //Check current template can show well or not
+            scheduleCommonPage.navigateToPreviousWeek();
+            activeDayAndOperatingHrs = consoleToggleSummaryPage.getOperatingHrsValue("Sun");
+            String currentOH = activeDayAndOperatingHrs.get("ScheduleOperatingHrs");
+            if(currentOH.contains(currentOperatingHour)){
+                SimpleUtils.pass("Current template can work well");
+            }else {
+                SimpleUtils.fail("Current template can NOT work well",false);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify channel configuration in settings")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyChannelConfigurationInSettingsForDemandDriverTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String channelName = "ChannelTest";
+            String channelEditName = "ChannelTest-Update";
+            String description = "This is a test for channel configuration!";
+            String verifyType = "channel";
+
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Settings tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+            //Add new channel in settings.
+            settingsAndAssociationPage.createNewChannelOrCategory(verifyType, channelName, description);
+            //Verify newly added channel is in Forecast page
+            SimpleUtils.switchToPreviousWindow();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+            scheduleCommonPage.goToSchedulePage();
+            forecastPage.clickForecast();
+            salesForecastPage.navigateToSalesForecastTab();
+            SimpleUtils.assertOnFail("The newly added channel not exist in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage(verifyType, channelName), false);
+
+            //edit the channel in settings
+            SimpleUtils.switchToPreviousWindow();
+            settingsAndAssociationPage.clickOnEditBtnInSettings(verifyType, channelName, channelEditName);
+            //verify edited channel is in Forecast page
+            SimpleUtils.switchToPreviousWindow();
+            refreshPage();
+            SimpleUtils.assertOnFail("The edited channel not exist in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage(verifyType, channelEditName), false);
+
+            //remove the channel in settings
+            SimpleUtils.switchToPreviousWindow();
+            settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, channelEditName);
+            //verify the removed channel not show up in forecast page.
+            SimpleUtils.switchToPreviousWindow();
+            refreshPage();
+            SimpleUtils.assertOnFail("The removed edited channel should not display in forecast page!",
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage(verifyType, channelEditName), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Location Level override")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationLevelOverriddenAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType="Operating Hours";
+            String templateName ="MultipleTemplateE2EUsing";
+            String locationName="MultipleTemplateLocationLevelChecking";
+            HashMap<String, String> activeDayAndOperatingHrs = new HashMap<>();
+            String overriddenOperatingHour = "8AM-12AM";
+            List<String> effectiveDatesOfMultipleTemplates = new ArrayList<String>();
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //get the future template's effective date, such as Jun 15, 2022
+            effectiveDatesOfMultipleTemplates = configurationPage.getEffectiveDateForTemplate(templateName);
+            String[] effectiveDate = effectiveDatesOfMultipleTemplates.get(effectiveDatesOfMultipleTemplates.size()-1).split(",");
+            Collections.reverse(Arrays.asList(effectiveDate));
+            //2022 Jun 15
+            String effectiveDate1 = String.join(" ", effectiveDate).trim();
+            String day = effectiveDate1.split(" ")[2];
+
+            // go to console side to check the result
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            LocationSelectorPage locationSelectorPage= new ConsoleLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+            //go to schedule function
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            // Navigate to the specified week
+            scheduleCommonPage.goToSpecificWeekByDate(effectiveDate1);
+            scheduleCommonPage.clickOnFirstWeekInWeekPicker();
+
+            // Ungenerate and create the schedule
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+
+            ToggleSummaryPage consoleToggleSummaryPage = pageFactory.createToggleSummaryPage();
+            //Check future template can show well or not
+            if(!scheduleCommonPage.isSpecifyDayEqualWithFirstDayOfActivateWeek(day)){
+                //go to next week
+                scheduleCommonPage.navigateToNextWeek();
+            }
+            activeDayAndOperatingHrs = consoleToggleSummaryPage.getOperatingHrsValue("Sun");
+            String futureOH = activeDayAndOperatingHrs.get("ScheduleOperatingHrs");
+            if(futureOH.contains(overriddenOperatingHour)){
+                SimpleUtils.pass("Future week's OH is showing with overridden value.");
+            }else {
+                SimpleUtils.fail("Future week's OH isn't showing with overridden value.",false);
+            }
+            //Check current template can show well or not
+            scheduleCommonPage.navigateToPreviousWeek();
+            activeDayAndOperatingHrs = consoleToggleSummaryPage.getOperatingHrsValue("Sun");
+            String currentOH = activeDayAndOperatingHrs.get("ScheduleOperatingHrs");
+            if(currentOH.contains(overriddenOperatingHour)){
+                SimpleUtils.pass("Current week's OH is showing with overridden value.");
+            }else {
+                SimpleUtils.fail("Current week's OH isn't showing with overridden value.",false);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+}

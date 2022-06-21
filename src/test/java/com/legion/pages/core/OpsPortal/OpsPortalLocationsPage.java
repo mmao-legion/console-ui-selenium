@@ -4276,10 +4276,108 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(okBtnInSelectLocation);
 		}
 	}
+
+	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
+	private List<WebElement> workRoleListInAssignmentRuleTemplate;
 	@Override
-	public void clickRestForTemplate(String templateName){
+	public void searchWorkRoleInAssignmentRuleTemplate(String workRole) throws Exception {
+		if (isElementLoaded(searchByWorkRoleInput, 5)) {
+			searchByWorkRoleInput.clear();
+			searchByWorkRoleInput.sendKeys(workRole);
+			waitForSeconds(2);
+
+			if (areListElementVisible(workRoleListInAssignmentRuleTemplate, 5)) {
+				for (WebElement s : workRoleListInAssignmentRuleTemplate) {
+					String workRoleName = s.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+					if (workRoleName.contains(workRole)) {
+						clickTheElement(s.findElement(By.cssSelector("td:nth-child(1) lg-button")));
+						waitForSeconds(2);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	@FindBy(css = "location-level-assignment-rule.ng-isolate-scope")
+	private List<WebElement> assignmentRules;
+	@FindBy(css = "(//location-level-assignment-rule)[1]//div[@class='settings-work-rule-assignment-string-format']/span[not(contains(@ng-show,'isExtendedCondition'))]")
+	private List<WebElement> assignmentRuleContent;
+
+	public void verifyAssignmentRulesFromLocationLevel(String assignmentRule) throws Exception {
+
+		if (assignmentRules.size() != 0) {
+			for (WebElement content : assignmentRuleContent) {
+				if (assignmentRule.contains(content.getText())) {
+					SimpleUtils.pass("AssignmentRules aligned with template level");
+				} else {
+					SimpleUtils.fail("AssignmentRules does not aligned with template level", false);
+				}
+			}
+		} else {
+			SimpleUtils.fail("no assignment role", false);
+		}
 
 	}
 
+	@FindBy(css = "location-level-assignment-rule div.settings-work-rule-number")
+	private List<WebElement> assignmentRuleEditStatues;
+	@FindBy(xpath = "//location-level-assignment-rule/div/div[2]/div/div[2]")
+	private WebElement assignmentRuleModeBox;
+	@FindBy(css = "div.settings-work-rule-save-icon")
+	private WebElement assignmentRuleSaveIcon;
+
+	public void changeAssignmentRuleStatusFromLocationLevel(String status) throws Exception {
+		if (isElementLoaded(assignmentRuleEditStatues.get(0), 3)) {
+			assignmentRuleEditStatues.get(0).click();
+			assignmentRuleModeBox.click();
+			assignmentRuleSaveIcon.click();
+			if (assignmentRuleEditStatues.get(0).getAttribute("data-tootik").trim().contains(status)) {
+				SimpleUtils.pass("AssignmentRules status updated");
+			} else {
+				SimpleUtils.fail("AssignmentRules status updated failed", false);
+			}
+		} else {
+			SimpleUtils.fail("no AdvancedStaffingRule in the template", false);
+		}
+	}
+
+	@FindBy(xpath = "//span[contains(text(),'Badge required')]//parent::div")
+	private WebElement badgeRequiredButton;
+	@FindBy(xpath = "//lg-search/input-field//input")
+	private WebElement badgeSearchInput;
+	@FindBy(css = "tr[ng-repeat=\"badge in filteredAndSortedBadges() track by badge.name\"]")
+	private List<WebElement> badgeListInAssignmentRuleTemplate;
+	@FindBy(xpath = "//work-role-badges-list/div")
+	private List<WebElement> addedBadges;
+
+	public void addBadgeAssignmentRuleStatusFromLocationLevel(String badgeName) throws Exception {
+		assignmentRuleEditStatues.get(0).click();
+		badgeRequiredButton.click();
+		if (isElementLoaded(badgeSearchInput, 5)) {
+			badgeSearchInput.clear();
+			badgeSearchInput.sendKeys(badgeName);
+			waitForSeconds(2);
+
+			if (areListElementVisible(badgeListInAssignmentRuleTemplate, 5)) {
+				for (WebElement s : badgeListInAssignmentRuleTemplate) {
+					String workRoleName = s.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+					if (workRoleName.contains(badgeName)) {
+						s.findElement(By.cssSelector("td input-field")).click();
+						waitForSeconds(2);
+						break;
+					}
+				}
+			}
+		}
+		assignmentRuleSaveIcon.click();
+		if (addedBadges.size() > 0) {
+			if (addedBadges.get(0).getAttribute("data-tootik").trim().contains(badgeName)) {
+				SimpleUtils.pass("Badge is added");
+			} else {
+				SimpleUtils.fail("Badge is added failed", false);
+			}
+		}
+	}
 }
 

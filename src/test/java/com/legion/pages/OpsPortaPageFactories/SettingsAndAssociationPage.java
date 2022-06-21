@@ -1,5 +1,7 @@
 package com.legion.pages.OpsPortaPageFactories;
 
+import org.openqa.selenium.WebElement;
+
 import java.util.List;
 
 public interface SettingsAndAssociationPage {
@@ -25,4 +27,8 @@ public interface SettingsAndAssociationPage {
     public boolean areFieldsCheckInputEnabled() throws Exception;
     public void verifyConflictDetectionInfo() throws Exception;
     public void clickOnButtonOnTheConflictDetectedWindow(String cancelOrSave) throws Exception;
+    public void createNewChannelOrCategory(String type, String displayName, String description) throws Exception;
+    public WebElement searchSettingsForDemandDriver(String verifyType, String Name) throws Exception;
+    public void clickOnEditBtnInSettings(String verifyType, String Name, String NewName) throws Exception;
+    public void clickOnRemoveBtnInSettings(String verifyType, String Name) throws Exception;
 }

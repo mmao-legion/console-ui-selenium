@@ -16,4 +16,5 @@ public interface SalesForecastPage {
 	public Boolean verifyCurrentUserWithUserJobTitle(HashMap<String, String> propertyMap, String jobTitle);
 	public boolean loadSalesForecast() throws Exception;
 	public void loadSalesForecastforCurrentNFutureWeek(String nextWeekView, int weekCount) throws Exception;
+	public boolean verifyChannelOrCategoryExistInForecastPage(String filterType, String filterName) throws Exception;
 }

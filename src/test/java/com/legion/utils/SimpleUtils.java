@@ -42,7 +42,7 @@ import static org.testng.AssertJUnit.assertTrue;
 public class SimpleUtils {
 
 	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
-	//	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
+//		static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
 	static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
 	static HashMap<String,String> testRailCfgOp = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_OP.json");
 	static String chrome_driver_path = parameterMap.get("CHROME_DRIVER_PATH");
@@ -2014,5 +2014,17 @@ public class SimpleUtils {
 			}
 		}
 		return isSame;
+	}
+
+	public static void switchToPreviousWindow(){
+		String previousHandler = "";
+		String currentHandler = getDriver().getWindowHandle();
+		Set<String> handles = getDriver().getWindowHandles();
+		for(String handle : handles){
+			if(!currentHandler.equals(handle)){
+				previousHandler = handle;
+			}
+		}
+		getDriver().switchTo().window(previousHandler);
 	}
 }
