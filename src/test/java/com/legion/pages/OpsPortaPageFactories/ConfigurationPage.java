@@ -139,5 +139,6 @@ public interface ConfigurationPage {
     public void changeAdvanceStaffRuleStatusFromLocationLevel(int i) throws Exception;
     public void verifyCanNotAddAdvancedStaffingRuleFromTemplateLevel() throws Exception;
     public void verifyCanNotEditDeleteAdvancedStaffingRuleFromTemplateLevel() throws Exception;
-
+    public String updateEffectiveDateOfFutureTemplate(String templateName,String button,int date) throws Exception;
+    public List<String> getEffectiveDateForTemplate(String templateName) throws Exception;
 }

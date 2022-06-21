@@ -5,6 +5,7 @@ import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
+import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -2191,7 +2192,6 @@ public class LocationsTest extends TestBase {
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
             List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
             locationsPage.clickActionsForTemplate("Scheduling Rules", "Edit");
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -2223,7 +2223,6 @@ public class LocationsTest extends TestBase {
             configurationPage.changeAdvanceStaffRuleStatusFromLocationLevel(0);
             configurationPage.saveBtnIsClickable();
             configurationPage.saveBtnIsClickable();
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
             locationsPage.clickActionsForTemplate("Scheduling Rules", "Reset");
             //Verify schdule can be generated correctly according to location level advance staffing rule which has been overridden.
 
@@ -2241,6 +2240,7 @@ public class LocationsTest extends TestBase {
 
         try {
             String locationName = "locationAutoCreateForYang";
+            String workRoleName = "AMBASSADOR";
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -2250,21 +2250,83 @@ public class LocationsTest extends TestBase {
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
             List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
             //Validate location - configuration tab should have assignment rules template.
             //Validate user can view location level assignment rules template
             locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
             //Validate location level assignment rules template should be aligned with global level by default.
-            locationsPage.searchWorkRoleInAssignmentRuleTemplate("AMBASSADOR");
-            String assignmentRule = "Ambassador should be assigned to AMBASSADOR at all hours . with priority 0 .";
-            //locationsPage.verifyAssignmentRulesFromLocationLevel(assignmentRule);
+            locationsPage.searchWorkRoleInAssignmentRuleTemplate(workRoleName);
+            String assignmentRule = "Ambassador";
+            locationsPage.verifyAssignmentRulesFromLocationLevel(assignmentRule);
             //Validate user can enable location level assignment rules template.
             //Validate user can disable location level assignment rules template.
             locationsPage.changeAssignmentRuleStatusFromLocationLevel("disable");
             locationsPage.changeAssignmentRuleStatusFromLocationLevel("enable");
             //Validate user can update badges at location level assignment rules template.;
             locationsPage.addBadgeAssignmentRuleStatusFromLocationLevel("20210713152098");
+            //Validate Overridden column for assignment rules template at location level.
+            locationsPage.verifyOverrideStatusAtLocationLevel("Assignment Rules");
+            //Validate Overridden column for assignment rules template at location level.
+            locationsPage.verifyOverrideStatusAtLocationLevel("Assignment Rules");
+            //Validate Last Modified Date and Last Modified By column for assignment rules template at location level.
+            //Validate user can reset location level assignment rules template.
+            locationsPage.clickActionsForTemplate("Assignment Rules", "Reset");
 
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Assignment Rules content and enable/disable rule/add Badge")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verify1AssignmentRulesInLocationLevelAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try {
+            String workRoleName = "AMBASSADOR";
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+            userManagementPage.verifySearchWorkRole(workRoleName);
+            userManagementPage.verifyEditBtnIsClickable();
+            userManagementPage.goToWorkRolesDetails(workRoleName);
+            userManagementPage.addAssignmentRule("DM Planer", "At all Hours", "At least", 2, 1, "20210713152098");
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            //Validate the new added assignment rules at global level should be enabled at location level by default.
+            locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
+            locationsPage.searchWorkRoleInAssignmentRuleTemplate("AMBASSADOR");
+            String assignmentRuleTitle = "DM Planer";
+            locationsPage.verifyAssignmentRulesFromLocationLevel(assignmentRuleTitle);
+            //Validate the location level assignment rule's badge info should not be changed after updating global assignment rules when
+            //Validate the global assignment rules should not be changed after change one location level assignment rule.
+            userManagementPage.verifyAssignmentRuleBadge(assignmentRuleTitle, "20210713152098");
+            //Validate user can't update priority at location level assignment rules.
+            locationsPage.verifyAssignmentRulePriorityCannotBeEdit(assignmentRuleTitle);
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+            userManagementPage.verifySearchWorkRole(workRoleName);
+            userManagementPage.verifyEditBtnIsClickable();
+            userManagementPage.goToWorkRolesDetails(workRoleName);
+            userManagementPage.deleteAssignmentRule(assignmentRuleTitle);
+            //Validate that the global level assignment rule can work well when location didn't have location level assignment rules.
+            //Validate that the location level assignment rule can work well when have location level assignment rules.
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.VerifyStaffListInSchedule("AMBASSADOR");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
