@@ -4630,4 +4630,85 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("no AdvancedStaffingRule in the template",false);
 		}
 	}
+
+	//added by Fiona
+	@FindBy(css="div.lg-table div[ng-repeat*=\"childTemplate\"]:last-child")
+	private WebElement lastGroupInFutureTemplate;
+	@FindBy(css="div.lg-table div[ng-repeat*=\"childTemplate\"]:last-child>div")
+	private List<WebElement> lastGroupInFutureTemplates;
+	@FindBy(css="div.lg-table div[ng-repeat*=\"childTemplate\"]:last-child>div:last-child button")
+	private WebElement draftNameInLastGroupOfFutureTemplates;
+	@FindBy(css="div.lg-table div[ng-repeat*=\"childTemplate\"]:last-child>div button")
+	private WebElement publishedNameInLastGroupOfFutureTemplates;
+	@FindBy(css="modal[modal-title=\"Replacing Existing Published Status\"]")
+	private WebElement replacingExistingPublishedStatusPopup;
+
+	@Override
+	public String updateEffectiveDateOfFutureTemplate(String templateName,String button,int date) throws Exception{
+		List<String> effectiveDates = new ArrayList<String>();
+		String effectDate = null;
+		//update existing future published version template
+		waitForSeconds(2);
+		expandMultipleVersionTemplate(templateName);
+		if(areListElementVisible(multipleTemplateList,3)){
+			if(lastGroupInFutureTemplates.size()>1){
+				//click the last group future's draft template
+				clickTheElement(draftNameInLastGroupOfFutureTemplates);
+				waitForSeconds(5);
+				clickOnEditButtonOnTemplateDetailsPage();
+				scrollToBottom();
+				chooseSaveOrPublishBtnAndClickOnTheBtn(button);
+				if(isElementLoaded(dateOfPublishPopup,2)){
+					clickTheElement(effectiveDate);
+					setEffectiveDate(date);
+					clickTheElement(okButtonOnFuturePublishConfirmDialog);
+				}else {
+					SimpleUtils.fail("The future publish template confirm dialog is not displayed.",false);
+				}
+				if(isElementLoaded(replacingExistingPublishedStatusPopup,3)){
+					clickTheElement(okButtonOnFuturePublishConfirmDialog);
+				}
+			}else {
+				//click the last group future's published template
+				clickTheElement(publishedNameInLastGroupOfFutureTemplates);
+				waitForSeconds(5);
+				clickOnEditButtonOnTemplateDetailsPage();
+				scrollToBottom();
+				chooseSaveOrPublishBtnAndClickOnTheBtn(button);
+				if(isElementLoaded(dateOfPublishPopup,2)){
+					clickTheElement(effectiveDate);
+					setEffectiveDate(date);
+					clickTheElement(okButtonOnFuturePublishConfirmDialog);
+				}else {
+					SimpleUtils.fail("The future publish template confirm dialog is not displayed.",false);
+				}
+				if(isElementLoaded(replacingExistingPublishedStatusPopup,3)){
+					clickTheElement(okButtonOnFuturePublishConfirmDialog);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Template list is not displayed!",false);
+		}
+		effectiveDates = getEffectiveDateForTemplate(templateName);
+		effectDate = effectiveDates.get(effectiveDates.size()-1);
+		return effectDate;
+	}
+
+	@Override
+	public List<String> getEffectiveDateForTemplate(String templateName) throws Exception{
+		List<String> effectiveDates = new ArrayList<String>();
+		expandMultipleVersionTemplate(templateName);
+		if(areListElementVisible(multipleTemplateList,3)){
+			for(WebElement multipleTemplate:multipleTemplateList){
+				String effectiveDate = multipleTemplate.findElement(By.cssSelector(".date")).getText().trim();
+				//get all effectiveDate
+				if(!effectiveDate.isEmpty()||effectiveDate!=null) {
+					effectiveDates.add(effectiveDate);
+				}
+			}
+		}else {
+			SimpleUtils.fail("Multiple template doesn't show well! ",false);
+		}
+		return effectiveDates;
+	}
 }
