@@ -1,5 +1,7 @@
 package com.legion.tests.core.opEmployeeManagement;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
@@ -24,9 +26,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AccrualEngineTest extends TestBase {
     @Override
@@ -1074,6 +1074,11 @@ public class AccrualEngineTest extends TestBase {
         configurationPage.addSpecifiedServiceLever(0, "25", "0", "25");
         Assert.assertEquals(configurationPage.getDistributionType(), "Date", "Failed to assert the Distribution Switch to the Specified date!");
         SimpleUtils.pass("Succeeded in switching to the Specified date distribution!");
+        //Verify holiday list
+        ArrayList<String> hol = configurationPage.getHolidayList();
+        ArrayList<String> usHoliday = getHolidaysViaAPI(logIn());
+        Assert.assertTrue(hol.size() == usHoliday.size() && hol.containsAll(usHoliday) && usHoliday.containsAll(hol));
+        SimpleUtils.pass("Succeeded in validating the holiday options are default US holidays!");
         //add new holidays
         //search a holiday
         configurationPage.setDateDistribution("Labor Day", "8");
@@ -1103,7 +1108,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "OPS-4071 GM Holiday.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualGMHolidayWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
@@ -1124,7 +1129,7 @@ public class AccrualEngineTest extends TestBase {
         modelSwitchPage.switchToNewTab();
         //search and go to the target location
         ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
-        consoleNavigationPage.searchLocation("OMLocation16 -NO touch!!!");
+        consoleNavigationPage.searchLocation("OMLocation16");
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
@@ -1193,7 +1198,6 @@ public class AccrualEngineTest extends TestBase {
         String[] accrualResponse2 = runAccrualJobToSimulateDate(workerId, beforeDrMartinLutherKing, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse2), 200, "Failed to run accrual job!");
         //expected accrual
-        expectedTOBalance.put("Floating Holiday", "1");
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
@@ -1271,7 +1275,7 @@ public class AccrualEngineTest extends TestBase {
          * Labor Day: 2022-09-05, service lever 1     +8hours
          * Christmas Day: 2022-12-25, service lever 1 +8hours
          * */
-        String acrossServiceleverDate = "2022-09-06";
+        /*String acrossServiceleverDate = "2022-09-06";
         String[] accrualResponse7 = runAccrualJobToSimulateDate(workerId, acrossServiceleverDate, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse7), 200, "Failed to run accrual job!");
         //expected accrual
@@ -1284,7 +1288,30 @@ public class AccrualEngineTest extends TestBase {
         HashMap<String, String> accrualBalance7 = timeOffPage.getTimeOffBalance();
         String verification7 = validateTheAccrualResults(accrualBalance7, expectedTOBalance);
         Assert.assertTrue(verification7.contains("Succeeded in validating"), verification7);
-        SimpleUtils.pass("Succeeded in validating GM holiday accrued correctly when across the service lever!");
+        SimpleUtils.pass("Succeeded in validating GM holiday accrued correctly when across the service lever!");*/
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "OPS-4071 GM Holiday.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAccrualFixedDaysUIAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        //verify that employee management is enabled.
+        navigationPage.navigateToEmployeeManagement();
+        SimpleUtils.pass("EmployeeManagement Module is enabled!");
+        //go to the time off management page
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToTimeOffManagementPage();
+        //verify that the target template is here.
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        String targetTemplate = "Accrual Auto GM Holiday";
+        absentManagePage.search(targetTemplate);
+        Assert.assertTrue(absentManagePage.getResult().equals(targetTemplate), "Failed the find the target template!");
+        SimpleUtils.pass("Succeeded in finding the target template!");
+
+
     }
 
 
@@ -1301,6 +1328,23 @@ public class AccrualEngineTest extends TestBase {
                 System.out.println(value);
             }
         }
+    }
+
+    public ArrayList<String> getHolidaysViaAPI(String sessionId) {
+        String holidayUrl = Constants.getHoliday;
+        Map<String, String> holidayPara = new HashMap<>();
+        holidayPara.put("countryCode", "US");
+        String[] response = HttpUtil.httpGet(holidayUrl, sessionId, holidayPara);
+        Assert.assertEquals(getHttpStatusCode(response), 200, "Failed to getHolidays!");
+        //get the response
+        String records = ((JsonUtil.getJsonValue(response[1], "records")));
+        JSONArray re=JSON.parseArray(records);// from string to Array
+        ArrayList<String> holidays = new ArrayList<>();
+        for (int i = 0; i < re.size(); i++) {
+            String holidayName = JsonUtil.getJsonValue(re.get(i).toString(), "name");
+            holidays.add(holidayName);
+        }
+        return holidays;
     }
 
 }
