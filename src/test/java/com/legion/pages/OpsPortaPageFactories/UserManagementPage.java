@@ -136,8 +136,6 @@ public interface UserManagementPage {
 
     public void verifyRefreshBalancesNotDisplayed() throws Exception;
 
-    public void isRefreshBalancesDisplayed() throws Exception;
-
     public void addAssignmentRule(String teamMemberTitle, String assignmentRuleTime, String assignmentCondition, int staffingNumericValue, int priority, String badge) throws Exception;
 
     public void deleteAssignmentRule(String teamMemberTitle) throws Exception;
