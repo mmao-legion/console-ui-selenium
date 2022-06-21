@@ -48,4 +48,5 @@ public interface ScheduleCommonPage {
     public void goToSchedule() throws Exception;
     public boolean isSpecifyDayEqualWithFirstDayOfActivateWeek(String date) throws Exception;
     public void clickOnFirstWeekInWeekPicker() throws Exception;
+    public void VerifyStaffListInSchedule(String name) throws Exception;
 }

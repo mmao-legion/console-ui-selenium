@@ -875,21 +875,34 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
         dayInfo.put("month", activeDay[3]);
         dayInfo.put("day", activeDay[4]);
         dayInfo.put("year", getYearsFromCalendarMonthYearText().get(0));
-
         return dayInfo;
     }
 
     @Override
-    public boolean isSpecifyDayEqualWithFirstDayOfActivateWeek(String day) throws Exception{
-        boolean flag =true;
+    public boolean isSpecifyDayEqualWithFirstDayOfActivateWeek(String day) throws Exception {
+        boolean flag = true;
         String date = getSelectedWeekInfo().get("day");
-        if(Integer.parseInt(day) == Integer.parseInt(date)){
+        if (Integer.parseInt(day) == Integer.parseInt(date)) {
             SimpleUtils.pass("Template effective day is the first day of selected week.");
-        }else {
+        } else {
             flag = false;
-            SimpleUtils.fail("Template effective day is the first day of selected week.",true);
+            SimpleUtils.fail("Template effective day is the first day of selected week.", true);
         }
         return flag;
     }
 
+
+    @FindBy(xpath = "//table[@class='generate-schedule-staffing']//tr[@class]/td[2]")
+    private List<WebElement> staffNameList;
+
+    public void VerifyStaffListInSchedule(String name) throws Exception {
+        for (int i = 0; i < staffNameList.size(); i++) {
+            if (staffNameList.get(i).getText().contains(name)) {
+                SimpleUtils.pass("Staff name is showing");
+                break;
+            } else {
+                SimpleUtils.fail("Staff name is not showing", true);
+            }
+        }
+    }
 }
