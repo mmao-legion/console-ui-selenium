@@ -4408,7 +4408,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				} else {
 					SimpleUtils.fail("assignmentRulePriority can be edit", false);
 				}
-				;
 			}
 		} else {
 			SimpleUtils.fail("no priority est", false);
@@ -4419,7 +4418,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isExist(getDriver().findElement(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/span")))) {
 			SimpleUtils.pass("template is overrided");
 		} else {
-			SimpleUtils.fail("Tatemplate isnot overrided", false);
+			SimpleUtils.fail("Template is not overrided", false);
 		}
 	}
 

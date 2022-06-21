@@ -1449,7 +1449,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			click(saveBtn);
 			click(saveBtn);
 		}else{
-			SimpleUtils.pass("assignment Rule not exist");
+			SimpleUtils.fail("assignment Rule not exist", false);
 		}
 
 	}
@@ -1465,7 +1465,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 						SimpleUtils.fail("badge is not exist",false);
 					};
 				}else {
-					SimpleUtils.pass("badge is not exist");
+					SimpleUtils.fail("badge is not exist",falsegitgit);
 				}
 			}else{
 				SimpleUtils.fail("assignment Rule not exist",false);
