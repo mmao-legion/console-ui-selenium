@@ -1440,8 +1440,8 @@ public class AccrualEngineTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "OPS-4071 GM Holiday.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @TestName(description = "OPS-3078 Puerto Rico")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyAccrualFixedDaysUIAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
@@ -1452,10 +1452,107 @@ public class AccrualEngineTest extends TestBase {
         panelPage.goToTimeOffManagementPage();
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
-        String targetTemplate = "Accrual Auto GM Holiday";
+        String targetTemplate = "AccrualAuto-FixedDays(Don't touch!!!)";
         absentManagePage.search(targetTemplate);
         Assert.assertTrue(absentManagePage.getResult().equals(targetTemplate), "Failed the find the target template!");
         SimpleUtils.pass("Succeeded in finding the target template!");
+        //fixed days ui validation
+        absentManagePage.configureTemplate("AccrualAuto-FixedDays(Don't touch!!!)");
+        absentManagePage.configureTimeOffRules("Sick");
+        //verify that eligibility rules has been added in UI
+        TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
+        configurationPage.getEligibilityTitle();
+        Assert.assertTrue(configurationPage.getEligibilityTitle().contains("Employee must work")&&configurationPage.getEligibilityTitle().contains("hours over the last"));
+        SimpleUtils.pass("Succeeded in validating eligibility rules was added in UI!");
+        //set accrual period
+        configurationPage.setAccrualPeriod("Specified Date", "Specified Date", "January", "1", "December", "31");
+        SimpleUtils.pass("Succeeded in setting accrual period!");
+        //verify new distribution type (Fixed days)has been added.
+        configurationPage.setDistributionMethod("Worked Hours");
+        Assert.assertTrue(configurationPage.getWorkedHoursDistributionTypeOptions().contains("Fixed Days"));
+        SimpleUtils.pass("Succeeded in validating new distribution type---Fixed Days was added!");
+        //verify the new distribution method can be selected.
+        configurationPage.setDistributionType("Fixed Days");
+        SimpleUtils.pass("Succeeded in validating new distribution method---Fixed Days can be selected!");
+        //verify the distribution switch to the Specified one.
+        configurationPage.addSpecifiedServiceLever(0, "60", "5", "65");
+        Assert.assertEquals(configurationPage.getFixedDaysLabel(), "Fixed Days", "Failed to assert the Distribution Switch to the Fixed Days!");
+        SimpleUtils.pass("Succeeded in switching to the Fixed days distribution!");
+        //configure the fixed days distribution.
+        configurationPage.setFixedDaysDistribution("10","3");
+        SimpleUtils.pass("Succeeded in setting Fixed days distribution!");
+        //save the configuration
+        configurationPage.saveTimeOffConfiguration(true);
+        SimpleUtils.pass("Succeeded in saving fixed days configurations!");
+        //roll back the settings.
+        absentManagePage.removeTimeOffRules("Sick");
+        OpsCommonComponents components = new OpsCommonComponents();
+        components.saveTemplateAs("Save as draft");
+
+        //switch to console
+        RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        modelSwitchPage.switchToNewTab();
+        //search and go to the target location
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("OMLocation16");
+        //go to team member details and switch to the time off tab.
+        consoleNavigationPage.navigateTo("Team");
+        TimeOffPage timeOffPage = new TimeOffPage();
+        String teamMemName = "Cherry Li";
+        timeOffPage.goToTeamMemberDetail(teamMemName);
+        timeOffPage.switchToTimeOffTab();
+
+        //get session id via login
+        String sessionId = logIn();
+        //set UseAbsenceMgmtConfiguration Toggle On
+        if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
+            String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
+            Assert.assertEquals(getHttpStatusCode(toggleResponse), 200, "Failed to get the user's template!");
+        }
+        //confirm template
+        String workerId = "1523a61c-d9e4-4ee6-97f9-b8195ae6f990";
+        String tempName = getUserTemplate(workerId, sessionId);
+        Assert.assertEquals(tempName, targetTemplate, "The user wasn't associated to this Template!!! ");
+        SimpleUtils.pass("Succeeded in validating employee was associated to the target template!");
+
+        //create a time off balance map to store the expected time off balances.
+        HashMap<String, String> expectedTOBalance = new HashMap<>();
+        expectedTOBalance.put("Annual Leave", "0");//Hire Date 02/01/2021~ Hire Date
+        expectedTOBalance.put("PTO", "0");//Hire Date 02/01/2021 ~ SpecifiedDate 12/31
+
+        //Delete the worker's accrual balance
+        String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
+        Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> actualTOB = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(actualTOB, expectedTOBalance, "Failed to clear the employee's accrual balance!");
+        SimpleUtils.pass("Succeeded in clearing employee's accrual balance!");
+
+        //< eligibility rules:  10/21/2021~10/30/2021  in total:55.67(approved)   leave 10/29 5hrs as pending  8/18/28
+        //> eligibility rules: 10/31/2021~11/09/2021  in total:60.6(approved)     leave 11/02 10hrs as pending   7/17/27
+        //= eligibility rules: 11/10/2021~11/19/2021  in total:60(approved)     leave 11/19 2.5hrs as pending
+        //PTO set as no eligibility rules.
+        String Date1 = "2021-10-28";
+        String Date2 = "2021-10-30";
+        String Date3 = "2021-03-01";
+        String Date4 = "2021-06-01";
+        String Date5 = "2021-09-06";
+        String Date6 = "2021-12-25";
+        String Date7 = "2021-12-31";
+
+        //Run engine to the New Years Day:
+        String[] accrualResponse1 = runAccrualJobToSimulateDate(workerId, Date1, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse1), 200, "Failed to run accrual job!");
+        //expected accrual
+        expectedTOBalance.put("Floating Holiday", "1");//SpecifiedDate 01/01 ~ SpecifiedDate 12/31
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance1 = timeOffPage.getTimeOffBalance();
+        String verification1 = validateTheAccrualResults(accrualBalance1, expectedTOBalance);
+        Assert.assertTrue(verification1.contains("Succeeded in validating"), verification1);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
 
 
     }
