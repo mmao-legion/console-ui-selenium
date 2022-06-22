@@ -990,7 +990,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "9am,4pm";
             String shiftTime3 = "8am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "8am - 4pm";
+            String scheduleFromToTime = "8:00 AM - 4:00 PM";
             String scheduleMaxHours = "6";
             String selectWeekDayName = "Mon";
 //            setStrictlyEnforceMinorViolationSetting("No");
@@ -1016,7 +1016,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "9am,4pm";
             String shiftTime3 = "9am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "8:30am - 4pm";
+            String scheduleFromToTime = "8:30 AM - 4:00 PM";
             String scheduleMaxHours = "5";
             String selectWeekDayName = "Mon";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
@@ -1039,7 +1039,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "9am,5pm";
             String shiftTime3 = "11am,4pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "8:30am - 5pm";
+            String scheduleFromToTime = "8:30 AM - 5:00 PM";
             String scheduleMaxHours = "5";
             String selectWeekDayName = "Fri";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
@@ -1062,7 +1062,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "9am,5pm";
             String shiftTime3 = "9am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "9am - 5pm";
+            String scheduleFromToTime = "9:00 AM - 5:00 PM";
             String scheduleMaxHours = "6";
             String selectWeekDayName = "Fri";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
@@ -1084,7 +1084,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "9am,6pm";
             String shiftTime3 = "9am,3pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "9am - 6pm";
+            String scheduleFromToTime = "9:00 AM - 6:00 PM";
             String scheduleMaxHours = "7";
             String selectWeekDayName = "Sat";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
@@ -1108,7 +1108,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "10am,7pm";
             String shiftTime3 = "10am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "9:30am - 7pm";
+            String scheduleFromToTime = "9:30 AM - 7:00 PM";
             String scheduleMaxHours = "7";
             String selectWeekDayName = "Sat";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
@@ -1132,7 +1132,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "10am,9pm";
             String shiftTime3 = "10am,4pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "9:30am - 9pm";
+            String scheduleFromToTime = "9:30 AM - 9:00 PM";
             String scheduleMaxHours = "9";
             String selectWeekDayName = "Sun";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
@@ -1155,7 +1155,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "10am,8pm";
             String shiftTime3 = "10am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "10am - 8pm";
+            String scheduleFromToTime = "10:00 AM - 8:00 PM";
             String scheduleMaxHours = "8";
             String selectWeekDayName = "Sun";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
@@ -1177,7 +1177,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "10am,10pm";
             String shiftTime3 = "10am,4pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "10am - 10pm";
+            String scheduleFromToTime = "10:00 AM - 10:00 PM";
             String scheduleMaxHours = "10";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
 
@@ -1199,7 +1199,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "11am,10pm";
             String shiftTime3 = "11am,7pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "10:30am - 10pm";
+            String scheduleFromToTime = "10:30 AM - 10:00 PM";
             String scheduleMaxHours = "9";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
 
