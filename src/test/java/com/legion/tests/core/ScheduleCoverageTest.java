@@ -321,7 +321,7 @@ public class ScheduleCoverageTest extends TestBase {
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the functionality of coverage insights in day view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTheShiftTimesConsistentOnInputAndShiftCardAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void validateTheFunctionalityOfCoverageInsightsInDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
