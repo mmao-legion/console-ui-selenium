@@ -4268,14 +4268,21 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void clickActionsForTemplate(String templateName, String action) {
 		List<WebElement> actions = getDriver().findElements(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span/span[2]"));
 		actions.add(getDriver().findElement(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span[1]")));
+		String actionNew = action;
+		if (templateName.contains("Labor Model") && action.equalsIgnoreCase("reset")){
+			actionNew = "Edit";
+		}
 		for (int i = 0; i < actions.size(); i++) {
-			if (actions.get(i).getText().contains(action)) {
+			if (actions.get(i).getText().contains(actionNew)) {
 				actions.get(i).click();
 				SimpleUtils.pass(templateName + " click " + action);
 				break;
 			}
 		}
 		if (action.equalsIgnoreCase("reset")) {
+			if (templateName.contains("Labor Model")){
+				clickTheElement(resetButton);
+			}
 			click(okBtnInSelectLocation);
 		}
 	}
@@ -4414,11 +4421,19 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
-	public void verifyOverrideStatusAtLocationLevel(String templateName) throws Exception {
-		if (isExist(getDriver().findElement(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/span")))) {
-			SimpleUtils.pass("template is overrided");
+	public void verifyOverrideStatusAtLocationLevel(String templateName, String flag) throws Exception {
+		if (flag.equalsIgnoreCase("Yes")) {
+			if (isExist(getDriver().findElement(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/span")))) {
+				SimpleUtils.pass("template is overrided");
+			}else{
+				SimpleUtils.fail("Template is not overrided", false);
+			}
 		} else {
-			SimpleUtils.fail("Template is not overrided", false);
+			if (getDriver().findElements(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/*")).size() == 1) {
+				SimpleUtils.fail("template is overrided", false);
+			}else{
+				SimpleUtils.pass("Template is reset");
+			}
 		}
 	}
 
@@ -4429,6 +4444,30 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		} else {
 			SimpleUtils.fail("" + templateName + "template is not modified by " + user + "", false);
 		}
+	}
+
+	public Map<String, HashMap<String, String>> getLocationTemplateInfoInLocationLevelNew() {
+		Map<String, HashMap<String, String>>  templateInfo = new HashMap<>();
+		if (areListElementVisible(templateRows, 5)) {
+			for (WebElement s : templateRows) {
+				Map<String, String> li = new HashMap<String, String>() ;
+				li.put("Template Type", s.findElement(By.cssSelector("td:nth-child(1)")).getText());
+				if(s.findElement(By.cssSelector("td:nth-child(1)")).getText().equalsIgnoreCase("Time and Attendance")){
+					li.put("Template Type", "Time & Attendance");
+				}
+				li.put("Template Name", s.findElement(By.cssSelector("td:nth-child(2)")).getText());
+				if (isExist(overRiddenIcon)) {
+					li.put("Overridden", "Yes");
+				} else
+					li.put("Overridden", "No");
+
+				templateInfo.put(s.findElement(By.cssSelector("td:nth-child(1)")).getText(), (HashMap) li);
+			}
+			return templateInfo;
+
+		} else
+			SimpleUtils.fail("Location configuration tab load failed", false);
+		return null;
 	}
 }
 

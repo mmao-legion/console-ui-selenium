@@ -13,10 +13,7 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.tests.data.CredentialDataProviderSource;
-import com.legion.utils.Constants;
-import com.legion.utils.HttpUtil;
-import com.legion.utils.JsonUtil;
-import com.legion.utils.SimpleUtils;
+import com.legion.utils.*;
 import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.WebElement;
@@ -1023,30 +1020,27 @@ public class LocationsTest extends TestBase {
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
-            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            Map<String, HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevelNew();
             locationsPage.canGoToAssignmentRoleViaTemNameInLocationLevel();
-            List<HashMap<String, String>> workRolesListInAssignmentRules = locationsPage.getAssignmentRolesInLocationLevel();
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToOperationHoursViaTemNameInLocationLevel();
+            locationsPage.clickActionsForTemplate("Operating Hours","View");
             String contextInOHTemplate = locationsPage.getOHTemplateValueInLocationLevel();
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToSchedulingRulesViaTemNameInLocationLevel();
-            List<HashMap<String, String>> contextInScheRulesTemplate = locationsPage.getScheRulesTemplateValueInLocationLevel();
+            locationsPage.clickActionsForTemplate("Scheduling Rules","View");
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToScheduleCollaborationViaTemNameInLocationLevel();
+            locationsPage.clickActionsForTemplate("Schedule Collaboration","View");
             String contextInScheCollTemplate = locationsPage.getScheCollTemplateValueInLocationLevel();
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToTAViaTemNameInLocationLevel();
+            locationsPage.clickActionsForTemplate("Time and Attendance","View");
             String contextInTATemplate = locationsPage.getTATemplateValueInLocationLevel();
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToSchedulingPoliciesViaTemNameInLocationLevel();
+            locationsPage.clickActionsForTemplate("Scheduling Policies","View");
             String contextInSchedulingPoliciesTemplate = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToComplianceViaTemNameInLocationLevel();
+            locationsPage.clickActionsForTemplate("Compliance","View");
             String contextInComplianceTemplate = locationsPage.getComplianceTemplateValueInLocationLevel();
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToLaborModelViaTemNameInLocationLevel();
-            List<HashMap<String, String>> workRolesListInLaborModel = locationsPage.getLaborModelInLocationLevel();
+            locationsPage.clickActionsForTemplate("Labor Model","View");
             locationsPage.backToConfigurationTabInLocationLevel();
 
             //go to configuration tab to check each template value in template level
@@ -1057,44 +1051,45 @@ public class LocationsTest extends TestBase {
             //get template level info of Operation hours
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(7).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(7).get("Template Name"), "view");
+                    configurationPage.clickOnConfigurationCrad(templateInfo.get("Operating Hours").get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get("Operating Hours").get("Template Name"), "view");
             String specificOHInTemplateLevel = locationsPage.getOHTemplateValueInLocationLevel();
+
             //get template level info of Scheduling rules
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(5).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(5).get("Template Name"), "view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get("Scheduling Rules").get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get("Scheduling Rules").get("Template Name"), "view");
             List<HashMap<String, String>> specificSchRolesInTemplateLevel = locationsPage.getScheRulesTemplateValueInConfigurationLevel();
 
             //get template level info of Scheduling collaboration
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(3).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(3).get("Template Name"), "view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get("Schedule Collaboration").get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get("Schedule Collaboration").get("Template Name"), "view");
             String specificSchCollInTemplateLevel = locationsPage.getScheCollTemplateValueInLocationLevel();
 
             //get template level info of TA
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad("Time & Attendance");
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(4).get("Template Name"), "view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get("Time and Attendance").get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get("Time and Attendance").get("Template Name"), "view");
             String specificTAInTemplateLevel = locationsPage.getTATemplateValueInLocationLevel();
 
             //get template level info of Schedule policy
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(1).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(1).get("Template Name"), "view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get("Scheduling Policies").get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get("Scheduling Policies").get("Template Name"), "view");
             String specificSchPolicyInTemplateLevel = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
 
             //get template level info of Compliance
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(2).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(2).get("Template Name"), "view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get("Compliance").get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get("Compliance").get("Template Name"), "view");
             String specificComplianceInTemplateLevel = locationsPage.getTATemplateValueInLocationLevel();
 
             //go to labor model tab to get specific template value
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
             laborModelPage.clickOnLaborModelTab();
             laborModelPage.goToLaborModelTile();
-            laborModelPage.clickOnSpecifyTemplateName(templateInfo.get(6).get("Template Name"), "view");
+            laborModelPage.clickOnSpecifyTemplateName(templateInfo.get("Labor Model").get("Template Name"), "view");
             List<HashMap<String, String>> workRolesListInLaborModelTemplateLevel = laborModelPage.getLaborModelInTemplateLevel();
 
             //compare location level value with template level
@@ -1171,7 +1166,7 @@ public class LocationsTest extends TestBase {
             locationsPage.goToConfigurationTabInLocationLevel();
             List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
             //get template level info of Scheduling collaboration
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(3).get("Template Type"), "View");
+            locationsPage.clickActionsForTemplate("Schedule Collaboration", "View");
             String specificSchCollInTemplateLevel = locationsPage.getScheCollTemplateValueInLocationLevel();
             if (!(specificSchCollInTemplateLevel == null)) {
                 SimpleUtils.pass("Can view Scheduling collaboration successfully via view button in location level");
@@ -1182,7 +1177,7 @@ public class LocationsTest extends TestBase {
 
 
             //get template level info of TA
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(4).get("Template Type"), "View");
+            locationsPage.clickActionsForTemplate("Time and Attendance", "View");
             String contextInTATemplate = locationsPage.getTATemplateValueInLocationLevel();
             if (!(contextInTATemplate == null)) {
                 SimpleUtils.pass("Can view Time Attendance successfully via view button in location level");
@@ -1191,7 +1186,7 @@ public class LocationsTest extends TestBase {
             locationsPage.backToConfigurationTabInLocationLevel();
 
             //get template level info of Schedule policy
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(1).get("Template Type"), "View");
+            locationsPage.clickActionsForTemplate("Scheduling Policies", "View");
             String contextInSchedulingPoliciesTemplate = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
             if (!(contextInSchedulingPoliciesTemplate == null)) {
                 SimpleUtils.pass("Can view Scheduling Policies successfully via view button in location level");
@@ -1200,7 +1195,7 @@ public class LocationsTest extends TestBase {
             locationsPage.backToConfigurationTabInLocationLevel();
 
             //get template level info of Compliance
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(2).get("Template Type"), "View");
+            locationsPage.clickActionsForTemplate("Compliance", "View");
             String contextInComplianceTemplate = locationsPage.getComplianceTemplateValueInLocationLevel();
             if (!(contextInComplianceTemplate == null)) {
                 SimpleUtils.pass("Can view Compliance successfully via view button in location level");
@@ -1231,36 +1226,20 @@ public class LocationsTest extends TestBase {
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
-            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(5).get("Template Type"), "View");
-//            List<HashMap<String,String>> initial = locationsPage.getScheRulesTemplateValueInLocationLevel();
+            locationsPage.clickActionsForTemplate("Scheduling Rules","View");
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(5).get("Template Type"), "Edit");
+            locationsPage.clickActionsForTemplate("Scheduling Rules","Edit");
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToWorkRolesWithStaffingRules();
             configurationPage.deleteBasicStaffingRule();
             configurationPage.saveBtnIsClickable();
             configurationPage.saveBtnIsClickable();
-            List<HashMap<String, String>> templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftOverridden.get(5).get("Overridden").equalsIgnoreCase("Yes")) {
-//                locationsPage.viewBtnForSchedulingRulesBtnIsClickable();
-//                List<HashMap<String,String>> schedulingRulesDetailsAftOverridden = locationsPage.getScheRulesTemplateValueInLocationLevel();
-//                if (!schedulingRulesDetailsAftOverridden.equals(initial)) {
-                SimpleUtils.pass("Overridden scheduling rules successfully");
-//                }
-            } else
-                SimpleUtils.fail("Overridden scheduling rules failed", false);
-
+            locationsPage.verifyOverrideStatusAtLocationLevel("Scheduling Rules","Yes");
             //reset
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(5).get("Template Type"), "Reset");
-            List<HashMap<String, String>> templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftReset.get(5).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Reset scheduling rules successfully");
-            } else
-                SimpleUtils.fail("Reset scheduling rules failed", false);
+            locationsPage.clickActionsForTemplate("Scheduling Rules","Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Scheduling Rules","No");
+
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1285,31 +1264,21 @@ public class LocationsTest extends TestBase {
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
-            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "View");
+            locationsPage.clickActionsForTemplate("Operating Hours", "View");
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Edit");
+            locationsPage.clickActionsForTemplate("Operating Hours", "Edit");
+
             locationsPage.editBtnIsClickableInBusinessHours();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.moveSliderAtSomePoint(moveCount, ohSliderDroppable.EndPoint.getValue());
             locationsPage.selectDayInWorkingHoursPopUpWin(6);
             configurationPage.saveBtnIsClickable();
             configurationPage.saveBtnIsClickable();
-            List<HashMap<String, String>> templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftOverridden.get(1).get("Overridden").equalsIgnoreCase("Yes")) {
-                SimpleUtils.pass("Overridden Operating Hours successfully");
-            } else
-                SimpleUtils.fail("Overridden Operating Hours failed", false);
-
+            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "Yes");
             //reset
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Reset");
-            List<HashMap<String, String>> templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftReset.get(1).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Reset Operating Hours successfully");
-            } else
-                SimpleUtils.fail("Reset Operating Hours failed", false);
+            locationsPage.clickActionsForTemplate("Operating Hours", "Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "No");
+
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1336,10 +1305,9 @@ public class LocationsTest extends TestBase {
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
             List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(0).get("Template Type"), "View");
+            locationsPage.clickActionsForTemplate("Assignment Rules", "View");
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(0).get("Template Type"), "Edit");
+            locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
             userManagementPage.verifySearchWorkRole(workRoleName);
             userManagementPage.goToWorkRolesDetails(workRoleName);
@@ -1347,21 +1315,12 @@ public class LocationsTest extends TestBase {
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.saveBtnIsClickable();
             configurationPage.saveBtnIsClickable();
-
-            List<HashMap<String, String>> templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftOverridden.get(0).get("Overridden").equalsIgnoreCase("Yes")) {
-                SimpleUtils.pass("Overridden Assignment Rules successfully");
-            } else
-                SimpleUtils.fail("Overridden Assignment Rules failed", false);
+            locationsPage.verifyOverrideStatusAtLocationLevel("Assignment Rules","Yes");
 
             //reset
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(0).get("Template Type"), "Reset");
-            List<HashMap<String, String>> templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftReset.get(0).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Reset Assignment Rules successfully");
-            } else
-                SimpleUtils.fail("Reset Assignment Rules failed", false);
+            locationsPage.clickActionsForTemplate("Assignment Rules", "Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Assignment Rules","No");
+
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1388,30 +1347,19 @@ public class LocationsTest extends TestBase {
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
             List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"), "View");
+            locationsPage.clickActionsForTemplate("Labor Model", "View");
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"), "Edit");
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
             laborModelPage.overriddenLaborModelRuleInLocationLevel(index);
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.saveBtnIsClickable();
-
-            List<HashMap<String, String>> templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftOverridden.get(6).get("Overridden").equalsIgnoreCase("Yes")) {
-                SimpleUtils.pass("Overridden Labor Model successfully");
-            } else
-                SimpleUtils.fail("Overridden Labor Model failed", false);
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
 
             //reset
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"), "Edit");
-            locationsPage.resetLaborModel();
-            List<HashMap<String, String>> templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftReset.get(6).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Reset Labor Model successfully");
-            } else
-                SimpleUtils.fail("Reset Labor Model failed", false);
+            locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","No");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2264,12 +2212,11 @@ public class LocationsTest extends TestBase {
             //Validate user can update badges at location level assignment rules template.;
             locationsPage.addBadgeAssignmentRuleStatusFromLocationLevel("20210713152098");
             //Validate Overridden column for assignment rules template at location level.
-            locationsPage.verifyOverrideStatusAtLocationLevel("Assignment Rules");
-            //Validate Overridden column for assignment rules template at location level.
-            locationsPage.verifyOverrideStatusAtLocationLevel("Assignment Rules");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Assignment Rules","Yes");
             //Validate Last Modified Date and Last Modified By column for assignment rules template at location level.
             //Validate user can reset location level assignment rules template.
             locationsPage.clickActionsForTemplate("Assignment Rules", "Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Assignment Rules","No");
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -2279,7 +2226,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Yang")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify Assignment Rules content and enable/disable rule/add Badge")
+    @TestName(description = "Verify Assignment Rules")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verify1AssignmentRulesInLocationLevelAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
@@ -2331,4 +2278,5 @@ public class LocationsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
 }
