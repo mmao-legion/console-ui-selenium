@@ -6289,12 +6289,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			shiftOperatePage.clickOnProfileIcon();
 			shiftOperatePage.clickOnEditShiftTime();
-			String shiftTime = "03:00am-09:00am";
+			String shiftTime = "3:00 am-9:00 am";
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
 			HashMap<String, String> shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			String shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
 			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
-					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "3:00am-9:00am".equals(shiftTimeOnShiftCard), false);
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, shiftTime.equals(shiftTimeOnShiftCard), false);
 			String compliance = "Shift starts too early (min: 6:00 AM)";
 			String complianceFromEditShiftTimePage = shiftOperatePage.getEditShiftTimeCompliance();
 			SimpleUtils.assertOnFail("The compliance on edit shift time page display incorrectly. The expected: "
@@ -6304,12 +6304,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					!shiftOperatePage.checkIfUpdateButtonEnabled(),false);
 
 
-			shiftTime = "08:00am-11:00pm";
+			shiftTime = "8:00 am-11:00 pm";
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
 			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
 			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
-					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "8:00am-11:00pm".equals(shiftTimeOnShiftCard), false);
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, shiftTime.equals(shiftTimeOnShiftCard), false);
 			compliance = "Shift ends too late (max: 9:00 PM)";
 			complianceFromEditShiftTimePage = shiftOperatePage.getEditShiftTimeCompliance();
 			SimpleUtils.assertOnFail("The compliance on edit shift time page display incorrectly. The expected: "
