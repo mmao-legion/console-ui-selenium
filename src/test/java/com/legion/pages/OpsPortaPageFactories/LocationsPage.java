@@ -287,6 +287,7 @@ public interface LocationsPage {
     public void verifyAssignmentRulesFromLocationLevel(String assignmentRule) throws Exception;
     public void changeAssignmentRuleStatusFromLocationLevel(String status) throws Exception;
     public void addBadgeAssignmentRuleStatusFromLocationLevel(String badgeName) throws Exception;
-
+    public void verifyAssignmentRulePriorityCannotBeEdit(String assignmentRuleTitle) throws Exception;
+    public void verifyOverrideStatusAtLocationLevel(String templateName) throws Exception;
     }
 
