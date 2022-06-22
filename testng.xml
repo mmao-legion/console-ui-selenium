@@ -528,6 +528,8 @@
                     <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />
                     <include name="verifyTMCanBeOfferedAsTeamMember" />
                     <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
+                    <include name="verifySingleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />
+                    <include name="verifyMultipleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />
                 </methods>
             </class>
         </classes>

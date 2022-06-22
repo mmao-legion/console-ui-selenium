@@ -1273,7 +1273,7 @@ public class CinemarkMinorTest extends TestBase {
 
         //check the violation message in Status column
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
-                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime.toLowerCase()), false);
         Thread.sleep(5000);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         Thread.sleep(5000);
@@ -1302,11 +1302,11 @@ public class CinemarkMinorTest extends TestBase {
         WebElement newAddedShift = scheduleShiftTablePage.
                 getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1.split(" ")[0]).get(0));
         String expectMessage = "Minor hrs "+ scheduleFromToTime;
-        String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString();
+        String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString().replace(":00 ", "").replace(":30 ", ":30").toLowerCase();
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! the expect is: "+expectMessage
                             +" the actual is:"+actualMessage,
-                    actualMessage.contains(expectMessage), false);
+                    actualMessage.contains(expectMessage.toLowerCase()), false);
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
 
