@@ -529,7 +529,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     for(WebElement openShift: openShifts){
                         openShiftTimes.add(openShift.findElement(By.className("week-schedule-shift-time")).getText()) ;
                     }
-                    if(!unassignedShiftTimes.contains("10am - 3pm") && openShiftTimes.contains("10am - 3pm")) {
+                    if(!unassignedShiftTimes.contains("10:00 am - 3:00 pm") && openShiftTimes.contains("10:00 am - 3:00 pm")) {
                         SimpleUtils.pass("The opening/closing shifts display as open! ");
                     } else
                         SimpleUtils.fail("The opening/closing shifts are not display as open! ", false);

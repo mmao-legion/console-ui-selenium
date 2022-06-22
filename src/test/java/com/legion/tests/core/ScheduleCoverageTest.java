@@ -321,7 +321,7 @@ public class ScheduleCoverageTest extends TestBase {
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the functionality of coverage insights in day view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheFunctionalityOfCoverageInsightsInDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyTheShiftTimesConsistentOnInputAndShiftCardAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -385,7 +385,7 @@ public class ScheduleCoverageTest extends TestBase {
             float scheduledHour = 0;
             for (int i=0; i< scheduleShiftTablePage.getAvailableShiftsInDayView().size(); i++) {
                 String shiftTime = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(i).get(2);
-                if (shiftTime.replace(":00", "").contains(timesInLaborForecastChart.get(0))) {
+                if (shiftTime.replace(":00 ", "").toLowerCase().contains(timesInLaborForecastChart.get(0).toLowerCase())) {
                     scheduledHour += 1;
                 }
             }
