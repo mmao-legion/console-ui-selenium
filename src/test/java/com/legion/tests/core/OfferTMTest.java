@@ -1752,7 +1752,7 @@ public class OfferTMTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Ting")
     @Enterprise(name = "")
-    @TestName(description = "Should be able to get 1 shift offer by TM while multiple shifts were offered at the same duration of time")
+    @TestName(description = "Should be able to receive one shift offer by TM while multiple shifts were offered at the same duration of time")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySingleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember(String browser, String username, String password, String location) throws Exception {
         try {
@@ -1847,7 +1847,7 @@ public class OfferTMTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Ting")
     @Enterprise(name = "")
-    @TestName(description = "Should be able to get 2 shift offer by TM while multiple shifts were offered at the 2 different duration of time")
+    @TestName(description = "Should be able to receive two shifts offer by TM while multiple shifts were offered at the two different duration of time")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMultipleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember(String browser, String username, String password, String location) throws Exception {
         try {
@@ -1948,6 +1948,9 @@ public class OfferTMTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             smartCardPage.clickLinkOnSmartCardByName("View Shifts");
             SimpleUtils.assertOnFail("Didn't get open shift offer!", scheduleShiftTablePage.getShiftsCount() == 2, false);
+
+            // TODO: Check the two shift offer were not the same
+
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
