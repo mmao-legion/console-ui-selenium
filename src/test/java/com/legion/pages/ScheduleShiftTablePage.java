@@ -44,6 +44,7 @@ public interface ScheduleShiftTablePage {
     public List<Integer> getAddedShiftIndexes(String name) throws Exception;
     public boolean areShiftsPresent() throws Exception;
     public int getShiftsCount() throws Exception;
+    public String getShiftTextByIndex(int indexOfShift);
     public boolean isProfileIconsClickable() throws Exception;
     public int getOTShiftCount();
     public void validateXButtonForEachShift() throws Exception;

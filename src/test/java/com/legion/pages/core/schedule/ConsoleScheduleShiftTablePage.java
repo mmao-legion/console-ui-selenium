@@ -1339,6 +1339,18 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     }
 
     @Override
+    public String getShiftTextByIndex(int indexOfShift) {
+        String shiftText = "";
+        waitForSeconds(5);
+        if (areListElementVisible(wholeWeekShifts, 10)) {
+            shiftText = wholeWeekShifts.get(indexOfShift).getText();
+        } else if (areListElementVisible(dayViewAvailableShifts, 10)){
+            shiftText = dayViewAvailableShifts.get(indexOfShift).getText();
+        }
+        return shiftText;
+    }
+
+    @Override
     public boolean isProfileIconsClickable() throws Exception {
         if(areListElementVisible(profileIcons,10)){
             int randomIndex = (new Random()).nextInt(profileIcons.size());

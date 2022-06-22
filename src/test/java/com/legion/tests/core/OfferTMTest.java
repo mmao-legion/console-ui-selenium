@@ -1839,6 +1839,7 @@ public class OfferTMTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             smartCardPage.clickLinkOnSmartCardByName("View Shifts");
             SimpleUtils.assertOnFail("Didn't get open shift offer!", scheduleShiftTablePage.getShiftsCount() == 1, false);
+            SimpleUtils.assertOnFail("The shift hours were incorrect!", scheduleShiftTablePage.getShiftTextByIndex(0).replaceAll(" ", "").contains("9:00am-3:00pm"), false );
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1910,8 +1911,8 @@ public class OfferTMTest extends TestBase {
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.selectWorkRole(workRoleOfTM);
-            newShiftPage.moveSliderAtCertainPoint("9am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
-            newShiftPage.moveSliderAtCertainPoint("1pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.setShiftsPerDay(2);
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectMultipleOrSpecificWorkDay(3, true);
@@ -1924,8 +1925,8 @@ public class OfferTMTest extends TestBase {
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.selectWorkRole(workRoleOfTM);
-            newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
-            newShiftPage.moveSliderAtCertainPoint("6pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("4pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.setShiftsPerDay(2);
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectMultipleOrSpecificWorkDay(3, true);
@@ -1948,9 +1949,8 @@ public class OfferTMTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             smartCardPage.clickLinkOnSmartCardByName("View Shifts");
             SimpleUtils.assertOnFail("Didn't get open shift offer!", scheduleShiftTablePage.getShiftsCount() == 2, false);
-
-            // TODO: Check the two shift offer were not the same
-
+            SimpleUtils.assertOnFail("The shift hours were incorrect!", scheduleShiftTablePage.getShiftTextByIndex(0).replaceAll(" ", "").contains("8:00am-2:00pm"), false );
+            SimpleUtils.assertOnFail("The shift hours were incorrect!", scheduleShiftTablePage.getShiftTextByIndex(1).replaceAll(" ", "").contains("10:00am-4:00pm"), false );
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
