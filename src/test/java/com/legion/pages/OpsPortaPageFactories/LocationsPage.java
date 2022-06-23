@@ -292,5 +292,7 @@ public interface LocationsPage {
     public void verifyOverrideStatusAtLocationLevel(String templateName, String flag) throws Exception;
     public Map<String, HashMap<String, String>> getLocationTemplateInfoInLocationLevelNew() ;
     public void resetLocationLevelExternalAttributesInLaborModelTemplate()throws Exception;
+    public void updateEnterpriseProfileDetailInfo() throws Exception;
+    public void clickOnEnterpriseProfileCard() throws Exception;
 }
 
