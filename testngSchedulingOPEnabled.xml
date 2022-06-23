@@ -553,7 +553,7 @@ SCH-5862-->
         </classes>
     </test>
 
-    <!--<test name="FTSE Support Variant Violations Except OT Ones">
+    <test name="FTSE Support Variant Violations Except OT Ones">
         <classes>
             <class name="com.legion.tests.core.FTSEViolations">
                 <methods>
@@ -575,5 +575,5 @@ SCH-5862-->
                 </methods>
             </class>
         </classes>
-    </test>-->
+    </test>
 </suite> <!-- Suite -->
