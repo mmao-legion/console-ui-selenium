@@ -182,7 +182,11 @@ public interface ControlsNewUIPage {
 
 	public boolean isControlsConsoleMenuAvailable() throws Exception;
 
-	public HashMap<String, ArrayList<String>> getSchedulingPoliciesSchedulesSectionEditableOrNonEditableFields() throws Exception;
+	public void clickOnLocationProfileEditLocationBtn() throws Exception;
+
+    public void checkTimeZoneDropdownOptions(int numbersOfCity, String timeZone) throws Exception;
+
+    public HashMap<String, ArrayList<String>> getSchedulingPoliciesSchedulesSectionEditableOrNonEditableFields() throws Exception;
 
 	public HashMap<String, ArrayList<String>> getSchedulingPoliciesShiftsSectionEditableOrNonEditableFields() throws Exception;
 
