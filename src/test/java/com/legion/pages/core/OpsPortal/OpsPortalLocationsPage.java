@@ -4474,9 +4474,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	//added by fiona
-	@FindBy(css="lg-dashboard-card[title=\"Enterprise Profile\"]")
+	@FindBy(css="lg-dashboard-card[title=\"Enterprise Profile\"] h1")
 	private WebElement enterpriseProfileCard;
-	@FindBy(css="-button[label=\"Edit\"] button")
+	@FindBy(css="lg-button[label=\"Edit\"] button")
 	private WebElement editButtonOnEnterpriseProfilePage;
 	@FindBy(css="form form-section[form-title=\"Enterprise Information\"]")
 	private WebElement enterpriseInformation;
@@ -4491,6 +4491,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css="form form-section[form-title=\"Easy Company Identifier\"]")
 	private WebElement easyCompanyIdentifier;
 
+	@Override
 	public void clickOnEnterpriseProfileCard() throws Exception {
 		if(isElementLoaded(enterpriseProfileCard,5)){
 			clickTheElement(enterpriseProfileCard);
@@ -4530,10 +4531,42 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
+	@FindBy(css="input-field[label=\"First Name\"] input")
+	private WebElement firstName;
+	@FindBy(css="input-field[label=\"Last Name\"] input")
+	private WebElement lastName;
+	@FindBy(css="input-field[label=\"E-mail\"] input")
+	private WebElement email;
+	@FindBy(css="input-field[label=\"Phone\"] input")
+	private WebElement phone;
+	@FindBy(css="lg-button[label=\"Save and continue\"] button")
+	private WebElement saveAndContinue;
+	@FindBy(tagName = "lg-close")
+	private WebElement successPopup;
+
+	@Override
 	public void updateEnterpriseProfileDetailInfo() throws Exception{
 		if(isEnterpriseProfileDetailsShowing()){
 			clickOnEditButtonOnEnterpriseProfile();
 			//update EnterpriseProfileDetailInfo
+			firstName.click();
+			firstName.clear();
+			firstName.sendKeys("First Name");
+			lastName.click();
+			lastName.clear();
+			lastName.sendKeys("First Name");
+			email.click();
+			email.clear();
+			email.sendKeys("fiona@test.com");
+			phone.click();
+			phone.clear();
+			phone.sendKeys("1587614");
+			clickTheElement(saveAndContinue);
+			if(isElementLoaded(successPopup)){
+				SimpleUtils.pass("User can update enterprise info successfully!");
+			}else {
+				SimpleUtils.fail("User can't update enterprise info successfully!",false);
+			}
 		}
 	}
 }
