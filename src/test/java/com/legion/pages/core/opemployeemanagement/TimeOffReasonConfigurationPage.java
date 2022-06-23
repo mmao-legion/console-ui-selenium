@@ -216,6 +216,22 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     @FindBy(css = "div.lg-search-options__scroller>div>div")
     private List<WebElement> holidayList;
 
+    //Fixed days
+    @FindBy(css = "question-input[question-title='Distribution type'] select")
+    private WebElement distributionTypeSelect;
+    @FindBy(css = "div.eligibility-rule.lg-question-input")
+    private WebElement eligibilityRuleText;
+    @FindBy(css = "div.eligibility-rule.lg-question-input>input-field:first-of-type input")
+    private WebElement eligibilityHours;
+    @FindBy(css = "div.eligibility-rule.lg-question-input>input-field:last-of-type input")
+    private WebElement eligibilityDays;
+    @FindBy(css = "div.dt-container>div.table-wrapper.ng-scope tr:nth-child(1)>th:nth-child(1)")
+    private WebElement fixedDaysLabel;
+    @FindBy(css = "div.dt-container>div.table-wrapper.ng-scope tr:nth-child(2)>td:nth-child(1) input")
+    private WebElement fixedHours;
+    @FindBy(css = "div.dt-container>div.table-wrapper.ng-scope tr:nth-child(2)>td:nth-child(2) input")
+    private WebElement accruedHours;
+
     //submit
     @FindBy(css = "lg-button[label='Cancel']>button")
     private WebElement cancelButton;
@@ -565,6 +581,41 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     public ArrayList<String> getHolidayList() {
         dateSelect.click();
         return getWebElementsText(holidayList);
+    }
+
+    public String getEligibilityTitle() {
+        scrollToElement(eligibilityRuleText);
+        waitForSeconds(2);
+        return eligibilityRuleText.getText();
+    }
+
+    public void setEligibilityRule(String hrs, String Days) {
+        eligibilityHours.clear();
+        eligibilityHours.sendKeys(hrs);
+        eligibilityDays.clear();
+        eligibilityDays.sendKeys(Days);
+    }
+
+    public ArrayList<String> getWorkedHoursDistributionTypeOptions(){
+        Select disType = new Select(distributionType);
+        List<WebElement> opt=disType.getOptions();
+        return getWebElementsText(opt);
+    }
+
+    public void setDistributionType(String disTy) {//Total Hours, Rate, Fixed Days
+        Select disType = new Select(distributionType);
+        disType.selectByVisibleText(disTy);
+    }
+
+    public void setFixedDaysDistribution(String workedHrs, String accrualHrs) {
+        fixedHours.clear();
+        fixedHours.sendKeys(workedHrs);
+        accruedHours.clear();
+        accruedHours.sendKeys(accrualHrs);
+        waitForSeconds(2);
+    }
+    public String getFixedDaysLabel(){
+        return fixedDaysLabel.getText();
     }
 
 }

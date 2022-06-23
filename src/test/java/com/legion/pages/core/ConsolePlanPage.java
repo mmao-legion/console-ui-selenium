@@ -896,7 +896,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                 if (scenarioPlanStatusInDetail.getText().equals("In Progress"))
                     SimpleUtils.pass("Begin to generate forecast will push the plan status from not started to in progress!");
                 //wait some seconds till the forecast job finished
-                if (areListElementVisible(scenarioPlanReRunBTNs, 300)) {
+                if (areListElementVisible(scenarioPlanReRunBTNs, 500)) {
                     SimpleUtils.pass("The forecast job run to finished!");
                     //check the budget button is enabled
                     if (runBudgetButton.getAttribute("disabled") == null) {
@@ -906,7 +906,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                         if (isElementLoaded(budgetRunDialog) && isElementLoaded(budgetRunBTNOnDialog)) {
                             clickTheElement(budgetRunBTNOnDialog);
                             //check the budget result
-                            if (isElementLoaded(budgetValue,300) && Integer.parseInt(budgetValue.getText().split("\\$")[1].trim().replace(",", "")) > 0) {
+                            if (isElementLoaded(budgetValue,300) && Double.valueOf(budgetValue.getText().split("\\$")[1].trim().replace(",", "")).intValue() > 0) {
                                 SimpleUtils.pass("Budget job run complete and get the result budget hours on UI!");
                                 // send for review for the plan
                                 sendForReviewAplan();
