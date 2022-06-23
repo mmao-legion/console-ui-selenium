@@ -8,6 +8,7 @@ import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.an.E;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
@@ -4468,6 +4469,70 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		} else
 			SimpleUtils.fail("Location configuration tab load failed", false);
 		return null;
+	}
+
+	//added by fiona
+	@FindBy(css="lg-dashboard-card[title=\"Enterprise Profile\"]")
+	private WebElement enterpriseProfileCard;
+	@FindBy(css="-button[label=\"Edit\"] button")
+	private WebElement editButtonOnEnterpriseProfilePage;
+	@FindBy(css="form form-section[form-title=\"Enterprise Information\"]")
+	private WebElement enterpriseInformation;
+	@FindBy(css="form form-section[form-title=\"Primary Contact\"]")
+	private WebElement primaryContactOnEnterpriseProfilePage;
+	@FindBy(css="form form-section[form-title=\"Enterprise Logo\"]")
+	private WebElement enterpriseLogo;
+	@FindBy(css="form form-section[form-title=\"Default Location Picture\"]")
+	private WebElement enterpriseLocationPicture;
+	@FindBy(css="form form-section[form-title=\"Login Splash Image\"]")
+	private WebElement loginSplashImage;
+	@FindBy(css="form form-section[form-title=\"Easy Company Identifier\"]")
+	private WebElement easyCompanyIdentifier;
+
+	public void clickOnEnterpriseProfileCard() throws Exception {
+		if(isElementLoaded(enterpriseProfileCard,5)){
+			clickTheElement(enterpriseProfileCard);
+			waitForSeconds(3);
+			if(isElementLoaded(editButtonOnEnterpriseProfilePage,2)){
+				SimpleUtils.pass("User click Enterprise Profile tile successfully!");
+			}else {
+				SimpleUtils.fail("User CAN'T click Enterprise Profile tile!",false);
+			}
+		}else {
+			SimpleUtils.fail("Enterprise Profile tile is NOT showing",false);
+		}
+	}
+
+	public boolean isEnterpriseProfileDetailsShowing() throws Exception{
+		boolean flag = false;
+		if(isElementLoaded(editButtonOnEnterpriseProfilePage,2)&&(isElementLoaded(enterpriseInformation,2))&&(isElementLoaded(primaryContactOnEnterpriseProfilePage,2))
+				&&isElementLoaded(enterpriseLogo,2)&&isElementLoaded(enterpriseLocationPicture,2)&&isElementLoaded(loginSplashImage,2)
+				&&isElementLoaded(easyCompanyIdentifier,2)){
+			flag = true;
+			SimpleUtils.pass("Enterprise Profile details page can show well");
+		}else {
+			SimpleUtils.fail("Enterprise Profile details page can't show well",false);
+		}
+		return flag;
+	}
+
+	public void clickOnEditButtonOnEnterpriseProfile() throws Exception{
+		if(isElementLoaded(editButtonOnEnterpriseProfilePage,2)){
+			clickTheElement(editButtonOnEnterpriseProfilePage);
+			String classValue = getDriver().findElement(By.cssSelector("input-field[label=\"Enterprise Name\"] ng-form")).getAttribute("class").trim();
+			if(!classValue.contains("input-field-disabled")){
+				SimpleUtils.pass("User can click edit button successfully!");
+			}else {
+				SimpleUtils.fail("User can't click edit button",false);
+			}
+		}
+	}
+
+	public void updateEnterpriseProfileDetailInfo() throws Exception{
+		if(isEnterpriseProfileDetailsShowing()){
+			clickOnEditButtonOnEnterpriseProfile();
+			//update EnterpriseProfileDetailInfo
+		}
 	}
 }
 
