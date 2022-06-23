@@ -1597,26 +1597,17 @@ public class LocationsTest extends TestBase {
         locationsPage.goToSubLocationsInLocationsPage();
         locationsPage.goToLocationDetailsPage(locationName);
         locationsPage.goToConfigurationTabInLocationLevel();
-        List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-        if (templateInfo.get(6).get("Overridden").equalsIgnoreCase("No")) {
-            SimpleUtils.pass("Labor model template is not overridden at location level");
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-        } else {
-            SimpleUtils.pass("Labor model template is already overridden at location level");
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"), "Reset");
-        }
+        locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+        locationsPage.backToConfigurationTabInLocationLevel();
+        locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+        locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
+        locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","No");
 
-        locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"), "Edit");
+        locationsPage.clickActionsForTemplate("Labor Model", "Edit");
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
         locationsPage.updateLocationLevelExternalAttributes(attributeName, attributeValue, attributeDescription);
 
-        List<HashMap<String, String>> templateInfo1 = locationsPage.getLocationTemplateInfoInLocationLevel();
-        if (templateInfo1.get(6).get("Overridden").equalsIgnoreCase("Yes")) {
-            SimpleUtils.pass("User can override location level external attributes successfully");
-        } else {
-            SimpleUtils.pass("User can NOT override location level external attributes successfully");
-        }
+        locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
 
         locationsPage.clickModelSwitchIconInDashboardPage(ConfigurationTest.modelSwitchOperation.Console.getValue());
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -1690,15 +1681,13 @@ public class LocationsTest extends TestBase {
         locationsPage.goToLocationDetailsPage(locationName);
         locationsPage.goToConfigurationTabInLocationLevel();
         List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfosInLocationLevel();
-        if (templateInfo.get(6).get("Overridden").equalsIgnoreCase("No")) {
-            SimpleUtils.pass("Labor model template is not overridden at location level");
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"), "View");
-        } else {
-            SimpleUtils.pass("Labor model template is already overridden at location level");
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"), "Reset");
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"), "View");
-        }
+        locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+        locationsPage.backToConfigurationTabInLocationLevel();
+        locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+        locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
+        locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","No");
+
+        locationsPage.clickActionsForTemplate("Labor Model", "View");
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
         attributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
         for (String key : attributesInfoInLocation.keySet()) {
@@ -1718,15 +1707,13 @@ public class LocationsTest extends TestBase {
         locationsPage.goToSubLocationsInLocationsPage();
         locationsPage.goToLocationDetailsPage(locationName);
         locationsPage.goToConfigurationTabInLocationLevel();
-        locationsPage.editLocationBtnIsClickableInLocationDetails();
-        List<HashMap<String, String>> templateInfo1 = locationsPage.getLocationTemplateInfosInLocationLevel();
-        locationsPage.actionsForEachTypeOfTemplate(templateInfo1.get(6).get("Template Type"), "Edit");
+        locationsPage.clickActionsForTemplate("Labor Model", "Edit");
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
         locationsPage.updateLocationLevelExternalAttributes(attributeName, attributeValueUpdate, attributeDescriptionUpdate);
 
         //Check the location level external attributes updated correct or not?
         List<HashMap<String, String>> templateInfo2 = locationsPage.getLocationTemplateInfosInLocationLevel();
-        locationsPage.actionsForEachTypeOfTemplate(templateInfo2.get(6).get("Template Type"), "View");
+        locationsPage.clickActionsForTemplate("Labor Model", "View");
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
         attributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
         for (String key : attributesInfoInLocation.keySet()) {
@@ -1780,10 +1767,11 @@ public class LocationsTest extends TestBase {
         locationsPage.goToSubLocationsInLocationsPage();
         locationsPage.goToLocationDetailsPage(locationName);
         locationsPage.goToConfigurationTabInLocationLevel();
-        List<HashMap<String, String>> templateInfo3 = locationsPage.getLocationTemplateInfosInLocationLevel();
-        locationsPage.editLocationBtnIsClickableInLocationDetails();
-        locationsPage.actionsForEachTypeOfTemplate(templateInfo3.get(6).get("Template Type"), "Reset");
-        locationsPage.actionsForEachTypeOfTemplate(templateInfo3.get(6).get("Template Type"), "View");
+        locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+        locationsPage.backToConfigurationTabInLocationLevel();
+        locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+        locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
+        locationsPage.clickActionsForTemplate("Labor Model", "View");
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
         HashMap<String, List<String>> attributesInfoInLocationAfterReset = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
         for (String key : attributesInfoInLocationAfterReset.keySet()) {
@@ -2274,6 +2262,32 @@ public class LocationsTest extends TestBase {
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.VerifyStaffListInSchedule("AMBASSADOR");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify that different legion user can see created status location by default")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyVerifyDifferentLegionUserCanSeeCreatedLocationOfDM(String username, String password, String browser, String location) throws Exception {
+        try {
+
+            String locationName = "yangUsingNSOLocation";
+            LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+
+
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
