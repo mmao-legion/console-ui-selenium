@@ -1830,25 +1830,25 @@ public class BulkCreateTest extends TestBase {
         try {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
-//            //Verify the shifts can be created by new UI by original SM access role
-//            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
-//            createShiftsByDifferentAccessRoles(false);
+            //Verify the shifts can be created by new UI by original SM access role
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            createShiftsByDifferentAccessRoles(false);
+            loginPage.logOut();
+
+            //Verify the shifts can be created by new UI by custom SM access role
+            loginAsDifferentRole(AccessRoles.StoreManager2.getValue());
+            createShiftsByDifferentAccessRoles(false);
+            loginPage.logOut();
+
+//            //Verify the shifts can be created by new UI by original TL access role
+//            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
+//            createShiftsByDifferentAccessRoles(true);
 //            loginPage.logOut();
 //
-//            //Verify the shifts can be created by new UI by custom SM access role
-//            loginAsDifferentRole(AccessRoles.StoreManager2.getValue());
-//            createShiftsByDifferentAccessRoles(false);
+//            //Verify the shifts can be created by new UI by custom TL access role
+//            loginAsDifferentRole(AccessRoles.TeamLead2.getValue());
+//            createShiftsByDifferentAccessRoles(true);
 //            loginPage.logOut();
-
-            //Verify the shifts can be created by new UI by original TL access role
-            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
-            createShiftsByDifferentAccessRoles(true);
-            loginPage.logOut();
-
-            //Verify the shifts can be created by new UI by custom TL access role
-            loginAsDifferentRole(AccessRoles.TeamLead2.getValue());
-            createShiftsByDifferentAccessRoles(true);
-            loginPage.logOut();
 
             //Verify the shifts can be created by new UI by original DM access role
             loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
