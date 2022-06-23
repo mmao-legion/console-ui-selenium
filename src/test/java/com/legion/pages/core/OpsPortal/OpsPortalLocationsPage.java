@@ -3526,9 +3526,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void canGoToLaborModelViaTemNameInLocationLevel() {
-		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
-		if (areListElementVisible(templateNameLinks, 10)) {
-			click(templateNameLinks.get(6));
+		WebElement templateNameLink = getDriver().findElement(By.xpath("//td[contains(text(),'Labor Model')]/following-sibling::*[1]/span"));
+		if (isExist(templateNameLink)) {
+			click(templateNameLink);
 			if (areListElementVisible(workRoleList, 5)){
 				SimpleUtils.pass("Go to Labor model in locations level successfully");
 			} else
@@ -4281,8 +4281,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}
 		}
 		if (action.equalsIgnoreCase("reset")) {
-			if (templateName.contains("Labor Model")){
-				clickTheElement(resetButton);
+			if (templateName.contains("Labor Model")) {
+				if (isExist(resetButton)) {
+					clickTheElement(resetButton);
+				}
 			}
 			click(okBtnInSelectLocation);
 		}
