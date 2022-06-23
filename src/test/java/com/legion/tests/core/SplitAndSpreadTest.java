@@ -457,7 +457,7 @@ public class SplitAndSpreadTest extends TestBase {
         String weekday = scheduleShiftTablePage.getWeekDayTextByIndex(0);
         scheduleShiftTablePage.dragOneShiftToAnotherDay(1, firstNameOfTM1, 0);
         String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday.split(" ")[0]);
-        String expectedViolationMessage = firstNameOfTM1 + " is scheduled 8am - 10am on "+fullWeekDay+". This will trigger a split shift.";
+        String expectedViolationMessage = firstNameOfTM1 + " is scheduled 8:00 am - 10:00 am on "+fullWeekDay+". This will trigger a split shift.";
         scheduleShiftTablePage.verifyMessageOnCopyMoveConfirmPage(expectedViolationMessage,expectedViolationMessage);
         scheduleShiftTablePage.selectCopyOrMoveByOptionName("Move");
         scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();

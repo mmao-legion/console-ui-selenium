@@ -716,7 +716,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
         ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();
-        waitForSeconds(3);
+        waitForSeconds(10);
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
             clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover")));
@@ -2136,7 +2136,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         int count = 0;
         if (areListElementVisible(copyMoveErrorMesgs,15) && copyMoveErrorMesgs.size() > 0){
             for (WebElement message : copyMoveErrorMesgs) {
-                if (message.getText().equalsIgnoreCase(expectedMsgInCopy) || message.getText().equalsIgnoreCase(expectedMsgInMove)) {
+                if (message.getText().replaceAll(" ", "").equalsIgnoreCase(expectedMsgInCopy.replaceAll(" ", "")) || message.getText().replaceAll(" ", "").equalsIgnoreCase(expectedMsgInMove.replaceAll(" ", ""))) {
                     count = count + 1;
                 }
             }
