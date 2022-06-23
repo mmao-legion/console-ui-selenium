@@ -1769,6 +1769,8 @@ public class LocationsTest extends TestBase {
         locationsPage.goToConfigurationTabInLocationLevel();
         locationsPage.clickActionsForTemplate("Labor Model", "Reset");
         locationsPage.backToConfigurationTabInLocationLevel();
+        locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+        locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
         locationsPage.clickActionsForTemplate("Labor Model", "View");
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
         HashMap<String, List<String>> attributesInfoInLocationAfterReset = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
