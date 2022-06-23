@@ -3042,7 +3042,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 boolean moveBreakTimeSuccess = false;
                 for (int i = 0; i< timeLineLength; i++) {
                     moveDayViewCards(mealBreaks.get(index), 10);
-                    mealBreakTimeAfterEdit = breakTimes.get(index).getText().split("-")[0].trim();
+                    mealBreakTimeAfterEdit = breakTimes.get(index).getText().split("-")[0].trim().replace(" ","");
                     if (mealBreakTimeAfterEdit.equalsIgnoreCase(breakTime)) {
                         SimpleUtils.pass("Move breaks successfully! ");
                         moveBreakTimeSuccess = true;

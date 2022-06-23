@@ -25,7 +25,7 @@ import java.util.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.MyThreadLocal.workerRole;
 
-public class CreateShiftNewUITest extends TestBase {
+public class BulkCreateTest extends TestBase {
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) {
@@ -193,7 +193,7 @@ public class CreateShiftNewUITest extends TestBase {
             newShiftPage.moveSliderAtCertainPoint("11pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
             newShiftPage.selectSpecificWorkDay(7);
-            String expectMessage = "Hours on Friday: 6:00 AM - 12:00 AM. Hours on Saturday: 6:00 AM - 12:00 AM. Hours on Monday: 6:00 AM - 12:00 AM. Hours on Tuesday: 6:00 AM - 12:00 AM. Hours on Wednesday: 6:00 AM - 12:00 AM. Hours on Thursday: 6:00 AM - 12:00 AM";
+            String expectMessage = "Hours on Friday: 6:00am - 12:00am. Hours on Saturday: 6:00am - 12:00am. Hours on Monday: 6:00am - 12:00am. Hours on Tuesday: 6:00am - 12:00am. Hours on Wednesday: 6:00am - 12:00am. Hours on Thursday: 6:00am - 12:00am";
             String actualMessage = newShiftPage.getShiftStartWarningMessage();
             SimpleUtils.assertOnFail("The shift start warning message display incorrectly. The expect is: "+ expectMessage
                             + " the actual is "+ actualMessage,
@@ -228,6 +228,7 @@ public class CreateShiftNewUITest extends TestBase {
                     expectMessage.equalsIgnoreCase(actualMessage), false);
 
             //Check closed day warning message
+            Thread.sleep(3000);
             newShiftPage.moveMouseToSpecificWeekDayOnNewCreateShiftPage("Sun");
             SimpleUtils.assertOnFail("The closed day tooltip is loaded! ",
                     newShiftPage.checkClosedDayTooltipIsLoaded(), false);
@@ -737,8 +738,8 @@ public class CreateShiftNewUITest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify assign shift by each days")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAssignShiftByEachDaysAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -1829,15 +1830,15 @@ public class CreateShiftNewUITest extends TestBase {
         try {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
-            //Verify the shifts can be created by new UI by original SM access role
-            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
-            createShiftsByDifferentAccessRoles(false);
-            loginPage.logOut();
-
-            //Verify the shifts can be created by new UI by custom SM access role
-            loginAsDifferentRole(AccessRoles.StoreManager2.getValue());
-            createShiftsByDifferentAccessRoles(false);
-            loginPage.logOut();
+//            //Verify the shifts can be created by new UI by original SM access role
+//            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+//            createShiftsByDifferentAccessRoles(false);
+//            loginPage.logOut();
+//
+//            //Verify the shifts can be created by new UI by custom SM access role
+//            loginAsDifferentRole(AccessRoles.StoreManager2.getValue());
+//            createShiftsByDifferentAccessRoles(false);
+//            loginPage.logOut();
 
             //Verify the shifts can be created by new UI by original TL access role
             loginAsDifferentRole(AccessRoles.TeamLead.getValue());

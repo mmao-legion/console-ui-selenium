@@ -586,9 +586,9 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
     </test>
 
 
-    <test name="Create Shift New UI Test">
+    <test name="Bulk Create Test">
         <classes>
-            <class name="com.legion.tests.core.CreateShiftNewUITest">
+            <class name="com.legion.tests.core.BulkCreateTest">
                 <methods>
                     <include name="validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin" />
                     <include name="validateTheWarningMessageOfTheItemsOnFirstPageOfCreateShiftModalAsInternalAdmin" />

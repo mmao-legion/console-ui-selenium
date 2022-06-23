@@ -502,9 +502,9 @@ SCH-5862-->
         </classes>
     </test>
 
-    <test name="Create Shift New UI Test">
+    <test name="Bulk Create Test">
         <classes>
-            <class name="com.legion.tests.core.CreateShiftNewUITest">
+            <class name="com.legion.tests.core.BulkCreateTest">
                 <methods>
                     <include name="validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin" />
                     <include name="validateAllItemsOnTheSelectTMPageAsInternalAdmin" /> <!--  need run on 24hrs ops env-->

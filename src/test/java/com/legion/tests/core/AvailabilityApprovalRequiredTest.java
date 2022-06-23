@@ -131,7 +131,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
                     changedBusyAvailabilities.size()==1, false);
             String availabilityWeek2 = profileNewUIPage.getAvailabilityWeek();
             loginPage.logOut();
-
+            Thread.sleep(3000);
             //Login as SM and check the dotted line
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             teamPage.goToTeam();
