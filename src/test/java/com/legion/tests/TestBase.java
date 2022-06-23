@@ -644,4 +644,14 @@ public abstract class TestBase {
         String sessionId = postResponse[1];
         return sessionId;
     }
+
+    public static void refreshCache(String cacheType) throws Exception{
+        String sessionId = getSessionId("{\"enterpriseName\":\"opauto\",\"userName\":\"stoneman@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}");
+        //url
+        String toggleUrl = Constants.refreshCache;
+        Map<String, String> togglePara = new HashMap<>();
+        togglePara.put("cacheType", cacheType);
+        String[] response = HttpUtil.httpGet(toggleUrl, sessionId, togglePara);
+    }
+
 }

@@ -44,4 +44,6 @@ public class Constants {
     //uploadFiscalCalendar
     public static final String uploadFiscalCalendar = "https://rc-enterprise.dev.legion.work/legion/fiscalCalendars/upload";
 
+    //refreshCache
+    public static final String refreshCache = "https://rc-enterprise.dev.legion.work/legion/cache/refreshCache";
 }
