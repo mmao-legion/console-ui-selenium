@@ -3567,7 +3567,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(backBtnInLocationDetailsPage, 5)) {
 			click(backBtnInLocationDetailsPage);
 			waitForSeconds(8);
-			if (isElementEnabled(editLocationBtn, 10)) {
+			if (templateRows.size()>0) {
 				SimpleUtils.pass("Back to location configuration page successfully");
 			} else
 				SimpleUtils.fail("Back to location configuration page failed", false);
@@ -4298,7 +4298,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			searchByWorkRoleInput.sendKeys(workRole);
 			if (areListElementVisible(workRoleListInAssignmentRuleTemplate, 5)) {
 				for (WebElement s : workRoleListInAssignmentRuleTemplate) {
-					String workRoleName = s.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+					String workRoleName = s.findElement(By.cssSelector("td:nth-child(1) lg-button button span span")).getText().trim();
 					if (workRoleName.contains(workRole)) {
 						clickTheElement(s.findElement(By.cssSelector("td:nth-child(1) lg-button")));
 						waitForSeconds(2);
