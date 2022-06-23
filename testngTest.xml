@@ -3,21 +3,31 @@
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
-    <parameter name="testRailRunName" value="Automation PR Code Check"/>
+    <parameter name="testRailRunName" value="Automation PR Code Check - FTSE"/>
 
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-    <test name="Cinemark Minor Test">
+    <test name="FTSE Support Variant Violations Except OT Ones">
         <classes>
-            <class name="com.legion.tests.core.CinemarkMinorTest">
+            <class name="com.legion.tests.core.FTSEViolations">
                 <methods>
-                    <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" />
-                    <include name="verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin" />
-                    <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
-                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />
-                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyFTSEEmployeesIgnoreTheDayOTAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnoreTheWeekOTAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnoreThe7thConsecutiveOTAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnoreThe24HrsOTAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeeSupportClopeningViolationAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeeSupportMaxShiftViolationAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeeSupportRoleViolationAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore4X10AgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore5X8AgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore40X8AgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore40hrsAgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnoreNoOverTimeAgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore50hrsPerWeekAgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesSupportSplitShiftsViolationAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesSupportSpreadOfHoursViolationAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
