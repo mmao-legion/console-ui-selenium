@@ -1270,7 +1270,6 @@ public class LocationsTest extends TestBase {
 
             locationsPage.editBtnIsClickableInBusinessHours();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            configurationPage.moveSliderAtSomePoint(moveCount, ohSliderDroppable.EndPoint.getValue());
             locationsPage.selectDayInWorkingHoursPopUpWin(6);
             configurationPage.saveBtnIsClickable();
             configurationPage.saveBtnIsClickable();
