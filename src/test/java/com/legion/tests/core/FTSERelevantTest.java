@@ -1610,7 +1610,7 @@ public class FTSERelevantTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Cosimo")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the shift info displays correctly in the DayView")
+    @TestName(description = "Validate the short shifts displayed correctly with the improved UI")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyShiftInfoInDayViewAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
@@ -1730,7 +1730,7 @@ public class FTSERelevantTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Cosimo")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the shift info displays correctly in the View Profile")
+    @TestName(description = "Validate the short shifts displayed correctly with the improved UI")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyShiftInfoInViewProfileAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
@@ -1846,7 +1846,7 @@ public class FTSERelevantTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Cosimo")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the shift info displays correctly in the DayView")
+    @TestName(description = "Validate the short shifts displayed correctly with the improved UI")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyShiftInfoInPersonalMyScheduleAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
@@ -1986,7 +1986,7 @@ public class FTSERelevantTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Cosimo")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the shift info displays correctly in the DayView")
+    @TestName(description = "Validate the short shifts displayed correctly with the improved UI")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyShiftInfoInPersonalMyPreferenceAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
@@ -2110,7 +2110,7 @@ public class FTSERelevantTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Cosimo")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify the shift info displays correctly in the DayView")
+    @TestName(description = "Validate the short shifts displayed correctly with the improved UI")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMaxShiftDurationInfoInDayViewAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
