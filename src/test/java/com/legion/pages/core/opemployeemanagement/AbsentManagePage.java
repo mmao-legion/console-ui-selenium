@@ -596,7 +596,7 @@ public class AbsentManagePage extends BasePage {
 
     public void configureTimeOffRules(String timeOff) throws Exception {
         search(timeOff);
-        waitForSeconds(3);
+        waitForSeconds(5);
         if (isButtonClickable(configure)) {
             System.out.println("Configure button is shown and clickable!");
             configure.click();

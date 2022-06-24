@@ -10,6 +10,7 @@ import org.openqa.selenium.support.PageFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.testng.Assert;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -97,7 +98,8 @@ public class TimeOffPage extends BasePage {
     private List<WebElement> timeOffs;
     @FindBy(css = "modal[modal-title='Edit Time Off Balance'] table.lg-table td>input-field input")
     private List<WebElement> editInputs;
-
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tbody tr")
+    private List<WebElement> editTr;
 
     //history
     @FindBy(css = "div.balance-action lg-button[label='History']>button")
@@ -239,22 +241,6 @@ public class TimeOffPage extends BasePage {
         return requestErrorMessage.getText();
     }
 
-    public void editTimeOffBalance(String timeOffName, String bal) {
-        editButton.click();
-        if (timeOffName.equalsIgnoreCase("Annual Leave")) {
-            annualLeaveInput.clear();
-            annualLeaveInput.sendKeys(bal);
-        } else if (timeOffName.equalsIgnoreCase("Floating holiday")) {
-            floatingHolidayInput.clear();
-            floatingHolidayInput.sendKeys(bal);
-        } else if (timeOffName.equalsIgnoreCase("PTO")) {
-            ptoInput.clear();
-            ptoInput.sendKeys(bal);
-        }else {
-            System.out.println("No this type of time off!");
-        }
-    }
-
     public ArrayList<String> getTimeOffTypes() {
         ArrayList<String> timeOffs = getWebElementsText(timeOffTypes);
         return timeOffs;
@@ -334,30 +320,30 @@ public class TimeOffPage extends BasePage {
     private WebElement Month;
 
     //cancel button
-    @FindBy(css = "lg-button[label=Cancel]" )
+    @FindBy(css = "lg-button[label=Cancel]")
     private WebElement cancelButton;
 
-    public String getMonth(){
-        return Month.getText().substring(0,3);
+    public String getMonth() {
+        return Month.getText().substring(0, 3);
     }
 
-    public void cancelTimeOffRequest() throws Exception{
-        if(isElementLoaded(cancelButton,5)){
+    public void cancelTimeOffRequest() throws Exception {
+        if (isElementLoaded(cancelButton, 5)) {
             click(cancelButton);
         }
     }
 
-    @FindBy( css = "div.timeoff-requests-request.row-fx.cursor-pointer")
+    @FindBy(css = "div.timeoff-requests-request.row-fx.cursor-pointer")
     private List<WebElement> timeOffList;
 
-    public Integer getTimeOffSize() throws Exception{
+    public Integer getTimeOffSize() throws Exception {
         return timeOffList.size();
     }
 
-    @FindBy( css = "span[data-tootik='Cancel']")
+    @FindBy(css = "span[data-tootik='Cancel']")
     private WebElement cancelCreatedTimeOff;
 
-    public void cancelCreatedTimeOffRequest() throws Exception{
+    public void cancelCreatedTimeOffRequest() throws Exception {
         waitForSeconds(5);
         scrollToElement(timeOffList.get(1));
         clickTheElement(timeOffList.get(1));
@@ -365,14 +351,14 @@ public class TimeOffPage extends BasePage {
     }
 
     @FindBy(xpath = "//span[contains(@class,'request-status')]")
-    private  List<WebElement> timeOffStatus;
+    private List<WebElement> timeOffStatus;
 
-    public void verifyTimeOffStatus() throws Exception{
+    public void verifyTimeOffStatus() throws Exception {
         waitForSeconds(5);
-        if(timeOffStatus.get(2).getAttribute("innerText").toUpperCase().equals("CANCELLED") && timeOffStatus.get(3).getAttribute("innerText").toUpperCase().equals("REJECTED") && timeOffStatus.get(4).getAttribute("innerText").toUpperCase().equals("APPROVED")){
+        if (timeOffStatus.get(2).getAttribute("innerText").toUpperCase().equals("CANCELLED") && timeOffStatus.get(3).getAttribute("innerText").toUpperCase().equals("REJECTED") && timeOffStatus.get(4).getAttribute("innerText").toUpperCase().equals("APPROVED")) {
             SimpleUtils.pass("Time off status is correct");
-        }else
-            SimpleUtils.fail("Time off status is wrong",false);
+        } else
+            SimpleUtils.fail("Time off status is wrong", false);
     }
 
     public String getWorkerId() {
@@ -396,11 +382,26 @@ public class TimeOffPage extends BasePage {
         return timeOffRequests.get(index).findElement(By.cssSelector("div.request-stat.text-right.col-fx-1")).getText();
     }
 
-    public void goToTargetMonth(String month){
-        while(!targetMonth.getText().equals(month)){//"March 2022"
+    public void goToTargetMonth(String month) {
+        while (!targetMonth.getText().equals(month)) {//"March 2022"
             calendarNavArrow.click();
         }
     }
+
+    public void editTimeOffBalance(String timeOff, String bal) {
+        editButton.click();
+        int timeOffNum = editTr.size() - 1;
+        for (int i = 1; i <= timeOffNum; i++) {
+            String timeOffName = editTr.get(i).findElement(By.cssSelector("td:nth-child(1)")).getText();
+            if (timeOffName.contains(timeOff)) {
+                WebElement inputBox = editTr.get(i).findElement(By.cssSelector("td:nth-child(3)>input-field input"));
+                inputBox.clear();
+                inputBox.sendKeys(bal);
+                break;
+            }
+        }
+    }
+
 
 }
 
