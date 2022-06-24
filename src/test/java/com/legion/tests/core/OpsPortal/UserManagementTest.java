@@ -531,7 +531,7 @@ public class UserManagementTest extends TestBase {
             rightHeaderBarPage.switchToConsole();
             ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
             consoleNavigationPage.searchLocation("ClearDistrict");
-            consoleNavigationPage.navigateTo("ControlsCustomer");
+            consoleNavigationPage.navigateTo("Controls");
 
             //go to job title page
             userManagementPage.goToUserAndRoles();
@@ -718,7 +718,7 @@ public class UserManagementTest extends TestBase {
                 SimpleUtils.fail("Hourly rate display",false);
 
             //go to controls
-            consoleNavigationPage.navigateTo("ControlsCustomer");
+            consoleNavigationPage.navigateTo("Controls");
             consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
             consoleControlsNewUIPage.searchAndSelectTeamMemberByName(users);
 
@@ -840,7 +840,7 @@ public class UserManagementTest extends TestBase {
             opsPortalNavigationPage.logout();
 
             //log in with user has no view contact info job title permission
-            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+nocontact01@legion.co", "admin11.a","verifyMock");
+            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+nocontact@legion.co", "admin11.a","verifyMock");
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.verifyNewTermsOfServicePopUp();
             //go to team
@@ -857,7 +857,7 @@ public class UserManagementTest extends TestBase {
             }else
                 SimpleUtils.fail("Profile permission is wrong",false);
 
-            consoleNavigationPage.navigateTo("ControlsCustomer");
+            consoleNavigationPage.navigateTo("Controls");
             consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
             consoleControlsNewUIPage.searchAndSelectTeamMemberByName(user2);
 
@@ -903,7 +903,7 @@ public class UserManagementTest extends TestBase {
             }else
                 SimpleUtils.fail("Profile permission is wrong",false);
 
-            consoleNavigationPage.navigateTo("ControlsCustomer");
+            consoleNavigationPage.navigateTo("Controls");
             consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
             consoleControlsNewUIPage.searchAndSelectTeamMemberByName(user2);
 

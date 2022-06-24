@@ -635,7 +635,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement workPreferTab;
 	@FindBy (css = "timeoff-management .collapsible-title-text")
 	private WebElement timeOffTab;
-	@FindBy (css = "[ng-click=\"newTimeOff()\"]")
+	@FindBy (css = "lg-button[label = 'Create time off']")
 	private WebElement newTimeOffBtn;
 	@FindBy (css = ".user-profile-section")
 	private List<WebElement> userProfileSections;

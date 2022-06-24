@@ -739,74 +739,85 @@ public class NewNavigationFlowTest extends TestBase {
 
         ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
 
-        consoleNavigationPage.clickTeamTab();
+        consoleNavigationPage.verifyOnlyComplianceIsGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
         consoleNavigationPage.verifyTeamPageIsNormal();
-        consoleNavigationPage.clickComplianceTab();
+        consoleNavigationPage.navigateTo("Compliance");
         consoleNavigationPage.verifyPageEmpty();
-        consoleNavigationPage.clickTimeSheetTab();
+        consoleNavigationPage.navigateTo("Timesheet");
         consoleNavigationPage.verifytimeSheetPageIsNormal();
-        consoleNavigationPage.clickScheduleTab();
+        consoleNavigationPage.navigateTo("Schedule");
         consoleNavigationPage.verifySchedulePageIsNormal();
 
         locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("ClearDistrict");
 
-        consoleNavigationPage.clickTeamTab();
+        consoleNavigationPage.verifyOnlyTeamIsGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
         consoleNavigationPage.verifyPageEmpty();
-        consoleNavigationPage.clickComplianceTab();
+        consoleNavigationPage.navigateTo("Compliance");
         consoleNavigationPage.verifyCompliancePageIsNormal();
-        consoleNavigationPage.clickScheduleTab();
+        consoleNavigationPage.navigateTo("Schedule");
         consoleNavigationPage.verifySchedulePageForDisIsNormal();
-        consoleNavigationPage.clickTimeSheetTab();
+        consoleNavigationPage.navigateTo("Timesheet");
         consoleNavigationPage.verifytimeSheetPageForDisIsNormal();
 
-        consoleNavigationPage.navigateTo("logoutAdmin");
+        consoleNavigationPage.navigateTo("logout");
 
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+dm@legion.co", "admin11.a","");
 
-        consoleNavigationPage.clickTeamTab();
+        consoleNavigationPage.verifyFourTabAreGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
         consoleNavigationPage.verifyPageEmpty();
-        consoleNavigationPage.clickComplianceTab();
+        consoleNavigationPage.navigateTo("Compliance");
         consoleNavigationPage.verifyPageEmpty();
-        consoleNavigationPage.clickScheduleTab();
+        consoleNavigationPage.navigateTo("Schedule");
         consoleNavigationPage.verifyPageEmpty();
-        consoleNavigationPage.clickTimeSheetTab();
+        consoleNavigationPage.navigateTo("Timesheet");
         consoleNavigationPage.verifyPageEmpty();
 
         locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("Region20210818053401");
 
+        consoleNavigationPage.navigateTo("dashboard");
+        consoleNavigationPage.verifyFourTabAreGray();
         consoleNavigationPage.verifyOtherTableIsNormal();
-        consoleNavigationPage.clickTeamTab();
+        consoleNavigationPage.navigateTo("Team");
         consoleNavigationPage.verifyPageEmpty();
-        consoleNavigationPage.clickComplianceTab();
+        consoleNavigationPage.navigateTo("Compliance");
         consoleNavigationPage.verifyPageEmpty();
-        consoleNavigationPage.clickScheduleTab();
+        consoleNavigationPage.navigateTo("Schedule");
         consoleNavigationPage.verifyPageEmpty();
-        consoleNavigationPage.clickTimeSheetTab();
+        consoleNavigationPage.navigateTo("Timesheet");
         consoleNavigationPage.verifyPageEmpty();
 
         locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("ClearDistrict");
 
+        consoleNavigationPage.verifyOnlyTeamIsGray();
         consoleNavigationPage.verifyOtherTableIsNormal();
-        consoleNavigationPage.clickTeamTab();
+        consoleNavigationPage.navigateTo("Team");
         consoleNavigationPage.verifyPageEmpty();
-        consoleNavigationPage.clickComplianceTab();
+        consoleNavigationPage.navigateTo("Compliance");
         consoleNavigationPage.verifyCompliancePageIsNormal();
-        consoleNavigationPage.clickScheduleTab();
+        consoleNavigationPage.navigateTo("Schedule");
         consoleNavigationPage.verifySchedulePageForDisIsNormal();
-        consoleNavigationPage.clickTimeSheetTab();
+        consoleNavigationPage.navigateTo("Timesheet");
         consoleNavigationPage.verifytimeSheetPageForDisIsNormal();
 
 
         locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("verifyMock");
 
+        consoleNavigationPage.navigateTo("dashboard");
+        consoleNavigationPage.verifyOnlyComplianceIsGray();
         consoleNavigationPage.verifyOtherTableIsNormal();
-        consoleNavigationPage.clickTeamTab();
+        consoleNavigationPage.navigateTo("Team");
         consoleNavigationPage.verifyTeamPageIsNormal();
-        consoleNavigationPage.clickComplianceTab();
+        consoleNavigationPage.navigateTo("Compliance");
         consoleNavigationPage.verifyPageEmpty();
-        consoleNavigationPage.clickScheduleTab();
+        consoleNavigationPage.navigateTo("Schedule");
         consoleNavigationPage.verifySchedulePageIsNormal();
-        consoleNavigationPage.clickTimeSheetTab();
+        consoleNavigationPage.navigateTo("Timesheet");
         consoleNavigationPage.verifytimeSheetPageIsNormal();
     }
 }

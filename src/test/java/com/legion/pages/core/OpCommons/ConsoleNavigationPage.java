@@ -25,34 +25,32 @@ public class ConsoleNavigationPage extends BasePage {
     private WebElement searchResult;
 
     //Console navigation panel
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(1)")
+    @FindBy(id = "legion_cons_Dashboard_tab")
     private WebElement dashBoard;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(2)")
+    @FindBy(id = "legion_cons_Team_tab")
     private WebElement team;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(3)")
+    @FindBy(id = "legion_cons_Schedule_tab")
     private WebElement schedule;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(4)")
+    @FindBy(id = "legion_cons_Timesheet_tab")
     private WebElement timeSheet;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(5)")
+    @FindBy(id = "legion_cons_Compliance_tab")
     private WebElement compliance;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(6)")
+    @FindBy(id = "legion_cons_Report_tab")
     private WebElement report;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(7)")
+    @FindBy(id = "legion_cons_Inbox_tab")
     private WebElement inbox;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(9)")
+    @FindBy(id = "legion_cons_Admin_tab")
     private WebElement admin;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(10)")
-    private WebElement intergation;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(8)")
+    @FindBy(id = "legion_cons_Integration_tab")
+    private WebElement integration;
+    @FindBy(css = "div[title='News']")
     private WebElement news;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(11)")
+    @FindBy(id = "legion_cons_Controls_tab")
     private WebElement controls;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(8)")
-    private WebElement controlsCustomer;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(10)")
+    @FindBy(id = "legion_cons_Logout_tab")
     private WebElement logout;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(12)")
-    private WebElement logoutAdmin;
+    @FindBy(id = "legion_cons_Plan_tab")
+    private WebElement plan;
 
     public void searchLocation(String locationName) {
         upperFieldSearch.click();
@@ -89,17 +87,15 @@ public class ConsoleNavigationPage extends BasePage {
         } else if (module.equalsIgnoreCase("Admin")) {
             element = admin;
         } else if (module.equalsIgnoreCase("Integration")) {
-            element = intergation;
+            element = integration;
         } else if (module.equalsIgnoreCase("News")) {
             element = news;
         } else if (module.equalsIgnoreCase("Controls")) {
             element = controls;
-        }else if (module.equalsIgnoreCase("ControlsCustomer")) {
-            element = controlsCustomer;
+        }else if (module.equalsIgnoreCase("Plan")) {
+            element = plan;
         }else if (module.equalsIgnoreCase("Logout")) {
             element = logout;
-        } else if (module.equalsIgnoreCase("LogoutAdmin")) {
-            element = logoutAdmin;
         }else {
             System.out.println("No such Module!");
         }
@@ -108,98 +104,77 @@ public class ConsoleNavigationPage extends BasePage {
     }
     @FindBy (css = "div.no-left-right-padding.ng-scope")
     private WebElement dashBoardTab;
-    @FindBy (css = "div.col-sm-11.pl-35")
-    private WebElement reportTab;
     @FindBy (css = "div.col-xs-12.no-left-right-padding.ng-scope")
-    private WebElement inboxTab;
+    private WebElement reportTab;
     @FindBy (css = "lg-dashboard-card-wrapper.ng-scope")
     private WebElement consoleTab;
+    @FindBy(css = "div.lg-scenario-table-improved.ng-scope")
+    private WebElement planTab;
 
     public void verifyOtherTableIsNormal(){
-        if(dashBoard.isEnabled()){
-            click(dashBoard);
-            SimpleUtils.pass("Click dashBoard table successfully");
-            waitForSeconds(3);
-            if(dashBoardTab.isDisplayed()){
-                SimpleUtils.pass("DashBoard page is normal");
-            }else
-                SimpleUtils.fail("DashBoard page is not normal",false);
+        navigateTo("DashBoard");
+        if(dashBoardTab.isDisplayed()){
+            SimpleUtils.pass("DashBoard page is normal");
         }else
-            SimpleUtils.fail("dashBoard table is disable",false);
+            SimpleUtils.fail("DashBoard page is not normal",false);
 
-        if(report.isEnabled()){
-            click(report);
-            SimpleUtils.pass("Click report table successfully");
-            waitForSeconds(3);
+        navigateTo("Report");
+        if(reportTab.isDisplayed()){
+            SimpleUtils.pass("Report page is normal");
+        }else
+            SimpleUtils.fail("Report page is not normal",false);
+
+        navigateTo("Inbox");
+        if(reportTab.isDisplayed()){
+            SimpleUtils.pass("Inbox page is normal");
+        }else
+            SimpleUtils.fail("Inbox page is not normal",false);
+
+        navigateTo("Controls");
+        if(consoleTab.isDisplayed()){
+            SimpleUtils.pass("Controls page is normal");
+        }else
+            SimpleUtils.fail("Controls page is not normal",false);
+
+        if(isExist(plan)){
+            navigateTo("plan");
+            if(planTab.isDisplayed()){
+                SimpleUtils.pass("Plan page is normal");
+            }else
+                SimpleUtils.fail("Plan page is not normal",false);
+        }
+
+        if(isExist(admin)){
+            navigateTo("Admin");
             if(reportTab.isDisplayed()){
-                SimpleUtils.pass("Report page is normal");
+                SimpleUtils.pass("Admin page is normal");
             }else
-                SimpleUtils.fail("Report page is not normal",false);
-        }else
-            SimpleUtils.fail("Report table is disable",false);
+                SimpleUtils.fail("Admin page is not normal",false);
+        }
 
-        if(inbox.isEnabled()){
-            click(inbox);
-            SimpleUtils.pass("Click inbox table successfully");
-            waitForSeconds(3);
-            if(inboxTab.isDisplayed()){
-                SimpleUtils.pass("Inbox page is normal");
+        if(isExist(integration)){
+            navigateTo("Integration");
+            if(reportTab.isDisplayed()){
+                SimpleUtils.pass("Intergation page is normal");
             }else
-                SimpleUtils.fail("Inbox page is not normal",false);
-        }else
-            SimpleUtils.fail("Inbox table is disable",false);
-
-        if(controlsCustomer.isEnabled()){
-            click(controlsCustomer);
-            SimpleUtils.pass("Click controls table successfully");
-            waitForSeconds(3);
-            if(consoleTab.isDisplayed()){
-                SimpleUtils.pass("Controls page is normal");
-            }else
-                SimpleUtils.fail("Controls page is not normal",false);
-        }else
-            SimpleUtils.fail("Controls table is disable",false);
+                SimpleUtils.fail("Intergation page is not normal",false);
+        }
     }
 
-    public void clickTeamTab(){
-        if(team.isEnabled()){
-            click(team);
-            SimpleUtils.pass("Click team table successfully");
-        }else
-            SimpleUtils.fail("Team table is disable",false);
-    }
-
-    public void clickScheduleTab(){
-        if(schedule.isEnabled()){
-            click(schedule);
-            SimpleUtils.pass("Click schedule table successfully");
-        }else
-            SimpleUtils.fail("Schedule table is disable",false);
-    }
     @FindBy (css = "div.sov.ng-scope")
     private WebElement scheduleTab;
 
     public void verifySchedulePageIsNormal(){
-        waitForSeconds(3);
         if(scheduleTab.isDisplayed()){
             SimpleUtils.pass("Schedule table is normal");
         }else
             SimpleUtils.fail("Schedule table is not normal",false);
     }
 
-    public void clickTimeSheetTab(){
-        if(timeSheet.isEnabled()){
-            click(timeSheet);
-            SimpleUtils.pass("Click timesheet table successfully");
-        }else
-            SimpleUtils.fail("TimeSheet table is disable",false);
-    }
-
     @FindBy(css ="div.table-view")
     private WebElement timeSheetTab;
 
     public void verifytimeSheetPageIsNormal(){
-        waitForSeconds(3);
         if(timeSheetTab.isDisplayed()){
             SimpleUtils.pass("TimeSheet page is normal");
         }else
@@ -210,25 +185,15 @@ public class ConsoleNavigationPage extends BasePage {
     private WebElement teamTable;
 
     public void verifyTeamPageIsNormal(){
-        waitForSeconds(3);
         if(teamTable.isDisplayed()){
             SimpleUtils.pass("Team page is normal");
         }else
             SimpleUtils.fail("Team page is not normal",false);
     }
 
-    public void clickComplianceTab(){
-        if(compliance.isEnabled()){
-            click(compliance);
-            SimpleUtils.pass("Click compliance table successfully");
-        }else
-            SimpleUtils.fail("Compliance table is disable",false);
-    }
-
     @FindBy(css = "div.analytics-new-table.ng-scope")
     private WebElement complianceTable;
     public void verifyCompliancePageIsNormal(){
-        waitForSeconds(3);
         if(complianceTable.isDisplayed()){
             SimpleUtils.pass("Compliance page is normal");
         }else
@@ -249,7 +214,6 @@ public class ConsoleNavigationPage extends BasePage {
     private WebElement scheduleTabForDis;
 
     public void verifySchedulePageForDisIsNormal(){
-        waitForSeconds(3);
         if(scheduleTabForDis.isDisplayed()){
             SimpleUtils.pass("Schedule table for distinct is normal");
         }else
@@ -260,10 +224,39 @@ public class ConsoleNavigationPage extends BasePage {
     private WebElement timeSheetTabForDis;
 
     public void verifytimeSheetPageForDisIsNormal(){
-        waitForSeconds(3);
         if(timeSheetTabForDis.isDisplayed()){
             SimpleUtils.pass("TimeSheet page for distinct is normal");
         }else
             SimpleUtils.fail("Schedule page for distinct is not normal",false);
+    }
+
+    public void verifyOnlyTeamIsGray(){
+        if(team.getAttribute("class").contains("gray-item") && !compliance.getAttribute("class").contains("gray-item")
+            && !dashBoard.getAttribute("class").contains("gray-item") && !schedule.getAttribute("class").contains("gray-item")
+            && !timeSheet.getAttribute("class").contains("gray-item") && !controls.getAttribute("class").contains("gray-item")
+            && !report.getAttribute("class").contains("gray-item") && !inbox.getAttribute("class").contains("gray-item")){
+            SimpleUtils.pass("Only team is gray out");
+        }else
+            SimpleUtils.fail("Team is not gray out or other is gray out",false);
+    }
+
+    public void verifyOnlyComplianceIsGray(){
+        if(!team.getAttribute("class").contains("gray-item") && compliance.getAttribute("class").contains("gray-item")
+                && !dashBoard.getAttribute("class").contains("gray-item") && !schedule.getAttribute("class").contains("gray-item")
+                && !timeSheet.getAttribute("class").contains("gray-item") && !controls.getAttribute("class").contains("gray-item")
+                && !report.getAttribute("class").contains("gray-item") && !inbox.getAttribute("class").contains("gray-item")){
+            SimpleUtils.pass("Only compliance is gray out");
+        }else
+            SimpleUtils.fail("Compliance is not gray out or other is gray out",false);
+    }
+
+    public void verifyFourTabAreGray(){
+        if(team.getAttribute("class").contains("gray-item") && compliance.getAttribute("class").contains("gray-item")
+                && !dashBoard.getAttribute("class").contains("gray-item") && schedule.getAttribute("class").contains("gray-item")
+                && timeSheet.getAttribute("class").contains("gray-item") && !controls.getAttribute("class").contains("gray-item")
+                && !report.getAttribute("class").contains("gray-item") && !inbox.getAttribute("class").contains("gray-item")){
+            SimpleUtils.pass("Only compliance is gray out");
+        }else
+            SimpleUtils.fail("Compliance is not gray out or other is gray out",false);
     }
 }
