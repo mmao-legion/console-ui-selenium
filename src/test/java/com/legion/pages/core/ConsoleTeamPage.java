@@ -635,7 +635,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement workPreferTab;
 	@FindBy (css = "timeoff-management .collapsible-title-text")
 	private WebElement timeOffTab;
-	@FindBy (css = "[ng-click=\"newTimeOff()\"]")
+	@FindBy (css = "lg-button[label = 'Create time off']")
 	private WebElement newTimeOffBtn;
 	@FindBy (css = ".user-profile-section")
 	private List<WebElement> userProfileSections;
@@ -2065,7 +2065,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public void navigateToTimeOffPage() throws Exception {
 		if (isElementLoaded(timeOffTab, 5)) {
 			click(timeOffTab);
-			if (isElementLoaded(newTimeOffBtn, 10)) {
+			if (isElementLoaded(newTimeOffBtn, 15)) {
 				SimpleUtils.pass("Navigate to Time Off page Successfully!");
 			}else {
 				SimpleUtils.fail("Time Off page not loaded Successfully!", true);

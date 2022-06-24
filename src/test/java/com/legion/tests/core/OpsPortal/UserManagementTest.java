@@ -1,18 +1,15 @@
 package com.legion.tests.core.OpsPortal;
 
-import com.legion.pages.BasePage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.core.ConsoleControlsNewUIPage;
 import com.legion.pages.core.ConsoleControlsPage;
-import com.legion.pages.core.ConsoleTeamPage;
 import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
 import com.legion.pages.core.OpCommons.OpsCommonComponents;
 import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.pages.core.OpCommons.RightHeaderBarPage;
-import com.legion.pages.core.OpsPortal.OpsPortalUserManagementPage;
 import com.legion.pages.core.opusermanagement.*;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -531,7 +528,7 @@ public class UserManagementTest extends TestBase {
             rightHeaderBarPage.switchToConsole();
             ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
             consoleNavigationPage.searchLocation("ClearDistrict");
-            consoleNavigationPage.navigateTo("ControlsCustomer");
+            consoleNavigationPage.navigateTo("Controls");
 
             //go to job title page
             userManagementPage.goToUserAndRoles();
@@ -718,7 +715,7 @@ public class UserManagementTest extends TestBase {
                 SimpleUtils.fail("Hourly rate display",false);
 
             //go to controls
-            consoleNavigationPage.navigateTo("ControlsCustomer");
+            consoleNavigationPage.navigateTo("Controls");
             consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
             consoleControlsNewUIPage.searchAndSelectTeamMemberByName(users);
 
@@ -840,7 +837,7 @@ public class UserManagementTest extends TestBase {
             opsPortalNavigationPage.logout();
 
             //log in with user has no view contact info job title permission
-            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+nocontact01@legion.co", "admin11.a","verifyMock");
+            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+nocontact@legion.co", "admin11.a","verifyMock");
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.verifyNewTermsOfServicePopUp();
             //go to team
@@ -857,7 +854,7 @@ public class UserManagementTest extends TestBase {
             }else
                 SimpleUtils.fail("Profile permission is wrong",false);
 
-            consoleNavigationPage.navigateTo("ControlsCustomer");
+            consoleNavigationPage.navigateTo("Controls");
             consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
             consoleControlsNewUIPage.searchAndSelectTeamMemberByName(user2);
 
@@ -903,7 +900,7 @@ public class UserManagementTest extends TestBase {
             }else
                 SimpleUtils.fail("Profile permission is wrong",false);
 
-            consoleNavigationPage.navigateTo("ControlsCustomer");
+            consoleNavigationPage.navigateTo("Controls");
             consoleControlsNewUIPage.clickOnControlsUsersAndRolesSection();
             consoleControlsNewUIPage.searchAndSelectTeamMemberByName(user2);
 
@@ -928,6 +925,26 @@ public class UserManagementTest extends TestBase {
             }else
                 SimpleUtils.fail("Profile permission is wrong",false);
         }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Job title group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyJobTitleGroupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            //go to User Management Access Role table
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleGroup();
+
+            userManagementPage.verifyJobTitleGroupTabDisplay();
+
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }

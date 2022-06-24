@@ -142,4 +142,7 @@ public interface UserManagementPage {
 
     public void verifyAssignmentRuleBadge(String teamMemberTitle, String badge) throws Exception;
 
+    public void goToJobTitleGroup() throws Exception;
+
+    public void verifyJobTitleGroupTabDisplay() throws Exception;
     }

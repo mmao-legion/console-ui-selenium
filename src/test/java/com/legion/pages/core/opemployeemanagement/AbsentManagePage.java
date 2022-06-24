@@ -596,7 +596,7 @@ public class AbsentManagePage extends BasePage {
 
     public void configureTimeOffRules(String timeOff) throws Exception {
         search(timeOff);
-        waitForSeconds(3);
+        waitForSeconds(5);
         if (isButtonClickable(configure)) {
             System.out.println("Configure button is shown and clickable!");
             configure.click();
@@ -867,4 +867,13 @@ public class AbsentManagePage extends BasePage {
      return hasPromotionRule;
     }
 
+    @FindBy(css = "div.text-danger.text-invalid-range.ng-binding")
+    private WebElement noEnoughMessage;
+
+    public void verifyNotEnoughMessageDisplay(){
+        if(noEnoughMessage.isDisplayed()){
+            SimpleUtils.pass("Error message display");
+        }else
+            SimpleUtils.fail("Error message doesn't display",false);
+    }
 }

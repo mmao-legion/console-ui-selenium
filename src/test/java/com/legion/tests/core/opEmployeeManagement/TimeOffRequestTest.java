@@ -19,6 +19,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 public class TimeOffRequestTest extends TestBase {
 
@@ -419,6 +420,80 @@ public class TimeOffRequestTest extends TestBase {
         Assert.assertEquals(queryResult3, "No item returned!", "Failed to clear the data just generated in DB!");
         String queryResult4 = DBConnection.queryDB("legionrc.TAWorkerPTO", "id", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
         Assert.assertEquals(queryResult4, "No item returned!", "Failed to clear the data just generated in DB!");
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "OPS-4060 Ability to enable/disable accrual deductions for customers who do not use Legion to track accruals")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUseAccrualToggleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        navigationPage.navigateToEmployeeManagement();
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToTimeOffManagementPage();
+
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        absentManagePage.switchToSettings();
+        absentManagePage.setAccrualToggle(false);
+
+        refreshCache("Template");
+
+        switchToNewWindow();
+
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.navigateTo("logout");
+        Thread.sleep(480000);
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+admin@legion.co", "admin11.a","verifyMock");
+        consoleNavigationPage.searchLocation("verifyMock");
+        consoleNavigationPage.navigateTo("Team");
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMemberByName("Nancy NoContact");
+        teamPage.navigateToTimeOffPage();
+
+        deleteRequestedTimeOffDateByWorkerId("8aab92e1-8d15-4cad-b6fa-8c596e4d691c");
+
+        //refreshPage();
+
+        HashMap<String, String> expectedTOBalance = new HashMap<>();
+        //expectedTOBalance.put("Annual Leave", "100");
+        TimeOffPage timeOffPage = new TimeOffPage();
+        OpsCommonComponents opsCommonComponents = new OpsCommonComponents();
+        timeOffPage.createTimeOff("Annual Leave",false,28,28);
+        opsCommonComponents.okToActionInModal(true);
+        timeOffPage.createTimeOff("Annual Leave1",false,27,27);
+        opsCommonComponents.okToActionInModal(true);
+        expectedTOBalance.put("Annual Leave", "100");
+        expectedTOBalance.put("Annual Leave1", "0");
+        expectedTOBalance.put("Annual Leave2", "0");
+        expectedTOBalance.put("Annual Leave3", "0");
+        expectedTOBalance.put("Annual Leave4", "0");
+        expectedTOBalance.put("Bereavement1", "0");
+        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement3", "0");
+        expectedTOBalance.put("Bereavement4", "0");
+        expectedTOBalance.put("Covid1", "0");
+        expectedTOBalance.put("Covid2", "0");
+        expectedTOBalance.put("Covid3", "0");
+        expectedTOBalance.put("Covid4", "0");
+        expectedTOBalance.put("Floating Holiday", "0");
+        expectedTOBalance.put("Grandparents Day Off1", "0");
+
+        HashMap<String, String> accrualBalance100 = timeOffPage.getTimeOffBalance();
+        System.out.println(accrualBalance100);
+        System.out.println(expectedTOBalance);
+        Assert.assertTrue(expectedTOBalance.equals(accrualBalance100));
+
+        switchToNewWindow();
+        navigationPage.navigateToEmployeeManagement();
+        panelPage.goToTimeOffManagementPage();
+        absentManagePage.switchToSettings();
+        absentManagePage.setAccrualToggle(true);
+
+        refreshCache("Template");
     }
 
     @Automated(automated = "Automated")

@@ -1440,7 +1440,7 @@ public class AccrualEngineTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "OPS-4071 GM Holiday.")
+    @TestName(description = "OPS-3078 Puerto Rico")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualFixedDaysUIAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
@@ -1452,12 +1452,289 @@ public class AccrualEngineTest extends TestBase {
         panelPage.goToTimeOffManagementPage();
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
-        String targetTemplate = "Accrual Auto GM Holiday";
+        String targetTemplate = "AccrualAuto-FixedDays(Don't touch!!!)";
         absentManagePage.search(targetTemplate);
         Assert.assertTrue(absentManagePage.getResult().equals(targetTemplate), "Failed the find the target template!");
         SimpleUtils.pass("Succeeded in finding the target template!");
+        //fixed days ui validation
+        absentManagePage.configureTemplate("AccrualAuto-FixedDays(Don't touch!!!)");
+        absentManagePage.configureTimeOffRules("Sick");
+        //verify that eligibility rules has been added in UI
+        TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
+        configurationPage.getEligibilityTitle();
+        Assert.assertTrue(configurationPage.getEligibilityTitle().contains("Employee must work") && configurationPage.getEligibilityTitle().contains("hours over the last"));
+        SimpleUtils.pass("Succeeded in validating eligibility rules was added in UI!");
+        //set accrual period
+        configurationPage.setAccrualPeriod("Specified Date", "Specified Date", "January", "1", "December", "31");
+        SimpleUtils.pass("Succeeded in setting accrual period!");
+        //verify new distribution type (Fixed days)has been added.
+        configurationPage.setDistributionMethod("Worked Hours");
+        Assert.assertTrue(configurationPage.getWorkedHoursDistributionTypeOptions().contains("Fixed Days"));
+        SimpleUtils.pass("Succeeded in validating new distribution type---Fixed Days was added!");
+        //verify the new distribution method can be selected.
+        configurationPage.setDistributionType("Fixed Days");
+        SimpleUtils.pass("Succeeded in validating new distribution method---Fixed Days can be selected!");
+        //verify the distribution switch to the Specified one.
+        configurationPage.addSpecifiedServiceLever(0, "60", "5", "65");
+        Assert.assertEquals(configurationPage.getFixedDaysLabel(), "Fixed Days", "Failed to assert the Distribution Switch to the Fixed Days!");
+        SimpleUtils.pass("Succeeded in switching to the Fixed days distribution!");
+        //configure the fixed days distribution.
+        configurationPage.setFixedDaysDistribution("10", "3");
+        SimpleUtils.pass("Succeeded in setting Fixed days distribution!");
+        //save the configuration
+        configurationPage.saveTimeOffConfiguration(true);
+        SimpleUtils.pass("Succeeded in saving fixed days configurations!");
+        //roll back the settings.
+        absentManagePage.removeTimeOffRules("Sick");
+        OpsCommonComponents components = new OpsCommonComponents();
+        components.saveTemplateAs("Save as draft");
 
+        //switch to console
+        RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        modelSwitchPage.switchToNewTab();
+        //search and go to the target location
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("OMLocation16");
+        //go to team member details and switch to the time off tab.
+        consoleNavigationPage.navigateTo("Team");
+        TimeOffPage timeOffPage = new TimeOffPage();
+        String teamMemName = "Cherry Li";
+        timeOffPage.goToTeamMemberDetail(teamMemName);
+        timeOffPage.switchToTimeOffTab();
 
+        //get session id via login
+        String sessionId = logIn();
+        //set UseAbsenceMgmtConfiguration Toggle On
+        if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
+            String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
+            Assert.assertEquals(getHttpStatusCode(toggleResponse), 200, "Failed to get the user's template!");
+        }
+        //confirm template
+        String workerId = "1523a61c-d9e4-4ee6-97f9-b8195ae6f990";
+        String tempName = getUserTemplate(workerId, sessionId);
+        Assert.assertEquals(tempName, targetTemplate, "The user wasn't associated to this Template!!! ");
+        SimpleUtils.pass("Succeeded in validating employee was associated to the target template!");
+
+        //create a time off balance map to store the expected time off balances.
+        HashMap<String, String> expectedTOBalance = new HashMap<>();
+        expectedTOBalance.put("Annual Leave", "0");//Hire Date 10/21/2021~ Hire Date
+        expectedTOBalance.put("PTO", "0");//Hire Date 10/21/2021 ~ SpecifiedDate 12/31
+
+        //Delete the worker's accrual balance
+        String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
+        Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> actualTOB = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(actualTOB, expectedTOBalance, "Failed to clear the employee's accrual balance!");
+        SimpleUtils.pass("Succeeded in clearing employee's accrual balance!");
+        //Annual Leave
+        //< eligibility rules:  10/21/2021~10/30/2021  in total:55.67(approved)   leave 10/29 5hrs as pending  8/18/28
+        //> eligibility rules: 10/31/2021~11/09/2021  in total:60.6(approved)     leave 11/02 10hrs as pending   7/17/27
+        //= eligibility rules: 11/10/2021~11/19/2021  in total:60(approved)     leave 11/19 2.5hrs as pending
+        //PTO set as no eligibility rules. default value N/A
+        //< eligibility rules:
+        String Date1 = "2021-10-26";//<fixed days
+        String Date2 = "2021-10-30";//=fixed days
+        String Date3 = "2021-10-31";//>fixed days
+        //> eligibility rules:
+        String Date4 = "2021-11-08";//<fixed days
+        String Date5 = "2021-11-09";//=fixed days
+        String Date6 = "2021-11-10";//>fixed days
+        //= eligibility rules:
+        String Date7 = "2021-11-18";//<fixed days
+        String Date8 = "2021-11-19";//=fixed days
+        String Date9 = "2021-11-20";//>fixed days
+
+        //Run engine to the day<fixed days:
+        /*String[] accrualResponse1 = runAccrualJobToSimulateDate(workerId, Date1, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse1), 200, "Failed to run accrual job!");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance1 = timeOffPage.getTimeOffBalance();
+        String verification1 = validateTheAccrualResults(accrualBalance1, expectedTOBalance);
+        Assert.assertTrue(verification1.contains("Succeeded in validating"), verification1);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //Run engine to the fixed days:
+        //blocked by OPS-4788
+        String[] accrualResponse2 = runAccrualJobToSimulateDate(workerId, Date2, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse2), 200, "Failed to run accrual job!");
+        //expectedTOBalance.put("PTO", "3");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance2 = timeOffPage.getTimeOffBalance();
+        String verification2 = validateTheAccrualResults(accrualBalance2, expectedTOBalance);
+        Assert.assertTrue(verification2.contains("Succeeded in validating"), verification2);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //Delete the worker's accrual balance and directly run engine to the day>fixed days
+        String[] deleteResponse1 = deleteAccrualByWorkerId(workerId, sessionId);
+        Assert.assertEquals(getHttpStatusCode(deleteResponse1), 200, "Failed to delete the user's accrual!");
+        expectedTOBalance.put("PTO", "0");
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> actualTOB1 = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(actualTOB1, expectedTOBalance, "Failed to clear the employee's accrual balance!");
+        SimpleUtils.pass("Succeeded in clearing employee's accrual balance!");
+
+        String[] accrualResponse3 = runAccrualJobToSimulateDate(workerId, Date3, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse3), 200, "Failed to run accrual job!");
+        //expectedTOBalance.put("PTO", "3");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance3 = timeOffPage.getTimeOffBalance();
+        String verification3 = validateTheAccrualResults(accrualBalance3, expectedTOBalance);
+        Assert.assertTrue(verification3.contains("Succeeded in validating"), verification3);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //>eligibility rules
+        //Run engine to the day<fixed days:  0, 3
+        String[] accrualResponse4 = runAccrualJobToSimulateDate(workerId, Date4, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse4), 200, "Failed to run accrual job!");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance4 = timeOffPage.getTimeOffBalance();
+        String verification4 = validateTheAccrualResults(accrualBalance4, expectedTOBalance);
+        Assert.assertTrue(verification4.contains("Succeeded in validating"), verification4);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //Run engine to the fixed days:
+        String[] accrualResponse5 = runAccrualJobToSimulateDate(workerId, Date5, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse5), 200, "Failed to run accrual job!");
+        expectedTOBalance.put("Annual Leave", "3");
+        //expectedTOBalance.put("PTO", "6");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance5 = timeOffPage.getTimeOffBalance();
+        String verification5 = validateTheAccrualResults(accrualBalance5, expectedTOBalance);
+        Assert.assertTrue(verification5.contains("Succeeded in validating"), verification5);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //Delete the worker's accrual balance and directly run engine to the day>fixed days
+        String[] deleteResponse2 = deleteAccrualByWorkerId(workerId, sessionId);
+        Assert.assertEquals(getHttpStatusCode(deleteResponse2), 200, "Failed to delete the user's accrual!");
+        expectedTOBalance.put("Annual Leave", "0");
+        expectedTOBalance.put("PTO", "0");
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> actualTOB2 = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(actualTOB2, expectedTOBalance, "Failed to clear the employee's accrual balance!");
+        SimpleUtils.pass("Succeeded in clearing employee's accrual balance!");
+
+        String[] accrualResponse6 = runAccrualJobToSimulateDate(workerId, Date6, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse6), 200, "Failed to run accrual job!");
+        expectedTOBalance.put("Annual Leave", "3");
+        //expectedTOBalance.put("PTO", "6");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance6 = timeOffPage.getTimeOffBalance();
+        String verification6 = validateTheAccrualResults(accrualBalance6, expectedTOBalance);
+        Assert.assertTrue(verification6.contains("Succeeded in validating"), verification6);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //=eligibility rules
+        //Run engine to the day<fixed days:
+        String[] accrualResponse7 = runAccrualJobToSimulateDate(workerId, Date7, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse7), 200, "Failed to run accrual job!");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance7 = timeOffPage.getTimeOffBalance();
+        String verification7 = validateTheAccrualResults(accrualBalance7, expectedTOBalance);
+        Assert.assertTrue(verification7.contains("Succeeded in validating"), verification7);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //Run engine to the fixed days:
+        String[] accrualResponse8 = runAccrualJobToSimulateDate(workerId, Date8, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse8), 200, "Failed to run accrual job!");
+        expectedTOBalance.put("Annual Leave", "6");
+        //expectedTOBalance.put("PTO", "9");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance8 = timeOffPage.getTimeOffBalance();
+        String verification8 = validateTheAccrualResults(accrualBalance8, expectedTOBalance);
+        Assert.assertTrue(verification8.contains("Succeeded in validating"), verification8);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //Delete the worker's accrual balance and directly run engine to the day>fixed days
+        String[] deleteResponse3 = deleteAccrualByWorkerId(workerId, sessionId);
+        Assert.assertEquals(getHttpStatusCode(deleteResponse3), 200, "Failed to delete the user's accrual!");
+        expectedTOBalance.put("Annual Leave", "0");
+        expectedTOBalance.put("PTO", "0");
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> actualTOB3 = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(actualTOB3, expectedTOBalance, "Failed to clear the employee's accrual balance!");
+        SimpleUtils.pass("Succeeded in clearing employee's accrual balance!");
+
+        String[] accrualResponse9 = runAccrualJobToSimulateDate(workerId, Date9, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse9), 200, "Failed to run accrual job!");
+        expectedTOBalance.put("Annual Leave", "6");
+        //expectedTOBalance.put("PTO", "9");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance9 = timeOffPage.getTimeOffBalance();
+        String verification9 = validateTheAccrualResults(accrualBalance9, expectedTOBalance);
+        Assert.assertTrue(verification9.contains("Succeeded in validating"), verification9);
+        SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
+
+        //max carryover works well with fixed days
+        //OPS-5063
+        timeOffPage.editTimeOffBalance("PTO", "63");//50
+        components.okToActionInModal(true);
+        runAccrualJobToSimulateDate(workerId, "2021-12-30", sessionId); //PTO: +12hrs
+        expectedTOBalance.put("PTO", "60");//hire date to specified date
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance10 = timeOffPage.getTimeOffBalance();
+        String verification10 = validateTheAccrualResults(accrualBalance10, expectedTOBalance);
+        Assert.assertTrue(verification10.contains("Succeeded in validating"), verification10);
+        SimpleUtils.pass("Succeeded in validating Annual earn limit works well with fixed days(Hire date to Specified date)!");
+        //OPS-5062
+        String[] accrualResponse11 = runAccrualJobToSimulateDate(workerId, "2021-12-31", sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse11), 200, "Failed to run accrual job!");
+        expectedTOBalance.put("PTO", "5");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance11 = timeOffPage.getTimeOffBalance();
+        String verification11 = validateTheAccrualResults(accrualBalance11, expectedTOBalance);
+        Assert.assertTrue(verification11.contains("Succeeded in validating"), verification11);
+        SimpleUtils.pass("Succeeded in validating max carryover works well with fixed days(Hire date to Specified date)!");*/
+
+        //Annual earn limit works well with fixed days
+        timeOffPage.editTimeOffBalance("Annual Leave", "61");
+        components.okToActionInModal(true);
+        runAccrualJobToSimulateDate(workerId, "2022-10-01", sessionId);
+        expectedTOBalance.put("Annual Leave", "60");//hire date to specified date
+        //expectedTOBalance.put("PTO", "32");//5+27
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance12 = timeOffPage.getTimeOffBalance();
+        String verification12 = validateTheAccrualResults(accrualBalance12, expectedTOBalance);
+        Assert.assertTrue(verification12.contains("Succeeded in validating"), verification12);
+        SimpleUtils.pass("Succeeded in validating Annual earn limit works well with fixed days(Hire date to hire date)!");
+
+        runAccrualJobToSimulateDate(workerId, "2022-10-21", sessionId);
+        expectedTOBalance.put("Annual Leave", "5");//hire date to specified date
+        //expectedTOBalance.put("PTO", "34");//5+29
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance13 = timeOffPage.getTimeOffBalance();
+        String verification13 = validateTheAccrualResults(accrualBalance13, expectedTOBalance);
+        Assert.assertTrue(verification13.contains("Succeeded in validating"), verification13);
+        SimpleUtils.pass("Succeeded in validating max carryover works well with fixed days(Hire date to hire date)!");
+
+        //Max available hours works well with fixed days
     }
 
 
