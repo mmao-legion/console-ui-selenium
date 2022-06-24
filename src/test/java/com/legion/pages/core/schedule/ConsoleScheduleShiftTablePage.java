@@ -3732,21 +3732,21 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @Override
     public boolean isMyScheduleShiftLocationLoaded(int index) throws Exception {
-        boolean shiftJobTitleLoaded = false;
+        boolean myScheduleShiftLocationLoaded = false;
         try{
             if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
                 WebElement shiftJobTitle = dayViewAvailableShifts.get(index).findElement(By.cssSelector(".sch-day-view-shift-location.ng-binding.ng-scope"));
                 if (isElementLoaded(shiftJobTitle)) {
-                    shiftJobTitleLoaded = true;
-                    SimpleUtils.report("The job title displays!");
+                    myScheduleShiftLocationLoaded = true;
+                    SimpleUtils.report("The location displays!");
                 }else{
                     SimpleUtils.fail("The shifts in DayView are not loaded correctly!",false);
                 }
             } }
         catch (Exception e) {
-            SimpleUtils.report("The job title doesn't display!");
+            SimpleUtils.report("The location doesn't display!");
         }finally {
-            return shiftJobTitleLoaded;
+            return myScheduleShiftLocationLoaded;
         }
     }
 
