@@ -983,7 +983,7 @@ public class ConfigurationTest extends TestBase {
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
-            locationsPage.actionsForEachTypeOfTemplate("Scheduling Rules","View");
+            locationsPage.clickActionsForTemplate("Scheduling Rules","View");
             locationsPage.goToScheduleRulesListAtLocationLevel(workRole);
             configurationPage.validateAdvanceStaffingRuleShowingAtLocationLevel(startEvent,startOffsetTime,startEventPoint,startTimeUnit,
                     endEvent,endOffsetTime,endEventPoint,endTimeUnit,days,shiftsNumber);
