@@ -48,7 +48,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             int count = dayViewAvailableShifts.size();
             for (int i = 0; i < count; i++) {
                 List<WebElement> tempShifts = getDriver().findElements(By.cssSelector(".sch-day-view-shift-outer .right-shift-box"));
-                scrollToElement(tempShifts.get(i));
+//                scrollToElement(tempShifts.get(i));
+                scrollToBottom();
                 moveToElementAndClick(tempShifts.get(i));
                 deleteShift();
             }
