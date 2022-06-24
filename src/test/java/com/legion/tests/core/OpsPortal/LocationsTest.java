@@ -1512,28 +1512,21 @@ public class LocationsTest extends TestBase {
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
             List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfosInLocationLevel();
-            if (templateInfo.get(6).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Labor model template is not overridden at location level");
-                locationsPage.editLocationBtnIsClickableInLocationDetails();
-            } else {
-                SimpleUtils.pass("Labor model template is already overridden at location level");
-                locationsPage.editLocationBtnIsClickableInLocationDetails();
-                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"), "Reset");
-            }
+            locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+            locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","No");
 
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"), "Edit");
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
             locationsPage.updateLocationLevelExternalAttributes(attributeName, attributeValue, attributeDescription);
 
             List<HashMap<String, String>> templateInfo1 = locationsPage.getLocationTemplateInfosInLocationLevel();
-            if (templateInfo1.get(6).get("Overridden").equalsIgnoreCase("Yes")) {
-                SimpleUtils.pass("User can override location level external attributes successfully");
-            } else {
-                SimpleUtils.pass("User can NOT override location level external attributes successfully");
-            }
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
+
 
 //          Check the value is updated correct or not?
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"), "View");
+            locationsPage.clickActionsForTemplate("Labor Model", "View");
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
             HashMap<String, List<String>> locationLevelAttributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
             for (String key : locationLevelAttributesInfoInLocation.keySet()) {
@@ -1597,7 +1590,6 @@ public class LocationsTest extends TestBase {
         locationsPage.goToLocationDetailsPage(locationName);
         locationsPage.goToConfigurationTabInLocationLevel();
         locationsPage.clickActionsForTemplate("Labor Model", "Reset");
-        locationsPage.backToConfigurationTabInLocationLevel();
         locationsPage.clickActionsForTemplate("Labor Model", "Edit");
         locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
         locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","No");
@@ -1681,7 +1673,6 @@ public class LocationsTest extends TestBase {
         locationsPage.goToConfigurationTabInLocationLevel();
         List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfosInLocationLevel();
         locationsPage.clickActionsForTemplate("Labor Model", "Reset");
-        locationsPage.backToConfigurationTabInLocationLevel();
         locationsPage.clickActionsForTemplate("Labor Model", "Edit");
         locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
         locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","No");
@@ -1767,7 +1758,6 @@ public class LocationsTest extends TestBase {
         locationsPage.goToLocationDetailsPage(locationName);
         locationsPage.goToConfigurationTabInLocationLevel();
         locationsPage.clickActionsForTemplate("Labor Model", "Reset");
-        locationsPage.backToConfigurationTabInLocationLevel();
         locationsPage.clickActionsForTemplate("Labor Model", "Edit");
         locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
         locationsPage.clickActionsForTemplate("Labor Model", "View");

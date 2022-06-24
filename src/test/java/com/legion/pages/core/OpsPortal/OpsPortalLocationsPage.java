@@ -4284,9 +4284,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (templateName.contains("Labor Model")) {
 				if (isExist(resetButton)) {
 					clickTheElement(resetButton);
+					verifyResetWindowDisplay();
+					click(okBtnInSelectLocation);
+				}else {
+					SimpleUtils.report("Location level External Attributes is not overridden");
+					clickTheElement(cancelBTNOnLocationLevelTemplateDetailsPage);
 				}
+			}else{
+				click(okBtnInSelectLocation);
 			}
-			click(okBtnInSelectLocation);
 		}
 	}
 
