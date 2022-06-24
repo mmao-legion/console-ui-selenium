@@ -228,7 +228,6 @@ public class BulkCreateTest extends TestBase {
                     expectMessage.equalsIgnoreCase(actualMessage), false);
 
             //Check closed day warning message
-            Thread.sleep(3000);
             newShiftPage.moveMouseToSpecificWeekDayOnNewCreateShiftPage("Sun");
             SimpleUtils.assertOnFail("The closed day tooltip is loaded! ",
                     newShiftPage.checkClosedDayTooltipIsLoaded(), false);
@@ -775,6 +774,8 @@ public class BulkCreateTest extends TestBase {
             String workRole = shiftInfo.get(4);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1840,15 +1841,15 @@ public class BulkCreateTest extends TestBase {
             createShiftsByDifferentAccessRoles(false);
             loginPage.logOut();
 
-//            //Verify the shifts can be created by new UI by original TL access role
-//            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
-//            createShiftsByDifferentAccessRoles(true);
-//            loginPage.logOut();
-//
-//            //Verify the shifts can be created by new UI by custom TL access role
-//            loginAsDifferentRole(AccessRoles.TeamLead2.getValue());
-//            createShiftsByDifferentAccessRoles(true);
-//            loginPage.logOut();
+            //Verify the shifts can be created by new UI by original TL access role
+            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
+            createShiftsByDifferentAccessRoles(true);
+            loginPage.logOut();
+
+            //Verify the shifts can be created by new UI by custom TL access role
+            loginAsDifferentRole(AccessRoles.TeamLead2.getValue());
+            createShiftsByDifferentAccessRoles(true);
+            loginPage.logOut();
 
             //Verify the shifts can be created by new UI by original DM access role
             loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
@@ -1896,14 +1897,15 @@ public class BulkCreateTest extends TestBase {
         if (isWeekGenerated) {
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
-        String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
         createSchedulePage.createScheduleForNonDGFlowNewUI();
         //Verify the assign workflow with one shift for one days
+        String workRole = shiftOperatePage.getRandomWorkRole();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         newShiftPage.clickOnDayViewAddNewShiftButton();
         SimpleUtils.assertOnFail("New create shift page is not display! ",
                 newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
         //Fill the required option
+
         newShiftPage.selectWorkRole(workRole);
         String shiftStartTime = "8:00am";
         String shiftEndTime = "11:00am";
