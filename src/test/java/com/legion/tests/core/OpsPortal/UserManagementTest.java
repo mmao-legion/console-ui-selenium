@@ -930,7 +930,7 @@ public class UserManagementTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
-    @Owner(owner = "Fiona")
+    @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Job title group")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
