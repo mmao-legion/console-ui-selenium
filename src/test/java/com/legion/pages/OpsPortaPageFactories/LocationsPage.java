@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface LocationsPage {
 
@@ -288,6 +289,10 @@ public interface LocationsPage {
     public void changeAssignmentRuleStatusFromLocationLevel(String status) throws Exception;
     public void addBadgeAssignmentRuleStatusFromLocationLevel(String badgeName) throws Exception;
     public void verifyAssignmentRulePriorityCannotBeEdit(String assignmentRuleTitle) throws Exception;
-    public void verifyOverrideStatusAtLocationLevel(String templateName) throws Exception;
-    }
+    public void verifyOverrideStatusAtLocationLevel(String templateName, String flag) throws Exception;
+    public Map<String, HashMap<String, String>> getLocationTemplateInfoInLocationLevelNew() ;
+    public void resetLocationLevelExternalAttributesInLaborModelTemplate()throws Exception;
+    public void updateEnterpriseProfileDetailInfo() throws Exception;
+    public void clickOnEnterpriseProfileCard() throws Exception;
+}
 

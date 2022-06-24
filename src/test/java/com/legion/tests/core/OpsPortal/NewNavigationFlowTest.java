@@ -2,6 +2,7 @@ package com.legion.tests.core.OpsPortal;
 
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -721,5 +722,102 @@ public class NewNavigationFlowTest extends TestBase {
         }else {
             SimpleUtils.fail("The count of districts is NOT correct",false);
         }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Persist console tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPersistConsoleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
+
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("verifyMock");
+
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+
+        consoleNavigationPage.verifyOnlyComplianceIsGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
+        consoleNavigationPage.verifyTeamPageIsNormal();
+        consoleNavigationPage.navigateTo("Compliance");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Timesheet");
+        consoleNavigationPage.verifytimeSheetPageIsNormal();
+        consoleNavigationPage.navigateTo("Schedule");
+        consoleNavigationPage.verifySchedulePageIsNormal();
+
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("ClearDistrict");
+
+        consoleNavigationPage.verifyOnlyTeamIsGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Compliance");
+        consoleNavigationPage.verifyCompliancePageIsNormal();
+        consoleNavigationPage.navigateTo("Schedule");
+        consoleNavigationPage.verifySchedulePageForDisIsNormal();
+        consoleNavigationPage.navigateTo("Timesheet");
+        consoleNavigationPage.verifytimeSheetPageForDisIsNormal();
+
+        consoleNavigationPage.navigateTo("logout");
+
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+dm@legion.co", "admin11.a","");
+
+        consoleNavigationPage.verifyFourTabAreGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Compliance");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Schedule");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Timesheet");
+        consoleNavigationPage.verifyPageEmpty();
+
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("Region20210818053401");
+
+        consoleNavigationPage.navigateTo("dashboard");
+        consoleNavigationPage.verifyFourTabAreGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Compliance");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Schedule");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Timesheet");
+        consoleNavigationPage.verifyPageEmpty();
+
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("ClearDistrict");
+
+        consoleNavigationPage.verifyOnlyTeamIsGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Compliance");
+        consoleNavigationPage.verifyCompliancePageIsNormal();
+        consoleNavigationPage.navigateTo("Schedule");
+        consoleNavigationPage.verifySchedulePageForDisIsNormal();
+        consoleNavigationPage.navigateTo("Timesheet");
+        consoleNavigationPage.verifytimeSheetPageForDisIsNormal();
+
+
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("verifyMock");
+
+        consoleNavigationPage.navigateTo("dashboard");
+        consoleNavigationPage.verifyOnlyComplianceIsGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
+        consoleNavigationPage.verifyTeamPageIsNormal();
+        consoleNavigationPage.navigateTo("Compliance");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Schedule");
+        consoleNavigationPage.verifySchedulePageIsNormal();
+        consoleNavigationPage.navigateTo("Timesheet");
+        consoleNavigationPage.verifytimeSheetPageIsNormal();
     }
 }

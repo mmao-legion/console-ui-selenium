@@ -8,6 +8,7 @@ import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.an.E;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
@@ -3525,9 +3526,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void canGoToLaborModelViaTemNameInLocationLevel() {
-		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
-		if (areListElementVisible(templateNameLinks, 10)) {
-			click(templateNameLinks.get(6));
+		WebElement templateNameLink = getDriver().findElement(By.xpath("//td[contains(text(),'Labor Model')]/following-sibling::*[1]/span"));
+		if (isExist(templateNameLink)) {
+			click(templateNameLink);
 			if (areListElementVisible(workRoleList, 5)){
 				SimpleUtils.pass("Go to Labor model in locations level successfully");
 			} else
@@ -3566,7 +3567,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(backBtnInLocationDetailsPage, 5)) {
 			click(backBtnInLocationDetailsPage);
 			waitForSeconds(8);
-			if (isElementEnabled(editLocationBtn, 10)) {
+			if (templateRows.size()>0) {
 				SimpleUtils.pass("Back to location configuration page successfully");
 			} else
 				SimpleUtils.fail("Back to location configuration page failed", false);
@@ -4268,19 +4269,28 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void clickActionsForTemplate(String templateName, String action) {
 		List<WebElement> actions = getDriver().findElements(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span/span[2]"));
 		actions.add(getDriver().findElement(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span[1]")));
+		String actionNew = action;
+		if (templateName.contains("Labor Model") && action.equalsIgnoreCase("reset")){
+			actionNew = "Edit";
+		}
 		for (int i = 0; i < actions.size(); i++) {
-			if (actions.get(i).getText().contains(action)) {
+			if (actions.get(i).getText().contains(actionNew)) {
 				actions.get(i).click();
 				SimpleUtils.pass(templateName + " click " + action);
 				break;
 			}
 		}
 		if (action.equalsIgnoreCase("reset")) {
+			if (templateName.contains("Labor Model")) {
+				if (isExist(resetButton)) {
+					clickTheElement(resetButton);
+				}
+			}
 			click(okBtnInSelectLocation);
 		}
 	}
 
-	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
+	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"] td lg-button button span span")
 	private List<WebElement> workRoleListInAssignmentRuleTemplate;
 
 	@Override
@@ -4290,9 +4300,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			searchByWorkRoleInput.sendKeys(workRole);
 			if (areListElementVisible(workRoleListInAssignmentRuleTemplate, 5)) {
 				for (WebElement s : workRoleListInAssignmentRuleTemplate) {
-					String workRoleName = s.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+					String workRoleName = s.getText().trim();
 					if (workRoleName.contains(workRole)) {
-						clickTheElement(s.findElement(By.cssSelector("td:nth-child(1) lg-button")));
+						clickTheElement(s);
 						waitForSeconds(2);
 						break;
 					}
@@ -4414,11 +4424,19 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
-	public void verifyOverrideStatusAtLocationLevel(String templateName) throws Exception {
-		if (isExist(getDriver().findElement(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/span")))) {
-			SimpleUtils.pass("template is overrided");
+	public void verifyOverrideStatusAtLocationLevel(String templateName, String flag) throws Exception {
+		if (flag.equalsIgnoreCase("Yes")) {
+			if (isExist(getDriver().findElement(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/span")))) {
+				SimpleUtils.pass("template is overrided");
+			}else{
+				SimpleUtils.fail("Template is not overrided", false);
+			}
 		} else {
-			SimpleUtils.fail("Template is not overrided", false);
+			if (getDriver().findElements(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/*")).size() == 1) {
+				SimpleUtils.fail("template is overrided", false);
+			}else{
+				SimpleUtils.pass("Template is reset");
+			}
 		}
 	}
 
@@ -4428,6 +4446,127 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.pass("" + templateName + "template is modified by " + user + "");
 		} else {
 			SimpleUtils.fail("" + templateName + "template is not modified by " + user + "", false);
+		}
+	}
+
+	public Map<String, HashMap<String, String>> getLocationTemplateInfoInLocationLevelNew() {
+		Map<String, HashMap<String, String>>  templateInfo = new HashMap<>();
+		if (areListElementVisible(templateRows, 5)) {
+			for (WebElement s : templateRows) {
+				Map<String, String> li = new HashMap<String, String>() ;
+				li.put("Template Type", s.findElement(By.cssSelector("td:nth-child(1)")).getText());
+				if(s.findElement(By.cssSelector("td:nth-child(1)")).getText().equalsIgnoreCase("Time and Attendance")){
+					li.put("Template Type", "Time & Attendance");
+				}
+				li.put("Template Name", s.findElement(By.cssSelector("td:nth-child(2)")).getText());
+				if (isExist(overRiddenIcon)) {
+					li.put("Overridden", "Yes");
+				} else
+					li.put("Overridden", "No");
+
+				templateInfo.put(s.findElement(By.cssSelector("td:nth-child(1)")).getText(), (HashMap) li);
+			}
+			return templateInfo;
+
+		} else
+			SimpleUtils.fail("Location configuration tab load failed", false);
+		return null;
+	}
+
+	//added by fiona
+	@FindBy(css="lg-dashboard-card[title=\"Enterprise Profile\"] h1")
+	private WebElement enterpriseProfileCard;
+	@FindBy(css="lg-button[label=\"Edit\"] button")
+	private WebElement editButtonOnEnterpriseProfilePage;
+	@FindBy(css="form form-section[form-title=\"Enterprise Information\"]")
+	private WebElement enterpriseInformation;
+	@FindBy(css="form form-section[form-title=\"Primary Contact\"]")
+	private WebElement primaryContactOnEnterpriseProfilePage;
+	@FindBy(css="form form-section[form-title=\"Enterprise Logo\"]")
+	private WebElement enterpriseLogo;
+	@FindBy(css="form form-section[form-title=\"Default Location Picture\"]")
+	private WebElement enterpriseLocationPicture;
+	@FindBy(css="form form-section[form-title=\"Login Splash Image\"]")
+	private WebElement loginSplashImage;
+	@FindBy(css="form form-section[form-title=\"Easy Company Identifier\"]")
+	private WebElement easyCompanyIdentifier;
+
+	@Override
+	public void clickOnEnterpriseProfileCard() throws Exception {
+		if(isElementLoaded(enterpriseProfileCard,5)){
+			clickTheElement(enterpriseProfileCard);
+			waitForSeconds(3);
+			if(isElementLoaded(editButtonOnEnterpriseProfilePage,2)){
+				SimpleUtils.pass("User click Enterprise Profile tile successfully!");
+			}else {
+				SimpleUtils.fail("User CAN'T click Enterprise Profile tile!",false);
+			}
+		}else {
+			SimpleUtils.fail("Enterprise Profile tile is NOT showing",false);
+		}
+	}
+
+	public boolean isEnterpriseProfileDetailsShowing() throws Exception{
+		boolean flag = false;
+		if(isElementLoaded(editButtonOnEnterpriseProfilePage,2)&&(isElementLoaded(enterpriseInformation,2))&&(isElementLoaded(primaryContactOnEnterpriseProfilePage,2))
+				&&isElementLoaded(enterpriseLogo,2)&&isElementLoaded(enterpriseLocationPicture,2)&&isElementLoaded(loginSplashImage,2)
+				&&isElementLoaded(easyCompanyIdentifier,2)){
+			flag = true;
+			SimpleUtils.pass("Enterprise Profile details page can show well");
+		}else {
+			SimpleUtils.fail("Enterprise Profile details page can't show well",false);
+		}
+		return flag;
+	}
+
+	public void clickOnEditButtonOnEnterpriseProfile() throws Exception{
+		if(isElementLoaded(editButtonOnEnterpriseProfilePage,2)){
+			clickTheElement(editButtonOnEnterpriseProfilePage);
+			String classValue = getDriver().findElement(By.cssSelector("input-field[label=\"Enterprise Name\"] ng-form")).getAttribute("class").trim();
+			if(!classValue.contains("input-field-disabled")){
+				SimpleUtils.pass("User can click edit button successfully!");
+			}else {
+				SimpleUtils.fail("User can't click edit button",false);
+			}
+		}
+	}
+
+	@FindBy(css="input-field[label=\"First Name\"] input")
+	private WebElement firstName;
+	@FindBy(css="input-field[label=\"Last Name\"] input")
+	private WebElement lastName;
+	@FindBy(css="input-field[label=\"E-mail\"] input")
+	private WebElement email;
+	@FindBy(css="input-field[label=\"Phone\"] input")
+	private WebElement phone;
+	@FindBy(css="lg-button[label=\"Save and continue\"] button")
+	private WebElement saveAndContinue;
+	@FindBy(tagName = "lg-close")
+	private WebElement successPopup;
+
+	@Override
+	public void updateEnterpriseProfileDetailInfo() throws Exception{
+		if(isEnterpriseProfileDetailsShowing()){
+			clickOnEditButtonOnEnterpriseProfile();
+			//update EnterpriseProfileDetailInfo
+			firstName.click();
+			firstName.clear();
+			firstName.sendKeys("First Name");
+			lastName.click();
+			lastName.clear();
+			lastName.sendKeys("First Name");
+			email.click();
+			email.clear();
+			email.sendKeys("fiona@test.com");
+			phone.click();
+			phone.clear();
+			phone.sendKeys("1587614");
+			clickTheElement(saveAndContinue);
+			if(isElementLoaded(successPopup)){
+				SimpleUtils.pass("User can update enterprise info successfully!");
+			}else {
+				SimpleUtils.fail("User can't update enterprise info successfully!",false);
+			}
 		}
 	}
 }
