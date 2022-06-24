@@ -2,6 +2,7 @@ package com.legion.pages.OpsPortaPageFactories;
 
 import org.openqa.selenium.WebElement;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface SettingsAndAssociationPage {
@@ -31,4 +32,6 @@ public interface SettingsAndAssociationPage {
     public WebElement searchSettingsForDemandDriver(String verifyType, String Name) throws Exception;
     public void clickOnEditBtnInSettings(String verifyType, String Name, String NewName) throws Exception;
     public void clickOnRemoveBtnInSettings(String verifyType, String Name) throws Exception;
+    public void createInputStream(HashMap<String, String> inputStreamSpecificInfo) throws Exception;
+    public  void clickOnEditBtnForInputStream(HashMap<String, String> inputStream, HashMap<String, String> inputStreamUpdated)  throws Exception;
 }

@@ -1283,7 +1283,7 @@ public class ConfigurationTest extends TestBase {
             //Add new category in settings.
             settingsAndAssociationPage.createNewChannelOrCategory(verifyType, categoryName, description);
             //Verify newly added category is in Forecast page
-            SimpleUtils.switchToPreviousWindow();
+            switchToNewWindow();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1295,25 +1295,25 @@ public class ConfigurationTest extends TestBase {
             forecastPage.clickForecast();
             salesForecastPage.navigateToSalesForecastTab();
             SimpleUtils.assertOnFail("The newly added category not exist in forecast page!",
-                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", "Enrollments"), false);
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryName), false);
 
             //edit the category in settings
-            SimpleUtils.switchToPreviousWindow();
+            switchToNewWindow();
             settingsAndAssociationPage.clickOnEditBtnInSettings(verifyType, categoryName, categoryEditName);
             //verify edited category is in Forecast page
-            SimpleUtils.switchToPreviousWindow();
+            switchToNewWindow();
             refreshPage();
             SimpleUtils.assertOnFail("The edited category not exist in forecast page!",
-                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", "Enrollments"), false);
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryEditName), false);
 
             //remove the category in settings
-            SimpleUtils.switchToPreviousWindow();
+            switchToNewWindow();
             settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, categoryEditName);
             //verify the removed category not show up in forecast page.
-            SimpleUtils.switchToPreviousWindow();
+            switchToNewWindow();
             refreshPage();
             SimpleUtils.assertOnFail("The removed edited category should not display in forecast page!",
-                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryEditName), false);
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", "categoryEditName"), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1416,7 +1416,7 @@ public class ConfigurationTest extends TestBase {
             //Add new channel in settings.
             settingsAndAssociationPage.createNewChannelOrCategory(verifyType, channelName, description);
             //Verify newly added channel is in Forecast page
-            SimpleUtils.switchToPreviousWindow();
+            switchToNewWindow();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1431,22 +1431,100 @@ public class ConfigurationTest extends TestBase {
                     salesForecastPage.verifyChannelOrCategoryExistInForecastPage(verifyType, channelName), false);
 
             //edit the channel in settings
-            SimpleUtils.switchToPreviousWindow();
+            switchToNewWindow();
             settingsAndAssociationPage.clickOnEditBtnInSettings(verifyType, channelName, channelEditName);
             //verify edited channel is in Forecast page
-            SimpleUtils.switchToPreviousWindow();
+            switchToNewWindow();
             refreshPage();
             SimpleUtils.assertOnFail("The edited channel not exist in forecast page!",
                     salesForecastPage.verifyChannelOrCategoryExistInForecastPage(verifyType, channelEditName), false);
 
             //remove the channel in settings
-            SimpleUtils.switchToPreviousWindow();
+            switchToNewWindow();
             settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, channelEditName);
             //verify the removed channel not show up in forecast page.
-            SimpleUtils.switchToPreviousWindow();
+            switchToNewWindow();
             refreshPage();
             SimpleUtils.assertOnFail("The removed edited channel should not display in forecast page!",
                     !salesForecastPage.verifyChannelOrCategoryExistInForecastPage(verifyType, channelEditName), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Input Streams configuration in settings")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyInputStreamsConfigurationInSettingsForDemandDriverTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String inputStreamName1 = "InputStreamTest-Base";
+            String inputStreamName2 = "InputStreamTest-Aggregated";
+            String verifyType = "input stream";
+
+            //input stream specification information to add
+            List<HashMap<String, String>> inputStreamInfoToAdd = new ArrayList<>();
+            HashMap<String, String> inputStreamInfoToAdd1 = new HashMap<String, String>(){
+                {
+                    put("Name", inputStreamName1);
+                    put("Type", "Base");
+                    put("Tag", "Items:EDW:Enrollments");
+                }
+            };
+            HashMap<String, String> inputStreamInfoToAdd2 = new HashMap<String, String>(){
+                {
+                    put("Name", inputStreamName2);
+                    put("Type", "Aggregated");
+                    put("Operator", "IN");
+                    put("Streams", "All");
+                    put("Tag", "Items:EDW:Aggregated");
+                }
+            };
+            inputStreamInfoToAdd.add(inputStreamInfoToAdd1);
+            inputStreamInfoToAdd.add(inputStreamInfoToAdd2);
+
+            //input stream specification information to edit
+            List<HashMap<String, String>> inputStreamInfoToEdit = new ArrayList<>();
+            HashMap<String, String> inputStreamInfoToEdit1 = new HashMap<String, String>(){
+                {
+                    put("Name", inputStreamName1);
+                    put("Type", "Base");
+                    put("Tag", "Items:EDW:Enrollments-Updated");
+                }
+            };
+            HashMap<String, String> inputStreamInfoToEdit2 = new HashMap<String, String>(){
+                {
+                    put("Name", inputStreamName2);
+                    put("Type", "Aggregated");
+                    put("Operator", "NOT IN");
+                    put("Streams", inputStreamName1);
+                    put("Tag", "Items:EDW:Aggregated-Updated");
+                }
+            };
+            inputStreamInfoToEdit.add(inputStreamInfoToEdit1);
+            inputStreamInfoToEdit.add(inputStreamInfoToEdit2);
+
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Settings tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+            //Add new input stream in settings
+            for (HashMap<String, String> inputStreamToAdd : inputStreamInfoToAdd){
+                settingsAndAssociationPage.createInputStream(inputStreamToAdd);
+            }
+
+            //edit the input stream in settings
+            settingsAndAssociationPage.clickOnEditBtnForInputStream(inputStreamInfoToAdd1, inputStreamInfoToEdit1);
+            settingsAndAssociationPage.clickOnEditBtnForInputStream(inputStreamInfoToAdd2, inputStreamInfoToEdit2);
+
+            //remove the category in settings
+            settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, inputStreamName1);
+            settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, inputStreamName2);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
