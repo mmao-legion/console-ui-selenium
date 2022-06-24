@@ -79,7 +79,7 @@
 
     <test name="FTSE Support Variant Violations Except OT Ones">
         <classes>
-            <class name="com.legion.tests.core.FTSEViolations">
+            <class name="com.legion.tests.core.FTSERelevantTest">
                 <methods>
                     <include name="verifyFTSEEmployeesIgnoreTheDayOTAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnoreTheWeekOTAsInternalAdmin"/>
@@ -96,6 +96,11 @@
                     <include name="verifyFTSEEmployeesIgnore50hrsPerWeekAgreementAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesSupportSplitShiftsViolationAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesSupportSpreadOfHoursViolationAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInDayViewAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInViewProfileAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInPersonalMyScheduleAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInPersonalMyPreferenceAsInternalAdmin"/>
+                    <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>

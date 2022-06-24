@@ -133,4 +133,19 @@ public interface ScheduleShiftTablePage {
     public void verifySelectedShiftsAreMarkedWithX(HashSet<Integer> selectedIndexes) throws Exception;
     public void getWeekDayAndDate() throws Exception;
     public void bulkDeleteTMShiftsInWeekView(String teamMemberName) throws Exception;
+    public boolean isInfoIconLoaded(int index) throws Exception;
+    public boolean isProfileIconLoaded(int index) throws Exception;
+    public boolean isShiftTotalLengthLoaded(int index) throws Exception;
+    public boolean isShiftDurationInBoxLoaded(int index) throws Exception;
+    public boolean isProfileNameAndWorkRoleLoaded(int index) throws Exception;
+    public boolean isShiftLengthLoaded(int index) throws Exception;
+    public boolean isShiftJobTitleLoaded(int index) throws Exception;
+//    public boolean isShiftDurationInAvailabilityLoaded(int index) throws Exception;
+    public boolean isShiftJobTitleMediumInAvailabilityLoaded(int index) throws Exception;
+    public boolean isShiftJobTitleLargeInAvailabilityLoaded(int index) throws Exception;
+    public boolean isShiftLocationInAvailabilityLoaded(int index) throws Exception;
+    public boolean isShiftInfoIconInAvailabilityLoaded(int index) throws Exception;
+    public boolean isMyScheduleShiftLocationLoaded(int index) throws Exception;
+    public boolean isMyScheduleShiftWorkRoleLoaded(int index) throws Exception;
+    public boolean isMyScheduleProfileNameLoaded(int index) throws Exception;
 }
