@@ -1509,5 +1509,37 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			}
 		}
 	}
+
+	@FindBy(css = "div.lg-tabs__nav-item:nth-child(4)")
+	private WebElement jobTitleGroup;
+
+	public void goToJobTitleGroup() throws Exception{
+		if(isExist(jobTitleGroup)) {
+			click(jobTitleGroup);
+			SimpleUtils.pass("Job title group is exist");
+		}
+		else
+			SimpleUtils.fail("Job title group is not exist",false);
+	}
+
+	@FindBy(css = "lg-button[label= 'Add Job Title Group']")
+	private WebElement addJobTitleGroupButton;
+	@FindBy(css = "input.ng-pristine.ng-scope.ng-empty.ng-invalid.ng-invalid-required.ng-valid-pattern.ng-valid-maxlength.ng-touched")
+	private WebElement inputJobTitleGroup;
+	@FindBy(css = "div.lg-select")
+	private WebElement HRJobTitleSelect;
+	@FindBy(css = "input[placeholder = 'Search']")
+	private WebElement inputSearch;
+	@FindBy(css = "div.lg-search-options__option.ng-binding.lg-search-options__subLabel")
+	private WebElement jobTitleList;
+	@FindBy(css = "table.lg-table.ng-scope")
+	private WebElement jobTitleGroupTab;
+
+	public void verifyJobTitleGroupTabDisplay() throws Exception{
+		if(isExist(jobTitleGroupTab)){
+			SimpleUtils.pass("Job title group table display");
+		}else
+			SimpleUtils.fail("Job title group table doesn't display",false);
+	}
 }
 
