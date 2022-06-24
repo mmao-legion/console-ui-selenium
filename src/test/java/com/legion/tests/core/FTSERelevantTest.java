@@ -1954,25 +1954,25 @@ public class FTSERelevantTest extends TestBase {
             Thread.sleep(3000);
 
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            SimpleUtils.assertOnFail("The first shift displays correctly!",
+            SimpleUtils.assertOnFail("The first shift displays incorrectly!",
                     scheduleShiftTablePage.isInfoIconLoaded(0)&&scheduleShiftTablePage.isProfileIconLoaded(0)
                             &&!(scheduleShiftTablePage.isMyScheduleShiftLocationLoaded(0))&&!(scheduleShiftTablePage.isShiftLengthLoaded(0))
                             &&!(scheduleShiftTablePage.isShiftDurationInBoxLoaded(0))&&scheduleShiftTablePage.isMyScheduleProfileNameLoaded(0)
                             &&!(scheduleShiftTablePage.isMyScheduleShiftWorkRoleLoaded(0)), false);
 
-            SimpleUtils.assertOnFail("The second shift displays correctly!",
+            SimpleUtils.assertOnFail("The second shift displays incorrectly!",
                     scheduleShiftTablePage.isInfoIconLoaded(1)&&scheduleShiftTablePage.isProfileIconLoaded(0)
                             &&!(scheduleShiftTablePage.isMyScheduleShiftLocationLoaded(1))&&!(scheduleShiftTablePage.isShiftLengthLoaded(1))
                             &&scheduleShiftTablePage.isShiftDurationInBoxLoaded(1) &&!(scheduleShiftTablePage.isMyScheduleProfileNameLoaded(1))
                             &&!(scheduleShiftTablePage.isMyScheduleShiftWorkRoleLoaded(1)), false);
 
-            SimpleUtils.assertOnFail("The third shift displays correctly!",
+            SimpleUtils.assertOnFail("The third shift displays incorrectly!",
                     scheduleShiftTablePage.isInfoIconLoaded(2)&&(scheduleShiftTablePage.isProfileIconLoaded(2))
                             &&scheduleShiftTablePage.isMyScheduleShiftLocationLoaded(2)&&scheduleShiftTablePage.isShiftLengthLoaded(2)
                             &&scheduleShiftTablePage.isShiftDurationInBoxLoaded(2) &&!(scheduleShiftTablePage.isMyScheduleProfileNameLoaded(2))
                             &&!(scheduleShiftTablePage.isMyScheduleShiftWorkRoleLoaded(2)), false);
 
-            SimpleUtils.assertOnFail("The fourth shift displays correctly!",
+            SimpleUtils.assertOnFail("The fourth shift displays incorrectly!",
                     scheduleShiftTablePage.isInfoIconLoaded(3)&&scheduleShiftTablePage.isProfileIconLoaded(3)
                             &&scheduleShiftTablePage.isMyScheduleShiftLocationLoaded(3)&&scheduleShiftTablePage.isShiftLengthLoaded(3)
                             &&scheduleShiftTablePage.isShiftDurationInBoxLoaded(3) &&scheduleShiftTablePage.isMyScheduleProfileNameLoaded(3)
