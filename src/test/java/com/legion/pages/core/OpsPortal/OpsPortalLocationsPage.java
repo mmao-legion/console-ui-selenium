@@ -4290,7 +4290,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
-	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
+	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"] td lg-button button span span")
 	private List<WebElement> workRoleListInAssignmentRuleTemplate;
 
 	@Override
@@ -4300,9 +4300,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			searchByWorkRoleInput.sendKeys(workRole);
 			if (areListElementVisible(workRoleListInAssignmentRuleTemplate, 5)) {
 				for (WebElement s : workRoleListInAssignmentRuleTemplate) {
-					String workRoleName = s.findElement(By.cssSelector("td:nth-child(1) lg-button button span span")).getText().trim();
+					String workRoleName = s.getText().trim();
 					if (workRoleName.contains(workRole)) {
-						clickTheElement(s.findElement(By.cssSelector("td:nth-child(1) lg-button")));
+						clickTheElement(s);
 						waitForSeconds(2);
 						break;
 					}
