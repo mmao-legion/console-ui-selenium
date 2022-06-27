@@ -1,11 +1,13 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
@@ -34,31 +36,22 @@ public class TimeZoneTest extends TestBase {
     public void verifyTheUTCTimeFormatInControlsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String enterprise = System.getProperty("enterprise").toLowerCase();
+            if (enterprise.equalsIgnoreCase("vailqacn")) {
+                controlsPage.gotoControlsPage();
+                SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
 
-            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+                controlsNewUIPage.clickOnControlsLocationProfileSection();
+                SimpleUtils.assertOnFail("Scheduling Location Profile page not loaded successfully!", controlsNewUIPage.isControlsLocationProfileLoaded(), false);
 
-            controlsPage.gotoControlsPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-            controlsNewUIPage.clickOnControlsLocationProfileSection();
-            SimpleUtils.assertOnFail("Scheduling Location Profile page not loaded successfully!", controlsNewUIPage.isControlsLocationProfileLoaded(), false);
-
-            // Check UTC time format in dropdown list
-            controlsNewUIPage.clickOnLocationProfileEditLocationBtn();
-            controlsNewUIPage.checkTimeZoneDropdownOptions(593, "UTC");
+                // Check UTC time format in dropdown list
+                controlsNewUIPage.clickOnLocationProfileEditLocationBtn();
+                controlsNewUIPage.checkTimeZoneDropdownOptions(593, "UTC");
+            }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -72,31 +65,21 @@ public class TimeZoneTest extends TestBase {
     public void verifyTheUTCTimeFormatInOPEnterpriseConfigurationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String enterprise = System.getProperty("enterprise").toLowerCase();
+            if (enterprise.equalsIgnoreCase("cinemark-wkdy")) {
+                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                locationsPage.clickOnLocationsTab();
+                locationsPage.clickEditEnterpriseProfile();
 
-            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-
-            controlsPage.gotoControlsPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-            controlsNewUIPage.clickOnControlsLocationProfileSection();
-            SimpleUtils.assertOnFail("Scheduling Location Profile page not loaded successfully!", controlsNewUIPage.isControlsLocationProfileLoaded(), false);
-
-            // Check UTC time format in dropdown options
-            controlsNewUIPage.clickOnLocationProfileEditLocationBtn();
-            controlsNewUIPage.checkTimeZoneDropdownOptions(593, "UTC");
+                // Check UTC time format in dropdown list
+                controlsNewUIPage.checkTimeZoneDropdownOptions(593, "UTC");
+            }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -110,31 +93,25 @@ public class TimeZoneTest extends TestBase {
     public void verifyTheUTCTimeFormatInOPLocationConfigurationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String enterprise = System.getProperty("enterprise").toLowerCase();
+            if (enterprise.equalsIgnoreCase("cinemark-wkdy")) {
+                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                locationsPage.clickOnLocationsTab();
+                locationsPage.goToSubLocationsInLocationsPage();
+                locationsPage.searchLocation(location);
+                SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+                locationsPage.clickOnLocationInLocationResult(location);
 
-            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-
-            controlsPage.gotoControlsPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-            controlsNewUIPage.clickOnControlsLocationProfileSection();
-            SimpleUtils.assertOnFail("Scheduling Location Profile page not loaded successfully!", controlsNewUIPage.isControlsLocationProfileLoaded(), false);
-
-            // Check UTC time format in dropdown options
-            controlsNewUIPage.clickOnLocationProfileEditLocationBtn();
-            controlsNewUIPage.checkTimeZoneDropdownOptions(593, "UTC");
+                // Check UTC time format in dropdown list
+                controlsNewUIPage.clickOnLocationProfileEditLocationBtn();
+                controlsNewUIPage.checkTimeZoneDropdownOptions(593, "UTC");
+            }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -253,4 +253,6 @@ public interface LocationsPage {
     public void cancelBtnOnImportExportPopUpWinsIsClickable();
 
     public void clickOnExportBtn();
+
+    public void clickEditEnterpriseProfile();
 }
