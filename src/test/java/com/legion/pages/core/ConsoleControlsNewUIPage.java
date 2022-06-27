@@ -2445,10 +2445,11 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement timeZoneInput;
 
 	@Override
-	public void checkTimeZoneDropdownOptions(int numbersOfCity, String timeZone) throws Exception {
+	public void checkTimeZoneDropdownOptions(int targetNumbersOfUTCFormat, String timeZone) throws Exception {
 		int timeZoneFormatedCount = 0;
 		int incorrectFormatedCount = 0;
 		if (isElementLoaded(timeZoneInput, 10) && isClickable(timeZoneInput, 10)) {
+			scrollToElement(timeZoneInput);
 			click(timeZoneInput);
 			waitForSeconds(3);
 			Select select = new Select(timeZoneInput);
@@ -2460,8 +2461,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					incorrectFormatedCount++;
 				}
 			}
-			if (timeZoneFormatedCount != numbersOfCity) {
-				SimpleUtils.fail("The UTC time zone count is " + timeZoneFormatedCount + " doesn't match target number " + numbersOfCity, false);
+			if (timeZoneFormatedCount != targetNumbersOfUTCFormat) {
+				SimpleUtils.fail("The UTC time zone count is " + timeZoneFormatedCount + " doesn't match target number " + targetNumbersOfUTCFormat, false);
 			}
 			if (incorrectFormatedCount > 0) {
 				SimpleUtils.fail("There was " + incorrectFormatedCount + " didn't format to UTC time zone!", false);

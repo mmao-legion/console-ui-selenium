@@ -184,7 +184,7 @@ public interface ControlsNewUIPage {
 
 	public void clickOnLocationProfileEditLocationBtn() throws Exception;
 
-    public void checkTimeZoneDropdownOptions(int numbersOfCity, String timeZone) throws Exception;
+    public void checkTimeZoneDropdownOptions(int targetNumbersOfUTCFormat, String timeZone) throws Exception;
 
     public HashMap<String, ArrayList<String>> getSchedulingPoliciesSchedulesSectionEditableOrNonEditableFields() throws Exception;
 
