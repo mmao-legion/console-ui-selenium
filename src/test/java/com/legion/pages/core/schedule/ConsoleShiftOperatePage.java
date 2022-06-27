@@ -729,9 +729,15 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             if (isEditMealBreakEnabled){
                 click(addMealBreakButton);
                 click(continueBtnInMealBreakButton);
+                if (isElementEnabled(confirmWindow, 5)) {
+                    click(okBtnOnConfirm);
+                }
                 SimpleUtils.pass("add meal break time successfully");
             } else {
                 click(continueBtnInMealBreakButton);
+                if (isElementEnabled(confirmWindow, 5)) {
+                    click(okBtnOnConfirm);
+                }
             }
         }else
             SimpleUtils.report("add meal break failed");

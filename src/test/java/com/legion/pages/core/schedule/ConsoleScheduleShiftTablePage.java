@@ -2365,10 +2365,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> shifts = getDriver().findElements(By.cssSelector("[data-day-index=\"" + indexOfDay + "\"] .week-schedule-shift-wrapper"));
         if (areListElementVisible(shifts, 5) && shifts != null && shifts.size() > 0) {
             for (WebElement shift : shifts) {
-                clickTheElement(shift.findElement(By.className("week-schedule-shit-open-popover")));
-                String shiftName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
-//                WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
-                if (!shiftName.equals("") && shiftName.split(" ")[0].equalsIgnoreCase(name)) {
+//                clickTheElement(shift.findElement(By.className("week-schedule-shit-open-popover")));
+//                String shiftName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
+                String shiftName = shift.findElement(By.className("week-schedule-worker-name")).getText();
+                if (!shiftName.equals("") && shiftName.contains(name)) {
                     shiftsOfOneTM.add(shift);
                     SimpleUtils.pass("shift exists on this day!");
                     count++;
@@ -3528,6 +3528,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @Override
     public void bulkDeleteTMShiftsInWeekView(String teamMemberName) throws Exception {
+        unSelectAllBulkSelectedShifts();
         if (areListElementVisible(shiftsWeekView, 15)) {
             HashSet<Integer> shiftIndexes = new HashSet<>();
             //Get all index of TM's shifts
@@ -3870,5 +3871,21 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }finally {
             return shiftInfoIconInAvailabilityLoaded;
         }
+    }
+
+
+    @FindBy(css = ".shift-selected-multi")
+    private List<WebElement> bulkSelectedShifts;
+    public void unSelectAllBulkSelectedShifts(){
+        if (areListElementVisible(bulkSelectedShifts, 5)) {
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (WebElement element : bulkSelectedShifts) {
+                action.click(element);
+                SimpleUtils.pass("Bulk action: Unselect one shift successfully! ");
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+        } else
+            SimpleUtils.report("There is no bulk selected shifts! ");
     }
 }
