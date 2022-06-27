@@ -6863,6 +6863,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						&&isElementLoaded(editDialog.findElement(By.cssSelector("[label=\"Save\"]")), 5)){
 					if (saveOrNot){
 						clickTheElement(editDialog.findElement(By.cssSelector("[label=\"Save\"] button")));
+						Thread.sleep(3000);
 						SimpleUtils.assertOnFail("Setting is not saved successfully!", getSpreadOfHoursContent().contains(numOfPremiumHrs)&&getSpreadOfHoursContent().contains(greaterThan), false);
 					} else {
 						clickTheElement(editDialog.findElement(By.cssSelector("[label=\"Cancel\"] button")));

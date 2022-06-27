@@ -1830,6 +1830,19 @@ public class BulkCreateTest extends TestBase {
     public void validateShiftsCanBeCreatedByNewUIByDifferentAccessRolesAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
             loginPage.logOut();
             //Verify the shifts can be created by new UI by original SM access role
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
@@ -1894,10 +1907,10 @@ public class BulkCreateTest extends TestBase {
         }
         scheduleCommonPage.navigateToNextWeek();
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-        if (isWeekGenerated) {
-            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+        if (!isWeekGenerated) {
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
         }
-        createSchedulePage.createScheduleForNonDGFlowNewUI();
+
         //Verify the assign workflow with one shift for one days
         String workRole = shiftOperatePage.getRandomWorkRole();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1928,7 +1941,8 @@ public class BulkCreateTest extends TestBase {
         MyThreadLocal.setAssignTMStatus(true);
         String selectedTM1 = newShiftPage.selectTeamMembers();
         newShiftPage.clickOnCreateOrNextBtn();
-        List<WebElement> shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
+        List<WebElement> shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0,
+                selectedTM1.split(" ")[0]+" "+selectedTM1.split(" ")[1].substring(0,1));
         SimpleUtils.assertOnFail("The "+selectedTM1+ "shift is not exist on the first day! ",
                 shiftsOfOneDay.size()==1, false);
         scheduleMainPage.saveSchedule();
