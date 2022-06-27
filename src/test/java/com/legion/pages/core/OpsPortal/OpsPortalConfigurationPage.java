@@ -2330,13 +2330,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				if(isElementEnabled(welcomeCloseButton, 5)){
 					clickTheElement(welcomeCloseButton);
 				}
-				if(isElementEnabled(taTemplateSpecialField, 5)){
-					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
-					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
-					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
-				}
+//				if(isElementEnabled(taTemplateSpecialField, 5)){
+//					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
+//					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
+//					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
+//				}
 				if(isElementEnabled(saveAsDraftButton, 5)){
 					SimpleUtils.pass("User can click continue button successfully!");
+					waitForSeconds(3);
 					clickTheElement(saveAsDraftButton);
 					waitForSeconds(5);
 				}else {
@@ -3471,11 +3472,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					createDynamicGroup(dynamicGName,criteria,formula);
 				    selectOneDynamicGroup(dynamicGName);}
 				waitForSeconds(4);
-				if(isElementEnabled(taTemplateSpecialField,20)){
-					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
-					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
-					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
-				}
+//				if(isElementEnabled(taTemplateSpecialField,20)){
+//					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
+//					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
+//					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
+//				}
 				clickOnTemplateDetailTab();
 				publishNowTemplate();
 			}else {
@@ -4508,10 +4509,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		if(areListElementVisible(multipleTemplateList,3)){
 			for(WebElement multipleTemplate:multipleTemplateList){
 				SimpleUtils.report("1111");
-				WebElement templateNameButton = multipleTemplate.findElement(By.cssSelector("button"));
+//				WebElement templateNameButton = multipleTemplate.findElement(By.cssSelector("button"));
+				WebElement templateNameButton = getDriver().findElement(By.cssSelector(".lg-templates-table-improved__grid-row--header~div button"));
 				SimpleUtils.report("222");
-				String templateStatus = multipleTemplate.findElement(By.cssSelector("lg-eg-status")).getAttribute("type").trim();
+				String templateStatus = getDriver().findElement(By.cssSelector(".lg-templates-table-improved__grid-row--header~div lg-eg-status")).getAttribute("type").trim();
+				SimpleUtils.report("333");
 				if(templateStatus.equalsIgnoreCase("Published")){
+
 					clickTheElement(templateNameButton);
 					waitForSeconds(5);
 					if(isElementLoaded(archiveButton,2)){
