@@ -1254,7 +1254,7 @@ public class ConfigurationTest extends TestBase {
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.createMultipleTemplateForAllTypeOfTemplate(templateName,dynamicGpName,criteriaType,criteriaValue,button,date,editOrViewMode);
-            configurationPage.archiveMultipleTemplate(templateName);
+//            configurationPage.archiveMultipleTemplate(templateName);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
