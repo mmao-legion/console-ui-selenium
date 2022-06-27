@@ -348,8 +348,8 @@ public class OfferTMTest extends TestBase {
         scheduleShiftTablePage.clickViewStatusBtn();
         shiftOperatePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
         shiftOperatePage.closeViewStatusContainer();
-        SimpleUtils.assertOnFail("shift time is not consistent!", shiftInfoInWindows.replaceAll(" ", "").toLowerCase().contains(shiftInfo.get(2).toLowerCase()), false);
-        SimpleUtils.assertOnFail("shift work role is not consistent!", shiftInfoInWindows.replaceAll(" ", "").toLowerCase().contains(shiftInfo.get(4).toLowerCase()), false);
+        SimpleUtils.assertOnFail("shift time is not consistent!", shiftInfoInWindows.replaceAll(" ", "").toLowerCase().contains(shiftInfo.get(2).replaceAll(" ", "").toLowerCase()), false);
+        SimpleUtils.assertOnFail("shift work role is not consistent!", shiftInfoInWindows.toLowerCase().contains(shiftInfo.get(4).toLowerCase()), false);
     }
 
     @Automated(automated = "Automated")
@@ -535,8 +535,8 @@ public class OfferTMTest extends TestBase {
             scheduleShiftTablePage.clickViewStatusBtn();
             shiftOperatePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
             shiftOperatePage.closeViewStatusContainer();
-            SimpleUtils.assertOnFail("shift time is not consistent!", shiftInfoInWindows.replaceAll(" ", "").toLowerCase().contains(shiftInfo.get(2).toLowerCase()), false);
-            SimpleUtils.assertOnFail("shift work role is not consistent!", shiftInfoInWindows.replaceAll(" ", "").toLowerCase().contains(shiftInfo.get(4).toLowerCase()), false);
+            SimpleUtils.assertOnFail("shift time is not consistent!", shiftInfoInWindows.replaceAll(" ", "").toLowerCase().contains(shiftInfo.get(2).replaceAll(" ", "").toLowerCase()), false);
+            SimpleUtils.assertOnFail("shift work role is not consistent!", shiftInfoInWindows.toLowerCase().contains(shiftInfo.get(4).toLowerCase()), false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -709,8 +709,8 @@ public class OfferTMTest extends TestBase {
             scheduleShiftTablePage.clickViewStatusBtn();
             shiftOperatePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
             shiftOperatePage.closeViewStatusContainer();
-            SimpleUtils.assertOnFail("shift time is not consistent!", shiftInfoInWindows.replaceAll(" ", "").toLowerCase().contains(shiftInfo.get(2).toLowerCase()), false);
-            SimpleUtils.assertOnFail("shift work role is not consistent!", shiftInfoInWindows.replaceAll(" ", "").toLowerCase().contains(shiftInfo.get(4).toLowerCase()), false);
+            SimpleUtils.assertOnFail("shift time is not consistent!", shiftInfoInWindows.replaceAll(" ", "").toLowerCase().contains(shiftInfo.get(2).replaceAll(" ", "").toLowerCase()), false);
+            SimpleUtils.assertOnFail("shift work role is not consistent!", shiftInfoInWindows.toLowerCase().contains(shiftInfo.get(4).toLowerCase()), false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -7458,7 +7458,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		if (isElementLoaded(dailyOvertimePayEditBtn, 5)){
 			String contentBefore = getDailyOTContent();
 			clickTheElement(dailyOvertimePayEditBtn);
-			if (isElementLoaded(splitShiftDialog, 10)){
+			if (isElementLoaded(splitShiftDialog, 15)){
 				//check the title.
 				if (splitShiftDialog.findElement(By.cssSelector(".lg-modal__title")).getText().trim().equalsIgnoreCase("Edit Daily Overtime")){
 					SimpleUtils.pass("Dialog title is expected!");

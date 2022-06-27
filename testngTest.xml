@@ -9,25 +9,15 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-    <test name="FTSE Support Variant Violations Except OT Ones">
+    <test name="Improve UI for short shifts in Day View">
         <classes>
-            <class name="com.legion.tests.core.FTSEViolations">
+            <class name="com.legion.tests.core.FTSERelevantTest">
                 <methods>
-                    <include name="verifyFTSEEmployeesIgnoreTheDayOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnoreTheWeekOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnoreThe7thConsecutiveOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnoreThe24HrsOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeeSupportClopeningViolationAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeeSupportMaxShiftViolationAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeeSupportRoleViolationAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore4X10AgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore5X8AgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore40X8AgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore40hrsAgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnoreNoOverTimeAgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore50hrsPerWeekAgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesSupportSplitShiftsViolationAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesSupportSpreadOfHoursViolationAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInDayViewAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInViewProfileAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInPersonalMyScheduleAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInPersonalMyPreferenceAsInternalAdmin"/>
+                    <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>

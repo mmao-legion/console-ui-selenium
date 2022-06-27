@@ -48,7 +48,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             int count = dayViewAvailableShifts.size();
             for (int i = 0; i < count; i++) {
                 List<WebElement> tempShifts = getDriver().findElements(By.cssSelector(".sch-day-view-shift-outer .right-shift-box"));
-                scrollToElement(tempShifts.get(i));
+//                scrollToElement(tempShifts.get(i));
+                scrollToBottom();
                 moveToElementAndClick(tempShifts.get(i));
                 deleteShift();
             }
@@ -3042,7 +3043,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 boolean moveBreakTimeSuccess = false;
                 for (int i = 0; i< timeLineLength; i++) {
                     moveDayViewCards(mealBreaks.get(index), 10);
-                    mealBreakTimeAfterEdit = breakTimes.get(index).getText().split("-")[0].trim();
+                    mealBreakTimeAfterEdit = breakTimes.get(index).getText().split("-")[0].trim().replace(" ","");
                     if (mealBreakTimeAfterEdit.equalsIgnoreCase(breakTime)) {
                         SimpleUtils.pass("Move breaks successfully! ");
                         moveBreakTimeSuccess = true;

@@ -25,7 +25,7 @@ import java.util.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.MyThreadLocal.workerRole;
 
-public class CreateShiftNewUITest extends TestBase {
+public class BulkCreateTest extends TestBase {
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) {
@@ -193,7 +193,7 @@ public class CreateShiftNewUITest extends TestBase {
             newShiftPage.moveSliderAtCertainPoint("11pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
             newShiftPage.selectSpecificWorkDay(7);
-            String expectMessage = "Hours on Friday: 6:00 AM - 12:00 AM. Hours on Saturday: 6:00 AM - 12:00 AM. Hours on Monday: 6:00 AM - 12:00 AM. Hours on Tuesday: 6:00 AM - 12:00 AM. Hours on Wednesday: 6:00 AM - 12:00 AM. Hours on Thursday: 6:00 AM - 12:00 AM";
+            String expectMessage = "Hours on Friday: 6:00am - 12:00am. Hours on Saturday: 6:00am - 12:00am. Hours on Monday: 6:00am - 12:00am. Hours on Tuesday: 6:00am - 12:00am. Hours on Wednesday: 6:00am - 12:00am. Hours on Thursday: 6:00am - 12:00am";
             String actualMessage = newShiftPage.getShiftStartWarningMessage();
             SimpleUtils.assertOnFail("The shift start warning message display incorrectly. The expect is: "+ expectMessage
                             + " the actual is "+ actualMessage,
@@ -737,8 +737,8 @@ public class CreateShiftNewUITest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify assign shift by each days")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAssignShiftByEachDaysAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -774,6 +774,8 @@ public class CreateShiftNewUITest extends TestBase {
             String workRole = shiftInfo.get(4);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1895,14 +1897,15 @@ public class CreateShiftNewUITest extends TestBase {
         if (isWeekGenerated) {
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
-        String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
         createSchedulePage.createScheduleForNonDGFlowNewUI();
         //Verify the assign workflow with one shift for one days
+        String workRole = shiftOperatePage.getRandomWorkRole();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         newShiftPage.clickOnDayViewAddNewShiftButton();
         SimpleUtils.assertOnFail("New create shift page is not display! ",
                 newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
         //Fill the required option
+
         newShiftPage.selectWorkRole(workRole);
         String shiftStartTime = "8:00am";
         String shiftEndTime = "11:00am";
