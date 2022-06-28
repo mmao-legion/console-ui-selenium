@@ -1532,6 +1532,113 @@ public class ConfigurationTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Very creating demand drivers template successfully")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateDemandDriverTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String templateName = "testDemand-NotDelete";
+            String noDriverWarningMsg = "At least one demand driver is required when publishing a template";
+            String noAssociationWarningMsg = "At least one association when publish template";
+            HashMap<String, String> driverSpecificInfo = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Enrollments");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Enrollments");
+                    put("Show in App", "Yes");
+                    put("Order", "1");
+                    put("Forecast Source", "Legion ML");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
+
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Templates tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+            //Add new demand driver template, warning message will show up when no driver created
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnTemplateName(templateName);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.chooseSaveOrPublishBtnAndClickOnTheBtn("Publish Now");
+            SimpleUtils.assertOnFail("There should be a warning message for no drivers", configurationPage.verifyWarningInfoForDemandDriver(noDriverWarningMsg), false);
+
+            //Add new demand driver, warning message will show up when no association
+            configurationPage.addDemandDriverInTemplate(driverSpecificInfo);
+            configurationPage.chooseSaveOrPublishBtnAndClickOnTheBtn("Publish Now");
+            SimpleUtils.assertOnFail("There should be a warning message for no association", configurationPage.verifyWarningInfoForDemandDriver(noAssociationWarningMsg), false);
+
+            //Add association and save
+            configurationPage.createDynamicGroup(templateName, "Location Name", null);
+            configurationPage.selectOneDynamicGroup(templateName);
+            //Could publish normally
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.publishNowTemplate();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify demand driver template detail duplicated adding check")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDemandDriverTemplateDetailsDuplicatedAddingCheckAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateName = "testDemand-NotDelete";
+            String templateType = "Demand Drivers";
+
+            HashMap<String, String> driverWithExistingName = new HashMap<String, String>()
+            {
+                {
+                    put("Name", "Items:EDW:Enrollments");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Verifications");
+                    put("Input Stream", "Items:EDW:Verifications");
+                }
+            };
+            HashMap<String, String> driverWithExistingCombination = new HashMap<String, String>()
+            {
+                {
+                    put("Name", "Items:EDW:New");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Enrollments");
+                    put("Input Stream", "Items:EDW:Verifications");
+                }
+            };
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Templates tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+
+            //Choose an existing template, add a driver with existing name
+            configurationPage.clickOnTemplateName(templateName);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.addDemandDriverInTemplate(driverWithExistingName);
+
+            //Choose an existing template, add a driver with existing Type+Channel+Category
+            configurationPage.addDemandDriverInTemplate(driverWithExistingCombination);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Location Level override")
