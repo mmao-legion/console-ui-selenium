@@ -4779,8 +4779,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		if (isElementLoaded(warningMsgToast, 3)){
 			if(warningMsgToast.getText().toLowerCase().contains(warningMsg.toLowerCase())){
 				isWarningMsgExisting = true;
-			}else if(warningMsgToast.getText().toLowerCase().contains(warningMsg.toLowerCase())){
-				isWarningMsgExisting = true;
 			}
 		}
 		return isWarningMsgExisting;
