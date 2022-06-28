@@ -821,6 +821,8 @@ public class BulkCreateTest extends TestBase {
             workRole = shiftInfo.get(4);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
