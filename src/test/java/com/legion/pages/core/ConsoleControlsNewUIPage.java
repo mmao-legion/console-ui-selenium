@@ -2429,6 +2429,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "lg-button[label=\"Edit Location\"]")
 	private WebElement locationProfileEditLocationBtn;
 
+	@Override
 	public void clickOnLocationProfileEditLocationBtn() throws Exception {
 		if (isElementLoaded(locationProfileEditLocationBtn)) {
 			if (locationProfileEditLocationBtn.isEnabled()) {
@@ -2438,6 +2439,37 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				SimpleUtils.report("Controls page: Location Profile section 'Edit Location' button not Enabled.");
 		} else
 			SimpleUtils.fail("Controls page: Location Profile section 'Edit Location' button not loaded.", false);
+	}
+
+	@FindBy(css = "[aria-label=\"Time Zone\"]")
+	private WebElement timeZoneInput;
+
+	@Override
+	public void checkTimeZoneDropdownOptions(int targetNumbersOfUTCFormat, String timeZone) throws Exception {
+		int timeZoneFormatedCount = 0;
+		int incorrectFormatedCount = 0;
+		if (isElementLoaded(timeZoneInput, 10) && isClickable(timeZoneInput, 10)) {
+			scrollToElement(timeZoneInput);
+			click(timeZoneInput);
+			waitForSeconds(3);
+			Select select = new Select(timeZoneInput);
+			List<WebElement> options = select.getOptions();
+			for (WebElement option : options) {
+				if (option.getText().contains(timeZone)) {
+					timeZoneFormatedCount++;
+				} else {
+					incorrectFormatedCount++;
+				}
+			}
+			if (timeZoneFormatedCount != targetNumbersOfUTCFormat) {
+				SimpleUtils.fail("The UTC time zone count is " + timeZoneFormatedCount + " doesn't match target number " + targetNumbersOfUTCFormat, false);
+			}
+			if (incorrectFormatedCount > 0) {
+				SimpleUtils.fail("There was " + incorrectFormatedCount + " didn't format to UTC time zone!", false);
+			}
+		} else {
+			SimpleUtils.fail("Failed for loading time zone field!", false);
+		}
 	}
 
 	@FindBy(css = "div.lg-general-form__top-buttons")
