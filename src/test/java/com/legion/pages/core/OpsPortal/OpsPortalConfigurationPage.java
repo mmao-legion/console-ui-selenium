@@ -4770,4 +4770,91 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	//added by Jane
+	@FindBy(css = ".lg-toast span.lg-toast__simple-text")
+	private WebElement warningMsgToast;
+	@Override
+	public boolean verifyWarningInfoForDemandDriver(String warningMsg) throws Exception {
+		boolean isWarningMsgExisting = false;
+		if (isElementLoaded(warningMsgToast, 3)){
+			if(warningMsgToast.getText().toLowerCase().contains(warningMsg.toLowerCase())){
+				isWarningMsgExisting = true;
+			}else if(warningMsgToast.getText().toLowerCase().contains(warningMsg.toLowerCase())){
+				isWarningMsgExisting = true;
+			}
+		}
+		return isWarningMsgExisting;
+	}
+
+	@FindBy(css = "lg-button[label=\"Add\"] button")
+	private WebElement addBtnForDriver;
+	@FindBy(css = "div[ng-repeat=\"field in item.propertyMetas\"]")
+	private List<WebElement> fieldInputList;
+	@FindBy(css = "lg-button[label=\"Save\"] button")
+	private WebElement saveBtn;
+	@FindBy(css = "div.modal-content")
+	private WebElement warningToast;
+	@FindBy(css = "button[class*=\"btn lgn-action-button\"]")
+	private WebElement okBtn;
+	@Override
+	public void addDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception {
+		String childTag = "";
+		String fieldType = "";
+		Select select = null;
+		List<WebElement> yesOrNoOptions = null;
+		if (isElementLoaded(addBtnForDriver)){
+			clickTheElement(addBtnForDriver);
+			if (areListElementVisible(fieldInputList)){
+				for (int i = 0; i < fieldInputList.size() - 1; i++){
+					for (Map.Entry<String, String> entry : driverSpecificInfo.entrySet()){
+						if (fieldInputList.get(i).findElement(By.cssSelector("question-input")).getAttribute("question-title").contains(entry.getKey())){
+							childTag = fieldInputList.get(i).findElement(By.cssSelector("ng-transclude.lg-question-input__input :first-child")).getTagName();
+							if(childTag.equals("input-field")){
+								fieldType = fieldInputList.get(i).findElement(By.cssSelector("input-field")).getAttribute("type");
+								if (fieldType.equals("text") || fieldType.equals("number")){
+									fieldInputList.get(i).findElement(By.cssSelector("input-field input")).clear();
+									fieldInputList.get(i).findElement(By.cssSelector("input-field input")).sendKeys(entry.getValue());
+									break;
+								}else if(fieldType.equals("select")){
+									select = new Select(fieldInputList.get(i).findElement(By.cssSelector("select")));
+									select.selectByVisibleText(entry.getValue());
+									break;
+								}else{
+									SimpleUtils.fail("Field Type is not as expected!", false);
+								}
+							}else if (childTag.equals("yes-no")){
+								yesOrNoOptions = fieldInputList.get(i).findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
+								for (WebElement choose : yesOrNoOptions){
+									if (choose.findElement(By.cssSelector("span")).getText().equals(entry.getValue()) &&
+											choose.findElement(By.cssSelector("span")).getAttribute("class").equals("lg-button-group-selected")){
+										clickTheElement(choose);
+										break;
+									}
+									break;
+								}
+							}else {
+								SimpleUtils.fail("Tag Type is not as expected!", false);
+							}
+						}
+					}
+				}
+				clickTheElement(saveBtn);
+				if (isElementLoaded(warningToast, 5)) {
+					if (warningToast.getText().contains("name duplicates with existing demand drivers")) {
+						SimpleUtils.report("Create a driver with a duplicated name is not allowed!");
+					}else if(warningToast.getText().contains("type, channel and category duplicate with existing demand drivers")){
+						SimpleUtils.report("Create a driver with a duplicated type& channel& category is not allowed!");
+					}
+					//click the ok and cancel
+					clickTheElement(okBtn);
+					clickTheElement(cancelButton);
+					waitForSeconds(3);
+				}
+			}else {
+				SimpleUtils.fail("No fields found in demand driver creation page!", false);
+			}
+		}else {
+			SimpleUtils.fail("No add button found in demand driver list page!", false);
+		}
+	}
 }
