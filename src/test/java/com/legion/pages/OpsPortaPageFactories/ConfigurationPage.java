@@ -142,6 +142,4 @@ public interface ConfigurationPage {
     public String updateEffectiveDateOfFutureTemplate(String templateName,String button,int date) throws Exception;
     public List<String> getEffectiveDateForTemplate(String templateName) throws Exception;
     public void checkTheEntryOfAddBasicStaffingRule() throws Exception;
-    public boolean verifyWarningInfoForDemandDriver(String warningMsg) throws Exception;
-    public void addDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception;
 }
