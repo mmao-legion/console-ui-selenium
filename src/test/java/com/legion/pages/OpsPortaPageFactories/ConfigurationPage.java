@@ -141,4 +141,5 @@ public interface ConfigurationPage {
     public void verifyCanNotEditDeleteAdvancedStaffingRuleFromTemplateLevel() throws Exception;
     public String updateEffectiveDateOfFutureTemplate(String templateName,String button,int date) throws Exception;
     public List<String> getEffectiveDateForTemplate(String templateName) throws Exception;
+    public void checkTheEntryOfAddBasicStaffingRule() throws Exception;
 }

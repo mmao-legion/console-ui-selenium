@@ -841,7 +841,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(templateName)){
 					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
-						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
+//						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
+						clickTheElement(templatesList.get(i).findElement(By.cssSelector(".toggle i")));
 						waitForSeconds(3);
 						if(editOrViewMode!=null && editOrViewMode.toLowerCase().contains("edit")){
 							clickTheElement(getDriver().findElement(By.cssSelector(".child-row button")));
@@ -2142,6 +2143,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		scrollToTop();
 	}
 
+	@FindBy(css="lg-button[on-submit=\"$ctrl.submit(label,type)\"] button.pre-saveas")
+	private WebElement publishBTN;
 	@Override
 	public void publishNowTheTemplate() throws Exception {
 		if (isElementLoaded(dropdownArrowButton,5)) {
@@ -2181,6 +2184,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css="lg-button[label=\"Save as draft\"] h3[ng-click*= publishReplace]")
 	private WebElement publishReplaceButton;
+	@FindBy(css="[ng-if=\"$ctrl.saveAsLabel\"] div h3:nth-child(1)")
+	private WebElement saveAsDraftButtonInButtonList;
+	@FindBy(css="[ng-if=\"$ctrl.saveAsLabel\"] div h3:nth-child(2)")
+	private WebElement publishNowButtonInButtonList;
+	@FindBy(css="[ng-if=\"$ctrl.saveAsLabel\"] div h3:nth-child(3)")
+	private WebElement publishLaterButtonInButtonList;
+
 
 	@Override
 	public void chooseSaveOrPublishBtnAndClickOnTheBtn(String button) throws Exception {
@@ -2188,7 +2198,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			scrollToElement(dropdownArrowButton);
 			click(dropdownArrowButton);
 			if (button.toLowerCase().contains("save")){
-				clickTheElement(saveAsDraftButton);
+				clickTheElement(saveAsDraftButtonInButtonList);
 			} else if (button.toLowerCase().contains("publish now")){
 				clickTheElement(publishNowButton);
 			} else if (button.toLowerCase().contains("different time")){
@@ -2196,7 +2206,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			} else if (button.toLowerCase().contains("replacing")){
 				clickTheElement(publishReplaceButton);
 			}
-			click(publishTemplateButton);
+//			click(publishTemplateButton);
+			clickTheElement(publishBTN);
 		}else{
 			SimpleUtils.fail("Publish template dropdown button load failed",false);
 		}
@@ -2330,13 +2341,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				if(isElementEnabled(welcomeCloseButton, 5)){
 					clickTheElement(welcomeCloseButton);
 				}
-				if(isElementEnabled(taTemplateSpecialField, 5)){
-					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
-					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
-					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
-				}
+//				if(isElementEnabled(taTemplateSpecialField, 5)){
+//					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
+//					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
+//					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
+//				}
 				if(isElementEnabled(saveAsDraftButton, 5)){
 					SimpleUtils.pass("User can click continue button successfully!");
+					waitForSeconds(3);
 					clickTheElement(saveAsDraftButton);
 					waitForSeconds(5);
 				}else {
@@ -3471,11 +3483,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					createDynamicGroup(dynamicGName,criteria,formula);
 				    selectOneDynamicGroup(dynamicGName);}
 				waitForSeconds(4);
-				if(isElementEnabled(taTemplateSpecialField,20)){
-					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
-					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
-					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
-				}
+//				if(isElementEnabled(taTemplateSpecialField,20)){
+//					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
+//					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
+//					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
+//				}
 				clickOnTemplateDetailTab();
 				publishNowTemplate();
 			}else {
@@ -4340,14 +4352,18 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 }
 
+    @FindBy(css="div[ng-repeat=\"child in item.childTemplate\"] div.child-row:nth-child(1)")
+	private List<WebElement> AllChildrenOfCurrentPublishedTemplate;
+
 	@Override
 	public void createDraftForEachPublishInMultipleTemplate(String templateName,String button,String editOrViewMode) throws Exception{
 		expandMultipleVersionTemplate(templateName);
 		if(areListElementVisible(multipleTemplateList,2)){
-			for(WebElement multipleTemplate:multipleTemplateList){
 				int beforeCount = getAllTemplateCountInMultipleVersion();
-				String tempName = multipleTemplate.findElement(By.cssSelector("div:nth-child(2) button span.ng-binding")).getText().trim();
-				clickOnSpecifyTemplateName(tempName,editOrViewMode);
+//				String tempName = multipleTemplate.findElement(By.cssSelector("div:nth-child(2) button span.ng-binding")).getText().trim();
+//				clickOnSpecifyTemplateName(tempName,editOrViewMode);
+				//Create draft version for current published template
+				clickTheElement(currentPublishedTemplate.findElement(By.cssSelector(" button")));
 				clickOnEditButtonOnTemplateDetailsPage();
 				scrollToBottom();
 				chooseSaveOrPublishBtnAndClickOnTheBtn(button);
@@ -4355,11 +4371,28 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				expandMultipleVersionTemplate(templateName);
 				int afterCount = getAllTemplateCountInMultipleVersion();
 				if(afterCount-beforeCount==1){
-					SimpleUtils.pass("User create draft version template successfully!");
+					SimpleUtils.pass("User create draft version template for current published template successfully!");
 				}else {
-					SimpleUtils.fail("User failed to create draft version template!",false);
+					SimpleUtils.fail("User failed to create draft version for current published template!",false);
 				}
-			}
+
+				//create draft version for each future publish version
+				for(WebElement futurePublish:AllChildrenOfCurrentPublishedTemplate){
+					if(futurePublish.findElement(By.cssSelector("lg-eg-status")).getAttribute("type").trim().equalsIgnoreCase("Published")){
+						clickTheElement(futurePublish.findElement(By.cssSelector(" button")));
+						clickOnEditButtonOnTemplateDetailsPage();
+						scrollToBottom();
+						chooseSaveOrPublishBtnAndClickOnTheBtn(button);
+						waitForSeconds(2);
+						expandMultipleVersionTemplate(templateName);
+						int afterCount1 = getAllTemplateCountInMultipleVersion();
+						if(afterCount1-afterCount==1){
+							SimpleUtils.pass("User create draft version for future published template successfully!");
+						}else {
+							SimpleUtils.fail("User failed to create draft version for future published template!",false);
+						}
+					}
+				}
 		}
 	}
 
@@ -4508,10 +4541,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		if(areListElementVisible(multipleTemplateList,3)){
 			for(WebElement multipleTemplate:multipleTemplateList){
 				SimpleUtils.report("1111");
-				WebElement templateNameButton = multipleTemplate.findElement(By.cssSelector("button"));
+//				WebElement templateNameButton = multipleTemplate.findElement(By.cssSelector("button"));
+				WebElement templateNameButton = getDriver().findElement(By.cssSelector(".lg-templates-table-improved__grid-row--header~div button"));
 				SimpleUtils.report("222");
-				String templateStatus = multipleTemplate.findElement(By.cssSelector("lg-eg-status")).getAttribute("type").trim();
+				String templateStatus = getDriver().findElement(By.cssSelector(".lg-templates-table-improved__grid-row--header~div lg-eg-status")).getAttribute("type").trim();
+				SimpleUtils.report("333");
 				if(templateStatus.equalsIgnoreCase("Published")){
+
 					clickTheElement(templateNameButton);
 					waitForSeconds(5);
 					if(isElementLoaded(archiveButton,2)){
@@ -4711,4 +4747,27 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 		return effectiveDates;
 	}
+
+	@Override
+	public void checkTheEntryOfAddBasicStaffingRule() throws Exception {
+		waitForSeconds(5);
+		if(isElementEnabled(addIconOnRulesListPage)){
+			clickTheElement(addIconOnRulesListPage);
+			if(isElementEnabled(addAdvancedStaffingRuleButton)){
+				SimpleUtils.pass("Advance staffing rules tab is show");
+				clickTheElement(addAdvancedStaffingRuleButton);
+				if(isElementEnabled(dynamicGroupSection)){
+					SimpleUtils.pass("Advance staffing rules tab is clickable");
+				}
+				else{
+					SimpleUtils.fail("Advance staffing rules tab is NOT clickable",false);
+				}
+			}else {
+				SimpleUtils.pass("Advance staffing rules tab is NOT show");
+			}
+		}else{
+			SimpleUtils.fail("Work role's staffing rules list page was loaded failed",false);
+		}
+	}
+
 }

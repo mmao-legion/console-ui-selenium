@@ -1139,6 +1139,7 @@ public class ConfigurationTest extends TestBase {
             String templateType="Operating Hours";
             String templateName = "MultipleTemplate" + currentTime;
             String dynamicGpName = "MultipleTemplate" + currentTime;
+            String formula ="AutoCreatedDynamic---Format Script" + currentTime;
             String button1 = "publish at different time";
             String button2 ="save as draft";
             int date = 14;
@@ -1147,7 +1148,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(templateType);
             //Create one current published version template
-            configurationPage.publishNewTemplate(templateName,dynamicGpName,"Custom","AutoCreatedDynamic---Format Script");
+            configurationPage.publishNewTemplate(templateName,dynamicGpName,"Custom",formula);
             //Create future publish version based on current published version
             configurationPage.createFutureTemplateBasedOnExistingTemplate(templateName,button1,date,"edit");
             //Create draft version for current published version template and then create future publish template based on it
@@ -1254,7 +1255,7 @@ public class ConfigurationTest extends TestBase {
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.createMultipleTemplateForAllTypeOfTemplate(templateName,dynamicGpName,criteriaType,criteriaValue,button,date,editOrViewMode);
-            configurationPage.archiveMultipleTemplate(templateName);
+//            configurationPage.archiveMultipleTemplate(templateName);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
