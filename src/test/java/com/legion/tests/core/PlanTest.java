@@ -479,7 +479,7 @@ public class PlanTest extends TestBase {
         loginPage.logOut();
 
         // Login as District Manager
-        loginAsDifferentRole(AccessRoles.DMPlanner.getValue());
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("fiona+114@legion.co", "admin11.a","");
         dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
