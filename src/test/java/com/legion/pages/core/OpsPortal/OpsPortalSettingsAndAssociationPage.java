@@ -8,8 +8,10 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -431,7 +433,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                         if (NameOrSourceTypeInput.getText().equals(displayNameInput.getText())) {
                             fieldsInput.get(2).findElement(By.cssSelector("textarea[ng-if=\"$ctrl.type === 'textarea'\"]")).sendKeys(description);
                             if ("Category".equalsIgnoreCase(type) && isElementLoaded(useInReportCheckbox) &&
-                                    !useInReportCheckbox.getAttribute("checked").equalsIgnoreCase("checked")) {
+                                    useInReportCheckbox.getAttribute("checked") == null) {
                                 useInReportCheckbox.click();
                             }
                             clickTheElement(okBtnToSave);
@@ -498,8 +500,9 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
 
     @Override
     public void clickOnRemoveBtnInSettings(String verifyType, String Name) throws Exception {
-        if(searchSettingsForDemandDriver(verifyType, Name) != null){
-            clickTheElement(searchSettingsForDemandDriver(verifyType, Name).findElement(By.cssSelector("lg-button[label=\"Remove\"] button")));
+        WebElement searchResult = searchSettingsForDemandDriver(verifyType, Name);
+        if(searchResult != null){
+            clickTheElement(searchResult.findElement(By.cssSelector("lg-button[label=\"Remove\"] button")));
             if (isElementLoaded(popUpWindow.findElement(By.cssSelector("modal[modal-title*=\"Remove\"]")))){
                 clickTheElement(popUpWindow.findElement(By.cssSelector("lg-button[label=\"OK\"] button")));
             }else{
@@ -514,4 +517,105 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             SimpleUtils.fail("The item you want to remove does not exist in the result list!", false);
         }
     }
+
+    @FindBy(css = "select[aria-label=\"Type\"]")
+    private WebElement streamType;
+    @FindBy(css = "select[aria-label=\"Streams\"]")
+    private WebElement streamOperator;
+    @FindBy(css = "lg-multiple-select[options=\"baseStreamOptions\"] input")
+    private WebElement streamValueInput;
+    @FindBy(css = "div.select-list-item.ng-scope")
+    private List<WebElement> streamOptions;
+    @Override
+    public void createInputStream(HashMap<String, String> inputStreamSpecificInfo) throws Exception {
+        WebElement NameInput;
+        boolean isExisting = false;
+        if (areListElementVisible(settingsTypes, 5)) {
+            for (WebElement settingsType : settingsTypes) {
+                if (settingsType.findElement(By.cssSelector("lg-paged-search")).getAttribute("placeholder").contains("input stream")) {
+                    isExisting = true;
+                    scrollToElement(settingsType.findElement(By.cssSelector("lg-paged-search")));
+                    clickTheElement(settingsType.findElement(By.cssSelector("div.header-add-icon button")));
+                    if (isElementLoaded(popUpWindow, 3)) {
+                        NameInput = fieldsInput.get(0).findElement(By.xpath("//input[contains(@placeholder, 'Input Stream')]"));
+                        NameInput.sendKeys(inputStreamSpecificInfo.get("Name"));
+                        fieldsInput.get(2).findElement(By.cssSelector("input[aria-label=\"Data Tag\"]")).sendKeys(inputStreamSpecificInfo.get("Tag"));
+                        if (!"Base".equalsIgnoreCase(inputStreamSpecificInfo.get("Type"))){
+                            clickTheElement(streamType);
+                            Select typeSelect = new Select(streamType);
+                            typeSelect.selectByVisibleText(inputStreamSpecificInfo.get("Type"));
+                            if (streamOperator.getAttribute("class").contains("ng-empty")) {
+                                clickTheElement(streamOperator);
+                                Select select = new Select(streamOperator);
+                                select.selectByVisibleText(inputStreamSpecificInfo.get("Operator"));
+                                if (streamValueInput.getAttribute("class").contains("ng-empty")) {
+                                    clickTheElement(streamValueInput);
+                                    if ("All".equalsIgnoreCase(inputStreamSpecificInfo.get("Streams"))){
+                                        for (WebElement streamOption : streamOptions) {
+                                            streamOption.click();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        clickTheElement(okBtnToSave);
+                    }else {
+                        SimpleUtils.fail("The creation window not show up after clicking add button!", false);
+                    }
+                }
+            }
+            if (!isExisting){
+                SimpleUtils.fail("Can not find the setting type you want to add!", false);
+            }
+        }else {
+            SimpleUtils.fail("No content in Settings page!", false);
+        }
+    }
+
+    @FindBy(css = "input-field input[aria-label=\"Data Tag\"]")
+    private WebElement tagInput;
+    @Override
+    public void clickOnEditBtnForInputStream(HashMap<String, String> inputStream, HashMap<String, String> inputStreamUpdated) throws Exception {
+        WebElement searchResult = searchSettingsForDemandDriver("input stream", inputStream.get("Name"));
+        if(searchResult != null){
+            clickTheElement(searchResult.findElement(By.cssSelector("lg-button[label=\"Edit\"] button")));
+            if (isElementLoaded(popUpWindow) && popUpWindow.findElement(By.cssSelector("modal")).getAttribute("modal-title").toLowerCase().contains("input stream")){
+                if (!inputStream.get("Type").equals(inputStreamUpdated.get("Type"))){
+                    clickTheElement(streamType);
+                    Select typeSelect = new Select(streamType);
+                    typeSelect.selectByVisibleText(inputStreamUpdated.get("Type"));
+                }
+                if (!"Base".equalsIgnoreCase(inputStreamUpdated.get("Type"))){
+                    if (!inputStream.get("Operator").equalsIgnoreCase(inputStreamUpdated.get("Operator"))){
+                        clickTheElement(streamOperator);
+                        Select select = new Select(streamOperator);
+                        select.selectByVisibleText(inputStreamUpdated.get("Operator"));
+                    }
+                    clickTheElement(streamValueInput);
+                    for (WebElement streamOption : streamOptions) {
+                        if (streamOption.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-not-empty"))
+                            streamOption.click();
+                    }
+                    for (WebElement streamOption : streamOptions){
+                        if ("All".equalsIgnoreCase(inputStreamUpdated.get("Streams"))){
+                            streamOption.click();
+                        }else if (streamOption.findElement(By.cssSelector("label.input-label")).getText().equalsIgnoreCase(inputStreamUpdated.get("Streams"))){
+                            streamOption.click();
+                        }
+                    }
+                    clickTheElement(streamValueInput);
+                }
+                if(!inputStream.get("Tag").equalsIgnoreCase(inputStreamUpdated.get("Tag"))){
+                    tagInput.clear();
+                    tagInput.sendKeys(inputStreamUpdated.get("Tag"));
+                }
+                clickTheElement(okBtnToSave);
+            }else {
+                SimpleUtils.fail("The edit pop up window not show up!", false);
+            }
+        }else {
+            SimpleUtils.fail("The item does not exist in the result list!", false);
+        }
+    }
+
 }
