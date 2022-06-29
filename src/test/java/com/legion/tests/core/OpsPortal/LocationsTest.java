@@ -6,6 +6,7 @@ import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
+import com.legion.pages.core.opemployeemanagement.TimeOffPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -2205,7 +2206,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Assignment Rules")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verify1AssignmentRulesInLocationLevelAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyAssignmentRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try {
             String workRoleName = "AMBASSADOR";
@@ -2262,20 +2263,41 @@ public class LocationsTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
     public void verifyVerifyDifferentLegionUserCanSeeCreatedLocationOfDM(String username, String password, String browser, String location) throws Exception {
         try {
-
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyy MMM dd");
+            String currentTime = dfs.format(new Date());
             String locationName = "yangUsingNSOLocation";
             LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName("A B");
+            teamPage.isProfilePageLoaded();
+            teamPage.goToTeam();
             teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.goToSpecificWeekByDate(currentTime);
+            scheduleCommonPage.clickOnFirstWeekInWeekPicker();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
-            locationsPage.goToLocationDetailsPage(locationName);
-
+            //check the location status
+            if(locationsPage.searchLocationAndGetStatus(locationName).equals("ENABLED"))
+                SimpleUtils.pass("New created location with today as effective day is enabled");
+            else
+                SimpleUtils.report("New created location with today as effective day status is incorrect");
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
