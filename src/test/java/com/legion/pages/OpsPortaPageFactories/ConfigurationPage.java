@@ -144,4 +144,5 @@ public interface ConfigurationPage {
     public void checkTheEntryOfAddBasicStaffingRule() throws Exception;
     public boolean verifyWarningInfoForDemandDriver(String warningMsg) throws Exception;
     public void addDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception;
+    public void verifyStaffingRulePageShowWell() throws Exception;
 }

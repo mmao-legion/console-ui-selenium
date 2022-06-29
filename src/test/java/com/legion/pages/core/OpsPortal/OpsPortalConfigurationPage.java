@@ -4748,19 +4748,23 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		return effectiveDates;
 	}
 
+	@FindBy(css="ul.staffing-dropdown-menu li:nth-child(1)")
+	private WebElement staffingRuleButton;
+	@FindBy(css=".constraint-box")
+	private WebElement staffingRuleFields;
 	@Override
 	public void checkTheEntryOfAddBasicStaffingRule() throws Exception {
 		waitForSeconds(5);
 		if(isElementEnabled(addIconOnRulesListPage)){
 			clickTheElement(addIconOnRulesListPage);
-			if(isElementEnabled(addAdvancedStaffingRuleButton)){
-				SimpleUtils.pass("Advance staffing rules tab is show");
-				clickTheElement(addAdvancedStaffingRuleButton);
-				if(isElementEnabled(dynamicGroupSection)){
-					SimpleUtils.pass("Advance staffing rules tab is clickable");
+			if(isElementEnabled(staffingRuleButton)){
+				SimpleUtils.pass("Staffing rules tab is show");
+				clickTheElement(staffingRuleButton);
+				if(isElementEnabled(staffingRuleFields)){
+					SimpleUtils.pass("Staffing rules tab is clickable");
 				}
 				else{
-					SimpleUtils.fail("Advance staffing rules tab is NOT clickable",false);
+					SimpleUtils.fail("Staffing rules tab is NOT clickable",false);
 				}
 			}else {
 				SimpleUtils.pass("Advance staffing rules tab is NOT show");
@@ -4853,6 +4857,17 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}else {
 			SimpleUtils.fail("No add button found in demand driver list page!", false);
+		}
+	}
+	@FindBy(tagName = "work-role-badges-edit")
+	private WebElement badgeSection;
+
+	@Override
+	public void verifyStaffingRulePageShowWell() throws Exception{
+		if(isElementEnabled(badgeSection) && isElementEnabled(staffingRuleFields)){
+			SimpleUtils.pass("Staffing rule page shows well");
+		}else{
+			SimpleUtils.fail("Staffing rule page doesn't show well",false);
 		}
 	}
 }
