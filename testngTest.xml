@@ -19,16 +19,6 @@
         </classes>
     </test>
 
-    <test name="Time Zone Test" >
-        <classes>
-            <class name="com.legion.tests.core.TimeZoneTest">
-                <methods>
-                    <include name="verifyTheUTCTimeFormatInControlsAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
     <test name="Offer TM Test" >
         <classes>
             <class name="com.legion.tests.core.OfferTMTest">
