@@ -132,4 +132,16 @@ public interface ScheduleShiftTablePage {
     public void verifySelectedShiftsAreMarkedWithX(HashSet<Integer> selectedIndexes) throws Exception;
     public void getWeekDayAndDate() throws Exception;
     public void bulkDeleteTMShiftsInWeekView(String teamMemberName) throws Exception;
+    public List<WebElement> selectMultipleDifferentAssignmentShiftsOnOneDay(int shiftCount, int dayIndex) throws Exception;
+    public List<WebElement> selectMultipleSameAssignmentShifts(int shiftCount, String tmName) throws Exception;
+    public List<WebElement> selectMultipleDifferentAssignmentShifts(int shiftCount) throws Exception;
+    public void dragBulkShiftToAnotherDay(List<WebElement> selectedShifts, int endIndex, boolean needConfirmChangeModalDisplay) throws Exception;
+    public boolean checkIfBulkDragAndDropConfirmChangeModalDisplay() throws Exception;
+    public String getBulkDragAndDropConfirmChangeInfo () throws Exception;
+    public void selectMoveOrCopyBulkShifts (String moveOrCopy) throws Exception;
+    public void enableOrDisableAllowComplianceErrorSwitch (boolean enableOrDisable) throws Exception;
+    public void enableOrDisableAllowConvertToOpenSwitch (boolean enableOrDisable) throws Exception;
+    public void expandSpecificCountGroup(int count) throws Exception;
+    public int getOneDayShiftCountByIndex(int index) throws Exception;
+    public void unSelectAllBulkSelectedShifts();
 }

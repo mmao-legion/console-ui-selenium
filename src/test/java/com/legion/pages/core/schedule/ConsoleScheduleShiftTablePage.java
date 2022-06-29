@@ -3438,7 +3438,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             }
             Actions action = new Actions(getDriver());
             for (int i : selectedIndex) {
-                scrollToBottom();
+                scrollToElement(names.get(i));
                 waitForSeconds(1);
                 action.contextClick(names.get(i)).build().perform();
                 if (isBulkActionMenuPopup()) {
@@ -3516,6 +3516,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @Override
     public void bulkDeleteTMShiftsInWeekView(String teamMemberName) throws Exception {
+        unSelectAllBulkSelectedShifts();
         if (areListElementVisible(shiftsWeekView, 15)) {
             HashSet<Integer> shiftIndexes = new HashSet<>();
             //Get all index of TM's shifts
@@ -3542,7 +3543,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 if (selectedShiftCount == shiftIndexes.size()){
                     SimpleUtils.pass("Bulk delete:Select shift successfully! ");
                 }else
-                    SimpleUtils.fail("Bulk delete: Fail to select shift! ", false);
+                    SimpleUtils.fail("Bulk delete: Fail to select shift! the expect count is:"+shiftIndexes.size()
+                            + " the actual count is: "+selectedShiftCount, false);
                 //Right click the selected shifts
                 waitForSeconds(2);
                 rightClickOnSelectedShifts(shiftIndexes);
@@ -3555,5 +3557,339 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.report("There is no shift for :"+teamMemberName+" !");
         }else
             SimpleUtils.report("Schedule Week View: shifts load failed or there is no shift in this week");
+    }
+
+    @Override
+    public List<WebElement> selectMultipleDifferentAssignmentShiftsOnOneDay(int shiftCount, int dayIndex) throws Exception {
+        List<WebElement> shiftsOnOneDay = getDriver().findElements(By.cssSelector("[data-day-index=\"" + dayIndex + "\"] .week-schedule-shift"));
+        List<WebElement> selectedShifts = new ArrayList<>();
+        List<String> selectedShiftTMNames = new ArrayList<>();
+//        scrollToBottom();
+        waitForSeconds(2);
+        if (shiftsOnOneDay.size() >= shiftCount) {
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (WebElement element : shiftsOnOneDay) {
+                WebElement shiftName = element.findElement(By.cssSelector(".week-schedule-worker-name"));
+                if (!selectedShiftTMNames.contains(shiftName.getText())) {
+                    action.click(element);
+                    selectedShifts.add(element);
+                    selectedShiftTMNames.add(shiftName.getText());
+                    SimpleUtils.pass("Bulk action: Click "+shiftName.getText()+"'s shift successfully! ");
+                }
+                if (selectedShifts.size() == shiftCount) {
+                    break;
+                }
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
+                SimpleUtils.pass("Selected " + shiftCount + " shifts successfully");
+            } else {
+                SimpleUtils.fail("Expected to select " + shiftCount + " shifts, but actually selected " +
+                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+            }
+        } else {
+            SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+        }
+        return selectedShifts;
+    }
+
+    @Override
+    public List<WebElement> selectMultipleSameAssignmentShifts(int shiftCount, String tmName) throws Exception {
+        List<WebElement> selectedShifts = new ArrayList<>();
+//        List<String> selectedShiftTMNames = new ArrayList<>();
+        List<WebElement> names = new ArrayList<>();
+        if (areListElementVisible(namesWeekView, 10)) {
+            names = namesWeekView;
+        } else if (areListElementVisible(namesDayView, 10)) {
+            names = namesDayView;
+        }
+        scrollToBottom();
+        waitForSeconds(2);
+        if (names.size() >= shiftCount) {
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (WebElement name : names) {
+                if (name.getText().toLowerCase().contains(tmName.toLowerCase())) {
+                    action.click(name);
+                    selectedShifts.add(name);
+                    SimpleUtils.pass("Bulk action: Click "+tmName+"'s shift successfully! ");
+                }
+                if (selectedShifts.size() == shiftCount) {
+                    break;
+                }
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
+                SimpleUtils.pass("Selected " + shiftCount + " shifts successfully");
+            } else {
+                SimpleUtils.fail("Expected to select " + shiftCount + " shifts, but actually selected " +
+                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+            }
+        } else {
+            SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+        }
+        return selectedShifts;
+    }
+
+
+    @Override
+    public List<WebElement> selectMultipleDifferentAssignmentShifts(int shiftCount) throws Exception {
+        List<WebElement> selectedShifts = new ArrayList<>();
+        List<String> selectedShiftTMNames = new ArrayList<>();
+        List<WebElement> elements = new ArrayList<>();
+        if (areListElementVisible(weekShifts, 10)) {
+            elements = weekShifts;
+        } else if (areListElementVisible(dayViewAvailableShifts, 10)) {
+            elements = dayViewAvailableShifts;
+        }
+        if (elements.size() >= shiftCount) {
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (WebElement element : elements) {
+                WebElement shiftName = element.findElement(By.cssSelector(".week-schedule-worker-name"));
+                if (!selectedShiftTMNames.contains(shiftName.getText())) {
+                    scrollToElement(element);
+                    waitForSeconds(1);
+                    action.click(element);
+                    selectedShifts.add(element);
+                    selectedShiftTMNames.add(shiftName.getText());
+                    SimpleUtils.pass("Bulk action: Click " + shiftName.getText() + "'s shift successfully! ");
+                }
+                if (selectedShifts.size() == shiftCount) {
+                    break;
+                }
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
+                SimpleUtils.pass("Selected " + shiftCount + " shifts successfully");
+            } else {
+                SimpleUtils.fail("Expected to select " + shiftCount + " shifts, but actually selected " +
+                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+            }
+        }
+        return selectedShifts;
+    }
+
+    @Override
+    public void dragBulkShiftToAnotherDay(List<WebElement> selectedShifts, int endIndex, boolean needConfirmChangeModalDisplay) throws Exception {
+//        waitForSeconds(3);
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
+        WebElement weekDay = getDriver().findElement(By.cssSelector("[data-day-index=\""+endIndex+"\"] .sch-calendar-day-label"));
+        if (selectedShifts != null
+                && endElements != null
+                && selectedShifts.size() > 0
+//                && endElements.size() > 0
+                && weekDay!=null) {
+            Actions action = new Actions(getDriver());
+            action.clickAndHold(selectedShifts.get(selectedShifts.size()-1)).build().perform();
+            if (endElements.size() == 0) {
+                scrollToElement(daySummaries.get(endIndex+7));
+                waitForSeconds(1);
+                action.moveToElement(daySummaries.get(endIndex+7));
+            }else {
+                scrollToElement(endElements.get(endElements.size()-1));
+                waitForSeconds(1);
+                action.moveToElement(endElements.get(endElements.size()-1));
+            }
+            action.release().build().perform();
+
+//            scrollToElement(endElements.get(endElements.size()-1));
+//            waitForSeconds(1);
+//            mouseHoverDragandDrop(selectedShifts.get(selectedShifts.size()-1), endElements.get(endElements.size()-1));
+            if (needConfirmChangeModalDisplay) {
+                if (!checkIfBulkDragAndDropConfirmChangeModalDisplay()) {
+                    SimpleUtils.fail("Bulk Drag&Drop: Bulk drag and drop confirm change modal should display!", false);
+                }else
+                    SimpleUtils.pass("Bulk Drag&Drop: Drag multiple shifts to " + weekDay.getText() + " days Successfully!");
+            }else {
+                if (checkIfBulkDragAndDropConfirmChangeModalDisplay()) {
+                    SimpleUtils.fail("Bulk Drag&Drop: Bulk drag and drop confirm change modal should not display!", false);
+                }else
+                    SimpleUtils.pass("Bulk Drag&Drop: Bulk drag and drop confirm change modal not display!");
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Failed to find the shifts or " + endIndex, false);
+        }
+    }
+
+    @FindBy(css = ".swap-modal.modal-instance")
+    private WebElement bulkDragAndDropConfirmChangeModal;
+    public boolean checkIfBulkDragAndDropConfirmChangeModalDisplay() throws Exception {
+        boolean ifModalDisplay = false;
+        if (isElementLoaded(bulkDragAndDropConfirmChangeModal, 5)) {
+            ifModalDisplay = true;
+            SimpleUtils.report("Bulk action: Bulk drag and drop confirm change modal display successfully! ");
+        } else
+            SimpleUtils.report("Bulk action: Bulk drag and drop confirm change modal is not display! ");
+        return ifModalDisplay;
+    }
+
+    @FindBy(css = "p.text-regular")
+    private WebElement bulkDragAndDropConfirmChangeInfo;
+    public String getBulkDragAndDropConfirmChangeInfo () throws Exception {
+        String message = "";
+        if (isElementLoaded(bulkDragAndDropConfirmChangeInfo, 5)) {
+            message = bulkDragAndDropConfirmChangeInfo.getText();
+            SimpleUtils.pass("Bulk action: Get bulk drag and drop confirm change info successfully!");
+        } else
+            SimpleUtils.fail("Bulk action: The bulk drag and drop confirm change info fail to load! ", false);
+        return message;
+    }
+
+    @FindBy(css = "[ng-click=\"config.mode = 'move'\"] .tma-staffing-option-outer-circle")
+    private WebElement moveShiftsRadioButton;
+    @FindBy(css = "[ng-click=\"config.mode = 'copy'\"] .tma-staffing-option-outer-circle")
+    private WebElement copyShiftsRadioButton;
+    public void selectMoveOrCopyBulkShifts (String moveOrCopy) throws Exception {
+        if (isElementLoaded(moveShiftsRadioButton, 5)
+                && isElementLoaded(copyShiftsRadioButton, 5)) {
+            if (moveOrCopy.equalsIgnoreCase("move")) {
+                if (moveShiftsRadioButton.findElement(By.tagName("div")).getAttribute("class").contains("ng-hide")) {
+                    click(moveShiftsRadioButton);
+                    if (!moveShiftsRadioButton.findElement(By.tagName("div")).getAttribute("class").contains("ng-hide")) {
+                        SimpleUtils.pass("Bulk action: Select move shifts radio button successfully!");
+                    } else
+                        SimpleUtils.fail("Bulk action: Fail to select move shift radio button! ", false);
+                } else
+                    SimpleUtils.pass("Bulk action: Move shifts radio button already been selected!");
+            }else {
+                if (copyShiftsRadioButton.findElement(By.tagName("div")).getAttribute("class").contains("ng-hide")) {
+                    click(copyShiftsRadioButton);
+                    if (!copyShiftsRadioButton.findElement(By.tagName("div")).getAttribute("class").contains("ng-hide")) {
+                        SimpleUtils.pass("Bulk action: Select copy shifts radio button successfully!");
+                    } else
+                        SimpleUtils.fail("Bulk action: Fail to select copy shift radio button! ", false);
+                } else
+                    SimpleUtils.pass("Bulk action: Copy shifts radio button already been selected!");
+            }
+        }else
+            SimpleUtils.fail("Bulk action: The move and copy shifts radio buttons fail to load! ", false);
+    }
+
+    @FindBy(css = "[value=\"config.allowComplianceErrors\"]")
+    private WebElement allowComplianceErrorSwitch;
+    @FindBy(css = "[value=\"config.allowConvertToOpen\"]")
+    private WebElement allowConvertToOpenSwitch;
+    public void enableOrDisableAllowComplianceErrorSwitch (boolean enableOrDisable) throws Exception {
+        if (isElementLoaded(allowComplianceErrorSwitch, 5)) {
+            if (enableOrDisable) {
+                if (allowComplianceErrorSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
+                    click(allowComplianceErrorSwitch);
+                    if (allowComplianceErrorSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+                        SimpleUtils.pass("Bulk action: Enable Allow Compliance Error switch successfully!");
+                    } else
+                        SimpleUtils.fail("Bulk action: Fail to Enable Allow Compliance Error switch! ", false);
+                } else
+                    SimpleUtils.pass("Bulk action: Allow Compliance Error switch already been enabled!");
+            }else {
+                if (allowComplianceErrorSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+                    click(allowComplianceErrorSwitch);
+                    if (allowComplianceErrorSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
+                        SimpleUtils.pass("Bulk action: Disable Allow Compliance Error switch successfully!");
+                    } else
+                        SimpleUtils.fail("Bulk action: Fail to disable Allow Compliance Error switch! ", false);
+                } else
+                    SimpleUtils.pass("Bulk action: Allow Compliance Error switch already been disable!");
+            }
+        }else
+            SimpleUtils.fail("Bulk action: The Allow Compliance Error switch fail to load! ", false);
+    }
+
+
+    public void enableOrDisableAllowConvertToOpenSwitch (boolean enableOrDisable) throws Exception {
+        if (isElementLoaded(allowConvertToOpenSwitch, 5)) {
+            if (enableOrDisable) {
+                if (allowConvertToOpenSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
+                    click(allowConvertToOpenSwitch);
+                    if (allowConvertToOpenSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+                        SimpleUtils.pass("Bulk action: Enable Allow Convert to Open switch successfully!");
+                    } else
+                        SimpleUtils.fail("Bulk action: Fail to Enable Allow Convert to Open switch! ", false);
+                } else
+                    SimpleUtils.pass("Bulk action: Enable Allow Convert to Open switch already been enabled!");
+            }else {
+                if (allowConvertToOpenSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+                    click(allowConvertToOpenSwitch);
+                    if (allowConvertToOpenSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
+                        SimpleUtils.pass("Bulk action: Disable Enable Allow Convert to Open switch successfully!");
+                    } else
+                        SimpleUtils.fail("Bulk action: Fail to disable Enable Allow Convert to Open switch! ", false);
+                } else
+                    SimpleUtils.pass("Bulk action: Enable Allow Convert to Open switch already been disable!");
+            }
+        }else
+            SimpleUtils.fail("Bulk action: The Enable Allow Convert to Open switch fail to load! ", false);
+    }
+
+    @Override
+    public void expandSpecificCountGroup(int count) throws Exception {
+        if (areListElementVisible(groupTitleList,10)){
+            if (count> groupTitleList.size()) {
+                SimpleUtils.fail("The count "+count+" more than the group by lists: "+ groupTitleList.size(), false);
+            } else {
+                int expendedGroup = 0;
+                for (int i=0; i< groupTitleList.size(); i++){
+                    if (expendedGroup != count){
+                        clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                        if (!getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                            expendedGroup +=1;
+                            SimpleUtils.pass("Group is expanded!");
+                        } else {
+                            clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                            if (!getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                                expendedGroup +=1;
+                                SimpleUtils.pass("Group is expanded!");
+                            } else {
+                                SimpleUtils.fail("Group is not able to be expanded!", false);
+                            }
+                        }
+                    }else {
+                        clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                        if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                            SimpleUtils.pass("Group is collapsed!");
+                        } else {
+                            clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                            if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                                SimpleUtils.pass("Group is collapsed!");
+                            } else {
+                                SimpleUtils.fail("Group is not able to be collapsed!", false);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("No group title show up!", false);
+        }
+    }
+
+
+    @Override
+    public int getOneDayShiftCountByIndex(int index) throws Exception {
+        int count = 0;
+        if (index<7) {
+            List<WebElement> oneDayShifts = getDriver().findElements(By.cssSelector("[data-day-index=\"" + index + "\"] .week-schedule-shift-wrapper"));
+            count = oneDayShifts.size();
+        } else
+            SimpleUtils.fail("Index cannot greater than 7, but actual it is:"+index, false);
+
+        return count;
+    }
+
+
+    @FindBy(css = ".shift-selected-multi")
+    private List<WebElement> bulkSelectedShift;
+    public void unSelectAllBulkSelectedShifts(){
+        if (areListElementVisible(bulkSelectedShift, 5)) {
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (WebElement element : bulkSelectedShift) {
+                action.click(element);
+                SimpleUtils.pass("Bulk action: Unselect one shift successfully! ");
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+        } else
+            SimpleUtils.report("There is no bulk selected shifts! ");
     }
 }
