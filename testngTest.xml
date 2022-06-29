@@ -19,15 +19,15 @@
         </classes>
     </test>
 
-    <test name="Offer TM Test" >
-        <classes>
-            <class name="com.legion.tests.core.OfferTMTest">
-                <methods>
-                    <include name="verifySingleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />
-                    <include name="verifyMultipleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+<!--    <test name="Offer TM Test" >-->
+<!--        <classes>-->
+<!--            <class name="com.legion.tests.core.OfferTMTest">-->
+<!--                <methods>-->
+<!--                    <include name="verifySingleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />-->
+<!--                    <include name="verifyMultipleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
 
 </suite> 
