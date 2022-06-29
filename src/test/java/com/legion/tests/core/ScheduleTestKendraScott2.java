@@ -6284,7 +6284,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			if (isActiveWeekGenerated) {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
-			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00AM", "6:00PM");
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "06:00PM");
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			shiftOperatePage.clickOnProfileIcon();

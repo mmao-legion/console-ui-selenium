@@ -377,7 +377,7 @@ public class BulkCreateTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    //@Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify assign or offer TMs in Search and Recommended tabs")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -423,7 +423,7 @@ public class BulkCreateTest extends TestBase {
             //Fill the required option
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
-            int count = (int)(Math.random()*100+1);
+            int count = (int)(Math.random()*(100-2)+2);
             newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
             newShiftPage.clearAllSelectedDays();
             int dayCount = 7;
