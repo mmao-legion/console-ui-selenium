@@ -42,7 +42,7 @@ public class TimeZoneTest extends TestBase {
 
             String enterprise = System.getProperty("enterprise").toLowerCase();
             if (enterprise.equalsIgnoreCase("vailqacn")) {
-                // Check UTC time format in Controls-->Location Profile--Edit
+                // Check UTC time format in Controls-->Location Profile-->Edit
                 controlsPage.gotoControlsPage();
                 SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
                 controlsNewUIPage.clickOnControlsLocationProfileSection();
@@ -58,7 +58,7 @@ public class TimeZoneTest extends TestBase {
                 locationsPage.clickEditEnterpriseProfile();
                 controlsNewUIPage.checkTimeZoneDropdownOptions(593, "UTC");
 
-                // Check UTC time format in Control Center-->Locations-->Location Configuration--Edit
+                // Check UTC time format in Control Center-->Locations-->Location Configuration-->Edit
                 locationsPage.clickOnLocationsTab();
                 locationsPage.goToSubLocationsInLocationsPage();
                 locationsPage.searchLocation(location);
