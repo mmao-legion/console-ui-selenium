@@ -34,7 +34,7 @@
             <class name="com.legion.tests.core.OfferTMTest">
                 <methods>
                     <include name="verifySingleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />
-                    <include name="verifyMultipleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />git
+                    <include name="verifyMultipleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />
                 </methods>
             </class>
         </classes>
