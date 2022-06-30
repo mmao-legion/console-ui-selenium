@@ -263,9 +263,9 @@ public class OPConfigTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify wages shows when setting Labor Preferences to Wages")
+    @TestName(description = "Verify wages should not show when setting Labor Preferences to None")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
@@ -308,9 +308,9 @@ public class OPConfigTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify wages should not show when setting Labor Preferences to None")
+    @TestName(description = "Verify wages shows when setting Labor Preferences to Wages")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
