@@ -294,5 +294,10 @@ public interface LocationsPage {
     public void resetLocationLevelExternalAttributesInLaborModelTemplate()throws Exception;
     public void updateEnterpriseProfileDetailInfo() throws Exception;
     public void clickOnEnterpriseProfileCard() throws Exception;
+    public String editWFSDynamicGroup(String groupName, String criteriaUpdate) throws Exception;
+    public void removedSearchedWFSDG() throws Exception;
+    public void verifyDuplicatedDGErrorMessage() throws Exception;
+    public void verifyCriteriaList() throws Exception;
+    public void eidtExistingDGP() throws Exception;
 }
 

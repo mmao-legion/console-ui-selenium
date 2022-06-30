@@ -8,6 +8,7 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.SettingsAndAssociationPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.pages.core.OpCommons.OpsCommonComponents;
+import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffPage;
 import com.legion.pages.core.schedule.ConsoleScheduleCommonPage;
 import com.legion.pages.core.schedule.ConsoleToggleSummaryPage;
@@ -1523,4 +1524,67 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Dynamic Group Function>In Workforce Sharing")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleCollaborationOfDynamicGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            String templateType = "Schedule Collaboration";
+            String templateName = "testDynamicGroup";
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime = dfs.format(new Date()).trim();
+            String groupNameForWFS = "AutoWFS" + currentTime;
+            String description = "AutoCreate" + currentTime;
+            String criteria = "Config Type";
+            String criteriaUpdate = "Country";
+            String searchText = "AutoCreate";
+
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+
+            boolean flag = configurationPage.isTemplateListPageShow();
+            if(flag){
+                SimpleUtils.pass("Template landing page shows well");
+            }else
+                SimpleUtils.fail("Template landing page loads failed",false);
+
+            configurationPage.searchTemplate(templateName);
+
+            configurationPage.clickOnTemplateName(templateName);
+
+            configurationPage.clickEdit();
+            configurationPage.clickOK();
+
+            configurationPage.clickOnAssociationTabOnTemplateDetailsPage();
+
+            OpsPortalLocationsPage opsPortalLocationsPage = new OpsPortalLocationsPage();
+            opsPortalLocationsPage.eidtExistingDGP();
+            opsPortalLocationsPage.searchWFSDynamicGroup(searchText);
+
+            opsPortalLocationsPage.verifyCriteriaList();
+            String locationNum = opsPortalLocationsPage.addWorkforceSharingDGWithOneCriteria(groupNameForWFS,description,criteria);
+            String locationNumAftUpdate = opsPortalLocationsPage.editWFSDynamicGroup(groupNameForWFS,criteriaUpdate);
+
+            if (!locationNumAftUpdate.equalsIgnoreCase(locationNum)) {
+                SimpleUtils.pass("Update workforce sharing dynamic group successfully");
+            }
+
+            opsPortalLocationsPage.removedSearchedWFSDG();
+            opsPortalLocationsPage.addWorkforceSharingDGWithOneCriteria(groupNameForWFS,"",criteria);
+            opsPortalLocationsPage.removedSearchedWFSDG();
+
+            opsPortalLocationsPage.addWorkforceSharingDGWithOneCriteria(groupNameForWFS+"Custom",description,"Custom");
+            opsPortalLocationsPage.addWorkforceSharingDGWithOneCriteria(groupNameForWFS+"Custom",description,"Custom");
+            opsPortalLocationsPage.verifyDuplicatedDGErrorMessage();
+            opsPortalLocationsPage.removedSearchedWFSDG();
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }
