@@ -276,7 +276,13 @@ public class OPConfigTest extends TestBase {
             String option = "None";
             setLaborPreferencesForForecastSummarySmartcardSetting(option);
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-            Thread.sleep(300000);
+            int i=0;
+            while (i<5) {
+               scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                Thread.sleep(60000);
+                i++;
+            }
+
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 
