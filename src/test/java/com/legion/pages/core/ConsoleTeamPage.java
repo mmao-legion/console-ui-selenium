@@ -4948,4 +4948,91 @@ private List<WebElement> locationColumn;
 		} else
 			SimpleUtils.fail("The transfer button is fail to loaded! ", false);
 	}
+
+	@FindBy (css = "[ng-click=\"viewProfile(worker)\"]")
+	private List<WebElement> filteredTMs;
+
+	@Override
+	public void clickTheTMByNameAndEdit (String tmName) throws Exception {
+		if (areListElementVisible(filteredTMs, 10)) {
+			for (WebElement elm : filteredTMs) {
+				if (elm.getText().equalsIgnoreCase(tmName)) {
+					clickTheElement(elm);
+					waitForSeconds(3);
+					SimpleUtils.pass("TM has been clicked!");
+				}
+			}
+		} else {
+			SimpleUtils.fail("No vailed TM filtered! TM name is: " + tmName, false);
+		}
+		if (isElementLoaded(profileSection, 10)) {
+			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
+			waitForSeconds(3);
+			SimpleUtils.pass("enter edit profile mode!");
+		} else {
+			SimpleUtils.fail("Profile section is failed for loading!", false);
+		}
+	}
+
+	@FindBy (css = ".lg-badges-badge")
+	private List<WebElement> badgesIcon;
+
+	@FindBy (css = ".lg-badges-add")
+	private WebElement addBadgeIcon;
+
+	@Override
+	public boolean isWithBadges() {
+		boolean hasBadge = false;
+		if (areListElementVisible(badgesIcon, 10)) {
+			hasBadge = true;
+		}
+		return hasBadge;
+	}
+
+	@Override
+	public void deleteBadges() throws Exception {
+		if (isWithBadges()) {
+			WebElement manageBadge = profileSection.findElement(By.cssSelector(".ManageButton"));
+			if (isElementLoaded(manageBadge, 5)) {
+				scrollToElement(manageBadge);
+				clickTheElement(manageBadge);
+			} else {
+				SimpleUtils.fail("Manage basge button is not loaded!", false);
+			}
+			if (isManageBadgesLoaded()) {
+				String isChecked = "checked";
+				if (areListElementVisible(badgeCheckBoxes, 15)) {
+					for (WebElement elm : badgeCheckBoxes) {
+						if (elm.getAttribute("class").contains("checked")) {
+							scrollToElement(elm);
+							clickTheElement(elm);
+							waitForSeconds(3);
+							if (!elm.getAttribute("class").contains("checked")) {
+								SimpleUtils.pass("Badge is removed!");
+							} else {
+								SimpleUtils.fail("Failed for remove badge!", false);
+							}
+						}
+					}
+				} else {
+					SimpleUtils.fail("Failed for loading badge selection popup!", false);
+				}
+			}
+			scrollToElement(confirmButton);
+			clickTheElement(confirmButton);
+			waitForSeconds(3);
+			if (isWithBadges()) {
+				SimpleUtils.fail("Badge has not been removed!", false);
+			}
+			WebElement saveEditUserProfileBtn = profileSection.findElement(By.xpath("//span[text()=\"Save\"]"));
+			if (isElementLoaded(saveEditUserProfileBtn, 10)) {
+				scrollToElement(saveEditUserProfileBtn);
+				clickTheElement(saveEditUserProfileBtn);
+				waitForSeconds(3);
+				SimpleUtils.pass("All badges have been removed!");
+			} else {
+				SimpleUtils.fail("Save edit user profile button is not loaded!", false);
+			}
+		}
+	}
 }

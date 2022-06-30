@@ -186,4 +186,7 @@ public interface TeamPage {
 	public void transferTheTeamMemberOnSpecificDay(String transferLocation, String transferFromDate) throws Exception;
 	public void verifyTheButtonsInActions(List<String> buttons) throws Exception;
 	public int getWeekDayIndexByTitle(String selectedWeekDay) throws Exception;
+	public void clickTheTMByNameAndEdit(String tmName) throws Exception;
+	public boolean isWithBadges();
+	public void deleteBadges() throws Exception;
 }
