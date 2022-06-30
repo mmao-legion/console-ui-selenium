@@ -23,6 +23,7 @@ public class BulkDeleteNEditTest extends TestBase {
     private ScheduleMainPage scheduleMainPage;
     private ScheduleShiftTablePage scheduleShiftTablePage;
     private ScheduleCommonPage scheduleCommonPage;
+    private EditShiftPage editShiftPage;
 
     @Override
     @BeforeMethod()
@@ -36,6 +37,7 @@ public class BulkDeleteNEditTest extends TestBase {
             scheduleMainPage = pageFactory.createScheduleMainPage();
             scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            editShiftPage = pageFactory.createEditShiftPage();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -153,6 +155,66 @@ public class BulkDeleteNEditTest extends TestBase {
             } else {
                 SimpleUtils.fail("Selected shifts are not deleted successfully!", false);
             }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the content on Multiple Edit Shifts window")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheContentOnMultipleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            // Verify can select multiple shifts by pressing Ctrl/Cmd(Mac)
+            int selectedShiftCount = 2;
+            HashSet<Integer> set = scheduleShiftTablePage.verifyCanSelectMultipleShifts(selectedShiftCount);
+            List<String> selectedDays = scheduleShiftTablePage.getSelectedWorkDays(set);
+            // Verify action menu will pop up when right clicking on anywhere of the selected shifts
+            scheduleShiftTablePage.rightClickOnSelectedShifts(set);
+            scheduleShiftTablePage.verifyTheContentOnBulkActionMenu(selectedShiftCount);
+            // Verify Edit action is visible when right clicking the selected shifts in week view
+            // Verify the functionality of Edit button in week view
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            // Verify the title of Edit Shifts window
+            editShiftPage.verifyTheTitleOfEditShiftsWindow(selectedShiftCount);
+            // Verify the selected days show correctly
+            editShiftPage.verifySelectedWorkDays(selectedShiftCount, selectedDays);
+            // Verify the Location Name shows correctly
+            editShiftPage.verifyLocationNameShowsCorrectly(location);
+            // Verify the visibility of buttons
+            editShiftPage.verifyTheVisibilityOfButtons();
+            // Verify the content of options section
+            editShiftPage.verifyTheContentOfOptionsSection();
+            // Verify the visibility of Clear Edited Fields button
+            SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
+            // Verify the three columns show on Shift Details section
+            editShiftPage.verifyThreeColumns();
+            // Verify the editable types show on Shift Detail section
+            editShiftPage.verifyEditableTypesShowOnShiftDetail();
+            // Verify the functionality of x button
+            editShiftPage.clickOnXButton();
+            SimpleUtils.assertOnFail("Click on X button failed!", !editShiftPage.isEditShiftWindowLoaded(), false);
+            // Verify the functionality of Cancel button
+            set = scheduleShiftTablePage.verifyCanSelectMultipleShifts(selectedShiftCount);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(set);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.clickOnCancelButton();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

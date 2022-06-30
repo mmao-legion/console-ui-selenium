@@ -302,14 +302,33 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     }
 
     @Override
-    public void getWeekDayAndDate() throws Exception {
-        HashMap<String, Integer> weekDayNDates = new HashMap<>();
+    public LinkedHashMap<String, Integer> getWeekDayAndDate() throws Exception {
+        LinkedHashMap<String, Integer> weekDayNDates = new LinkedHashMap<>();
         if (areListElementVisible(schCalendarDateLabel, 10) && areListElementVisible(schWeekDayLabels, 10)) {
             for (int i = 0; i < schCalendarDateLabel.size(); i++) {
                 weekDayNDates.put(schWeekDayLabels.get(i).getText().trim(), Integer.parseInt(schCalendarDateLabel.get(i).getText().trim()));
             }
             setWeekDaysNDates(weekDayNDates);
         }
+        return weekDayNDates;
+    }
+
+    @Override
+    public List<String> getSelectedWorkDays(HashSet<Integer> set) throws Exception {
+        LinkedHashMap<String, Integer> weekDaysAndDates = getWeekDayAndDate();
+        List<String> days = new ArrayList<>();
+        List<String> fullWeekDays = new ArrayList<>();
+        Iterator<String> iterator = weekDaysAndDates.keySet().iterator();
+        while (iterator.hasNext()) {
+            days.add(iterator.next());
+        }
+        if (areListElementVisible(weekShifts, 3)) {
+            for (int i : set) {
+                int index = Integer.parseInt(weekShifts.get(i).getAttribute("data-day-index").trim());
+                fullWeekDays.add(SimpleUtils.getFullWeekDayName(days.get(index)));
+            }
+        }
+        return fullWeekDays;
     }
 
     @FindBy(css = "div.sch-calendar-day-dimension")

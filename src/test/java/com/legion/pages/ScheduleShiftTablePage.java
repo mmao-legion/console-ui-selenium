@@ -130,6 +130,7 @@ public interface ScheduleShiftTablePage {
     public void verifyTheContentOnBulkActionMenu(int selectedShiftCount) throws Exception;
     public void clickOnBtnOnBulkActionMenuByText(String action) throws Exception;
     public void verifySelectedShiftsAreMarkedWithX(HashSet<Integer> selectedIndexes) throws Exception;
-    public void getWeekDayAndDate() throws Exception;
+    public LinkedHashMap<String, Integer> getWeekDayAndDate() throws Exception;
     public void bulkDeleteTMShiftsInWeekView(String teamMemberName) throws Exception;
+    public List<String> getSelectedWorkDays(HashSet<Integer> set) throws Exception;
 }
