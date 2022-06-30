@@ -3,31 +3,45 @@
 <suite verbose ="0" thread-count="10" name="LegionTest">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
-    <parameter name="testRailRunName" value="Automation PR Code Check - FTSE"/>
+    <parameter name="testRailRunName" value="Automation PR Code Check"/>
 
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-<!--    <test name="Time Zone Test" >-->
-<!--        <classes>-->
-<!--            <class name="com.legion.tests.core.TimeZoneTest">-->
-<!--                <methods>-->
-<!--                    <include name="verifyTheUTCTimeFormatInControlsAsInternalAdmin" />-->
-<!--                </methods>-->
-<!--            </class>-->
-<!--        </classes>-->
-<!--    </test>-->
-
-    <test name="Offer TM Test" >
+    <test name="Drag And Drop Test">
         <classes>
-            <class name="com.legion.tests.core.OfferTMTest">
+            <class name="com.legion.tests.core.DragAndDropTest">
                 <methods>
-                    <include name="verifySingleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />
-                    <include name="verifyMultipleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />
+                    <include name="verifyTheItemsOnBulkDragAndDropConfirmPopupAsInternalAdmin" />
+                    <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
+                    <include name="verifyMoveShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
+                    <include name="verifyCopyShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
+                    <include name="verifyShiftsCannotBeMovedOrCopiedToCloseDayAsInternalAdmin" />
+                    <include name="verifyMoveMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
+                    <include name="verifyCopyMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
+                    <include name="verifyTheShiftsWithSameTMsAndOverlappingShiftTimeCannotBulkDragAndDropAsInternalAdmin" />
+                    <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterMoveAsInternalAdmin" />
+                    <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterCopyAsInternalAdmin" />
+  <!--                  <include name="verifyBulkMoveShiftsThatWillIncurOTViolationAsInternalAdmin" />
+                    <include name="verifyBulkCopyShiftsThatWillIncurOTViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7007-->
+                    <!--                  <include name="verifyBulkMoveShiftsThatWillIncur7thDayViolationAsInternalAdmin" />
+                                     <include name="verifyBulkCopyShiftsThatWillIncur7thDayViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-6816 -->
+                    <include name="verifyShiftsCanBeDragAndDropSeveralTimesWithOutSaveAsInternalAdmin" />
+                    <include name="verifyBulkDragAndDropByDifferentAccessRolesAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
     </test>
-
+<!--
+    <test name="P2P LG Test">
+        <classes>
+            <class name="com.legion.tests.core.P2PLGTest">
+                <methods>
+                    <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyBulkDragAndDropShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> 

@@ -555,17 +555,21 @@ SCH-5862-->
                     <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
                     <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
                     <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnP2PLGAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-    <test name="Parent Child LG Test">
-        <classes>
-            <class name="com.legion.tests.core.ParentChildLGTest">
-                <methods>
-                    <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
-                    <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
-                    <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                    <!--                      <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnP2PLGScheduleAsInternalAdmin" />
+                                        <include name="verifyBulkDragAndDropShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> -->
+                                    </methods>
+                                </class>
+                            </classes>
+                        </test>
+                        <test name="Parent Child LG Test">
+                            <classes>
+                                <class name="com.legion.tests.core.ParentChildLGTest">
+                                    <methods>
+                                        <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                                        <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                                        <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                     <!--                   <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnParentChildLGScheduleAsInternalAdmin" />
+                                        <include name="verifyBulkDragAndDropShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" /> -->
                 </methods>
             </class>
         </classes>
@@ -582,4 +586,53 @@ SCH-5862-->
         </classes>
     </test>
 
+    <test name="FTSE Support Variant Violations Except OT Ones">
+        <classes>
+            <class name="com.legion.tests.core.FTSERelevantTest">
+                <methods>
+                    <include name="verifyFTSEEmployeesIgnoreTheDayOTAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnoreTheWeekOTAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnoreThe7thConsecutiveOTAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnoreThe24HrsOTAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeeSupportClopeningViolationAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeeSupportMaxShiftViolationAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeeSupportRoleViolationAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore4X10AgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore5X8AgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore40X8AgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore40hrsAgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnoreNoOverTimeAgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore50hrsPerWeekAgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesSupportSplitShiftsViolationAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesSupportSpreadOfHoursViolationAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <!--
+       <test name="Drag And Drop Test">
+           <classes>
+               <class name="com.legion.tests.core.DragAndDropTest">
+                   <methods>
+                       <include name="verifyTheItemsOnBulkDragAndDropConfirmPopupAsInternalAdmin" />
+                       <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
+                       <include name="verifyMoveShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
+                       <include name="verifyCopyShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
+                       <include name="verifyShiftsCannotBeMovedOrCopiedToCloseDayAsInternalAdmin" />
+                       <include name="verifyMoveMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
+                       <include name="verifyCopyMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
+                       <include name="verifyTheShiftsWithSameTMsAndOverlappingShiftTimeCannotBulkDragAndDropAsInternalAdmin" />
+                       <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterMoveAsInternalAdmin" />
+                       <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterCopyAsInternalAdmin" />
+                                       <include name="verifyBulkMoveShiftsThatWillIncurOTViolationAsInternalAdmin" />
+                                         <include name="verifyBulkCopyShiftsThatWillIncurOTViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7007-->
+                    <!--                  <include name="verifyBulkMoveShiftsThatWillIncur7thDayViolationAsInternalAdmin" />
+                                     <include name="verifyBulkCopyShiftsThatWillIncur7thDayViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-6816
+                    <include name="verifyShiftsCanBeDragAndDropSeveralTimesWithOutSaveAsInternalAdmin" />
+                    <include name="verifyBulkDragAndDropByDifferentAccessRolesAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+   -->
 </suite> <!-- Suite -->

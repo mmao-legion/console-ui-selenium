@@ -2021,8 +2021,9 @@ public class ActivityTest extends TestBase {
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftOffer.getValue(), indexOfActivityType.ShiftOffer.name());
             activityPage.approveOrRejectMultipleShiftOfferRequestOnActivity(teamMemberName1, ActivityTest.approveRejectAction.Approve.getValue(), 1);
             Thread.sleep(3000);
-            String expectedTopMessage = "Error!Alert is already expired";
-            activityPage.verifyApproveShiftOfferRequestAndGetErrorOnActivity(teamMemberName2, expectedTopMessage);
+//            String expectedTopMessage = "Error!Alert is already expired";
+//            activityPage.verifyApproveShiftOfferRequestAndGetErrorOnActivity(teamMemberName2, expectedTopMessage);
+            activityPage.approveOrRejectMultipleShiftOfferRequestOnActivity(teamMemberName2, ActivityTest.approveRejectAction.Approve.getValue(), 1);
 
             //To close activity window
             getDriver().navigate().refresh();
