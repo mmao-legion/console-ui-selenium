@@ -716,7 +716,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
         ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();
-        waitForSeconds(10);
+//        waitForSeconds(10);
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
             clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover")));
@@ -747,20 +747,6 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 }
                 String workRole = shiftJobTitleAsWorkRole.getText().split(" as ")[1].trim();
                 SimpleUtils.pass("Get shift work role successfully! The work role is: " + workRole);
-//                if (areListElementVisible(infoContainers, 5) && infoContainers.size() >= 3) {
-//                    String shiftTime = infoContainers.get(infoContainers.size() - 2).getText().split("\n")[0];
-//                    String totalHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\\|")[1];
-//                    String shiftHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\\|")[0];
-//                    shiftInfo.add(firstName);
-//                    shiftInfo.add(dayIndex);
-//                    shiftInfo.add(shiftTime);
-//                    shiftInfo.add(jobTitle);
-//                    shiftInfo.add(workRole);
-//                    shiftInfo.add(lastName);
-//                    shiftInfo.add(shiftTimeWeekView);
-//                    shiftInfo.add(totalHrs);
-//                    shiftInfo.add(shiftHrs);
-//                }
                     if (isElementLoaded(shiftNotes, 5)) {
                         shiftNotesOnIIconPopUp = shiftNotes.getText();
                     }
@@ -784,7 +770,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     shiftInfo.add(shiftNameOnIIconPopUp); //Index 9
                     shiftInfo.add(shiftNotesOnIIconPopUp); //Index 10
                     //To close the info popup
-                    clickTheElement(weekShifts.get(index));
+//                    clickTheElement(weekShifts.get(index));
             } else {
                 //SimpleUtils.report("This is an Open Shift");
                 //return shiftInfo;
