@@ -9,15 +9,15 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import sun.rmi.runtime.Log;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getEnterprise;
 
@@ -731,7 +731,7 @@ public class DragAndDropTest extends TestBase {
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
-            Thread.sleep(3000);
+            Thread.sleep(5000);
             teamPage.searchAndSelectTeamMemberByName(firstNameOfTM1);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String myTimeOffLabel = "Time Off";
@@ -2006,5 +2006,2280 @@ public class DragAndDropTest extends TestBase {
         scheduleShiftTablePage.verifyShiftIsCopiedToAnotherDay(0,"open",0);
         scheduleMainPage.saveSchedule();
         scheduleShiftTablePage.verifyShiftIsCopiedToAnotherDay(0,"open",0);
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate the items on bulk drag and drop confirm change popup")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheItemsOnBulkDragAndDropConfirmPopupAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            scheduleCommonPage.clickOnDayView();
+            scheduleCommonPage.navigateDayViewWithIndex(1);
+            Map<String, String> dayInfo = scheduleCommonPage.getActiveDayInfo();
+            String fullWeekDay = SimpleUtils.getFullWeekDayName(dayInfo.get("weekDay"));
+            String fullMonth = mySchedulePage.getFullMonthName(dayInfo.get("month"));
+            String day = dayInfo.get("day");
+            scheduleCommonPage.clickOnWeekView();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            // Verify can select multiple shifts by pressing Ctrl/Cmd(Mac)
+            int selectedShiftCount = 2;
+            List<WebElement> selectedShifts = scheduleShiftTablePage.selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, 0);
+            //Drag the selected shifts to next day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 1, true);
+            //Verify the confirm change info display correctly
+            String expectedInfo = "Would you like to move or copy the "+selectedShiftCount+" Selected shifts to "+fullWeekDay+", "+fullMonth+" "+ day+ "?";
+            String actualInfo = scheduleShiftTablePage.getBulkDragAndDropConfirmChangeInfo();
+            SimpleUtils.assertOnFail("The expected message is: "+expectedInfo
+                            + " The actual message is: "+actualInfo,
+                    expectedInfo.equals(actualInfo), false);
+            //Verify the Move shifts and Copy Shifts radio buttons display and clickable
+            scheduleShiftTablePage.selectCopyOrMoveByOptionName("copy");
+            scheduleShiftTablePage.selectCopyOrMoveByOptionName("move");
+
+            //Verify the the compliance and conflict switches should display and could enable or disable
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(false);
+            scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(false);
+
+            //Verify the Cancel and Confirm buttons are display and clickable
+            scheduleShiftTablePage.clickCancelBtnOnDragAndDropConfirmPage();
+            SimpleUtils.assertOnFail("The bulk drag and drop confirm change modal should not display! ",
+                    !scheduleShiftTablePage.checkIfBulkDragAndDropConfirmChangeModalDisplay(), false);
+            selectedShifts = scheduleShiftTablePage.selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, 0);
+            //Drag the selected shifts to next day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 1, true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            SimpleUtils.assertOnFail("The bulk drag and drop confirm change modal should not display! ",
+                    !scheduleShiftTablePage.checkIfBulkDragAndDropConfirmChangeModalDisplay(), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate open shifts will been created when drag and drop shifts to same day and same location on non-LG schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnNonLGScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            // Verify can select multiple shifts by pressing Ctrl/Cmd(Mac)
+            int selectedShiftCount = 2;
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, 1);
+            //Drag the selected shifts to same day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 1, false);
+
+            //Two open shifts been created
+            List<WebElement> newAddedShifts = scheduleShiftTablePage.getOneDayShiftByName(1, "open");
+            SimpleUtils.assertOnFail("The expected new added shifts count is "+selectedShiftCount
+                            + " The actual new added shift count is:"+newAddedShifts.size(),
+                    newAddedShifts.size()==0, false);
+
+            scheduleMainPage.saveSchedule();
+            newAddedShifts = scheduleShiftTablePage.getOneDayShiftByName(1, "open");
+            SimpleUtils.assertOnFail("The expected new added shifts count is "+selectedShiftCount
+                            + " The actual new added shift count is:"+newAddedShifts.size(),
+                    newAddedShifts.size()==2, false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate shifts can be moved to another day and same location on non-LG schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyMoveShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Get shift count before drag and drop
+            int allShiftsCountBefore = scheduleShiftTablePage.getShiftsCount();
+            int firstDayShiftCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            int secondDayShiftsCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+            // Verify can select multiple shifts by pressing Ctrl/Cmd(Mac)
+            int selectedShiftCount = 3;
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, 1);
+
+            List<String> shiftNames = new ArrayList<>();
+            for (int i=0; i< selectedShiftCount;i++) {
+                int index = scheduleShiftTablePage.getTheIndexOfShift(selectedShifts.get(i));
+                shiftNames.add(scheduleShiftTablePage.getTheShiftInfoByIndex(index).get(0));
+            }
+            //Drag the selected shifts to another day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 2, true);
+
+            //Select move option
+            scheduleShiftTablePage.selectMoveOrCopyBulkShifts("move");
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+            scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+            //Check the shift count after drag and drop
+            int allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            int firstDayShiftCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            int secondDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+            SimpleUtils.assertOnFail("The all shifts count should not change, the expect count is: "+allShiftsCountBefore
+                            + ", the actual count is:"+allShiftsCountAfter
+                    , allShiftsCountAfter == allShiftsCountBefore
+                    , false);
+            SimpleUtils.assertOnFail("The first day shifts count should be: "+ (firstDayShiftCountBefore-selectedShiftCount)
+                            + ", the actual count is:"+firstDayShiftCountAfter
+                    , (firstDayShiftCountBefore-selectedShiftCount) == firstDayShiftCountAfter
+                    , false);
+            SimpleUtils.assertOnFail("The second day shifts count should be: "+ (secondDayShiftsCountBefore+selectedShiftCount)
+                            + ", the actual count is:"+secondDayShiftsCountAfter
+                    , (secondDayShiftsCountBefore+selectedShiftCount) == secondDayShiftsCountAfter
+                    , false);
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size()>0, false);
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()==0, false);
+
+            }
+            //Verify changes can be saved
+            scheduleMainPage.saveSchedule();
+            allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            firstDayShiftCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            secondDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+            SimpleUtils.assertOnFail("The all shifts count should not change, the expect count is: "+allShiftsCountBefore
+                            + ", the actual count is:"+allShiftsCountAfter
+                    , allShiftsCountAfter == allShiftsCountBefore
+                    , false);
+            SimpleUtils.assertOnFail("The first day shifts count should be: "+ (firstDayShiftCountBefore-selectedShiftCount)
+                            + ", the actual count is:"+firstDayShiftCountAfter
+                    , (firstDayShiftCountBefore-selectedShiftCount) == firstDayShiftCountAfter
+                    , false);
+            SimpleUtils.assertOnFail("The second day shifts count should be: "+ (secondDayShiftsCountBefore+selectedShiftCount)
+                            + ", the actual count is:"+secondDayShiftsCountAfter
+                    , (secondDayShiftsCountBefore+selectedShiftCount) == secondDayShiftsCountAfter
+                    , false);
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size()>0, false);
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()==0, false);
+
+            }
+            //Verify changes can be published
+            createSchedulePage.publishActiveSchedule();
+            allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            firstDayShiftCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            secondDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+            SimpleUtils.assertOnFail("The all shifts count should not change, the expect count is: "+allShiftsCountBefore
+                            + ", the actual count is:"+allShiftsCountAfter
+                    , allShiftsCountAfter == allShiftsCountBefore
+                    , false);
+            SimpleUtils.assertOnFail("The first day shifts count should be: "+ (firstDayShiftCountBefore-selectedShiftCount)
+                            + ", the actual count is:"+firstDayShiftCountAfter
+                    , (firstDayShiftCountBefore-selectedShiftCount) == firstDayShiftCountAfter
+                    , false);
+            SimpleUtils.assertOnFail("The second day shifts count should be: "+ (secondDayShiftsCountBefore+selectedShiftCount)
+                            + ", the actual count is:"+secondDayShiftsCountAfter
+                    , (secondDayShiftsCountBefore+selectedShiftCount) == secondDayShiftsCountAfter
+                    , false);
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size()>0, false);
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()==0, false);
+
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate shifts can be copied to another day and same location on non-LG schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyCopyShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Get shift count before drag and drop
+            int allShiftsCountBefore = scheduleShiftTablePage.getShiftsCount();
+            int firstDayShiftCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            int secondDayShiftsCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+            // Verify can select multiple shifts by pressing Ctrl/Cmd(Mac)
+            int selectedShiftCount = 3;
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, 1);
+
+            List<String> shiftNames = new ArrayList<>();
+            for (int i=0; i< selectedShiftCount;i++) {
+                int index = scheduleShiftTablePage.getTheIndexOfShift(selectedShifts.get(i));
+                shiftNames.add(scheduleShiftTablePage.getTheShiftInfoByIndex(index).get(0));
+            }
+            //Drag the selected shifts to another day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 2, true);
+
+            //Select move option
+            scheduleShiftTablePage.selectMoveOrCopyBulkShifts("copy");
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+            scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+            //Check the shift count after drag and drop
+            int allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            int firstDayShiftCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            int secondDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+            SimpleUtils.assertOnFail("The all shifts count should not change, the expect count is: "+(allShiftsCountBefore+selectedShiftCount)
+                            + ", the actual count is:"+allShiftsCountAfter
+                    , allShiftsCountAfter == (allShiftsCountBefore+selectedShiftCount)
+                    , false);
+            SimpleUtils.assertOnFail("The first day shifts count should be: "+ firstDayShiftCountBefore
+                            + ", the actual count is:"+firstDayShiftCountAfter
+                    , firstDayShiftCountBefore == firstDayShiftCountAfter
+                    , false);
+            SimpleUtils.assertOnFail("The second day shifts count should be: "+ (secondDayShiftsCountBefore+selectedShiftCount)
+                            + ", the actual count is:"+secondDayShiftsCountAfter
+                    , (secondDayShiftsCountBefore+selectedShiftCount) == secondDayShiftsCountAfter
+                    , false);
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size() >0, false);
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size() >0, false);
+
+            }
+            //Verify changes can be saved
+            scheduleMainPage.saveSchedule();
+            allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            firstDayShiftCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            secondDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+            SimpleUtils.assertOnFail("The all shifts count should not change, the expect count is: "+(allShiftsCountBefore+selectedShiftCount)
+                            + ", the actual count is:"+allShiftsCountAfter
+                    , allShiftsCountAfter == (allShiftsCountBefore+selectedShiftCount)
+                    , false);
+            SimpleUtils.assertOnFail("The first day shifts count should be: "+ firstDayShiftCountBefore
+                            + ", the actual count is:"+firstDayShiftCountAfter
+                    , firstDayShiftCountBefore == firstDayShiftCountAfter
+                    , false);
+            SimpleUtils.assertOnFail("The second day shifts count should be: "+ (secondDayShiftsCountBefore+selectedShiftCount)
+                            + ", the actual count is:"+secondDayShiftsCountAfter
+                    , (secondDayShiftsCountBefore+selectedShiftCount) == secondDayShiftsCountAfter
+                    , false);
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size() >0, false);
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size() >0, false);
+
+            }
+            //Verify changes can be published
+            createSchedulePage.publishActiveSchedule();
+            allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            firstDayShiftCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            secondDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+            SimpleUtils.assertOnFail("The all shifts count should not change, the expect count is: "+(allShiftsCountBefore+selectedShiftCount)
+                            + ", the actual count is:"+allShiftsCountAfter
+                    , allShiftsCountAfter == (allShiftsCountBefore+selectedShiftCount)
+                    , false);
+            SimpleUtils.assertOnFail("The first day shifts count should be: "+ firstDayShiftCountBefore
+                            + ", the actual count is:"+firstDayShiftCountAfter
+                    , firstDayShiftCountBefore == firstDayShiftCountAfter
+                    , false);
+            SimpleUtils.assertOnFail("The second day shifts count should be: "+ (secondDayShiftsCountBefore+selectedShiftCount)
+                            + ", the actual count is:"+secondDayShiftsCountAfter
+                    , (secondDayShiftsCountBefore+selectedShiftCount) == secondDayShiftsCountAfter
+                    , false);
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size() >0, false);
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size() >0, false);
+
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate the shifts cannot be moved or copied to close day")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyShiftsCannotBeMovedOrCopiedToCloseDayAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            List<String> weekDaysToClose = new ArrayList<>();
+            weekDaysToClose.add("Sunday");
+            createSchedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose, null);
+            int targetDayIndex = teamPage.getWeekDayIndexByTitle("Sun");
+            int fromDayIndex;
+            if (targetDayIndex ==6) {
+                fromDayIndex = targetDayIndex-1;
+            } else
+                fromDayIndex = targetDayIndex+1;
+
+            if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Get shift count before drag and drop
+            int allShiftsCountBefore = scheduleShiftTablePage.getShiftsCount();
+
+            // Verify can select multiple shifts by pressing Ctrl/Cmd(Mac)
+            int selectedShiftCount = 3;
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, fromDayIndex);
+
+            //Drag the selected shifts to another day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, targetDayIndex, false);
+
+            //Check the close day popup will display
+            SimpleUtils.assertOnFail("The warning modal should be loaded! ",
+                    newShiftPage.ifWarningModeDisplay(), false);
+
+            newShiftPage.clickOnOkButtonOnWarningModal();
+
+            //Check the shift count after drag and drop
+            int allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            SimpleUtils.assertOnFail("The all shifts count should not change, the expect count is: "+(allShiftsCountBefore+selectedShiftCount)
+                            + ", the actual count is:"+allShiftsCountAfter
+                    , allShiftsCountAfter == allShiftsCountBefore
+                    , false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate move multiple shifts on different day and same location")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyMoveMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            int allShiftsCountBefore = scheduleShiftTablePage.getShiftsCount();
+            int targetDayShiftsCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(6);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Press ctrl and click multiple shifts with different TMs at the different day and same location
+            int selectedShiftCount = 3;
+            int targetDayIndex = 6;
+            List<WebElement> selectedShifts = scheduleShiftTablePage.selectMultipleDifferentAssignmentShifts(selectedShiftCount);
+            List<String> shiftNames = new ArrayList<>();
+            for (int i=0; i< selectedShiftCount;i++) {
+                int index = scheduleShiftTablePage.getTheIndexOfShift(selectedShifts.get(i));
+                shiftNames.add(scheduleShiftTablePage.getTheShiftInfoByIndex(index).get(0));
+            }
+            //Move them to one day and same location
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, targetDayIndex, true);
+            scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+            //Check the shifts on target day
+            int allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            int targetDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(6);
+            SimpleUtils.assertOnFail("The all shifts count should not change after move shift. The expected is:"+allShiftsCountBefore
+                    + " The actual is: "+allShiftsCountAfter, allShiftsCountBefore == allShiftsCountAfter, false);
+
+            SimpleUtils.assertOnFail("The target shifts count should be:"+(targetDayShiftsCountBefore+selectedShiftCount)
+                    + " The actual is: "+targetDayShiftsCountAfter, (targetDayShiftsCountBefore+selectedShiftCount) == targetDayShiftsCountAfter, false);
+
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(6, shiftNames.get(i)).size() >0, false);
+            }
+
+            scheduleMainPage.saveSchedule();
+            allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            targetDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(6);
+            SimpleUtils.assertOnFail("The all shifts count should not change after move shift. The expected is:"+allShiftsCountBefore
+                    + " The actual is: "+allShiftsCountAfter, allShiftsCountBefore == allShiftsCountAfter, false);
+
+            SimpleUtils.assertOnFail("The target shifts count should be:"+(targetDayShiftsCountBefore+selectedShiftCount)
+                    + " The actual is: "+targetDayShiftsCountAfter, (targetDayShiftsCountBefore+selectedShiftCount) == targetDayShiftsCountAfter, false);
+
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(6, shiftNames.get(i)).size() >0, false);
+            }
+
+            createSchedulePage.publishActiveSchedule();
+            allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            targetDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(6);
+            SimpleUtils.assertOnFail("The all shifts count should not change after move shift. The expected is:"+allShiftsCountBefore
+                    + " The actual is: "+allShiftsCountAfter, allShiftsCountBefore == allShiftsCountAfter, false);
+
+            SimpleUtils.assertOnFail("The target shifts count should be:"+(targetDayShiftsCountBefore+selectedShiftCount)
+                    + " The actual is: "+targetDayShiftsCountAfter, (targetDayShiftsCountBefore+selectedShiftCount) == targetDayShiftsCountAfter, false);
+
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(6, shiftNames.get(i)).size() >0, false);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate copy multiple shifts on different day and same location")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyCopyMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            int allShiftsCountBefore = scheduleShiftTablePage.getShiftsCount();
+            int targetDayShiftsCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(6);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Press ctrl and click multiple shifts with different TMs at the different day and same location
+            int selectedShiftCount = 3;
+            int targetDayIndex = 6;
+            List<WebElement> selectedShifts = scheduleShiftTablePage.selectMultipleDifferentAssignmentShifts(selectedShiftCount);
+            List<String> shiftNames = new ArrayList<>();
+            for (int i=0; i< selectedShiftCount;i++) {
+                int index = scheduleShiftTablePage.getTheIndexOfShift(selectedShifts.get(i));
+                shiftNames.add(scheduleShiftTablePage.getTheShiftInfoByIndex(index).get(0));
+            }
+            //Move them to one day and same location
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, targetDayIndex, true);
+            scheduleShiftTablePage.selectMoveOrCopyBulkShifts("Copy");
+            scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+            //Check the shifts on target day
+            int allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            int targetDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(6);
+            SimpleUtils.assertOnFail("The all shifts count be:"+(allShiftsCountBefore+selectedShiftCount)
+                    + " The actual is: "+allShiftsCountAfter, (allShiftsCountBefore+selectedShiftCount) == allShiftsCountAfter, false);
+
+            SimpleUtils.assertOnFail("The target shifts count should be:"+(targetDayShiftsCountBefore+selectedShiftCount)
+                    + " The actual is: "+targetDayShiftsCountAfter, (targetDayShiftsCountBefore+selectedShiftCount) == targetDayShiftsCountAfter, false);
+
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(6, shiftNames.get(i)).size() >0, false);
+            }
+
+            scheduleMainPage.saveSchedule();
+            allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            targetDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(6);
+            SimpleUtils.assertOnFail("The all shifts count be:"+(allShiftsCountBefore+selectedShiftCount)
+                    + " The actual is: "+allShiftsCountAfter, (allShiftsCountBefore+selectedShiftCount) == allShiftsCountAfter, false);
+
+            SimpleUtils.assertOnFail("The target shifts count should be:"+(targetDayShiftsCountBefore+selectedShiftCount)
+                    + " The actual is: "+targetDayShiftsCountAfter, (targetDayShiftsCountBefore+selectedShiftCount) == targetDayShiftsCountAfter, false);
+
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(6, shiftNames.get(i)).size() >0, false);
+            }
+
+            createSchedulePage.publishActiveSchedule();
+            allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            targetDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(6);
+            SimpleUtils.assertOnFail("The all shifts count be:"+(allShiftsCountBefore+selectedShiftCount)
+                    + " The actual is: "+allShiftsCountAfter, (allShiftsCountBefore+selectedShiftCount) == allShiftsCountAfter, false);
+
+            SimpleUtils.assertOnFail("The target shifts count should be:"+(targetDayShiftsCountBefore+selectedShiftCount)
+                    + " The actual is: "+targetDayShiftsCountAfter, (targetDayShiftsCountBefore+selectedShiftCount) == targetDayShiftsCountAfter, false);
+
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(6, shiftNames.get(i)).size() >0, false);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate the shifts with same TMs and overlapping shift time cannot bulk drag and drop")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheShiftsWithSameTMsAndOverlappingShiftTimeCannotBulkDragAndDropAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+            String firstNameOfTM = shiftInfo.get(0);
+            while (firstNameOfTM.equalsIgnoreCase("open")
+                    || firstNameOfTM.equalsIgnoreCase("unassigned")) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM  = shiftInfo.get(0);
+            }
+            String workRole= shiftInfo.get(4);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+            scheduleMainPage.saveSchedule();
+
+            //Fill the required option
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            int count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            int dayCount = 2;
+            newShiftPage.selectSpecificWorkDay(dayCount);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<WebElement> selectedShifts = scheduleShiftTablePage.selectMultipleSameAssignmentShifts(2, firstNameOfTM);
+            //drag them to one day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 2, false);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            dayCount = 1;
+            newShiftPage.selectSpecificWorkDay(dayCount);
+            String shiftStartTime = "11:00am";
+            String shiftEndTime = "2:00pm";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnOfferOrAssignBtn();
+
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            dayCount = 1;
+            newShiftPage.selectSpecificWorkDay(dayCount);
+            shiftStartTime = "4:00pm";
+            shiftEndTime = "9:00pm";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            selectedShifts = scheduleShiftTablePage.selectMultipleSameAssignmentShifts(2, firstNameOfTM);
+            //drag them to one day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 2, true);
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+            scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+            SimpleUtils.assertOnFail("The "+firstNameOfTM+"'s shift should not display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM).size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM+"'s shift should not display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM).size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM+"'s shift should display on third day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(2, firstNameOfTM).size()==2, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate shifts will convert to open if it will incur conflict after move")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterMoveAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+            String firstNameOfTM1 = shiftInfo.get(0);
+            while (firstNameOfTM1.equalsIgnoreCase("open")
+                    || firstNameOfTM1.equalsIgnoreCase("unassigned")) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM1  = shiftInfo.get(0);
+            }
+            String workRole1= shiftInfo.get(4);
+            String firstNameOfTM2 = shiftInfo.get(0);
+            while (firstNameOfTM2.equalsIgnoreCase("open")
+                    || firstNameOfTM2.equalsIgnoreCase("unassigned")
+                    || firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1)) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM2  = shiftInfo.get(0);
+            }
+            String workRole2= shiftInfo.get(4);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
+            scheduleMainPage.saveSchedule();
+
+            //Fill the required option
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole1);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            int count = 2;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            int dayCount = 2;
+            newShiftPage.selectSpecificWorkDay(dayCount);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM2);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(2, 0);
+            //drag them to one day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 1, true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM2).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should not display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should not display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 1, true);
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+            scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should not display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM1).size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should not display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM2).size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The open shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, "open").size()==2, false);
+            scheduleMainPage.saveSchedule();
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should not display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM1).size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should not display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM2).size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The open shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, "open").size()==2, false);
+            createSchedulePage.publishActiveSchedule();
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should not display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM1).size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should not display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM2).size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The open shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, "open").size()==2, false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate shifts will convert to open if it will incur conflict after copy")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterCopyAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+            String firstNameOfTM1 = shiftInfo.get(0);
+            while (firstNameOfTM1.equalsIgnoreCase("open")
+                    || firstNameOfTM1.equalsIgnoreCase("unassigned")) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM1  = shiftInfo.get(0);
+            }
+            String workRole1= shiftInfo.get(4);
+            String firstNameOfTM2 = shiftInfo.get(0);
+            while (firstNameOfTM2.equalsIgnoreCase("open")
+                    || firstNameOfTM2.equalsIgnoreCase("unassigned")
+                    || firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1)) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM2  = shiftInfo.get(0);
+            }
+            String workRole2= shiftInfo.get(4);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
+            scheduleMainPage.saveSchedule();
+
+            //Fill the required option
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole1);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            int count = 2;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            int dayCount = 2;
+            newShiftPage.selectSpecificWorkDay(dayCount);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM2);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(2, 0);
+            //drag them to one day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 1, true);
+            scheduleShiftTablePage.selectMoveOrCopyBulkShifts("Copy");
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM2).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 1, true);
+            scheduleShiftTablePage.selectMoveOrCopyBulkShifts("Copy");
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+            scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM2).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The open shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, "open").size()==2, false);
+            scheduleMainPage.saveSchedule();
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM2).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The open shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, "open").size()==2, false);
+            createSchedulePage.publishActiveSchedule();
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should display on first day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM2).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).size()==1, false);
+            SimpleUtils.assertOnFail("The open shift should display on second day! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, "open").size()==2, false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate bulk move the shifts that will incur OT violation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyBulkMoveShiftsThatWillIncurOTViolationAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+            String firstNameOfTM1 = shiftInfo.get(0);
+            while (firstNameOfTM1.equalsIgnoreCase("open")
+                    || firstNameOfTM1.equalsIgnoreCase("unassigned")) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM1  = shiftInfo.get(0);
+            }
+            String workRole1= shiftInfo.get(4);
+            String firstNameOfTM2 = shiftInfo.get(0);
+            while (firstNameOfTM2.equalsIgnoreCase("open")
+                    || firstNameOfTM2.equalsIgnoreCase("unassigned")
+                    || firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1)) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM2  = shiftInfo.get(0);
+            }
+            String workRole2= shiftInfo.get(4);
+            String firstNameOfTM3 = shiftInfo.get(0);
+            while (firstNameOfTM3.equalsIgnoreCase("open")
+                    || firstNameOfTM3.equalsIgnoreCase("unassigned")
+                    || firstNameOfTM3.equalsIgnoreCase(firstNameOfTM1)
+                    || firstNameOfTM3.equalsIgnoreCase(firstNameOfTM2)) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM3  = shiftInfo.get(0);
+            }
+            String workRole3= shiftInfo.get(4);
+            String firstNameOfTM4 = shiftInfo.get(0);
+            while (firstNameOfTM4.equalsIgnoreCase("open")
+                    || firstNameOfTM4.equalsIgnoreCase("unassigned")
+                    || firstNameOfTM4.equalsIgnoreCase(firstNameOfTM1)
+                    || firstNameOfTM4.equalsIgnoreCase(firstNameOfTM2)
+                    || firstNameOfTM4.equalsIgnoreCase(firstNameOfTM3)) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM4  = shiftInfo.get(0);
+            }
+            String workRole4= shiftInfo.get(4);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM3);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM4);
+            scheduleMainPage.saveSchedule();
+
+            //Create shifts on first day
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole1);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            int count = 4;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(5,5,5);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM2);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM3);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM4);
+            newShiftPage.clickOnOfferOrAssignBtn();
+
+            //Create OT shift on second day
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole1);
+            String shiftStartTime = "11:30am";
+            String shiftEndTime = "4:00pm";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(4,4,4);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
+
+            //Create split shift on second day
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole2);
+            shiftStartTime = "1:00pm";
+            shiftEndTime = "3:00pm";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(4,4,4);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM2);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            //Create spread shift on second day
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole3);
+            shiftStartTime = "4:00pm";
+            shiftEndTime = "6:00pm";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(4,4,4);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM3);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            //Create clopening shift on second day
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole4);
+            shiftStartTime = "6:00pm";
+            shiftEndTime = "11:00pm";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(3,3,3);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM4);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(4, 5);
+            //drag them to one day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 4, true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            List<WebElement> firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            List<WebElement> secondTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM2);
+            List<WebElement> thirdTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM3);
+            List<WebElement> forthTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM4);
+            List<WebElement> firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM1);
+            List<WebElement> secondTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM2);
+            List<WebElement> thirdTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM3);
+            List<WebElement> forthTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM4);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should display on first day! ",
+                    secondTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM3+"'s shift should display on first day! ",
+                    thirdTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM4+"'s shift should display on first day! ",
+                    forthTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    secondTMShiftsOnTargetDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    thirdTMShiftsOnTargetDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    forthTMShiftsOnTargetDay.size()==1, false);
+
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 4, true);
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+//        scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            secondTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM2);
+            thirdTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM3);
+            forthTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM4);
+            firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM1);
+            secondTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM2);
+            thirdTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM3);
+            forthTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM4);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should display on first day! ",
+                    secondTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM3+"'s shift should display on first day! ",
+                    thirdTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM4+"'s shift should display on first day! ",
+                    forthTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    secondTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    thirdTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    forthTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("OT compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(firstTMShiftsOnTargetDay.get(firstTMShiftsOnTargetDay.size()-1)).contains("hrs daily overtime"), false);
+            SimpleUtils.assertOnFail("Split compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(secondTMShiftsOnTargetDay.get(secondTMShiftsOnTargetDay.size()-1)).contains("Split Shift"), false);
+            SimpleUtils.assertOnFail("Spread compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(thirdTMShiftsOnTargetDay.get(thirdTMShiftsOnTargetDay.size()-1)).contains("Spread of hours"), false);
+            SimpleUtils.assertOnFail("Spread compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(forthTMShiftsOnTargetDay.get(forthTMShiftsOnTargetDay.size()-1)).contains("Clopening"), false);
+
+            scheduleMainPage.saveSchedule();
+            firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            secondTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM2);
+            thirdTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM3);
+            forthTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM4);
+            firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM1);
+            secondTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM2);
+            thirdTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM3);
+            forthTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM4);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should display on first day! ",
+                    secondTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM3+"'s shift should display on first day! ",
+                    thirdTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM4+"'s shift should display on first day! ",
+                    forthTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    secondTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    thirdTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    forthTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("OT compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(firstTMShiftsOnTargetDay.get(firstTMShiftsOnTargetDay.size()-1)).contains("hrs daily overtime"), false);
+            SimpleUtils.assertOnFail("Split compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(secondTMShiftsOnTargetDay.get(secondTMShiftsOnTargetDay.size()-1)).contains("Split Shift"), false);
+            SimpleUtils.assertOnFail("Spread compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(thirdTMShiftsOnTargetDay.get(thirdTMShiftsOnTargetDay.size()-1)).contains("Spread of hours"), false);
+            SimpleUtils.assertOnFail("Spread compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(forthTMShiftsOnTargetDay.get(forthTMShiftsOnTargetDay.size()-1)).contains("Clopening"), false);
+
+            createSchedulePage.publishActiveSchedule();
+            firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            secondTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM2);
+            thirdTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM3);
+            forthTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM4);
+            firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM1);
+            secondTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM2);
+            thirdTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM3);
+            forthTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM4);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should display on first day! ",
+                    secondTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM3+"'s shift should display on first day! ",
+                    thirdTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM4+"'s shift should display on first day! ",
+                    forthTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    secondTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    thirdTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    forthTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("OT compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(firstTMShiftsOnTargetDay.get(firstTMShiftsOnTargetDay.size()-1)).contains("hrs daily overtime"), false);
+            SimpleUtils.assertOnFail("Split compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(secondTMShiftsOnTargetDay.get(secondTMShiftsOnTargetDay.size()-1)).contains("Split Shift"), false);
+            SimpleUtils.assertOnFail("Spread compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(thirdTMShiftsOnTargetDay.get(thirdTMShiftsOnTargetDay.size()-1)).contains("Spread of hours"), false);
+            SimpleUtils.assertOnFail("Spread compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(forthTMShiftsOnTargetDay.get(forthTMShiftsOnTargetDay.size()-1)).contains("Clopening"), false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate bulk copy the shifts will incur OT violation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyBulkCopyShiftsThatWillIncurOTViolationAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+            String firstNameOfTM1 = shiftInfo.get(0);
+            while (firstNameOfTM1.equalsIgnoreCase("open")
+                    || firstNameOfTM1.equalsIgnoreCase("unassigned")) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM1  = shiftInfo.get(0);
+            }
+            String workRole1= shiftInfo.get(4);
+            String firstNameOfTM2 = shiftInfo.get(0);
+            while (firstNameOfTM2.equalsIgnoreCase("open")
+                    || firstNameOfTM2.equalsIgnoreCase("unassigned")
+                    || firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1)) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM2  = shiftInfo.get(0);
+            }
+            String workRole2= shiftInfo.get(4);
+            String firstNameOfTM3 = shiftInfo.get(0);
+            while (firstNameOfTM3.equalsIgnoreCase("open")
+                    || firstNameOfTM3.equalsIgnoreCase("unassigned")
+                    || firstNameOfTM3.equalsIgnoreCase(firstNameOfTM1)) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM3  = shiftInfo.get(0);
+            }
+            String workRole3= shiftInfo.get(4);
+            String firstNameOfTM4 = shiftInfo.get(0);
+            while (firstNameOfTM4.equalsIgnoreCase("open")
+                    || firstNameOfTM4.equalsIgnoreCase("unassigned")
+                    || firstNameOfTM4.equalsIgnoreCase(firstNameOfTM1)) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM4  = shiftInfo.get(0);
+            }
+            String workRole4= shiftInfo.get(4);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM3);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM4);
+            scheduleMainPage.saveSchedule();
+
+            //Create shifts on first day
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole1);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            int count = 2;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(5,5,5);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM2);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM3);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM4);
+            newShiftPage.clickOnOfferOrAssignBtn();
+
+            //Create OT shift on second day
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole1);
+            String shiftStartTime = "3:00pm";
+            String shiftEndTime = "8:00pm";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(4,4,4);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
+
+            //Create split shift on second day
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole2);
+            shiftStartTime = "12:00pm";
+            shiftEndTime = "3:00pm";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(4,4,4);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM2);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            //Create spread shift on second day
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole3);
+            shiftStartTime = "4:00pm";
+            shiftEndTime = "6:00pm";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(4,4,4);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM3);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            //Create clopening shift on second day
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole4);
+            shiftStartTime = "6:00pm";
+            shiftEndTime = "11:00pm";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(3,3,3);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM4);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(4, 5);
+            //drag them to one day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 4, true);
+            scheduleShiftTablePage.selectMoveOrCopyBulkShifts("Copy");
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            List<WebElement> firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            List<WebElement> secondTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM2);
+            List<WebElement> thirdTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM3);
+            List<WebElement> forthTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM4);
+            List<WebElement> firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM1);
+            List<WebElement> secondTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM2);
+            List<WebElement> thirdTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM3);
+            List<WebElement> forthTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM4);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should display on first day! ",
+                    secondTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM3+"'s shift should display on first day! ",
+                    thirdTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM4+"'s shift should display on first day! ",
+                    forthTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    secondTMShiftsOnTargetDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    thirdTMShiftsOnTargetDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    forthTMShiftsOnTargetDay.size()==1, false);
+
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 4, true);
+            scheduleShiftTablePage.selectMoveOrCopyBulkShifts("Copy");
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+//        scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            secondTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM2);
+            thirdTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM3);
+            forthTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM4);
+            firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM1);
+            secondTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM2);
+            thirdTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM3);
+            forthTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM4);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should display on first day! ",
+                    secondTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM3+"'s shift should display on first day! ",
+                    thirdTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM4+"'s shift should display on first day! ",
+                    forthTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    secondTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    thirdTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    forthTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("OT compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(firstTMShiftsOnTargetDay.get(firstTMShiftsOnTargetDay.size()-1)).contains("hrs daily overtime"), false);
+            SimpleUtils.assertOnFail("Split compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(secondTMShiftsOnTargetDay.get(secondTMShiftsOnTargetDay.size()-1)).contains("Split Shift"), false);
+            SimpleUtils.assertOnFail("Spread compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(thirdTMShiftsOnTargetDay.get(thirdTMShiftsOnTargetDay.size()-1)).contains("Spread of hours"), false);
+            SimpleUtils.assertOnFail("Spread compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(forthTMShiftsOnTargetDay.get(forthTMShiftsOnTargetDay.size()-1)).contains("Clopening"), false);
+
+            scheduleMainPage.saveSchedule();
+            firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            secondTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM2);
+            thirdTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM3);
+            forthTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM4);
+            firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM1);
+            secondTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM2);
+            thirdTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM3);
+            forthTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM4);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should display on first day! ",
+                    secondTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM3+"'s shift should display on first day! ",
+                    thirdTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM4+"'s shift should display on first day! ",
+                    forthTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    secondTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    thirdTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    forthTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("OT compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(firstTMShiftsOnTargetDay.get(firstTMShiftsOnTargetDay.size()-1)).contains("hrs daily overtime"), false);
+            SimpleUtils.assertOnFail("Split compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(secondTMShiftsOnTargetDay.get(secondTMShiftsOnTargetDay.size()-1)).contains("Split Shift"), false);
+            SimpleUtils.assertOnFail("Spread compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(thirdTMShiftsOnTargetDay.get(thirdTMShiftsOnTargetDay.size()-1)).contains("Spread of hours"), false);
+            SimpleUtils.assertOnFail("Spread compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(forthTMShiftsOnTargetDay.get(forthTMShiftsOnTargetDay.size()-1)).contains("Clopening"), false);
+
+            createSchedulePage.publishActiveSchedule();
+            firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            secondTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM2);
+            thirdTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM3);
+            forthTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM4);
+            firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM1);
+            secondTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM2);
+            thirdTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM3);
+            forthTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(4, firstNameOfTM4);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM2+"'s shift should display on first day! ",
+                    secondTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM3+"'s shift should display on first day! ",
+                    thirdTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM4+"'s shift should display on first day! ",
+                    forthTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    secondTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    thirdTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    forthTMShiftsOnTargetDay.size()==2, false);
+            SimpleUtils.assertOnFail("OT compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(firstTMShiftsOnTargetDay.get(firstTMShiftsOnTargetDay.size()-1)).contains("hrs daily overtime"), false);
+            SimpleUtils.assertOnFail("Split compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(secondTMShiftsOnTargetDay.get(secondTMShiftsOnTargetDay.size()-1)).contains("Split Shift"), false);
+            SimpleUtils.assertOnFail("Spread compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(thirdTMShiftsOnTargetDay.get(thirdTMShiftsOnTargetDay.size()-1)).contains("Spread of hours"), false);
+            SimpleUtils.assertOnFail("Spread compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(forthTMShiftsOnTargetDay.get(forthTMShiftsOnTargetDay.size()-1)).contains("Clopening"), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate bulk move the shifts that will incur 7th day violation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyBulkMoveShiftsThatWillIncur7thDayViolationAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+            String firstNameOfTM1 = shiftInfo.get(0);
+            while (firstNameOfTM1.equalsIgnoreCase("open")
+                    || firstNameOfTM1.equalsIgnoreCase("unassigned")) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM1  = shiftInfo.get(0);
+            }
+            String workRole1= shiftInfo.get(4);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleMainPage.saveSchedule();
+
+            //Create shifts on first 6 day
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole1);
+            newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            int count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectSpecificWorkDay(6);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
+
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole1);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectDaysByIndex(5,5,5);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(2, 5);
+            //drag them to one day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 6, true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            List<WebElement> firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            List<WebElement> firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(6, firstNameOfTM1);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==0, false);
+
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 6, true);
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+//        scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(6, firstNameOfTM1);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==1, false);
+            SimpleUtils.assertOnFail("OT compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
+                            (firstTMShiftsOnTargetDay.get(firstTMShiftsOnTargetDay.size()-1)).contains("hrs daily overtime"),
+                    false);
+
+            scheduleMainPage.saveSchedule();
+            firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(6, firstNameOfTM1);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==1, false);
+            SimpleUtils.assertOnFail("OT compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
+                            (firstTMShiftsOnTargetDay.get(firstTMShiftsOnTargetDay.size()-1)).contains("hrs daily overtime"),
+                    false);
+
+            createSchedulePage.publishActiveSchedule();
+            firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(6, firstNameOfTM1);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==0, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==1, false);
+            SimpleUtils.assertOnFail("OT compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
+                            (firstTMShiftsOnTargetDay.get(firstTMShiftsOnTargetDay.size()-1)).contains("hrs daily overtime"),
+                    false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate bulk copy the shifts that will incur 7th day violation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyBulkCopyShiftsThatWillIncur7thDayViolationAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+            String firstNameOfTM1 = shiftInfo.get(0);
+            while (firstNameOfTM1.equalsIgnoreCase("open")
+                    || firstNameOfTM1.equalsIgnoreCase("unassigned")) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM1  = shiftInfo.get(0);
+            }
+            String workRole1= shiftInfo.get(4);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleMainPage.saveSchedule();
+
+            //Create shifts on first 6 day
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole1);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            int count = 1;
+            newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectSpecificWorkDay(6);
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(2, 5);
+            //drag them to one day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 6, true);
+            scheduleShiftTablePage.selectMoveOrCopyBulkShifts("Copy");
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            List<WebElement> firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            List<WebElement> firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(6, firstNameOfTM1);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==0, false);
+
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 4, true);
+            scheduleShiftTablePage.selectMoveOrCopyBulkShifts("Copy");
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+//        scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+            firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(6, firstNameOfTM1);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==1, false);
+            SimpleUtils.assertOnFail("OT compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
+                            (firstTMShiftsOnTargetDay.get(firstTMShiftsOnTargetDay.size()-1)).contains("hrs daily overtime"),
+                    false);
+
+            scheduleMainPage.saveSchedule();
+            firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(6, firstNameOfTM1);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==1, false);
+            SimpleUtils.assertOnFail("OT compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
+                            (firstTMShiftsOnTargetDay.get(firstTMShiftsOnTargetDay.size()-1)).contains("hrs daily overtime"),
+                    false);
+
+            createSchedulePage.publishActiveSchedule();
+            firstTMShiftsOnOriginDay = scheduleShiftTablePage.getOneDayShiftByName(5, firstNameOfTM1);
+            firstTMShiftsOnTargetDay = scheduleShiftTablePage.getOneDayShiftByName(6, firstNameOfTM1);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on first day! ",
+                    firstTMShiftsOnOriginDay.size()==1, false);
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
+                    firstTMShiftsOnTargetDay.size()==1, false);
+            SimpleUtils.assertOnFail("OT compliance message display failed",
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
+                            (firstTMShiftsOnTargetDay.get(firstTMShiftsOnTargetDay.size()-1)).contains("hrs daily overtime"),
+                    false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate bulk drag and drop by different access roles")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyBulkDragAndDropByDifferentAccessRolesAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            //Verify the shifts can be created by new UI by original SM access role
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            bulkDragAndDropByDifferentAccessRoles();
+            loginPage.logOut();
+
+            //Verify the shifts can be created by new UI by original TL access role
+            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
+            bulkDragAndDropByDifferentAccessRoles();
+            loginPage.logOut();
+
+            //Verify the shifts can be created by new UI by original DM access role
+            loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
+            bulkDragAndDropByDifferentAccessRoles();
+            loginPage.logOut();
+
+            //Verify the shifts can be created by new UI by original CA access role
+            loginAsDifferentRole(AccessRoles.CustomerAdmin.getValue());
+            bulkDragAndDropByDifferentAccessRoles();
+            loginPage.logOut();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    private void bulkDragAndDropByDifferentAccessRoles() throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+        SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+        // Navigate to next week
+        scheduleCommonPage.navigateToNextWeek();
+        // create the schedule.
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (isWeekGenerated) {
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        createSchedulePage.createScheduleForNonDGFlowNewUI();
+        if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            scheduleMainPage.saveSchedule();
+        }
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        //Get shift count before drag and drop
+        int allShiftsCountBefore = scheduleShiftTablePage.getShiftsCount();
+        int firstDayShiftCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+        int secondDayShiftsCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+        // Verify can select multiple shifts by pressing Ctrl/Cmd(Mac)
+        int selectedShiftCount = 3;
+        List<WebElement> selectedShifts = scheduleShiftTablePage.
+                selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, 1);
+
+        List<String> shiftNames = new ArrayList<>();
+        for (int i=0; i< selectedShiftCount;i++) {
+            int index = scheduleShiftTablePage.getTheIndexOfShift(selectedShifts.get(i));
+            shiftNames.add(scheduleShiftTablePage.getTheShiftInfoByIndex(index).get(0));
+        }
+        //Drag the selected shifts to another day
+        scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 2, true);
+
+        //Select move option
+        scheduleShiftTablePage.selectMoveOrCopyBulkShifts("move");
+        scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+        scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+        scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+        //Check the shift count after drag and drop
+        int allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+        int firstDayShiftCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+        int secondDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+        SimpleUtils.assertOnFail("The all shifts count should not change, the expect count is: "+allShiftsCountBefore
+                        + ", the actual count is:"+allShiftsCountAfter
+                , allShiftsCountAfter == allShiftsCountBefore
+                , false);
+        SimpleUtils.assertOnFail("The first day shifts count should be: "+ (firstDayShiftCountBefore-selectedShiftCount)
+                        + ", the actual count is:"+firstDayShiftCountAfter
+                , (firstDayShiftCountBefore-selectedShiftCount) == firstDayShiftCountAfter
+                , false);
+        SimpleUtils.assertOnFail("The second day shifts count should be: "+ (secondDayShiftsCountBefore+selectedShiftCount)
+                        + ", the actual count is:"+secondDayShiftsCountAfter
+                , (secondDayShiftsCountBefore+selectedShiftCount) == secondDayShiftsCountAfter
+                , false);
+        for (int i=0; i< selectedShiftCount;i++) {
+            SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size()>0, false);
+            SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()==0, false);
+
+        }
+
+        //Verify changes can be saved
+        scheduleMainPage.saveSchedule();
+        allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+        firstDayShiftCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+        secondDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+        SimpleUtils.assertOnFail("The all shifts count should not change, the expect count is: "+allShiftsCountBefore
+                        + ", the actual count is:"+allShiftsCountAfter
+                , allShiftsCountAfter == allShiftsCountBefore
+                , false);
+        SimpleUtils.assertOnFail("The first day shifts count should be: "+ (firstDayShiftCountBefore-selectedShiftCount)
+                        + ", the actual count is:"+firstDayShiftCountAfter
+                , (firstDayShiftCountBefore-selectedShiftCount) == firstDayShiftCountAfter
+                , false);
+        SimpleUtils.assertOnFail("The second day shifts count should be: "+ (secondDayShiftsCountBefore+selectedShiftCount)
+                        + ", the actual count is:"+secondDayShiftsCountAfter
+                , (secondDayShiftsCountBefore+selectedShiftCount) == secondDayShiftsCountAfter
+                , false);
+        for (int i=0; i< selectedShiftCount;i++) {
+            SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size()>0, false);
+            SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()==0, false);
+
+        }
+
+        isWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (isWeekGenerated) {
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+        }
+        createSchedulePage.createScheduleForNonDGFlowNewUI();
+        if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            scheduleMainPage.saveSchedule();
+        }
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        //Get shift count before drag and drop
+        allShiftsCountBefore = scheduleShiftTablePage.getShiftsCount();
+        firstDayShiftCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+        secondDayShiftsCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+        // Verify can select multiple shifts by pressing Ctrl/Cmd(Mac)
+        selectedShiftCount = 3;
+        selectedShifts = scheduleShiftTablePage.
+                selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, 1);
+
+       shiftNames = new ArrayList<>();
+        for (int i=0; i< selectedShiftCount;i++) {
+            int index = scheduleShiftTablePage.getTheIndexOfShift(selectedShifts.get(i));
+            shiftNames.add(scheduleShiftTablePage.getTheShiftInfoByIndex(index).get(0));
+        }
+        //Drag the selected shifts to another day
+        scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 2, true);
+
+        //Select move option
+        scheduleShiftTablePage.selectMoveOrCopyBulkShifts("copy");
+        scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+        scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+        scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+        //Check the shift count after drag and drop
+        allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+        firstDayShiftCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+        secondDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+        SimpleUtils.assertOnFail("The all shifts count should not change, the expect count is: "+(allShiftsCountBefore+selectedShiftCount)
+                        + ", the actual count is:"+allShiftsCountAfter
+                , allShiftsCountAfter == (allShiftsCountBefore+selectedShiftCount)
+                , false);
+        SimpleUtils.assertOnFail("The first day shifts count should be: "+ firstDayShiftCountBefore
+                        + ", the actual count is:"+firstDayShiftCountAfter
+                , firstDayShiftCountBefore == firstDayShiftCountAfter
+                , false);
+        SimpleUtils.assertOnFail("The second day shifts count should be: "+ (secondDayShiftsCountBefore+selectedShiftCount)
+                        + ", the actual count is:"+secondDayShiftsCountAfter
+                , (secondDayShiftsCountBefore+selectedShiftCount) == secondDayShiftsCountAfter
+                , false);
+        for (int i=0; i< selectedShiftCount;i++) {
+            SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size() >0, false);
+            SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size() >0, false);
+
+        }
+        //Verify changes can be saved
+        scheduleMainPage.saveSchedule();
+        allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+        firstDayShiftCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+        secondDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+        SimpleUtils.assertOnFail("The all shifts count should not change, the expect count is: "+(allShiftsCountBefore+selectedShiftCount)
+                        + ", the actual count is:"+allShiftsCountAfter
+                , allShiftsCountAfter == (allShiftsCountBefore+selectedShiftCount)
+                , false);
+        SimpleUtils.assertOnFail("The first day shifts count should be: "+ firstDayShiftCountBefore
+                        + ", the actual count is:"+firstDayShiftCountAfter
+                , firstDayShiftCountBefore == firstDayShiftCountAfter
+                , false);
+        SimpleUtils.assertOnFail("The second day shifts count should be: "+ (secondDayShiftsCountBefore+selectedShiftCount)
+                        + ", the actual count is:"+secondDayShiftsCountAfter
+                , (secondDayShiftsCountBefore+selectedShiftCount) == secondDayShiftsCountAfter
+                , false);
+        for (int i=0; i< selectedShiftCount;i++) {
+            SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size() >0, false);
+            SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                    scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size() >0, false);
+
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Validate shifts can be drag&drop several times without save")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyShiftsCanBeDragAndDropSeveralTimesWithOutSaveAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Get shift count before drag and drop
+            int allShiftsCountBefore = scheduleShiftTablePage.getShiftsCount();
+            int firstDayShiftCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            int secondDayShiftsCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+            int thirdDayShiftsCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(3);
+            // Verify can select multiple shifts by pressing Ctrl/Cmd(Mac)
+            int selectedShiftCount = 3;
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, 1);
+
+            List<String> shiftNames = new ArrayList<>();
+            for (int i=0; i< selectedShiftCount;i++) {
+                int index = scheduleShiftTablePage.getTheIndexOfShift(selectedShifts.get(i));
+                shiftNames.add(scheduleShiftTablePage.getTheShiftInfoByIndex(index).get(0));
+            }
+            //Drag the selected shifts to another day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 2, true);
+
+            //Select move option
+            scheduleShiftTablePage.selectMoveOrCopyBulkShifts("move");
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+            scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+            //Check the shift count after drag and drop
+            int allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            int firstDayShiftCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            int secondDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+            SimpleUtils.assertOnFail("The all shifts count should not change, the expect count is: "+allShiftsCountBefore
+                            + ", the actual count is:"+allShiftsCountAfter
+                    , allShiftsCountAfter == allShiftsCountBefore
+                    , false);
+            SimpleUtils.assertOnFail("The first day shifts count should be: "+ (firstDayShiftCountBefore-selectedShiftCount)
+                            + ", the actual count is:"+firstDayShiftCountAfter
+                    , (firstDayShiftCountBefore-selectedShiftCount) == firstDayShiftCountAfter
+                    , false);
+            SimpleUtils.assertOnFail("The second day shifts count should be: "+ (secondDayShiftsCountBefore+selectedShiftCount)
+                            + ", the actual count is:"+secondDayShiftsCountAfter
+                    , (secondDayShiftsCountBefore+selectedShiftCount) == secondDayShiftsCountAfter
+                    , false);
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size()>0, false);
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()==0, false);
+
+            }
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, 2);
+
+            shiftNames = new ArrayList<>();
+            for (int i=0; i< selectedShiftCount;i++) {
+                int index = scheduleShiftTablePage.getTheIndexOfShift(selectedShifts.get(i));
+                shiftNames.add(scheduleShiftTablePage.getTheShiftInfoByIndex(index).get(0));
+            }
+            //Drag the selected shifts to another day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 3, true);
+
+            //Select copy option
+            scheduleShiftTablePage.selectMoveOrCopyBulkShifts("copy");
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+            scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+            //Check the shift count after drag and drop
+            allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            firstDayShiftCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
+            secondDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(3);
+            SimpleUtils.assertOnFail("The all shifts count should not change, the expect count is: "+(allShiftsCountBefore+selectedShiftCount)
+                            + ", the actual count is:"+allShiftsCountAfter
+                    , allShiftsCountAfter == (allShiftsCountBefore+selectedShiftCount)
+                    , false);
+            SimpleUtils.assertOnFail("The first day shifts count should be: "+ firstDayShiftCountBefore
+                            + ", the actual count is:"+firstDayShiftCountAfter
+                    , firstDayShiftCountBefore == firstDayShiftCountAfter
+                    , false);
+            SimpleUtils.assertOnFail("The second day shifts count should be: "+ (secondDayShiftsCountBefore+selectedShiftCount)
+                            + ", the actual count is:"+secondDayShiftsCountAfter
+                    , (secondDayShiftsCountBefore+selectedShiftCount) == secondDayShiftsCountAfter
+                    , false);
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size() >0, false);
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size() >0, false);
+
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 }

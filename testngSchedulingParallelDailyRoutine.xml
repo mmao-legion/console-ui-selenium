@@ -51,6 +51,7 @@
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
+                    <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" />
                     <include name="verifyComplianceSmartCardFunctionality" />
 <!--                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/> https://legiontech.atlassian.net/browse/SCH-5994 -->
                     <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
@@ -105,7 +106,6 @@
                     <!--                    <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" /> need disable Continuous Operation-->
                     <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
-                    <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" />
                                    </methods>
                                </class>
                            </classes>
@@ -304,6 +304,22 @@
                     <include name="verifyWarningMsgForTMFromAnotherStoreScheduledAtCurrentLocationAsInternalAdmin" />
                     <include name="verifyWarningModelForClopeningAsInternalAdmin" />
                     <include name="verifySwapWarningModelForRoleViolationConfigYesAsInternalAdmin" />
+                    <include name="verifyTheItemsOnBulkDragAndDropConfirmPopupAsInternalAdmin" />
+                    <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
+                    <include name="verifyMoveShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
+                    <include name="verifyCopyShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
+                    <include name="verifyShiftsCannotBeMovedOrCopiedToCloseDayAsInternalAdmin" />
+                    <include name="verifyMoveMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
+                    <include name="verifyCopyMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
+                    <include name="verifyTheShiftsWithSameTMsAndOverlappingShiftTimeCannotBulkDragAndDropAsInternalAdmin" />
+                    <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterMoveAsInternalAdmin" />
+                    <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterCopyAsInternalAdmin" />
+                    <!--                  <include name="verifyBulkMoveShiftsThatWillIncurOTViolationAsInternalAdmin" />
+                                      <include name="verifyBulkCopyShiftsThatWillIncurOTViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7007-->
+                    <!--                  <include name="verifyBulkMoveShiftsThatWillIncur7thDayViolationAsInternalAdmin" />
+                                     <include name="verifyBulkCopyShiftsThatWillIncur7thDayViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-6816 -->
+                    <include name="verifyShiftsCanBeDragAndDropSeveralTimesWithOutSaveAsInternalAdmin" />
+                    <include name="verifyBulkDragAndDropByDifferentAccessRolesAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -341,6 +357,8 @@
                       <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
 <!--                    <include name="verifyTheShiftOfferCountWhenNeedingApprovalAsTeamMember" Blocked by SCH-4832 />-->
 <!--                    <include name="verifyTheShiftOfferCountWhenNotNeedingApprovalAsTeamMember" Wait for code freeze/>-->
+                    <include name="verifySingleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />
+                    <include name="verifyMultipleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />
                 </methods>
             </class>
         </classes>
@@ -586,9 +604,9 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
     </test>
 
 
-    <test name="Create Shift New UI Test">
+    <test name="Bulk Create Test">
         <classes>
-            <class name="com.legion.tests.core.CreateShiftNewUITest">
+            <class name="com.legion.tests.core.BulkCreateTest">
                 <methods>
                     <include name="validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin" />
                     <include name="validateTheWarningMessageOfTheItemsOnFirstPageOfCreateShiftModalAsInternalAdmin" />
@@ -618,7 +636,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
 
     <test name="FTSE Support Variant Violations Except OT Ones">
         <classes>
-            <class name="com.legion.tests.core.FTSEViolations">
+            <class name="com.legion.tests.core.FTSERelevantTest">
                 <methods>
                     <include name="verifyFTSEEmployeesIgnoreTheDayOTAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnoreTheWeekOTAsInternalAdmin"/>
@@ -635,8 +653,24 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                     <include name="verifyFTSEEmployeesIgnore50hrsPerWeekAgreementAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesSupportSplitShiftsViolationAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesSupportSpreadOfHoursViolationAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInDayViewAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInViewProfileAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInPersonalMyScheduleAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInPersonalMyPreferenceAsInternalAdmin"/>
+                    <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
     </test>
+
+    <test name="Time Zone Test" >
+        <classes>
+            <class name="com.legion.tests.core.TimeZoneTest">
+                <methods>
+                    <include name="verifyTheUTCTimeFormatInControlsAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->

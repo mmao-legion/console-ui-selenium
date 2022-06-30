@@ -6162,43 +6162,43 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			HashMap<String, String> shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			String shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
 			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
-					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "8:00am-9:00pm".equals(shiftTimeOnShiftCard), false);
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "8:00am-9:00pm".equals(shiftTimeOnShiftCard.replace(" ","")), false);
 
 			shiftTime = "08:45am-11:45am";
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
 			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
 			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
-					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "8:45am-11:45am".equals(shiftTimeOnShiftCard), false);
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "8:45am-11:45am".equals(shiftTimeOnShiftCard.replace(" ", "")), false);
 
 			shiftTime = "01:00pm-10:00pm";
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], true);
 			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
 			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
-					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "1:00pm-10:00pm".equals(shiftTimeOnShiftCard), false);
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "1:00pm-10:00pm".equals(shiftTimeOnShiftCard.replace(" ","")), false);
 
 			shiftTime = "10:00pm-06:00am";
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
 			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
 			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
-					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "10:00pm-6:00am".equals(shiftTimeOnShiftCard), false);
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "10:00pm-6:00am".equals(shiftTimeOnShiftCard.replace(" ", "")), false);
 
 			shiftTime = "11:00am-02:00pm";
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
 			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
 			SimpleUtils.assertOnFail("The shift times on inputs and shift card should consistent, the time in inputs: "
-					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "11:00am-2:00pm".equals(shiftTimeOnShiftCard), false);
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "11:00am-2:00pm".equals(shiftTimeOnShiftCard.replace(" ", "")), false);
 			Thread.sleep(5000);
 			shiftOperatePage.clickOnUpdateEditShiftTimeButton();
-			String shiftInfoOnIIcon = scheduleShiftTablePage.getIIconTextInfo(scheduleShiftTablePage.getShiftById(id));
+			String shiftInfoOnIIcon = scheduleShiftTablePage.getIIconTextInfo(scheduleShiftTablePage.getShiftById(id)).replace(" ", "");
 			SimpleUtils.assertOnFail("The shift times on edit shift page and i icon should consistent, the time on edit shift time page: "
 							+shiftTime + " the time on i icon: "+ shiftInfoOnIIcon,
 					shiftInfoOnIIcon.contains("11:00am-2:00pm") , false);
 			scheduleMainPage.saveSchedule();
-			shiftInfoOnIIcon = scheduleShiftTablePage.getIIconTextInfo(scheduleShiftTablePage.getShiftById(id));
+			shiftInfoOnIIcon = scheduleShiftTablePage.getIIconTextInfo(scheduleShiftTablePage.getShiftById(id)).replace(" ", "");
 			SimpleUtils.assertOnFail("The shift times on edit shift page and i icon should consistent, the time on edit shift time page: "
 							+shiftTime + " the time on i icon: "+ shiftInfoOnIIcon,
 					shiftInfoOnIIcon.contains("11:00am-2:00pm") , false);
@@ -6241,7 +6241,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String id = shift.getAttribute("id");
 			shiftOperatePage.clickOnEditShiftTime();
 			String shiftTimeForInput = "08:00am-09:00am";
-			String shiftTime = "8:00am-9:00am";
+			String shiftTime = "8:00 am-9:00 am";
 			Thread.sleep(3000);
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTimeForInput.split("-")[0], shiftTimeForInput.split("-")[1], true);
 
@@ -6284,17 +6284,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			if (isActiveWeekGenerated) {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
-			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00AM", "6:00PM");
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "06:00PM");
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			shiftOperatePage.clickOnProfileIcon();
 			shiftOperatePage.clickOnEditShiftTime();
-			String shiftTime = "3:00 am-9:00 am";
+			String shiftTime = "03:00 am-09:00 am";
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
 			HashMap<String, String> shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			String shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
 			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
-					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, shiftTime.equals(shiftTimeOnShiftCard), false);
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "3:00 am-9:00 am".equals(shiftTimeOnShiftCard), false);
 			String compliance = "Shift starts too early (min: 6:00 AM)";
 			String complianceFromEditShiftTimePage = shiftOperatePage.getEditShiftTimeCompliance();
 			SimpleUtils.assertOnFail("The compliance on edit shift time page display incorrectly. The expected: "

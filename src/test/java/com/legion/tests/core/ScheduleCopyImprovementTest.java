@@ -211,7 +211,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the unassigned opening or closing shifts will not convert to open shifts when copying schedule setting set as Yes, except opening/closing shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -344,9 +344,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
         if (isCopySchedule){
             // Delete all the shifts that are assigned to the team member
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
-            shiftOperatePage.deleteTMShiftInWeekView("open");
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
             scheduleMainPage.saveSchedule();
 
             // Create new shift for TM on seven days
@@ -504,13 +504,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
                         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
                         SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                 complianceMessage.contains("Unassigned Shift"), false);
-                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
+                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText().replace(" ", ""));
                     }
                     for(WebElement openShift: openShifts){
-                        openShiftTimes.add(openShift.findElement(By.className("week-schedule-shift-time")).getText()) ;
+                        openShiftTimes.add(openShift.findElement(By.className("week-schedule-shift-time")).getText().replace(" ", "")) ;
                     }
 
-                    if(unassignedShiftTimes.contains("10am - 3pm") && !openShiftTimes.contains("10am - 3pm")) {
+                    if(unassignedShiftTimes.contains("10:00am-3:00pm") && !openShiftTimes.contains("10:00am-3:00pm")) {
                         SimpleUtils.pass("The opening/closing shifts display as unassigned! ");
                     } else
                         SimpleUtils.fail("The opening/closing shifts are not display as unassigned! ", false);
@@ -524,12 +524,12 @@ public class ScheduleCopyImprovementTest extends TestBase {
                         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
                         SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                 complianceMessage.contains("Unassigned Shift"), false);
-                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
+                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText().replace(" ", ""));
                     }
                     for(WebElement openShift: openShifts){
-                        openShiftTimes.add(openShift.findElement(By.className("week-schedule-shift-time")).getText()) ;
+                        openShiftTimes.add(openShift.findElement(By.className("week-schedule-shift-time")).getText().replace(" ", "")) ;
                     }
-                    if(!unassignedShiftTimes.contains("10:00 am - 3:00 pm") && openShiftTimes.contains("10:00 am - 3:00 pm")) {
+                    if(!unassignedShiftTimes.contains("10:00am-3:00pm") && openShiftTimes.contains("10:00am-3:00pm")) {
                         SimpleUtils.pass("The opening/closing shifts display as open! ");
                     } else
                         SimpleUtils.fail("The opening/closing shifts are not display as open! ", false);
@@ -679,7 +679,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             Thread.sleep(10000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
             if (ifVerifyOOOHShifts){
                 HashMap<String, String> message = smartCardPage.getMessageFromActionRequiredSmartCard();
@@ -1018,7 +1018,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             scheduleMainPage.clickOnFilterBtn();
             shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             shiftOperatePage.deleteAllOOOHShiftInWeekView();
             scheduleMainPage.saveSchedule();
 
@@ -1167,9 +1167,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             // Delete all the shifts that are assigned to the team member
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
-            shiftOperatePage.deleteTMShiftInWeekView("open");
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
             scheduleMainPage.saveSchedule();
 
             // Create new shift for TM on seven days
@@ -1450,9 +1450,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
             // Create new shift for TM1 on seven days
             shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(tm1);
-            shiftOperatePage.deleteTMShiftInWeekView(tm2);
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tm1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tm2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = shiftOperatePage.getRandomWorkRole();
@@ -1684,12 +1684,12 @@ public class ScheduleCopyImprovementTest extends TestBase {
             }
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("05:00AM", "11:00PM");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(teamMember1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMember1);
 
             // Delete all the shifts that are assigned to the team member
-            shiftOperatePage.deleteTMShiftInWeekView(teamMember2);
-            shiftOperatePage.deleteTMShiftInWeekView(teamMember3);
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMember2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMember3);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
             scheduleMainPage.saveSchedule();
 
             //Create shift for tm1 on the first day
@@ -1835,7 +1835,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 

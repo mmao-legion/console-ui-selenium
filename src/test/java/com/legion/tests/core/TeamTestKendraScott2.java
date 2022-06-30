@@ -1535,7 +1535,9 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 //			locationSelectorPage.refreshTheBrowser();
 //			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
-//			profileNewUIPage.clickNextWeek();
+			profileNewUIPage.clickNextWeek();
+			profileNewUIPage.clickPreviousWeek();
+			Thread.sleep(5000);
 			//The message should display as '18 of 24 Available hrs left'
 			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
 			String totalHoursValue = availabilityData.get("totalHoursValue").toString();
@@ -1562,7 +1564,9 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 //			locationSelectorPage.refreshTheBrowser();
 //			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
-//			profileNewUIPage.clickNextWeek();
+			profileNewUIPage.clickNextWeek();
+			profileNewUIPage.clickPreviousWeek();
+			Thread.sleep(5000);
 			//The message should display as '18 of 24 Available hrs left'
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
 			totalHoursValue = availabilityData.get("totalHoursValue").toString();

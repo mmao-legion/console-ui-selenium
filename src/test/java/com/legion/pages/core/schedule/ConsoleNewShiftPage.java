@@ -546,7 +546,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             } else {
                 SimpleUtils.fail("Work Roles size are empty", false);
             }
-        } else if (isElementLoaded(workRoleOnNewShiftPage, 5)) {
+        } else if (isElementLoaded(workRoleOnNewShiftPage, 15)) {
             click(workRoleOnNewShiftPage);
             SimpleUtils.pass("Work Role button clicked Successfully");
             if (dropDownListOnNewCreateShiftPage.size() > 0) {
@@ -933,7 +933,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             if (searchAndRecommendedTMTabs.size() == 2) {
                 //click(btnSearchteamMember.get(1));
                 if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
-                    textSearchOnNewCreateShiftPage.clear();
+                    textSearchOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+                    textSearchOnNewCreateShiftPage.sendKeys(Keys.DELETE);
                     textSearchOnNewCreateShiftPage.sendKeys(name);
                     waitForSeconds(3);
                     if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
@@ -2140,6 +2141,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     } else {
                         clickTheElement(nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root input")));
                         waitForSeconds(2);
+                        moveToElementAndClick(nextDayIcon);
                         if (nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
                             SimpleUtils.pass("Check Next day checkbox successfully! ");
                         } else

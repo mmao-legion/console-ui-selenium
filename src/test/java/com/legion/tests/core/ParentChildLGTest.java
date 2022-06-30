@@ -3696,4 +3696,176 @@ public class ParentChildLGTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate open shifts will been created when drag and drop shifts to same day and same location on parent child LG schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnParentChildLGScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.selectRandomChildLocationToFilter();
+            ArrayList<HashMap<String,String>> locations = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            SimpleUtils.assertOnFail("It should has one location display, but actual is has :"+locations.size(),
+                    locations.size() ==1, false);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            // Verify can select multiple shifts by pressing Ctrl/Cmd(Mac)
+            int selectedShiftCount = 2;
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, 1);
+            //Drag the selected shifts to same day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 1, false);
+
+            //Two open shifts been created
+            List<WebElement> newAddedShifts = scheduleShiftTablePage.getOneDayShiftByName(1, "open");
+            SimpleUtils.assertOnFail("The expected new added shifts count is "+selectedShiftCount
+                            + " The actual new added shift count is:"+newAddedShifts.size(),
+                    newAddedShifts.size()==0, false);
+
+            scheduleMainPage.saveSchedule();
+            newAddedShifts = scheduleShiftTablePage.getOneDayShiftByName(1, "open");
+            SimpleUtils.assertOnFail("The expected new added shifts count is "+selectedShiftCount
+                            + " The actual new added shift count is:"+newAddedShifts.size(),
+                    newAddedShifts.size()==2, false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify shifts can be moved to same day and another location on parent child LG schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyBulkDragAndDropShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+            scheduleShiftTablePage.expandSpecificCountGroup(2);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Get shift count before drag and drop
+            int allShiftsCountBefore = scheduleShiftTablePage.getShiftsCount();
+            int oneDayShiftsCountBefore = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            // Verify can select multiple shifts by pressing Ctrl/Cmd(Mac)
+            int selectedShiftCount = 2;
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, 1);
+            List<String> shiftNames = new ArrayList<>();
+            for (int i=0; i< selectedShiftCount;i++) {
+                int index = scheduleShiftTablePage.getTheIndexOfShift(selectedShifts.get(i));
+                shiftNames.add(scheduleShiftTablePage.getTheShiftInfoByIndex(index).get(0));
+            }
+
+            //Drag the selected shifts to same day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 1, true);
+
+            //Select move option
+            scheduleShiftTablePage.selectMoveOrCopyBulkShifts("move");
+            scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
+            scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+            //Check the shift count after drag and drop
+            int allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            int oneDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            SimpleUtils.assertOnFail("The expected count are: "+allShiftsCountBefore + " and "+ oneDayShiftsCountBefore
+                            + ", but the actual are: "+allShiftsCountAfter + " and "+ oneDayShiftsCountAfter,
+                    allShiftsCountAfter == allShiftsCountBefore && oneDayShiftsCountAfter == oneDayShiftsCountBefore, false);
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()>0, false);
+            }
+            //Verify changes can be saved
+            scheduleMainPage.saveSchedule();
+            allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            oneDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            SimpleUtils.assertOnFail("The expected count are: "+allShiftsCountBefore + " and "+ oneDayShiftsCountBefore
+                            + ", but the actual are: "+allShiftsCountAfter + " and "+ oneDayShiftsCountAfter,
+                    allShiftsCountAfter == allShiftsCountBefore && oneDayShiftsCountAfter == oneDayShiftsCountBefore, false);
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()>0, false);
+            }
+            //Verify changes can be published
+            createSchedulePage.publishActiveSchedule();
+            allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
+            oneDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            SimpleUtils.assertOnFail("The expected count are: "+allShiftsCountBefore + " and "+ oneDayShiftsCountBefore
+                            + ", but the actual are: "+allShiftsCountAfter + " and "+ oneDayShiftsCountAfter,
+                    allShiftsCountAfter == allShiftsCountBefore && oneDayShiftsCountAfter == oneDayShiftsCountBefore, false);
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()>0, false);
+            }
+            //Check the shifts are not display on first location
+            scheduleShiftTablePage.expandSpecificCountGroup(1);
+            for (int i=0; i< selectedShiftCount;i++) {
+                SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()==0, false);
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

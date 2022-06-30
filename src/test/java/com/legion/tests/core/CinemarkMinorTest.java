@@ -1234,13 +1234,14 @@ public class CinemarkMinorTest extends TestBase {
         }
         Thread.sleep(5000);
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-        if (isWeekGenerated){
-            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//        if (isWeekGenerated){
+//            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//        }
+//        Thread.sleep(5000);
+//        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+        if (!isWeekGenerated) {
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         }
-        Thread.sleep(5000);
-        List<String> toCloseDays = new ArrayList<>();
-        //newShiftPage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
-        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
         shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1.split(" ")[0]);
@@ -1587,13 +1588,14 @@ public class CinemarkMinorTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
         }
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-        if (isWeekGenerated){
-            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//        if (isWeekGenerated){
+//            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//        }
+//        Thread.sleep(3000);
+//        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+        if (!isWeekGenerated) {
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         }
-//        List<String> toCloseDays = new ArrayList<>();
-        //newShiftPage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
-        Thread.sleep(3000);
-        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
         shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1.split(" ")[0]);

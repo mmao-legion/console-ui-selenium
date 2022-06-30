@@ -735,7 +735,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
         ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();
-        waitForSeconds(3);
+//        waitForSeconds(10);
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
             clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover")));
@@ -766,20 +766,6 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 }
                 String workRole = shiftJobTitleAsWorkRole.getText().split(" as ")[1].trim();
                 SimpleUtils.pass("Get shift work role successfully! The work role is: " + workRole);
-//                if (areListElementVisible(infoContainers, 5) && infoContainers.size() >= 3) {
-//                    String shiftTime = infoContainers.get(infoContainers.size() - 2).getText().split("\n")[0];
-//                    String totalHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\\|")[1];
-//                    String shiftHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\\|")[0];
-//                    shiftInfo.add(firstName);
-//                    shiftInfo.add(dayIndex);
-//                    shiftInfo.add(shiftTime);
-//                    shiftInfo.add(jobTitle);
-//                    shiftInfo.add(workRole);
-//                    shiftInfo.add(lastName);
-//                    shiftInfo.add(shiftTimeWeekView);
-//                    shiftInfo.add(totalHrs);
-//                    shiftInfo.add(shiftHrs);
-//                }
                     if (isElementLoaded(shiftNotes, 5)) {
                         shiftNotesOnIIconPopUp = shiftNotes.getText();
                     }
@@ -803,7 +789,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     shiftInfo.add(shiftNameOnIIconPopUp); //Index 9
                     shiftInfo.add(shiftNotesOnIIconPopUp); //Index 10
                     //To close the info popup
-                    clickTheElement(weekShifts.get(index));
+//                    clickTheElement(weekShifts.get(index));
             } else {
                 //SimpleUtils.report("This is an Open Shift");
                 //return shiftInfo;
@@ -1355,6 +1341,18 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             count = dayViewAvailableShifts.size();
         }
         return count;
+    }
+
+    @Override
+    public String getShiftTextByIndex(int indexOfShift) {
+        String shiftText = "";
+        waitForSeconds(5);
+        if (areListElementVisible(wholeWeekShifts, 10)) {
+            shiftText = wholeWeekShifts.get(indexOfShift).getText();
+        } else if (areListElementVisible(dayViewAvailableShifts, 10)){
+            shiftText = dayViewAvailableShifts.get(indexOfShift).getText();
+        }
+        return shiftText;
     }
 
     @Override
@@ -2143,7 +2141,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         int count = 0;
         if (areListElementVisible(copyMoveErrorMesgs,15) && copyMoveErrorMesgs.size() > 0){
             for (WebElement message : copyMoveErrorMesgs) {
-                if (message.getText().equalsIgnoreCase(expectedMsgInCopy) || message.getText().equalsIgnoreCase(expectedMsgInMove)) {
+                if (message.getText().replaceAll(" ", "").equalsIgnoreCase(expectedMsgInCopy.replaceAll(" ", "")) || message.getText().replaceAll(" ", "").equalsIgnoreCase(expectedMsgInMove.replaceAll(" ", ""))) {
                     count = count + 1;
                 }
             }
@@ -2372,10 +2370,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> shifts = getDriver().findElements(By.cssSelector("[data-day-index=\"" + indexOfDay + "\"] .week-schedule-shift-wrapper"));
         if (areListElementVisible(shifts, 5) && shifts != null && shifts.size() > 0) {
             for (WebElement shift : shifts) {
-                clickTheElement(shift.findElement(By.className("week-schedule-shit-open-popover")));
-                String shiftName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
-//                WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
-                if (!shiftName.equals("") && shiftName.split(" ")[0].equalsIgnoreCase(name)) {
+//                clickTheElement(shift.findElement(By.className("week-schedule-shit-open-popover")));
+//                String shiftName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
+                String shiftName = shift.findElement(By.className("week-schedule-worker-name")).getText().toLowerCase();
+                if (!shiftName.equals("") && shiftName.contains(name.toLowerCase())) {
                     shiftsOfOneTM.add(shift);
                     SimpleUtils.pass("shift exists on this day!");
                     count++;
@@ -3535,6 +3533,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @Override
     public void bulkDeleteTMShiftsInWeekView(String teamMemberName) throws Exception {
+        unSelectAllBulkSelectedShifts();
         if (areListElementVisible(shiftsWeekView, 15)) {
             HashSet<Integer> shiftIndexes = new HashSet<>();
             //Get all index of TM's shifts
@@ -3561,7 +3560,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 if (selectedShiftCount == shiftIndexes.size()){
                     SimpleUtils.pass("Bulk delete:Select shift successfully! ");
                 }else
-                    SimpleUtils.fail("Bulk delete: Fail to select shift! ", false);
+                    SimpleUtils.fail("Bulk delete: Fail to select shift! the expect count is:"+shiftIndexes.size()
+                            + " the actual count is: "+selectedShiftCount, false);
                 //Right click the selected shifts
                 waitForSeconds(2);
                 rightClickOnSelectedShifts(shiftIndexes);
@@ -3574,5 +3574,638 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.report("There is no shift for :"+teamMemberName+" !");
         }else
             SimpleUtils.report("Schedule Week View: shifts load failed or there is no shift in this week");
+    }
+
+    @Override
+    public List<WebElement> selectMultipleDifferentAssignmentShiftsOnOneDay(int shiftCount, int dayIndex) throws Exception {
+        List<WebElement> shiftsOnOneDay = getDriver().findElements(By.cssSelector("[data-day-index=\"" + dayIndex + "\"] .week-schedule-shift"));
+        List<WebElement> selectedShifts = new ArrayList<>();
+        List<String> selectedShiftTMNames = new ArrayList<>();
+//        scrollToBottom();
+        waitForSeconds(2);
+        if (shiftsOnOneDay.size() >= shiftCount) {
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (WebElement element : shiftsOnOneDay) {
+                WebElement shiftName = element.findElement(By.cssSelector(".week-schedule-worker-name"));
+                if (!selectedShiftTMNames.contains(shiftName.getText())) {
+                    action.click(element);
+                    selectedShifts.add(element);
+                    selectedShiftTMNames.add(shiftName.getText());
+                    SimpleUtils.pass("Bulk action: Click "+shiftName.getText()+"'s shift successfully! ");
+                }
+                if (selectedShifts.size() == shiftCount) {
+                    break;
+                }
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
+                SimpleUtils.pass("Selected " + shiftCount + " shifts successfully");
+            } else {
+                SimpleUtils.fail("Expected to select " + shiftCount + " shifts, but actually selected " +
+                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+            }
+        } else {
+            SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+        }
+        return selectedShifts;
+    }
+
+    @Override
+    public List<WebElement> selectMultipleSameAssignmentShifts(int shiftCount, String tmName) throws Exception {
+        List<WebElement> selectedShifts = new ArrayList<>();
+//        List<String> selectedShiftTMNames = new ArrayList<>();
+        List<WebElement> names = new ArrayList<>();
+        if (areListElementVisible(namesWeekView, 10)) {
+            names = namesWeekView;
+        } else if (areListElementVisible(namesDayView, 10)) {
+            names = namesDayView;
+        }
+        scrollToBottom();
+        waitForSeconds(2);
+        if (names.size() >= shiftCount) {
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (WebElement name : names) {
+                if (name.getText().toLowerCase().contains(tmName.toLowerCase())) {
+                    action.click(name);
+                    selectedShifts.add(name);
+                    SimpleUtils.pass("Bulk action: Click " + tmName + "'s shift successfully! ");
+                }
+                if (selectedShifts.size() == shiftCount) {
+                    break;
+                }
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
+                SimpleUtils.pass("Selected " + shiftCount + " shifts successfully");
+            } else {
+                SimpleUtils.fail("Expected to select " + shiftCount + " shifts, but actually selected " +
+                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+            }
+        } else {
+            SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+        }
+        return selectedShifts;
+    }
+
+    public boolean isInfoIconLoaded(int index) throws Exception {
+        boolean infoIconLoaded = false;
+        try {
+            if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
+                WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
+                if (isElementLoaded(infoIcon, 5)) {
+                    infoIconLoaded = true;
+                    SimpleUtils.report("The info icon displays!");
+                }else{
+                    SimpleUtils.fail("The shifts in DayView are not loaded correctly!",false);
+                }
+            }
+        }catch (Exception e) {
+            SimpleUtils.report("The info icon doesn't display!");
+        }finally{
+            return infoIconLoaded;
+        }
+    }
+
+
+    @Override
+    public List<WebElement> selectMultipleDifferentAssignmentShifts(int shiftCount) throws Exception {
+        List<WebElement> selectedShifts = new ArrayList<>();
+        List<String> selectedShiftTMNames = new ArrayList<>();
+        List<WebElement> elements = new ArrayList<>();
+        if (areListElementVisible(weekShifts, 10)) {
+            elements = weekShifts;
+        } else if (areListElementVisible(dayViewAvailableShifts, 10)) {
+            elements = dayViewAvailableShifts;
+        }
+        if (elements.size() >= shiftCount) {
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (WebElement element : elements) {
+                WebElement shiftName = element.findElement(By.cssSelector(".week-schedule-worker-name"));
+                if (!selectedShiftTMNames.contains(shiftName.getText())) {
+                    scrollToElement(element);
+                    waitForSeconds(1);
+                    action.click(element);
+                    selectedShifts.add(element);
+                    selectedShiftTMNames.add(shiftName.getText());
+                    SimpleUtils.pass("Bulk action: Click " + shiftName.getText() + "'s shift successfully! ");
+                }
+                if (selectedShifts.size() == shiftCount) {
+                    break;
+                }
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
+                SimpleUtils.pass("Selected " + shiftCount + " shifts successfully");
+            } else {
+                SimpleUtils.fail("Expected to select " + shiftCount + " shifts, but actually selected " +
+                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+            }
+        }
+        return selectedShifts;
+    }
+
+    @Override
+    public void dragBulkShiftToAnotherDay(List<WebElement> selectedShifts, int endIndex, boolean needConfirmChangeModalDisplay) throws Exception {
+//        waitForSeconds(3);
+        List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
+        WebElement weekDay = getDriver().findElement(By.cssSelector("[data-day-index=\""+endIndex+"\"] .sch-calendar-day-label"));
+        if (selectedShifts != null
+                && endElements != null
+                && selectedShifts.size() > 0
+//                && endElements.size() > 0
+                && weekDay!=null) {
+            Actions action = new Actions(getDriver());
+            action.clickAndHold(selectedShifts.get(selectedShifts.size()-1)).build().perform();
+            if (endElements.size() == 0) {
+                scrollToElement(daySummaries.get(endIndex+7));
+                waitForSeconds(1);
+                action.moveToElement(daySummaries.get(endIndex+7));
+            }else {
+                scrollToElement(endElements.get(endElements.size()-1));
+                waitForSeconds(1);
+                action.moveToElement(endElements.get(endElements.size()-1));
+            }
+            action.release().build().perform();
+
+//            scrollToElement(endElements.get(endElements.size()-1));
+//            waitForSeconds(1);
+//            mouseHoverDragandDrop(selectedShifts.get(selectedShifts.size()-1), endElements.get(endElements.size()-1));
+            if (needConfirmChangeModalDisplay) {
+                if (!checkIfBulkDragAndDropConfirmChangeModalDisplay()) {
+                    SimpleUtils.fail("Bulk Drag&Drop: Bulk drag and drop confirm change modal should display!", false);
+                }else
+                    SimpleUtils.pass("Bulk Drag&Drop: Drag multiple shifts to " + weekDay.getText() + " days Successfully!");
+            }else {
+                if (checkIfBulkDragAndDropConfirmChangeModalDisplay()) {
+                    SimpleUtils.fail("Bulk Drag&Drop: Bulk drag and drop confirm change modal should not display!", false);
+                }else
+                    SimpleUtils.pass("Bulk Drag&Drop: Bulk drag and drop confirm change modal not display!");
+            }
+        } else {
+            SimpleUtils.fail("Schedule Page: Failed to find the shifts or " + endIndex, false);
+        }
+    }
+
+    @FindBy(css = ".swap-modal.modal-instance")
+    private WebElement bulkDragAndDropConfirmChangeModal;
+    public boolean checkIfBulkDragAndDropConfirmChangeModalDisplay() throws Exception {
+        boolean ifModalDisplay = false;
+        if (isElementLoaded(bulkDragAndDropConfirmChangeModal, 5)) {
+            ifModalDisplay = true;
+            SimpleUtils.report("Bulk action: Bulk drag and drop confirm change modal display successfully! ");
+        } else
+            SimpleUtils.report("Bulk action: Bulk drag and drop confirm change modal is not display! ");
+        return ifModalDisplay;
+    }
+
+    @FindBy(css = "p.text-regular")
+    private WebElement bulkDragAndDropConfirmChangeInfo;
+    public String getBulkDragAndDropConfirmChangeInfo () throws Exception {
+        String message = "";
+        if (isElementLoaded(bulkDragAndDropConfirmChangeInfo, 5)) {
+            message = bulkDragAndDropConfirmChangeInfo.getText();
+            SimpleUtils.pass("Bulk action: Get bulk drag and drop confirm change info successfully!");
+        } else
+            SimpleUtils.fail("Bulk action: The bulk drag and drop confirm change info fail to load! ", false);
+        return message;
+    }
+
+    @FindBy(css = "[ng-click=\"config.mode = 'move'\"] .tma-staffing-option-outer-circle")
+    private WebElement moveShiftsRadioButton;
+    @FindBy(css = "[ng-click=\"config.mode = 'copy'\"] .tma-staffing-option-outer-circle")
+    private WebElement copyShiftsRadioButton;
+    public void selectMoveOrCopyBulkShifts (String moveOrCopy) throws Exception {
+        if (isElementLoaded(moveShiftsRadioButton, 5)
+                && isElementLoaded(copyShiftsRadioButton, 5)) {
+            if (moveOrCopy.equalsIgnoreCase("move")) {
+                if (moveShiftsRadioButton.findElement(By.tagName("div")).getAttribute("class").contains("ng-hide")) {
+                    click(moveShiftsRadioButton);
+                    if (!moveShiftsRadioButton.findElement(By.tagName("div")).getAttribute("class").contains("ng-hide")) {
+                        SimpleUtils.pass("Bulk action: Select move shifts radio button successfully!");
+                    } else
+                        SimpleUtils.fail("Bulk action: Fail to select move shift radio button! ", false);
+                } else
+                    SimpleUtils.pass("Bulk action: Move shifts radio button already been selected!");
+            }else {
+                if (copyShiftsRadioButton.findElement(By.tagName("div")).getAttribute("class").contains("ng-hide")) {
+                    click(copyShiftsRadioButton);
+                    if (!copyShiftsRadioButton.findElement(By.tagName("div")).getAttribute("class").contains("ng-hide")) {
+                        SimpleUtils.pass("Bulk action: Select copy shifts radio button successfully!");
+                    } else
+                        SimpleUtils.fail("Bulk action: Fail to select copy shift radio button! ", false);
+                } else
+                    SimpleUtils.pass("Bulk action: Copy shifts radio button already been selected!");
+            }
+        }else
+            SimpleUtils.fail("Bulk action: The move and copy shifts radio buttons fail to load! ", false);
+    }
+
+    @FindBy(css = "[value=\"config.allowComplianceErrors\"]")
+    private WebElement allowComplianceErrorSwitch;
+    @FindBy(css = "[value=\"config.allowConvertToOpen\"]")
+    private WebElement allowConvertToOpenSwitch;
+    public void enableOrDisableAllowComplianceErrorSwitch (boolean enableOrDisable) throws Exception {
+        if (isElementLoaded(allowComplianceErrorSwitch, 5)) {
+            if (enableOrDisable) {
+                if (allowComplianceErrorSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
+                    click(allowComplianceErrorSwitch);
+                    if (allowComplianceErrorSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+                        SimpleUtils.pass("Bulk action: Enable Allow Compliance Error switch successfully!");
+                    } else
+                        SimpleUtils.fail("Bulk action: Fail to Enable Allow Compliance Error switch! ", false);
+                } else
+                    SimpleUtils.pass("Bulk action: Allow Compliance Error switch already been enabled!");
+            }else {
+                if (allowComplianceErrorSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+                    click(allowComplianceErrorSwitch);
+                    if (allowComplianceErrorSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
+                        SimpleUtils.pass("Bulk action: Disable Allow Compliance Error switch successfully!");
+                    } else
+                        SimpleUtils.fail("Bulk action: Fail to disable Allow Compliance Error switch! ", false);
+                } else
+                    SimpleUtils.pass("Bulk action: Allow Compliance Error switch already been disable!");
+            }
+        }else
+            SimpleUtils.fail("Bulk action: The Allow Compliance Error switch fail to load! ", false);
+    }
+
+
+    public void enableOrDisableAllowConvertToOpenSwitch (boolean enableOrDisable) throws Exception {
+        if (isElementLoaded(allowConvertToOpenSwitch, 5)) {
+            if (enableOrDisable) {
+                if (allowConvertToOpenSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
+                    click(allowConvertToOpenSwitch);
+                    if (allowConvertToOpenSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+                        SimpleUtils.pass("Bulk action: Enable Allow Convert to Open switch successfully!");
+                    } else
+                        SimpleUtils.fail("Bulk action: Fail to Enable Allow Convert to Open switch! ", false);
+                } else
+                    SimpleUtils.pass("Bulk action: Enable Allow Convert to Open switch already been enabled!");
+            }else {
+                if (allowConvertToOpenSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+                    click(allowConvertToOpenSwitch);
+                    if (allowConvertToOpenSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
+                        SimpleUtils.pass("Bulk action: Disable Enable Allow Convert to Open switch successfully!");
+                    } else
+                        SimpleUtils.fail("Bulk action: Fail to disable Enable Allow Convert to Open switch! ", false);
+                } else
+                    SimpleUtils.pass("Bulk action: Enable Allow Convert to Open switch already been disable!");
+            }
+        }else
+            SimpleUtils.fail("Bulk action: The Enable Allow Convert to Open switch fail to load! ", false);
+    }
+
+    @Override
+    public void expandSpecificCountGroup(int count) throws Exception {
+        if (areListElementVisible(groupTitleList,10)){
+            if (count> groupTitleList.size()) {
+                SimpleUtils.fail("The count "+count+" more than the group by lists: "+ groupTitleList.size(), false);
+            } else {
+                int expendedGroup = 0;
+                for (int i=0; i< groupTitleList.size(); i++){
+                    if (expendedGroup != count){
+                        clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                        if (!getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                            expendedGroup +=1;
+                            SimpleUtils.pass("Group is expanded!");
+                        } else {
+                            clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                            if (!getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                                expendedGroup +=1;
+                                SimpleUtils.pass("Group is expanded!");
+                            } else {
+                                SimpleUtils.fail("Group is not able to be expanded!", false);
+                            }
+                        }
+                    }else {
+                        clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                        if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                            SimpleUtils.pass("Group is collapsed!");
+                        } else {
+                            clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                            if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+                                SimpleUtils.pass("Group is collapsed!");
+                            } else {
+                                SimpleUtils.fail("Group is not able to be collapsed!", false);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("No group title show up!", false);
+        }
+    }
+
+
+    @Override
+    public int getOneDayShiftCountByIndex(int index) throws Exception {
+        int count = 0;
+        if (index < 7) {
+            List<WebElement> oneDayShifts = getDriver().findElements(By.cssSelector("[data-day-index=\"" + index + "\"] .week-schedule-shift-wrapper"));
+            count = oneDayShifts.size();
+        } else
+            SimpleUtils.fail("Index cannot greater than 7, but actual it is:" + index, false);
+
+        return count;
+    }
+    public boolean isProfileIconLoaded(int index) throws Exception {
+        boolean profileIconLoaded = false;
+        try{
+            if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
+                WebElement profileIcon = dayViewAvailableShifts.get(index).findElement(By.cssSelector(".sch-day-view-shift-worker-detail.ng-scope.sch-shift-orientation-right.sch-shift-worker-img-cursor"));
+                if(isElementLoaded(profileIcon)) {
+                    profileIconLoaded = true;
+                    SimpleUtils.report("The profile icon displays!");
+                }else{
+                    SimpleUtils.fail("The shifts in DayView are not loaded correctly!",false);
+                }
+            }
+        }catch(Exception e){
+            SimpleUtils.report("The profile icon doesn't display!");
+        }finally{
+            return profileIconLoaded;
+        }
+    }
+
+    @Override
+    public boolean isShiftLengthLoaded(int index) throws Exception {
+        boolean shiftLengthLoaded = false;
+        try {
+            if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
+                WebElement shiftLength = dayViewAvailableShifts.get(index).findElement(By.cssSelector(".sch-day-view-worker-time.ng-binding"));
+                if (isElementLoaded(shiftLength)) {
+                    shiftLengthLoaded = true;
+                    SimpleUtils.report("The shift length displays!");
+                }
+            }else {
+                SimpleUtils.fail("The shifts in DayView are not loaded correctly!", false);
+            }
+        }catch (Exception e) {
+            SimpleUtils.report("The shift length doesn't display!");
+        }finally {
+            return shiftLengthLoaded;
+        }
+    }
+
+    @Override
+    public boolean isShiftDurationInBoxLoaded(int index) throws Exception {
+        boolean shiftDurationInBoxLoaded = false;
+        try {
+            if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
+                WebElement shiftDuration = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[class=\"sch-day-view-shift-time pt-5 mr-10\"] [class=\"ng-binding ng-scope\"]"));
+                if (isElementLoaded(shiftDuration)) {
+                    shiftDurationInBoxLoaded = true;
+                    SimpleUtils.report("The shift duration displays!");
+                }
+            }else{
+                SimpleUtils.fail("The shifts in DayView are not loaded correctly!",false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.report("The shift duration doesn't display!");
+        }finally {
+            return shiftDurationInBoxLoaded;
+        }
+    }
+
+    @Override
+    public boolean isShiftTotalLengthLoaded(int index) throws Exception {
+        boolean shiftTotalLengthLoaded = false;
+        try {
+            if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
+                WebElement shiftTotalLength = dayViewAvailableShifts.get(index).findElement(By.cssSelector(".sch-day-view-worker-time.ng-binding.ng-scope"));
+                if (isElementLoaded(shiftTotalLength)) {
+                    shiftTotalLengthLoaded = true;
+                    SimpleUtils.report("The shift total length displays!");
+                }else{
+                    SimpleUtils.fail("The shifts in DayView are not loaded correctly!",false);
+                }
+            }
+        }catch(Exception e){
+            SimpleUtils.report("The shift total length doesn't display!");
+        }finally {
+            return shiftTotalLengthLoaded;
+        }
+    }
+
+    @Override
+    public boolean isProfileNameAndWorkRoleLoaded(int index) throws Exception {
+        boolean profileNameAndWorkRoleLoaded = false;
+        try {
+            if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
+                WebElement profileNameAndWorkRole = dayViewAvailableShifts.get(index).findElement(By.cssSelector(".sch-day-view-shift-worker-name.ng-binding.ng-scope"));
+                if (isElementLoaded(profileNameAndWorkRole)) {
+                    profileNameAndWorkRoleLoaded = true;
+                    SimpleUtils.report("The profile name and work role display!");
+                }else{
+                    SimpleUtils.fail("The shifts in DayView are not loaded correctly!",false);
+                }
+            }
+        }catch(Exception e) {
+            SimpleUtils.report("The profile name and work role don't display!");
+        }finally{
+            return profileNameAndWorkRoleLoaded ;
+        }
+    }
+
+    @Override
+    public boolean isMyScheduleProfileNameLoaded(int index) throws Exception {
+        boolean profileNameAndWorkRoleLoaded = false;
+        try {
+            if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
+                WebElement profileNameAndWorkRole = dayViewAvailableShifts.get(index).findElement(By.className("sch-day-view-shift-worker-name-status"));
+                if (isElementLoaded(profileNameAndWorkRole)) {
+                    profileNameAndWorkRoleLoaded = true;
+                    SimpleUtils.report("The profile name and work role display!");
+                }else{
+                    SimpleUtils.fail("The shifts in DayView are not loaded correctly!",false);
+                }
+            }
+        }catch(Exception e) {
+            SimpleUtils.report("The profile name and work role don't display!");
+        }finally{
+            return profileNameAndWorkRoleLoaded ;
+        }
+    }
+
+    @Override
+    public boolean isShiftJobTitleLoaded(int index) throws Exception {
+        boolean shiftJobTitleLoaded = false;
+        try{
+            if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
+                WebElement shiftJobTitle = dayViewAvailableShifts.get(index).findElement(By.cssSelector(".sch-day-view-shift-worker-title-role.ng-binding"));
+                if (isElementLoaded(shiftJobTitle)) {
+                    shiftJobTitleLoaded = true;
+                    SimpleUtils.report("The job title displays!");
+                }else{
+                    SimpleUtils.fail("The shifts in DayView are not loaded correctly!",false);
+                }
+            } }
+        catch (Exception e) {
+            SimpleUtils.report("The job title doesn't display!");
+        }finally {
+            return shiftJobTitleLoaded;
+        }
+    }
+
+    @Override
+    public boolean isMyScheduleShiftLocationLoaded(int index) throws Exception {
+        boolean myScheduleShiftLocationLoaded = false;
+        try{
+            if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
+                WebElement shiftJobTitle = dayViewAvailableShifts.get(index).findElement(By.cssSelector(".sch-day-view-shift-location.ng-binding.ng-scope"));
+                if (isElementLoaded(shiftJobTitle)) {
+                    myScheduleShiftLocationLoaded = true;
+                    SimpleUtils.report("The location displays!");
+                }else{
+                    SimpleUtils.fail("The shifts in DayView are not loaded correctly!",false);
+                }
+            } }
+        catch (Exception e) {
+            SimpleUtils.report("The location doesn't display!");
+        }finally {
+            return myScheduleShiftLocationLoaded;
+        }
+    }
+
+    @Override
+    public boolean isMyScheduleShiftWorkRoleLoaded(int index) throws Exception {
+        boolean shiftJobTitleLoaded = false;
+        try{
+            if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
+                WebElement shiftJobTitle = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[class=\"sch-day-view-shift-worker-name-status\"] [class=\"sch-day-view-shift-worker-title-role ng-binding\"]"));
+                if (isElementLoaded(shiftJobTitle)) {
+                    shiftJobTitleLoaded = true;
+                    SimpleUtils.report("The job title displays!");
+                }else{
+                    SimpleUtils.fail("The shifts in DayView are not loaded correctly!",false);
+                }
+            } }
+        catch (Exception e) {
+            SimpleUtils.report("The job title doesn't display!");
+        }finally {
+            return shiftJobTitleLoaded;
+        }
+    }
+
+//    @Override
+//    public boolean isShiftDurationInAvailabilityLoaded(int index) throws Exception {
+//        boolean shiftDurationInAvailablityLoaded = false;
+//        try{
+//            if (areListElementVisible(viewProfileAvailableShifts, 20) && index < viewProfileAvailableShifts.size()) {
+//                WebElement shiftJobTitle = viewProfileAvailableShifts.get(index).findElement(By.cssSelector("[class=\"availability-shift ng-scope Standard\"] [class=\"ng-binding ng-scope\"]"));
+//                if (isElementLoaded(shiftJobTitle)) {
+//                    shiftDurationInAvailablityLoaded = true;
+//                    SimpleUtils.report("The shift duration in Availability displays!");
+//                }else{
+//                    SimpleUtils.fail("The shifts in Availability are not loaded correctly!",false);
+//                }
+//            } }
+//        catch (Exception e) {
+//            SimpleUtils.report("The shift duration in Availability doesn't display!");
+//        }finally {
+//            return shiftDurationInAvailablityLoaded;
+//        }
+//    }
+
+    @FindBy(css = ".availability-shift.ng-scope.Standard")
+    private List<WebElement> viewProfileAvailableShifts;
+    @Override
+    public boolean isShiftJobTitleMediumInAvailabilityLoaded(int index) throws Exception {
+        boolean shiftJobTitleInAvailabilityLoaded = false;
+        try{
+            if (areListElementVisible(viewProfileAvailableShifts, 20) && index < viewProfileAvailableShifts.size()) {
+                WebElement shiftJobTitle = viewProfileAvailableShifts.get(index).findElement(By.cssSelector(".left.shift-name.ng-binding.ng-scope"));
+                if (isElementLoaded(shiftJobTitle)) {
+                    shiftJobTitleInAvailabilityLoaded = true;
+                    SimpleUtils.report("The shift job title in Availability displays!");
+                }else{
+                    SimpleUtils.fail("The shifts in Availability are not loaded correctly!",false);
+                }
+            } }
+        catch (Exception e) {
+            SimpleUtils.report("The shift job title in Availability doesn't display!");
+        }finally {
+            return shiftJobTitleInAvailabilityLoaded;
+        }
+    }
+
+    @Override
+    public boolean isShiftJobTitleLargeInAvailabilityLoaded(int index) throws Exception {
+        boolean shiftJobTitleInAvailabilityLoaded = false;
+        try{
+            if (areListElementVisible(viewProfileAvailableShifts, 20) && index < viewProfileAvailableShifts.size()) {
+                WebElement shiftJobTitle = viewProfileAvailableShifts.get(index).findElement(By.cssSelector(".left.shift-name.ng-binding.ng-scope.large"));
+                if (isElementLoaded(shiftJobTitle)) {
+                    shiftJobTitleInAvailabilityLoaded = true;
+                    SimpleUtils.report("The shift job title in Availability displays!");
+                }else{
+                    SimpleUtils.fail("The shifts in Availability are not loaded correctly!",false);
+                }
+            } }
+        catch (Exception e) {
+            SimpleUtils.report("The shift job title in Availability doesn't display!");
+        }finally {
+            return shiftJobTitleInAvailabilityLoaded;
+        }
+    }
+
+    @Override
+    public boolean isShiftLocationInAvailabilityLoaded(int index) throws Exception {
+        boolean shiftLocationInAvailabilityLoaded = false;
+        try{
+            if (areListElementVisible(viewProfileAvailableShifts, 20) && index < viewProfileAvailableShifts.size()) {
+                WebElement shiftJobTitle = viewProfileAvailableShifts.get(index).findElement(By.cssSelector(".business-location.ng-binding.ng-scope"));
+                if (isElementLoaded(shiftJobTitle)) {
+                    shiftLocationInAvailabilityLoaded = true;
+                    SimpleUtils.report("The shift location in Availability displays!");
+                }else{
+                    SimpleUtils.fail("The shifts in Availability are not loaded correctly!",false);
+                }
+            } }
+        catch (Exception e) {
+            SimpleUtils.report("The shift location in Availability doesn't display!");
+        }finally {
+            return shiftLocationInAvailabilityLoaded;
+        }
+    }
+
+    @Override
+    public boolean isShiftInfoIconInAvailabilityLoaded(int index) throws Exception {
+        boolean shiftInfoIconInAvailabilityLoaded = false;
+        try{
+            if (areListElementVisible(viewProfileAvailableShifts, 20) && index < viewProfileAvailableShifts.size()) {
+                WebElement shiftJobTitle = viewProfileAvailableShifts.get(index).findElement(By.cssSelector(""));
+                if (isElementLoaded(shiftJobTitle)) {
+                    shiftInfoIconInAvailabilityLoaded = true;
+                    SimpleUtils.report("The shift info icon in Availability displays!");
+                }else{
+                    SimpleUtils.fail("The shifts in Availability are not loaded correctly!",false);
+                }
+            } }
+        catch (Exception e) {
+            SimpleUtils.report("The shift info icon in Availability doesn't display!");
+        }finally {
+            return shiftInfoIconInAvailabilityLoaded;
+        }
+    }
+
+
+    @FindBy(css = ".shift-selected-multi")
+    private List<WebElement> bulkSelectedShift;
+    public void unSelectAllBulkSelectedShifts(){
+        if (areListElementVisible(bulkSelectedShift, 5)) {
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (WebElement element : bulkSelectedShift) {
+                action.click(element);
+                SimpleUtils.pass("Bulk action: Unselect one shift successfully! ");
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+        } else
+            SimpleUtils.report("There is no bulk selected shifts! ");
     }
 }

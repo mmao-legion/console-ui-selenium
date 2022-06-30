@@ -457,7 +457,7 @@ public class SplitAndSpreadTest extends TestBase {
         String weekday = scheduleShiftTablePage.getWeekDayTextByIndex(0);
         scheduleShiftTablePage.dragOneShiftToAnotherDay(1, firstNameOfTM1, 0);
         String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday.split(" ")[0]);
-        String expectedViolationMessage = firstNameOfTM1 + " is scheduled 8am - 10am on "+fullWeekDay+". This will trigger a split shift.";
+        String expectedViolationMessage = firstNameOfTM1 + " is scheduled 8:00 am - 10:00 am on "+fullWeekDay+". This will trigger a split shift.";
         scheduleShiftTablePage.verifyMessageOnCopyMoveConfirmPage(expectedViolationMessage,expectedViolationMessage);
         scheduleShiftTablePage.selectCopyOrMoveByOptionName("Move");
         scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
@@ -782,6 +782,7 @@ public class SplitAndSpreadTest extends TestBase {
                 tmFirstName  = shiftInfo.get(0);
                 i++;
             }
+            String tmLastName = shiftInfo.get(5);
             String workRole = shiftInfo.get(4);
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
@@ -801,7 +802,7 @@ public class SplitAndSpreadTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(tmFirstName);
+            newShiftPage.searchTeamMemberByName(tmFirstName +" "+tmLastName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
