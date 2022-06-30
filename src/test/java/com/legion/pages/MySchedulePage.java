@@ -75,4 +75,5 @@ public interface MySchedulePage {
     public boolean checkIfTMExitsInCoverOrSwapRequestList (String tmName);
     public void verifyClickAgreeBtnForSwapWithMessage(String expectedMessage) throws Exception;
     public int getCountOfCoverOrSwapRequestsInList();
+    public String getFullMonthName(String shortName);
 }
