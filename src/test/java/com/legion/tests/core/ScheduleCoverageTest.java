@@ -385,7 +385,7 @@ public class ScheduleCoverageTest extends TestBase {
             float scheduledHour = 0;
             for (int i=0; i< scheduleShiftTablePage.getAvailableShiftsInDayView().size(); i++) {
                 String shiftTime = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(i).get(2);
-                if (shiftTime.replace(":00", "").contains(timesInLaborForecastChart.get(0))) {
+                if (shiftTime.replace(":00 ", "").toLowerCase().contains(timesInLaborForecastChart.get(0).toLowerCase())) {
                     scheduledHour += 1;
                 }
             }
@@ -704,7 +704,7 @@ public class ScheduleCoverageTest extends TestBase {
         scheduleCommonPage.clickOnWeekView();
         String shiftTime = shiftInfo.get(2);
         String shiftStartTime = shiftTime.split("-")[0];
-        String shiftEndTime = shiftTime.split("-")[1].replace("am","").replace("pm","").replace("00 ", "");
+        String shiftEndTime = shiftTime.split("-")[1].replace("am","").replace("pm","").replace(" ","");
         int shiftEndTimeHour = Integer.parseInt(shiftEndTime.split(":")[0])- decreaseHrs;
         int shiftEndTimeMins = Integer.parseInt(shiftEndTime.split(":")[1])- decreaseMins;
         if (shiftEndTimeMins< 0) {

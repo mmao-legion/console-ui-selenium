@@ -48,7 +48,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             int count = dayViewAvailableShifts.size();
             for (int i = 0; i < count; i++) {
                 List<WebElement> tempShifts = getDriver().findElements(By.cssSelector(".sch-day-view-shift-outer .right-shift-box"));
-                scrollToElement(tempShifts.get(i));
+//                scrollToElement(tempShifts.get(i));
+                scrollToBottom();
                 moveToElementAndClick(tempShifts.get(i));
                 deleteShift();
             }
@@ -728,9 +729,15 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             if (isEditMealBreakEnabled){
                 click(addMealBreakButton);
                 click(continueBtnInMealBreakButton);
+                if (isElementEnabled(confirmWindow, 5)) {
+                    click(okBtnOnConfirm);
+                }
                 SimpleUtils.pass("add meal break time successfully");
             } else {
                 click(continueBtnInMealBreakButton);
+                if (isElementEnabled(confirmWindow, 5)) {
+                    click(okBtnOnConfirm);
+                }
             }
         }else
             SimpleUtils.report("add meal break failed");
@@ -2813,8 +2820,10 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         try {
             if (isElementLoaded(shiftInfoContainer, 10)) {
                 String actualShiftInfo = shiftInfoContainer.getText();
-                if (actualShiftInfo.contains(expectedShiftInfo.get(0)) && actualShiftInfo.contains(expectedShiftInfo.get(3)) &&
-                        actualShiftInfo.contains(expectedShiftInfo.get(4)) && actualShiftInfo.contains(expectedShiftInfo.get(2))) {
+                if (actualShiftInfo.replaceAll(" ", "").contains(expectedShiftInfo.get(0).replaceAll(" ", ""))
+                        && actualShiftInfo.replaceAll(" ", "").contains(expectedShiftInfo.get(3).replaceAll(" ", "")) &&
+                        actualShiftInfo.replaceAll(" ", "").contains(expectedShiftInfo.get(4).replaceAll(" ", ""))
+                        && actualShiftInfo.replaceAll(" ", "").contains(expectedShiftInfo.get(2).replaceAll(" ", ""))) {
                     SimpleUtils.pass("Shift info on the Meal Break pop up is correct!");
                 } else {
                     SimpleUtils.fail("Shift info on the Meal Break pop up is correct!", false);
@@ -3040,7 +3049,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 boolean moveBreakTimeSuccess = false;
                 for (int i = 0; i< timeLineLength; i++) {
                     moveDayViewCards(mealBreaks.get(index), 10);
-                    mealBreakTimeAfterEdit = breakTimes.get(index).getText().split("-")[0].trim();
+                    mealBreakTimeAfterEdit = breakTimes.get(index).getText().split("-")[0].trim().replace(" ","");
                     if (mealBreakTimeAfterEdit.equalsIgnoreCase(breakTime)) {
                         SimpleUtils.pass("Move breaks successfully! ");
                         moveBreakTimeSuccess = true;

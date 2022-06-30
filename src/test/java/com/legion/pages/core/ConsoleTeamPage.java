@@ -338,11 +338,12 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if(isElementLoaded(teamMemberSearchBox, 10)) {
 				teamMemberSearchBox.clear();
 				teamMemberSearchBox.sendKeys(username);
-				waitForSeconds(2);
+				waitForSeconds(3);
 				int i = 0;
 				while(teamMembers.size() == 0 && i< 5){
 					teamMemberSearchBox.clear();
 					teamMemberSearchBox.sendKeys(username);
+					SimpleUtils.report("Input the TM name in search box and waiting for the result! ");
 					waitForSeconds(5);
 					i++;
 				}
@@ -3988,7 +3989,7 @@ private List<WebElement> locationColumn;
 	private WebElement saveSchoolSessionBtn;
 	@FindBy(css = "div[ng-click=\"dismissPopup()\"]")
 	private WebElement cancelSchoolSessionBtn;
-	@FindBy(css = "[label=\"Delete\"]")
+	@FindBy(css = "[label=\"Delete\"] span.ng-binding")
 	private WebElement deleteCalendarBtn;
 	@FindBy(css = "[label=\"Edit\"]")
 	private WebElement editCalendarBtn;
@@ -4221,6 +4222,7 @@ private List<WebElement> locationColumn;
 			for (WebElement title : calendarTitles) {
 				if (title.getText().trim().equalsIgnoreCase(calendarName)) {
 					clickTheElement(title);
+					waitForSeconds(3);
 					if (areListElementVisible(calendarCells,  10) && isElementLoaded(deleteCalendarBtn, 10)) {
 						waitForSeconds(3);
 						clickTheElement(deleteCalendarBtn);

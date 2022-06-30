@@ -44,6 +44,7 @@ public interface ScheduleShiftTablePage {
     public List<Integer> getAddedShiftIndexes(String name) throws Exception;
     public boolean areShiftsPresent() throws Exception;
     public int getShiftsCount() throws Exception;
+    public String getShiftTextByIndex(int indexOfShift);
     public boolean isProfileIconsClickable() throws Exception;
     public int getOTShiftCount();
     public void validateXButtonForEachShift() throws Exception;
@@ -144,4 +145,19 @@ public interface ScheduleShiftTablePage {
     public void expandSpecificCountGroup(int count) throws Exception;
     public int getOneDayShiftCountByIndex(int index) throws Exception;
     public void unSelectAllBulkSelectedShifts();
+    public boolean isInfoIconLoaded(int index) throws Exception;
+    public boolean isProfileIconLoaded(int index) throws Exception;
+    public boolean isShiftTotalLengthLoaded(int index) throws Exception;
+    public boolean isShiftDurationInBoxLoaded(int index) throws Exception;
+    public boolean isProfileNameAndWorkRoleLoaded(int index) throws Exception;
+    public boolean isShiftLengthLoaded(int index) throws Exception;
+    public boolean isShiftJobTitleLoaded(int index) throws Exception;
+//    public boolean isShiftDurationInAvailabilityLoaded(int index) throws Exception;
+    public boolean isShiftJobTitleMediumInAvailabilityLoaded(int index) throws Exception;
+    public boolean isShiftJobTitleLargeInAvailabilityLoaded(int index) throws Exception;
+    public boolean isShiftLocationInAvailabilityLoaded(int index) throws Exception;
+    public boolean isShiftInfoIconInAvailabilityLoaded(int index) throws Exception;
+    public boolean isMyScheduleShiftLocationLoaded(int index) throws Exception;
+    public boolean isMyScheduleShiftWorkRoleLoaded(int index) throws Exception;
+    public boolean isMyScheduleProfileNameLoaded(int index) throws Exception;
 }

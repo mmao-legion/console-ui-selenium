@@ -12,11 +12,9 @@ import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -3496,6 +3494,24 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void setLatitudeAndLongitude() {
 		latitude.sendKeys("34.3416");
 		longitude.sendKeys("108.9398");
+	}
+
+	@FindBy(css = ".lg-dashboard-card__header--enterpriseprofiledashboard")
+	private WebElement enterpriseProfile;
+
+	@FindBy(css = "[ng-click=\"editEnterprise()\"]")
+	private WebElement editEnterpriseProfile;
+
+	@Override
+	public void clickEditEnterpriseProfile() {
+		if (isElementEnabled(enterpriseProfile, 10)) {
+			click(enterpriseProfile);
+			if (isClickable(editEnterpriseProfile, 15)) {
+				click(editEnterpriseProfile);
+				SimpleUtils.pass("Button for edit enterprise profile is clickable!");
+			} else
+				SimpleUtils.fail("Button for edit enterprise profile is not clickable!", false);
+		}
 	}
 }
 

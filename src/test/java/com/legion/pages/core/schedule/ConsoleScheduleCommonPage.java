@@ -638,6 +638,8 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
     private WebElement shiftOfferTime;
     @FindBy(className = "shift-swap-modal-table-shift-status")
     private List<WebElement> shiftStatus;
+    @FindBy(css = ".loading-icon")
+    private WebElement loadingIcon;
 
     @Override
     public void navigateToNextWeek() throws Exception {
@@ -653,10 +655,14 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
                 clickTheElement(calendarNavigationNextWeekArrow);
                 if (areListElementVisible(currentWeeks, 5)) {
                     clickTheElement(currentWeeks.get(0));
+                    waitUntilElementIsInVisible(loadingIcon);
+                    waitForSeconds(10);
                     SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(0).getText() + "' Successfully!");
                 }
             }else {
                 clickTheElement(currentWeeks.get(currentWeekIndex + 1));
+                waitUntilElementIsInVisible(loadingIcon);
+                waitForSeconds(10);
                 SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(currentWeekIndex + 1).getText() + "' Successfully!");
             }
         }else {

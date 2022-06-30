@@ -211,7 +211,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the unassigned opening or closing shifts will not convert to open shifts when copying schedule setting set as Yes, except opening/closing shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -504,13 +504,13 @@ public class ScheduleCopyImprovementTest extends TestBase {
                         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
                         SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                 complianceMessage.contains("Unassigned Shift"), false);
-                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
+                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText().replace(" ", ""));
                     }
                     for(WebElement openShift: openShifts){
-                        openShiftTimes.add(openShift.findElement(By.className("week-schedule-shift-time")).getText()) ;
+                        openShiftTimes.add(openShift.findElement(By.className("week-schedule-shift-time")).getText().replace(" ", "")) ;
                     }
 
-                    if(unassignedShiftTimes.contains("10am - 3pm") && !openShiftTimes.contains("10am - 3pm")) {
+                    if(unassignedShiftTimes.contains("10:00am-3:00pm") && !openShiftTimes.contains("10:00am-3:00pm")) {
                         SimpleUtils.pass("The opening/closing shifts display as unassigned! ");
                     } else
                         SimpleUtils.fail("The opening/closing shifts are not display as unassigned! ", false);
@@ -524,12 +524,12 @@ public class ScheduleCopyImprovementTest extends TestBase {
                         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(unassignedShift);
                         SimpleUtils.assertOnFail("The unassigned violation message display incorrectly in i icon popup! ",
                                 complianceMessage.contains("Unassigned Shift"), false);
-                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
+                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText().replace(" ", ""));
                     }
                     for(WebElement openShift: openShifts){
-                        openShiftTimes.add(openShift.findElement(By.className("week-schedule-shift-time")).getText()) ;
+                        openShiftTimes.add(openShift.findElement(By.className("week-schedule-shift-time")).getText().replace(" ", "")) ;
                     }
-                    if(!unassignedShiftTimes.contains("10am - 3pm") && openShiftTimes.contains("10am - 3pm")) {
+                    if(!unassignedShiftTimes.contains("10:00am-3:00pm") && openShiftTimes.contains("10:00am-3:00pm")) {
                         SimpleUtils.pass("The opening/closing shifts display as open! ");
                     } else
                         SimpleUtils.fail("The opening/closing shifts are not display as open! ", false);

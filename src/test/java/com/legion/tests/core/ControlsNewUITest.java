@@ -1769,37 +1769,37 @@ public class ControlsNewUITest extends TestBase{
             controlsNewUIPage.turnOnOrOffSpecificRegularWorkingHours(weekDays.SATURDAY.getValue(), "on");
             LinkedHashMap<String, List<String>> regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
             List<String> workingHours = regularWorkingHours.get(weekDays.SUNDAY.getValue());
-            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
-                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00 am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00 am") , false);
             regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
             workingHours = regularWorkingHours.get(weekDays.MONDAY.getValue());
-            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
-                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00 am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00 am") , false);
             regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
             workingHours = regularWorkingHours.get(weekDays.TUESDAY.getValue());
-            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
-                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00 am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00 am") , false);
             regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
             workingHours = regularWorkingHours.get(weekDays.WEDNESDAY.getValue());
-            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
-                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00 am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00 am") , false);
             regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
             workingHours = regularWorkingHours.get(weekDays.THURSDAY.getValue());
-            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
-                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00 am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00 am") , false);
             regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
             workingHours = regularWorkingHours.get(weekDays.FRIDAY.getValue());
-            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
-                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00 am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00 am") , false);
             regularWorkingHours = controlsNewUIPage.getRegularWorkingHours();
             workingHours = regularWorkingHours.get(weekDays.SATURDAY.getValue());
-            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00am")
-                    && workingHours.get(1).equalsIgnoreCase("12:00am") , false);
+            SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase("12:00 am")
+                    && workingHours.get(1).equalsIgnoreCase("12:00 am") , false);
 
             //verify all 7 day's opening and closing time can be edit
             List<String> applyToOtherDays = new ArrayList<>();
-            String openingTime = "6:00am";
-            String closingTime = "6:00pm";
+            String openingTime = "6:00 am";
+            String closingTime = "6:00 pm";
             controlsNewUIPage.updateControlsRegularHours(openingTime, closingTime, weekDays.SUNDAY.getValue(), applyToOtherDays);
             controlsNewUIPage.updateControlsRegularHours(openingTime, closingTime, weekDays.MONDAY.getValue(), applyToOtherDays);
             controlsNewUIPage.updateControlsRegularHours(openingTime, closingTime, weekDays.TUESDAY.getValue(), applyToOtherDays);
@@ -1837,8 +1837,8 @@ public class ControlsNewUITest extends TestBase{
             SimpleUtils.assertOnFail("The regular working hours display incorrectly! ", workingHours.get(0).equalsIgnoreCase(openingTime)
                     && workingHours.get(1).equalsIgnoreCase(closingTime) , false);
 
-            String openingTime2 = "8:00am";
-            String closingTime2 = "8:00pm";
+            String openingTime2 = "8:00 am";
+            String closingTime2 = "8:00 pm";
             applyToOtherDays.add("All days");
             controlsNewUIPage.updateControlsRegularHours(openingTime2, closingTime2, weekDays.SUNDAY.getValue(), applyToOtherDays);
             controlsNewUIPage.clickOnCancelBtn();

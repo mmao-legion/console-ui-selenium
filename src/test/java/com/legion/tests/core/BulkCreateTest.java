@@ -25,7 +25,7 @@ import java.util.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.MyThreadLocal.workerRole;
 
-public class CreateShiftNewUITest extends TestBase {
+public class BulkCreateTest extends TestBase {
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) {
@@ -193,7 +193,7 @@ public class CreateShiftNewUITest extends TestBase {
             newShiftPage.moveSliderAtCertainPoint("11pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
             newShiftPage.selectSpecificWorkDay(7);
-            String expectMessage = "Hours on Friday: 6:00 AM - 12:00 AM. Hours on Saturday: 6:00 AM - 12:00 AM. Hours on Monday: 6:00 AM - 12:00 AM. Hours on Tuesday: 6:00 AM - 12:00 AM. Hours on Wednesday: 6:00 AM - 12:00 AM. Hours on Thursday: 6:00 AM - 12:00 AM";
+            String expectMessage = "Hours on Friday: 6:00am - 12:00am. Hours on Saturday: 6:00am - 12:00am. Hours on Monday: 6:00am - 12:00am. Hours on Tuesday: 6:00am - 12:00am. Hours on Wednesday: 6:00am - 12:00am. Hours on Thursday: 6:00am - 12:00am";
             String actualMessage = newShiftPage.getShiftStartWarningMessage();
             SimpleUtils.assertOnFail("The shift start warning message display incorrectly. The expect is: "+ expectMessage
                             + " the actual is "+ actualMessage,
@@ -377,7 +377,7 @@ public class CreateShiftNewUITest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    //@Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify assign or offer TMs in Search and Recommended tabs")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -423,7 +423,7 @@ public class CreateShiftNewUITest extends TestBase {
             //Fill the required option
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
-            int count = (int)(Math.random()*100+1);
+            int count = (int)(Math.random()*(100-2)+2);
             newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
             newShiftPage.clearAllSelectedDays();
             int dayCount = 7;
@@ -737,8 +737,8 @@ public class CreateShiftNewUITest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify assign shift by each days")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAssignShiftByEachDaysAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -774,6 +774,8 @@ public class CreateShiftNewUITest extends TestBase {
             String workRole = shiftInfo.get(4);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -819,6 +821,8 @@ public class CreateShiftNewUITest extends TestBase {
             workRole = shiftInfo.get(4);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1828,6 +1832,19 @@ public class CreateShiftNewUITest extends TestBase {
     public void validateShiftsCanBeCreatedByNewUIByDifferentAccessRolesAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
             loginPage.logOut();
             //Verify the shifts can be created by new UI by original SM access role
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
@@ -1892,17 +1909,18 @@ public class CreateShiftNewUITest extends TestBase {
         }
         scheduleCommonPage.navigateToNextWeek();
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-        if (isWeekGenerated) {
-            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+        if (!isWeekGenerated) {
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
         }
-        String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
-        createSchedulePage.createScheduleForNonDGFlowNewUI();
+
         //Verify the assign workflow with one shift for one days
+        String workRole = shiftOperatePage.getRandomWorkRole();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         newShiftPage.clickOnDayViewAddNewShiftButton();
         SimpleUtils.assertOnFail("New create shift page is not display! ",
                 newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
         //Fill the required option
+
         newShiftPage.selectWorkRole(workRole);
         String shiftStartTime = "8:00am";
         String shiftEndTime = "11:00am";
@@ -1925,7 +1943,8 @@ public class CreateShiftNewUITest extends TestBase {
         MyThreadLocal.setAssignTMStatus(true);
         String selectedTM1 = newShiftPage.selectTeamMembers();
         newShiftPage.clickOnCreateOrNextBtn();
-        List<WebElement> shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
+        List<WebElement> shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0,
+                selectedTM1.split(" ")[0]+" "+selectedTM1.split(" ")[1].substring(0,1));
         SimpleUtils.assertOnFail("The "+selectedTM1+ "shift is not exist on the first day! ",
                 shiftsOfOneDay.size()==1, false);
         scheduleMainPage.saveSchedule();

@@ -659,7 +659,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
                     if (element.findElement(By.cssSelector(".working-days-day-work-time")).getText().split("\n").length>1){
                         String actualStartTime = element.findElement(By.cssSelector(".working-days-day-work-time")).getText().split("\n")[0];
                         String actualEndTime = element.findElement(By.cssSelector(".working-days-day-work-time")).getText().split("\n")[1];
-                        if (getTimeFormat(startTimeExpected).contains(actualStartTime) && getTimeFormat(endTimeExpected).contains(actualEndTime)){
+                        if (getTimeFormat(startTimeExpected).contains(getTimeFormat(actualStartTime)) && getTimeFormat(endTimeExpected).contains(getTimeFormat(actualEndTime))){
                             SimpleUtils.pass(dayExpected+": Operating hours is consistent with setting!");
                         }else {
                             SimpleUtils.fail(dayExpected+": Operating hours is inconsistent with setting!", false);
@@ -686,7 +686,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
         if (result.indexOf("0")==0){
             result = result.substring(1);
         }
-        return result;
+        return result.replace("::", ":");
     }
 
     @FindBy(css = ".week-summary")

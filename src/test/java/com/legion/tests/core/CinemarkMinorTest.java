@@ -990,7 +990,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "9am,4pm";
             String shiftTime3 = "8am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "8:00 AM - 4:00 PM";
+            String scheduleFromToTime = "8am - 4pm";
             String scheduleMaxHours = "6";
             String selectWeekDayName = "Mon";
 //            setStrictlyEnforceMinorViolationSetting("No");
@@ -1016,7 +1016,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "9am,4pm";
             String shiftTime3 = "9am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "8:30 AM - 4:00 PM";
+            String scheduleFromToTime = "8:30am - 4pm";
             String scheduleMaxHours = "5";
             String selectWeekDayName = "Mon";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
@@ -1039,7 +1039,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "9am,5pm";
             String shiftTime3 = "11am,4pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "8:30 AM - 5:00 PM";
+            String scheduleFromToTime = "8:30am - 5pm";
             String scheduleMaxHours = "5";
             String selectWeekDayName = "Fri";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
@@ -1062,7 +1062,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "9am,5pm";
             String shiftTime3 = "9am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "9:00 AM - 5:00 PM";
+            String scheduleFromToTime = "9am - 5pm";
             String scheduleMaxHours = "6";
             String selectWeekDayName = "Fri";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
@@ -1084,7 +1084,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "9am,6pm";
             String shiftTime3 = "9am,3pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "9:00 AM - 6:00 PM";
+            String scheduleFromToTime = "9am - 6pm";
             String scheduleMaxHours = "7";
             String selectWeekDayName = "Sat";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
@@ -1108,7 +1108,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "10am,7pm";
             String shiftTime3 = "10am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "9:30 AM - 7:00 PM";
+            String scheduleFromToTime = "9:30am - 7pm";
             String scheduleMaxHours = "7";
             String selectWeekDayName = "Sat";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
@@ -1132,7 +1132,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "10am,9pm";
             String shiftTime3 = "10am,4pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "9:30 AM - 9:00 PM";
+            String scheduleFromToTime = "9:30am - 9pm";
             String scheduleMaxHours = "9";
             String selectWeekDayName = "Sun";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
@@ -1155,7 +1155,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "10am,8pm";
             String shiftTime3 = "10am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "10:00 AM - 8:00 PM";
+            String scheduleFromToTime = "10am - 8pm";
             String scheduleMaxHours = "8";
             String selectWeekDayName = "Sun";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
@@ -1177,7 +1177,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "10am,10pm";
             String shiftTime3 = "10am,4pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "10:00 AM - 10:00 PM";
+            String scheduleFromToTime = "10am - 10pm";
             String scheduleMaxHours = "10";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
 
@@ -1199,7 +1199,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "11am,10pm";
             String shiftTime3 = "11am,7pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "10:30 AM - 10:00 PM";
+            String scheduleFromToTime = "10:30am - 10pm";
             String scheduleMaxHours = "9";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
 
@@ -1234,13 +1234,14 @@ public class CinemarkMinorTest extends TestBase {
         }
         Thread.sleep(5000);
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-        if (isWeekGenerated){
-            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//        if (isWeekGenerated){
+//            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//        }
+//        Thread.sleep(5000);
+//        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+        if (!isWeekGenerated) {
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         }
-        Thread.sleep(5000);
-        List<String> toCloseDays = new ArrayList<>();
-        //newShiftPage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
-        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
         shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1.split(" ")[0]);
@@ -1273,7 +1274,7 @@ public class CinemarkMinorTest extends TestBase {
 
         //check the violation message in Status column
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
-                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime.toLowerCase()), false);
         Thread.sleep(5000);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         Thread.sleep(5000);
@@ -1302,11 +1303,11 @@ public class CinemarkMinorTest extends TestBase {
         WebElement newAddedShift = scheduleShiftTablePage.
                 getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1.split(" ")[0]).get(0));
         String expectMessage = "Minor hrs "+ scheduleFromToTime;
-        String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString();
+        String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString().replace(":00 ", "").replace(":30 ", ":30").toLowerCase();
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! the expect is: "+expectMessage
                             +" the actual is:"+actualMessage,
-                    actualMessage.contains(expectMessage), false);
+                    actualMessage.contains(expectMessage.toLowerCase()), false);
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
 
@@ -1587,13 +1588,14 @@ public class CinemarkMinorTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
         }
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-        if (isWeekGenerated){
-            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//        if (isWeekGenerated){
+//            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//        }
+//        Thread.sleep(3000);
+//        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+        if (!isWeekGenerated) {
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         }
-//        List<String> toCloseDays = new ArrayList<>();
-        //newShiftPage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
-        Thread.sleep(3000);
-        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
         shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1.split(" ")[0]);

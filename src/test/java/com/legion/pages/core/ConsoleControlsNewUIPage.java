@@ -2429,6 +2429,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@FindBy(css = "lg-button[label=\"Edit Location\"]")
 	private WebElement locationProfileEditLocationBtn;
 
+	@Override
 	public void clickOnLocationProfileEditLocationBtn() throws Exception {
 		if (isElementLoaded(locationProfileEditLocationBtn)) {
 			if (locationProfileEditLocationBtn.isEnabled()) {
@@ -2438,6 +2439,37 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				SimpleUtils.report("Controls page: Location Profile section 'Edit Location' button not Enabled.");
 		} else
 			SimpleUtils.fail("Controls page: Location Profile section 'Edit Location' button not loaded.", false);
+	}
+
+	@FindBy(css = "[aria-label=\"Time Zone\"]")
+	private WebElement timeZoneInput;
+
+	@Override
+	public void checkTimeZoneDropdownOptions(int targetNumbersOfUTCFormat, String timeZone) throws Exception {
+		int timeZoneFormatedCount = 0;
+		int incorrectFormatedCount = 0;
+		if (isElementLoaded(timeZoneInput, 10) && isClickable(timeZoneInput, 10)) {
+			scrollToElement(timeZoneInput);
+			click(timeZoneInput);
+			waitForSeconds(3);
+			Select select = new Select(timeZoneInput);
+			List<WebElement> options = select.getOptions();
+			for (WebElement option : options) {
+				if (option.getText().contains(timeZone)) {
+					timeZoneFormatedCount++;
+				} else {
+					incorrectFormatedCount++;
+				}
+			}
+			if (timeZoneFormatedCount != targetNumbersOfUTCFormat) {
+				SimpleUtils.fail("The UTC time zone count is " + timeZoneFormatedCount + " doesn't match target number " + targetNumbersOfUTCFormat, false);
+			}
+			if (incorrectFormatedCount > 0) {
+				SimpleUtils.fail("There was " + incorrectFormatedCount + " didn't format to UTC time zone!", false);
+			}
+		} else {
+			SimpleUtils.fail("Failed for loading time zone field!", false);
+		}
 	}
 
 	@FindBy(css = "div.lg-general-form__top-buttons")
@@ -6831,6 +6863,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						&&isElementLoaded(editDialog.findElement(By.cssSelector("[label=\"Save\"]")), 5)){
 					if (saveOrNot){
 						clickTheElement(editDialog.findElement(By.cssSelector("[label=\"Save\"] button")));
+						Thread.sleep(3000);
 						SimpleUtils.assertOnFail("Setting is not saved successfully!", getSpreadOfHoursContent().contains(numOfPremiumHrs)&&getSpreadOfHoursContent().contains(greaterThan), false);
 					} else {
 						clickTheElement(editDialog.findElement(By.cssSelector("[label=\"Cancel\"] button")));
@@ -7426,7 +7459,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		if (isElementLoaded(dailyOvertimePayEditBtn, 5)){
 			String contentBefore = getDailyOTContent();
 			clickTheElement(dailyOvertimePayEditBtn);
-			if (isElementLoaded(splitShiftDialog, 10)){
+			if (isElementLoaded(splitShiftDialog, 15)){
 				//check the title.
 				if (splitShiftDialog.findElement(By.cssSelector(".lg-modal__title")).getText().trim().equalsIgnoreCase("Edit Daily Overtime")){
 					SimpleUtils.pass("Dialog title is expected!");

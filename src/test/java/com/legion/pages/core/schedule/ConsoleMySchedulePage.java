@@ -583,15 +583,10 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
             SimpleUtils.fail("Team Member's shift view popup is not displayed", false);
         }
 
-        if (isElementLoaded(claimConfirmPopup, 5)) {
+        if (isElementLoaded(claimConfirmPopup, 10)) {
             if (isClickable(acceptBtn, 5)) {
                 click(acceptBtn);
-                waitForSeconds(3);
-                if (waitForNotExists(claimConfirmPopup, 40)) {
-                    SimpleUtils.pass("Claim request done!");
-                } else {
-                    SimpleUtils.fail("Accept request takes more than 40 seconds!", false);
-                }
+                waitForSeconds(5);
             } else {
                 SimpleUtils.fail("Accept button is not clickable!", false);
             }

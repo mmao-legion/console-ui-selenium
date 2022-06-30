@@ -743,7 +743,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     SimpleUtils.fail("The warning message display incorrectly, the expected is: "+ expectedMessage
                             + " the actual is: "+ selectDaysWarningMessageOnNewShiftPage.getText(), false);
             } else
-                SimpleUtils.fail("The 'at least one day selected' warning message fail to load! ", false);
+                SimpleUtils.report("The 'at least one day selected' warning message fail to load! ");
         }else{
             SimpleUtils.fail("Weeks Days failed to load!", true);
         }
@@ -2141,6 +2141,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     } else {
                         clickTheElement(nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root input")));
                         waitForSeconds(2);
+                        moveToElementAndClick(nextDayIcon);
                         if (nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
                             SimpleUtils.pass("Check Next day checkbox successfully! ");
                         } else
