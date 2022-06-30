@@ -585,30 +585,7 @@ SCH-5862-->
             </class>
         </classes>
     </test>
-
-    <test name="FTSE Support Variant Violations Except OT Ones">
-        <classes>
-            <class name="com.legion.tests.core.FTSERelevantTest">
-                <methods>
-                    <include name="verifyFTSEEmployeesIgnoreTheDayOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnoreTheWeekOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnoreThe7thConsecutiveOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnoreThe24HrsOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeeSupportClopeningViolationAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeeSupportMaxShiftViolationAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeeSupportRoleViolationAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore4X10AgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore5X8AgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore40X8AgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore40hrsAgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnoreNoOverTimeAgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore50hrsPerWeekAgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesSupportSplitShiftsViolationAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesSupportSpreadOfHoursViolationAsInternalAdmin"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
+    
     <!--
        <test name="Drag And Drop Test">
            <classes>
