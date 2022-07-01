@@ -30,7 +30,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     @FindBy(css = "[label=\"Cancel\"]")
     private WebElement scheduleEditModeCancelButton;
 
-    @FindBy(css = "lg-button[data-tootik=\"Edit Schedule\"]")
+    @FindBy(css = "lg-button[label=\"Edit\"] button")
     private WebElement newEdit;
 
     @FindBy(css = "[ng-click=\"callOkCallback()\"]")
@@ -2011,15 +2011,15 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     @FindBy(css = ".popover-content")
     private WebElement shiftInfoPopup;
 
-    @FindBy(css = "[src=\"img/legion/schedule/shift-info-danger.png\"]")
-    private WebElement shiftInfoIcon;
-
     @Override
     public void closeShiftInfoPopup() throws Exception {
         if (areListElementVisible(wholeWeekShifts,15)) {
             if (isElementLoaded(shiftInfoPopup, 5)) {
-                click(shiftInfoIcon);
+                click(shiftInfoPopup);
                 waitForSeconds(3);
+                if (isElementLoaded(shiftInfoPopup, 5)) {
+                    SimpleUtils.fail("Shift info popup is not closed!", false);
+                }
             }
         }
     }

@@ -500,7 +500,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		if(isElementEnabled(editButton, 10)){
 			clickTheElement(editButton);
 			waitForSeconds(3);
-			if(isElementEnabled(editTemplatePopupPage)){
+			if(isElementEnabled(editTemplatePopupPage, 5)){
 				SimpleUtils.pass("Click edit button successfully!");
 				clickTheElement(okButton);
 				if(isElementEnabled(dropdownArrowButton)){
@@ -3742,6 +3742,19 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			displaySuccessMessage();
 		} else{
 			SimpleUtils.fail("Can a manager add another locations' employee in schedule before the employee's home location has published the schedule? input field not loaded.", false);
+		}
+	}
+
+	@FindBy(css = "question-input[question-title=\"Labor Preferences for Forecast Summary Smartcard\"] select[ng-change=\"$ctrl.handleChange()\"]")
+	private WebElement laborPreferencesForForecastSummarySmartcardSettingDropdown;
+	@Override
+	public void updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(String option) throws Exception {
+		if (isElementLoaded(laborPreferencesForForecastSummarySmartcardSettingDropdown, 10)) {
+			Select dropdown = new Select(laborPreferencesForForecastSummarySmartcardSettingDropdown);
+			dropdown.selectByVisibleText(option);
+			SimpleUtils.pass("OP Page: Global Configuration: Schedules : Labor Preferences for Forecast Summary Smartcard settings been changed successfully");
+		} else {
+			SimpleUtils.fail("OP Page: Global Configuration: Schedules : Labor Preferences for Forecast Summary Smartcard settings dropdown list not loaded.", false);
 		}
 	}
 }
