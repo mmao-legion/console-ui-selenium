@@ -9,52 +9,14 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-
-    <test name="Drag And Drop Test">
+    <test name="OP Config Test">
         <classes>
-            <class name="com.legion.tests.core.DragAndDropTest">
+            <class name="com.legion.tests.core.OPConfigTest">
                 <methods>
-                    <include name="verifyTheItemsOnBulkDragAndDropConfirmPopupAsInternalAdmin" />
-                    <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
-                    <include name="verifyMoveShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
-                    <include name="verifyCopyShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
-                    <include name="verifyShiftsCannotBeMovedOrCopiedToCloseDayAsInternalAdmin" />
-                    <include name="verifyMoveMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
-                    <include name="verifyCopyMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
-                    <include name="verifyTheShiftsWithSameTMsAndOverlappingShiftTimeCannotBulkDragAndDropAsInternalAdmin" />
-                    <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterMoveAsInternalAdmin" />
-                    <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterCopyAsInternalAdmin" />
-  <!--                  <include name="verifyBulkMoveShiftsThatWillIncurOTViolationAsInternalAdmin" />
-                    <include name="verifyBulkCopyShiftsThatWillIncurOTViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7007-->
-                    <!--                  <include name="verifyBulkMoveShiftsThatWillIncur7thDayViolationAsInternalAdmin" />
-                                     <include name="verifyBulkCopyShiftsThatWillIncur7thDayViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-6816 -->
-                    <include name="verifyShiftsCanBeDragAndDropSeveralTimesWithOutSaveAsInternalAdmin" />
-                    <include name="verifyBulkDragAndDropByDifferentAccessRolesAsInternalAdmin" />
+                    <include name="verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin" />
+                    <include name="verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
     </test>
-<!--
-    <test name="P2P LG Test">
-        <classes>
-            <class name="com.legion.tests.core.P2PLGTest">
-                <methods>
-                    <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnP2PLGScheduleAsInternalAdmin" />
-                    <include name="verifyBulkDragAndDropShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Parent Child LG Test Test">
-        <classes>
-            <class name="com.legion.tests.core.ParentChildLGTest">
-                <methods>
-                    <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnParentChildLGScheduleAsInternalAdmin" />
-                    <include name="verifyBulkDragAndDropShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
--->
 </suite> 

@@ -30,7 +30,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     @FindBy(css = "[label=\"Cancel\"]")
     private WebElement scheduleEditModeCancelButton;
 
-    @FindBy(css = "lg-button[data-tootik=\"Edit Schedule\"]")
+    @FindBy(css = "lg-button[label=\"Edit\"] button")
     private WebElement newEdit;
 
     @FindBy(css = "[ng-click=\"callOkCallback()\"]")
