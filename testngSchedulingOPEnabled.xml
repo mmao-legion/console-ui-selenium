@@ -612,4 +612,14 @@ SCH-5862-->
         </classes>
     </test>
    -->
+    <test name="OP Config Test">
+        <classes>
+            <class name="com.legion.tests.core.OPConfigTest">
+                <methods>
+                    <include name="verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin" />
+                    <include name="verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

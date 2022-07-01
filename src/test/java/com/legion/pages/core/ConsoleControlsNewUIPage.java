@@ -7262,7 +7262,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 
-	@FindBy(css = "[label=\"Save\"]")
+	@FindBy(css = "[label=\"Save\"] button")
 	private WebElement saveBtn;
 	public void clickOnSaveBtn() throws Exception {
 		if (isElementLoaded(saveBtn)) {
