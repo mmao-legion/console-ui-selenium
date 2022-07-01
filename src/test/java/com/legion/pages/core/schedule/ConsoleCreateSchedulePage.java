@@ -369,11 +369,16 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 //                waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
 //                checkEnterBudgetWindowLoadedForNonDG();
-                if (isElementLoaded(nextButtonOnCreateSchedule, 3)) {
+                if (generateModalTitle.getText().trim().equalsIgnoreCase("Enter Budget")
+                        && isElementLoaded(nextButtonOnCreateSchedule, 10)) {
                     clickTheElement(nextButtonOnCreateSchedule);
                 }
-                selectWhichWeekToCopyFrom("SUGGESTED");
-                clickOnFinishButtonOnCreateSchedulePage();
+                if (isElementEnabled(checkOutTheScheduleButton, 3)) {
+                    checkoutSchedule();
+                } else {
+                    selectWhichWeekToCopyFrom("SUGGESTED");
+                    clickOnFinishButtonOnCreateSchedulePage();
+                }
 //                switchToManagerViewToCheckForSecondGenerate();
             }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
@@ -764,27 +769,35 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
                 checkEnterBudgetWindowLoadedForNonDG();
-                selectWhichWeekToCopyFrom("SUGGESTED");
-                clickOnFinishButtonOnCreateSchedulePage();
-                switchToManagerViewToCheckForSecondGenerate();
+                if (generateModalTitle.getText().trim().equalsIgnoreCase("Enter Budget")
+                        && isElementLoaded(nextButtonOnCreateSchedule, 10)) {
+                    clickTheElement(nextButtonOnCreateSchedule);
+                }
+                if (isElementEnabled(checkOutTheScheduleButton, 3)) {
+                    checkoutSchedule();
+                } else {
+                    selectWhichWeekToCopyFrom("SUGGESTED");
+                    clickOnFinishButtonOnCreateSchedulePage();
+                }
+//                switchToManagerViewToCheckForSecondGenerate();
             }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
                 if (isElementEnabled(checkOutTheScheduleButton, 20)) {
                     checkoutSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
+//                    switchToManagerViewToCheckForSecondGenerate();
                 } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                     updateAndGenerateSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
+//                    switchToManagerViewToCheckForSecondGenerate();
                 } else {
                     SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
                 }
             } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                 updateAndGenerateSchedule();
-                switchToManagerViewToCheckForSecondGenerate();
+//                switchToManagerViewToCheckForSecondGenerate();
             } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
                 checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
                 SimpleUtils.pass("Schedule Generated Successfully!");
-                switchToManagerViewToCheckForSecondGenerate();
+//                switchToManagerViewToCheckForSecondGenerate();
             } else {
                 SimpleUtils.fail("Not able to generate schedule Successfully!", false);
             }
@@ -808,11 +821,16 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 clickTheElement(nextButtonOnCreateSchedule);
 //                waitForSeconds(2);
 //                checkEnterBudgetWindowLoadedForNonDG();
-                if (isElementLoaded(nextButtonOnCreateSchedule, 3)) {
+                if (generateModalTitle.getText().trim().equalsIgnoreCase("Enter Budget")
+                        && isElementLoaded(nextButtonOnCreateSchedule, 10)) {
                     clickTheElement(nextButtonOnCreateSchedule);
                 }
-                selectWhichWeekToCopyFrom("SUGGESTED");
-                clickOnFinishButtonOnCreateSchedulePage();
+                if (isElementEnabled(checkOutTheScheduleButton, 3)) {
+                    checkoutSchedule();
+                } else {
+                    selectWhichWeekToCopyFrom("SUGGESTED");
+                    clickOnFinishButtonOnCreateSchedulePage();
+                }
 //                switchToManagerViewToCheckForSecondGenerate();
             }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
