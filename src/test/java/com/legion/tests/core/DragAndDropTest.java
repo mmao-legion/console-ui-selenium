@@ -14,7 +14,6 @@ import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import sun.rmi.runtime.Log;
 
 import java.lang.reflect.Method;
 import java.util.*;
