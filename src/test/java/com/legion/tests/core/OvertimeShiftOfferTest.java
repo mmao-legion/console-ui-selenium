@@ -69,7 +69,15 @@ public class OvertimeShiftOfferTest extends TestBase {
                 controlsPage.clickGlobalSettings();
                 controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
                 controlsNewUIPage.allowEmployeesClaimOvertimeShiftOffer();
-            }
+
+                // Make sure the access for TM claimed open shift offer is approved by SM
+                controlsPage.gotoControlsPage();
+                SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+                controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+                SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+                String option = "Always";
+                controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
+               }
 
             // Start to check and generate target schedule
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
