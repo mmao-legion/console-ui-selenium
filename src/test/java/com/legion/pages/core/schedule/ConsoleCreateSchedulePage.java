@@ -360,36 +360,39 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     public void createScheduleForNonDGFlowNewUI() throws Exception {
         String subTitle = "Confirm Operating Hours";
         if (isElementLoaded(generateSheduleButton,240)) {
-            waitForSeconds(3);
+//            waitForSeconds(3);
             clickTheElement(generateSheduleButton);
-            openBudgetPopUp();
+//            openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
                 editTheOperatingHours(new ArrayList<>());
-                waitForSeconds(3);
+//                waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
-                checkEnterBudgetWindowLoadedForNonDG();
+//                checkEnterBudgetWindowLoadedForNonDG();
+                if (isElementLoaded(nextButtonOnCreateSchedule, 3)) {
+                    clickTheElement(nextButtonOnCreateSchedule);
+                }
                 selectWhichWeekToCopyFrom("SUGGESTED");
                 clickOnFinishButtonOnCreateSchedulePage();
-                switchToManagerViewToCheckForSecondGenerate();
+//                switchToManagerViewToCheckForSecondGenerate();
             }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
                 if (isElementEnabled(checkOutTheScheduleButton, 30)) {
                     checkoutSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
+//                    switchToManagerViewToCheckForSecondGenerate();
                 } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                     updateAndGenerateSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
+//                    switchToManagerViewToCheckForSecondGenerate();
                 } else {
                     SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
                 }
             } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                 updateAndGenerateSchedule();
-                switchToManagerViewToCheckForSecondGenerate();
+//                switchToManagerViewToCheckForSecondGenerate();
             } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
                 checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
                 SimpleUtils.pass("Schedule Generated Successfully!");
-                switchToManagerViewToCheckForSecondGenerate();
+//                switchToManagerViewToCheckForSecondGenerate();
             } else {
                 SimpleUtils.fail("Not able to generate schedule Successfully!", false);
             }
@@ -795,37 +798,40 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception {
         String subTitle = "Confirm Operating Hours";
         if (isElementLoaded(generateSheduleButton,240)) {
-            waitForSeconds(3);
+//            waitForSeconds(3);
             click(generateSheduleButton);
-            openBudgetPopUp();
+//            openBudgetPopUp();
             if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
                 editOperatingHoursWithGivingPrameters(startTime, endTime);
-                waitForSeconds(3);
+//                waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
-                waitForSeconds(2);
-                checkEnterBudgetWindowLoadedForNonDG();
+//                waitForSeconds(2);
+//                checkEnterBudgetWindowLoadedForNonDG();
+                if (isElementLoaded(nextButtonOnCreateSchedule, 3)) {
+                    clickTheElement(nextButtonOnCreateSchedule);
+                }
                 selectWhichWeekToCopyFrom("SUGGESTED");
                 clickOnFinishButtonOnCreateSchedulePage();
-                switchToManagerViewToCheckForSecondGenerate();
+//                switchToManagerViewToCheckForSecondGenerate();
             }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
                 if (isElementEnabled(checkOutTheScheduleButton, 20)) {
                     checkoutSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
+//                    switchToManagerViewToCheckForSecondGenerate();
                 } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                     updateAndGenerateSchedule();
-                    switchToManagerViewToCheckForSecondGenerate();
+//                    switchToManagerViewToCheckForSecondGenerate();
                 } else {
                     SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
                 }
             } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                 updateAndGenerateSchedule();
-                switchToManagerViewToCheckForSecondGenerate();
+//                switchToManagerViewToCheckForSecondGenerate();
             } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
                 checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
                 SimpleUtils.pass("Schedule Generated Successfully!");
-                switchToManagerViewToCheckForSecondGenerate();
+//                switchToManagerViewToCheckForSecondGenerate();
             } else {
                 SimpleUtils.fail("Not able to generate schedule Successfully!", false);
             }
@@ -930,7 +936,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose, List<String> copyShiftAssignments) throws Exception {
         float budgetHours = 0;
         String subTitle = "Confirm Operating Hours";
-        waitForSeconds(2);
+//        waitForSeconds(2);
         if (isElementLoaded(generateSheduleButton,60)) {
             clickTheElement(generateSheduleButton);
             if (isElementLoaded(generateModalTitle, 20) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
