@@ -21,6 +21,7 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -30,6 +31,9 @@ import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.*;
 
 
@@ -1542,6 +1546,7 @@ public class ConfigurationTest extends TestBase {
             String templateName = "testDemand-NotDelete";
             String noDriverWarningMsg = "At least one demand driver is required when publishing a template";
             String noAssociationWarningMsg = "At least one association when publish template";
+            String addOrEdit = "Add";
             HashMap<String, String> driverSpecificInfo = new HashMap<String, String>(){
                 {
                     put("Name", "Items:EDW:Enrollments");
@@ -1571,7 +1576,7 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.assertOnFail("There should be a warning message for no drivers", configurationPage.verifyWarningInfoForDemandDriver(noDriverWarningMsg), false);
 
             //Add new demand driver, warning message will show up when no association
-            configurationPage.addDemandDriverInTemplate(driverSpecificInfo);
+            configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfo, addOrEdit);
             configurationPage.chooseSaveOrPublishBtnAndClickOnTheBtn("Publish Now");
             SimpleUtils.assertOnFail("There should be a warning message for no association", configurationPage.verifyWarningInfoForDemandDriver(noAssociationWarningMsg), false);
 
@@ -1595,6 +1600,7 @@ public class ConfigurationTest extends TestBase {
         try {
             String templateName = "testDemand-NotDelete";
             String templateType = "Demand Drivers";
+            String addOrEdit = "Add";
 
             HashMap<String, String> driverWithExistingName = new HashMap<String, String>()
             {
@@ -1628,11 +1634,185 @@ public class ConfigurationTest extends TestBase {
             //Choose an existing template, add a driver with existing name
             configurationPage.clickOnTemplateName(templateName);
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            configurationPage.addDemandDriverInTemplate(driverWithExistingName);
+            configurationPage.addOrEditDemandDriverInTemplate(driverWithExistingName, addOrEdit);
 
             //Choose an existing template, add a driver with existing Type+Channel+Category
-            configurationPage.addDemandDriverInTemplate(driverWithExistingCombination);
+            configurationPage.addOrEditDemandDriverInTemplate(driverWithExistingCombination, addOrEdit);
 
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Very demand drivers template as publish now")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDemandDriverTemplateAsPublishNowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateName = "testDemand-NotDelete";
+            String templateType = "Demand Drivers";
+            SimpleDateFormat dfs = new SimpleDateFormat("dd, yyyy");
+            Month month = LocalDate.now().getMonth();
+            String shortMonth = month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+            String currentDate = shortMonth + " " + dfs.format(new Date()).trim();
+
+           //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Templates tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+
+            //Check the template with published and draft version
+            configurationPage.verifyPublishedTemplateAfterEdit(templateName);
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            //Get and verify effective date
+            String effectiveDate = configurationPage.getEffectiveDateForTemplate(templateName).get(0);
+            SimpleUtils.assertOnFail("the effective Date is not Today!", effectiveDate.equalsIgnoreCase(currentDate), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Very demand drivers template details editing")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDemandDriverTemplateDetailsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+//        try {
+        String templateName = "testDemand-NotDelete";
+        String templateType = "Demand Drivers";
+        HashMap<String, String> driverSpecificInfo = new HashMap<String, String>(){
+            {
+                put("Name", "Items:EDW:Verifications");
+                put("Type", "Items");
+                put("Channel", "EDW");
+                put("Category", "Verifications");
+                put("Show in App", "Yes");
+                put("Order", "1");
+                put("Forecast Source", "Imported");
+                put("Input Stream", "Items:EDW:Verifications");
+            }
+        };
+
+        HashMap<String, String> driverSpecificInfoUpdated = new HashMap<String, String>(){
+            {
+                put("Name", "Items:EDW:Verifications-Updated");
+                put("Type", "Items");
+                put("Channel", "EDW");
+                put("Category", "Verifications");
+                put("Show in App", "No");
+                put("Order", "2");
+                put("Forecast Source", "Legion ML");
+                put("Input Stream", "Items:EDW:Verifications");
+            }
+        };
+
+        //Go to Demand Driver template
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(templateType);
+        //Go to Templates tab
+        settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+
+        //Enter the template, add a driver
+        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfo, "Add");
+        SimpleUtils.assertOnFail("Can not find the driver you search!", configurationPage.searchDriverInTemplateDetailsPage(driverSpecificInfo.get("Name")), false);
+
+        //Update the added driver
+        configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfoUpdated, "Edit");
+        SimpleUtils.assertOnFail("Can not find the driver you search!", configurationPage.searchDriverInTemplateDetailsPage(driverSpecificInfoUpdated.get("Name")), false);
+
+        //Remove the added driver
+        configurationPage.clickRemove();
+        SimpleUtils.assertOnFail("Failed to removed the driver!", !configurationPage.searchDriverInTemplateDetailsPage(driverSpecificInfoUpdated.get("Name")), false);
+
+//        } catch (Exception e) {
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
+    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate Creation for Input Stream in Settings page.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreationForInputStreamInSettingsPageCAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+        String templateType = "Demand Drivers";
+        String verifyType = "input stream";
+        String baseInputStreamName1 = "InputStreamTest-Base01";
+        String aggregatedInputStreamName1 = "InputStreamTest-Aggregated01";
+        String aggregatedInputStreamName2 = "InputStreamTest-Aggregated02";
+
+        //input stream specification information to add
+        HashMap<String, String> baseInputStreamInfoToAdd = new HashMap<String, String>(){
+            {
+                put("Name", baseInputStreamName1);
+                put("Type", "Base");
+                put("Tag", "Items:EDW:Base01");
+            }
+        };
+        HashMap<String, String> aggregatedInputStreamInfoToAdd1 = new HashMap<String, String>(){
+            {
+                put("Name", aggregatedInputStreamName1);
+                put("Type", "Aggregated");
+                put("Operator", "IN");
+                put("Streams", "All");
+                put("Tag", aggregatedInputStreamName1);
+            }
+        };
+        HashMap<String, String> aggregatedInputStreamInfoToAdd2 = new HashMap<String, String>(){
+            {
+                put("Name", aggregatedInputStreamName2);
+                put("Type", "Aggregated");
+                put("Operator", "NOT IN");
+                put("Streams", baseInputStreamName1);
+                put("Tag", aggregatedInputStreamName2);
+            }
+        };
+
+        //Go to Demand Driver template
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(templateType);
+        //Go to Settings tab
+        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+
+        //Add new Base input stream in settings
+        settingsAndAssociationPage.createInputStream(baseInputStreamInfoToAdd);
+        WebElement baseSearchElement = settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, baseInputStreamName1);
+        settingsAndAssociationPage.verifyInputStreamInList(baseInputStreamInfoToAdd, baseSearchElement);
+        settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, "");
+
+        //Add new Aggregated input stream with IN Operator in settings
+        settingsAndAssociationPage.createInputStream(aggregatedInputStreamInfoToAdd1);
+        WebElement aggregatedSearchElement = settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, aggregatedInputStreamName1);
+        settingsAndAssociationPage.verifyInputStreamInList(aggregatedInputStreamInfoToAdd1, aggregatedSearchElement);
+        settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, "");
+
+        //Add an input stream with existing name
+        settingsAndAssociationPage.createInputStream(baseInputStreamInfoToAdd);
+
+        //Add new Aggregated input stream with NOT IN Operator in settings
+        settingsAndAssociationPage.createInputStream(aggregatedInputStreamInfoToAdd2);
+        WebElement aggregatedSearchElement2 = settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, aggregatedInputStreamName2);
+        settingsAndAssociationPage.verifyInputStreamInList(aggregatedInputStreamInfoToAdd2, aggregatedSearchElement2);
+
+        //Remove at last
+        settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, baseInputStreamName1);
+        settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, aggregatedInputStreamName1);
+        settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, aggregatedInputStreamName2);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

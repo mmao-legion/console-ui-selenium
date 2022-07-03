@@ -25,6 +25,8 @@ import static org.apache.commons.lang.math.RandomUtils.nextInt;
 
 public class OpsPortalConfigurationPage extends BasePage implements ConfigurationPage {
 
+	private WebElement startElement;
+
 	public OpsPortalConfigurationPage() {
 		PageFactory.initElements(getDriver(), this);
 	}
@@ -634,17 +636,18 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				if (str1.contains("opening and closing shift times"))
 					SimpleUtils.pass("The dialog title is correct!");
 				//get the original start time
-				String OHStartOrigin = OHOperateOpenCloseStartTimeDrag.findElement(By.cssSelector("span.lgn-time-slider-label")).getText().trim();
+				String OHStartOrigin = openCloseTimeInputs.get(0).findElement(By.xpath("./following-sibling::div")).getAttribute("innerText").trim();
 				//get the original end time
-				String OHEndOrigin = OHOperateOpenCloseEndTimeDrag.findElement(By.cssSelector("span.lgn-time-slider-label")).getText().trim();
-				//drag to change the start time and end time
-				moveDayViewCards(OHOperateOpenCloseStartTimeDrag, 40);
-				moveDayViewCards(OHOperateOpenCloseEndTimeDrag, -40);
+				String OHEndOrigin = openCloseTimeInputs.get(1).findElement(By.xpath("./following-sibling::div")).getAttribute("innerText").trim();
+
+				//change the start time and end time
+				OHTempSetOpenAndCloseTime("Open/Close", "7:00AM", "8:00PM");
+
 				//get the changed start time and end time
-				String OHStartCurrent = OHOperateOpenCloseStartTimeDrag.findElement(By.cssSelector("span.lgn-time-slider-label")).getText().trim();
-				String OHEndCurrent = OHOperateOpenCloseEndTimeDrag.findElement(By.cssSelector("span.lgn-time-slider-label")).getText().trim();
+				String OHStartCurrent = openCloseTimeInputs.get(0).findElement(By.xpath("./following-sibling::div")).getAttribute("innerText").trim();
+				String OHEndCurrent = openCloseTimeInputs.get(1).findElement(By.xpath("./following-sibling::div")).getAttribute("innerText").trim();
 				if (!OHStartOrigin.equals(OHStartCurrent) && !OHEndOrigin.equals(OHEndCurrent))
-					SimpleUtils.pass("Drag to change Operating Hours opening and closing shift times successfully");
+					SimpleUtils.pass("change Operating Hours opening and closing shift times successfully");
 				//click save
 				clickTheElement(saveButton);
 				waitForSeconds(1);
@@ -686,7 +689,29 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	}
 
-
+	@FindBy(css="input-field.lg-new-time-input-text input")
+	private List<WebElement> openCloseTimeInputs;
+	@FindBy(css="table.lg-table.daypart-open-close-config tr>th")
+	private List<WebElement> columnsInDaypartsTab;
+	private void OHTempSetOpenAndCloseTime(String settingTab, String openTime, String closeTime) throws Exception {
+			if (isElementLoaded(OHOperateOpenCloseTimeEditDialog)){
+				if (settingTab.contains("Open")){
+					openCloseTimeInputs.get(0).click();
+					openCloseTimeInputs.get(0).sendKeys(openTime);
+					openCloseTimeInputs.get(1).click();
+					openCloseTimeInputs.get(1).sendKeys(closeTime);
+				}else if (settingTab.contains("Dayparts")){
+					openCloseTimeInputs.get(2).click();
+					openCloseTimeInputs.get(2).sendKeys(openTime);
+					openCloseTimeInputs.get(3).click();
+					openCloseTimeInputs.get(3).sendKeys(closeTime);
+				}else {
+					SimpleUtils.fail("Can not find the setting item!", false);
+				}
+			}else {
+				SimpleUtils.fail("There should pop up a window before set open/close time!", false);
+			}
+	}
 
 	private void OHTempBusinessHoursDaySetting(boolean status) throws Exception {
 			if (status) {
@@ -704,7 +729,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				OHBusinessHoursEntries.get(0).findElement(By.cssSelector("label.switch span")).click();
 				waitForSeconds(1);
 				WebElement defaultDaypartSet = OHBusinessHoursEntries.get(0).findElement(By.cssSelector("div.col-sm-8 label"));
-				if (isElementLoaded(defaultDaypartSet) && defaultDaypartSet.getText().trim().contains("Day parts Not Set"))
+				if (isElementLoaded(defaultDaypartSet) && defaultDaypartSet.getText().trim().contains("Dayparts Not Set"))
 					SimpleUtils.pass("Set the day of as opened successfully and default as no day parts set");
 				//get default start time and end time
 				String StartOrigin = OHBusinessHoursEntries.get(0).findElement(By.cssSelector("span.work-time")).getText().trim();
@@ -715,9 +740,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				//change the time
 				OHBusinessHoursEntries.get(0).findElement(By.cssSelector("lg-button[label=\"Edit\"]")).click();
 				waitForSeconds(1);
-				//drag to change the start time and end time
-				moveDayViewCards(OHOperateOpenCloseStartTimeDrag, 40);
-				moveDayViewCards(OHOperateOpenCloseEndTimeDrag, -40);
+				//change the start time and end time
+				OHTempSetOpenAndCloseTime("Open/Close", "6:00AM", "9:00PM");
 				waitForSeconds(1);
 				//check the all day selection
 				boolean selection = true;
@@ -739,10 +763,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				//switch to day part tab
 				clickTheElement(OHOperateDayPartTab);
 				waitForSeconds(2);
-				if (areListElementVisible(OHBusinessHoursTimeCells) && OHBusinessHoursTimeCells.size() == 96) {
+				if (areListElementVisible(columnsInDaypartsTab) && columnsInDaypartsTab.size() == 4) {
 					SimpleUtils.pass("Day part time cell show correctly");
-					//drag to select a day part
-					moveDayViewCards(OHBusinessHoursTimeCells.get(10), 20);
+					//select a day part
+					OHTempSetOpenAndCloseTime("Dayparts", "6:00AM", "5:00PM");
 					//click save
 					clickTheElement(saveButton);
 					waitForSeconds(1);
@@ -4794,65 +4818,135 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement warningToast;
 	@FindBy(css = "button[class*=\"btn lgn-action-button\"]")
 	private WebElement okBtn;
+	@FindBy(css = "tr[ng-repeat=\"rule in $ctrl.sortedRows\"] lg-button[label=\"Edit\"]")
+	private WebElement editBtnForDriver;
 	@Override
-	public void addDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception {
+	public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo, String addOrEdit) throws Exception {
 		String childTag = "";
 		String fieldType = "";
 		Select select = null;
 		List<WebElement> yesOrNoOptions = null;
-		if (isElementLoaded(addBtnForDriver)){
-			clickTheElement(addBtnForDriver);
-			if (areListElementVisible(fieldInputList)){
-				for (int i = 0; i < fieldInputList.size() - 1; i++){
-					for (Map.Entry<String, String> entry : driverSpecificInfo.entrySet()){
-						if (fieldInputList.get(i).findElement(By.cssSelector("question-input")).getAttribute("question-title").contains(entry.getKey())){
-							childTag = fieldInputList.get(i).findElement(By.cssSelector("ng-transclude.lg-question-input__input :first-child")).getTagName();
-							if(childTag.equals("input-field")){
-								fieldType = fieldInputList.get(i).findElement(By.cssSelector("input-field")).getAttribute("type");
-								if (fieldType.equals("text") || fieldType.equals("number")){
-									fieldInputList.get(i).findElement(By.cssSelector("input-field input")).clear();
-									fieldInputList.get(i).findElement(By.cssSelector("input-field input")).sendKeys(entry.getValue());
-									break;
-								}else if(fieldType.equals("select")){
-									select = new Select(fieldInputList.get(i).findElement(By.cssSelector("select")));
+
+		if ("Add".equalsIgnoreCase(addOrEdit)){
+			if (isElementLoaded(addBtnForDriver))
+				clickTheElement(addBtnForDriver);
+		}else if("Edit".equalsIgnoreCase(addOrEdit)){
+			if (isElementLoaded(editBtnForDriver,5))
+				click(editBtnForDriver);
+			if (isElementLoaded(warningToast))
+				clickTheElement(leaveThisPageButton);
+		}else {
+			SimpleUtils.fail("Please choose add or edit mode!", false);
+		}
+
+		if (areListElementVisible(fieldInputList)){
+			for (int i = 0; i < fieldInputList.size() - 1; i++){
+				for (Map.Entry<String, String> entry : driverSpecificInfo.entrySet()){
+					if (fieldInputList.get(i).findElement(By.cssSelector("question-input")).getAttribute("question-title").contains(entry.getKey())){
+						childTag = fieldInputList.get(i).findElement(By.cssSelector("ng-transclude.lg-question-input__input :first-child")).getTagName();
+						if(childTag.equals("input-field")){
+							fieldType = fieldInputList.get(i).findElement(By.cssSelector("input-field")).getAttribute("type");
+							if ((fieldType.equals("text") || fieldType.equals("number")) &&
+									!fieldInputList.get(i).findElement(By.cssSelector("input-field input")).getText().equals(entry.getValue())){
+								fieldInputList.get(i).findElement(By.cssSelector("input-field input")).clear();
+								fieldInputList.get(i).findElement(By.cssSelector("input-field input")).sendKeys(entry.getValue());
+								break;
+							}else if(fieldType.equals("select")){
+								select = new Select(fieldInputList.get(i).findElement(By.cssSelector("select")));
+								if ((fieldInputList.get(i).findElement(By.cssSelector("select")).getAttribute("class").contains("ng-empty")) ||
+										!select.getFirstSelectedOption().getText().equals(entry.getValue()))
 									select.selectByVisibleText(entry.getValue());
-									break;
-								}else{
-									SimpleUtils.fail("Field Type is not as expected!", false);
-								}
-							}else if (childTag.equals("yes-no")){
-								yesOrNoOptions = fieldInputList.get(i).findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
-								for (WebElement choose : yesOrNoOptions){
-									if (choose.findElement(By.cssSelector("span")).getText().equals(entry.getValue()) &&
-											choose.findElement(By.cssSelector("span")).getAttribute("class").equals("lg-button-group-selected")){
-										clickTheElement(choose);
-										break;
-									}
-									break;
-								}
-							}else {
-								SimpleUtils.fail("Tag Type is not as expected!", false);
+								break;
+							}else{
+								SimpleUtils.fail("Field Type is not as expected!", false);
 							}
+						}else if (childTag.equals("yes-no")){
+							yesOrNoOptions = fieldInputList.get(i).findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
+							for (WebElement choose : yesOrNoOptions){
+								if (choose.findElement(By.cssSelector("span")).getText().equals(entry.getValue()) &&
+										!choose.findElement(By.cssSelector("span")).getAttribute("class").equals("lg-button-group-selected")){
+									clickTheElement(choose);
+									break;
+								}
+								break;
+							}
+						}else {
+							SimpleUtils.fail("Tag Type is not as expected!", false);
 						}
 					}
 				}
-				clickTheElement(saveBtn);
-				if (isElementLoaded(warningToast, 5)) {
-					if (warningToast.getText().contains("name duplicates with existing demand drivers")) {
-						SimpleUtils.report("Create a driver with a duplicated name is not allowed!");
-					}else if(warningToast.getText().contains("type, channel and category duplicate with existing demand drivers")){
-						SimpleUtils.report("Create a driver with a duplicated type& channel& category is not allowed!");
-					}
-					//click the ok and cancel
-					clickTheElement(okBtn);
-					clickTheElement(cancelButton);
-					waitForSeconds(3);
+			}
+			clickTheElement(saveBtn);
+			if (isElementLoaded(warningToast, 5)) {
+				if (warningToast.getText().contains("name duplicates with existing demand drivers")) {
+					SimpleUtils.report("Create a driver with a duplicated name is not allowed!");
+				}else if(warningToast.getText().contains("type, channel and category duplicate with existing demand drivers")){
+					SimpleUtils.report("Create a driver with a duplicated type& channel& category is not allowed!");
 				}
-			}else {
-				SimpleUtils.fail("No fields found in demand driver creation page!", false);
+				//click the ok and cancel
+				clickTheElement(okBtn);
+				clickTheElement(cancelButton);
+				waitForSeconds(3);
 			}
 		}else {
-			SimpleUtils.fail("No add button found in demand driver list page!", false);
+			SimpleUtils.fail("No fields found in demand driver creation/Edit page!", false);
+		}
+	}
+
+	@Override
+	public void verifyPublishedTemplateAfterEdit(String templateName) throws Exception {
+		if (searchTemplate(templateName)){
+			if (isItMultipVersion()){
+				if (!isClickable(templatesList.get(0).findElement(By.cssSelector("button")), 5)){
+					if(publishedTemplateStatus.size() == 1){
+						expandTemplate();
+						clickTheElement(getDriver().findElement(By.cssSelector(".child-row button")));
+						if(!isElementLoaded(templateDetailsTab))
+							SimpleUtils.fail("Failed to enter the template details page!", false);
+					}else {
+						SimpleUtils.fail("There should be only one published version!", false);
+					}
+
+				}else{
+					SimpleUtils.fail("Template name should not be clickable for multiple version!", false);
+				}
+			}else{
+				SimpleUtils.fail("This template should be multiple version!", false);
+			}
+		}else {
+			SimpleUtils.fail("Can not find the template you search!", false);
+		}
+
+
+	}
+
+	@FindBy(css="input[placeholder=\"Search by demand driver name\"]")
+	private WebElement searchDriverInputBox;
+	@FindBy(css="tr[ng-repeat=\"rule in $ctrl.sortedRows\"]")
+	private List<WebElement> driverList;
+	@Override
+	public boolean searchDriverInTemplateDetailsPage(String driverName) throws Exception {
+		boolean existing = false;
+		if(isElementEnabled(searchDriverInputBox,5)){
+			clickTheElement(searchDriverInputBox);
+			searchDriverInputBox.clear();
+			searchDriverInputBox.sendKeys(driverName);
+			searchDriverInputBox.sendKeys(Keys.ENTER);
+			waitForSeconds(2);
+			if(driverList.size()>0)
+				existing = true;
+		}
+		return existing;
+	}
+
+	@FindBy(css="lg-button[label=\"Remove\"]")
+	private WebElement removeBTN;
+	@Override
+	public void clickRemove() throws Exception {
+		if (isElementLoaded(removeBTN)){
+			clickTheElement(removeBTN);
+		}else {
+			SimpleUtils.fail("Can not find the remove button!", false);
 		}
 	}
 }
