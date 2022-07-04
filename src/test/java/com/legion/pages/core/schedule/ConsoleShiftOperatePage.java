@@ -3241,5 +3241,42 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.fail("OK button failed to load on Meal Break Dialog!", false);
         }
     }
+
+    @FindBy(css = "[ng-if=\"badgesToShow && badgesToShow.length\"] .one-badge")
+    private List<WebElement> badgeIconList;
+
+    public Boolean isWithBadges() throws Exception {
+        Boolean hasBadge = false;
+        if (areListElementVisible(badgeIconList, 15)) {
+            hasBadge = true;
+        } else {
+            return hasBadge;
+        }
+        return hasBadge;
+    }
+
+    @Override
+    public void clickOnProfileIconByIndex(int indexOfProfIcon) throws Exception {
+        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+            clickTheElement(profileIcons.get(indexOfProfIcon));
+        } else {
+            SimpleUtils.fail("Failed for loading profile icon!", false);
+        }
+    }
+
+    @Override
+    public void checkBadgeOnProfilePopup(String tmA, String tmB) throws Exception {
+        if (areListElementVisible(shifts, 10)) {
+            SimpleUtils.assertOnFail("Shifts number is:" + shifts.size() + " didn't match 2!", shifts.size() == 2, false);
+            clickOnProfileIconByIndex(0);
+            waitForSeconds(3);
+            SimpleUtils.assertOnFail("TM " + tmA + "should have badge!", isWithBadges(), false);
+            clickOnProfileIconByIndex(1);
+            waitForSeconds(3);
+            SimpleUtils.assertOnFail("TM " + tmB + "should have no badge!", !isWithBadges(), false);
+        } else {
+            SimpleUtils.fail("Shifts are not listed!", false);
+        }
+    }
 }
 

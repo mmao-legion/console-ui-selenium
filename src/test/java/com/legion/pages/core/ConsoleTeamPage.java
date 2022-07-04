@@ -4953,7 +4953,7 @@ private List<WebElement> locationColumn;
 	private List<WebElement> filteredTMs;
 
 	@Override
-	public void clickTheTMByNameAndEdit (String tmName) throws Exception {
+	public void clickTheTMByName(String tmName) throws Exception {
 		if (areListElementVisible(filteredTMs, 10)) {
 			for (WebElement elm : filteredTMs) {
 				if (elm.getText().equalsIgnoreCase(tmName)) {
@@ -4965,12 +4965,19 @@ private List<WebElement> locationColumn;
 		} else {
 			SimpleUtils.fail("No vailed TM filtered! TM name is: " + tmName, false);
 		}
-		if (isElementLoaded(profileSection, 10)) {
-			click(profileSection.findElement(By.cssSelector("lg-button[label=\"Edit\"]")));
+	}
+
+	@FindBy (css = "form-section[on-action=\"editProfile()\"] lg-button[label=\"Edit\"]")
+	private WebElement editProfileBtn;
+
+	@Override
+	public void clickEditProfileBtn() throws Exception {
+		if (isElementLoaded(editProfileBtn, 10)) {
+			clickTheElement(editProfileBtn);
 			waitForSeconds(3);
-			SimpleUtils.pass("enter edit profile mode!");
+			SimpleUtils.pass("Enter edit profile mode!");
 		} else {
-			SimpleUtils.fail("Profile section is failed for loading!", false);
+			SimpleUtils.fail("Profile edit button is failed for loading!", false);
 		}
 	}
 
@@ -4980,10 +4987,16 @@ private List<WebElement> locationColumn;
 	@FindBy (css = ".lg-badges-add")
 	private WebElement addBadgeIcon;
 
+	@FindBy (css = ".badge-section [type=\"button\"]")
+	private WebElement manageBadgesOrAddABadgeBtn;
+
+	@FindBy (css = "[type=\"submit\"]")
+	private List<WebElement> saveEditUserProfileBtn;
+
 	@Override
 	public boolean isWithBadges() {
 		boolean hasBadge = false;
-		if (areListElementVisible(badgesIcon, 10)) {
+		if (areListElementVisible(badgesIcon, 15)) {
 			hasBadge = true;
 		}
 		return hasBadge;
@@ -4992,12 +5005,12 @@ private List<WebElement> locationColumn;
 	@Override
 	public void deleteBadges() throws Exception {
 		if (isWithBadges()) {
-			WebElement manageBadge = profileSection.findElement(By.cssSelector(".ManageButton"));
-			if (isElementLoaded(manageBadge, 5)) {
-				scrollToElement(manageBadge);
-				clickTheElement(manageBadge);
+			if (isElementLoaded(manageBadgesOrAddABadgeBtn, 10) && manageBadgesOrAddABadgeBtn.getText().equalsIgnoreCase("Manage Badges")) {
+				scrollToElement(manageBadgesOrAddABadgeBtn);
+				clickTheElement(manageBadgesOrAddABadgeBtn);
+				waitForSeconds(2);
 			} else {
-				SimpleUtils.fail("Manage basge button is not loaded!", false);
+				SimpleUtils.fail("Manage badge button is not loaded!", false);
 			}
 			if (isManageBadgesLoaded()) {
 				String isChecked = "checked";
@@ -5010,7 +5023,7 @@ private List<WebElement> locationColumn;
 							if (!elm.getAttribute("class").contains("checked")) {
 								SimpleUtils.pass("Badge is removed!");
 							} else {
-								SimpleUtils.fail("Failed for remove badge!", false);
+								SimpleUtils.fail("Failed for removing badge!", false);
 							}
 						}
 					}
@@ -5024,15 +5037,72 @@ private List<WebElement> locationColumn;
 			if (isWithBadges()) {
 				SimpleUtils.fail("Badge has not been removed!", false);
 			}
-			WebElement saveEditUserProfileBtn = profileSection.findElement(By.xpath("//span[text()=\"Save\"]"));
-			if (isElementLoaded(saveEditUserProfileBtn, 10)) {
-				scrollToElement(saveEditUserProfileBtn);
-				clickTheElement(saveEditUserProfileBtn);
-				waitForSeconds(3);
-				SimpleUtils.pass("All badges have been removed!");
-			} else {
-				SimpleUtils.fail("Save edit user profile button is not loaded!", false);
+		}
+	}
+
+	@FindBy (css = ".badge-title")
+	private List<WebElement> badgeTitleList;
+
+	@Override
+	public void selectBadgeByName(String badgeName) throws Exception {
+		if (isElementLoaded(manageBadgesOrAddABadgeBtn, 15)) {
+			scrollToElement(manageBadgesOrAddABadgeBtn);
+			clickTheElement(manageBadgesOrAddABadgeBtn);
+			SimpleUtils.pass("Edit badge mode start!");
+			waitForSeconds(3);
+		} else {
+			SimpleUtils.fail("Badge edit button is not loaded!", false);
+		}
+		if (areListElementVisible(badgeCheckBoxes, 15) && areListElementVisible(badgeTitleList, 10)) {
+			SimpleUtils.assertOnFail("The number of bage checkbox didn't match the badge titles", badgeCheckBoxes.size() == badgeTitleList.size(), false);
+			int badgeIndex = -1;
+			for (WebElement elm : badgeTitleList) {
+				if (elm.getText().equalsIgnoreCase(badgeName)) {
+					badgeIndex ++;
+					break;
+				}
 			}
+
+			if (badgeIndex < 0) {
+				SimpleUtils.fail("No badge found!", false);
+			}
+
+			scrollToElement(badgeCheckBoxes.get(badgeIndex));
+			clickTheElement(badgeCheckBoxes.get(badgeIndex));
+
+			if (badgeCheckBoxes.get(badgeIndex).getAttribute("class").contains("checked")) {
+				SimpleUtils.pass("Check the Badge successfully!");
+			} else {
+				SimpleUtils.fail("Failed to find the parent element!", true);
+			}
+			clickBadgeSaveBtn();
+		}
+	}
+
+	@FindBy (css = "button.lgn-action-button-success")
+	private WebElement badgeSaveBtn;
+
+	@Override
+	public void clickBadgeSaveBtn() throws Exception {
+		if (isElementLoaded(badgeSaveBtn, 10)) {
+			scrollToElement(badgeSaveBtn);
+			click(badgeSaveBtn);
+			waitForSeconds(3);
+			SimpleUtils.pass("Badge selection done!");
+		} else {
+			SimpleUtils.fail("Save badge button on the popup is not loaded!", false);
+		}
+	}
+
+	@Override
+	public void saveEditProfileBtn() {
+		if (areListElementVisible(saveEditUserProfileBtn, 10)) {
+			scrollToElement(saveEditUserProfileBtn.get(0));
+			click(saveEditUserProfileBtn.get(0));
+			waitForSeconds(3);
+			SimpleUtils.pass("All badges have been removed!");
+		} else {
+			SimpleUtils.fail("Save edit user profile button is not loaded!", false);
 		}
 	}
 }

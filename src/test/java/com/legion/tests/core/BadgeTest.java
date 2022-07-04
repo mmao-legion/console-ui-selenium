@@ -35,42 +35,37 @@ public class BadgeTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 
             // Prepare badge for the 2 TMs
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             String teamMemberA = "Holly Trainer";
             String teamMemberB = "Chloe Keates";
+
             teamPage.goToTeam();
             String tmA = teamPage.searchAndSelectTeamMemberByName(teamMemberA);
-            teamPage.clickTheTMByNameAndEdit(tmA);
+            teamPage.clickTheTMByName(tmA);
+            teamPage.clickEditProfileBtn();
             teamPage.deleteBadges();
-            teamPage.verifyTheFunctionOfEditBadges();
+            teamPage.selectBadgeByName("Drop In Shift");
+            teamPage.saveEditProfileBtn();
             if (teamPage.isWithBadges()) {
                 SimpleUtils.pass("Bage for TM " + tmA + " has been added!");
             }
 
             teamPage.goToTeam();
             String tmB = teamPage.searchAndSelectTeamMemberByName(teamMemberB);
-            teamPage.clickTheTMByNameAndEdit(tmB);
+            teamPage.clickTheTMByName(tmB);
+            teamPage.clickEditProfileBtn();
             teamPage.deleteBadges();
+            teamPage.saveEditProfileBtn();
             if (!teamPage.isWithBadges()) {
                 SimpleUtils.pass("Bage for TM " + tmB + " has been removed!");
             }
-
-            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
-            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-
-            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 
             // Start to check and generate target schedule
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -113,28 +108,28 @@ public class BadgeTest extends TestBase {
             newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint("5pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.selectWorkRole(workRoleOfTM);
-            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByNameNLocation(teamMemberA, location);
-            newShiftPage.clickOnOfferOrAssignBtn();
             newShiftPage.clickOnCreateOrNextBtn();
 
             // Create and assign open shift to tmB
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
-            newShiftPage.selectMultipleOrSpecificWorkDay(3, true);
-            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
-            newShiftPage.moveSliderAtCertainPoint("5pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.selectMultipleOrSpecificWorkDay(5, true);
+            newShiftPage.moveSliderAtCertainPoint("9am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("3pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.selectWorkRole(workRoleOfTM);
-            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByNameNLocation(teamMemberB, location);
-            newShiftPage.clickOnOfferOrAssignBtn();
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
 
-            // TODO: Check the badge in the shift smart card while switching between the to shifts
+            // Check If badge status has been refreshed
+            shiftOperatePage.checkBadgeOnProfilePopup(teamMemberA, teamMemberB);
+
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
