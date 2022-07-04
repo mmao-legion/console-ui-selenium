@@ -2259,9 +2259,9 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Yang")
     @Enterprise(name = "opauto")
-    @TestName(description = "Verify that different legion user can see created status location by default")
+    @TestName(description = "Verify that different legion user can see created status NSO location by default.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
-    public void verifyVerifyDifferentLegionUserCanSeeCreatedLocationOfDM(String username, String password, String browser, String location) throws Exception {
+    public void verifyDifferentLegionUserCanSeeCreatedLocationAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyy MMM dd");
             String currentTime = dfs.format(new Date());
@@ -2276,8 +2276,12 @@ public class LocationsTest extends TestBase {
             teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
+            ForecastPage forecastPage  = pageFactory.createForecastPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            forecastPage.verifyEditBtnVisible();
+            forecastPage.verifyAndClickEditBtn();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.goToSpecificWeekByDate(currentTime);
             scheduleCommonPage.clickOnFirstWeekInWeekPicker();
