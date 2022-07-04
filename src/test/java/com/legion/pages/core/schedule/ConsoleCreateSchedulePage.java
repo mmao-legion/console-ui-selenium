@@ -819,13 +819,15 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 editOperatingHoursWithGivingPrameters(startTime, endTime);
 //                waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
-//                waitForSeconds(2);
+                waitForSeconds(2);
 //                checkEnterBudgetWindowLoadedForNonDG();
-                if (generateModalTitle.getText().trim().equalsIgnoreCase("Enter Budget")
-                        && isElementLoaded(nextButtonOnCreateSchedule, 10)) {
-                    clickTheElement(nextButtonOnCreateSchedule);
+                if (isElementLoaded(generateModalTitle, 5)) {
+                    if (generateModalTitle.getText().trim().equalsIgnoreCase("Enter Budget")
+                            && isElementLoaded(nextButtonOnCreateSchedule, 10)) {
+                        clickTheElement(nextButtonOnCreateSchedule);
+                    }
                 }
-                if (isElementEnabled(checkOutTheScheduleButton, 3)) {
+                if (isElementEnabled(checkOutTheScheduleButton, 5)) {
                     checkoutSchedule();
                 } else {
                     selectWhichWeekToCopyFrom("SUGGESTED");
