@@ -120,4 +120,6 @@ public interface ShiftOperatePage {
     public void deleteMealOrRestBreaks(boolean isMealBreak) throws Exception;
     public void shortenMealOrRestBreak(boolean isMealBreak) throws Exception;
     public void moveMealOrRestBreak(boolean isMeal, int offset) throws Exception;
+    public void clickOnProfileIconByIndex(int indexOfProfIcon) throws Exception;
+    public void checkBadgeOnProfilePopup(String tmA, String tmB) throws Exception;
 }

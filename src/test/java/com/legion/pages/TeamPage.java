@@ -119,6 +119,7 @@ public interface TeamPage {
 	public void	selectTheJobTitleByName(String jobTitleName) throws Exception;
 	public HashMap<Integer, List<String>> getTimeOffWeekTableByDateNTime(HashMap<Integer, List<String>> previousTimeOffs,
 																		 HashMap<String, List<String>> selectedDateNTime, HashMap<Integer, String> indexAndTimes) throws Exception;
+	public void selectBadgeByName(String badgeName) throws Exception;
 	public void updateBusinessProfilePicture(String filePath) throws Exception;
 	public void rejectAllTheTimeOffRequests() throws Exception;
 	public List<String> getTMNameList() throws Exception;
@@ -186,4 +187,10 @@ public interface TeamPage {
 	public void transferTheTeamMemberOnSpecificDay(String transferLocation, String transferFromDate) throws Exception;
 	public void verifyTheButtonsInActions(List<String> buttons) throws Exception;
 	public int getWeekDayIndexByTitle(String selectedWeekDay) throws Exception;
+	public void clickTheTMByName(String tmName) throws Exception;
+	public void clickEditProfileBtn() throws Exception;
+	public boolean isWithBadges();
+	public void deleteBadges() throws Exception;
+	public void clickBadgeSaveBtn() throws Exception;
+	public void saveEditProfileBtn();
 }

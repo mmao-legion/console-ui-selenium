@@ -367,7 +367,9 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
                 editTheOperatingHours(new ArrayList<>());
 //                waitForSeconds(3);
-                clickTheElement(nextButtonOnCreateSchedule);
+                if (isClickable(nextButtonOnCreateSchedule, 10)) {
+                    clickTheElement(nextButtonOnCreateSchedule);
+                }
 //                checkEnterBudgetWindowLoadedForNonDG();
                 waitForSeconds(2);
                 if (isElementLoaded(generateModalTitle, 5)) {
