@@ -2259,9 +2259,9 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Yang")
     @Enterprise(name = "opauto")
-    @TestName(description = "Verify that different legion user can see created status NSO location by default.")
+    @TestName(description = "Verify that different user can edit forecast data, then he can generate demand based schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
-    public void verifyDifferentLegionUserCanSeeCreatedLocationAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+    public void verifyDifferentLegionUserCanGenerateScheduleAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyy MMM dd");
             String currentTime = dfs.format(new Date());
@@ -2307,6 +2307,28 @@ public class LocationsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify that different legion user can see created status NSO location by default.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyDifferentLegionUserCanSeeCreatedLocationAsDM(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyy MMM dd");
+            String currentTime = dfs.format(new Date());
+            String locationName = "yangUsingNSOLocation";
+            LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+            ForecastPage forecastPage  = pageFactory.createForecastPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            forecastPage.verifyEditBtnNotVisible();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
