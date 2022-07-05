@@ -1287,8 +1287,16 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
                     if (MyThreadLocal.getAssignTMStatus()) {
                         clickTheElement(assignAndOfferButtons.get(0));
-                    } else
-                        clickTheElement(assignAndOfferButtons.get(1));
+                        SimpleUtils.report("Click Assign button successfully! ");
+                    } else {
+                        if (assignAndOfferButtons.size()==1) {
+                            clickTheElement(assignAndOfferButtons.get(0));
+                            SimpleUtils.report("Only one offer button and click Offer button successfully! ");
+                        } else {
+                            clickTheElement(assignAndOfferButtons.get(1));
+                            SimpleUtils.report("There are both assign and offer button, click offer button successfully! ");
+                        }
+                    }
                     if (isElementEnabled(btnAssignAnyway, 5)) {
                         click(btnAssignAnyway);
                     }
@@ -1332,11 +1340,15 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 List<WebElement> assignAndOfferButtons = searchResultsOnNewCreateShiftPage.get(0).findElements(By.tagName("button"));
                 if (MyThreadLocal.getAssignTMStatus()) {
                     clickTheElement(assignAndOfferButtons.get(0));
+                    SimpleUtils.report("Click Assign button successfully! ");
                 } else {
                     if (assignAndOfferButtons.size()==1) {
                         clickTheElement(assignAndOfferButtons.get(0));
-                    } else
+                        SimpleUtils.report("Only one offer button and click Offer button successfully! ");
+                    } else {
                         clickTheElement(assignAndOfferButtons.get(1));
+                        SimpleUtils.report("There are both assign and offer button, click offer button successfully! ");
+                    }
                 }
             } else {
                 clickTheElement(searchAndRecommendedTMTabs.get(0));
@@ -2492,6 +2504,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         if (areListElementVisible(weekDaysInNewCreateShiftPage, 5)) {
             for (WebElement day: weekDaysInNewCreateShiftPage) {
                 if (day.getText().contains(weekDay)){
+                    scrollToElement(day);
                     moveToElementAndClick(day);
                     SimpleUtils.pass("Move to the specific day on New Create Shift page successfully! ");
                     break;

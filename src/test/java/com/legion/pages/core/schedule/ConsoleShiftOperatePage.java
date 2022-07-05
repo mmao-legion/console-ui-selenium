@@ -725,6 +725,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public void verifyMealBreakTimeDisplayAndFunctionality(boolean isEditMealBreakEnabled) throws Exception {
         clickOnProfileIcon();
         clickOnEditMeaLBreakTime();
+        waitForSeconds(2);
         if (isMealBreakTimeWindowDisplayWell(isEditMealBreakEnabled)) {
             if (isEditMealBreakEnabled){
                 click(addMealBreakButton);

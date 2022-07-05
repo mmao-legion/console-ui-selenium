@@ -228,7 +228,9 @@ public class BulkCreateTest extends TestBase {
                     expectMessage.equalsIgnoreCase(actualMessage), false);
 
             //Check closed day warning message
+            Thread.sleep(5000);
             newShiftPage.moveMouseToSpecificWeekDayOnNewCreateShiftPage("Sun");
+            Thread.sleep(5000);
             SimpleUtils.assertOnFail("The closed day tooltip is loaded! ",
                     newShiftPage.checkClosedDayTooltipIsLoaded(), false);
 
