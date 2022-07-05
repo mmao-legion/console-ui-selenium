@@ -2351,4 +2351,41 @@ public class LocationsTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Split override/reset of Work Role and Location Attribute")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void VerifySplitOverrideResetOfWorkRoleAndLocationAttributeAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            //Verify Overridden sign is changed once there is modification for Work Role.
+            //Verify Overridden sign is changed once there is modification for External Attribute
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.overriddenLaborModelRuleInLocationLevel(1);
+            laborModelPage.clickOnSaveButton();
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("External Attributes");
+            laborModelPage.updateAttributeValueInTemplate("LongLane", "1");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
+            //Verify modify and reset is split for work role and external attribute
+            locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+            //Verify reset work role will not reset external attribute
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+            locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","No");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
