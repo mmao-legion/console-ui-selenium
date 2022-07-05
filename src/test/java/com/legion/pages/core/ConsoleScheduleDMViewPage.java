@@ -1894,4 +1894,23 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
 
     }
 
+    public void verifyP2PSchedulesTableHeaderNames(boolean isApplyBudget) throws Exception {
+        if(areListElementVisible(schedulesTableHeaders, 10) && schedulesTableHeaders.size() == 8){
+            String[] schedulesTableHeaderNames;
+            if(isApplyBudget){
+                    schedulesTableHeaderNames = new String[]{"Peer Locations", "Published Status", "Score",
+                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", ""};
+            } else {
+                    schedulesTableHeaderNames = new String[]{"Peer Locations", "Published Status", "Score",
+                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", ""};
+            }
+            for(int i= 0;i<schedulesTableHeaders.size(); i++){
+                if(schedulesTableHeaders.get(i).getText().equals(schedulesTableHeaderNames[i])){
+                    SimpleUtils.pass("Schedule table header: " + schedulesTableHeaders.get(i).getText()+" display correctly! ");
+                } else
+                    SimpleUtils.fail("Schedule table header: " + schedulesTableHeaderNames[i] +" display incorrectly! ", false);
+            }
+        } else
+            SimpleUtils.fail("Schedules Table Headers on Schedule DM view loaded fail! ", false);
+    }
 }

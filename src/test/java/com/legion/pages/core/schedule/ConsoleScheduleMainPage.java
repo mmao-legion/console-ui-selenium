@@ -1611,7 +1611,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     public void clickOnOpenSearchBoxButton() throws Exception {
         if (isElementEnabled(openSearchBoxButton, 5) && isClickable(openSearchBoxButton, 5)) {
-            click(openSearchBoxButton);
+            clickTheElement(openSearchBoxButton);
             if (isElementLoaded(searchBox, 15)) {
                 SimpleUtils.pass("Search box is opened successfully");
             } else {
@@ -2139,5 +2139,32 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         } else
             SimpleUtils.fail("Staff work roles fail to load! ", false);
         return workRoles;
+    }
+
+    public List<String> getSpecificFilterNames (String filterText) throws Exception {
+        List<String> names = new ArrayList<>();
+        ArrayList<WebElement> availableFilters = getAvailableFilters().get(filterText);
+        if (availableFilters != null && availableFilters.size()>0){
+            for (int i = 0; i < availableFilters.size() - 1; i++) {
+                String name = availableFilters.get(i).getText().split("\\(")[0].trim();
+                names.add(name);
+                SimpleUtils.pass("Get name: "+name +" from "+filterText+" list successfully! ");
+            }
+        } else
+            SimpleUtils.report("There is no this filter: "+filterText);
+        return names;
+    }
+
+    @FindBy(css = "[label=\"Create schedule\"] button:not([disabled])")
+    private WebElement generateScheduleButton;
+    public boolean isScheduleMainPageLoaded () throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(editScheduleButton, 5)
+                ||isElementLoaded(generateScheduleButton, 5)) {
+            isLoaded = true;
+            SimpleUtils.pass("Schedule main page is loaded successfully! ");
+        } else
+            SimpleUtils.report("Schedule main page is not loaded! ");
+        return isLoaded;
     }
 }

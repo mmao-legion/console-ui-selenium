@@ -15,7 +15,6 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import sun.rmi.runtime.Log;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -289,6 +288,9 @@ public class OPConfigTest extends TestBase {
             int i=0;
             while (i<10 && textOnLaborSmartCard.toLowerCase().contains("wages")) {
                 Thread.sleep(60000);
+                loginPage.logOut();
+                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+                Thread.sleep(5000);
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);

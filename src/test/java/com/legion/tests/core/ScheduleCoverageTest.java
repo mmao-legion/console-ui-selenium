@@ -526,6 +526,7 @@ public class ScheduleCoverageTest extends TestBase {
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00am", "8:00pm");
+        Thread.sleep(3000);
         arrowImgsBeforeChange = arrowImgs.size();
         scheduleHrs = scheduleShiftTablePage.getHrsOnTooltipOfScheduleSummaryHoursByIndex(0);
         //Edit the schedule, decrease the shift duration, let the coverage < 25%
