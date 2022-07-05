@@ -143,10 +143,19 @@ public interface ConfigurationPage {
     public List<String> getEffectiveDateForTemplate(String templateName) throws Exception;
     public void checkTheEntryOfAddBasicStaffingRule() throws Exception;
     public boolean verifyWarningInfoForDemandDriver(String warningMsg) throws Exception;
+    public void verifyStaffingRulePageShowWell() throws Exception;
     public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo, String addOrEdit) throws Exception;
     public void verifyPublishedTemplateAfterEdit(String templateName) throws Exception;
 
     public boolean searchDriverInTemplateDetailsPage(String driverName) throws Exception;
 
     public void clickRemove() throws Exception;
+    public void selectStartTimeEvent(String startTimeEvent) throws Exception;
+    public void verifyConditionAndNumberFiledCanShowWell() throws Exception;
+    public void verifyNumberInputFieldOfBasicStaffingRule() throws Exception;
+    public List<String> verifyWorkRoleListOfBasicStaffingRule() throws Exception;
+    public void verifyUnitOptionsListOfBasicStaffingRule() throws Exception;
+    public void verifyStartEndOffsetMinutesShowingByDefault() throws Exception;
+    public void verifyStartEndEventPointOptionsList() throws Exception;
+    public List<String> verifyStartEndTimeEventOptionsList() throws Exception;
 }
