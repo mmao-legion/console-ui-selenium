@@ -836,7 +836,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                         clickTheElement(nextButtonOnCreateSchedule);
                     }
                 }
-                if (isElementEnabled(checkOutTheScheduleButton, 5)) {
+                if (isElementEnabled(checkOutTheScheduleButton, 10)) {
                     checkoutSchedule();
                 } else {
                     selectWhichWeekToCopyFrom("SUGGESTED");
