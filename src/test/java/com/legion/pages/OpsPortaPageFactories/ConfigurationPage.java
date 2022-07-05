@@ -160,4 +160,7 @@ public interface ConfigurationPage {
     public List<String> verifyStartEndTimeEventOptionsList() throws Exception;
     public void selectDaysForBasicStaffingRule(String day) throws Exception;
     public void verifyDaysListShowWell() throws Exception;
+    public void setSpecifiedHours(String start, String end) throws Exception;
+    public void selectEventPointForBasicStaffingRule(String startEventPoint,String endEventPoint) throws Exception;
+    public void verifyBeforeAndAfterDayPartsShouldBeSameWhenSetAsDayParts(String dayParts1,String dayParts2,String startEventPoint,String endEventPoint) throws Exception;
 }
