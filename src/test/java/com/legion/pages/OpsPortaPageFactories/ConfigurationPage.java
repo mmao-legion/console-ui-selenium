@@ -158,4 +158,6 @@ public interface ConfigurationPage {
     public void verifyStartEndOffsetMinutesShowingByDefault() throws Exception;
     public void verifyStartEndEventPointOptionsList() throws Exception;
     public List<String> verifyStartEndTimeEventOptionsList() throws Exception;
+    public void selectDaysForBasicStaffingRule(String day) throws Exception;
+    public void verifyDaysListShowWell() throws Exception;
 }
