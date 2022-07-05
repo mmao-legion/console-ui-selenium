@@ -3245,16 +3245,6 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css = "[ng-if=\"badgesToShow && badgesToShow.length\"] .one-badge")
     private List<WebElement> badgeIconList;
 
-    public Boolean isWithBadges() throws Exception {
-        Boolean hasBadge = false;
-        if (areListElementVisible(badgeIconList, 15)) {
-            hasBadge = true;
-        } else {
-            return hasBadge;
-        }
-        return hasBadge;
-    }
-
     @Override
     public void clickOnProfileIconByIndex(int indexOfProfIcon) throws Exception {
         if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
@@ -3270,10 +3260,11 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.assertOnFail("Shifts number is:" + shifts.size() + " didn't match 2!", shifts.size() == 2, false);
             clickOnProfileIconByIndex(0);
             waitForSeconds(3);
-            SimpleUtils.assertOnFail("TM " + tmA + "should have badge!", isWithBadges(), false);
+            SimpleUtils.assertOnFail("TM " + tmA + "should have badge!", areListElementVisible(badgeIconList), false);
+            SimpleUtils.assertOnFail("TM " + tmA + "should have 1 badge! But actual number is: " + badgeIconList.size(), badgeIconList.size() == 1, false);
             clickOnProfileIconByIndex(1);
             waitForSeconds(3);
-            SimpleUtils.assertOnFail("TM " + tmB + "should have no badge!", !isWithBadges(), false);
+            SimpleUtils.assertOnFail("TM " + tmB + "should have no badge!", !areListElementVisible(badgeIconList), false);
         } else {
             SimpleUtils.fail("Shifts are not listed!", false);
         }

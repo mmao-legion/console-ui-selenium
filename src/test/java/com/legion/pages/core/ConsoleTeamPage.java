@@ -4981,7 +4981,7 @@ private List<WebElement> locationColumn;
 		}
 	}
 
-	@FindBy (css = ".lg-badges-badge")
+	@FindBy (css = "#Symbols")
 	private List<WebElement> badgesIcon;
 
 	@FindBy (css = ".lg-badges-add")
@@ -4995,16 +4995,12 @@ private List<WebElement> locationColumn;
 
 	@Override
 	public boolean isWithBadges() {
-		boolean hasBadge = false;
-		if (areListElementVisible(badgesIcon, 15)) {
-			hasBadge = true;
-		}
-		return hasBadge;
+		return areListElementVisible(badgesIcon, 10);
 	}
 
 	@Override
 	public void deleteBadges() throws Exception {
-		if (isWithBadges()) {
+		if (areListElementVisible(badgesIcon, 15)) {
 			if (isElementLoaded(manageBadgesOrAddABadgeBtn, 10) && manageBadgesOrAddABadgeBtn.getText().equalsIgnoreCase("Manage Badges")) {
 				scrollToElement(manageBadgesOrAddABadgeBtn);
 				clickTheElement(manageBadgesOrAddABadgeBtn);
@@ -5019,7 +5015,7 @@ private List<WebElement> locationColumn;
 						if (elm.getAttribute("class").contains("checked")) {
 							scrollToElement(elm);
 							clickTheElement(elm);
-							waitForSeconds(3);
+							waitForSeconds(2);
 							if (!elm.getAttribute("class").contains("checked")) {
 								SimpleUtils.pass("Badge is removed!");
 							} else {
@@ -5034,14 +5030,12 @@ private List<WebElement> locationColumn;
 			scrollToElement(confirmButton);
 			clickTheElement(confirmButton);
 			waitForSeconds(3);
-			if (isWithBadges()) {
-				SimpleUtils.fail("Badge has not been removed!", false);
-			}
+			SimpleUtils.assertOnFail("Failed for delete badge!", !areListElementVisible(badgesIcon, 10),false);
 		}
 	}
 
 	@FindBy (css = ".badge-title")
-	private List<WebElement> badgeTitleList;
+	private List<WebElement> badgeTitleListOnPopup;
 
 	@Override
 	public void selectBadgeByName(String badgeName) throws Exception {
@@ -5053,10 +5047,10 @@ private List<WebElement> locationColumn;
 		} else {
 			SimpleUtils.fail("Badge edit button is not loaded!", false);
 		}
-		if (areListElementVisible(badgeCheckBoxes, 15) && areListElementVisible(badgeTitleList, 10)) {
-			SimpleUtils.assertOnFail("The number of bage checkbox didn't match the badge titles", badgeCheckBoxes.size() == badgeTitleList.size(), false);
+		if (areListElementVisible(badgeCheckBoxes, 15) && areListElementVisible(badgeTitleListOnPopup, 10)) {
+			SimpleUtils.assertOnFail("The number of bage checkbox didn't match the badge titles", badgeCheckBoxes.size() == badgeTitleListOnPopup.size(), false);
 			int badgeIndex = -1;
-			for (WebElement elm : badgeTitleList) {
+			for (WebElement elm : badgeTitleListOnPopup) {
 				if (elm.getText().equalsIgnoreCase(badgeName)) {
 					badgeIndex ++;
 					break;
