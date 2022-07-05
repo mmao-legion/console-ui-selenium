@@ -4964,4 +4964,246 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Staffing rule page doesn't show well",false);
 		}
 	}
+
+	@FindBy(css=".limit-constraint select")
+	private WebElement conditionMaxMinExactly;
+	@FindBy(css="input-field[type=\"number\"] input")
+	private WebElement numberInput;
+	@FindBy(css="input-field.workRoleSelect select")
+	private WebElement workRoleSelect;
+	@FindBy(css="input-field[options*=\"UnitOptions\"] select")
+	private WebElement unitOptions;
+	@FindBy(css="div[ng-if*=\"showTimeConstraint()\"] input-field[type=\"number\"] input")
+	private WebElement startOffsetMinutes;
+	@FindBy(css="div[ng-if*=\"isDuring()\"] input-field[type=\"number\"] input")
+	private WebElement endOffsetMinutes;
+	@FindBy(css="div[ng-if^=\"$ctrl.showTimeConstraint()\"] input-field[options*=\"getEventPointOptions\"] select")
+	private WebElement startEventPointOptions;
+	@FindBy(css="div[ng-if*=\"isDuring()\"] input-field[options*=\"getEventPointOptions\"] select")
+	private WebElement endEventPointOptions;
+	@FindBy(css="div[ng-if^=\"$ctrl.showTimeConstraint()\"] lg-select[options*=\"timeEventOptions\"] input-field")
+	private WebElement startTimeEventOptions;
+	@FindBy(css="div[ng-if^=\"$ctrl.showTimeConstraint()\"] lg-select[options*=\"timeEventOptions\"] input-field div")
+	private WebElement startTimeEventSelected;
+	@FindBy(css="div[ng-if*=\"isDuring()\"] lg-select[options*=\"timeEventOptions\"]")
+	private WebElement endTimeEventOptions;
+	@FindBy(css="div[ng-if*=\"isDuring()\"] lg-select[options*=\"timeEventOptions\"] input-field div")
+	private WebElement endTimeEventSelected;
+	@FindBy(css="div[ng-if^=\"$ctrl.showTimeConstraint()\"]  .lg-search-options .lg-search-options__option")
+	private List<WebElement> startTimeEventOptionsList;
+	@FindBy(css="div[ng-if*=\"isDuring()\"]  .lg-search-options .lg-search-options__option")
+	private List<WebElement> endTimeEventOptionsList;
+
+	@Override
+	public void verifyConditionAndNumberFiledCanShowWell() throws Exception{
+		boolean flag = true;
+		List<String> targets = new ArrayList<>(Arrays.asList("A Maximum","A Minimum","Exactly"));
+		List<String> optionNames = new ArrayList<>();
+		Select select = new Select(conditionMaxMinExactly);
+		//verify the conditionMaxMinExactly field options list
+		if(isElementLoaded(conditionMaxMinExactly,2) && isElementLoaded(numberInput,2)){
+			List<WebElement> options = select.getOptions();
+			for(WebElement option:options){
+				String optionName = option.getText().trim();
+				optionNames.add(optionName);
+			}
+			for(String optionName:optionNames){
+				for(String option:targets){
+					if(optionName.equalsIgnoreCase(option)){
+						flag = true;
+						SimpleUtils.pass(option + " is showing in list.");
+						break;
+					}else {
+						flag =false;
+					}
+				}
+			}
+			if(flag){
+				SimpleUtils.pass("conditionMaxMinExactly field options list can show well");
+			}else{
+				SimpleUtils.pass("conditionMaxMinExactly field options list is Not Correct.");
+			}
+
+			//Verify Exactly option is disabled by default
+			if(options.get(2).getAttribute("disabled").equalsIgnoreCase("true")){
+				SimpleUtils.pass("Exactly option is disabled by default!");
+			}else{
+				SimpleUtils.fail("Exactly option is Not disabled by default!",false);
+			}
+			//verify the Exactly option will only be enabled when user select start event filed as Specified Hours
+			selectStartTimeEvent("Specified Hours");
+			if(select.getFirstSelectedOption().getText().trim().equalsIgnoreCase("Exactly")){
+				SimpleUtils.pass("Exactly option will only be enabled when user select start event filed as Specified Hours.");
+			}else {
+				SimpleUtils.fail("Exactly option is not selected by default after user selected start event filed as Specified Hours.",false);
+			}
+		}
+	}
+
+	//select Start Time Event
+	@Override
+	public void selectStartTimeEvent(String startTimeEvent) throws Exception{
+		if(isElementLoaded(conditionMaxMinExactly,2)){
+			clickTheElement(startTimeEventOptions);
+			if(areListElementVisible(startTimeEventOptionsList,3)){
+				for(WebElement w:startTimeEventOptionsList){
+					if(w.getAttribute("innerText").trim().equalsIgnoreCase(startTimeEvent)){
+						clickTheElement(w);
+						break;
+					}
+				}
+			}
+			if(startTimeEventSelected.getAttribute("innerText").trim().equalsIgnoreCase(startTimeEvent)){
+				SimpleUtils.pass("User select start Time Event successfully!");
+			}else {
+				SimpleUtils.fail("User failed to select start Time Event!", false);
+			}
+		}
+	}
+
+	@FindBy(css="lg-button[label=\"Save\"] button")
+	private WebElement saveButtonOnBasicStaffingRule;
+	@FindBy(className = "settings-work-rule-save-icon")
+	private WebElement saveRuleIcon;
+	@Override
+	public void verifyNumberInputFieldOfBasicStaffingRule() throws Exception{
+		if(isElementLoaded(numberInput,3)){
+			clickTheElement(numberInput);
+			numberInput.clear();
+			numberInput.sendKeys("5");
+			if(saveRuleIcon.getAttribute("class").contains("enabled")){
+				SimpleUtils.pass("User can input number successfully!");
+			}else {
+				SimpleUtils.fail("User can not input number successfully!",false);
+			}
+		}
+	}
+
+	@Override
+	public List<String> verifyWorkRoleListOfBasicStaffingRule() throws Exception{
+		List<String> workRoleNames = new ArrayList<>();
+		if(isElementLoaded(workRoleSelect,3)){
+			Select select = new Select(workRoleSelect);
+			List<WebElement> workRoleList = select.getOptions();
+			for(WebElement workRole:workRoleList){
+				String workRoleName = workRole.getText().trim();
+				workRoleNames.add(workRoleName);
+			}
+		}
+		return workRoleNames;
+	}
+
+	@Override
+	public void verifyUnitOptionsListOfBasicStaffingRule() throws Exception{
+		List<String> unitOptionsValues = new ArrayList<>();
+		List<String> optionValues = new ArrayList<>(Arrays.asList("Shifts","Hours"));
+		if(isElementLoaded(unitOptions,2)){
+			Select select = new Select(unitOptions);
+			List<WebElement> unitOptionsList = select.getOptions();
+			for(WebElement unitOption:unitOptionsList){
+				unitOptionsValues.add(unitOption.getText().trim());
+			}
+		}
+		boolean flag = true;
+		for(String unitOptionsValue:unitOptionsValues){
+			for(String optionValue:optionValues){
+				if(unitOptionsValue.equalsIgnoreCase(optionValue)){
+					SimpleUtils.pass(optionValue + " is showing in Unit Options List");
+					flag = true;
+					break;
+				}else {
+					flag = false;
+				}
+			}
+		}
+		if(flag){
+			SimpleUtils.pass("unitOptions can show well");
+		}else {
+			SimpleUtils.fail("unitOptions can NOT show well",false);
+		}
+	}
+
+	@Override
+	public void verifyStartEndOffsetMinutesShowingByDefault() throws Exception{
+		Select select = new Select(startEventPointOptions);
+		WebElement selected = select.getFirstSelectedOption();
+		if(selected.getText().trim().equalsIgnoreCase("during")){
+			if(!isElementExist("div[ng-if*=\"showTimeConstraint()\"] input-field[type=\"number\"] input") && !isElementExist("div[ng-if*=\"isDuring()\"] input-field[type=\"number\"] input")){
+				SimpleUtils.pass("Start/End offset time is not showing when start Event Point Option is selected during");
+			}else {
+				SimpleUtils.fail("Start/End offset time is showing when start Event Point Option is selected during",false);
+			}
+		}
+		selectStartTimeEvent("Opening Operating Hours");
+		select.selectByVisibleText("after");
+		if(isElementExist("div[ng-if*=\"showTimeConstraint()\"] input-field[type=\"number\"] input") && isElementExist("div[ng-if*=\"isDuring()\"] input-field[type=\"number\"] input")){
+			SimpleUtils.pass("Start/End offset time is showing when start Event Point Option is selected after");
+		}else {
+			SimpleUtils.fail("Start/End offset time is NOT showing when start Event Point Option is selected after",false);
+		}
+		if(isElementLoaded(startOffsetMinutes,3)){
+			clickTheElement(startOffsetMinutes);
+			startOffsetMinutes.clear();
+			startOffsetMinutes.sendKeys("5");
+			if(saveRuleIcon.getAttribute("class").contains("enabled")){
+				SimpleUtils.pass("User can input number successfully!");
+			}else {
+				SimpleUtils.fail("User can not input number successfully!",false);
+			}
+		}
+		if(isElementLoaded(endOffsetMinutes,3)){
+			clickTheElement(endOffsetMinutes);
+			endOffsetMinutes.clear();
+			endOffsetMinutes.sendKeys("10");
+			if(saveRuleIcon.getAttribute("class").contains("enabled")){
+				SimpleUtils.pass("User can input number successfully!");
+			}else {
+				SimpleUtils.fail("User can not input number successfully!",false);
+			}
+		}
+	}
+
+	@Override
+	public void verifyStartEndEventPointOptionsList() throws Exception{
+		List<String> eventPoints = new ArrayList<>(Arrays.asList("before","after","during"));
+		List<String> eventPointList = new ArrayList<>();
+		boolean flag = true;
+		Select select = new Select(startEventPointOptions);
+		List<WebElement> eventPointOptions = select.getOptions();
+		for(WebElement eventPointOption:eventPointOptions){
+			eventPointList.add(eventPointOption.getText().trim());
+		}
+		for(String eventPointName:eventPointList){
+			for(String eventPoint:eventPoints){
+				if(eventPointName.equalsIgnoreCase(eventPoint)){
+					flag=true;
+					SimpleUtils.pass(eventPointName + " is showing in start Event Point Options list.");
+					break;
+				}else {
+					flag=false;
+				}
+			}
+		}
+		if(flag){
+			SimpleUtils.pass("start Event Point Options list can show correctly!");
+		}else {
+			SimpleUtils.fail("start Event Point Options list can NOT show correctly!",false);
+		}
+	}
+
+	@Override
+	public List<String> verifyStartEndTimeEventOptionsList() throws Exception{
+		List<String> startEndTimeEventOptions = new ArrayList<>();
+		if(isElementLoaded(startTimeEventOptions,3)){
+			clickTheElement(startTimeEventOptions);
+			if(areListElementVisible(startTimeEventOptionsList,2)){
+				for(WebElement startTimeEventOption:startTimeEventOptionsList){
+					startEndTimeEventOptions.add(startTimeEventOption.getAttribute("innerText").trim());
+				}
+			}else {
+				SimpleUtils.fail("startTimeEventOptionsList is not showing",false);
+			}
+		}
+		return  startEndTimeEventOptions;
+	}
 }
