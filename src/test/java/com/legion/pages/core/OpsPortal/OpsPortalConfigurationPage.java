@@ -5206,4 +5206,74 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 		return  startEndTimeEventOptions;
 	}
+
+	@FindBy(css=".days-select input-field")
+	private WebElement daysOfWeekOfBasicRule;
+	@FindBy(css=".days-select input-field[type=\"checkbox\"]")
+	private List<WebElement> daysOptionList;
+
+	@Override
+	public void verifyDaysListShowWell() throws Exception{
+		List<String> days = new ArrayList<>();
+		List<String> daysInfo = new ArrayList<>(Arrays.asList("Fri","Mon","Sat","Sun","Thu","Tue","Wed"));
+		boolean flag = true;
+		if(isElementLoaded(daysOfWeekOfBasicRule,2)){
+			clickTheElement(daysOfWeekOfBasicRule);
+			if(areListElementVisible(daysOptionList,2)){
+				for(WebElement daysOption:daysOptionList){
+					days.add(daysOption.findElement(By.cssSelector(" label")).getText().trim());
+				}
+			}else {
+				SimpleUtils.fail("days Option List is not showing",false);
+			}
+		}
+		for(String dayInfo:daysInfo){
+			for(String day:days){
+				if(day.equalsIgnoreCase(dayInfo)){
+					flag = true;
+					SimpleUtils.pass(day + " is showing in days of week Option List");
+				}else {
+					flag = false;
+				}
+			}
+		}
+		if(flag){
+			SimpleUtils.pass("Days of week Option List are correct");
+		}else {
+			SimpleUtils.fail("Days of week Option List are NOT correct",false);
+		}
+	}
+
+	@Override
+	public void selectDaysForBasicStaffingRule(String day) throws Exception{
+		//verify all days are selected by default
+		for(WebElement daysOption:daysOptionList){
+			if(daysOption.findElement(By.cssSelector(" input")).getAttribute("class").trim().contains("ng-not-empty")){
+				SimpleUtils.pass(daysOption.findElement(By.cssSelector(" label")).getText().trim() + " is selected by default!");
+			}else {
+				SimpleUtils.fail(daysOption.findElement(By.cssSelector(" label")).getText().trim() + " is NOT selected by default!",false);
+			}
+		}
+		//select specified days
+		//de-selected all checkbox first
+		for(WebElement daysOption:daysOptionList){
+			if(daysOption.findElement(By.cssSelector(" input")).getAttribute("class").trim().contains("ng-not-empty")){
+				clickTheElement(daysOption.findElement(By.cssSelector(" input")));
+			}
+		}
+		//then select specified days
+		for(WebElement daysOption:daysOptionList){
+			if(daysOption.findElement(By.cssSelector(" label")).getText().trim().equals(day)){
+				clickTheElement(daysOption.findElement(By.cssSelector(" input")));
+				if(daysOption.findElement(By.cssSelector(" input")).getAttribute("class").trim().contains("ng-not-empty")){
+					SimpleUtils.pass("User can select " + day + " successfully!");
+				}else {
+					SimpleUtils.fail("User can NOT select " + day + " successfully!",false);
+				}
+				break;
+			}else {
+				continue;
+			}
+		}
+	}
 }
