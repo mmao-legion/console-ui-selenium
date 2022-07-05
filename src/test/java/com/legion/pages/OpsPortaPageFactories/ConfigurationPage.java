@@ -145,4 +145,10 @@ public interface ConfigurationPage {
     public boolean verifyWarningInfoForDemandDriver(String warningMsg) throws Exception;
     public void addDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception;
     public void verifyStaffingRulePageShowWell() throws Exception;
+    public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo, String addOrEdit) throws Exception;
+    public void verifyPublishedTemplateAfterEdit(String templateName) throws Exception;
+
+    public boolean searchDriverInTemplateDetailsPage(String driverName) throws Exception;
+
+    public void clickRemove() throws Exception;
 }
