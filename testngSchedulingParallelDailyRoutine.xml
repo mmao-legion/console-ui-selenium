@@ -673,4 +673,14 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
         </classes>
     </test>
 
+    <test name="Badge Test" >
+        <classes>
+            <class name="com.legion.tests.core.BadgeTest">
+                <methods>
+                    <include name="verifyTheBadgeChangeInShiftSmartCardViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->

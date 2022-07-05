@@ -42,8 +42,8 @@ public class BadgeTest extends TestBase {
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            String teamMemberA = "Holly Trainer";
-            String teamMemberB = "Chloe Keates";
+            String teamMemberA = "Tayla Browne";
+            String teamMemberB = "Jacob Minaker";
 
             // Prepare badge for TM A
             teamPage.goToTeam();
