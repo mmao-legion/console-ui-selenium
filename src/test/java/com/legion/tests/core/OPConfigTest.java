@@ -15,7 +15,6 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import sun.rmi.runtime.Log;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
