@@ -163,4 +163,5 @@ public interface ConfigurationPage {
     public void setSpecifiedHours(String start, String end) throws Exception;
     public void selectEventPointForBasicStaffingRule(String startEventPoint,String endEventPoint) throws Exception;
     public void verifyBeforeAndAfterDayPartsShouldBeSameWhenSetAsDayParts(String dayParts1,String dayParts2,String startEventPoint,String endEventPoint) throws Exception;
+    public void verifyCrossAndCheckButtonOfBasicStaffingRule() throws Exception;
 }
