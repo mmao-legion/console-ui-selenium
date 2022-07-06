@@ -2280,8 +2280,6 @@ public class LocationsTest extends TestBase {
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
-            forecastPage.verifyEditBtnVisible();
-            forecastPage.verifyAndClickEditBtn();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.goToSpecificWeekByDate(currentTime);
             scheduleCommonPage.clickOnFirstWeekInWeekPicker();
