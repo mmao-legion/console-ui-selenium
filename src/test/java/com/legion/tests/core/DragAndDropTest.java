@@ -4272,9 +4272,9 @@ public class DragAndDropTest extends TestBase {
                     , false);
             for (int i=0; i< selectedShiftCount;i++) {
                 SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
-                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size() >0, false);
+                        scheduleShiftTablePage.getOneDayShiftByName(3, shiftNames.get(i)).size() >0, false);
                 SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
-                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size() >0, false);
+                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size() >0, false);
 
             }
         } catch (Exception e){
