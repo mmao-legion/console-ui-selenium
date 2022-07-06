@@ -143,5 +143,24 @@ public interface ConfigurationPage {
     public List<String> getEffectiveDateForTemplate(String templateName) throws Exception;
     public void checkTheEntryOfAddBasicStaffingRule() throws Exception;
     public boolean verifyWarningInfoForDemandDriver(String warningMsg) throws Exception;
-    public void addDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception;
+    public void verifyStaffingRulePageShowWell() throws Exception;
+    public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo, String addOrEdit) throws Exception;
+    public void verifyPublishedTemplateAfterEdit(String templateName) throws Exception;
+
+    public boolean searchDriverInTemplateDetailsPage(String driverName) throws Exception;
+
+    public void clickRemove() throws Exception;
+    public void selectStartTimeEvent(String startTimeEvent) throws Exception;
+    public void verifyConditionAndNumberFiledCanShowWell() throws Exception;
+    public void verifyNumberInputFieldOfBasicStaffingRule() throws Exception;
+    public List<String> verifyWorkRoleListOfBasicStaffingRule() throws Exception;
+    public void verifyUnitOptionsListOfBasicStaffingRule() throws Exception;
+    public void verifyStartEndOffsetMinutesShowingByDefault() throws Exception;
+    public void verifyStartEndEventPointOptionsList() throws Exception;
+    public List<String> verifyStartEndTimeEventOptionsList() throws Exception;
+    public void selectDaysForBasicStaffingRule(String day) throws Exception;
+    public void verifyDaysListShowWell() throws Exception;
+    public void setSpecifiedHours(String start, String end) throws Exception;
+    public void selectEventPointForBasicStaffingRule(String startEventPoint,String endEventPoint) throws Exception;
+    public void verifyBeforeAndAfterDayPartsShouldBeSameWhenSetAsDayParts(String dayParts1,String dayParts2,String startEventPoint,String endEventPoint) throws Exception;
 }

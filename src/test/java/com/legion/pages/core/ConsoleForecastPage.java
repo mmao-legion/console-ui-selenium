@@ -2138,4 +2138,11 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		else
 			SimpleUtils.fail("Forecast Page: Content under labor tab is not loaded",false);
 	}
+	@Override
+	public void verifyEditBtnNotVisible() throws Exception {
+		if (!(isElementLoaded(editForecastBtn,10) && editForecastBtn.isDisplayed()))
+			SimpleUtils.pass("Forecast Page: Edit button failed to load");
+		else
+			SimpleUtils.fail("Forecast Page: Edit button is visible",false);
+	}
 }

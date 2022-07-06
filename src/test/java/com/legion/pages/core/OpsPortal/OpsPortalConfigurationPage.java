@@ -25,6 +25,8 @@ import static org.apache.commons.lang.math.RandomUtils.nextInt;
 
 public class OpsPortalConfigurationPage extends BasePage implements ConfigurationPage {
 
+	private WebElement startElement;
+
 	public OpsPortalConfigurationPage() {
 		PageFactory.initElements(getDriver(), this);
 	}
@@ -634,17 +636,18 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				if (str1.contains("opening and closing shift times"))
 					SimpleUtils.pass("The dialog title is correct!");
 				//get the original start time
-				String OHStartOrigin = OHOperateOpenCloseStartTimeDrag.findElement(By.cssSelector("span.lgn-time-slider-label")).getText().trim();
+				String OHStartOrigin = openCloseTimeInputs.get(0).findElement(By.xpath("./following-sibling::div")).getAttribute("innerText").trim();
 				//get the original end time
-				String OHEndOrigin = OHOperateOpenCloseEndTimeDrag.findElement(By.cssSelector("span.lgn-time-slider-label")).getText().trim();
-				//drag to change the start time and end time
-				moveDayViewCards(OHOperateOpenCloseStartTimeDrag, 40);
-				moveDayViewCards(OHOperateOpenCloseEndTimeDrag, -40);
+				String OHEndOrigin = openCloseTimeInputs.get(1).findElement(By.xpath("./following-sibling::div")).getAttribute("innerText").trim();
+
+				//change the start time and end time
+				OHTempSetOpenAndCloseTime("Open/Close", "7:00AM", "8:00PM");
+
 				//get the changed start time and end time
-				String OHStartCurrent = OHOperateOpenCloseStartTimeDrag.findElement(By.cssSelector("span.lgn-time-slider-label")).getText().trim();
-				String OHEndCurrent = OHOperateOpenCloseEndTimeDrag.findElement(By.cssSelector("span.lgn-time-slider-label")).getText().trim();
+				String OHStartCurrent = openCloseTimeInputs.get(0).findElement(By.xpath("./following-sibling::div")).getAttribute("innerText").trim();
+				String OHEndCurrent = openCloseTimeInputs.get(1).findElement(By.xpath("./following-sibling::div")).getAttribute("innerText").trim();
 				if (!OHStartOrigin.equals(OHStartCurrent) && !OHEndOrigin.equals(OHEndCurrent))
-					SimpleUtils.pass("Drag to change Operating Hours opening and closing shift times successfully");
+					SimpleUtils.pass("change Operating Hours opening and closing shift times successfully");
 				//click save
 				clickTheElement(saveButton);
 				waitForSeconds(1);
@@ -686,7 +689,29 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	}
 
-
+	@FindBy(css="input-field.lg-new-time-input-text input")
+	private List<WebElement> openCloseTimeInputs;
+	@FindBy(css="table.lg-table.daypart-open-close-config tr>th")
+	private List<WebElement> columnsInDaypartsTab;
+	private void OHTempSetOpenAndCloseTime(String settingTab, String openTime, String closeTime) throws Exception {
+			if (isElementLoaded(OHOperateOpenCloseTimeEditDialog)){
+				if (settingTab.contains("Open")){
+					openCloseTimeInputs.get(0).click();
+					openCloseTimeInputs.get(0).sendKeys(openTime);
+					openCloseTimeInputs.get(1).click();
+					openCloseTimeInputs.get(1).sendKeys(closeTime);
+				}else if (settingTab.contains("Dayparts")){
+					openCloseTimeInputs.get(2).click();
+					openCloseTimeInputs.get(2).sendKeys(openTime);
+					openCloseTimeInputs.get(3).click();
+					openCloseTimeInputs.get(3).sendKeys(closeTime);
+				}else {
+					SimpleUtils.fail("Can not find the setting item!", false);
+				}
+			}else {
+				SimpleUtils.fail("There should pop up a window before set open/close time!", false);
+			}
+	}
 
 	private void OHTempBusinessHoursDaySetting(boolean status) throws Exception {
 			if (status) {
@@ -704,7 +729,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				OHBusinessHoursEntries.get(0).findElement(By.cssSelector("label.switch span")).click();
 				waitForSeconds(1);
 				WebElement defaultDaypartSet = OHBusinessHoursEntries.get(0).findElement(By.cssSelector("div.col-sm-8 label"));
-				if (isElementLoaded(defaultDaypartSet) && defaultDaypartSet.getText().trim().contains("Day parts Not Set"))
+				if (isElementLoaded(defaultDaypartSet) && defaultDaypartSet.getText().trim().contains("Dayparts Not Set"))
 					SimpleUtils.pass("Set the day of as opened successfully and default as no day parts set");
 				//get default start time and end time
 				String StartOrigin = OHBusinessHoursEntries.get(0).findElement(By.cssSelector("span.work-time")).getText().trim();
@@ -715,9 +740,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				//change the time
 				OHBusinessHoursEntries.get(0).findElement(By.cssSelector("lg-button[label=\"Edit\"]")).click();
 				waitForSeconds(1);
-				//drag to change the start time and end time
-				moveDayViewCards(OHOperateOpenCloseStartTimeDrag, 40);
-				moveDayViewCards(OHOperateOpenCloseEndTimeDrag, -40);
+				//change the start time and end time
+				OHTempSetOpenAndCloseTime("Open/Close", "6:00AM", "9:00PM");
 				waitForSeconds(1);
 				//check the all day selection
 				boolean selection = true;
@@ -739,10 +763,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				//switch to day part tab
 				clickTheElement(OHOperateDayPartTab);
 				waitForSeconds(2);
-				if (areListElementVisible(OHBusinessHoursTimeCells) && OHBusinessHoursTimeCells.size() == 96) {
+				if (areListElementVisible(columnsInDaypartsTab) && columnsInDaypartsTab.size() == 4) {
 					SimpleUtils.pass("Day part time cell show correctly");
-					//drag to select a day part
-					moveDayViewCards(OHBusinessHoursTimeCells.get(10), 20);
+					//select a day part
+					OHTempSetOpenAndCloseTime("Dayparts", "6:00AM", "5:00PM");
 					//click save
 					clickTheElement(saveButton);
 					waitForSeconds(1);
@@ -4748,19 +4772,23 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		return effectiveDates;
 	}
 
+	@FindBy(css="ul.staffing-dropdown-menu li:nth-child(1)")
+	private WebElement staffingRuleButton;
+	@FindBy(css=".constraint-box")
+	private WebElement staffingRuleFields;
 	@Override
 	public void checkTheEntryOfAddBasicStaffingRule() throws Exception {
 		waitForSeconds(5);
 		if(isElementEnabled(addIconOnRulesListPage)){
 			clickTheElement(addIconOnRulesListPage);
-			if(isElementEnabled(addAdvancedStaffingRuleButton)){
-				SimpleUtils.pass("Advance staffing rules tab is show");
-				clickTheElement(addAdvancedStaffingRuleButton);
-				if(isElementEnabled(dynamicGroupSection)){
-					SimpleUtils.pass("Advance staffing rules tab is clickable");
+			if(isElementEnabled(staffingRuleButton)){
+				SimpleUtils.pass("Staffing rules tab is show");
+				clickTheElement(staffingRuleButton);
+				if(isElementEnabled(staffingRuleFields)){
+					SimpleUtils.pass("Staffing rules tab is clickable");
 				}
 				else{
-					SimpleUtils.fail("Advance staffing rules tab is NOT clickable",false);
+					SimpleUtils.fail("Staffing rules tab is NOT clickable",false);
 				}
 			}else {
 				SimpleUtils.pass("Advance staffing rules tab is NOT show");
@@ -4794,65 +4822,516 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement warningToast;
 	@FindBy(css = "button[class*=\"btn lgn-action-button\"]")
 	private WebElement okBtn;
+	@FindBy(css = "tr[ng-repeat=\"rule in $ctrl.sortedRows\"] lg-button[label=\"Edit\"]")
+	private WebElement editBtnForDriver;
 	@Override
-	public void addDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception {
+	public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo, String addOrEdit) throws Exception {
 		String childTag = "";
 		String fieldType = "";
 		Select select = null;
 		List<WebElement> yesOrNoOptions = null;
-		if (isElementLoaded(addBtnForDriver)){
-			clickTheElement(addBtnForDriver);
-			if (areListElementVisible(fieldInputList)){
-				for (int i = 0; i < fieldInputList.size() - 1; i++){
-					for (Map.Entry<String, String> entry : driverSpecificInfo.entrySet()){
-						if (fieldInputList.get(i).findElement(By.cssSelector("question-input")).getAttribute("question-title").contains(entry.getKey())){
-							childTag = fieldInputList.get(i).findElement(By.cssSelector("ng-transclude.lg-question-input__input :first-child")).getTagName();
-							if(childTag.equals("input-field")){
-								fieldType = fieldInputList.get(i).findElement(By.cssSelector("input-field")).getAttribute("type");
-								if (fieldType.equals("text") || fieldType.equals("number")){
-									fieldInputList.get(i).findElement(By.cssSelector("input-field input")).clear();
-									fieldInputList.get(i).findElement(By.cssSelector("input-field input")).sendKeys(entry.getValue());
-									break;
-								}else if(fieldType.equals("select")){
-									select = new Select(fieldInputList.get(i).findElement(By.cssSelector("select")));
+
+		if ("Add".equalsIgnoreCase(addOrEdit)){
+			if (isElementLoaded(addBtnForDriver))
+				clickTheElement(addBtnForDriver);
+		}else if("Edit".equalsIgnoreCase(addOrEdit)){
+			if (isElementLoaded(editBtnForDriver,5))
+				click(editBtnForDriver);
+			if (isElementLoaded(warningToast))
+				clickTheElement(leaveThisPageButton);
+		}else {
+			SimpleUtils.fail("Please choose add or edit mode!", false);
+		}
+
+		if (areListElementVisible(fieldInputList)){
+			for (int i = 0; i < fieldInputList.size() - 1; i++){
+				for (Map.Entry<String, String> entry : driverSpecificInfo.entrySet()){
+					if (fieldInputList.get(i).findElement(By.cssSelector("question-input")).getAttribute("question-title").contains(entry.getKey())){
+						childTag = fieldInputList.get(i).findElement(By.cssSelector("ng-transclude.lg-question-input__input :first-child")).getTagName();
+						if(childTag.equals("input-field")){
+							fieldType = fieldInputList.get(i).findElement(By.cssSelector("input-field")).getAttribute("type");
+							if ((fieldType.equals("text") || fieldType.equals("number")) &&
+									!fieldInputList.get(i).findElement(By.cssSelector("input-field input")).getText().equals(entry.getValue())){
+								fieldInputList.get(i).findElement(By.cssSelector("input-field input")).clear();
+								fieldInputList.get(i).findElement(By.cssSelector("input-field input")).sendKeys(entry.getValue());
+								break;
+							}else if(fieldType.equals("select")){
+								select = new Select(fieldInputList.get(i).findElement(By.cssSelector("select")));
+								if ((fieldInputList.get(i).findElement(By.cssSelector("select")).getAttribute("class").contains("ng-empty")) ||
+										!select.getFirstSelectedOption().getText().equals(entry.getValue()))
 									select.selectByVisibleText(entry.getValue());
-									break;
-								}else{
-									SimpleUtils.fail("Field Type is not as expected!", false);
-								}
-							}else if (childTag.equals("yes-no")){
-								yesOrNoOptions = fieldInputList.get(i).findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
-								for (WebElement choose : yesOrNoOptions){
-									if (choose.findElement(By.cssSelector("span")).getText().equals(entry.getValue()) &&
-											choose.findElement(By.cssSelector("span")).getAttribute("class").equals("lg-button-group-selected")){
-										clickTheElement(choose);
-										break;
-									}
-									break;
-								}
-							}else {
-								SimpleUtils.fail("Tag Type is not as expected!", false);
+								break;
+							}else{
+								SimpleUtils.fail("Field Type is not as expected!", false);
 							}
+						}else if (childTag.equals("yes-no")){
+							yesOrNoOptions = fieldInputList.get(i).findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
+							for (WebElement choose : yesOrNoOptions){
+								if (choose.findElement(By.cssSelector("span")).getText().equals(entry.getValue()) &&
+										!choose.findElement(By.cssSelector("span")).getAttribute("class").equals("lg-button-group-selected")){
+									clickTheElement(choose);
+									break;
+								}
+								break;
+							}
+						}else {
+							SimpleUtils.fail("Tag Type is not as expected!", false);
 						}
 					}
 				}
-				clickTheElement(saveBtn);
-				if (isElementLoaded(warningToast, 5)) {
-					if (warningToast.getText().contains("name duplicates with existing demand drivers")) {
-						SimpleUtils.report("Create a driver with a duplicated name is not allowed!");
-					}else if(warningToast.getText().contains("type, channel and category duplicate with existing demand drivers")){
-						SimpleUtils.report("Create a driver with a duplicated type& channel& category is not allowed!");
-					}
-					//click the ok and cancel
-					clickTheElement(okBtn);
-					clickTheElement(cancelButton);
-					waitForSeconds(3);
+			}
+			clickTheElement(saveBtn);
+			if (isElementLoaded(warningToast, 5)) {
+				if (warningToast.getText().contains("name duplicates with existing demand drivers")) {
+					SimpleUtils.report("Create a driver with a duplicated name is not allowed!");
+				}else if(warningToast.getText().contains("type, channel and category duplicate with existing demand drivers")){
+					SimpleUtils.report("Create a driver with a duplicated type& channel& category is not allowed!");
 				}
-			}else {
-				SimpleUtils.fail("No fields found in demand driver creation page!", false);
+				//click the ok and cancel
+				clickTheElement(okBtn);
+				clickTheElement(cancelButton);
+				waitForSeconds(3);
 			}
 		}else {
-			SimpleUtils.fail("No add button found in demand driver list page!", false);
+			SimpleUtils.fail("No fields found in demand driver creation/Edit page!", false);
+		}
+	}
+
+	@Override
+	public void verifyPublishedTemplateAfterEdit(String templateName) throws Exception {
+		if (searchTemplate(templateName)){
+			if (isItMultipVersion()){
+				if (!isClickable(templatesList.get(0).findElement(By.cssSelector("button")), 5)){
+					if(publishedTemplateStatus.size() == 1){
+						expandTemplate();
+						clickTheElement(getDriver().findElement(By.cssSelector(".child-row button")));
+						if(!isElementLoaded(templateDetailsTab))
+							SimpleUtils.fail("Failed to enter the template details page!", false);
+					}else {
+						SimpleUtils.fail("There should be only one published version!", false);
+					}
+
+				}else{
+					SimpleUtils.fail("Template name should not be clickable for multiple version!", false);
+				}
+			}else{
+				SimpleUtils.fail("This template should be multiple version!", false);
+			}
+		}else {
+			SimpleUtils.fail("Can not find the template you search!", false);
+		}
+
+
+	}
+
+	@FindBy(css="input[placeholder=\"Search by demand driver name\"]")
+	private WebElement searchDriverInputBox;
+	@FindBy(css="tr[ng-repeat=\"rule in $ctrl.sortedRows\"]")
+	private List<WebElement> driverList;
+	@Override
+	public boolean searchDriverInTemplateDetailsPage(String driverName) throws Exception {
+		boolean existing = false;
+		if(isElementEnabled(searchDriverInputBox,5)){
+			clickTheElement(searchDriverInputBox);
+			searchDriverInputBox.clear();
+			searchDriverInputBox.sendKeys(driverName);
+			searchDriverInputBox.sendKeys(Keys.ENTER);
+			waitForSeconds(2);
+			if(driverList.size()>0)
+				existing = true;
+		}
+		return existing;
+	}
+
+	@FindBy(css="lg-button[label=\"Remove\"]")
+	private WebElement removeBTN;
+	@Override
+	public void clickRemove() throws Exception {
+		if (isElementLoaded(removeBTN)){
+			clickTheElement(removeBTN);
+		}else {
+			SimpleUtils.fail("Can not find the remove button!", false);
+		}
+	}
+	@FindBy(tagName = "work-role-badges-edit")
+	private WebElement badgeSection;
+
+	@Override
+	public void verifyStaffingRulePageShowWell() throws Exception{
+		if(isElementEnabled(badgeSection) && isElementEnabled(staffingRuleFields)){
+			SimpleUtils.pass("Staffing rule page shows well");
+		}else{
+			SimpleUtils.fail("Staffing rule page doesn't show well",false);
+		}
+	}
+
+	@FindBy(css=".limit-constraint select")
+	private WebElement conditionMaxMinExactly;
+	@FindBy(css="input-field[type=\"number\"] input")
+	private WebElement numberInput;
+	@FindBy(css="input-field.workRoleSelect select")
+	private WebElement workRoleSelect;
+	@FindBy(css="input-field[options*=\"UnitOptions\"] select")
+	private WebElement unitOptions;
+	@FindBy(css="div[ng-if*=\"showTimeConstraint()\"] input-field[type=\"number\"] input")
+	private WebElement startOffsetMinutes;
+	@FindBy(css="div[ng-if*=\"isDuring()\"] input-field[type=\"number\"] input")
+	private WebElement endOffsetMinutes;
+	@FindBy(css="div[ng-if^=\"$ctrl.showTimeConstraint()\"] input-field[options*=\"getEventPointOptions\"] select")
+	private WebElement startEventPointOptions;
+	@FindBy(css="div[ng-if*=\"isDuring()\"] input-field[options*=\"getEventPointOptions\"] select")
+	private WebElement endEventPointOptions;
+	@FindBy(css="div[ng-if^=\"$ctrl.showTimeConstraint()\"] lg-select[options*=\"timeEventOptions\"] input-field")
+	private WebElement startTimeEventOptions;
+	@FindBy(css="div[ng-if^=\"$ctrl.showTimeConstraint()\"] lg-select[options*=\"timeEventOptions\"] input-field div")
+	private WebElement startTimeEventSelected;
+	@FindBy(css="div[ng-if*=\"isDuring()\"] lg-select[options*=\"timeEventOptions\"]")
+	private WebElement endTimeEventOptions;
+	@FindBy(css="div[ng-if*=\"isDuring()\"] lg-select[options*=\"timeEventOptions\"] input-field div")
+	private WebElement endTimeEventSelected;
+	@FindBy(css="div[ng-if^=\"$ctrl.showTimeConstraint()\"]  .lg-search-options .lg-search-options__option")
+	private List<WebElement> startTimeEventOptionsList;
+	@FindBy(css="div[ng-if*=\"isDuring()\"]  .lg-search-options .lg-search-options__option")
+	private List<WebElement> endTimeEventOptionsList;
+
+	@Override
+	public void verifyConditionAndNumberFiledCanShowWell() throws Exception{
+		boolean flag = true;
+		List<String> targets = new ArrayList<>(Arrays.asList("A Maximum","A Minimum","Exactly"));
+		List<String> optionNames = new ArrayList<>();
+		Select select = new Select(conditionMaxMinExactly);
+		//verify the conditionMaxMinExactly field options list
+		if(isElementLoaded(conditionMaxMinExactly,2) && isElementLoaded(numberInput,2)){
+			List<WebElement> options = select.getOptions();
+			for(WebElement option:options){
+				String optionName = option.getText().trim();
+				optionNames.add(optionName);
+			}
+			for(String optionName:optionNames){
+				for(String option:targets){
+					if(optionName.equalsIgnoreCase(option)){
+						flag = true;
+						SimpleUtils.pass(option + " is showing in list.");
+						break;
+					}else {
+						flag =false;
+					}
+				}
+			}
+			if(flag){
+				SimpleUtils.pass("conditionMaxMinExactly field options list can show well");
+			}else{
+				SimpleUtils.pass("conditionMaxMinExactly field options list is Not Correct.");
+			}
+
+			//Verify Exactly option is disabled by default
+			if(options.get(2).getAttribute("disabled").equalsIgnoreCase("true")){
+				SimpleUtils.pass("Exactly option is disabled by default!");
+			}else{
+				SimpleUtils.fail("Exactly option is Not disabled by default!",false);
+			}
+			//verify the Exactly option will only be enabled when user select start event filed as Specified Hours
+			selectStartTimeEvent("Specified Hours");
+			if(select.getFirstSelectedOption().getText().trim().equalsIgnoreCase("Exactly")){
+				SimpleUtils.pass("Exactly option will only be enabled when user select start event filed as Specified Hours.");
+			}else {
+				SimpleUtils.fail("Exactly option is not selected by default after user selected start event filed as Specified Hours.",false);
+			}
+		}
+	}
+
+	//select Start Time Event
+	@Override
+	public void selectStartTimeEvent(String startTimeEvent) throws Exception{
+		if(isElementLoaded(conditionMaxMinExactly,2)){
+			clickTheElement(startTimeEventOptions);
+			if(areListElementVisible(startTimeEventOptionsList,3)){
+				for(WebElement w:startTimeEventOptionsList){
+					if(w.getAttribute("innerText").trim().equalsIgnoreCase(startTimeEvent)){
+						clickTheElement(w);
+						break;
+					}
+				}
+			}
+			if(startTimeEventSelected.getAttribute("innerText").trim().equalsIgnoreCase(startTimeEvent)){
+				SimpleUtils.pass("User select start Time Event successfully!");
+			}else {
+				SimpleUtils.fail("User failed to select start Time Event!", false);
+			}
+		}
+	}
+
+	@FindBy(css="lg-button[label=\"Save\"] button")
+	private WebElement saveButtonOnBasicStaffingRule;
+	@FindBy(className = "settings-work-rule-save-icon")
+	private WebElement saveRuleIcon;
+	@Override
+	public void verifyNumberInputFieldOfBasicStaffingRule() throws Exception{
+		if(isElementLoaded(numberInput,3)){
+			clickTheElement(numberInput);
+			numberInput.clear();
+			numberInput.sendKeys("5");
+			if(saveRuleIcon.getAttribute("class").contains("enabled")){
+				SimpleUtils.pass("User can input number successfully!");
+			}else {
+				SimpleUtils.fail("User can not input number successfully!",false);
+			}
+		}
+	}
+
+	@Override
+	public List<String> verifyWorkRoleListOfBasicStaffingRule() throws Exception{
+		List<String> workRoleNames = new ArrayList<>();
+		if(isElementLoaded(workRoleSelect,3)){
+			Select select = new Select(workRoleSelect);
+			List<WebElement> workRoleList = select.getOptions();
+			for(WebElement workRole:workRoleList){
+				String workRoleName = workRole.getText().trim();
+				workRoleNames.add(workRoleName);
+			}
+		}
+		return workRoleNames;
+	}
+
+	@Override
+	public void verifyUnitOptionsListOfBasicStaffingRule() throws Exception{
+		List<String> unitOptionsValues = new ArrayList<>();
+		List<String> optionValues = new ArrayList<>(Arrays.asList("Shifts","Hours"));
+		if(isElementLoaded(unitOptions,2)){
+			Select select = new Select(unitOptions);
+			List<WebElement> unitOptionsList = select.getOptions();
+			for(WebElement unitOption:unitOptionsList){
+				unitOptionsValues.add(unitOption.getText().trim());
+			}
+		}
+		boolean flag = true;
+		for(String unitOptionsValue:unitOptionsValues){
+			for(String optionValue:optionValues){
+				if(unitOptionsValue.equalsIgnoreCase(optionValue)){
+					SimpleUtils.pass(optionValue + " is showing in Unit Options List");
+					flag = true;
+					break;
+				}else {
+					flag = false;
+				}
+			}
+		}
+		if(flag){
+			SimpleUtils.pass("unitOptions can show well");
+		}else {
+			SimpleUtils.fail("unitOptions can NOT show well",false);
+		}
+	}
+
+	@Override
+	public void verifyStartEndOffsetMinutesShowingByDefault() throws Exception{
+		Select select = new Select(startEventPointOptions);
+		WebElement selected = select.getFirstSelectedOption();
+		if(selected.getText().trim().equalsIgnoreCase("during")){
+			if(!isElementExist("div[ng-if*=\"showTimeConstraint()\"] input-field[type=\"number\"] input") && !isElementExist("div[ng-if*=\"isDuring()\"] input-field[type=\"number\"] input")){
+				SimpleUtils.pass("Start/End offset time is not showing when start Event Point Option is selected during");
+			}else {
+				SimpleUtils.fail("Start/End offset time is showing when start Event Point Option is selected during",false);
+			}
+		}
+		selectStartTimeEvent("Opening Operating Hours");
+		select.selectByVisibleText("after");
+		if(isElementExist("div[ng-if*=\"showTimeConstraint()\"] input-field[type=\"number\"] input") && isElementExist("div[ng-if*=\"isDuring()\"] input-field[type=\"number\"] input")){
+			SimpleUtils.pass("Start/End offset time is showing when start Event Point Option is selected after");
+		}else {
+			SimpleUtils.fail("Start/End offset time is NOT showing when start Event Point Option is selected after",false);
+		}
+		if(isElementLoaded(startOffsetMinutes,3)){
+			clickTheElement(startOffsetMinutes);
+			startOffsetMinutes.clear();
+			startOffsetMinutes.sendKeys("5");
+			if(saveRuleIcon.getAttribute("class").contains("enabled")){
+				SimpleUtils.pass("User can input number successfully!");
+			}else {
+				SimpleUtils.fail("User can not input number successfully!",false);
+			}
+		}
+		if(isElementLoaded(endOffsetMinutes,3)){
+			clickTheElement(endOffsetMinutes);
+			endOffsetMinutes.clear();
+			endOffsetMinutes.sendKeys("10");
+			if(saveRuleIcon.getAttribute("class").contains("enabled")){
+				SimpleUtils.pass("User can input number successfully!");
+			}else {
+				SimpleUtils.fail("User can not input number successfully!",false);
+			}
+		}
+	}
+
+	@Override
+	public void verifyStartEndEventPointOptionsList() throws Exception{
+		List<String> eventPoints = new ArrayList<>(Arrays.asList("before","after","during"));
+		List<String> eventPointList = new ArrayList<>();
+		boolean flag = true;
+		Select select = new Select(startEventPointOptions);
+		List<WebElement> eventPointOptions = select.getOptions();
+		for(WebElement eventPointOption:eventPointOptions){
+			eventPointList.add(eventPointOption.getText().trim());
+		}
+		for(String eventPointName:eventPointList){
+			for(String eventPoint:eventPoints){
+				if(eventPointName.equalsIgnoreCase(eventPoint)){
+					flag=true;
+					SimpleUtils.pass(eventPointName + " is showing in start Event Point Options list.");
+					break;
+				}else {
+					flag=false;
+				}
+			}
+		}
+		if(flag){
+			SimpleUtils.pass("start Event Point Options list can show correctly!");
+		}else {
+			SimpleUtils.fail("start Event Point Options list can NOT show correctly!",false);
+		}
+	}
+
+	@Override
+	public List<String> verifyStartEndTimeEventOptionsList() throws Exception{
+		List<String> startEndTimeEventOptions = new ArrayList<>();
+		if(isElementLoaded(startTimeEventOptions,3)){
+			clickTheElement(startTimeEventOptions);
+			if(areListElementVisible(startTimeEventOptionsList,2)){
+				for(WebElement startTimeEventOption:startTimeEventOptionsList){
+					startEndTimeEventOptions.add(startTimeEventOption.getAttribute("innerText").trim());
+				}
+			}else {
+				SimpleUtils.fail("startTimeEventOptionsList is not showing",false);
+			}
+		}
+		return  startEndTimeEventOptions;
+	}
+
+	@FindBy(css=".days-select input-field")
+	private WebElement daysOfWeekOfBasicRule;
+	@FindBy(css=".days-select input-field[type=\"checkbox\"]")
+	private List<WebElement> daysOptionList;
+
+	@Override
+	public void verifyDaysListShowWell() throws Exception{
+		List<String> days = new ArrayList<>();
+		List<String> daysInfo = new ArrayList<>(Arrays.asList("Fri","Mon","Sat","Sun","Thu","Tue","Wed"));
+		boolean flag = true;
+		if(isElementLoaded(daysOfWeekOfBasicRule,2)){
+			clickTheElement(daysOfWeekOfBasicRule);
+			if(areListElementVisible(daysOptionList,2)){
+				for(WebElement daysOption:daysOptionList){
+					days.add(daysOption.findElement(By.cssSelector(" label")).getText().trim());
+				}
+			}else {
+				SimpleUtils.fail("days Option List is not showing",false);
+			}
+		}
+		for(String dayInfo:daysInfo){
+			for(String day:days){
+				if(day.equalsIgnoreCase(dayInfo)){
+					flag = true;
+					SimpleUtils.pass(day + " is showing in days of week Option List");
+				}else {
+					flag = false;
+				}
+			}
+		}
+		if(flag){
+			SimpleUtils.pass("Days of week Option List are correct");
+		}else {
+			SimpleUtils.fail("Days of week Option List are NOT correct",false);
+		}
+	}
+
+	@Override
+	public void selectDaysForBasicStaffingRule(String day) throws Exception{
+		//verify all days are selected by default
+		for(WebElement daysOption:daysOptionList){
+			if(daysOption.findElement(By.cssSelector(" input")).getAttribute("class").trim().contains("ng-not-empty")){
+				SimpleUtils.pass(daysOption.findElement(By.cssSelector(" label")).getText().trim() + " is selected by default!");
+			}else {
+				SimpleUtils.fail(daysOption.findElement(By.cssSelector(" label")).getText().trim() + " is NOT selected by default!",false);
+			}
+		}
+		//select specified days
+		//de-selected all checkbox first
+		for(WebElement daysOption:daysOptionList){
+			if(daysOption.findElement(By.cssSelector(" input")).getAttribute("class").trim().contains("ng-not-empty")){
+				clickTheElement(daysOption.findElement(By.cssSelector(" input")));
+			}
+		}
+		//then select specified days
+		for(WebElement daysOption:daysOptionList){
+			if(daysOption.findElement(By.cssSelector(" label")).getText().trim().equals(day)){
+				clickTheElement(daysOption.findElement(By.cssSelector(" input")));
+				if(daysOption.findElement(By.cssSelector(" input")).getAttribute("class").trim().contains("ng-not-empty")){
+					SimpleUtils.pass("User can select " + day + " successfully!");
+				}else {
+					SimpleUtils.fail("User can NOT select " + day + " successfully!",false);
+				}
+				break;
+			}else {
+				continue;
+			}
+		}
+	}
+
+	@FindBy(css="span[ng-if=\"$ctrl.isFixedTime()\"]")
+	private WebElement fixedTime;
+	@FindBy(css="lg-time-select-modal[dismiss=\"$dismiss\"]")
+	private WebElement startAndEndTime;
+	@FindBy(css="lg-new-time-input[label=\"Open\"] input")
+	private WebElement startTime;
+	@FindBy(css="lg-new-time-input[label=\"Close\"] input")
+	private WebElement endTime;
+	@Override
+	public void setSpecifiedHours(String start, String end) throws Exception{
+		selectStartTimeEvent("Specified Hours");
+		if(isElementLoaded(fixedTime,2)){
+			SimpleUtils.pass("fixed Time field is showing after select Specified Hours");
+			clickTheElement(fixedTime);
+			if(isElementLoaded(startAndEndTime,2)){
+				SimpleUtils.pass("User can click fixed time field successfully");
+				clickTheElement(startTime);
+				startTime.clear();
+				startTime.sendKeys(start);
+				clickTheElement(endTime);
+				endTime.clear();
+				endTime.sendKeys(end);
+				clickTheElement(saveButton);
+				waitForSeconds(2);
+				if(isElementLoaded(fixedTime,2)){
+					if(fixedTime.getText().trim().contains(start) && fixedTime.getText().trim().contains(end)){
+						SimpleUtils.pass("User can set fixed Time successfully");
+					}else {
+						SimpleUtils.fail("User can NOT set fixed Time successfully",false);
+					}
+				}
+			}else {
+				SimpleUtils.fail("User can click fixed time field successfully",false);
+			}
+		}
+	}
+
+	@Override
+	public void selectEventPointForBasicStaffingRule(String startEventPoint,String endEventPoint) throws Exception{
+		Select select1 = new Select(startEventPointOptions);
+		select1.selectByVisibleText(startEventPoint);
+		Select select2 = new Select(endEventPointOptions);
+		select2.selectByVisibleText(endEventPoint);
+	}
+
+	@Override
+	public void verifyBeforeAndAfterDayPartsShouldBeSameWhenSetAsDayParts(String dayParts1,String dayParts2,String startEventPoint,String endEventPoint) throws Exception{
+		selectStartTimeEvent(dayParts1);
+		selectEventPointForBasicStaffingRule(startEventPoint,endEventPoint);
+		selectStartTimeEvent(dayParts2);
+		String bb= endTimeEventSelected.getAttribute("innerText").trim();
+		if(endTimeEventSelected.getAttribute("innerText").trim().equalsIgnoreCase(dayParts2)){
+			SimpleUtils.pass("The end time event will changed to same with start time event after changing start time event when set as day-parts");
+		}else {
+			SimpleUtils.fail("The end time event will NOT changed to same with start time event after changing start time event when set as day-parts",false);
 		}
 	}
 }

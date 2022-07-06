@@ -93,4 +93,5 @@ public interface ForecastPage<pubic> {
 	public void selectFilterOptionsByText(String option) throws Exception;
 	public void clickOnFilterButtonUnderDefinedTab() throws Exception;
 	public void clickOnDayPartsFilterButtonUnderLaborTab() throws Exception;
-}
+	public void verifyEditBtnNotVisible() throws Exception;
+	}
