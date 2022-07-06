@@ -5276,4 +5276,62 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}
 	}
+
+	@FindBy(css="span[ng-if=\"$ctrl.isFixedTime()\"]")
+	private WebElement fixedTime;
+	@FindBy(css="lg-time-select-modal[dismiss=\"$dismiss\"]")
+	private WebElement startAndEndTime;
+	@FindBy(css="lg-new-time-input[label=\"Open\"] input")
+	private WebElement startTime;
+	@FindBy(css="lg-new-time-input[label=\"Close\"] input")
+	private WebElement endTime;
+	@Override
+	public void setSpecifiedHours(String start, String end) throws Exception{
+		selectStartTimeEvent("Specified Hours");
+		if(isElementLoaded(fixedTime,2)){
+			SimpleUtils.pass("fixed Time field is showing after select Specified Hours");
+			clickTheElement(fixedTime);
+			if(isElementLoaded(startAndEndTime,2)){
+				SimpleUtils.pass("User can click fixed time field successfully");
+				clickTheElement(startTime);
+				startTime.clear();
+				startTime.sendKeys(start);
+				clickTheElement(endTime);
+				endTime.clear();
+				endTime.sendKeys(end);
+				clickTheElement(saveButton);
+				waitForSeconds(2);
+				if(isElementLoaded(fixedTime,2)){
+					if(fixedTime.getText().trim().contains(start) && fixedTime.getText().trim().contains(end)){
+						SimpleUtils.pass("User can set fixed Time successfully");
+					}else {
+						SimpleUtils.fail("User can NOT set fixed Time successfully",false);
+					}
+				}
+			}else {
+				SimpleUtils.fail("User can click fixed time field successfully",false);
+			}
+		}
+	}
+
+	@Override
+	public void selectEventPointForBasicStaffingRule(String startEventPoint,String endEventPoint) throws Exception{
+		Select select1 = new Select(startEventPointOptions);
+		select1.selectByVisibleText(startEventPoint);
+		Select select2 = new Select(endEventPointOptions);
+		select2.selectByVisibleText(endEventPoint);
+	}
+
+	@Override
+	public void verifyBeforeAndAfterDayPartsShouldBeSameWhenSetAsDayParts(String dayParts1,String dayParts2,String startEventPoint,String endEventPoint) throws Exception{
+		selectStartTimeEvent(dayParts1);
+		selectEventPointForBasicStaffingRule(startEventPoint,endEventPoint);
+		selectStartTimeEvent(dayParts2);
+		String bb= endTimeEventSelected.getAttribute("innerText").trim();
+		if(endTimeEventSelected.getAttribute("innerText").trim().equalsIgnoreCase(dayParts2)){
+			SimpleUtils.pass("The end time event will changed to same with start time event after changing start time event when set as day-parts");
+		}else {
+			SimpleUtils.fail("The end time event will NOT changed to same with start time event after changing start time event when set as day-parts",false);
+		}
+	}
 }
