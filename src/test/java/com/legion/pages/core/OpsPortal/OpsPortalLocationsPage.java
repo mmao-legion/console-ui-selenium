@@ -8,8 +8,6 @@ import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.an.E;
-import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
@@ -4671,6 +4669,45 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Existing dynamic group show failed",false);
 		}
 		click(cancelBtn);
+	}
+
+	public void goToAssignmentRuleOfSearchedLocation(String locationName) throws Exception{
+		click(getDriver().findElement(By.cssSelector("lg-button[label = \""+ locationName + "\"]")));
+		clickOnConfigurationTabOfLocation();
+
+		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("span[ng-click=\"$ctrl.canEdit && $ctrl.getTemplateDetails(value,'edit')\"]"));
+		if (areListElementVisible(templateNameLinks, 5)) {
+			click(templateNameLinks.get(0));
+			if (areListElementVisible(workRolesInAssignmentRulesInLocationLevel, 5)) {
+				SimpleUtils.pass("Go to Assignment rules in locations level successfully");
+			} else
+				SimpleUtils.fail("Failed go to Assignment rules in locations page ", false);
+		} else
+			SimpleUtils.fail("Configuration tab in locations level page load failed ", false);
+	}
+
+	@FindBy(css = "td:nth-child(1) > lg-button > button")
+	private WebElement workRolesRow;
+	@FindBy(css = "span.setting-work-rule-staffing-text-font.setting-work-rule-assignment-condition")
+	private WebElement ambassador;
+	@FindBy(css = "div.ng-scope.lg-button-group-last")
+	private WebElement badgeRequired;
+	@FindBy(css = "div.search-message")
+	private WebElement badgesText;
+
+	public void verifyBadgeInLocation() throws Exception{
+		click(workRolesRow);
+		click(ambassador);
+		click(badgeRequired);
+
+		click(badgeSearchInput);
+		if(badgeListInAssignmentRuleTemplate.size() == 20){
+			if(badgesText.getAttribute("innerText").contains("Only 20 of the") && badgesText.getAttribute("innerText").contains("results are displayed in the list, you can use the search box to search for other badges."))
+				SimpleUtils.pass("Badge list size is 20 and text is correct");
+			else
+				SimpleUtils.fail("Badge text is wrong",false);
+		}else
+			SimpleUtils.fail("Badge list size is not 20",false);
 	}
 }
 

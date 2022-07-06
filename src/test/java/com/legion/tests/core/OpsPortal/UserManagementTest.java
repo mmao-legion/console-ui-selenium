@@ -1,5 +1,6 @@
 package com.legion.tests.core.OpsPortal;
 
+import com.legion.pages.DashboardPage;
 import com.legion.pages.LoginPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
@@ -11,6 +12,7 @@ import com.legion.pages.core.OpCommons.OpsCommonComponents;
 import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.pages.core.OpCommons.RightHeaderBarPage;
 import com.legion.pages.core.opusermanagement.*;
+import com.legion.pages.core.schedule.ConsoleScheduleCommonPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -945,6 +947,62 @@ public class UserManagementTest extends TestBase {
             userManagementPage.verifyJobTitleGroupTabDisplay();
 
         } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Badge Searching")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyBadgeSearchingAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try{
+            String badgeName = "ForAuto";
+            String badgeDescription = "Nancy";
+            //go to User Management Access Role table
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+
+            userManagementPage.verifyBadgesList("forBadge");
+            userManagementPage.searchBadge(badgeName);
+            userManagementPage.searchBadge(badgeDescription);
+
+            userManagementPage.verifyBackBtnIsClickable();
+            userManagementPage.clickLeaveThisPage();
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+
+            userManagementPage.verifySearchWorkRole("forBadge");
+            userManagementPage.verifyBadgeInWorkRole();
+            userManagementPage.searchBadge(badgeName);
+            userManagementPage.searchBadge(badgeDescription);
+            userManagementPage.updateBadge();
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+
+            locationsPage.searchLocation("NancyTest");
+            locationsPage.goToAssignmentRuleOfSearchedLocation("NancyTest");
+
+            userManagementPage.verifySearchWorkRole("forBadge");
+            locationsPage.verifyBadgeInLocation();
+            userManagementPage.searchBadge(badgeName);
+            userManagementPage.searchBadge(badgeDescription);
+            userManagementPage.updateBadge();
+
+            switchToNewWindow();
+            ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+            consoleNavigationPage.searchLocation("NancyTest");
+            consoleNavigationPage.navigateTo("Schedule");
+
+            ConsoleScheduleCommonPage consoleScheduleCommonPage = new ConsoleScheduleCommonPage();
+            consoleScheduleCommonPage.goToConsoleScheduleAndScheduleSubMenu();
+            consoleScheduleCommonPage.goToSchedule();
+
+        }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
