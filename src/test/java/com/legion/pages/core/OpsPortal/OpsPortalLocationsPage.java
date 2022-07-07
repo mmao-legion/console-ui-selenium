@@ -9,6 +9,7 @@ import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.an.E;
+import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
@@ -2370,8 +2371,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
-	@FindBy(css = "textarea[id=\"omjob\"]")
+	@FindBy(css = "textarea[autocorrect = 'off']")
 	private WebElement formulaInputBox;
+
+	@FindBy(css = "[placeholder = 'Enter your expression. The dynamic location group will only be created if the expresion evaluates to be true.']")
+	private WebElement formatScript;
 
 	@Override
 	public String addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception {
@@ -2397,11 +2401,16 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					} else
 						SimpleUtils.fail("WFS Dynamic group create failed", false);
 					return testInfo;
-				} else
+				} else{
+					if(formatScript.getAttribute("innerText").contains("Enter your expression. The dynamic location group will only be created if the expresion evaluates to be true.")){
+						SimpleUtils.pass("Format Script placeholder is correct");
+					}else
+						SimpleUtils.fail("Format Script placeholder is wrong",false);
 					formulaInputBox.sendKeys("Parent(1)");
-				click(okBtnInSelectLocation);
-				waitForSeconds(3);
+					scrollToElement(okBtnInSelectLocation);
+				}
 
+				click(okBtnInSelectLocation);
 
 			} else
 				SimpleUtils.fail("Manager Dynamic Group win load failed", false);
@@ -2432,11 +2441,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void iCanDeleteExistingWFSDG() {
-		waitForSeconds(10);
+		waitForSeconds(2);
 		if (groupRows.size() > 0) {
 			if (areListElementVisible(deleteDGIconInWFS, 30)) {
 				for (WebElement dg : deleteDGIconInWFS) {
-					waitForSeconds(10);
+					waitForSeconds(2);
 					click(dg);
 					if (isRemoveDynamicGroupPopUpShowing()) {
 						waitForSeconds(3);
@@ -2451,6 +2460,19 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.report("There is no groups which selected");
 
 
+	}
+
+	@Override
+	public void removedSearchedWFSDG() throws Exception{
+		if(isExist(removeBtnInRemovDGPopup)){
+			click(removeBtnInRemovDGPopup);
+			click(removeBtnInRemovDGPopup);
+			if(isExist(removeBtnInRemovDGPopup)){
+				SimpleUtils.pass("Remove successfully");
+			}else
+				SimpleUtils.fail("Remove failed",false);
+		}else
+			SimpleUtils.fail("There is no remove button",false);
 	}
 
 	@Override
@@ -2475,6 +2497,41 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		String testInfo = "";
 		if (areListElementVisible(editDGIconInWFS, 10)) {
 			click(editDGIconInWFS.get(0));
+		} else {
+			SimpleUtils.fail("There is no records in WFS!", false);
+		}
+		if (isManagerDGpopShowWell()) {
+			groupNameInput.clear();
+			groupNameInput.sendKeys(groupName + "Update");
+			selectTheCriteria(criteriaUpdate);
+			click(criteriaValue);
+			click(checkboxInCriteriaValue.get(0));
+			click(testBtn);
+			if (isElementLoaded(testBtnInfo, 5)) {
+				testInfo = testBtnInfo.getText().trim();
+			}
+			clickTheElement(okBtnInSelectLocation);
+			waitForSeconds(3);
+			searchWFSDynamicGroup(groupName + "Update");
+			if (groupRows.size() > 0) {
+				SimpleUtils.pass("WFS Dynamic group update  successfully");
+			} else
+				SimpleUtils.fail("WFS Dynamic group create failed", false);
+			return testInfo;
+		} else
+			SimpleUtils.fail("Manager Dynamic Group win load failed", false);
+		return null;
+	}
+
+	@FindBy(css = "lg-button[label = 'Edit']")
+	private List<WebElement> edit;
+
+	@Override
+	public String editWFSDynamicGroup(String groupName, String criteriaUpdate) throws Exception {
+		waitForSeconds(3);
+		String testInfo = "";
+		if (areListElementVisible(edit, 10)) {
+			click(edit.get(0));
 		} else {
 			SimpleUtils.fail("There is no records in WFS!", false);
 		}
@@ -4574,6 +4631,70 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.fail("User can't update enterprise info successfully!",false);
 			}
 		}
+	}
+
+	@FindBy(css = "div.radio-info input-field label:nth-child(1)")
+	private List<WebElement> parentLocationGroup;
+	@FindBy(xpath = "//input-field//div//span[contains(text(),'Select parent location')]")
+	private WebElement childLocationGroup;
+
+	public void verifyLocationRelationshipForLocationGroup(String locationGroup) throws Exception {
+		switch (locationGroup) {
+			case "Parent":
+				if (parentLocationGroup.size() == 2) {
+					SimpleUtils.pass("parent Location Group is showing");
+				} else {
+					SimpleUtils.fail("parent Location Group is not showing", false);
+				}
+				break;
+			case "Child":
+				if (isExist(childLocationGroup)) {
+					SimpleUtils.pass("Child Location Group is showing");
+				} else {
+					SimpleUtils.fail("Child Location Group is not showing", false);
+				}
+				break;
+		}
+
+
+	public void verifyDuplicatedDGErrorMessage() throws Exception{
+		if(isExist(errorMessage)){
+			if(errorMessage.getAttribute("innerText").contains("DynamicGroup duplicated with")){
+				SimpleUtils.pass("DynamicGroup duplicated error meaasge is correct");
+				click(cancelBtn);
+			}else
+				SimpleUtils.fail("DynamicGroup duplicated error meaasge is wrong",false);
+
+		}else
+			SimpleUtils.fail("DynamicGroup duplicated error meaasge doesn't display",false);
+	}
+
+	@FindBy(css = "h1>lg-close")
+	private WebElement closeBtn;
+
+	public void verifyCriteriaList() throws Exception{
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(0));
+			if (criteriaOptions.get(0).getAttribute("innerText").contains("Config Type") && criteriaOptions.get(1).getAttribute("innerText").contains("District") && criteriaOptions.get(2).getAttribute("innerText").contains("Country")
+					&& criteriaOptions.get(3).getAttribute("innerText").contains("State") && criteriaOptions.get(4).getAttribute("innerText").contains("City") && criteriaOptions.get(5).getAttribute("innerText").contains("Location Name")
+					&& criteriaOptions.get(6).getAttribute("innerText").contains("Location Id") && criteriaOptions.get(7).getAttribute("innerText").contains("Location Type") && criteriaOptions.get(8).getAttribute("innerText").contains("UpperField")
+					&& criteriaOptions.get(9).getAttribute("innerText").contains("Custom")) {
+				SimpleUtils.pass("Criteria list is correct");
+				click(closeBtn);
+			} else
+				SimpleUtils.fail("Criteria list is wrong", false);
+		}else
+			SimpleUtils.fail("Add dynamic group button load failed",false);
+	}
+
+	public void eidtExistingDGP() throws Exception{
+		click(editOnGlobalConfigPage);
+		if (isManagerDGpopShowWell()) {
+			SimpleUtils.pass("Existing dynamic group show well");
+		}else{
+			SimpleUtils.fail("Existing dynamic group show failed",false);
+		}
+		click(cancelBtn);
 	}
 }
 

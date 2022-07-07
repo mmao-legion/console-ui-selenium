@@ -896,13 +896,16 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
     private List<WebElement> staffNameList;
 
     public void VerifyStaffListInSchedule(String name) throws Exception {
+        boolean flag = false;
         for (int i = 0; i < staffNameList.size(); i++) {
             if (staffNameList.get(i).getText().contains(name)) {
                 SimpleUtils.pass("Staff name is showing");
+                flag = true;
                 break;
-            } else {
-                SimpleUtils.fail("Staff name is not showing", true);
             }
+        }
+        if (!flag) {
+            SimpleUtils.fail("Staff name is not showing", true);
         }
     }
 }

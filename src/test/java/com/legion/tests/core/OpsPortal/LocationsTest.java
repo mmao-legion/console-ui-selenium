@@ -6,6 +6,7 @@ import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
+import com.legion.pages.core.opemployeemanagement.TimeOffPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -2205,7 +2206,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Assignment Rules")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verify1AssignmentRulesInLocationLevelAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyAssignmentRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try {
             String workRoleName = "AMBASSADOR";
@@ -2258,29 +2259,74 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Yang")
     @Enterprise(name = "opauto")
-    @TestName(description = "Verify that different legion user can see created status location by default")
+    @TestName(description = "Verify that different user can edit forecast data, then he can generate demand based schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
-    public void verifyVerifyDifferentLegionUserCanSeeCreatedLocationOfDM(String username, String password, String browser, String location) throws Exception {
+    public void verifyDifferentLegionUserCanGenerateScheduleAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
-
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyy MMM dd");
+            String currentTime = dfs.format(new Date());
             String locationName = "yangUsingNSOLocation";
             LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName("A B");
+            teamPage.isProfilePageLoaded();
+            teamPage.goToTeam();
             teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            ForecastPage forecastPage  = pageFactory.createForecastPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.goToSpecificWeekByDate(currentTime);
+            scheduleCommonPage.clickOnFirstWeekInWeekPicker();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
-            locationsPage.goToLocationDetailsPage(locationName);
-
+            //check the location status
+            if(locationsPage.searchLocationAndGetStatus(locationName).equals("ENABLED"))
+                SimpleUtils.pass("New created location with today as effective day is enabled");
+            else
+                SimpleUtils.report("New created location with today as effective day status is incorrect");
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify that different legion user can see created status NSO location by default.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyDifferentLegionUserCanSeeCreatedLocationAsDM(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyy MMM dd");
+            String currentTime = dfs.format(new Date());
+            String locationName = "yangUsingNSOLocation";
+            LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+            ForecastPage forecastPage  = pageFactory.createForecastPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            forecastPage.verifyEditBtnNotVisible();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
@@ -2303,4 +2349,66 @@ public class LocationsTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Split override/reset of Work Role and Location Attribute")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void VerifySplitOverrideResetOfWorkRoleAndLocationAttributeAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            //Verify Overridden sign is changed once there is modification for Work Role.
+            //Verify Overridden sign is changed once there is modification for External Attribute
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.overriddenLaborModelRuleInLocationLevel(1);
+            laborModelPage.clickOnSaveButton();
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("External Attributes");
+            laborModelPage.updateAttributeValueInTemplate("LongLane", "1");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
+            //Verify modify and reset is split for work role and external attribute
+            locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+            //Verify reset work role will not reset external attribute
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+            locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","No");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify can not change location relationship for location group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyCanNotChangeLocationRelationshipForLocationGroupAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String parentLocationName = "AutoImport_LGP2P_To_SpecificDistrict";
+            String childLocationName = "AutoImport_LGP2P_Child1";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(parentLocationName);
+            locationsPage.verifyLocationRelationshipForLocationGroup("Parent");
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(childLocationName);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.verifyLocationRelationshipForLocationGroup("Child");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
