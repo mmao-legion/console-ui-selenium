@@ -4633,6 +4633,30 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
+	@FindBy(css = "div.radio-info input-field label:nth-child(1)")
+	private List<WebElement> parentLocationGroup;
+	@FindBy(xpath = "//input-field//div//span[contains(text(),'Select parent location')]")
+	private WebElement childLocationGroup;
+
+	public void verifyLocationRelationshipForLocationGroup(String locationGroup) throws Exception {
+		switch (locationGroup) {
+			case "Parent":
+				if (parentLocationGroup.size() == 2) {
+					SimpleUtils.pass("parent Location Group is showing");
+				} else {
+					SimpleUtils.fail("parent Location Group is not showing", false);
+				}
+				break;
+			case "Child":
+				if (isExist(childLocationGroup)) {
+					SimpleUtils.pass("Child Location Group is showing");
+				} else {
+					SimpleUtils.fail("Child Location Group is not showing", false);
+				}
+				break;
+		}
+
+
 	public void verifyDuplicatedDGErrorMessage() throws Exception{
 		if(isExist(errorMessage)){
 			if(errorMessage.getAttribute("innerText").contains("DynamicGroup duplicated with")){

@@ -299,5 +299,6 @@ public interface LocationsPage {
     public void verifyDuplicatedDGErrorMessage() throws Exception;
     public void verifyCriteriaList() throws Exception;
     public void eidtExistingDGP() throws Exception;
+    public void verifyLocationRelationshipForLocationGroup(String locationGroup) throws Exception;
 }
 

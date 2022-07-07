@@ -2386,4 +2386,29 @@ public class LocationsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify can not change location relationship for location group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyCanNotChangeLocationRelationshipForLocationGroupAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String parentLocationName = "AutoImport_LGP2P_To_SpecificDistrict";
+            String childLocationName = "AutoImport_LGP2P_Child1";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(parentLocationName);
+            locationsPage.verifyLocationRelationshipForLocationGroup("Parent");
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(childLocationName);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.verifyLocationRelationshipForLocationGroup("Child");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
