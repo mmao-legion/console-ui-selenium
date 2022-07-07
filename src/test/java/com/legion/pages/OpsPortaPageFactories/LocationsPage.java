@@ -302,5 +302,6 @@ public interface LocationsPage {
     public void goToAssignmentRuleOfSearchedLocation(String locationName) throws Exception;
     public void verifyBadgeInLocation() throws Exception;
     public void addWorkforceSharingDGWithMutiplyCriteria() throws Exception;
+    public void verifyLocationRelationshipForLocationGroup(String locationGroup) throws Exception;
 }
 

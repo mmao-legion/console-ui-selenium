@@ -5340,11 +5340,45 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css = "div.ng-scope.lg-button-group-last")
 	private WebElement noBtn;
 
-	public void verifyWorkforceSharingGroup() throws Exception{
+	public void verifyWorkforceSharingGroup() throws Exception {
 		click(noBtn);
-		if(!isElementLoaded(workforceSharingGroup,5)){
+		if (!isElementLoaded(workforceSharingGroup, 5)) {
 			SimpleUtils.pass("Workforce Sharing Group doesn't display");
-		}else
-			SimpleUtils.fail("Workforce Sharing Group display",false);
+		} else
+			SimpleUtils.fail("Workforce Sharing Group display", false);
+	}
+
+	@FindBy(css="div.settings-work-rule-footer-edit div:first-child")
+	private WebElement crossButtonOfBasicStaffingRule;
+	@FindBy(css="div.settings-work-rule-footer-edit div:last-child")
+	private WebElement checkButtonOfBasicStaffingRule;
+	@FindBy(css=".settings-work-rule-edit-edit-icon i.fa-pencil")
+	private WebElement editButtonOfStaffingRule;
+	@FindBy(css="div[ng-repeat=\"rule in roleDetails\"]")
+	private List<WebElement> staffingRuleList;
+
+	public void verifyCrossAndCheckButtonOfBasicStaffingRule() throws Exception{
+		if(isElementLoaded(checkButtonOfBasicStaffingRule,2)){
+			clickTheElement(checkButtonOfBasicStaffingRule);
+			if(areListElementVisible(staffingRuleList,2) && isElementExist("div.settings-work-rule-edit-icon-container")){
+				SimpleUtils.pass("User can click check button successfully for basic staffing rule!");
+			}else {
+				SimpleUtils.fail("User can NOT click check button successfully for basic staffing rule!",false);
+			}
+		}
+		waitForSeconds(2);
+		if(isElementLoaded(editButtonOfStaffingRule,2)){
+			clickTheElement(editButtonOfStaffingRule);
+			if(isElementLoaded(crossButtonOfBasicStaffingRule,2)){
+				clickTheElement(crossButtonOfBasicStaffingRule);
+				if(areListElementVisible(staffingRuleList,2) && isElementExist("div.settings-work-rule-edit-icon-container")){
+					SimpleUtils.pass("User can click cross button successfully for basic staffing rule!");
+				}else {
+					SimpleUtils.fail("User can NOT click cross button successfully for basic staffing rule!",false);
+				}
+			}
+		}else {
+			SimpleUtils.fail("pencil button is not showing",false);
+		}
 	}
 }
