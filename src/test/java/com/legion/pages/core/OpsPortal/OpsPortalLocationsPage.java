@@ -8,8 +8,6 @@ import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.an.E;
-import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
@@ -2472,7 +2470,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}else
 				SimpleUtils.fail("Remove failed",false);
 		}else
-			SimpleUtils.fail("There is no remove button",false);
+			SimpleUtils.report("There is no remove button");
 	}
 
 	@Override
@@ -4671,6 +4669,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "h1>lg-close")
 	private WebElement closeBtn;
+	@FindBy(css = "div:nth-child(4) > div.condition_line > div > i")
+	private WebElement deleteIcon;
 
 	public void verifyCriteriaList() throws Exception{
 		if (areListElementVisible(addDynamicGroupBtn)) {
@@ -4680,7 +4680,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					&& criteriaOptions.get(6).getAttribute("innerText").contains("Location Id") && criteriaOptions.get(7).getAttribute("innerText").contains("Location Type") && criteriaOptions.get(8).getAttribute("innerText").contains("UpperField")
 					&& criteriaOptions.get(9).getAttribute("innerText").contains("Custom")) {
 				SimpleUtils.pass("Criteria list is correct");
-				click(closeBtn);
+				selectTheCriteria("Config Type");
+				click(addMoreBtn);
+				click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > input-field")));
+				if(getDriver().findElement(By.cssSelector("div.lg-search-options__option-wrapper.ng-scope.lg-search-options__option-wrapper--disabled > div")).getCssValue("color").equals("rgba(211, 211, 211, 1)")){
+					SimpleUtils.pass("Selected criteria is gray out");
+					click(closeBtn);
+				}else
+					SimpleUtils.fail("Selected criteria is not gray out",false);
 			} else
 				SimpleUtils.fail("Criteria list is wrong", false);
 		}else
@@ -4695,6 +4702,74 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Existing dynamic group show failed",false);
 		}
 		click(cancelBtn);
+	}
+
+	public void goToAssignmentRuleOfSearchedLocation(String locationName) throws Exception{
+		click(getDriver().findElement(By.cssSelector("lg-button[label = \""+ locationName + "\"]")));
+		clickOnConfigurationTabOfLocation();
+
+		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("span[ng-click=\"$ctrl.canEdit && $ctrl.getTemplateDetails(value,'edit')\"]"));
+		if (areListElementVisible(templateNameLinks, 5)) {
+			click(templateNameLinks.get(0));
+			if (areListElementVisible(workRolesInAssignmentRulesInLocationLevel, 5)) {
+				SimpleUtils.pass("Go to Assignment rules in locations level successfully");
+			} else
+				SimpleUtils.fail("Failed go to Assignment rules in locations page ", false);
+		} else
+			SimpleUtils.fail("Configuration tab in locations level page load failed ", false);
+	}
+
+	@FindBy(css = "td:nth-child(1) > lg-button > button")
+	private WebElement workRolesRow;
+	@FindBy(css = "span.setting-work-rule-staffing-text-font.setting-work-rule-assignment-condition")
+	private WebElement ambassador;
+	@FindBy(css = "div.ng-scope.lg-button-group-last")
+	private WebElement badgeRequired;
+	@FindBy(css = "div.search-message")
+	private WebElement badgesText;
+
+	public void verifyBadgeInLocation() throws Exception{
+		click(workRolesRow);
+		click(ambassador);
+		click(badgeRequired);
+
+		click(badgeSearchInput);
+		if(badgeListInAssignmentRuleTemplate.size() == 20){
+			if(badgesText.getAttribute("innerText").contains("Only 20 of the") && badgesText.getAttribute("innerText").contains("results are displayed in the list, you can use the search box to search for other badges."))
+				SimpleUtils.pass("Badge list size is 20 and text is correct");
+			else
+				SimpleUtils.fail("Badge text is wrong",false);
+		}else
+			SimpleUtils.fail("Badge list size is not 20",false);
+	}
+
+	public void addWorkforceSharingDGWithMutiplyCriteria() throws Exception {
+		String testInfo = "";
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(0));
+			if (isManagerDGpopShowWell()) {
+				groupNameInput.sendKeys("AutoCreateMutiply");
+				selectTheCriteria("State");
+				click(criteriaValue);
+				click(checkboxInCriteriaValue.get(0));
+				click(criteriaValue);
+
+				click(addMoreBtn);
+				click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > input-field")));
+				click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > div > ng-transclude > lg-search-options > div > div > div:nth-child(5) > div")));
+				click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-cascade-select > lg-multiple-select > div > lg-picker-input > div > input-field")));
+				click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-cascade-select > lg-multiple-select > div > lg-picker-input > div > div > ng-transclude > div > div:nth-child(1) > input-field")));
+
+				click(addMoreBtn);
+				click(getDriver().findElement(By.cssSelector("div:nth-child(5) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > input-field")));
+				click(getDriver().findElement(By.cssSelector("div:nth-child(5) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > div > ng-transclude > lg-search-options > div > div > div:nth-child(10) > div")));
+				formulaInputBox.sendKeys("Parent(1)");
+				scrollToElement(okBtnInSelectLocation);
+				click(okBtnInSelectLocation);
+			}else
+				SimpleUtils.fail("Manager Dynamic Group win load failed", false);
+		} else
+			SimpleUtils.fail("Global dynamic group page load failed", false);
 	}
 }
 

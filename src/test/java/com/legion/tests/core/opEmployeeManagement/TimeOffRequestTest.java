@@ -501,7 +501,7 @@ public class TimeOffRequestTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Time off activity")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOffActivityAsInternalAdminOfTimeOffRequestTest(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOffActivityAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // delete created time off
         deleteRequestedTimeOffDateByWorkerId("648acc0c-64e7-4458-ad95-4a72057cb17b");
 

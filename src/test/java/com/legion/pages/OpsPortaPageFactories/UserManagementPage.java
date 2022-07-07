@@ -145,4 +145,14 @@ public interface UserManagementPage {
     public void goToJobTitleGroup() throws Exception;
 
     public void verifyJobTitleGroupTabDisplay() throws Exception;
+
+    public void verifyBadgesList(String workRoleName) throws Exception;
+
+    public void searchBadge(String badgeInfo) throws Exception;
+
+    public void updateBadge() throws Exception;
+
+    public void clickLeaveThisPage() throws Exception;
+
+    public void verifyBadgeInWorkRole() throws Exception;
     }

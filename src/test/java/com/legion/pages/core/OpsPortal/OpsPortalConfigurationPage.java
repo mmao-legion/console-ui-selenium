@@ -5335,6 +5335,19 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@FindBy(css = "div:nth-child(1) > ng-include > div > question-input > div > div.lg-question-input__wrapper > h3")
+	private WebElement workforceSharingGroup;
+	@FindBy(css = "div.ng-scope.lg-button-group-last")
+	private WebElement noBtn;
+
+	public void verifyWorkforceSharingGroup() throws Exception {
+		click(noBtn);
+		if (!isElementLoaded(workforceSharingGroup, 5)) {
+			SimpleUtils.pass("Workforce Sharing Group doesn't display");
+		} else
+			SimpleUtils.fail("Workforce Sharing Group display", false);
+	}
+
 	@FindBy(css="div.settings-work-rule-footer-edit div:first-child")
 	private WebElement crossButtonOfBasicStaffingRule;
 	@FindBy(css="div.settings-work-rule-footer-edit div:last-child")

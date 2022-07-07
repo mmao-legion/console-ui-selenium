@@ -9,6 +9,7 @@ import com.legion.pages.OpsPortaPageFactories.SettingsAndAssociationPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.pages.core.OpCommons.OpsCommonComponents;
 import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
+import com.legion.pages.core.OpsPortal.OpsPortalSettingsAndAssociationPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffPage;
 import com.legion.pages.core.schedule.ConsoleScheduleCommonPage;
 import com.legion.pages.core.schedule.ConsoleToggleSummaryPage;
@@ -1934,6 +1935,7 @@ public class ConfigurationTest extends TestBase {
             String searchText = "AutoCreate";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(templateType);
 
@@ -1949,12 +1951,17 @@ public class ConfigurationTest extends TestBase {
 
             configurationPage.clickEdit();
             configurationPage.clickOK();
+            configurationPage.verifyWorkforceSharingGroup();
 
             configurationPage.clickOnAssociationTabOnTemplateDetailsPage();
 
             OpsPortalLocationsPage opsPortalLocationsPage = new OpsPortalLocationsPage();
             opsPortalLocationsPage.eidtExistingDGP();
             opsPortalLocationsPage.searchWFSDynamicGroup(searchText);
+            opsPortalLocationsPage.removedSearchedWFSDG();
+
+            opsPortalLocationsPage.addWorkforceSharingDGWithMutiplyCriteria();
+            opsPortalLocationsPage.removedSearchedWFSDG();
 
             opsPortalLocationsPage.verifyCriteriaList();
             String locationNum = opsPortalLocationsPage.addWorkforceSharingDGWithOneCriteria(groupNameForWFS,description,criteria);
