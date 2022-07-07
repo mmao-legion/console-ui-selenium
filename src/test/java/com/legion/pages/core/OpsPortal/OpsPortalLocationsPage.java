@@ -2470,7 +2470,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}else
 				SimpleUtils.fail("Remove failed",false);
 		}else
-			SimpleUtils.fail("There is no remove button",false);
+			SimpleUtils.report("There is no remove button");
 	}
 
 	@Override
@@ -4645,6 +4645,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "h1>lg-close")
 	private WebElement closeBtn;
+	@FindBy(css = "div:nth-child(4) > div.condition_line > div > i")
+	private WebElement deleteIcon;
 
 	public void verifyCriteriaList() throws Exception{
 		if (areListElementVisible(addDynamicGroupBtn)) {
@@ -4654,7 +4656,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					&& criteriaOptions.get(6).getAttribute("innerText").contains("Location Id") && criteriaOptions.get(7).getAttribute("innerText").contains("Location Type") && criteriaOptions.get(8).getAttribute("innerText").contains("UpperField")
 					&& criteriaOptions.get(9).getAttribute("innerText").contains("Custom")) {
 				SimpleUtils.pass("Criteria list is correct");
-				click(closeBtn);
+				selectTheCriteria("Config Type");
+				click(addMoreBtn);
+				click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > input-field")));
+				if(getDriver().findElement(By.cssSelector("div.lg-search-options__option-wrapper.ng-scope.lg-search-options__option-wrapper--disabled > div")).getCssValue("color").equals("rgba(211, 211, 211, 1)")){
+					SimpleUtils.pass("Selected criteria is gray out");
+					click(closeBtn);
+				}else
+					SimpleUtils.fail("Selected criteria is not gray out",false);
 			} else
 				SimpleUtils.fail("Criteria list is wrong", false);
 		}else
@@ -4708,6 +4717,35 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.fail("Badge text is wrong",false);
 		}else
 			SimpleUtils.fail("Badge list size is not 20",false);
+	}
+
+	public void addWorkforceSharingDGWithMutiplyCriteria() throws Exception {
+		String testInfo = "";
+		if (areListElementVisible(addDynamicGroupBtn)) {
+			click(addDynamicGroupBtn.get(0));
+			if (isManagerDGpopShowWell()) {
+				groupNameInput.sendKeys("AutoCreateMutiply");
+				selectTheCriteria("State");
+				click(criteriaValue);
+				click(checkboxInCriteriaValue.get(0));
+				click(criteriaValue);
+
+				click(addMoreBtn);
+				click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > input-field")));
+				click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > div > ng-transclude > lg-search-options > div > div > div:nth-child(5) > div")));
+				click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-cascade-select > lg-multiple-select > div > lg-picker-input > div > input-field")));
+				click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-cascade-select > lg-multiple-select > div > lg-picker-input > div > div > ng-transclude > div > div:nth-child(1) > input-field")));
+
+				click(addMoreBtn);
+				click(getDriver().findElement(By.cssSelector("div:nth-child(5) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > input-field")));
+				click(getDriver().findElement(By.cssSelector("div:nth-child(5) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > div > ng-transclude > lg-search-options > div > div > div:nth-child(10) > div")));
+				formulaInputBox.sendKeys("Parent(1)");
+				scrollToElement(okBtnInSelectLocation);
+				click(okBtnInSelectLocation);
+			}else
+				SimpleUtils.fail("Manager Dynamic Group win load failed", false);
+		} else
+			SimpleUtils.fail("Global dynamic group page load failed", false);
 	}
 }
 

@@ -5334,4 +5334,17 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("The end time event will NOT changed to same with start time event after changing start time event when set as day-parts",false);
 		}
 	}
+
+	@FindBy(css = "div:nth-child(1) > ng-include > div > question-input > div > div.lg-question-input__wrapper > h3")
+	private WebElement workforceSharingGroup;
+	@FindBy(css = "div.ng-scope.lg-button-group-last")
+	private WebElement noBtn;
+
+	public void verifyWorkforceSharingGroup() throws Exception{
+		click(noBtn);
+		if(!isElementLoaded(workforceSharingGroup,5)){
+			SimpleUtils.pass("Workforce Sharing Group doesn't display");
+		}else
+			SimpleUtils.fail("Workforce Sharing Group display",false);
+	}
 }

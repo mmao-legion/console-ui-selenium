@@ -301,5 +301,6 @@ public interface LocationsPage {
     public void eidtExistingDGP() throws Exception;
     public void goToAssignmentRuleOfSearchedLocation(String locationName) throws Exception;
     public void verifyBadgeInLocation() throws Exception;
+    public void addWorkforceSharingDGWithMutiplyCriteria() throws Exception;
 }
 

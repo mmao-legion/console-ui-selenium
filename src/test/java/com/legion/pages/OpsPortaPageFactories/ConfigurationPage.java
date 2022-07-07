@@ -1,5 +1,7 @@
 package com.legion.pages.OpsPortaPageFactories;
 
+import org.openqa.selenium.WebElement;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,4 +165,5 @@ public interface ConfigurationPage {
     public void setSpecifiedHours(String start, String end) throws Exception;
     public void selectEventPointForBasicStaffingRule(String startEventPoint,String endEventPoint) throws Exception;
     public void verifyBeforeAndAfterDayPartsShouldBeSameWhenSetAsDayParts(String dayParts1,String dayParts2,String startEventPoint,String endEventPoint) throws Exception;
+    public void verifyWorkforceSharingGroup() throws Exception;
 }
