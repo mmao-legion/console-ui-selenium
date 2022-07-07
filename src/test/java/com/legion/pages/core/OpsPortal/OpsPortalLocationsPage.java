@@ -4655,7 +4655,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				}
 				break;
 		}
-
+	}
 
 	public void verifyDuplicatedDGErrorMessage() throws Exception{
 		if(isExist(errorMessage)){
