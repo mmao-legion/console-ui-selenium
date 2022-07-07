@@ -4590,7 +4590,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				}
 				break;
 			case "Child":
-				if (locationGroup.equalsIgnoreCase("Child") && isExist(childLocationGroup)) {
+				if (isExist(childLocationGroup)) {
 					SimpleUtils.pass("Child Location Group is showing");
 				} else {
 					SimpleUtils.fail("Child Location Group is not showing", false);
