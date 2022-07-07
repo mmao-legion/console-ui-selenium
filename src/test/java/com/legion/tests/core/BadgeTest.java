@@ -51,6 +51,8 @@ public class BadgeTest extends TestBase {
             teamPage.clickTheTMByName(tmA);
             teamPage.clickEditProfileBtn();
             teamPage.deleteBadges();
+            teamPage.saveEditProfileBtn();
+            teamPage.clickEditProfileBtn();
             teamPage.selectBadgeByName("Drop In Shift");
             teamPage.saveEditProfileBtn();
             SimpleUtils.assertOnFail("Failed for add badge to TM " + tmA, teamPage.isWithBadges(), false);
