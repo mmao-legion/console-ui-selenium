@@ -9,12 +9,14 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-    <test name="OP Config Test">
+    <test name="P2P LG Test">
         <classes>
-            <class name="com.legion.tests.core.OPConfigTest">
+            <class name="com.legion.tests.core.P2PLGTest">
                 <methods>
-                    <include name="verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin" />
-                    <include name="verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfPeerLocationsInTheScheduleOverviewPageAsInternalAdmin" />
+                    <include name="verifyCanCreateScheduleForAllPeerLocationsAsInternalAdmin" />
+                    <include name="verifyTheActionForEachPeerLocationsInDifferentStatusAsInternalAdmin" />
+ <!--                   <include name="verifyTheStatusOfP2PInDMViewsAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7076-->
                 </methods>
             </class>
         </classes>
