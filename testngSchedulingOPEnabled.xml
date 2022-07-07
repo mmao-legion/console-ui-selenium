@@ -558,6 +558,9 @@ SCH-5862-->
                     <!--                      <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnP2PLGScheduleAsInternalAdmin" />
                                         <include name="verifyBulkDragAndDropShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> -->
                     <include name="verifyTheFunctionalityOfPeerLocationsInTheScheduleOverviewPageAsInternalAdmin" />
+                    <include name="verifyCanCreateScheduleForAllPeerLocationsAsInternalAdmin" />
+                    <include name="verifyTheActionForEachPeerLocationsInDifferentStatusAsInternalAdmin" />
+                    <!--                   <include name="verifyTheStatusOfP2PInDMViewsAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7076-->
                                     </methods>
                                 </class>
                             </classes>

@@ -160,4 +160,9 @@ public interface ScheduleShiftTablePage {
     public boolean isMyScheduleShiftLocationLoaded(int index) throws Exception;
     public boolean isMyScheduleShiftWorkRoleLoaded(int index) throws Exception;
     public boolean isMyScheduleProfileNameLoaded(int index) throws Exception;
+    public void verifyGroupCannotbeCollapsedNExpanded() throws Exception;
+    public String getSpecificGroupByChildLocationStatus(String childLocation);
+    public String clickActionIconForSpecificGroupByChildLocation(String childLocation);
+    public void clickOnSpecificButtonsGroupByActionPopup(String buttonName) throws Exception;
+    public List<String> getButtonNamesFromGroupByActionPopup() throws Exception;
 }
