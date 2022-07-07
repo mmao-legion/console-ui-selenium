@@ -294,5 +294,6 @@ public interface LocationsPage {
     public void resetLocationLevelExternalAttributesInLaborModelTemplate()throws Exception;
     public void updateEnterpriseProfileDetailInfo() throws Exception;
     public void clickOnEnterpriseProfileCard() throws Exception;
+    public void verifyLocationRelationshipForLocationGroup(String locationGroup) throws Exception;
 }
 
