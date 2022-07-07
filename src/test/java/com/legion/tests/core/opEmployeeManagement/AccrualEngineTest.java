@@ -1547,7 +1547,7 @@ public class AccrualEngineTest extends TestBase {
         String Date9 = "2021-11-20";//>fixed days
 
         //Run engine to the day<fixed days:
-        /*String[] accrualResponse1 = runAccrualJobToSimulateDate(workerId, Date1, sessionId);
+        String[] accrualResponse1 = runAccrualJobToSimulateDate(workerId, Date1, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse1), 200, "Failed to run accrual job!");
         //and verify the result in UI
         refreshPage();
@@ -1709,7 +1709,7 @@ public class AccrualEngineTest extends TestBase {
         HashMap<String, String> accrualBalance11 = timeOffPage.getTimeOffBalance();
         String verification11 = validateTheAccrualResults(accrualBalance11, expectedTOBalance);
         Assert.assertTrue(verification11.contains("Succeeded in validating"), verification11);
-        SimpleUtils.pass("Succeeded in validating max carryover works well with fixed days(Hire date to Specified date)!");*/
+        SimpleUtils.pass("Succeeded in validating max carryover works well with fixed days(Hire date to Specified date)!");
 
         //Annual earn limit works well with fixed days
         timeOffPage.editTimeOffBalance("Annual Leave", "61");
@@ -1723,9 +1723,9 @@ public class AccrualEngineTest extends TestBase {
         String verification12 = validateTheAccrualResults(accrualBalance12, expectedTOBalance);
         Assert.assertTrue(verification12.contains("Succeeded in validating"), verification12);
         SimpleUtils.pass("Succeeded in validating Annual earn limit works well with fixed days(Hire date to hire date)!");
-
+        //Max carryover for hireDate to hireDate
         runAccrualJobToSimulateDate(workerId, "2022-10-21", sessionId);
-        expectedTOBalance.put("Annual Leave", "5");//hire date to specified date
+        //expectedTOBalance.put("Annual Leave", "5");//hire date to hire date
         //expectedTOBalance.put("PTO", "34");//5+29
         refreshPage();
         timeOffPage.switchToTimeOffTab();

@@ -3,14 +3,16 @@ package com.legion.pages.core.OpsPortal;
 import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.SettingsAndAssociationPage;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
+import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -431,7 +433,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                         if (NameOrSourceTypeInput.getText().equals(displayNameInput.getText())) {
                             fieldsInput.get(2).findElement(By.cssSelector("textarea[ng-if=\"$ctrl.type === 'textarea'\"]")).sendKeys(description);
                             if ("Category".equalsIgnoreCase(type) && isElementLoaded(useInReportCheckbox) &&
-                                    !useInReportCheckbox.getAttribute("checked").equalsIgnoreCase("checked")) {
+                                    useInReportCheckbox.getAttribute("checked") == null) {
                                 useInReportCheckbox.click();
                             }
                             clickTheElement(okBtnToSave);
@@ -498,8 +500,9 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
 
     @Override
     public void clickOnRemoveBtnInSettings(String verifyType, String Name) throws Exception {
-        if(searchSettingsForDemandDriver(verifyType, Name) != null){
-            clickTheElement(searchSettingsForDemandDriver(verifyType, Name).findElement(By.cssSelector("lg-button[label=\"Remove\"] button")));
+        WebElement searchResult = searchSettingsForDemandDriver(verifyType, Name);
+        if(searchResult != null){
+            clickTheElement(searchResult.findElement(By.cssSelector("lg-button[label=\"Remove\"] button")));
             if (isElementLoaded(popUpWindow.findElement(By.cssSelector("modal[modal-title*=\"Remove\"]")))){
                 clickTheElement(popUpWindow.findElement(By.cssSelector("lg-button[label=\"OK\"] button")));
             }else{
@@ -514,4 +517,222 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             SimpleUtils.fail("The item you want to remove does not exist in the result list!", false);
         }
     }
+
+    public List<String> getStreamNamesInList(String streamType) throws Exception{
+        List<String> streamNames = new ArrayList<>();
+
+        for (WebElement inputStreamRow : inputStreamRows){
+            if(streamType.equalsIgnoreCase(inputStreamRow.findElements(By.cssSelector("td")).get(1).getText())){
+                streamNames.add(inputStreamRow.findElement(By.cssSelector("td:first-child span")).getText());
+            }else if (streamType.equalsIgnoreCase("All")){
+                streamNames.add(inputStreamRow.findElement(By.cssSelector("td:first-child span")).getText());
+            }
+        }
+        return  streamNames;
+    }
+
+    public boolean verifyIfAllBaseStreamsInListForAggregatedInputStream(List<String> basicStreamNames) throws Exception{
+        boolean verifyResult = false;
+        List<String> streamNamesInList = new ArrayList<>();
+
+        for (WebElement streamOption : streamOptions){
+            streamNamesInList.add(streamOption.findElement(By.cssSelector("input-field label")).getText());
+        }
+        if (basicStreamNames.size() != streamNamesInList.size()){
+            SimpleUtils.fail("The total number in the stream list is not correct!", false);
+        }else{
+            Collections.sort(basicStreamNames);
+            Collections.sort(streamNamesInList);
+            if (ListUtils.isEqualList(basicStreamNames, streamNamesInList)){
+                verifyResult = true;
+            }
+        }
+        return  verifyResult;
+    }
+
+    @FindBy(css = "select[aria-label=\"Type\"]")
+    private WebElement streamType;
+    @FindBy(css = "select[aria-label=\"Streams\"]")
+    private WebElement streamOperator;
+    @FindBy(css = "lg-multiple-select[options=\"baseStreamOptions\"] input")
+    private WebElement streamValueInput;
+    @FindBy(css = "div.select-list-item.ng-scope")
+    private List<WebElement> streamOptions;
+    @FindBy(css = "lg-input-error.ng-scope span")
+    private WebElement errorHint;
+    @FindBy(css = "lg-button[label=\"Cancel\"] button")
+    private WebElement cancelBtn;
+    @Override
+    public void createInputStream(HashMap<String, String> inputStreamSpecificInfo) throws Exception {
+        WebElement NameInput;
+        boolean isExisting = false;
+        List<String> basicStreamNameList = null;
+        List<String> allStreamNameList = null;
+        String[] streamsToSet = null;
+
+        //Get stream names
+        basicStreamNameList = getStreamNamesInList("Base");
+        allStreamNameList = getStreamNamesInList("All");
+        if (areListElementVisible(settingsTypes, 5)) {
+            for (WebElement settingsType : settingsTypes) {
+                if (settingsType.findElement(By.cssSelector("lg-paged-search")).getAttribute("placeholder").contains("input stream")) {
+                    isExisting = true;
+                    scrollToElement(settingsType.findElement(By.cssSelector("lg-paged-search")));
+                    clickTheElement(settingsType.findElement(By.cssSelector("div.header-add-icon button")));
+                    if (isElementLoaded(popUpWindow, 3)) {
+                        NameInput = fieldsInput.get(0).findElement(By.xpath("//input[contains(@placeholder, 'Input Stream')]"));
+                        NameInput.sendKeys(inputStreamSpecificInfo.get("Name"));
+                        //Verify if the input name is existing
+                        if (allStreamNameList.contains(inputStreamSpecificInfo.get("Name"))){
+                            if (isElementLoaded(errorHint) && errorHint.getText().contains("input stream name is already exist")){
+                                clickTheElement(cancelBtn);
+                                SimpleUtils.pass("The error message is correct, cancel to create!");
+                           }else{
+                                SimpleUtils.fail("There should be an error message for existing input stream name!", false);
+                            }
+                            return;
+                        }
+
+                        fieldsInput.get(2).findElement(By.cssSelector("input[aria-label=\"Data Tag\"]")).sendKeys(inputStreamSpecificInfo.get("Tag"));
+                        if (!"Base".equalsIgnoreCase(inputStreamSpecificInfo.get("Type"))){
+                            clickTheElement(streamType);
+                            Select typeSelect = new Select(streamType);
+                            typeSelect.selectByVisibleText(inputStreamSpecificInfo.get("Type"));
+                            if (streamOperator.getAttribute("class").contains("ng-empty")) {
+                                clickTheElement(streamOperator);
+                                Select select = new Select(streamOperator);
+                                select.selectByVisibleText(inputStreamSpecificInfo.get("Operator"));
+
+                                if (streamValueInput.getAttribute("class").contains("ng-empty")) {
+                                    clickTheElement(streamValueInput);
+                                    if (verifyIfAllBaseStreamsInListForAggregatedInputStream(basicStreamNameList)){
+                                        SimpleUtils.pass("Stream options for aggregated type are correct!");
+                                    }else {
+                                        SimpleUtils.fail("Stream options are not correct!", false);
+                                    }
+
+                                    for (WebElement streamOption : streamOptions) {
+                                        if ("All".equalsIgnoreCase(inputStreamSpecificInfo.get("Streams")))
+                                            streamOption.click();
+                                        else {
+                                            streamsToSet = inputStreamSpecificInfo.get("Streams").split(",");
+                                            for (String streamToSet : streamsToSet){
+                                                if(streamToSet.equalsIgnoreCase(streamOption.getAttribute("innerText").trim()))
+                                                    streamOption.click();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        clickTheElement(okBtnToSave);
+                    }else {
+                        SimpleUtils.fail("The creation window not show up after clicking add button!", false);
+                    }
+                }
+            }
+            if (!isExisting){
+                SimpleUtils.fail("Can not find the setting type you want to add!", false);
+            }
+        }else {
+            SimpleUtils.fail("No content in Settings page!", false);
+        }
+    }
+
+    @FindBy(css = "input-field input[aria-label=\"Data Tag\"]")
+    private WebElement tagInput;
+    @Override
+    public void clickOnEditBtnForInputStream(HashMap<String, String> inputStream, HashMap<String, String> inputStreamUpdated) throws Exception {
+        WebElement searchResult = searchSettingsForDemandDriver("input stream", inputStream.get("Name"));
+        if(searchResult != null){
+            clickTheElement(searchResult.findElement(By.cssSelector("lg-button[label=\"Edit\"] button")));
+            if (isElementLoaded(popUpWindow) && popUpWindow.findElement(By.cssSelector("modal")).getAttribute("modal-title").toLowerCase().contains("input stream")){
+                if (!inputStream.get("Type").equals(inputStreamUpdated.get("Type"))){
+                    clickTheElement(streamType);
+                    Select typeSelect = new Select(streamType);
+                    typeSelect.selectByVisibleText(inputStreamUpdated.get("Type"));
+                }
+                if (!"Base".equalsIgnoreCase(inputStreamUpdated.get("Type"))){
+                    if (!inputStream.get("Operator").equalsIgnoreCase(inputStreamUpdated.get("Operator"))){
+                        clickTheElement(streamOperator);
+                        Select select = new Select(streamOperator);
+                        select.selectByVisibleText(inputStreamUpdated.get("Operator"));
+                    }
+                    clickTheElement(streamValueInput);
+                    for (WebElement streamOption : streamOptions) {
+                        if (streamOption.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-not-empty"))
+                            streamOption.click();
+                    }
+                    for (WebElement streamOption : streamOptions){
+                        if ("All".equalsIgnoreCase(inputStreamUpdated.get("Streams"))){
+                            streamOption.click();
+                        }else if (streamOption.findElement(By.cssSelector("label.input-label")).getText().equalsIgnoreCase(inputStreamUpdated.get("Streams"))){
+                            streamOption.click();
+                        }
+                    }
+                    clickTheElement(streamValueInput);
+                }
+                if(!inputStream.get("Tag").equalsIgnoreCase(inputStreamUpdated.get("Tag"))){
+                    tagInput.clear();
+                    tagInput.sendKeys(inputStreamUpdated.get("Tag"));
+                }
+                clickTheElement(okBtnToSave);
+            }else {
+                SimpleUtils.fail("The edit pop up window not show up!", false);
+            }
+        }else {
+            SimpleUtils.fail("The item does not exist in the result list!", false);
+        }
+    }
+
+    @FindBy(css = "tr[ng-repeat=\"item in $ctrl.inputStreamSortedRows\"]")
+    private List<WebElement> inputStreamRows;
+    @FindBy(css = "input-field[placeholder*=\"input stream\"] input")
+    private List<WebElement> inputStreamSearchInput;
+    @Override
+    public void verifyInputStreamInList(HashMap<String, String> inputStreamInfo, WebElement searchResultElement) throws Exception{
+        boolean isSame = false;
+        String resultName = "";
+        String resultType = "";
+        String resultSource = "";
+        String resultTag = "";
+        int baseCount = 0;
+
+        if (searchResultElement != null) {
+            resultName = searchResultElement.findElement(By.cssSelector("td:nth-child(1) span")).getText();
+            resultType = searchResultElement.findElement(By.cssSelector("td:nth-child(2)")).getText();
+            resultSource = searchResultElement.findElement(By.cssSelector("td:nth-child(3)")).getText();
+            resultTag = searchResultElement.findElement(By.cssSelector("td:nth-child(4) span")).getText();
+
+            if (inputStreamInfo.get("Name").equalsIgnoreCase(resultName)
+                    && inputStreamInfo.get("Type").equalsIgnoreCase(resultType)
+                    && inputStreamInfo.get("Tag").equalsIgnoreCase(resultTag)) {
+                if ("Base".equalsIgnoreCase(resultType) && resultSource.equals("")) {
+                    isSame = true;
+                } else if ("Aggregated".equalsIgnoreCase(resultType)) {
+                    if ("All".equalsIgnoreCase(inputStreamInfo.get("Streams"))) {
+                        searchSettingsForDemandDriver("input stream", "");
+                        for (WebElement inputStreamRow : inputStreamRows){
+                            if("Base".equalsIgnoreCase(inputStreamRow.findElements(By.cssSelector("td")).get(1).getText())){
+                                baseCount++;
+                            }
+                        }
+                        if (baseCount == Integer.parseInt(resultSource.split(" ")[0])){
+                            isSame = true;
+                        }
+                    } else if (inputStreamInfo.get("Streams").split(",").length == Integer.parseInt(resultSource.split(" ")[0])) {
+                        isSame = true;
+                    }
+                }
+            }
+            if (isSame) {
+                SimpleUtils.pass("The search result is same SUCCESS!");
+            } else {
+                SimpleUtils.fail("The search result is not same FAIL!", false);
+            }
+        } else {
+            SimpleUtils.fail("The search result is null!", false);
+        }
+    }
+
 }

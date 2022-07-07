@@ -2015,16 +2015,4 @@ public class SimpleUtils {
 		}
 		return isSame;
 	}
-
-	public static void switchToPreviousWindow(){
-		String previousHandler = "";
-		String currentHandler = getDriver().getWindowHandle();
-		Set<String> handles = getDriver().getWindowHandles();
-		for(String handle : handles){
-			if(!currentHandler.equals(handle)){
-				previousHandler = handle;
-			}
-		}
-		getDriver().switchTo().window(previousHandler);
-	}
 }
