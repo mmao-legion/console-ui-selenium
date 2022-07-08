@@ -473,11 +473,15 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                     searchResultList = searchContent.findElements(By.cssSelector("table.lg-table tr[ng-repeat*=\"item in $ctrl\"]"));
                     if (searchResultList.size() > 0){
                         searchResult = searchResultList.get(0);
-                        break;
+                    } else {
+                        searchInput.clear();
+                        waitForSeconds(2);
                     }
+                    break;
                 }
             }
         }
+
         return searchResult;
     }
 
@@ -500,6 +504,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
 
     @Override
     public void clickOnRemoveBtnInSettings(String verifyType, String Name) throws Exception {
+        int countBeforeRemove  = getTotalNumberForChannelOrCategory(verifyType);
         WebElement searchResult = searchSettingsForDemandDriver(verifyType, Name);
         if(searchResult != null){
             clickTheElement(searchResult.findElement(By.cssSelector("lg-button[label=\"Remove\"] button")));
@@ -508,7 +513,10 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             }else{
                 SimpleUtils.fail("There should pop up a confirmation window!", false);
             }
-            if (searchSettingsForDemandDriver(verifyType, Name) == null){
+            if ("input stream".equalsIgnoreCase(verifyType) && countBeforeRemove == 1){
+                searchSettingsForDemandDriver(verifyType, "");
+                SimpleUtils.pass("No need to check as there will generate new record after remove all");
+            } else if(searchSettingsForDemandDriver(verifyType, Name) == null){
                 SimpleUtils.pass("The item is remove successfully!");
             }else {
                 SimpleUtils.fail("The item is not removed failed!", false);
@@ -529,6 +537,29 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             }
         }
         return  streamNames;
+    }
+
+    @FindBy(css = "tr[ng-repeat=\"item in $ctrl.channelSortedRows\"]")
+    private List<WebElement> channelRows;
+    @FindBy(css = "tr[ng-repeat=\"item in $ctrl.categorySortedRows\"]")
+    private List<WebElement> categoryRows;
+
+    public int getTotalNumberForChannelOrCategory(String verifyType) throws Exception{
+        int totalNumber = 0;
+        List<WebElement> settingRows = new ArrayList<>();
+
+        if (verifyType.equalsIgnoreCase("channel")){
+            settingRows = channelRows;
+        }else if (verifyType.equalsIgnoreCase("category")){
+            settingRows = categoryRows;
+        }else if (verifyType.equalsIgnoreCase("input stream")){
+            settingRows = inputStreamRows;
+        }else {
+            SimpleUtils.fail("verifyType is not correct!", false);
+        }
+
+        totalNumber = settingRows.size();
+        return  totalNumber;
     }
 
     public boolean verifyIfAllBaseStreamsInListForAggregatedInputStream(List<String> basicStreamNames) throws Exception{
@@ -647,13 +678,18 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         if(searchResult != null){
             clickTheElement(searchResult.findElement(By.cssSelector("lg-button[label=\"Edit\"] button")));
             if (isElementLoaded(popUpWindow) && popUpWindow.findElement(By.cssSelector("modal")).getAttribute("modal-title").toLowerCase().contains("input stream")){
+                if ("true".equalsIgnoreCase(fieldsInput.get(0).findElement(By.xpath("//input[contains(@placeholder, 'Input Stream')]")).getAttribute("disabled"))){
+                    SimpleUtils.pass("Input Stream name is read only in edit mode!");
+                }else {
+                    SimpleUtils.fail("Input Stream name should not be editable!", false);
+                }
                 if (!inputStream.get("Type").equals(inputStreamUpdated.get("Type"))){
                     clickTheElement(streamType);
                     Select typeSelect = new Select(streamType);
                     typeSelect.selectByVisibleText(inputStreamUpdated.get("Type"));
                 }
                 if (!"Base".equalsIgnoreCase(inputStreamUpdated.get("Type"))){
-                    if (!inputStream.get("Operator").equalsIgnoreCase(inputStreamUpdated.get("Operator"))){
+                    if (inputStream.get("Operator") == null ||  !inputStream.get("Operator").equalsIgnoreCase(inputStreamUpdated.get("Operator"))){
                         clickTheElement(streamOperator);
                         Select select = new Select(streamOperator);
                         select.selectByVisibleText(inputStreamUpdated.get("Operator"));

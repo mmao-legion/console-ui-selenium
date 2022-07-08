@@ -35,4 +35,6 @@ public interface SettingsAndAssociationPage {
     public void createInputStream(HashMap<String, String> inputStreamSpecificInfo) throws Exception;
     public  void clickOnEditBtnForInputStream(HashMap<String, String> inputStream, HashMap<String, String> inputStreamUpdated)  throws Exception;
     public void verifyInputStreamInList(HashMap<String, String> inputStreamInfo, WebElement searchResultElement) throws Exception;
+    public List<String> getStreamNamesInList(String streamType) throws Exception;
+    public int getTotalNumberForChannelOrCategory(String streamType) throws Exception;
 }
