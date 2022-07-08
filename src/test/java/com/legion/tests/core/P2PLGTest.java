@@ -765,7 +765,7 @@ public class P2PLGTest extends TestBase {
             List<WebElement> selectedShifts = scheduleShiftTablePage.
                     selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, 1);
             List<String> shiftNames = new ArrayList<>();
-            for (int i=0; i< selectedShiftCount;i++) {
+            for (int i=0; i< selectedShiftCount; i++) {
                 int index = scheduleShiftTablePage.getTheIndexOfShift(selectedShifts.get(i));
                 shiftNames.add(scheduleShiftTablePage.getTheShiftInfoByIndex(index).get(0));
             }
@@ -789,8 +789,12 @@ public class P2PLGTest extends TestBase {
             }
             SimpleUtils.assertOnFail("An open shift should be created!", scheduleShiftTablePage.getAllShiftsOfOneTM("open").size() == 1, false);
 
-            //TODO: Can't be saved due to repetitive shifts created instead of converting it to an open shift
-            //Verify changes can be saved. Issue found: https://legiontech.atlassian.net/browse/SCH-7077
+            /*
+            // TODO: Can't be saved due to repetitive shifts created instead of converting it to an open shift
+            // Issue has been raised: https://legiontech.atlassian.net/browse/SCH-7077
+            */
+
+            //Verify changes can be saved
             scheduleMainPage.saveSchedule();
             allShiftsCountAfterForCopy = scheduleShiftTablePage.getShiftsCount();
             oneDayShiftsCountAfterForCopy = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
@@ -829,7 +833,7 @@ public class P2PLGTest extends TestBase {
                 SimpleUtils.assertOnFail("Drag and drop: the shift failed to be copied! ",
                         scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size() > 0, false);
             }
-            SimpleUtils.assertOnFail("An open shift should be created!", scheduleShiftTablePage.getAllShiftsOfOneTM("open").size() == 1, false);
+            SimpleUtils.assertOnFail("An open shift should be there!", scheduleShiftTablePage.getAllShiftsOfOneTM("open").size() == 1, false);
 
             //Verify changes can be saved
             scheduleMainPage.saveSchedule();
@@ -842,7 +846,7 @@ public class P2PLGTest extends TestBase {
                 SimpleUtils.assertOnFail("Drag and drop: the shift failed to be copied! ",
                         scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size() > 0, false);
             }
-            SimpleUtils.assertOnFail("An open shift should be created!", scheduleShiftTablePage.getAllShiftsOfOneTM("open").size() == 1, false);
+            SimpleUtils.assertOnFail("An open shift should be there!", scheduleShiftTablePage.getAllShiftsOfOneTM("open").size() == 1, false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
