@@ -366,7 +366,9 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                     && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
                 editTheOperatingHours(new ArrayList<>());
 //                waitForSeconds(3);
-                clickTheElement(nextButtonOnCreateSchedule);
+                if (isClickable(nextButtonOnCreateSchedule, 10)) {
+                    clickTheElement(nextButtonOnCreateSchedule);
+                }
 //                checkEnterBudgetWindowLoadedForNonDG();
                 waitForSeconds(2);
                 if (isElementLoaded(generateModalTitle, 5)) {
@@ -769,10 +771,16 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 editOperatingHoursWithGivingPrameters(day, startTime, endTime);
                 waitForSeconds(3);
                 clickTheElement(nextButtonOnCreateSchedule);
-                checkEnterBudgetWindowLoadedForNonDG();
-                if (generateModalTitle.getText().trim().equalsIgnoreCase("Enter Budget")
-                        && isElementLoaded(nextButtonOnCreateSchedule, 10)) {
-                    clickTheElement(nextButtonOnCreateSchedule);
+                // checkEnterBudgetWindowLoadedForNonDG();
+                try {
+                    if (isElementLoaded(generateModalTitle, 15) && generateModalTitle.getText().trim().equalsIgnoreCase("Enter Budget")
+                            && isElementLoaded(nextButtonOnCreateSchedule, 10)) {
+                        clickTheElement(nextButtonOnCreateSchedule);
+                    }
+                } catch (Exception e) {
+                    if (isElementLoaded(nextButtonOnCreateSchedule, 3) && nextButtonOnCreateSchedule.getText().trim().equals("NEXT")) {
+                        clickTheElement(nextButtonOnCreateSchedule);
+                    }
                 }
                 if (isElementEnabled(checkOutTheScheduleButton, 3)) {
                     checkoutSchedule();
