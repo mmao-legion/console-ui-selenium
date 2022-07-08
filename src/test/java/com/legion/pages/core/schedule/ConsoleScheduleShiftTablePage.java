@@ -2,6 +2,7 @@ package com.legion.pages.core.schedule;
 
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
+import com.legion.tests.core.GroupByDayPartsTest;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -2472,7 +2473,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             click(okBtnOnConfirm);
             SimpleUtils.pass("Click on Ok button on warning successfully");
         } else {
-            SimpleUtils.fail("Ok button fail to load", false);
+            SimpleUtils.report("Ok button fail to load");
         }
     }
 
@@ -3278,6 +3279,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 && daySummaries.size()> 0
                 && index<daySummaries.size()) {
             scrollToElement(daySummaries.get(index));
+            waitForSeconds(3);
             moveToElementAndClick(daySummaries.get(index));
             tooltip = getHrsOnTooltip();
         } else if (areListElementVisible(daySummariesInDayView, 5)
@@ -4188,5 +4190,103 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             action.keyUp(Keys.CONTROL).build().perform();
         } else
             SimpleUtils.report("There is no bulk selected shifts! ");
+    }
+
+
+    @Override
+    public void verifyGroupCannotbeCollapsedNExpanded() throws Exception {
+        if (areListElementVisible(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")),10)){
+            for (int i=0; i< getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).size(); i++){
+                clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("week-schedule-ribbon-group-toggle-closed")){
+                    clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+                    if (!getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("week-schedule-ribbon-group-toggle-closed")){
+                        SimpleUtils.fail("Group should not expanded!", false);
+                    } else {
+                        SimpleUtils.pass("Group cannot be expanded!!");
+                    }
+                } else
+                    SimpleUtils.fail("Group should not expanded!", false);
+            }
+        } else {
+            SimpleUtils.fail("No group title show up!", false);
+        }
+    }
+
+    public String getSpecificGroupByChildLocationStatus(String childLocation) {
+        String status = "";
+        ScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
+        scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+        List<WebElement> groupByLocationItems = getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle"));
+        if (areListElementVisible(groupByLocationItems,10)){
+            for (WebElement groupByLocationItem : groupByLocationItems) {
+                String locationName = groupByLocationItem.findElement(By.cssSelector(".week-schedule-shift-title")).getText();
+                if (locationName.equalsIgnoreCase(childLocation)) {
+                    status = groupByLocationItem
+                            .findElement(By.cssSelector(".week-schedule-ribbon-right-schedule-status")).getText();
+                    SimpleUtils.pass("Get " + childLocation + "'s status: " + status + " successfully! ");
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("No group title show up!", false);
+        }
+        return status;
+    }
+
+
+    public String clickActionIconForSpecificGroupByChildLocation(String childLocation) {
+        String status = "";
+        ScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
+        scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+        List<WebElement> groupByLocationItems = getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle"));
+        if (areListElementVisible(groupByLocationItems,10)){
+            for (WebElement groupByLocationItem : groupByLocationItems) {
+                String locationName = groupByLocationItem.findElement(By.cssSelector(".week-schedule-shift-title")).getText();
+                if (locationName.equalsIgnoreCase(childLocation)) {
+                    clickTheElement(groupByLocationItem.findElement(By.cssSelector("[role=\"button\"]")));
+                    SimpleUtils.pass("Click " + childLocation + "'s action icon successfully! ");
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("No group title show up!", false);
+        }
+        return status;
+    }
+
+    @FindBy(css = "[role=\"menu\"]")
+    private WebElement groupByActionPopup;
+    public void clickOnSpecificButtonsGroupByActionPopup(String buttonName) throws Exception {
+        if (isElementLoaded(groupByActionPopup, 3)){
+            List<WebElement> buttonsOnPopUp = groupByActionPopup.findElements(By.cssSelector("li.MuiListItem-button"));
+            boolean isButtonExist = false;
+            for (WebElement button: buttonsOnPopUp){
+                if (button.getText().equalsIgnoreCase(buttonName)){
+                    isButtonExist = true;
+                    clickTheElement(button);
+                    SimpleUtils.pass("Group by location: Click the "+buttonName+" button on action popup successfully! ");
+                    break;
+                }
+            }
+            if (!isButtonExist) {
+                SimpleUtils.fail("Group by location: The button "+buttonName+ " is not exist on action popup! ", false);
+            }
+        } else
+            SimpleUtils.fail("Group by Location: The action popup fail to load!! ", false);
+    }
+
+
+    public List<String> getButtonNamesFromGroupByActionPopup() throws Exception {
+        List<String> buttonNames = new ArrayList<>();
+        if (isElementLoaded(groupByActionPopup, 3)){
+            List<WebElement> buttonsOnPopUp = groupByActionPopup.findElements(By.cssSelector("li.MuiListItem-button"));
+            for (WebElement button: buttonsOnPopUp){
+                buttonNames.add(button.getText());
+                SimpleUtils.pass("Get button : "+ button.getText()+" successfully! ");
+            }
+        } else
+            SimpleUtils.fail("Group by Location: The action popup fail to load!! ", false);
+        return buttonNames;
     }
 }

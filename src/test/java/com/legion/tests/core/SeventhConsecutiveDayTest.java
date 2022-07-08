@@ -298,6 +298,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
         }
         String contentBeforeChange = compliancePage.getConsecutiveOTSettingContent();
+        compliancePage.turnOnOrTurnOffDayOTToggle(true);
         compliancePage.turnOnOrTurnOffConsecutiveDTToggle(false);
         compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
         compliancePage.editConsecutiveOTSetting(consecutiveOTDaysCount, consecutiveOTOptions, true);
@@ -1129,7 +1130,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
-            newShiftPage.selectSpecificWorkDay(7);
+            newShiftPage.selectSpecificWorkDay(6);
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
