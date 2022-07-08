@@ -4837,11 +4837,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}else if("Edit".equalsIgnoreCase(addOrEdit)){
 			if (isElementLoaded(editBtnForDriver,5))
 				click(editBtnForDriver);
-			if (isElementLoaded(warningToast))
-				clickTheElement(leaveThisPageButton);
 		}else {
 			SimpleUtils.fail("Please choose add or edit mode!", false);
 		}
+		if (isElementLoaded(warningToast) && isElementLoaded(leaveThisPageButton))
+			clickTheElement(leaveThisPageButton);
 
 		if (areListElementVisible(fieldInputList)){
 			for (int i = 0; i < fieldInputList.size() - 1; i++){
@@ -4868,11 +4868,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 							yesOrNoOptions = fieldInputList.get(i).findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
 							for (WebElement choose : yesOrNoOptions){
 								if (choose.findElement(By.cssSelector("span")).getText().equals(entry.getValue()) &&
-										!choose.findElement(By.cssSelector("span")).getAttribute("class").equals("lg-button-group-selected")){
+										!choose.getAttribute("class").contains("lg-button-group-selected")){
 									clickTheElement(choose);
 									break;
 								}
-								break;
 							}
 						}else {
 							SimpleUtils.fail("Tag Type is not as expected!", false);

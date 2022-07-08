@@ -150,7 +150,6 @@ public interface ConfigurationPage {
     public void verifyPublishedTemplateAfterEdit(String templateName) throws Exception;
 
     public boolean searchDriverInTemplateDetailsPage(String driverName) throws Exception;
-
     public void clickRemove() throws Exception;
     public void selectStartTimeEvent(String startTimeEvent) throws Exception;
     public void verifyConditionAndNumberFiledCanShowWell() throws Exception;
