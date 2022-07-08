@@ -2145,7 +2145,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         List<String> names = new ArrayList<>();
         ArrayList<WebElement> availableFilters = getAvailableFilters().get(filterText);
         if (availableFilters != null && availableFilters.size()>0){
-            for (int i = 0; i < availableFilters.size() - 1; i++) {
+            for (int i = 0; i < availableFilters.size(); i++) {
                 String name = availableFilters.get(i).getText().split("\\(")[0].trim();
                 names.add(name);
                 SimpleUtils.pass("Get name: "+name +" from "+filterText+" list successfully! ");

@@ -635,6 +635,7 @@ public class P2PLGTest extends TestBase {
             }
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            Thread.sleep(3000);
             scheduleDMViewPage.clickOnRefreshButton();
             String publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(peerLocation)
                     .get("publishedStatus");
@@ -710,6 +711,476 @@ public class P2PLGTest extends TestBase {
             SimpleUtils.assertOnFail("The P2P overview page should display! ",
                     scheduleDMViewPage.isScheduleDMView(), false);
 
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Ting")
+    @Enterprise(name = "")
+    @TestName(description = "Verify copy or move shifts to sub-locations in same day using location group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyCopyOrMoveShiftsToSubLocationsInSameDayUsingLocationGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
+
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+            scheduleShiftTablePage.expandSpecificCountGroup(2);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            //Get shift count before drag and drop
+            int allShiftsCountBeforeForCopy = scheduleShiftTablePage.getShiftsCount();
+            int oneDayShiftsCountBeforeForCopy = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+
+            // Verify can select multiple shifts by pressing Ctrl/Cmd(Mac)
+            int selectedShiftCount = 1;
+            List<WebElement> selectedShifts = scheduleShiftTablePage.
+                    selectMultipleDifferentAssignmentShiftsOnOneDay(selectedShiftCount, 1);
+            List<String> shiftNames = new ArrayList<>();
+            for (int i=0; i< selectedShiftCount; i++) {
+                int index = scheduleShiftTablePage.getTheIndexOfShift(selectedShifts.get(i));
+                shiftNames.add(scheduleShiftTablePage.getTheShiftInfoByIndex(index).get(0));
+            }
+
+            //Drag the selected shifts to same day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 1, true);
+
+            //Select copy option
+            scheduleShiftTablePage.selectCopyOrMoveByOptionName("Copy");
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+            //Check the shift count after drag and drop
+            int allShiftsCountAfterForCopy = scheduleShiftTablePage.getShiftsCount();
+            int oneDayShiftsCountAfterForCopy = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            SimpleUtils.assertOnFail("The expected count are: " + allShiftsCountBeforeForCopy + " and " + oneDayShiftsCountBeforeForCopy
+                            + ", but the actual are: " + allShiftsCountAfterForCopy + " and " + oneDayShiftsCountAfterForCopy,
+                    allShiftsCountAfterForCopy - allShiftsCountBeforeForCopy == 1 && oneDayShiftsCountAfterForCopy - oneDayShiftsCountBeforeForCopy == 1, false);
+            for (int i=0; i< selectedShiftCount; i++) {
+                SimpleUtils.assertOnFail("Drag and drop: the shift failed to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size() > 0, false);
+            }
+            SimpleUtils.assertOnFail("An open shift should be created!", scheduleShiftTablePage.getAllShiftsOfOneTM("open").size() == 1, false);
+
+            /*
+            // TODO: Can't be saved due to repetitive shifts created instead of converting it to an open shift
+            // Issue has been raised: https://legiontech.atlassian.net/browse/SCH-7077
+            */
+
+            //Verify changes can be saved
+            scheduleMainPage.saveSchedule();
+            allShiftsCountAfterForCopy = scheduleShiftTablePage.getShiftsCount();
+            oneDayShiftsCountAfterForCopy = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            SimpleUtils.assertOnFail("The expected count are: " + allShiftsCountBeforeForCopy + " and "+ oneDayShiftsCountBeforeForCopy
+                            + ", but the actual are: " + allShiftsCountAfterForCopy + " and "+ oneDayShiftsCountAfterForCopy,
+                    allShiftsCountAfterForCopy - allShiftsCountBeforeForCopy == 1 && oneDayShiftsCountAfterForCopy - oneDayShiftsCountBeforeForCopy == 1, false);
+            for (int i=0; i< selectedShiftCount; i++) {
+                SimpleUtils.assertOnFail("Drag and drop: the shift failed to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size() > 0, false);
+            }
+            SimpleUtils.assertOnFail("An open shift should be created!", scheduleShiftTablePage.getAllShiftsOfOneTM("open").size() == 1, false);
+
+            // Edit schedule
+            scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+            scheduleShiftTablePage.expandSpecificCountGroup(2);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            //Get shift count before drag and drop
+            int allShiftsCountBeforeForMove = scheduleShiftTablePage.getShiftsCount();
+            int oneDayShiftsCountBeforeForMove = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+
+            //Drag the selected shifts to same day
+            scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 1, true);
+
+            //Select move option
+            scheduleShiftTablePage.selectCopyOrMoveByOptionName("Move");
+            scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
+
+            //Check the shift count after drag and drop
+            int allShiftsCountAfterForMove = scheduleShiftTablePage.getShiftsCount();
+            int oneDayShiftsCountAfterForMove = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            SimpleUtils.assertOnFail("The expected count are: "+ allShiftsCountBeforeForMove + " and "+ oneDayShiftsCountBeforeForMove
+                            + ", but the actual are: "+allShiftsCountAfterForMove + " and "+ oneDayShiftsCountAfterForMove,
+                    allShiftsCountAfterForMove == allShiftsCountBeforeForMove && oneDayShiftsCountAfterForMove == oneDayShiftsCountBeforeForMove, false);
+            for (int i=0; i< selectedShiftCount; i++) {
+                SimpleUtils.assertOnFail("Drag and drop: the shift failed to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size() > 0, false);
+            }
+            SimpleUtils.assertOnFail("An open shift should be there!", scheduleShiftTablePage.getAllShiftsOfOneTM("open").size() == 1, false);
+
+            //Verify changes can be saved
+            scheduleMainPage.saveSchedule();
+            allShiftsCountAfterForMove = scheduleShiftTablePage.getShiftsCount();
+            oneDayShiftsCountAfterForMove = scheduleShiftTablePage.getOneDayShiftCountByIndex(1);
+            SimpleUtils.assertOnFail("The expected count are: " + allShiftsCountBeforeForMove + " and " + oneDayShiftsCountBeforeForMove
+                            + ", but the actual are: "+allShiftsCountAfterForMove + " and "+ oneDayShiftsCountAfterForMove,
+                    allShiftsCountAfterForMove == allShiftsCountBeforeForMove && oneDayShiftsCountAfterForMove == oneDayShiftsCountBeforeForMove, false);
+            for (int i=0; i< selectedShiftCount; i++) {
+                SimpleUtils.assertOnFail("Drag and drop: the shift failed to be copied! ",
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size() > 0, false);
+            }
+            SimpleUtils.assertOnFail("An open shift should be there!", scheduleShiftTablePage.getAllShiftsOfOneTM("open").size() == 1, false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify can create the schedule for all peer locations")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyCanCreateScheduleForAllPeerLocationsAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            // create the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            List<String> locationNames = scheduleMainPage.getSpecificFilterNames("location");
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyAll.getValue());
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.publishOrRepublishSchedule();
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            //Check that the peer locations should be listed
+            for (String name : locationNames) {
+                scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(name);
+                scheduleDMViewPage.clickOnRefreshButton();
+                scheduleDMViewPage.clickOnRefreshButton();
+                String publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(name)
+                        .get("publishedStatus");
+                SimpleUtils.assertOnFail("The schedule status should be Published, but actual is:"+publishStatus,
+                        publishStatus.equalsIgnoreCase("Published"), false);
+            }
+            scheduleOverviewPage.clickOnViewGroupScheduleButton();
+            scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+            scheduleShiftTablePage.verifyGroupCanbeCollapsedNExpanded();
+
+            //Verify the value on LOCATION GROUP smart card when schedule is published
+            String messageOnSmartCard = smartCardPage.getsmartCardTextByLabel("LOCATION GROUP").replace("\n", " ");
+            String expectedMessage1 = "0 Not Started";
+            String expectedMessage2 = "0 In Progress";
+            String expectedMessage3 = locationNames.size()+" Published";
+            String expectedMessage4 = locationNames.size()+" Total Locations";
+            SimpleUtils.assertOnFail("The expected message is: "+expectedMessage1
+                            + expectedMessage2+ " "
+                            + expectedMessage3+ " "
+                            + expectedMessage4+ " The actual message is: "+messageOnSmartCard,
+                    messageOnSmartCard.contains(expectedMessage1)
+                            && messageOnSmartCard.contains(expectedMessage2)
+                            && messageOnSmartCard.contains(expectedMessage3)
+                            && messageOnSmartCard.contains(expectedMessage4), false);
+
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            //Check that the peer locations should be listed
+            for (String name : locationNames) {
+                scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(name);
+                scheduleDMViewPage.clickOnRefreshButton();
+                String publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(name)
+                        .get("publishedStatus");
+                SimpleUtils.assertOnFail("The schedule status should be Published, but actual is:"+publishStatus,
+                        publishStatus.equalsIgnoreCase("Not Started"), false);
+            }
+            scheduleOverviewPage.clickOnViewGroupScheduleButton();
+            scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+            scheduleShiftTablePage.verifyGroupCannotbeCollapsedNExpanded();
+
+            //Verify the value on LOCATION GROUP smart card when schedule is published
+            messageOnSmartCard = smartCardPage.getsmartCardTextByLabel("LOCATION GROUP").replace("\n", " ");
+            expectedMessage1 = locationNames.size()+" Not Started";
+            expectedMessage2 = "0 In Progress";
+            expectedMessage3 = "0 Published";
+            expectedMessage4 = locationNames.size()+" Total Locations";
+            SimpleUtils.assertOnFail("The expected message is: "+expectedMessage1
+                            + expectedMessage2+ " "
+                            + expectedMessage3+ " "
+                            + expectedMessage4+ " The actual message is: "+messageOnSmartCard,
+                    messageOnSmartCard.contains(expectedMessage1)
+                            && messageOnSmartCard.contains(expectedMessage2)
+                            && messageOnSmartCard.contains(expectedMessage3)
+                            && messageOnSmartCard.contains(expectedMessage4), false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the actions for each peer locations in different status")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheActionForEachPeerLocationsInDifferentStatusAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            //Delete the schedule.
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            String locationName = scheduleMainPage.getSpecificFilterNames("location").get(0);
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            //The status is changed to Not Started
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            String status = scheduleShiftTablePage.getSpecificGroupByChildLocationStatus(locationName);
+            SimpleUtils.assertOnFail("The expected status is Not Started, the actual status is: "+status,
+                    status.equalsIgnoreCase("Not Started"), false);
+            scheduleShiftTablePage.clickActionIconForSpecificGroupByChildLocation(locationName);
+
+            //Verify "Edit Operating Hours" action when peer location is Not Started
+            String editOperatingHoursButton = "Edit Operating Hours";
+            String deleteButton = "Delete Schedule";
+            String createScheduleButton = "Create Schedule";
+            String publishScheduleButton = "Publish Schedule";
+            String republishButton = "Republish Schedule";
+            List<String> buttonsFromPopup = scheduleShiftTablePage.getButtonNamesFromGroupByActionPopup();
+            SimpleUtils.assertOnFail("The buttons on group by location action popup display incorrectly! The expected is"
+                    + createScheduleButton + " button and "+ editOperatingHoursButton + " button."
+                    +" The actual is"+buttonsFromPopup,
+                    buttonsFromPopup.contains(editOperatingHoursButton)
+                            && buttonsFromPopup.contains(createScheduleButton), false);
+            scheduleShiftTablePage.clickOnSpecificButtonsGroupByActionPopup(editOperatingHoursButton);
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.closeNewCreateShiftPage();
+
+            //Verify "Create Schedule" action when peer location is Not Started
+            scheduleShiftTablePage.clickActionIconForSpecificGroupByChildLocation(locationName);
+            scheduleShiftTablePage.clickOnSpecificButtonsGroupByActionPopup(createScheduleButton);
+            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            Thread.sleep(3000);
+            if (createSchedulePage.isCopyScheduleWindow()) {
+                createSchedulePage.selectWhichWeekToCopyFrom("SUGGESTED");
+                createSchedulePage.clickOnFinishButtonOnCreateSchedulePage();
+            }
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyAll.getValue());
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+                scheduleMainPage.saveSchedule();
+                scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+            }
+
+            //The status is changed to In Progress
+            status = scheduleShiftTablePage.getSpecificGroupByChildLocationStatus(locationName);
+            SimpleUtils.assertOnFail("The expected status is In Progress, the actual status is: "+status,
+                    status.equalsIgnoreCase("In Progress"), false);
+
+            //Verify "Edit Operating Hours" action when peer location is In Progress
+            scheduleShiftTablePage.clickActionIconForSpecificGroupByChildLocation(locationName);
+            buttonsFromPopup = scheduleShiftTablePage.getButtonNamesFromGroupByActionPopup();
+            SimpleUtils.assertOnFail("The buttons on group by location action popup display incorrectly! The expected is"
+                            + editOperatingHoursButton + " button and "+ publishScheduleButton + " button and "+ deleteButton + " button."
+                            +" The actual is"+buttonsFromPopup,
+                    buttonsFromPopup.contains(editOperatingHoursButton)
+                            && buttonsFromPopup.contains(publishScheduleButton)
+                            && buttonsFromPopup.contains(deleteButton), false);
+            scheduleShiftTablePage.clickOnSpecificButtonsGroupByActionPopup(editOperatingHoursButton);
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.closeNewCreateShiftPage();
+
+            //Verify "Publish" action when peer location is In Progress
+            scheduleShiftTablePage.clickActionIconForSpecificGroupByChildLocation(locationName);
+            scheduleShiftTablePage.clickOnSpecificButtonsGroupByActionPopup(publishScheduleButton);
+            scheduleShiftTablePage.clickOnOkButtonInWarningMode();
+            Thread.sleep(5000);
+            //The status is changed to Published
+            status = scheduleShiftTablePage.getSpecificGroupByChildLocationStatus(locationName);
+            SimpleUtils.assertOnFail("The expected status is Published, the actual status is: "+status,
+                    status.equalsIgnoreCase("Published"), false);
+
+            //Verify the actions when peer locations has unpublished changes
+            String workRole = shiftOperatePage.getRandomWorkRole();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.selectChildLocInCreateShiftWindow(locationName);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
+            newShiftPage.selectTeamMembers();
+            newShiftPage.clickOnCreateOrNextBtn();
+            scheduleMainPage.saveSchedule();
+            scheduleShiftTablePage.clickActionIconForSpecificGroupByChildLocation(locationName);
+            buttonsFromPopup = scheduleShiftTablePage.getButtonNamesFromGroupByActionPopup();
+            SimpleUtils.assertOnFail("The buttons on group by location action popup display incorrectly! The expected is"
+                            + editOperatingHoursButton + " button and "+ republishButton + " button and "+ deleteButton + " button."
+                            +" The actual is"+buttonsFromPopup,
+                    buttonsFromPopup.contains(editOperatingHoursButton)
+                            && buttonsFromPopup.contains(republishButton)
+                            && buttonsFromPopup.contains(deleteButton), false);
+            scheduleShiftTablePage.clickOnSpecificButtonsGroupByActionPopup(republishButton);
+            scheduleShiftTablePage.clickOnOkButtonInWarningMode();
+            Thread.sleep(5000);
+            //The status is changed to Published
+            status = scheduleShiftTablePage.getSpecificGroupByChildLocationStatus(locationName);
+            SimpleUtils.assertOnFail("The expected status is Published, the actual status is: "+status,
+                    status.equalsIgnoreCase("Published"), false);
+
+            //Verify "Delete" when peer location is Published
+            scheduleShiftTablePage.clickActionIconForSpecificGroupByChildLocation(locationName);
+            buttonsFromPopup = scheduleShiftTablePage.getButtonNamesFromGroupByActionPopup();
+            SimpleUtils.assertOnFail("The buttons on group by location action popup display incorrectly! The expected is"
+                            + deleteButton + " button and "+ editOperatingHoursButton + " button."
+                            +" The actual is"+buttonsFromPopup,
+                    buttonsFromPopup.contains(editOperatingHoursButton)
+                            && buttonsFromPopup.contains(deleteButton), false);
+            scheduleShiftTablePage.clickOnSpecificButtonsGroupByActionPopup(deleteButton);
+            createSchedulePage.confirmDeleteSchedule();
+            Thread.sleep(5000);
+            //The status is changed to Not Started
+            status = scheduleShiftTablePage.getSpecificGroupByChildLocationStatus(locationName);
+            SimpleUtils.assertOnFail("The expected status is Not Started, the actual status is: "+status,
+                    status.equalsIgnoreCase("Not Started"), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the status of P2P in DM view")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheStatusOfP2PInDMViewsAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
+
+            //Verify Not Started will show if all the peer locations are Not Started
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String districtName = selectedUpperFields.get("District");
+            locationSelectorPage.changeUpperFieldDirect("District", districtName);
+            scheduleDMViewPage.clickOnRefreshButton();
+            String publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(location)
+                    .get("publishedStatus");
+            SimpleUtils.assertOnFail("The schedule status should be Not Started, but actual is:"+publishStatus,
+                    publishStatus.equalsIgnoreCase("Not Started"), false);
+            //Verify In Progress will show if some peer locations are Not Started, some are In Progress
+            scheduleDMViewPage.clickOnLocationNameInDMView(location);
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            locationSelectorPage.changeUpperFieldDirect("District", districtName);
+            scheduleDMViewPage.clickOnRefreshButton();
+            publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(location)
+                    .get("publishedStatus");
+            SimpleUtils.assertOnFail("The schedule status should be In Progress, but actual is:"+publishStatus,
+                    publishStatus.equalsIgnoreCase("In Progress"), false);
+            //Verify Published will show if all the peer locations are published
+            scheduleDMViewPage.clickOnLocationNameInDMView(location);
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+                scheduleMainPage.saveSchedule();
+            }
+            createSchedulePage.publishActiveSchedule();
+            locationSelectorPage.changeUpperFieldDirect("District", districtName);
+            scheduleDMViewPage.clickOnRefreshButton();
+            publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(location)
+                    .get("publishedStatus");
+            SimpleUtils.assertOnFail("The schedule status should be Published, but actual is:"+publishStatus,
+                    publishStatus.equalsIgnoreCase("Published"), false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
