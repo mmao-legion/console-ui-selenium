@@ -4772,19 +4772,23 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		return effectiveDates;
 	}
 
+	@FindBy(css="ul.staffing-dropdown-menu li:nth-child(1)")
+	private WebElement staffingRuleButton;
+	@FindBy(css=".constraint-box")
+	private WebElement staffingRuleFields;
 	@Override
 	public void checkTheEntryOfAddBasicStaffingRule() throws Exception {
 		waitForSeconds(5);
 		if(isElementEnabled(addIconOnRulesListPage)){
 			clickTheElement(addIconOnRulesListPage);
-			if(isElementEnabled(addAdvancedStaffingRuleButton)){
-				SimpleUtils.pass("Advance staffing rules tab is show");
-				clickTheElement(addAdvancedStaffingRuleButton);
-				if(isElementEnabled(dynamicGroupSection)){
-					SimpleUtils.pass("Advance staffing rules tab is clickable");
+			if(isElementEnabled(staffingRuleButton)){
+				SimpleUtils.pass("Staffing rules tab is show");
+				clickTheElement(staffingRuleButton);
+				if(isElementEnabled(staffingRuleFields)){
+					SimpleUtils.pass("Staffing rules tab is clickable");
 				}
 				else{
-					SimpleUtils.fail("Advance staffing rules tab is NOT clickable",false);
+					SimpleUtils.fail("Staffing rules tab is NOT clickable",false);
 				}
 			}else {
 				SimpleUtils.pass("Advance staffing rules tab is NOT show");
@@ -4947,6 +4951,510 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			clickTheElement(removeBTN);
 		}else {
 			SimpleUtils.fail("Can not find the remove button!", false);
+		}
+	}
+	@FindBy(tagName = "work-role-badges-edit")
+	private WebElement badgeSection;
+
+	@Override
+	public void verifyStaffingRulePageShowWell() throws Exception{
+		if(isElementEnabled(badgeSection) && isElementEnabled(staffingRuleFields)){
+			SimpleUtils.pass("Staffing rule page shows well");
+		}else{
+			SimpleUtils.fail("Staffing rule page doesn't show well",false);
+		}
+	}
+
+	@FindBy(css=".limit-constraint select")
+	private WebElement conditionMaxMinExactly;
+	@FindBy(css="input-field[type=\"number\"] input")
+	private WebElement numberInput;
+	@FindBy(css="input-field.workRoleSelect select")
+	private WebElement workRoleSelect;
+	@FindBy(css="input-field[options*=\"UnitOptions\"] select")
+	private WebElement unitOptions;
+	@FindBy(css="div[ng-if*=\"showTimeConstraint()\"] input-field[type=\"number\"] input")
+	private WebElement startOffsetMinutes;
+	@FindBy(css="div[ng-if*=\"isDuring()\"] input-field[type=\"number\"] input")
+	private WebElement endOffsetMinutes;
+	@FindBy(css="div[ng-if^=\"$ctrl.showTimeConstraint()\"] input-field[options*=\"getEventPointOptions\"] select")
+	private WebElement startEventPointOptions;
+	@FindBy(css="div[ng-if*=\"isDuring()\"] input-field[options*=\"getEventPointOptions\"] select")
+	private WebElement endEventPointOptions;
+	@FindBy(css="div[ng-if^=\"$ctrl.showTimeConstraint()\"] lg-select[options*=\"timeEventOptions\"] input-field")
+	private WebElement startTimeEventOptions;
+	@FindBy(css="div[ng-if^=\"$ctrl.showTimeConstraint()\"] lg-select[options*=\"timeEventOptions\"] input-field div")
+	private WebElement startTimeEventSelected;
+	@FindBy(css="div[ng-if*=\"isDuring()\"] lg-select[options*=\"timeEventOptions\"]")
+	private WebElement endTimeEventOptions;
+	@FindBy(css="div[ng-if*=\"isDuring()\"] lg-select[options*=\"timeEventOptions\"] input-field div")
+	private WebElement endTimeEventSelected;
+	@FindBy(css="div[ng-if^=\"$ctrl.showTimeConstraint()\"]  .lg-search-options .lg-search-options__option")
+	private List<WebElement> startTimeEventOptionsList;
+	@FindBy(css="div[ng-if*=\"isDuring()\"]  .lg-search-options .lg-search-options__option")
+	private List<WebElement> endTimeEventOptionsList;
+
+	@Override
+	public void verifyConditionAndNumberFiledCanShowWell() throws Exception{
+		boolean flag = true;
+		List<String> targets = new ArrayList<>(Arrays.asList("A Maximum","A Minimum","Exactly"));
+		List<String> optionNames = new ArrayList<>();
+		Select select = new Select(conditionMaxMinExactly);
+		//verify the conditionMaxMinExactly field options list
+		if(isElementLoaded(conditionMaxMinExactly,2) && isElementLoaded(numberInput,2)){
+			List<WebElement> options = select.getOptions();
+			for(WebElement option:options){
+				String optionName = option.getText().trim();
+				optionNames.add(optionName);
+			}
+			for(String optionName:optionNames){
+				for(String option:targets){
+					if(optionName.equalsIgnoreCase(option)){
+						flag = true;
+						SimpleUtils.pass(option + " is showing in list.");
+						break;
+					}else {
+						flag =false;
+					}
+				}
+			}
+			if(flag){
+				SimpleUtils.pass("conditionMaxMinExactly field options list can show well");
+			}else{
+				SimpleUtils.pass("conditionMaxMinExactly field options list is Not Correct.");
+			}
+
+			//Verify Exactly option is disabled by default
+			if(options.get(2).getAttribute("disabled").equalsIgnoreCase("true")){
+				SimpleUtils.pass("Exactly option is disabled by default!");
+			}else{
+				SimpleUtils.fail("Exactly option is Not disabled by default!",false);
+			}
+			//verify the Exactly option will only be enabled when user select start event filed as Specified Hours
+			selectStartTimeEvent("Specified Hours");
+			if(select.getFirstSelectedOption().getText().trim().equalsIgnoreCase("Exactly")){
+				SimpleUtils.pass("Exactly option will only be enabled when user select start event filed as Specified Hours.");
+			}else {
+				SimpleUtils.fail("Exactly option is not selected by default after user selected start event filed as Specified Hours.",false);
+			}
+		}
+	}
+
+	//select Start Time Event
+	@Override
+	public void selectStartTimeEvent(String startTimeEvent) throws Exception{
+		if(isElementLoaded(conditionMaxMinExactly,2)){
+			clickTheElement(startTimeEventOptions);
+			if(areListElementVisible(startTimeEventOptionsList,3)){
+				for(WebElement w:startTimeEventOptionsList){
+					if(w.getAttribute("innerText").trim().equalsIgnoreCase(startTimeEvent)){
+						clickTheElement(w);
+						break;
+					}
+				}
+			}
+			if(startTimeEventSelected.getAttribute("innerText").trim().equalsIgnoreCase(startTimeEvent)){
+				SimpleUtils.pass("User select start Time Event successfully!");
+			}else {
+				SimpleUtils.fail("User failed to select start Time Event!", false);
+			}
+		}
+	}
+
+	@FindBy(css="lg-button[label=\"Save\"] button")
+	private WebElement saveButtonOnBasicStaffingRule;
+	@FindBy(className = "settings-work-rule-save-icon")
+	private WebElement saveRuleIcon;
+	@Override
+	public void verifyNumberInputFieldOfBasicStaffingRule() throws Exception{
+		if(isElementLoaded(numberInput,3)){
+			clickTheElement(numberInput);
+			numberInput.clear();
+			numberInput.sendKeys("5");
+			if(saveRuleIcon.getAttribute("class").contains("enabled")){
+				SimpleUtils.pass("User can input number successfully!");
+			}else {
+				SimpleUtils.fail("User can not input number successfully!",false);
+			}
+		}
+	}
+
+	@Override
+	public List<String> verifyWorkRoleListOfBasicStaffingRule() throws Exception{
+		List<String> workRoleNames = new ArrayList<>();
+		if(isElementLoaded(workRoleSelect,3)){
+			Select select = new Select(workRoleSelect);
+			List<WebElement> workRoleList = select.getOptions();
+			for(WebElement workRole:workRoleList){
+				String workRoleName = workRole.getText().trim();
+				workRoleNames.add(workRoleName);
+			}
+		}
+		return workRoleNames;
+	}
+
+	@Override
+	public void verifyUnitOptionsListOfBasicStaffingRule() throws Exception{
+		List<String> unitOptionsValues = new ArrayList<>();
+		List<String> optionValues = new ArrayList<>(Arrays.asList("Shifts","Hours"));
+		if(isElementLoaded(unitOptions,2)){
+			Select select = new Select(unitOptions);
+			List<WebElement> unitOptionsList = select.getOptions();
+			for(WebElement unitOption:unitOptionsList){
+				unitOptionsValues.add(unitOption.getText().trim());
+			}
+		}
+		boolean flag = true;
+		for(String unitOptionsValue:unitOptionsValues){
+			for(String optionValue:optionValues){
+				if(unitOptionsValue.equalsIgnoreCase(optionValue)){
+					SimpleUtils.pass(optionValue + " is showing in Unit Options List");
+					flag = true;
+					break;
+				}else {
+					flag = false;
+				}
+			}
+		}
+		if(flag){
+			SimpleUtils.pass("unitOptions can show well");
+		}else {
+			SimpleUtils.fail("unitOptions can NOT show well",false);
+		}
+	}
+
+	@Override
+	public void verifyStartEndOffsetMinutesShowingByDefault() throws Exception{
+		Select select = new Select(startEventPointOptions);
+		WebElement selected = select.getFirstSelectedOption();
+		if(selected.getText().trim().equalsIgnoreCase("during")){
+			if(!isElementExist("div[ng-if*=\"showTimeConstraint()\"] input-field[type=\"number\"] input") && !isElementExist("div[ng-if*=\"isDuring()\"] input-field[type=\"number\"] input")){
+				SimpleUtils.pass("Start/End offset time is not showing when start Event Point Option is selected during");
+			}else {
+				SimpleUtils.fail("Start/End offset time is showing when start Event Point Option is selected during",false);
+			}
+		}
+		selectStartTimeEvent("Opening Operating Hours");
+		select.selectByVisibleText("after");
+		if(isElementExist("div[ng-if*=\"showTimeConstraint()\"] input-field[type=\"number\"] input") && isElementExist("div[ng-if*=\"isDuring()\"] input-field[type=\"number\"] input")){
+			SimpleUtils.pass("Start/End offset time is showing when start Event Point Option is selected after");
+		}else {
+			SimpleUtils.fail("Start/End offset time is NOT showing when start Event Point Option is selected after",false);
+		}
+		if(isElementLoaded(startOffsetMinutes,3)){
+			clickTheElement(startOffsetMinutes);
+			startOffsetMinutes.clear();
+			startOffsetMinutes.sendKeys("5");
+			if(saveRuleIcon.getAttribute("class").contains("enabled")){
+				SimpleUtils.pass("User can input number successfully!");
+			}else {
+				SimpleUtils.fail("User can not input number successfully!",false);
+			}
+		}
+		if(isElementLoaded(endOffsetMinutes,3)){
+			clickTheElement(endOffsetMinutes);
+			endOffsetMinutes.clear();
+			endOffsetMinutes.sendKeys("10");
+			if(saveRuleIcon.getAttribute("class").contains("enabled")){
+				SimpleUtils.pass("User can input number successfully!");
+			}else {
+				SimpleUtils.fail("User can not input number successfully!",false);
+			}
+		}
+	}
+
+	@Override
+	public void verifyStartEndEventPointOptionsList() throws Exception{
+		List<String> eventPoints = new ArrayList<>(Arrays.asList("before","after","during"));
+		List<String> eventPointList = new ArrayList<>();
+		boolean flag = true;
+		Select select = new Select(startEventPointOptions);
+		List<WebElement> eventPointOptions = select.getOptions();
+		for(WebElement eventPointOption:eventPointOptions){
+			eventPointList.add(eventPointOption.getText().trim());
+		}
+		for(String eventPointName:eventPointList){
+			for(String eventPoint:eventPoints){
+				if(eventPointName.equalsIgnoreCase(eventPoint)){
+					flag=true;
+					SimpleUtils.pass(eventPointName + " is showing in start Event Point Options list.");
+					break;
+				}else {
+					flag=false;
+				}
+			}
+		}
+		if(flag){
+			SimpleUtils.pass("start Event Point Options list can show correctly!");
+		}else {
+			SimpleUtils.fail("start Event Point Options list can NOT show correctly!",false);
+		}
+	}
+
+	@Override
+	public List<String> verifyStartEndTimeEventOptionsList() throws Exception{
+		List<String> startEndTimeEventOptions = new ArrayList<>();
+		if(isElementLoaded(startTimeEventOptions,3)){
+			clickTheElement(startTimeEventOptions);
+			if(areListElementVisible(startTimeEventOptionsList,2)){
+				for(WebElement startTimeEventOption:startTimeEventOptionsList){
+					startEndTimeEventOptions.add(startTimeEventOption.getAttribute("innerText").trim());
+				}
+			}else {
+				SimpleUtils.fail("startTimeEventOptionsList is not showing",false);
+			}
+		}
+		return  startEndTimeEventOptions;
+	}
+
+	@FindBy(css=".days-select input-field")
+	private WebElement daysOfWeekOfBasicRule;
+	@FindBy(css=".days-select input-field[type=\"checkbox\"]")
+	private List<WebElement> daysOptionList;
+
+	@Override
+	public void verifyDaysListShowWell() throws Exception{
+		List<String> days = new ArrayList<>();
+		List<String> daysInfo = new ArrayList<>(Arrays.asList("Fri","Mon","Sat","Sun","Thu","Tue","Wed"));
+		boolean flag = true;
+		if(isElementLoaded(daysOfWeekOfBasicRule,2)){
+			clickTheElement(daysOfWeekOfBasicRule);
+			if(areListElementVisible(daysOptionList,2)){
+				for(WebElement daysOption:daysOptionList){
+					days.add(daysOption.findElement(By.cssSelector(" label")).getText().trim());
+				}
+			}else {
+				SimpleUtils.fail("days Option List is not showing",false);
+			}
+		}
+		for(String dayInfo:daysInfo){
+			for(String day:days){
+				if(day.equalsIgnoreCase(dayInfo)){
+					flag = true;
+					SimpleUtils.pass(day + " is showing in days of week Option List");
+				}else {
+					flag = false;
+				}
+			}
+		}
+		if(flag){
+			SimpleUtils.pass("Days of week Option List are correct");
+		}else {
+			SimpleUtils.fail("Days of week Option List are NOT correct",false);
+		}
+	}
+
+	@Override
+	public void selectDaysForBasicStaffingRule(String day) throws Exception{
+		//verify all days are selected by default
+		for(WebElement daysOption:daysOptionList){
+			if(daysOption.findElement(By.cssSelector(" input")).getAttribute("class").trim().contains("ng-not-empty")){
+				SimpleUtils.pass(daysOption.findElement(By.cssSelector(" label")).getText().trim() + " is selected by default!");
+			}else {
+				SimpleUtils.fail(daysOption.findElement(By.cssSelector(" label")).getText().trim() + " is NOT selected by default!",false);
+			}
+		}
+		//select specified days
+		//de-selected all checkbox first
+		for(WebElement daysOption:daysOptionList){
+			if(daysOption.findElement(By.cssSelector(" input")).getAttribute("class").trim().contains("ng-not-empty")){
+				clickTheElement(daysOption.findElement(By.cssSelector(" input")));
+			}
+		}
+		//then select specified days
+		for(WebElement daysOption:daysOptionList){
+			if(daysOption.findElement(By.cssSelector(" label")).getText().trim().equals(day)){
+				clickTheElement(daysOption.findElement(By.cssSelector(" input")));
+				if(daysOption.findElement(By.cssSelector(" input")).getAttribute("class").trim().contains("ng-not-empty")){
+					SimpleUtils.pass("User can select " + day + " successfully!");
+				}else {
+					SimpleUtils.fail("User can NOT select " + day + " successfully!",false);
+				}
+				break;
+			}else {
+				continue;
+			}
+		}
+	}
+
+	@FindBy(css="span[ng-if=\"$ctrl.isFixedTime()\"]")
+	private WebElement fixedTime;
+	@FindBy(css="lg-time-select-modal[dismiss=\"$dismiss\"]")
+	private WebElement startAndEndTime;
+	@FindBy(css="lg-new-time-input[label=\"Open\"] input")
+	private WebElement startTime;
+	@FindBy(css="lg-new-time-input[label=\"Close\"] input")
+	private WebElement endTime;
+	@Override
+	public void setSpecifiedHours(String start, String end) throws Exception{
+		selectStartTimeEvent("Specified Hours");
+		if(isElementLoaded(fixedTime,2)){
+			SimpleUtils.pass("fixed Time field is showing after select Specified Hours");
+			clickTheElement(fixedTime);
+			if(isElementLoaded(startAndEndTime,2)){
+				SimpleUtils.pass("User can click fixed time field successfully");
+				clickTheElement(startTime);
+				startTime.clear();
+				startTime.sendKeys(start);
+				clickTheElement(endTime);
+				endTime.clear();
+				endTime.sendKeys(end);
+				clickTheElement(saveButton);
+				waitForSeconds(2);
+				if(isElementLoaded(fixedTime,2)){
+					if(fixedTime.getText().trim().contains(start) && fixedTime.getText().trim().contains(end)){
+						SimpleUtils.pass("User can set fixed Time successfully");
+					}else {
+						SimpleUtils.fail("User can NOT set fixed Time successfully",false);
+					}
+				}
+			}else {
+				SimpleUtils.fail("User can click fixed time field successfully",false);
+			}
+		}
+	}
+
+	@Override
+	public void selectEventPointForBasicStaffingRule(String startEventPoint,String endEventPoint) throws Exception{
+		Select select1 = new Select(startEventPointOptions);
+		select1.selectByVisibleText(startEventPoint);
+		Select select2 = new Select(endEventPointOptions);
+		select2.selectByVisibleText(endEventPoint);
+	}
+
+	@Override
+	public void verifyBeforeAndAfterDayPartsShouldBeSameWhenSetAsDayParts(String dayParts1,String dayParts2,String startEventPoint,String endEventPoint) throws Exception{
+		selectStartTimeEvent(dayParts1);
+		selectEventPointForBasicStaffingRule(startEventPoint,endEventPoint);
+		selectStartTimeEvent(dayParts2);
+		String bb= endTimeEventSelected.getAttribute("innerText").trim();
+		if(endTimeEventSelected.getAttribute("innerText").trim().equalsIgnoreCase(dayParts2)){
+			SimpleUtils.pass("The end time event will changed to same with start time event after changing start time event when set as day-parts");
+		}else {
+			SimpleUtils.fail("The end time event will NOT changed to same with start time event after changing start time event when set as day-parts",false);
+		}
+	}
+
+	@FindBy(css = "div:nth-child(1) > ng-include > div > question-input > div > div.lg-question-input__wrapper > h3")
+	private WebElement workforceSharingGroup;
+	@FindBy(css = "div.ng-scope.lg-button-group-last")
+	private WebElement noBtn;
+
+	public void verifyWorkforceSharingGroup() throws Exception {
+		click(noBtn);
+		if (!isElementLoaded(workforceSharingGroup, 5)) {
+			SimpleUtils.pass("Workforce Sharing Group doesn't display");
+		} else
+			SimpleUtils.fail("Workforce Sharing Group display", false);
+	}
+
+	@FindBy(css="div.settings-work-rule-footer-edit div:first-child")
+	private WebElement crossButtonOfBasicStaffingRule;
+	@FindBy(css="div.settings-work-rule-footer-edit div:last-child")
+	private WebElement checkButtonOfBasicStaffingRule;
+	@FindBy(css=".settings-work-rule-edit-edit-icon i.fa-pencil")
+	private WebElement editButtonOfStaffingRule;
+	@FindBy(css="div[ng-repeat=\"rule in roleDetails\"]")
+	private List<WebElement> staffingRuleList;
+
+	public void verifyCrossAndCheckButtonOfBasicStaffingRule() throws Exception{
+		if(isElementLoaded(checkButtonOfBasicStaffingRule,2)){
+			clickTheElement(checkButtonOfBasicStaffingRule);
+			if(areListElementVisible(staffingRuleList,2) && isElementExist("div.settings-work-rule-edit-icon-container")){
+				SimpleUtils.pass("User can click check button successfully for basic staffing rule!");
+			}else {
+				SimpleUtils.fail("User can NOT click check button successfully for basic staffing rule!",false);
+			}
+		}
+		waitForSeconds(2);
+		if(isElementLoaded(editButtonOfStaffingRule,2)){
+			clickTheElement(editButtonOfStaffingRule);
+			if(isElementLoaded(crossButtonOfBasicStaffingRule,2)){
+				clickTheElement(crossButtonOfBasicStaffingRule);
+				if(areListElementVisible(staffingRuleList,2) && isElementExist("div.settings-work-rule-edit-icon-container")){
+					SimpleUtils.pass("User can click cross button successfully for basic staffing rule!");
+				}else {
+					SimpleUtils.fail("User can NOT click cross button successfully for basic staffing rule!",false);
+				}
+			}
+		}else {
+			SimpleUtils.fail("pencil button is not showing",false);
+		}
+	}
+
+	@Override
+	public void clickCheckButtonOfBasicStaffingRule() throws Exception{
+		if(isElementLoaded(checkButtonOfBasicStaffingRule,2)){
+			clickTheElement(checkButtonOfBasicStaffingRule);
+			if(areListElementVisible(staffingRuleList,2) && isElementExist("div.settings-work-rule-edit-icon-container")){
+				SimpleUtils.pass("User can click check button successfully for basic staffing rule!");
+			}else {
+				SimpleUtils.fail("User can NOT click check button successfully for basic staffing rule!",false);
+			}
+		}
+	}
+
+	@FindBy(css="div.lg-button-group div")
+	private List<WebElement> badgeOption;
+	@FindBy(css="div.lg-button-group div:first-child")
+	private WebElement noBadge;
+	@FindBy(css="div.lg-button-group div:nth-child(2)")
+	private WebElement badgeRequired;
+
+	@Override
+	public void defaultSelectedBadgeOption() throws Exception{
+		if(areListElementVisible(badgeOption,2)){
+			for(WebElement badge:badgeOption){
+				String badgeLabel = badge.findElement(By.cssSelector(" span")).getText().trim();
+				waitForSeconds(2);
+				if(badge.getAttribute("class").contains("lg-button-group-selected") && badgeLabel.equalsIgnoreCase("No badge")){
+					SimpleUtils.pass(badgeLabel + " is selected by default!");
+					break;
+				}else {
+					SimpleUtils.fail("The default selected badge option is not correct!",false);
+				}
+			}
+		}
+	}
+
+	@FindBy(css="lg-search[placeholder=\"Search badges\"] input")
+	private WebElement searchBadgesField;
+	@FindBy(css="div.badges-list-scroll tr")
+	private WebElement badgeList;
+
+	//hasBadgeOrNot field's value is yes or no
+	@Override
+	public void selectBadgesOfBasicStaffingRule(String hasBadgeOrNot, String badgeName) throws Exception{
+		String badgeIcon = null;
+		if(areListElementVisible(badgeOption,2)){
+			//select badgeRequired or noBadge firstly
+			if(hasBadgeOrNot.equalsIgnoreCase("yes")){
+				clickTheElement(badgeRequired);
+				//select the details badge for rule
+				if(badgeRequired.getAttribute("class").trim().contains("lg-button-group-selected") && isElementLoaded(searchBadgesField,2)){
+					clickTheElement(searchBadgesField);
+					searchBadgesField.clear();
+					searchBadgesField.sendKeys(badgeName);
+					searchBadgesField.sendKeys(Keys.ENTER);
+					if(areListElementVisible(badgesList,2) && badgesList.size()>0){
+						WebElement checkBox = badgesList.get(0).findElement(By.cssSelector("td:first-child input"));
+						badgeIcon = badgesList.get(0).findElement(By.cssSelector("td:first-child svg-image g#Symbols g")).getAttribute("id").trim();
+						clickTheElement(checkBox);
+					}
+				}
+				clickCheckButtonOfBasicStaffingRule();
+				waitForSeconds(2);
+				if(areListElementVisible(staffingRuleList,2)){
+					String badgeInRuleList = staffingRuleList.get(0).findElement(By.cssSelector("svg-image g#Symbols g")).getAttribute("id").trim();
+					if(badgeInRuleList.equalsIgnoreCase(badgeIcon)){
+						SimpleUtils.pass("User can select badge successfully");
+					}else {
+						SimpleUtils.fail("User can NOT select badge successfully",false);
+					}
+				}
+			}else {
+				clickTheElement(noBadge);
+			}
 		}
 	}
 }

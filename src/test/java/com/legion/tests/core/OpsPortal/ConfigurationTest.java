@@ -9,6 +9,7 @@ import com.legion.pages.OpsPortaPageFactories.SettingsAndAssociationPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.pages.core.OpCommons.OpsCommonComponents;
 import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
+import com.legion.pages.core.OpsPortal.OpsPortalSettingsAndAssociationPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffPage;
 import com.legion.pages.core.schedule.ConsoleScheduleCommonPage;
 import com.legion.pages.core.schedule.ConsoleToggleSummaryPage;
@@ -1892,6 +1893,31 @@ public class ConfigurationTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Basic staffing rules page verify")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyStaffingRulePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "Fiona Auto Using";
+            String workRole = "AutoUsing2";
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddBasicStaffingRule();
+            configurationPage.verifyStaffingRulePageShowWell();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Dynamic Group Function>In Workforce Sharing")
@@ -1908,8 +1934,8 @@ public class ConfigurationTest extends TestBase {
             String criteriaUpdate = "Country";
             String searchText = "AutoCreate";
 
-
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(templateType);
 
@@ -1925,12 +1951,17 @@ public class ConfigurationTest extends TestBase {
 
             configurationPage.clickEdit();
             configurationPage.clickOK();
+            configurationPage.verifyWorkforceSharingGroup();
 
             configurationPage.clickOnAssociationTabOnTemplateDetailsPage();
 
             OpsPortalLocationsPage opsPortalLocationsPage = new OpsPortalLocationsPage();
             opsPortalLocationsPage.eidtExistingDGP();
             opsPortalLocationsPage.searchWFSDynamicGroup(searchText);
+            opsPortalLocationsPage.removedSearchedWFSDG();
+
+            opsPortalLocationsPage.addWorkforceSharingDGWithMutiplyCriteria();
+            opsPortalLocationsPage.removedSearchedWFSDG();
 
             opsPortalLocationsPage.verifyCriteriaList();
             String locationNum = opsPortalLocationsPage.addWorkforceSharingDGWithOneCriteria(groupNameForWFS,description,criteria);
@@ -1953,4 +1984,156 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Basic Staffing Rule Fields Verification")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void basicStaffingRuleFieldsVerificationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "Fiona Auto Using";
+            String workRole = "AutoUsing2";
+            List<String> workRoleList=new ArrayList<>();
+            List<String> startTimeEventOptionsList = new ArrayList<>();
+            List<String> TimeEventOptionsList = new ArrayList<>(Arrays.asList("All Hours", "Opening Business Hours", "Closing Business Hours", "Opening Operating Hours", "Closing Operating Hours", "Incoming Hours",
+                    "Outgoing Hours", "Specified Hours", "Peak Hours", "non Peak Hours","DP1-forAuto","DP2-forAuto"));
+            boolean flag = true;
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddBasicStaffingRule();
+            configurationPage.verifyStaffingRulePageShowWell();
+            configurationPage.verifyConditionAndNumberFiledCanShowWell();
+            configurationPage.verifyNumberInputFieldOfBasicStaffingRule();
+            workRoleList = configurationPage.verifyWorkRoleListOfBasicStaffingRule();
+            if(workRoleList.size()==2){
+                if(workRoleList.get(0).equals(workRole) && workRoleList.get(1).equals("Any")){
+                    SimpleUtils.pass("Work role option list in adding new basic staffing rule is correct");
+                }else {
+                    SimpleUtils.fail("Work role option list in adding new basic staffing rule is NOT correct",false);
+                }
+            }
+            configurationPage.verifyUnitOptionsListOfBasicStaffingRule();
+            configurationPage.verifyStartEndOffsetMinutesShowingByDefault();
+            configurationPage.verifyStartEndEventPointOptionsList();
+            startTimeEventOptionsList = configurationPage.verifyStartEndTimeEventOptionsList();
+            for(String startTimeEventOptions:startTimeEventOptionsList){
+                for(String TimeEventOptions:TimeEventOptionsList){
+                    if(startTimeEventOptions.equalsIgnoreCase(TimeEventOptions)){
+                        flag=true;
+                        SimpleUtils.pass(startTimeEventOptions + " is showing in Time Event Options List");
+                        break;
+                    }else {
+                        flag=false;
+                    }
+                }
+            }
+            if(flag){
+                SimpleUtils.pass("Time Event Options List is correct!");
+            }else {
+                SimpleUtils.fail("Time Event Options List is NOT correct!",false);
+            }
+            configurationPage.verifyDaysListShowWell();
+            configurationPage.selectDaysForBasicStaffingRule("Tue");
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Basic Staffing Rule special fields validation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void basicStaffingRuleSpecialFieldsVerificationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try {
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "Fiona Auto Using";
+            String workRole = "AutoUsing2";
+            String start = "8:30 AM";
+            String end = "9:30 PM";
+            String dayParts1 = "DP1-forAuto";
+            String dayParts2 = "DP2-forAuto";
+            String startEventPoint = "before";
+            String endEventPoint = "after";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddBasicStaffingRule();
+            configurationPage.verifyStaffingRulePageShowWell();
+            configurationPage.setSpecifiedHours(start,end);
+            configurationPage.verifyBeforeAndAfterDayPartsShouldBeSameWhenSetAsDayParts(dayParts1,dayParts2,startEventPoint,endEventPoint);
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Basic Staffing Rule Cross and Check button")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void basicStaffingRuleCrossCheckVerificationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try {
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "Fiona Auto Using";
+            String workRole = "AutoUsing2";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddBasicStaffingRule();
+            configurationPage.verifyStaffingRulePageShowWell();
+            configurationPage.verifyCrossAndCheckButtonOfBasicStaffingRule();
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Basic Staffing Rule badge section")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void basicStaffingRuleBadgeVerificationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try {
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "Fiona Auto Using";
+            String workRole = "AutoUsing2";
+            String hasBadgeOrNot = "yes";
+            String badgeName ="AutoUsing";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddBasicStaffingRule();
+            configurationPage.verifyStaffingRulePageShowWell();
+            configurationPage.defaultSelectedBadgeOption();
+            configurationPage.selectBadgesOfBasicStaffingRule(hasBadgeOrNot,badgeName);
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

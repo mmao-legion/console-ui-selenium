@@ -5,6 +5,7 @@ import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -1261,6 +1262,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	private WebElement backButton;
 
 	public void goBack() throws Exception{
+		scrollToTop();
 		if(isElementLoaded(backButton,5)){
 			click(backButton);
 			SimpleUtils.pass("Click back button successfully");
@@ -1540,6 +1542,72 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			SimpleUtils.pass("Job title group table display");
 		}else
 			SimpleUtils.fail("Job title group table doesn't display",false);
+	}
+
+	@FindBy(css = "div.search-message")
+	private WebElement badgesText;
+	@FindBy(css = "td:nth-child(1) > lg-button > button > span > span")
+	private WebElement workRolesRow;
+
+	public void verifyBadgesList(String workRoleName) throws Exception{
+		click(editBtnInWorkRole);
+		click(addWorkRoleBtn);
+		click(addAssignmentRuleIcon);
+		click(badgeRequiredButton);
+		click(badgeSearchInput);
+		if(badgeListInAssignmentRuleTemplate.size() == 20){
+			if(badgesText.getAttribute("innerText").contains("Only 20 of the") && badgesText.getAttribute("innerText").contains("results are displayed in the list, you can use the search box to search for other badges."))
+				SimpleUtils.pass("Badge list size is 20 and text is correct");
+			else
+				SimpleUtils.fail("Badge text is wrong",false);
+		}else
+			SimpleUtils.fail("Badge list size is not 20",false);
+	}
+
+	public void searchBadge(String badgeInfo) throws Exception{
+		badgeSearchInput.clear();
+		badgeSearchInput.sendKeys(badgeInfo);
+		if(badgeListInAssignmentRuleTemplate.size() == 1){
+			SimpleUtils.pass("Search badge successfully");
+		}else
+			SimpleUtils.fail("Search badge failed",false);
+	}
+
+	@FindBy(css = "input-field[type = 'checkbox'] > ng-form > input")
+	private WebElement badgeCheckBox;
+	@FindBy(css = "div.settings-work-rule-save-icon")
+	private WebElement confirmIcon;
+
+	public void updateBadge() throws Exception{
+		click(badgeCheckBox);
+		waitForSeconds(2);
+		click(confirmIcon);
+		click(saveBtn);
+		if(isElementLoaded(jobTitleGroupTab)){
+			SimpleUtils.pass("Update badge successfullly");
+		}else
+			SimpleUtils.fail("Update badge failed",false);
+		click(saveBtn);
+	}
+
+	public void clickLeaveThisPage() throws Exception{
+		if(isExist(leaveThisPageBtn)){
+			click(leaveThisPageBtn);
+			SimpleUtils.pass("Click leave this page button successfully");
+		}else
+			SimpleUtils.fail("Leave this page button is not exist",false);
+	}
+
+	@FindBy(css ="span.settings-work-rule-edit-edit-icon>i")
+	private WebElement pencil;
+	@FindBy(css = "div.ng-scope.lg-button-group-last")
+	private WebElement badgeRequired;
+
+	public void verifyBadgeInWorkRole() throws Exception{
+		click(workRolesRow);
+		clickTheElement(pencil);
+		click(badgeRequired);
+		click(badgeSearchInput);
 	}
 }
 
