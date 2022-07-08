@@ -160,4 +160,5 @@ public interface ScheduleShiftTablePage {
     public boolean isMyScheduleShiftLocationLoaded(int index) throws Exception;
     public boolean isMyScheduleShiftWorkRoleLoaded(int index) throws Exception;
     public boolean isMyScheduleProfileNameLoaded(int index) throws Exception;
+    public String getTotalBudgetFromSTAFFSmartCard() throws Exception;
 }

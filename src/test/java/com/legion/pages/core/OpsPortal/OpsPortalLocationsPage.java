@@ -14,7 +14,7 @@ import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-
+import org.openqa.selenium.support.ui.Select;
 import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -2172,6 +2172,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "div.daypart-container tbody tr")
 	private List<WebElement> dayPartsList;
 
+	@Override
 	public void goToGlobalConfigurationInLocations() throws Exception {
 		waitForSeconds(10);
 		if (isElementLoaded(globalConfigurationInLocations, 20)) {
@@ -3513,5 +3514,93 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.fail("Button for edit enterprise profile is not clickable!", false);
 		}
 	}
+
+
+	@FindBy(css = "form-section[form-title=\"Budget Management\"] [question-title*=\"Display labor budget in schedules?\"]")
+	private WebElement laborBudgetSection;
+	@Override
+	public String getLaborBudgetSettingContent() throws Exception{
+		if (isElementLoaded(laborBudgetSection, 10)){
+			return laborBudgetSection.findElement(By.cssSelector(".lg-question-input__text.ng-binding")).getText();
+		}
+		return "";
+	}
+
+	@Override
+	public void editLaborBudgetSettingContent() throws Exception{
+		int index = 0;
+		if (isElementLoaded(editOnGlobalConfigPage, 10)){
+			clickTheElement(editOnGlobalConfigPage);
+			SimpleUtils.assertOnFail("Global config page is editable!", isElementLoaded(saveButtonOnGlobalConfiguration,3), false);
+
+		}else{
+			SimpleUtils.fail("Edit button on global config page load failed!", false);
+		}
+	}
+
+	@FindBy(css = "form-section[form-title=\"Budget Management\"] [question-title*=\"Display labor budget in schedules?\"] [class*=\"buttonLabel ng-binding\"]")
+	private List<WebElement> yesOrNoBtn;
+	@Override
+	public void turnOnOrTurnOffLaborBudgetToggle(boolean yesOrNo) throws Exception {
+		String content = getLaborBudgetSettingContent();
+		int index;
+		if (isElementLoaded(laborBudgetSection, 10)
+				&& (content.contains("Display labor budget in schedules?"))){
+			if (isElementLoaded(laborBudgetSection.findElement(By.cssSelector(".ng-scope.ng-isolate-scope")),10)){
+				if(yesOrNo){
+					index = 0;
+					clickTheElement(yesOrNoBtn.get(index));
+					SimpleUtils.pass("Toggle is turned on!");
+				}else {
+					index = 1;
+					clickTheElement(yesOrNoBtn.get(index));
+					SimpleUtils.pass("Toggle is turned off!");
+				}
+			} else {
+				SimpleUtils.fail("Toggle fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Labor Budget section fail to load!", false);
+		}
+	}
+
+	@FindBy(css = "form-section[form-title=\"Budget Management\"] [question-title*=\"Input budget by location or break down by work role or job title?\"]")
+	private WebElement budgetGroupSelection;
+	@FindBy(css = "form-section[form-title=\"Budget Management\"] [question-title*=\"Input budget by location or break down by work role or job title?\"] [ng-required*=\"$ctrl.required\"]")
+	private WebElement budgetGroup;
+
+	@Override
+	public String getBudgetGroupSettingContent() throws Exception{
+		if (isElementLoaded(budgetGroupSelection, 10)){
+			return budgetGroupSelection.findElement(By.cssSelector(".lg-question-input__text.ng-binding")).getText();
+		}
+		return "";
+	}
+
+	@Override
+	public void selectBudgetGroup(String optionValue) throws Exception {
+		String content = getBudgetGroupSettingContent();
+		if (isElementLoaded(budgetGroupSelection, 10)
+				&& (content.contains("Input budget by location or break down by work role or job title?"))){
+			Select selectedBudgetGroup = new Select(budgetGroup);
+			selectedBudgetGroup.selectByVisibleText(optionValue);
+			SimpleUtils.report("Select '" + optionValue + "' as the WeekOT");
+			waitForSeconds(2);
+		} else {
+			SimpleUtils.fail("Budget group section fail to load!", false);
+		}
+	}
+
+	@Override
+	public void saveTheGlobalConfiguration() throws Exception {
+		int index = 0;
+		if(isElementLoaded(saveButtonOnGlobalConfiguration,3)){
+			clickTheElement(saveButtonOnGlobalConfiguration);
+			Thread.sleep(3);
+			SimpleUtils.assertOnFail("Global Configuration page not saved successfully!", isElementLoaded(editOnGlobalConfigPage,3), false);
+		}
+	}
+
+
 }
 

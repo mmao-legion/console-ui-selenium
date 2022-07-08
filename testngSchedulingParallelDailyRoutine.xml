@@ -135,6 +135,16 @@
                     <!--                    <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" /> need disable Continuous Operation-->
                     <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
+                    <include name="verifyCanSetTheInputBudgetLevelToLocationAsInternalAdmin" />
+                    <include name="verifyCanEditTheBudgetOnLaborForecastPageAsInternalAdmin" />
+                    <include name="verifyCanRefreshTheLaborForecastSuccessfullyAsInternalAdmin" />
+                    <include name="verifyEditedBudgetShowsOnWeeklyBudgetCardAsInternalAdmin" />
+                    <include name="verifyEditedBudgetShowsOnSTAFFCardAsInternalAdmin" />
+                    <include name="verifyTheBudgetShowsCorrectlyOnSmartCardWhenScheduleIsCreatedAsInternalAdmin" />
+                    <include name="verifyTheBudgetHoursShowsCorrectlyOnOverviewPageAsInternalAdmin" />
+                    <include name="verifyTheBudgetHoursShowsCorrectlyOnDMViewSchedulePageAsInternalAdmin" />
+                    <include name="verifyCreateScheduleButtonIsDisabledAsInternalAdmin" />
+                    <include name="verifyTheCreateScheduleButtonEnabledIfThereIsTheBudgetAsInternalAdmin" />
                                    </methods>
                                </class>
                            </classes>

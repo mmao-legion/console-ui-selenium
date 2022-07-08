@@ -61,5 +61,7 @@ public interface CreateSchedulePage {
     public boolean checkOnlyCopyShiftsSwitchEnableOrNot () throws Exception;
     public void turnOnOrTurnOffOnlyCopyShiftsSwitch (boolean action) throws Exception;
     public boolean checkOnlyCopyPartialAssignmentSwitchEnableOrNot () throws Exception;
+    public void isGenerateButtonNotClickable() throws Exception;
+    public void verifyTooltipForUnclickableCreateScheduleBtn() throws Exception;
 
 }

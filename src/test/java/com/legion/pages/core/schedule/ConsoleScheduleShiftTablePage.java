@@ -4189,4 +4189,21 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else
             SimpleUtils.report("There is no bulk selected shifts! ");
     }
+
+    @FindBy(css = "[ng-class=\"hideItem('staffing.guidance')\"]")
+    private WebElement staffSmartCard;
+    @Override
+    public String getTotalBudgetFromSTAFFSmartCard() throws Exception {
+        String totalBudgetFromSTAFFSmartCard = null;
+        if (isElementLoaded(staffSmartCard,3)) {
+            if (areListElementVisible(budgetedHoursOnSTAFF,3)) {
+                totalBudgetFromSTAFFSmartCard = budgetedHoursOnSTAFF.get(budgetedHoursOnSTAFF.size()-1).getText();
+            } else {
+                SimpleUtils.fail("The budgets are not loaded correctly on the STAFF Card!", false);
+            }
+        } else {
+            SimpleUtils.fail("The STAFF Card is not loaded correctly!", false);
+        }
+        return totalBudgetFromSTAFFSmartCard;
+    }
 }

@@ -369,5 +369,7 @@ public interface ControlsNewUIPage {
 	public boolean checkIfTheLocationUsingControlsConfiguration() throws Exception;
 	public boolean checkIfEmployeeCanClaimOTOpenShift() throws Exception;
 	public void selectClopeningHoursOP(String clopeningHour) throws Exception;
+	public String getBudgetGroupSettingContentNonOP() throws Exception;
+	public void selectBudgetGroupNonOP(String optionValue) throws Exception;
 
 }

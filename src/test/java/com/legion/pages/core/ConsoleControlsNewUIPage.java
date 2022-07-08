@@ -7558,4 +7558,30 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("'Allow employees claim open shift at overtime rate' setting fail to load! ", false);
 		return isAllowEmployeeClaimOTOpenShift;
 	}
+
+	@FindBy(css = "form-section[form-title=\"Budget\"] [question-title*=\"Input budget by location or break down by work role or job title?\"]")
+	private WebElement budgetGroupSelectionNonOP;
+	@FindBy(css = "form-section[form-title=\"Budget\"] [question-title*=\"Input budget by location or break down by work role or job title?\"] [ng-required*=\"$ctrl.required\"]")
+	private WebElement budgetGroupNonOP;
+	@Override
+	public String getBudgetGroupSettingContentNonOP() throws Exception{
+		if (isElementLoaded(budgetGroupSelectionNonOP, 10)){
+			return budgetGroupSelectionNonOP.findElement(By.cssSelector(".lg-question-input__text.ng-binding")).getText();
+		}
+		return "";
+	}
+	@Override
+	public void selectBudgetGroupNonOP(String optionValue) throws Exception {
+		String content = getBudgetGroupSettingContentNonOP();
+		if (isElementLoaded(budgetGroupSelectionNonOP, 10)
+				&& (content.contains("Input budget by location or break down by work role or job title?"))){
+			Select selectedBudgetGroupNonOP = new Select(budgetGroupNonOP);
+			selectedBudgetGroupNonOP.selectByVisibleText(optionValue);
+			SimpleUtils.report("Select '" + optionValue + "' as the budget group");
+			waitForSeconds(2);
+		} else {
+			SimpleUtils.fail("Budget group section fail to load!", false);
+		}
+	}
+
 }
