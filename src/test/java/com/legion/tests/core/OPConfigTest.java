@@ -286,7 +286,7 @@ public class OPConfigTest extends TestBase {
             forecastPage.clickOnLabor();
             String textOnLaborSmartCard = smartCardPage.getsmartCardTextByLabel("Summary");
             int i=0;
-            while (i<10 && textOnLaborSmartCard.toLowerCase().contains("wages")) {
+            while (i<15 && textOnLaborSmartCard.toLowerCase().contains("wages")) {
                 Thread.sleep(60000);
                 loginPage.logOut();
                 loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
@@ -351,8 +351,11 @@ public class OPConfigTest extends TestBase {
             forecastPage.clickOnLabor();
             String textOnLaborSmartCard = smartCardPage.getsmartCardTextByLabel("Summary");
             int i=0;
-            while (i<10 && !textOnLaborSmartCard.toLowerCase().contains(option.toLowerCase())) {
+            while (i<15 && !textOnLaborSmartCard.toLowerCase().contains(option.toLowerCase())) {
                 Thread.sleep(60000);
+                loginPage.logOut();
+                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+                Thread.sleep(5000);
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
