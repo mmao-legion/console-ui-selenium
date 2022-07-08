@@ -1754,7 +1754,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         return switchEnabled;
     }
 
-
+    @Override
     public void confirmDeleteSchedule() throws Exception {
         if (isElementLoaded(deleteSchedulePopup, 25)
                 && isElementLoaded(deleteScheduleCheckBox, 25)
