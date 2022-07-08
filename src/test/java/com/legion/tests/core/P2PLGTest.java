@@ -635,6 +635,7 @@ public class P2PLGTest extends TestBase {
             }
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            Thread.sleep(3000);
             scheduleDMViewPage.clickOnRefreshButton();
             String publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(peerLocation)
                     .get("publishedStatus");
@@ -763,6 +764,7 @@ public class P2PLGTest extends TestBase {
             //Check that the peer locations should be listed
             for (String name : locationNames) {
                 scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(name);
+                scheduleDMViewPage.clickOnRefreshButton();
                 scheduleDMViewPage.clickOnRefreshButton();
                 String publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(name)
                         .get("publishedStatus");

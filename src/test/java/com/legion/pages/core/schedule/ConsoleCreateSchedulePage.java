@@ -815,7 +815,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         }
     }
 
-
+    @FindBy(css = ".schedule-success")
+    private WebElement generateScheduleSuccessImg;
     @Override
     public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception {
         String subTitle = "Confirm Operating Hours";
@@ -836,7 +837,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                         clickTheElement(nextButtonOnCreateSchedule);
                     }
                 }
-                if (isElementEnabled(checkOutTheScheduleButton, 10)) {
+//                waitForSeconds(3);
+                if (isElementEnabled(generateScheduleSuccessImg, 5)) {
                     checkoutSchedule();
                 } else {
                     selectWhichWeekToCopyFrom("SUGGESTED");

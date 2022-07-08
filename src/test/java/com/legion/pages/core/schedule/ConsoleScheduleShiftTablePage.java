@@ -3279,6 +3279,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 && daySummaries.size()> 0
                 && index<daySummaries.size()) {
             scrollToElement(daySummaries.get(index));
+            waitForSeconds(3);
             moveToElementAndClick(daySummaries.get(index));
             tooltip = getHrsOnTooltip();
         } else if (areListElementVisible(daySummariesInDayView, 5)
