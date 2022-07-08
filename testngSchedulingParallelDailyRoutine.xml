@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="5" name="LegionTest" parallel="tests">
+<suite verbose ="0" thread-count="10" name="LegionTest" parallel="tests">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Automation Regression-In parallel mode"/>
@@ -13,6 +13,35 @@
             <class name="com.legion.tests.core.PrepareSettingsTest">
                 <methods>
                     <include name="prepareSettingsInControlsAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="FTSE Support Variant Violations Except OT Ones">
+        <classes>
+            <class name="com.legion.tests.core.FTSERelevantTest">
+                <methods>
+                    <include name="verifyFTSEEmployeesIgnoreTheDayOTAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnoreTheWeekOTAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnoreThe7thConsecutiveOTAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnoreThe24HrsOTAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeeSupportClopeningViolationAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeeSupportMaxShiftViolationAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeeSupportRoleViolationAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore4X10AgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore5X8AgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore40X8AgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore40hrsAgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnoreNoOverTimeAgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore50hrsPerWeekAgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesSupportSplitShiftsViolationAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesSupportSpreadOfHoursViolationAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInDayViewAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInViewProfileAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInPersonalMyScheduleAsInternalAdmin"/>
+                    <include name="verifyShiftInfoInPersonalMyPreferenceAsInternalAdmin"/>
+                    <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
@@ -634,40 +663,21 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
         </classes>
     </test>
 
-    <test name="FTSE Support Variant Violations Except OT Ones">
-        <classes>
-            <class name="com.legion.tests.core.FTSERelevantTest">
-                <methods>
-                    <include name="verifyFTSEEmployeesIgnoreTheDayOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnoreTheWeekOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnoreThe7thConsecutiveOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnoreThe24HrsOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeeSupportClopeningViolationAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeeSupportMaxShiftViolationAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeeSupportRoleViolationAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore4X10AgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore5X8AgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore40X8AgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore40hrsAgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnoreNoOverTimeAgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnore50hrsPerWeekAgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesSupportSplitShiftsViolationAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesSupportSpreadOfHoursViolationAsInternalAdmin"/>
-                    <include name="verifyShiftInfoInDayViewAsInternalAdmin"/>
-                    <include name="verifyShiftInfoInViewProfileAsInternalAdmin"/>
-                    <include name="verifyShiftInfoInPersonalMyScheduleAsInternalAdmin"/>
-                    <include name="verifyShiftInfoInPersonalMyPreferenceAsInternalAdmin"/>
-                    <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-
     <test name="Time Zone Test" >
         <classes>
             <class name="com.legion.tests.core.TimeZoneTest">
                 <methods>
                     <include name="verifyTheUTCTimeFormatInControlsAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Badge Test" >
+        <classes>
+            <class name="com.legion.tests.core.BadgeTest">
+                <methods>
+                    <include name="verifyTheBadgeChangeInShiftSmartCardViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

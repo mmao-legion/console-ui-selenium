@@ -173,7 +173,7 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))-1) +" Aug 1",
+            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))) +" Jan 1",
                     (Integer.parseInt(dayInfo.get("year"))) +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
 
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
@@ -418,7 +418,7 @@ public class CinemarkMinorTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = shiftOperatePage.getRandomWorkRole();
-            shiftOperatePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(cinemarkMinors.get("Minor14"));
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
@@ -739,7 +739,7 @@ public class CinemarkMinorTest extends TestBase {
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             String districtName = dashboardPage.getCurrentDistrict();
 
@@ -802,7 +802,7 @@ public class CinemarkMinorTest extends TestBase {
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = shiftOperatePage.getRandomWorkRole();
-            shiftOperatePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor17"));
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(cinemarkMinors.get("Minor17"));
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(0,0,0);
@@ -1244,10 +1244,11 @@ public class CinemarkMinorTest extends TestBase {
         }
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1.split(" ")[0]);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1.split(" ")[0]);
         scheduleMainPage.saveSchedule();
         if(smartCardPage.isRequiredActionSmartCardLoaded()){
-            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+//            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteAllOOOHShiftInWeekView();
             scheduleMainPage.saveSchedule();
@@ -1316,7 +1317,7 @@ public class CinemarkMinorTest extends TestBase {
         scheduleMainPage.clickOnFilterBtn();
         //Create new shift with shift hours is more than minor setting for TM1
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1.split(" ")[0]);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1.split(" ")[0]);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1372,7 +1373,7 @@ public class CinemarkMinorTest extends TestBase {
         //Create new shift that not avoid the minor settings for TM1
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         Thread.sleep(3000);
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1.split(" ")[0]);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1.split(" ")[0]);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1598,7 +1599,7 @@ public class CinemarkMinorTest extends TestBase {
         }
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1.split(" ")[0]);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1.split(" ")[0]);
         scheduleMainPage.saveSchedule();
 
         //Create new shift with shift time is not during the minor setting for TM
@@ -1670,7 +1671,7 @@ public class CinemarkMinorTest extends TestBase {
         smartCardPage.verifyClearFilterFunction();
         //Create new shift with shift hours is more than minor setting for TM1
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1.split(" ")[0]);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1.split(" ")[0]);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -2198,6 +2199,7 @@ public class CinemarkMinorTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -2223,10 +2225,10 @@ public class CinemarkMinorTest extends TestBase {
             minorNames.add(minor16);
             minorNames.add(minor17);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(minor14.split(" ")[0]);
-            shiftOperatePage.deleteTMShiftInWeekView(minor15.split(" ")[0]);
-            shiftOperatePage.deleteTMShiftInWeekView(minor16.split(" ")[0]);
-            shiftOperatePage.deleteTMShiftInWeekView(minor17.split(" ")[0]);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(minor14.split(" ")[0]);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(minor15.split(" ")[0]);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(minor16.split(" ")[0]);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(minor17.split(" ")[0]);
             scheduleMainPage.saveSchedule();
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

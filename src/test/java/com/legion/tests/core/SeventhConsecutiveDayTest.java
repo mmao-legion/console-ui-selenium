@@ -231,7 +231,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
         String lastName = shiftInfo.get(5);
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-        shiftOperatePage.deleteTMShiftInWeekView(firstName);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
         scheduleMainPage.saveSchedule();
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -367,9 +367,9 @@ public class SeventhConsecutiveDayTest extends TestBase {
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstName);
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
 
             //Create 6 shifts for TM1 on the first 6 consecutive days and save
@@ -472,9 +472,9 @@ public class SeventhConsecutiveDayTest extends TestBase {
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstName);
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
 
             //Create 7 auto open shifts on the 7 consecutive days
@@ -592,9 +592,9 @@ public class SeventhConsecutiveDayTest extends TestBase {
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstName);
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
 
             //Create 7 auto open shifts on the 7 consecutive days
@@ -726,9 +726,9 @@ public class SeventhConsecutiveDayTest extends TestBase {
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstName1);
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
 
             //Create 6 shifts for TM1 on the first 6 consecutive days and save
@@ -848,10 +848,10 @@ public class SeventhConsecutiveDayTest extends TestBase {
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstName1);
-            shiftOperatePage.deleteTMShiftInWeekView(firstName2);
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
 
             //Create 7 shifts for TM1 on the 7 consecutive days and save
@@ -918,6 +918,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
     public void verifyTMCannotAcceptTheShiftSwapRequestThatHasOTViolationAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		try {
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
         profileNewUIPage.clickOnUserProfileImage();
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
         String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
@@ -963,10 +964,10 @@ public class SeventhConsecutiveDayTest extends TestBase {
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstName1);
-        shiftOperatePage.deleteTMShiftInWeekView(firstName2);
-        shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-        shiftOperatePage.deleteTMShiftInWeekView("open");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName1);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName2);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
         scheduleMainPage.saveSchedule();
 
         //Create 1 shift for TM1 and 1 for TM2 on the 7th day, confirm these two shifts have no overlapping and save them
@@ -1116,10 +1117,10 @@ public class SeventhConsecutiveDayTest extends TestBase {
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstName1);
-            shiftOperatePage.deleteTMShiftInWeekView(firstName2);
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
 
             //Create 7 shifts for TM1 on the 7 consecutive days and save
@@ -1248,10 +1249,10 @@ public class SeventhConsecutiveDayTest extends TestBase {
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstName1);
-        shiftOperatePage.deleteTMShiftInWeekView(firstName2);
-        shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-        shiftOperatePage.deleteTMShiftInWeekView("open");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName1);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName2);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
         scheduleMainPage.saveSchedule();
 
         //Create 1 shift for TM2 on the 7th day and save
@@ -1739,7 +1740,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-        shiftOperatePage.deleteTMShiftInWeekView(firstName);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
         scheduleMainPage.saveSchedule();
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

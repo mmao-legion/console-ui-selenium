@@ -1150,7 +1150,7 @@ public class SplitAndSpreadTest extends TestBase {
     @TestName(description = "Validate open shift with 'Spread Of Hours' cannot be claimed")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyOpenShiftWithSpreadOfHoursViolationCannotBeClaimedAsTeamMember(String browser, String username, String password, String location) throws Exception {
-        try {
+//        try {
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
@@ -1351,8 +1351,8 @@ public class SplitAndSpreadTest extends TestBase {
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
             mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(isAllowEmployeeClaimOTOpenShift?Constants.NoLongEligibleTakeShiftErrorMessage:Constants.WillTriggerDailyOTErrorMessage);
 
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+//        } catch (Exception e) {
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
     }
 }

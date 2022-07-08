@@ -725,6 +725,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public void verifyMealBreakTimeDisplayAndFunctionality(boolean isEditMealBreakEnabled) throws Exception {
         clickOnProfileIcon();
         clickOnEditMeaLBreakTime();
+        waitForSeconds(2);
         if (isMealBreakTimeWindowDisplayWell(isEditMealBreakEnabled)) {
             if (isEditMealBreakEnabled){
                 click(addMealBreakButton);
@@ -3239,6 +3240,34 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             clickTheElement(continueBtnInMealBreakButton);
         } else {
             SimpleUtils.fail("OK button failed to load on Meal Break Dialog!", false);
+        }
+    }
+
+    @FindBy(css = "[ng-if=\"badgesToShow && badgesToShow.length\"] .one-badge")
+    private List<WebElement> badgeIconList;
+
+    @Override
+    public void clickOnProfileIconByIndex(int indexOfProfIcon) throws Exception {
+        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+            clickTheElement(profileIcons.get(indexOfProfIcon));
+        } else {
+            SimpleUtils.fail("Failed for loading profile icon!", false);
+        }
+    }
+
+    @Override
+    public void checkBadgeOnProfilePopup(String tmA, String tmB) throws Exception {
+        if (areListElementVisible(shifts, 10)) {
+            SimpleUtils.assertOnFail("Shifts number is:" + shifts.size() + " didn't match 2!", shifts.size() == 2, false);
+            clickOnProfileIconByIndex(0);
+            waitForSeconds(3);
+            SimpleUtils.assertOnFail("TM " + tmA + " should have badge!", areListElementVisible(badgeIconList), false);
+            SimpleUtils.assertOnFail("TM " + tmA + " should have 1 badge! But actual number is: " + badgeIconList.size(), badgeIconList.size() == 1, false);
+            clickOnProfileIconByIndex(1);
+            waitForSeconds(3);
+            SimpleUtils.assertOnFail("TM " + tmB + "should have no badge!", !areListElementVisible(badgeIconList), false);
+        } else {
+            SimpleUtils.fail("Shifts are not listed!", false);
         }
     }
 }

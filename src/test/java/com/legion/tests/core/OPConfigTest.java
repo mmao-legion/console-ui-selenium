@@ -1,6 +1,6 @@
 package com.legion.tests.core;
 
-import com.legion.pages.CinemarkMinorPage;
+import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
@@ -256,5 +256,153 @@ public class OPConfigTest extends TestBase {
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify wages should not show when setting Labor Preferences to None")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            String option = "None";
+            setLaborPreferencesForForecastSummarySmartcardSetting(option);
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+//            Thread.sleep(5000);
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            Thread.sleep(5000);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            forecastPage.clickOnLabor();
+            String textOnLaborSmartCard = smartCardPage.getsmartCardTextByLabel("Summary");
+            int i=0;
+            while (i<15 && textOnLaborSmartCard.toLowerCase().contains("wages")) {
+                Thread.sleep(60000);
+                loginPage.logOut();
+                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+                Thread.sleep(5000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+                forecastPage.clickOnLabor();
+                textOnLaborSmartCard = smartCardPage.getsmartCardTextByLabel("Summary");
+                i++;
+            }
+            SimpleUtils.assertOnFail("The Wages row should not display on Forecast Labor smart card! the actual text is "+textOnLaborSmartCard,
+                    !textOnLaborSmartCard.toLowerCase().contains("wages"), false);
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            Thread.sleep(5000);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            String textOnScheduleSmartCard = smartCardPage.getsmartCardTextByLabel("Schedule V");
+            SimpleUtils.assertOnFail("The Wages row should not display on Schedule smart card! the actual text is "+textOnScheduleSmartCard,
+                    !textOnScheduleSmartCard.toLowerCase().contains("wages"), false);
+
+//            //Change setting for next case to save the waiting session time
+//            setLaborPreferencesForForecastSummarySmartcardSetting("Wages");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify wages shows when setting Labor Preferences to Wages")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            String option = "Wages";
+            setLaborPreferencesForForecastSummarySmartcardSetting(option);
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+//            Thread.sleep(5000);
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            Thread.sleep(5000);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            forecastPage.clickOnLabor();
+            String textOnLaborSmartCard = smartCardPage.getsmartCardTextByLabel("Summary");
+            int i=0;
+            while (i<15 && !textOnLaborSmartCard.toLowerCase().contains(option.toLowerCase())) {
+                Thread.sleep(60000);
+                loginPage.logOut();
+                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+                Thread.sleep(5000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+                forecastPage.clickOnLabor();
+                textOnLaborSmartCard = smartCardPage.getsmartCardTextByLabel("Summary");
+                i++;
+            }
+            SimpleUtils.assertOnFail("The Wages row should display on Forecast Labor smart card! The actual text is "+textOnLaborSmartCard,
+                    textOnLaborSmartCard.toLowerCase().contains(option.toLowerCase()), false);
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            Thread.sleep(5000);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            String textOnScheduleSmartCard = smartCardPage.getsmartCardTextByLabel("Schedule V");
+            SimpleUtils.assertOnFail("The Wages row should display on Schedule smart card! The actual text is "+ textOnScheduleSmartCard,
+                    textOnScheduleSmartCard.toLowerCase().contains(option.toLowerCase()), false);
+
+//            //Change setting for previous case to save the waiting session time
+//            setLaborPreferencesForForecastSummarySmartcardSetting("None");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    private void setLaborPreferencesForForecastSummarySmartcardSetting(String option) throws Exception {
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        Thread.sleep(7000);
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToGlobalConfigurationInLocations();
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        scheduleMainPage.clickOnEditButton();
+        configurationPage.updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(option);
+        Thread.sleep(3);
+        controlsNewUIPage.clickOnSaveBtn();
+
+
     }
 }

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.legion.utils.JsonUtil;
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
@@ -682,4 +683,14 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		}
 	}
 
+
+	@FindBy (css = "[label=\"View Group Schedule\"] button")
+	private WebElement viewGroupScheduleButton;
+	public void clickOnViewGroupScheduleButton() throws Exception {
+		if(isElementLoaded(viewGroupScheduleButton,10)){
+			click(viewGroupScheduleButton);
+			SimpleUtils.pass("Click on View Group Schedule Button successfully! ");
+		} else
+			SimpleUtils.fail("The View Group Schedule Button fail to load! ", false);
+	}
 }
