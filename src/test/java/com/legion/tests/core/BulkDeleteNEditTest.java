@@ -7,12 +7,15 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.jsoup.Connection;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.net.SocketImpl;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -163,7 +166,7 @@ public class BulkDeleteNEditTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify the content on Multiple Edit Shifts window")
+    @TestName(description = "Verify the content on Multiple Edit Shifts window for regular location")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheContentOnMultipleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -177,6 +180,9 @@ public class BulkDeleteNEditTest extends TestBase {
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
+            BasePage basePage = new BasePage();
+            String activeWeek = basePage.getActiveWeekText();
+            String startOfWeek = activeWeek.split(" ")[3] + " " + activeWeek.split(" ")[4];
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             // Verify can select multiple shifts by pressing Ctrl/Cmd(Mac)
             int selectedShiftCount = 2;
@@ -191,7 +197,7 @@ public class BulkDeleteNEditTest extends TestBase {
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             // Verify the title of Edit Shifts window
-            editShiftPage.verifyTheTitleOfEditShiftsWindow(selectedShiftCount);
+            editShiftPage.verifyTheTitleOfEditShiftsWindow(selectedShiftCount, startOfWeek);
             // Verify the selected days show correctly
             editShiftPage.verifySelectedWorkDays(selectedShiftCount, selectedDays);
             // Verify the Location Name shows correctly
@@ -210,11 +216,38 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.clickOnXButton();
             SimpleUtils.assertOnFail("Click on X button failed!", !editShiftPage.isEditShiftWindowLoaded(), false);
             // Verify the functionality of Cancel button
-            set = scheduleShiftTablePage.verifyCanSelectMultipleShifts(selectedShiftCount);
             scheduleShiftTablePage.rightClickOnSelectedShifts(set);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             editShiftPage.clickOnCancelButton();
+
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
+            scheduleCommonPage.clickOnDayView();
+            String weekDay = basePage.getActiveWeekText();
+            String fullWeekDay = SimpleUtils.getFullWeekDayName(weekDay.split(" ")[0].trim());
+            selectedDays = new ArrayList<>();
+            selectedDays.add(fullWeekDay);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            set = scheduleShiftTablePage.verifyCanSelectMultipleShifts(selectedShiftCount);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(set);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            // Verify the title of Edit Shifts window in day view
+            editShiftPage.verifyTheTitleOfEditShiftsWindow(selectedShiftCount, startOfWeek);
+            // Verify the selected days show correctly in day view
+            editShiftPage.verifySelectedWorkDays(selectedShiftCount, selectedDays);
+            // Verify the Location Name shows correctly in day view
+            editShiftPage.verifyLocationNameShowsCorrectly(location);
+            // Verify the visibility of buttons in day view
+            editShiftPage.verifyTheVisibilityOfButtons();
+            // Verify the content of options section in day view
+            editShiftPage.verifyTheContentOfOptionsSection();
+            // Verify the visibility of Clear Edited Fields button in day view
+            SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
+            // Verify the three columns show on Shift Details section in day view
+            editShiftPage.verifyThreeColumns();
+            // Verify the editable types show on Shift Detail section in day view
+            editShiftPage.verifyEditableTypesShowOnShiftDetail();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

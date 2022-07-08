@@ -40,17 +40,17 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public boolean isEditShiftWindowLoaded() throws Exception {
-        if (isElementLoaded(editShiftWindow, 5)) {
+        waitForSeconds(3);
+        if (isElementLoaded(editShiftWindow, 5) && areListElementVisible(gridContainers, 10)) {
             return true;
         }
         return false;
     }
 
     @Override
-    public void verifyTheTitleOfEditShiftsWindow(int selectedShiftCount) throws Exception {
-        String expectedTitle = "Edit " + selectedShiftCount + " Shift" + (selectedShiftCount == 0 ? "" : "s") + " Week of "
-                + getActiveWeekText();
-        System.out.println(expectedTitle);
+    public void verifyTheTitleOfEditShiftsWindow(int selectedShiftCount, String startOfWeek) throws Exception {
+        String expectedTitle = "Edit " + selectedShiftCount + " Shift" + (selectedShiftCount == 0 ? "" : "s") + ": Week of "
+                + startOfWeek;
         if (isElementLoaded(windowTitle, 5) && windowTitle.getText().trim().equalsIgnoreCase(expectedTitle)) {
             SimpleUtils.pass("The title of the Edit Shift window is correct: " + expectedTitle);
         } else {
@@ -60,7 +60,8 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public void verifySelectedWorkDays(int selectedShitCount, List<String> selectedDays) throws Exception {
-        String expectedSubTitle = "SHIFTS SELECTED: " + selectedShitCount + "\n" + "Days: " + selectedDays.toString();
+        String expectedSubTitle = "SHIFTS SELECTED: " + selectedShitCount + "\n" + "Days: " +
+                selectedDays.toString().substring(selectedDays.toString().indexOf("[") + 1, selectedDays.toString().indexOf("]"));
         if (isElementLoaded(subTitle, 3) && subTitle.getText().equalsIgnoreCase(expectedSubTitle)) {
             SimpleUtils.pass("The sub title of the Edit Shift window is correct: " + expectedSubTitle);
         } else {
