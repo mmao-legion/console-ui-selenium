@@ -817,15 +817,21 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if (isMealBreakTimeWindowDisplayWell(true)) {
             if (mealBreakBar.getAttribute("class").contains("disabled")) {
                 click(addMealBreakButton);
+                SimpleUtils.pass("Click Add Meal Break button successfully! ");
                 click(continueBtnInMealBreakButton);
+                SimpleUtils.pass("Click Continue button successfully! ");
                 if (isElementEnabled(confirmWindow, 5)) {
                     click(okBtnOnConfirm);
+                    SimpleUtils.pass("Click OK button successfully! ");
                 }
                 if (scheduleCommonPage.isScheduleDayViewActive()) {
                     selectedShift = scheduleShiftTablePage.getShiftById(id);
                     clickTheElement(selectedShift.findElement(By.cssSelector(".sch-day-view-shift .sch-shift-worker-img-cursor")));
-                } else
+                    SimpleUtils.pass("Click the selected shift avatar in day view successfully! ");
+                } else {
                     clickTheElement(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+                    SimpleUtils.pass("Click the selected shift avatar in week view successfully! ");
+                }
                 clickOnEditMeaLBreakTime();
             }
             mealBreakTimeBeforeEdit = mealBreakTimes.get(0).getText();
@@ -833,27 +839,33 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             mealBreakTimeAfterEdit = mealBreakTimes.get(0).getText();
             if (isSavedChange) {
                 click(continueBtnInMealBreakButton);
+                SimpleUtils.pass("Click Continue button to save break successfully! ");
                 if (isElementEnabled(confirmWindow, 5)) {
                     click(okBtnOnConfirm);
+                    SimpleUtils.pass("Click OK button to save break successfully! ");
                 }
             } else {
                 click(cannelBtnInMealBreakButton);
+                SimpleUtils.pass("Click Cancel Btn successfully! ");
             }
         }else
-            SimpleUtils.fail("Meal break window load failed",true);
+            SimpleUtils.fail("Meal break window load failed",false);
 
         if (scheduleCommonPage.isScheduleDayViewActive()) {
             selectedShift = scheduleShiftTablePage.getShiftById(id);
             clickTheElement(selectedShift.findElement(By.cssSelector(".sch-day-view-shift .sch-shift-worker-img-cursor")));
-        } else
+            SimpleUtils.pass("Click the selected shift avatar in day view successfully! ");
+        } else {
             clickTheElement(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+            SimpleUtils.pass("Click the selected shift avatar in week view successfully! ");
+        }
         clickOnEditMeaLBreakTime();
         if (isMealBreakTimeWindowDisplayWell(true)) {
             if (isSavedChange) {
                 if (mealBreakTimes.get(0).getText().equals(mealBreakTimeAfterEdit)) {
                     SimpleUtils.pass("Edit meal break times successfully");
                 } else
-                    SimpleUtils.fail("Edit meal break time failed",true);
+                    SimpleUtils.fail("Edit meal break time failed",false);
             } else {
                 if (mealBreakTimes.get(0).getText().equals(mealBreakTimeBeforeEdit)) {
                     SimpleUtils.pass("Edit meal break times not been changed after click Cancel button");
@@ -861,8 +873,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     SimpleUtils.fail("Edit meal break times still been changed after click Cancel button",true);
             }
         }else
-            SimpleUtils.fail("Meal break window load failed",true);
+            SimpleUtils.fail("Meal break window load failed",false);
         click(cannelBtnInMealBreakButton);
+        SimpleUtils.pass("Click Cancel Button successfully! ");
     }
 
     @Override

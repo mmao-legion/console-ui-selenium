@@ -1624,6 +1624,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			String firstNameOfTM = tmFullName.split(" ")[0];
 			String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
@@ -1693,6 +1694,13 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The time offs fail to load on availability table" ,
 					timeOffsLength.size() == 1
 							&& timeOffsLength.get(0).equalsIgnoreCase("24.0 hrs"), false);
+			//Edit the steps for SCH-657
+			profileNewUIPage.clickAvailabilityEditButton();
+			timeOffsLength = profileNewUIPage.getTimeOffsLengthOnAvailabilityTable();
+			SimpleUtils.assertOnFail("The time offs fail to load on availability table" ,
+					timeOffsLength.size() == 1
+							&& timeOffsLength.get(0).equalsIgnoreCase("24.0 hrs"), false);
+			controlsNewUIPage.clickOnCancelBtn();
 			//Check the available left hrs, the hrs will not change
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
 			totalHoursValue = availabilityData.get("totalHoursValue").toString();

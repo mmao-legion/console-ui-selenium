@@ -3854,7 +3854,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	public void clickOnCancelBtn() throws Exception {
 		if (isElementLoaded(cancelBtn)) {
-			click(cancelBtn);
+			scrollToElement(cancelBtn);
+			clickTheElement(cancelBtn);
 			SimpleUtils.pass("Cancel button clicked successfully.");
 		} else
 			SimpleUtils.report("Cancel Button not loaded.");

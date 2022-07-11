@@ -321,7 +321,7 @@
                     <include name="validateTheAvailableLeftHrsDisplayAs168WhenAddFullAvailabilitiesAsTeamMember" />
                     <include name="validateTheAvailableLeftHrsDisplayCorrectlyWhenUpdateAvailabilitiesAsTeamMember" />
                     <include name="validateTheAvailableLeftHrsWhenTMHasShiftsOnTheWeekAsTeamMember" />
-<!--                    <include name="validateTimeOffOnAvailabilityTableAsTeamMember" /> -->
+                    <include name="validateTimeOffOnAvailabilityTableAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWithScheduledShiftAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWillChangedAccordinglyAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTablWhenThereIsNoShiftBeenScheduledAsTeamMember" />
