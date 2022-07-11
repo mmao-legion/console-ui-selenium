@@ -40,4 +40,6 @@ public interface SmartCardPage {
     public String getWholeMessageFromActionRequiredSmartCard() throws Exception;
     public HashMap<String, String> getMessageFromActionRequiredSmartCard() throws Exception;
     public void clickViewTemplateLinkOnMasterTemplateSmartCard() throws Exception;
+    public String getBudgetValueFromWeeklyBudgetSmartCard(String cardName) throws Exception;
+    public String getBudgetValueFromScheduleBudgetSmartCard() throws Exception;
 }

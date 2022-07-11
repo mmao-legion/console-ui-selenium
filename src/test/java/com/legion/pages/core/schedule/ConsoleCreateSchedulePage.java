@@ -1777,4 +1777,34 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         return isLoaded;
 
     }
+    
+  @Override
+    public void isGenerateButtonNotClickable() throws Exception {
+        if (isElementLoaded(scheduleGenerateButton) && isClickable(scheduleGenerateButton,5)){
+            if(!(isElementLoaded(generateModalTitle))){
+                SimpleUtils.pass("The Create Schedule button is unclickable!");
+            }else{
+                SimpleUtils.fail("The Create Schedule button is clickable!", false);
+            }
+        } else {
+            SimpleUtils.fail("The Create Schedule button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void verifyTooltipForUnclickableCreateScheduleBtn() throws Exception {
+        if (isElementLoaded(scheduleGenerateButton) && isClickable(scheduleGenerateButton,5)){
+            mouseToElement(scheduleGenerateButton);
+            String tooltipText = "The schedule can not be created because the budget is missing";
+            if(tooltipText.equalsIgnoreCase(scheduleGenerateButton.getAttribute("tooltip"))){
+                SimpleUtils.pass("Tooltip is expected!");
+            }else{
+                SimpleUtils.fail("Tooltip should display when mouse hover the create schedule button!", false);
+            }
+        } else {
+            SimpleUtils.fail("The Create Schedule button is not loaded!", false);
+        }
+    }
+
 }
+

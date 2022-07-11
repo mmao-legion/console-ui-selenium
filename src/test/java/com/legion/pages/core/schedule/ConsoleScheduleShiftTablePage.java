@@ -4192,7 +4192,6 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             SimpleUtils.report("There is no bulk selected shifts! ");
     }
 
-
     @Override
     public void verifyGroupCannotbeCollapsedNExpanded() throws Exception {
         if (areListElementVisible(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")),10)){
@@ -4288,5 +4287,22 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else
             SimpleUtils.fail("Group by Location: The action popup fail to load!! ", false);
         return buttonNames;
+    }
+    
+    @FindBy(css = "[ng-class=\"hideItem('staffing.guidance')\"]")
+    private WebElement staffSmartCard;
+    @Override
+    public String getTotalBudgetFromSTAFFSmartCard() throws Exception {
+        String totalBudgetFromSTAFFSmartCard = null;
+        if (isElementLoaded(staffSmartCard,3)) {
+            if (areListElementVisible(budgetedHoursOnSTAFF,3)) {
+                totalBudgetFromSTAFFSmartCard = budgetedHoursOnSTAFF.get(budgetedHoursOnSTAFF.size()-1).getText();
+            } else {
+                SimpleUtils.fail("The budgets are not loaded correctly on the STAFF Card!", false);
+            }
+        } else {
+            SimpleUtils.fail("The STAFF Card is not loaded correctly!", false);
+        }
+        return totalBudgetFromSTAFFSmartCard;
     }
 }

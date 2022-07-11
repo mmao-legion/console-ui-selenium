@@ -165,4 +165,5 @@ public interface ScheduleShiftTablePage {
     public String clickActionIconForSpecificGroupByChildLocation(String childLocation);
     public void clickOnSpecificButtonsGroupByActionPopup(String buttonName) throws Exception;
     public List<String> getButtonNamesFromGroupByActionPopup() throws Exception;
+    public String getTotalBudgetFromSTAFFSmartCard() throws Exception;
 }

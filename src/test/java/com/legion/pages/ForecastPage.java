@@ -100,4 +100,9 @@ public interface ForecastPage {
 	public HashMap<String, List<String>> getLaborChartCoordinateAxisData();
 	public void selectWorkRoleFilterByText(String workRoleLabel) throws Exception;
 	public boolean areWorkRoleDisplayOrderCorrectOnLaborForecast(HashMap<String, Integer> workRoleNOrders) throws Exception;
+	public void forecastLaborWeekNavigation() throws Exception;
+	public void editLaborBudgetOnSummarySmartCard() throws Exception;
+	public void goToForecastLaborWeek() throws Exception;
+	public String getLaborBudgetOnSummarySmartCard() throws Exception;
+	public void clearLaborBudgetOnSummarySmartCard() throws Exception;
 }

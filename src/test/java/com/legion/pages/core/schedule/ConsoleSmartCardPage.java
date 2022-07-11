@@ -824,4 +824,35 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
             SimpleUtils.fail("The Master Template smart card fail to load! ", false);
     }
 
+    @FindBy (xpath = "//div[contains(text(), \"Weekly Budget\")]/following-sibling::h1[1]")
+    private WebElement budgetHoursOnWeeklyBudget;
+    @Override
+    public String getBudgetValueFromWeeklyBudgetSmartCard(String cardName) throws Exception {
+        String weeklyBudgetValue;
+        if (areListElementVisible(smartCards, 15)) {
+            for (WebElement smartCard : smartCards) {
+                WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
+                if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {
+                    weeklyBudgetValue = budgetHoursOnWeeklyBudget.getText();
+                    return weeklyBudgetValue;
+                }
+            }
+        }else{
+            SimpleUtils.fail("The Smart Cards on the Schedule page are not loaded correctly!", false);
+        }
+        return null;
+    }
+
+    @Override
+    public String getBudgetValueFromScheduleBudgetSmartCard() throws Exception {
+        if (isElementLoaded(scheduleSmartCard, 3)) {
+            WebElement ScheduleBudgetSmartCard = scheduleSmartCard.findElement(By.cssSelector("[ng-if=\"scheduleSmartCard.guidanceSummary !== null\"]"));
+            return ScheduleBudgetSmartCard.getText().trim();
+        }else{
+            SimpleUtils.fail("The Schedule Smart Card on the Schedule page is not loaded correctly!", false);
+        }
+        return null;
+    }
+
+
 }

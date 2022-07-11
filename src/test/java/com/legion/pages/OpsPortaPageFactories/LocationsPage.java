@@ -255,4 +255,16 @@ public interface LocationsPage {
     public void clickOnExportBtn();
 
     public void clickEditEnterpriseProfile();
+
+    public String getLaborBudgetSettingContent() throws Exception;
+
+    public void turnOnOrTurnOffLaborBudgetToggle(boolean action) throws Exception;
+
+    public void saveTheGlobalConfiguration() throws Exception;
+
+    public void editLaborBudgetSettingContent() throws Exception;
+
+    public String getBudgetGroupSettingContent() throws Exception;
+
+    public void selectBudgetGroup(String optionValue) throws Exception;
 }

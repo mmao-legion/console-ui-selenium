@@ -64,5 +64,7 @@ public interface CreateSchedulePage {
     public void checkoutSchedule();
     public void confirmDeleteSchedule() throws Exception;
     public boolean checkIfCheckOutButtonLoaded() throws Exception;
+    public void isGenerateButtonNotClickable() throws Exception;
+    public void verifyTooltipForUnclickableCreateScheduleBtn() throws Exception;
 
 }
