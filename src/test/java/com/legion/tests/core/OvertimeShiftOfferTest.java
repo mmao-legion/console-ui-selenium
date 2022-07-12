@@ -109,6 +109,10 @@ public class OvertimeShiftOfferTest extends TestBase {
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
 
+            // To handle the assignment failures when delete TM's shifts and reassign
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
             int shiftsCountBefore = 0;
 
             if (enterprise.equalsIgnoreCase("vailqacn")) {
