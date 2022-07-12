@@ -4837,11 +4837,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}else if("Edit".equalsIgnoreCase(addOrEdit)){
 			if (isElementLoaded(editBtnForDriver,5))
 				click(editBtnForDriver);
-			if (isElementLoaded(warningToast))
-				clickTheElement(leaveThisPageButton);
 		}else {
 			SimpleUtils.fail("Please choose add or edit mode!", false);
 		}
+		if (isElementLoaded(warningToast) && isElementLoaded(leaveThisPageButton))
+			clickTheElement(leaveThisPageButton);
 
 		if (areListElementVisible(fieldInputList)){
 			for (int i = 0; i < fieldInputList.size() - 1; i++){
@@ -4868,11 +4868,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 							yesOrNoOptions = fieldInputList.get(i).findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
 							for (WebElement choose : yesOrNoOptions){
 								if (choose.findElement(By.cssSelector("span")).getText().equals(entry.getValue()) &&
-										!choose.findElement(By.cssSelector("span")).getAttribute("class").equals("lg-button-group-selected")){
+										!choose.getAttribute("class").contains("lg-button-group-selected")){
 									clickTheElement(choose);
 									break;
 								}
-								break;
 							}
 						}else {
 							SimpleUtils.fail("Tag Type is not as expected!", false);
@@ -5379,6 +5378,82 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}else {
 			SimpleUtils.fail("pencil button is not showing",false);
+		}
+	}
+
+	@Override
+	public void clickCheckButtonOfBasicStaffingRule() throws Exception{
+		if(isElementLoaded(checkButtonOfBasicStaffingRule,2)){
+			clickTheElement(checkButtonOfBasicStaffingRule);
+			if(areListElementVisible(staffingRuleList,2) && isElementExist("div.settings-work-rule-edit-icon-container")){
+				SimpleUtils.pass("User can click check button successfully for basic staffing rule!");
+			}else {
+				SimpleUtils.fail("User can NOT click check button successfully for basic staffing rule!",false);
+			}
+		}
+	}
+
+	@FindBy(css="div.lg-button-group div")
+	private List<WebElement> badgeOption;
+	@FindBy(css="div.lg-button-group div:first-child")
+	private WebElement noBadge;
+	@FindBy(css="div.lg-button-group div:nth-child(2)")
+	private WebElement badgeRequired;
+
+	@Override
+	public void defaultSelectedBadgeOption() throws Exception{
+		if(areListElementVisible(badgeOption,2)){
+			for(WebElement badge:badgeOption){
+				String badgeLabel = badge.findElement(By.cssSelector(" span")).getText().trim();
+				waitForSeconds(2);
+				if(badge.getAttribute("class").contains("lg-button-group-selected") && badgeLabel.equalsIgnoreCase("No badge")){
+					SimpleUtils.pass(badgeLabel + " is selected by default!");
+					break;
+				}else {
+					SimpleUtils.fail("The default selected badge option is not correct!",false);
+				}
+			}
+		}
+	}
+
+	@FindBy(css="lg-search[placeholder=\"Search badges\"] input")
+	private WebElement searchBadgesField;
+	@FindBy(css="div.badges-list-scroll tr")
+	private WebElement badgeList;
+
+	//hasBadgeOrNot field's value is yes or no
+	@Override
+	public void selectBadgesOfBasicStaffingRule(String hasBadgeOrNot, String badgeName) throws Exception{
+		String badgeIcon = null;
+		if(areListElementVisible(badgeOption,2)){
+			//select badgeRequired or noBadge firstly
+			if(hasBadgeOrNot.equalsIgnoreCase("yes")){
+				clickTheElement(badgeRequired);
+				//select the details badge for rule
+				if(badgeRequired.getAttribute("class").trim().contains("lg-button-group-selected") && isElementLoaded(searchBadgesField,2)){
+					clickTheElement(searchBadgesField);
+					searchBadgesField.clear();
+					searchBadgesField.sendKeys(badgeName);
+					searchBadgesField.sendKeys(Keys.ENTER);
+					if(areListElementVisible(badgesList,2) && badgesList.size()>0){
+						WebElement checkBox = badgesList.get(0).findElement(By.cssSelector("td:first-child input"));
+						badgeIcon = badgesList.get(0).findElement(By.cssSelector("td:first-child svg-image g#Symbols g")).getAttribute("id").trim();
+						clickTheElement(checkBox);
+					}
+				}
+				clickCheckButtonOfBasicStaffingRule();
+				waitForSeconds(2);
+				if(areListElementVisible(staffingRuleList,2)){
+					String badgeInRuleList = staffingRuleList.get(0).findElement(By.cssSelector("svg-image g#Symbols g")).getAttribute("id").trim();
+					if(badgeInRuleList.equalsIgnoreCase(badgeIcon)){
+						SimpleUtils.pass("User can select badge successfully");
+					}else {
+						SimpleUtils.fail("User can NOT select badge successfully",false);
+					}
+				}
+			}else {
+				clickTheElement(noBadge);
+			}
 		}
 	}
 }

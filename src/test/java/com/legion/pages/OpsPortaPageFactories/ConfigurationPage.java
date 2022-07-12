@@ -150,7 +150,6 @@ public interface ConfigurationPage {
     public void verifyPublishedTemplateAfterEdit(String templateName) throws Exception;
 
     public boolean searchDriverInTemplateDetailsPage(String driverName) throws Exception;
-
     public void clickRemove() throws Exception;
     public void selectStartTimeEvent(String startTimeEvent) throws Exception;
     public void verifyConditionAndNumberFiledCanShowWell() throws Exception;
@@ -167,4 +166,7 @@ public interface ConfigurationPage {
     public void verifyBeforeAndAfterDayPartsShouldBeSameWhenSetAsDayParts(String dayParts1,String dayParts2,String startEventPoint,String endEventPoint) throws Exception;
     public void verifyWorkforceSharingGroup() throws Exception;
     public void verifyCrossAndCheckButtonOfBasicStaffingRule() throws Exception;
+    public void clickCheckButtonOfBasicStaffingRule() throws Exception;
+    public void defaultSelectedBadgeOption() throws Exception;
+    public void selectBadgesOfBasicStaffingRule(String hasBadgeOrNot, String badgeName) throws Exception;
 }
