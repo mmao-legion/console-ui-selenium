@@ -1,5 +1,6 @@
 package com.legion.tests.core.OpsPortal;
 
+import com.alibaba.fastjson.JSONObject;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
@@ -17,6 +18,7 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.*;
 import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
@@ -1008,7 +1010,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify user can see template value via click template name in location level and compare")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyUserCanSeeEachTypeOfTemViaClickingTemNameAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
@@ -1151,7 +1153,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "View template of Scheduling policy schedule collaboration TA and Compliance")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
@@ -2035,9 +2037,7 @@ public class LocationsTest extends TestBase {
         locationsPage.verifyUploadTransaltionsButtonisClicked();
 
         String sessionId = logIn();
-
         String reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadTransation,sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\Translationstrings.csv");
-
     }
 
     @Automated(automated = "Automated")
@@ -2408,6 +2408,58 @@ public class LocationsTest extends TestBase {
             locationsPage.editLocationBtnIsClickableInLocationDetails();
             locationsPage.verifyLocationRelationshipForLocationGroup("Child");
         } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify the first day of week field on district/upperfield page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyFirstDayOfWeekFieldAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            locationsPage.clickOnLocationsTab();
+
+            locationsPage.goToUpperFieldsPage();
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            SimpleDateFormat bufs = new SimpleDateFormat("yyMMddHHmmss ");
+            SimpleDateFormat regionfs = new SimpleDateFormat("MMddHHmmss ");
+            String currentDisTime = dfs.format(new Date());
+            String currentBUTime = bufs.format(new Date());
+            String currentRegionTime = regionfs.format(new Date());
+            String districtName = "AutoCreateDistrict" + currentDisTime;
+            String buName = "AutoCreateBU" + currentBUTime;
+            String regionName = "AutoCreateRegion" + currentRegionTime;
+            locationsPage.addNewDistrictWithFirstDayOfWeek("District", districtName,currentDisTime,"",0);
+            locationsPage.searchUpperFields(districtName);
+            locationsPage.addNewDistrictWithFirstDayOfWeek("BU", buName,currentBUTime,"",1);
+            locationsPage.searchUpperFields(buName);
+            locationsPage.addNewDistrictWithFirstDayOfWeek("Region", regionName,currentRegionTime,"",2);
+            locationsPage.searchUpperFields(regionName);
+            locationsPage.goBack();
+
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation("NancyTest");
+            locationsPage.checkFirstDayOfWeekNotDisplay();
+            locationsPage.goBack();
+            locationsPage.goBack();
+
+            locationsPage.goToUpperFieldsPage();
+            locationsPage.searchUpperFields("000forAuto");
+            locationsPage.checkFirstDayOfWeekDisplay();
+            locationsPage.updateFirstDayOfWeek("Tuesday");
+
+            locationsPage.searchUpperFields("000forRegion");
+            locationsPage.checkFirstDayOfWeekDisplay();
+            locationsPage.updateFirstDayOfWeek("Wednesday");
+
+            locationsPage.searchUpperFields("000forBU");
+            locationsPage.checkFirstDayOfWeekDisplay();
+            locationsPage.updateFirstDayOfWeek("Thursday");
+        }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }

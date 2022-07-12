@@ -1920,7 +1920,7 @@ public class ConfigurationTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify Dynamic Group Function>In Workforce Sharing")
+    @TestName(description = "Verify workforce sharing in dynamic group in schedule collabration")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyScheduleCollaborationOfDynamicGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try{
