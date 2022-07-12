@@ -2363,6 +2363,7 @@ public class CinemarkMinorTest extends TestBase {
             minorName = minorNames.Minor14.getValue();
         } else
             minorName = minorNames.Minor17.getValue();
+        SimpleUtils.pass("Get minor user: "+minorName+ " successfully! ");
         return minorName;
     }
 }
