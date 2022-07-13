@@ -102,7 +102,6 @@
                 <methods>
                     <include name="verifyCommonUIOfWidgetsAsStoreManager" />
                     <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" />
-                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" />
                 </methods>
             </class>
         </classes>
@@ -115,7 +114,6 @@
                     <include name="verifyComplianceFunctionalityForComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyLocationListAndSubLocationOnComplianceInDMViewAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin" />
                     <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnTADGEnvAsInternalAdmin" />
                 </methods>
             </class>
