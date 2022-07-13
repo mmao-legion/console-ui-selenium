@@ -3231,6 +3231,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				SimpleUtils.pass("Fisrt day of week in dashboard is correct");
 			}else
 				SimpleUtils.fail("First day of week in dashboard is wrong",false);
-		}
+		}else
+			SimpleUtils.fail("Enter dashboard page failed",false);
 	}
 }
