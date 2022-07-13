@@ -6,7 +6,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.Select;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -636,6 +635,7 @@ public class AbsentManagePage extends BasePage {
 
     public void saveTemplateAs(String method) {
         scrollToBottom();
+        waitForSeconds(2);
         saveAsDrop.click();
         switch (method) {
             case "Save as draft":
