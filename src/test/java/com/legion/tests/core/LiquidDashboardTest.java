@@ -83,14 +83,15 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.closeWidget(widgetType.Todays_Forecast.getValue());
         liquidDashboardPage.switchOnWidget(widgetType.Todays_Forecast.getValue());
 
-
-        //verify switch off Timesheet_Approval_Status widget
-        liquidDashboardPage.switchOffWidget(widgetType.Timesheet_Approval_Status.getValue());
-        //verify switch on Timesheet_Approval_Status widget
-        liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
-        //verify close Timesheet_Approval_Status widget
-        liquidDashboardPage.closeWidget(widgetType.Timesheet_Approval_Status.getValue());
-        liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
+        if (dashboardPage.isTimesheetConsoleMenuDisplay()) {
+            //verify switch off Timesheet_Approval_Status widget
+            liquidDashboardPage.switchOffWidget(widgetType.Timesheet_Approval_Status.getValue());
+            //verify switch on Timesheet_Approval_Status widget
+            liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
+            //verify close Timesheet_Approval_Status widget
+            liquidDashboardPage.closeWidget(widgetType.Timesheet_Approval_Status.getValue());
+            liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
+        }
 
 /*
         //verify switch off Timesheet_Approval_Rate widget
@@ -102,13 +103,13 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Rate.getValue());
 */
 
-        //verify switch off Alerts widget
+ /*       //verify switch off Alerts widget
         liquidDashboardPage.switchOffWidget(widgetType.Alerts.getValue());
         //verify switch on Alerts widget
         liquidDashboardPage.switchOnWidget(widgetType.Alerts.getValue());
         //verify close Alerts widget
         liquidDashboardPage.closeWidget(widgetType.Alerts.getValue());
-        liquidDashboardPage.switchOnWidget(widgetType.Alerts.getValue());
+        liquidDashboardPage.switchOnWidget(widgetType.Alerts.getValue());*/
 
 /*
         //verify switch off Swaps_Covers widget
@@ -171,9 +172,11 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Schedules.getValue());
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Starting_Soon.getValue());
         //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Swaps_Covers.getValue());
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Alerts.getValue());
+        //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Alerts.getValue());
         //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Timesheet_Approval_Rate.getValue());
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Timesheet_Approval_Status.getValue());
+        if (dashboardPage.isTimesheetConsoleMenuDisplay()) {
+            liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Timesheet_Approval_Status.getValue());
+        }
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Helpful_Links.getValue());
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Todays_Forecast.getValue());
         //verify search input
