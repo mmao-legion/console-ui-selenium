@@ -4,13 +4,11 @@ import com.legion.pages.BasePage;
 import com.legion.pages.LiquidDashboardPage;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.hu.Ha;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.net.SocketImpl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -1155,5 +1153,51 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             SimpleUtils.fail("Open Shifts: No data on legend", true);
         }
         return openShiftsData;
+    }
+
+    @FindBy(css = "[label=\"'dashboard:compliance-violations' | $t\"]")
+    private WebElement complianceViolationsWidgetSection;
+
+    @FindBy(css = "[label=\"'dashboard:compliance-violations' | $t\"] [ng-click=\"viewSchedules()\"]")
+    private WebElement viewSchedulesLinkOfComplianceViolationsWidget;
+
+    @Override
+    public void clickViewSchedulesLinkOfComplianceViolationsWidget() throws Exception {
+        if (isElementLoaded(viewSchedulesLinkOfComplianceViolationsWidget, 10)) {
+            scrollToElement(viewSchedulesLinkOfComplianceViolationsWidget);
+            clickTheElement(viewSchedulesLinkOfComplianceViolationsWidget);
+        } else {
+            SimpleUtils.fail("View Schedules Link Of Compliance Violations Widget is not loaded!", false);
+        }
+    }
+
+    @Override
+    public boolean checkViewSchedulesLinkOfComplianceViolationsSection() throws Exception {
+        boolean isViewSchedulesLinkDisplayed = false;
+        if (isElementLoaded(complianceViolationsWidgetSection, 15)) {
+            scrollToElement(complianceViolationsWidgetSection);
+            isViewSchedulesLinkDisplayed = isElementLoaded(viewSchedulesLinkOfComplianceViolationsWidget, 10);
+        } else {
+            SimpleUtils.fail("Compliance Violations widget is not loaded!", false);
+        }
+        return isViewSchedulesLinkDisplayed;
+    }
+
+    @FindBy(css = "[label=\"'dashboard:compliance-violations' | $t\"] .slideNumberText")
+    private WebElement startDayOfWeekOfComplianceViolationsWidget;
+
+    @Override
+    public String getActiveWeekStartDayFromComplianceViolationsWidget() throws Exception {
+        String startDayOfWeek = "";
+        if (checkViewSchedulesLinkOfComplianceViolationsSection()) {
+            if (isElementLoaded(startDayOfWeekOfComplianceViolationsWidget, 10)) {
+                startDayOfWeek = startDayOfWeekOfComplianceViolationsWidget.getText().replaceAll(" ", "").toLowerCase();
+                startDayOfWeek = startDayOfWeek.substring(startDayOfWeek.indexOf("weekof"));
+            } else {
+                SimpleUtils.fail("Start Day on Compliance Violations Widget is not loaded!", false);
+            }
+        }
+
+        return startDayOfWeek;
     }
 }

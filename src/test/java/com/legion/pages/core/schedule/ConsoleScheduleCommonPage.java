@@ -849,4 +849,20 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
             }
         }
     }
+
+    @FindBy(css = ".day-week-picker-period-active")
+    private WebElement activeWeek;
+
+    @Override
+    public String getActiveWeekStartDayFromSchedule() throws Exception {
+        String dayStartOfTheWeek = "";
+        if (isElementLoaded(activeWeek, 10)) {
+            dayStartOfTheWeek = activeWeek.getText().split("\n")[1].trim();
+            dayStartOfTheWeek = dayStartOfTheWeek.replaceAll(" ", "").split("-")[0];
+        } else {
+            SimpleUtils.fail("Active week is not loaded!", false);
+        }
+
+        return dayStartOfTheWeek;
+    }
 }
