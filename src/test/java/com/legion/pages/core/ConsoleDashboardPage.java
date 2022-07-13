@@ -3183,7 +3183,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		return shifts;
 	}
 
-	public String getMonthFromCharToNum(String month){
+	private String getMonthFromCharToNum(String month){
 		if(month.equals("Jan")){
 			month = "01";
 		}else if(month.equals("Feb")){
