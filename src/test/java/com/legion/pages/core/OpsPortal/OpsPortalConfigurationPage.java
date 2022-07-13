@@ -3184,7 +3184,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 //	@FindBy(css="lg-tabs.ng-isolate-scope nav div:nth-child(3)")
 	@FindBy(css="nav.lg-tabs__nav>div:nth-last-child(2)")
 	private WebElement templateAssociationBTN;
-	@FindBy(css="lg-button[label=\"Remove\"]")
+	@FindBy(css="lg-button[ng-click=\"$ctrl.removeDynamicGroup(group.id,'remove')\"]")
 	private WebElement dynamicGroupRemoveBTN;
 	@FindBy(css="div[ng-if*=showAction] lg-button[label=\"Edit\"]")
 	private WebElement dynamicGroupEditBTN;
@@ -5455,5 +5455,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				clickTheElement(noBadge);
 			}
 		}
+	}
+
+	@Override
+	public void setLeaveThisPageButton() throws Exception {
+		if (isElementLoaded(warningToast) && isElementLoaded(leaveThisPageButton))
+			clickTheElement(leaveThisPageButton);
+		waitForSeconds(3);
 	}
 }

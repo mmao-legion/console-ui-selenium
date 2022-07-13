@@ -169,4 +169,5 @@ public interface ConfigurationPage {
     public void clickCheckButtonOfBasicStaffingRule() throws Exception;
     public void defaultSelectedBadgeOption() throws Exception;
     public void selectBadgesOfBasicStaffingRule(String hasBadgeOrNot, String badgeName) throws Exception;
+    public void setLeaveThisPageButton() throws Exception;
 }
