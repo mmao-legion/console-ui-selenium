@@ -539,8 +539,6 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                         click(listWorkRole);
                         SimpleUtils.pass("Work Role " + workRoles + "selected Successfully");
                         break;
-                    } else {
-                        SimpleUtils.report("Work Role " + workRoles + " not selected");
                     }
                 }
             } else {
@@ -555,8 +553,6 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                         click(listWorkRole);
                         SimpleUtils.pass("Work Role " + workRoles + "selected Successfully");
                         break;
-                    } else {
-                        SimpleUtils.report("Work Role " + workRoles + " not selected");
                     }
                 }
             } else {

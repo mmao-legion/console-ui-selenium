@@ -30,7 +30,6 @@ public class BulkCreateTest extends TestBase {
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) {
         try {
-
             this.createDriver((String) params[0], "69", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
@@ -282,7 +281,7 @@ public class BulkCreateTest extends TestBase {
             int count = (int)(Math.random()*100+1);
             newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
             newShiftPage.clearAllSelectedDays();
-            int dayCount = (new Random()).nextInt(7);
+            int dayCount = (int)(Math.random()*7+1);
             newShiftPage.selectSpecificWorkDay(dayCount);
             List<String> selectedDays = newShiftPage.getSelectedDayInfoFromCreateShiftPage();
             String shiftStartTime = "11:00am";

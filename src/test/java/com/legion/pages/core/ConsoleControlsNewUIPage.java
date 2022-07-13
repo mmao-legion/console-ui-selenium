@@ -7548,7 +7548,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement allowEmployeeClaimOTOpenShift;
 	public boolean checkIfEmployeeCanClaimOTOpenShift() throws Exception {
 		boolean isAllowEmployeeClaimOTOpenShift = false;
-		if (isElementLoaded(allowEmployeeClaimOTOpenShift, 20)) {
+		if (isElementLoaded(allowEmployeeClaimOTOpenShift, 30)) {
 			if (allowEmployeeClaimOTOpenShift.findElement(By.cssSelector(".lg-button-group-first"))
 					.getAttribute("class").contains("selected")) {
 				isAllowEmployeeClaimOTOpenShift = true;
