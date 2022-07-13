@@ -1813,4 +1813,155 @@ public class AccrualEngineTest extends TestBase {
         return holidays;
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "OPS-4059 Ability to deduct accrual balance from imported approved time off.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTimeOffRequestImportAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        //verify that employee management is enabled.
+        navigationPage.navigateToEmployeeManagement();
+        SimpleUtils.pass("EmployeeManagement Module is enabled!");
+        //go to the time off management page
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToTimeOffManagementPage();
+        //verify that the target template is here.
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        String templateName = "AccrualAutoTest(Don't touch!!!)";
+        absentManagePage.search(templateName);
+        SimpleUtils.assertOnFail("Failed the find the target template!", absentManagePage.getResult().equals(templateName), false);
+
+        //switch to console
+        RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        modelSwitchPage.switchToNewTab();
+        //search and go to the target location
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("Newark");
+        //go to team member details and switch to the time off tab.
+        consoleNavigationPage.navigateTo("Team");
+        TimeOffPage timeOffPage = new TimeOffPage();
+        String teamMemName = "Elody Bauch";
+        timeOffPage.goToTeamMemberDetail(teamMemName);
+        timeOffPage.switchToTimeOffTab();
+
+        //get session id via login
+        String sessionId = logIn();
+        //set UseAbsenceMgmtConfiguration Toggle On
+        if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
+            String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
+            Assert.assertEquals(getHttpStatusCode(toggleResponse), 200, "Failed to get the user's template!");
+        }
+        //confirm template
+        String workerId = "18f7c695-3a40-4701-86e2-cc7c51281194";
+        String targetTemplate = "AccrualAutoTest(Don't touch!!!)";
+        String tempName = getUserTemplate(workerId, sessionId);
+        Assert.assertEquals(tempName, targetTemplate, "The user wasn't associated to this Template!!! ");
+        SimpleUtils.pass("Succeeded in confirming that employee was associated to the target template!");
+
+        //create a time off balance map to store the expected time off balances.
+        HashMap<String, String> expectedTOBalance = new HashMap<>();
+        expectedTOBalance.put("Annual Leave2", "0");// HireDate~HireDate/Monthly /calendar month/begin
+        expectedTOBalance.put("Annual Leave3", "0");// HireDate~Specified/Monthly /hire month/end
+        expectedTOBalance.put("Bereavement3", "0");// HireDate~Specified/weekly
+        expectedTOBalance.put("Covid2", "0");// HireDate~HireDate/worked hours/Rate
+        expectedTOBalance.put("Covid3", "0");// HireDate~Specified/worked hours/total hour
+        expectedTOBalance.put("Grandparents Day Off2", "0");//HireDate~HireDate/lump-sum
+        expectedTOBalance.put("Grandparents Day Off3", "0");//HireDate~Specified/lump-sum
+        expectedTOBalance.put("Pandemic1", "0");//Specified~Specified/Monthly /calendar month/begin /allowance in days 126(out of)
+        expectedTOBalance.put("Pandemic2", "0");//Specified~Specified/weekly /allowance in days 127(in)
+        expectedTOBalance.put("Pandemic3", "0");//Specified~Specified/worked hours/Rate /allowance in days 126(out of)
+        expectedTOBalance.put("Pandemic4", "0");//Specified~Specified/lump-sum /allowance in days 127(in)
+        expectedTOBalance.put("Spring Festival", "0");//None distribution
+
+        //Delete the worker's accrual balance
+        String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
+        Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> actualTOB = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(actualTOB, expectedTOBalance, "Failed to assert clear the accrual balance!");
+        SimpleUtils.pass("Succeeded in clearing employee's accrual balance!");
+
+        //delete history time off requests
+        deleteRequestedTimeOffDateByWorkerId(workerId);
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        SimpleUtils.pass("Succeeded in deleting time off requests!");
+
+        //Edit accrual balance.
+        timeOffPage.editTimeOffBalance("Annual Leave2", "40");
+        OpsCommonComponents components = new OpsCommonComponents();
+        components.okToActionInModal(true);
+        timeOffPage.editTimeOffBalance("Annual Leave3", "28");
+        components.okToActionInModal(true);
+        timeOffPage.editTimeOffBalance("Bereavement3", "35");
+        components.okToActionInModal(true);
+        timeOffPage.editTimeOffBalance("Covid2", "11");
+        components.okToActionInModal(true);
+        timeOffPage.editTimeOffBalance("Covid3", "18");
+        components.okToActionInModal(true);
+        timeOffPage.editTimeOffBalance("Grandparents Day Off2", "24");
+        components.okToActionInModal(true);
+        timeOffPage.editTimeOffBalance("Grandparents Day Off3", "19");
+        components.okToActionInModal(true);
+        SimpleUtils.pass("Succeeded in editing time off balance!");
+        //import time off requests
+        importTimeOffRequest(sessionId);
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        // get time off list in UI
+        //Verify the balance deducted as expect
+        expectedTOBalance.put("Annual Leave2", "40");
+        expectedTOBalance.put("Annual Leave3", "28");
+        expectedTOBalance.put("Bereavement3", "35");
+        expectedTOBalance.put("Covid2", "0");// 11-8hrs-3hrs
+        expectedTOBalance.put("Covid3", "2");// 18-16hrs
+        expectedTOBalance.put("Grandparents Day Off2", "24");
+        expectedTOBalance.put("Grandparents Day Off3", "11");//19-8hrs
+        HashMap<String, String> actualBalance = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(actualBalance, expectedTOBalance, "Failed to assert time off request deducted from balance correctly!");
+        SimpleUtils.pass("Succeeded in validating imported time off request deducted from accrual balance correctly!");
+    }
+
+    public void importTimeOffRequest(String sessionId) {
+        String filePath = "src/test/resources/uploadFile/PTO4059_Auto.csv";
+        String url = "https://rc-enterprise.dev.legion.work/legion/integration/testUploadPTOData?isTest=false&fileName=" + filePath + "&encrypted=false";
+        String responseInfo = HttpUtil.fileUploadByHttpPost(url, sessionId, filePath);
+        if (StringUtils.isNotBlank(responseInfo)) {
+            //转json数据
+            JSONObject json = JSONObject.parseObject(responseInfo);
+            if (!json.isEmpty()) {
+                //数据处理
+                String value = json.getString("responseStatus");
+                System.out.println(value);
+            }
+        }
+    }
+
+    //Delete the time off requests just created before each test.
+    public void deleteRequestedTimeOffDateByWorkerId(String workerId) {
+        String enterpriseId = "aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95";
+        String sql1 = "delete from legionrc.TimeOffRequest where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        System.out.println("sql1： " + sql1);
+        String sql2 = "delete from legionrc.TimeOffRequestHistory where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        System.out.println("sql2： " + sql2);
+        String sql3 = "delete from legionrc.WorkerAccrualHistory where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        System.out.println("sql3： " + sql3);
+        String sql4 = "delete from legionrc.TAWorkerPTO where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        System.out.println("sql4： " + sql4);
+        DBConnection.updateDB(sql1);
+        DBConnection.updateDB(sql2);
+        DBConnection.updateDB(sql3);
+        DBConnection.updateDB(sql4);
+        String queryResult1 = DBConnection.queryDB("legionrc.TimeOffRequest", "objectId", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
+        Assert.assertEquals(queryResult1, "No item returned!", "Failed to clear the data just generated in DB!");
+        String queryResult2 = DBConnection.queryDB("legionrc.TimeOffRequestHistory", "objectId", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
+        Assert.assertEquals(queryResult2, "No item returned!", "Failed to clear the data just generated in DB!");
+        String queryResult3 = DBConnection.queryDB("legionrc.WorkerAccrualHistory", "objectId", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
+        Assert.assertEquals(queryResult3, "No item returned!", "Failed to clear the data just generated in DB!");
+        String queryResult4 = DBConnection.queryDB("legionrc.TAWorkerPTO", "id", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
+        Assert.assertEquals(queryResult4, "No item returned!", "Failed to clear the data just generated in DB!");
+    }
+
 }
