@@ -4828,5 +4828,33 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("District landing page load failed", true);
 	}
 
+	@FindBy(css = "span.settings-work-role-details-edit-add-icon")
+	private WebElement addAStaffingRolesIcon;
+	@FindBy(xpath = "//li[contains(text(),'Staffing Rules')]")
+	private WebElement staffingRoles;
+	@FindBy(css = "input-field select")
+	private List<WebElement> specifyConditionSelect;
+	@FindBy(xpath = "//input-field//input")
+	private List<WebElement> staffingRoleInput;
+
+	public void addStaffingRolesForWorkRole(ArrayList staffingRoleCondition) throws Exception {
+		addAStaffingRolesIcon.click();
+		staffingRoles.click();
+		Select sourceType = new Select(specifyConditionSelect.get(0));
+		sourceType.selectByVisibleText(staffingRoleCondition.get(0).toString());
+		staffingRoleInput.get(0).sendKeys(String.valueOf(staffingRoleCondition.get(1)));
+		Select workRoleType = new Select(specifyConditionSelect.get(1));
+		workRoleType.selectByVisibleText(staffingRoleCondition.get(2).toString());
+		Select shiftType = new Select(specifyConditionSelect.get(2));
+		shiftType.selectByVisibleText(staffingRoleCondition.get(3).toString());
+		Select timeType = new Select(specifyConditionSelect.get(3));
+		timeType.selectByVisibleText(staffingRoleCondition.get(4).toString());
+		staffingRoleInput.get(1).sendKeys(String.valueOf(staffingRoleCondition.get(5)));
+		Select soltType = new Select(specifyConditionSelect.get(4));
+		soltType.selectByVisibleText(staffingRoleCondition.get(6).toString());
+		click(assignmentRuleSaveIcon);
+		click(saveBtn);
+	}
+
 }
 

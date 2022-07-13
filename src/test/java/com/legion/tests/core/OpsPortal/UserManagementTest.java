@@ -1,7 +1,8 @@
 package com.legion.tests.core.OpsPortal;
 
-import com.legion.pages.DashboardPage;
-import com.legion.pages.LoginPage;
+import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.TeamPage;
@@ -13,11 +14,13 @@ import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.pages.core.OpCommons.RightHeaderBarPage;
 import com.legion.pages.core.opusermanagement.*;
 import com.legion.pages.core.schedule.ConsoleScheduleCommonPage;
+import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.Constants;
 import com.legion.utils.HttpUtil;
@@ -1003,6 +1006,88 @@ public class UserManagementTest extends TestBase {
             consoleScheduleCommonPage.goToSchedule();
 
         }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Work Role E2E And Copy work role")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyWorkRoleE2EAndCopyWorkRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            String locationName = "locationAutoCreateForYang";
+            OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+            navigationPage.navigateToUserManagement();
+            OpsPortalUserManagementPanelPage panelPage = new OpsPortalUserManagementPanelPage();
+            panelPage.goToWorkRolesPage();
+            OpsPortalWorkRolesPage workRolesPage = new OpsPortalWorkRolesPage();
+            //add a new work role and save it
+            workRolesPage.addNewWorkRole();
+            WorkRoleDetailsPage workRoleDetailsPage = new WorkRoleDetailsPage();
+            Random random = new Random();
+            String workRoleName="autoWorkRole" + random.nextInt(1000);
+            workRoleDetailsPage.editWorkRoleDetails(workRoleName, 3, "Deployed", "3");
+            workRoleDetailsPage.addAssignmentRule("3","2","2098");
+            workRoleDetailsPage.saveAssignRule();
+            workRoleDetailsPage.submit();
+            workRolesPage.save();
+            workRolesPage.searchByWorkRole(workRoleName);
+            Assert.assertEquals(workRolesPage.getTheFirstWorkRoleInTheList(), workRoleName, "Failed to add new work role!");
+            //Validate work role list is disabled completely  in labor model template
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName("Default","edit");
+            laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
+            laborModelPage.selectWorkRoles(workRoleName);
+            laborModelPage.publishNowTemplate();
+            //Validate work role list is disabled completely  in scheduling rules template
+            //String workRoleName= "autoWorkRole558";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            locationsPage.clickActionsForTemplate("Scheduling Rules", "Edit");
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.selectWorkRoleToEdit(workRoleName);
+            ArrayList staffingRoleCondition = new ArrayList<>();
+            staffingRoleCondition.add("A Minimum");
+            staffingRoleCondition.add("1");
+            staffingRoleCondition.add(workRoleName);
+            staffingRoleCondition.add("Shifts");
+            staffingRoleCondition.add("during");
+            staffingRoleCondition.add("All Hours");
+            staffingRoleCondition.add("Slot");
+            locationsPage.addStaffingRolesForWorkRole(staffingRoleCondition);
+            locationsPage.clickOnSaveButton();
+            Thread.sleep(600000);
+
+
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            ForecastPage forecastPage  = pageFactory.createForecastPage();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
+            forecastPage.clickOnLabor();
+            forecastPage.verifyWorkRoleInList(workRoleName);
+            //disable the work role added and it can't be searched out
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            navigationPage.navigateToUserManagement();
+            panelPage.goToWorkRolesPage();
+            workRolesPage.disableAWorkRole(workRoleName);
+            Assert.assertEquals(workRolesPage.getDisableDialogTitle(), "Disable Work Role", "The disable work role dialog is not displayed.");
+            workRolesPage.okToDisableAction();
+            workRolesPage.save();
+
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
