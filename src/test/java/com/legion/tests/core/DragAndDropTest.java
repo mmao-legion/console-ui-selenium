@@ -735,6 +735,7 @@ public class DragAndDropTest extends TestBase {
             String myTimeOffLabel = "Time Off";
             profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
             teamPage.rejectAllTheTimeOffRequests();
+            Thread.sleep(5000);
             teamPage.goToTeam();
             teamPage.searchAndSelectTeamMemberByName(firstNameOfTM2);
             profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
@@ -2131,7 +2132,7 @@ public class DragAndDropTest extends TestBase {
             List<WebElement> newAddedShifts = scheduleShiftTablePage.getOneDayShiftByName(1, "open");
             SimpleUtils.assertOnFail("The expected new added shifts count is "+selectedShiftCount
                             + " The actual new added shift count is:"+newAddedShifts.size(),
-                    newAddedShifts.size()==0, false);
+                    newAddedShifts.size()==2, false);
 
             scheduleMainPage.saveSchedule();
             newAddedShifts = scheduleShiftTablePage.getOneDayShiftByName(1, "open");

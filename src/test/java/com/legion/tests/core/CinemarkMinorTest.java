@@ -2357,9 +2357,9 @@ public class CinemarkMinorTest extends TestBase {
         String minorName = "";
         LocalDate date = now();
         String dayOfWeek = date.getDayOfWeek().toString();
-        if (dayOfWeek.contains("Monday")
-                ||dayOfWeek.contains("Tuesday")
-                ||dayOfWeek.contains("Wednesday") ) {
+        if (dayOfWeek.equalsIgnoreCase("Monday")
+                ||dayOfWeek.equalsIgnoreCase("Tuesday")
+                ||dayOfWeek.equalsIgnoreCase("Wednesday") ) {
             minorName = minorNames.Minor14.getValue();
         } else
             minorName = minorNames.Minor17.getValue();

@@ -3022,8 +3022,10 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public boolean checkIfTMExistsInRecommendedTab (String fullNameOfTM) throws Exception {
         NewShiftPage newShiftPage = new ConsoleNewShiftPage();
         boolean isTMExist = false;
-        for (WebElement tm: getAllRecommendedTMs()) {
-            if (newShiftPage.checkIfNewCreateShiftPageDisplay()) {
+        boolean isNewCreateShiftPageDisplay = newShiftPage.checkIfNewCreateShiftPageDisplay();
+        List<WebElement> allRecommendedTMs = getAllRecommendedTMs();
+        for (WebElement tm: allRecommendedTMs) {
+            if (isNewCreateShiftPageDisplay) {
                 String tmFullName = tm.findElements(By.cssSelector("p.MuiTypography-body1")).get(0).getText();
                 if (tmFullName.equalsIgnoreCase(fullNameOfTM)) {
                     isTMExist = true;
