@@ -1650,7 +1650,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Very demand drivers template as publish now")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, dependsOnMethods = "verifyDemandDriverTemplateDetailsDuplicatedAddingCheckAsInternalAdmin")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDemandDriverTemplateAsPublishNowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateName = "testDemand-NotDelete";
@@ -1961,7 +1961,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify remove input stream in settings.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, dependsOnMethods = {"verifyEditForInputStreamInSettingsPageAsInternalAdmin"})
     public void verifyRemoveInputStreamAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
         String templateType = "Demand Drivers";
@@ -2050,7 +2050,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify demand drivers template archive")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, dependsOnMethods = {"verifyDemandDriverTemplateAsPublishNowAsInternalAdmin"})
     public void verifyDemandDriverTemplatesToArchiveAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
         String templateType = "Demand Drivers";
@@ -2063,7 +2063,13 @@ public class ConfigurationTest extends TestBase {
         configurationPage.clickOnConfigurationCrad(templateType);
         //Go to Templates tab
         settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
-        //Archive the template
+        //Delete the association and Archive the template
+        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        configurationPage.deleteOneDynamicGroup(templateName);
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.setLeaveThisPageButton();
         configurationPage.archiveOrDeleteTemplate(templateName);
     } catch (Exception e) {
         SimpleUtils.fail(e.getMessage(), false);
