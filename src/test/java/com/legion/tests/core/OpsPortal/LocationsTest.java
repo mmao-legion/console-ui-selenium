@@ -7,6 +7,7 @@ import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
+import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -2419,6 +2420,18 @@ public class LocationsTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
     public void verifyFirstDayOfWeekFieldAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
+            ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+            consoleNavigationPage.searchLocation("000forAuto");
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            dashboardPage.getWeekFromDate("Tuesday");
+
+            consoleNavigationPage.searchLocation("000forBU");
+            dashboardPage.getWeekFromDate("Thursday");
+
+            consoleNavigationPage.searchLocation("000forRegion");
+            dashboardPage.getWeekFromDate("Wednesday");
+
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             locationsPage.clickOnLocationsTab();
