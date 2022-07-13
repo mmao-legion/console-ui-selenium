@@ -47,7 +47,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine Distribution Types")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//blocked by:https://legiontech.atlassian.net/browse/OPS-5083
     public void verifyAccrualEngineWorksAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
@@ -459,7 +459,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine Distribution Types")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false) //blocked by: https://legiontech.atlassian.net/browse/OPS-5083
     public void verifyAccrualEngineWorksWellAfterEditingAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
 
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
@@ -731,7 +731,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine Distribution Types")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//known issue: https://legiontech.atlassian.net/browse/OPS-5083
     public void verifyAccrualHistoryAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
@@ -1297,7 +1297,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "OPS-4071 GM Holiday.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//known issue: https://legiontech.atlassian.net/browse/OPS-5085
     public void verifyAccrualGMHolidayWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
