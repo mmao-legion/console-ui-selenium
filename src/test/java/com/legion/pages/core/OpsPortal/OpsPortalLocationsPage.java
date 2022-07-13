@@ -8,6 +8,7 @@ import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
@@ -2027,6 +2028,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			upperfieldIdInput.sendKeys(districtId);
 			selectByIndex(upperfieldManagerSelector, 1);
 			waitForSeconds(3);
+
 			click(ManagerBtnInDistrictCreationPage);
 			managerDistrictLocations(searchChara, index);
 			click(createUpperfieldBtnInDistrictCreationPage);
@@ -4771,5 +4773,60 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		} else
 			SimpleUtils.fail("Global dynamic group page load failed", false);
 	}
+
+	@FindBy(css = "select[aria-label = 'First Day of Week']")
+	private WebElement selectFirstDayOfWeek;
+	public void checkFirstDayOfWeekDisplay() throws Exception{
+		click(upperfieldRows.get(0).findElement(By.cssSelector("lg-button")));
+		if(isElementLoaded(selectFirstDayOfWeek,10)){
+			SimpleUtils.pass("Fisrt Day Of Week dispay");
+		}else
+			SimpleUtils.fail("Fisrt Day Of Week doesn't dispay",false);
+	}
+
+	public void checkFirstDayOfWeekNotDisplay() throws Exception{
+		click(locationRows.get(0).findElement(By.cssSelector("lg-button")));
+		if(!isExist(selectFirstDayOfWeek)){
+			SimpleUtils.pass("Fisrt Day Of Week doesn't dispay");
+		}else
+			SimpleUtils.fail("Fisrt Day Of Week dispay",false);
+	}
+
+	public void goBack() throws Exception{
+		click(backBtnInDistrictListPage);
+	}
+
+	public void updateFirstDayOfWeek(String day) throws Exception{
+		click(editUpperfieldBtn);
+		selectFirstDayOfWeek.sendKeys(day);
+		if(selectFirstDayOfWeek.getAttribute("innerText").contains(day)){
+			SimpleUtils.pass("Update first day of week successfully");
+			waitForSeconds(2);
+		}else
+			SimpleUtils.fail("Update first day of week failed",false);
+		click(saveBtnInUpdateLocationPage);
+	}
+
+	@FindBy(css = "select[aria-label = 'Level']")
+	private WebElement upperFieldLevelSelect;
+
+	public void addNewDistrictWithFirstDayOfWeek(String level, String districtName, String districtId, String searchChara, int index) throws Exception {
+		click(addUpperfieldsButton);
+		if (upperfieldCreateLandingPageShowWell()) {
+			upperFieldLevelSelect.sendKeys(level);
+			upperfieldNameInput.sendKeys(districtName);
+			upperfieldIdInput.sendKeys(districtId);
+			selectByIndex(upperfieldManagerSelector, 1);
+			waitForSeconds(3);
+			selectFirstDayOfWeek.sendKeys("Saturday");
+			//click(ManagerBtnInDistrictCreationPage);
+			managerDistrictLocations(searchChara, index);
+			click(createUpperfieldBtnInDistrictCreationPage);
+			SimpleUtils.report("District creation done");
+			waitForSeconds(10);
+		} else
+			SimpleUtils.fail("District landing page load failed", true);
+	}
+
 }
 

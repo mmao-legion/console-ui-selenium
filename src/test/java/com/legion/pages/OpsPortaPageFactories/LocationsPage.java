@@ -303,5 +303,10 @@ public interface LocationsPage {
     public void verifyBadgeInLocation() throws Exception;
     public void addWorkforceSharingDGWithMutiplyCriteria() throws Exception;
     public void verifyLocationRelationshipForLocationGroup(String locationGroup) throws Exception;
+    public void checkFirstDayOfWeekDisplay() throws Exception;
+    public void checkFirstDayOfWeekNotDisplay() throws Exception;
+    public void goBack() throws Exception;
+    public void updateFirstDayOfWeek(String day) throws Exception;
+    public void addNewDistrictWithFirstDayOfWeek(String level, String districtName, String districtId, String searchChara, int index) throws Exception;
 }
 
