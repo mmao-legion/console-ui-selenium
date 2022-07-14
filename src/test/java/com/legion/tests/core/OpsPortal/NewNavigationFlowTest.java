@@ -347,7 +347,7 @@ public class NewNavigationFlowTest extends TestBase {
         List<String> navigateTextAftNavUpForDM = locationSelectorPage.getNavigatorValue();
         String[] navigateTextAftNavUpForDMToStr = navigateTextAftNavUpForDM.toArray(new String[]{});
         String[] navigateDefaultTextForDMToStr = navigateDefaultTextForDM.toArray(new String[]{});
-        if (!Arrays.equals(navigateTextAftNavUpForDMToStr,navigateDefaultTextForDMToStr)) {
+        if (Arrays.equals(navigateTextAftNavUpForDMToStr,navigateDefaultTextForDMToStr)) {
             SimpleUtils.pass("DM can navigate up one or more level successfully");
         }else
             SimpleUtils.fail("Navigate up one or more level failed",false);
