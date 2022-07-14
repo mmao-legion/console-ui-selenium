@@ -225,4 +225,36 @@ public class DynamicEmployeePage extends BasePage {
         } else
             SimpleUtils.report("The group: " +groupName +" is not exists! ");
     }
+
+    @FindBy(css = "div.lg-filter input-field[placeholder='Labels'] ng-form")
+    private WebElement labelInput;
+    @FindBy(css = "div.lg-filter__category-items div input-field")
+    private List<WebElement> labelList;
+
+    public void searchGroupWithLabel(String labelName) {
+        labelInput.click();
+        for (WebElement label : labelList) {
+            if (label.findElement(By.cssSelector("label.input-label")).getText().trim().contains(labelName)) {
+                label.click();
+                break;
+            }
+        }
+    }
+
+    @FindBy(css = "tr[ng-repeat='group in filterdynamicGroups']")
+    private List<WebElement> groupList;
+
+    public void verifyGroupIsSearched(String groupName) {
+        boolean flag = false;
+        for (WebElement group : groupList) {
+            if (group.findElement(By.cssSelector("td:nth-child(1)")).getText().trim().contains(groupName)) {
+                SimpleUtils.pass("The group: " + groupName + " is exists! ");
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) {
+            SimpleUtils.fail("The group: " + groupName + " is exists! ", true);
+        }
+    }
 }
