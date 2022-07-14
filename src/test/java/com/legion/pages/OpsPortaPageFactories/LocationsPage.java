@@ -308,6 +308,6 @@ public interface LocationsPage {
     public void goBack() throws Exception;
     public void updateFirstDayOfWeek(String day) throws Exception;
     public void addNewDistrictWithFirstDayOfWeek(String level, String districtName, String districtId, String searchChara, int index) throws Exception;
-    public void addStaffingRolesForWorkRole(ArrayList staffingRoleCondition) throws Exception;
+    public void addStaffingRulesForWorkRole(ArrayList staffingRuleCondition) throws Exception;
     }
 

@@ -1054,15 +1054,15 @@ public class UserManagementTest extends TestBase {
             locationsPage.clickActionsForTemplate("Scheduling Rules", "Edit");
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.selectWorkRoleToEdit(workRoleName);
-            ArrayList staffingRoleCondition = new ArrayList<>();
-            staffingRoleCondition.add("A Minimum");
-            staffingRoleCondition.add("1");
-            staffingRoleCondition.add(workRoleName);
-            staffingRoleCondition.add("Shifts");
-            staffingRoleCondition.add("during");
-            staffingRoleCondition.add("All Hours");
-            staffingRoleCondition.add("Slot");
-            locationsPage.addStaffingRolesForWorkRole(staffingRoleCondition);
+            ArrayList staffingRuleCondition = new ArrayList<>();
+            staffingRuleCondition.add("A Minimum");
+            staffingRuleCondition.add("1");
+            staffingRuleCondition.add(workRoleName);
+            staffingRuleCondition.add("Shifts");
+            staffingRuleCondition.add("during");
+            staffingRuleCondition.add("All Hours");
+            staffingRuleCondition.add("Slot");
+            locationsPage.addStaffingRulesForWorkRole(staffingRuleCondition);
             locationsPage.clickOnSaveButton();
             Thread.sleep(600000);
 
