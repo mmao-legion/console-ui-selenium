@@ -170,4 +170,19 @@ public interface ConfigurationPage {
     public void defaultSelectedBadgeOption() throws Exception;
     public void selectBadgesOfBasicStaffingRule(String hasBadgeOrNot, String badgeName) throws Exception;
     public void setLeaveThisPageButton() throws Exception;
+    public void selectWorkRoleOfBasicStaffingRule(String workRoleName) throws Exception;
+    public void selectEndTimeEvent(String endTimeEvent) throws Exception;
+    public void selectConditionMaxMinExactly(String condition) throws Exception;
+    public void selectUnitOptionsOfBasicStaffingRule(String unit) throws Exception;
+    public void inputStartOffsetMinutesOfBasicStaffingRule(String startOffset) throws Exception;
+    public void inputEndOffsetMinutesOfBasicStaffingRule(String endOffset) throws Exception;
+    public void createBasicStaffingRule(String startTimeEvent,String endTimeEvent,String startEventPoint,String endEventPoint,
+                                        String workRoleName,String unit,String condition,List<String> days,String number,
+                                        String startOffset,String endOffset) throws Exception;
+    public void selectStartEventPointForBasicStaffingRule(String startEventPoint) throws Exception;
+    public void selectEndEventPointForBasicStaffingRule(String endEventPoint) throws Exception;
+    public void selectDaysForBasicStaffingRule(List<String> days) throws Exception;
+    public void verifyBasicStaffingRuleIsCorrectInRuleList(String startTimeEvent,String endTimeEvent,String startEventPoint,String endEventPoint,
+                                                           String workRoleName,String unit,String condition,List<String> days,String number,
+                                                           String startOffset,String endOffset);
 }

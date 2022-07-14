@@ -2490,4 +2490,47 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Basic Staffing Rule can show well in rule list")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void basicStaffingRuleCanShowWellInListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try {
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "Fiona Auto Using";
+            String workRole = "AutoUsing2";
+            String startTimeEvent ="Opening Operating Hours";
+            String endTimeEvent ="Closing Operating Hours";
+            String startEventPoint="after";
+            String endEventPoint="before";
+            String workRoleName="AutoUsing2";
+            String unit="Shifts";
+            String condition ="A Minimum";
+            List<String>days= new ArrayList<>(Arrays.asList("Mon","Thu"));
+            String number = "2";
+            String startOffset ="30";
+            String endOffset = "45";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddBasicStaffingRule();
+            configurationPage.verifyStaffingRulePageShowWell();
+            configurationPage.createBasicStaffingRule(startTimeEvent,endTimeEvent,startEventPoint,endEventPoint,
+                    workRoleName,unit,condition,days,number,
+                    startOffset,endOffset);
+            configurationPage.verifyBasicStaffingRuleIsCorrectInRuleList(startTimeEvent,endTimeEvent,startEventPoint,endEventPoint,
+                    workRoleName,unit,condition,days,number,
+                    startOffset,endOffset);
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
