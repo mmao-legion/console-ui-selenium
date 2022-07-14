@@ -668,6 +668,7 @@ public class P2PLGTest extends TestBase {
             createSchedulePage.publishActiveSchedule();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            Thread.sleep(3000);
             scheduleDMViewPage.clickOnRefreshButton();
             publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(peerLocation)
                     .get("publishedStatus");
@@ -689,6 +690,7 @@ public class P2PLGTest extends TestBase {
             scheduleMainPage.saveSchedule();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            Thread.sleep(3000);
             scheduleDMViewPage.clickOnRefreshButton();
             publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(peerLocation)
                     .get("publishedStatus");
