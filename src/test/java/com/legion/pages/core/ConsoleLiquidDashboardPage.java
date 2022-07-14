@@ -1192,7 +1192,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         if (checkViewSchedulesLinkOfComplianceViolationsSection()) {
             if (isElementLoaded(startDayOfWeekOfComplianceViolationsWidget, 10)) {
                 startDayOfWeek = startDayOfWeekOfComplianceViolationsWidget.getText().replaceAll(" ", "").toLowerCase();
-                startDayOfWeek = startDayOfWeek.substring(startDayOfWeek.indexOf("weekof"));
+                startDayOfWeek = startDayOfWeek.replace("weekof", "");
             } else {
                 SimpleUtils.fail("Start Day on Compliance Violations Widget is not loaded!", false);
             }

@@ -1425,13 +1425,17 @@ public class LiquidDashboardTest extends TestBase {
     @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify the link on Compliance Violations widget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyTheLinkOnComplianceViolationsWidgetAsStoreManager(String browser, String username, String password, String location) {
+    public void verifyTheLinkOnComplianceViolationsWidgetAsInternalAdmin(String browser, String username, String password, String location) {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+
+            // Enable Compliance Violation widget
+            liquidDashboardPage.enterEditMode();
             liquidDashboardPage.switchOnWidget(widgetType.Compliance_Violation.getValue());
+            liquidDashboardPage.saveAndExitEditMode();
 
             String enterprise = System.getProperty("enterprise");
 
@@ -1444,7 +1448,8 @@ public class LiquidDashboardTest extends TestBase {
             if (enterprise.equalsIgnoreCase("kendrascott2")) {
                 String startDateOfCurrentWeek = liquidDashboardPage.getActiveWeekStartDayFromComplianceViolationsWidget();
                 liquidDashboardPage.clickViewSchedulesLinkOfComplianceViolationsWidget();
-                SimpleUtils.assertOnFail("The start day off current week didn't match!", startDateOfCurrentWeek.equalsIgnoreCase(scheduleCommonPage.getActiveWeekStartDayFromSchedule()), false);
+                String startDateOfActiveWeekFromSchedule = scheduleCommonPage.getActiveWeekStartDayFromSchedule();
+                SimpleUtils.assertOnFail("The start day off current week didn't match! " + "Start date from Compliance Violations Widget is: " + startDateOfCurrentWeek + ", " + "Start date from schedule is: " + startDateOfActiveWeekFromSchedule, startDateOfCurrentWeek.equalsIgnoreCase(startDateOfActiveWeekFromSchedule), false);
             }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

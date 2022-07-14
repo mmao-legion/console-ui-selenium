@@ -858,7 +858,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
         String dayStartOfTheWeek = "";
         if (isElementLoaded(activeWeek, 10)) {
             dayStartOfTheWeek = activeWeek.getText().split("\n")[1].trim();
-            dayStartOfTheWeek = dayStartOfTheWeek.replaceAll(" ", "").split("-")[0];
+            dayStartOfTheWeek = dayStartOfTheWeek.replaceAll(" ", "").split("-")[0].toLowerCase();
         } else {
             SimpleUtils.fail("Active week is not loaded!", false);
         }
