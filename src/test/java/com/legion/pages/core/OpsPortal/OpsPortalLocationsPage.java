@@ -4829,27 +4829,27 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@FindBy(css = "span.settings-work-role-details-edit-add-icon")
-	private WebElement addAStaffingRolesIcon;
+	private WebElement addAStaffingRulesIcon;
 	@FindBy(xpath = "//li[contains(text(),'Staffing Rules')]")
-	private WebElement staffingRoles;
+	private WebElement staffingRules;
 	@FindBy(css = "input-field select")
 	private List<WebElement> specifyConditionSelect;
 	@FindBy(xpath = "//input-field//input")
-	private List<WebElement> staffingRoleInput;
+	private List<WebElement> staffingRuleInput;
 
 	public void addStaffingRulesForWorkRole(ArrayList staffingRuleCondition) throws Exception {
-		addAStaffingRolesIcon.click();
-		staffingRoles.click();
+		addAStaffingRulesIcon.click();
+		staffingRules.click();
 		Select sourceType = new Select(specifyConditionSelect.get(0));
 		sourceType.selectByVisibleText(staffingRuleCondition.get(0).toString());
-		staffingRoleInput.get(0).sendKeys(String.valueOf(staffingRuleCondition.get(1)));
+		staffingRuleInput.get(0).sendKeys(String.valueOf(staffingRuleCondition.get(1)));
 		Select workRoleType = new Select(specifyConditionSelect.get(1));
 		workRoleType.selectByVisibleText(staffingRuleCondition.get(2).toString());
 		Select shiftType = new Select(specifyConditionSelect.get(2));
 		shiftType.selectByVisibleText(staffingRuleCondition.get(3).toString());
 		Select timeType = new Select(specifyConditionSelect.get(3));
 		timeType.selectByVisibleText(staffingRuleCondition.get(4).toString());
-		staffingRoleInput.get(1).sendKeys(String.valueOf(staffingRuleCondition.get(5)));
+		staffingRuleInput.get(1).sendKeys(String.valueOf(staffingRuleCondition.get(5)));
 		Select soltType = new Select(specifyConditionSelect.get(4));
 		soltType.selectByVisibleText(staffingRuleCondition.get(6).toString());
 		click(assignmentRuleSaveIcon);
