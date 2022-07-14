@@ -1091,4 +1091,29 @@ public class UserManagementTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Add labels to dynamic user group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddLabelsToDynamicUserGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            Random random = new Random();
+            String employeeGroupName = "AutoTestCreating" + random.nextInt(100);
+            OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+            navigationPage.navigateToUserManagement();
+            OpsPortalUserManagementPanelPage panelPage = new OpsPortalUserManagementPanelPage();
+            panelPage.goToDynamicGroups();
+            DynamicEmployeePage dynamicEmployeePage = new DynamicEmployeePage();
+            dynamicEmployeePage.addGroup();
+            dynamicEmployeePage.editEmployeeGroup(employeeGroupName, "create a new group", "autoTesNew", "Work Role");
+            dynamicEmployeePage.saveCreating();
+            dynamicEmployeePage.searchGroupWithLabel("autoTesNew");
+            dynamicEmployeePage.verifyGroupIsSearched(employeeGroupName);
+            dynamicEmployeePage.removeSpecificGroup(employeeGroupName);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
