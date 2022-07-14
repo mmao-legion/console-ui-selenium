@@ -175,6 +175,7 @@
                     <include name="verifyShiftInfoInPersonalMyScheduleAsInternalAdmin"/>
                     <include name="verifyShiftInfoInPersonalMyPreferenceAsInternalAdmin"/>
                     <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
+                    <include name="verifyTheFunctionalityOfGreenOrGreyAvailableAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>

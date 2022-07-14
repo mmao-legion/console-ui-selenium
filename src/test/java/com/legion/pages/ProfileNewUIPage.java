@@ -299,4 +299,5 @@ public interface ProfileNewUIPage {
 	public List<String> getTimeOffsLengthOnAvailabilityTable ();
 	public HashMap<String, String> getTimeOffBalanceHrs ();
 	public boolean checkIfReviewPreferencesInnerBoxDisplay () throws Exception;
+	public void updateSpecificPreferredOrBusyHoursToAllWeek(String hoursType) throws Exception;
 }

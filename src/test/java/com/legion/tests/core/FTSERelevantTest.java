@@ -2202,4 +2202,125 @@ public class FTSERelevantTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Cosimo")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify the functionality of green/grey available")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheFunctionalityOfGreenOrGreyAvailableAsInternalAdmin(String username, String password, String browser, String location)
+            throws Exception {
+        try {
+            //Set split shift violation in the Compliance page
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            TeamPage consoleTeamPage = pageFactory.createConsoleTeamPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+            String tmPartialName = "Tester1";
+            String workRole;
+            if (isLocationUsingControlsConfiguration) {
+                //Go to Controls page
+                workRole = "Training";
+            } else {
+                //Go to OP page
+                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
+                    //Back to the console page
+                    switchToConsoleWindow();
+                }
+            }
+
+            //Go to the schedule view table and un-generate the schedule
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnWeekView();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            Thread.sleep(5000);
+
+            //Go to the Team page and set work preference for the specific TM
+            consoleTeamPage.goToTeam();
+            consoleTeamPage.searchAndSelectTeamMemberByName(tmPartialName);
+            consoleTeamPage.navigateToWorkPreferencesTab();
+            consoleTeamPage.editOrUnLockAvailability();
+            String hoursType = "Preferred";
+            String availabilityChangesRepeat = "repeat forward";
+            profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
+            profileNewUIPage.updateSpecificPreferredOrBusyHoursToAllWeek(hoursType);
+            profileNewUIPage.saveMyAvailabilityEditMode(availabilityChangesRepeat);
+
+            //Go to the schedule view table
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnWeekView();
+            Thread.sleep(5000);
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
+
+            //Delete all relevant TM's shifts
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            String ftseTMShifts = "FTSE T.";
+            shiftOperatePage.deleteTMShiftInWeekView(ftseTMShifts);
+            scheduleMainPage.saveSchedule();
+
+            //Create a new shift and assign to the TM
+            String greenIcon = "#37cf3f";
+            String greyIcon = "grey";
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(false);
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchText(tmPartialName);
+            newShiftPage.clickClearAssignmentsLink();
+            Boolean colourMatch1 = greyIcon.equals(newShiftPage.getTMAvailableColourForAssignedShift());
+            SimpleUtils.assertOnFail("The available icon's colour is incorrect!", colourMatch1,false);
+            Thread.sleep(3000);
+
+            newShiftPage.clickOnBackButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.moveSliderAtCertainPoint("5pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(false);
+            newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchText(tmPartialName);
+            newShiftPage.clickClearAssignmentsLink();
+            Boolean colourMatch2 = greyIcon.equals(newShiftPage.getTMAvailableColourForAssignedShift());
+            SimpleUtils.assertOnFail("The available icon's colour is incorrect!", colourMatch2,false);
+            Thread.sleep(3000);
+
+            newShiftPage.clickOnBackButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.moveSliderAtCertainPoint("12pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(false);
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchText(tmPartialName);
+            newShiftPage.clickClearAssignmentsLink();
+            Boolean colourMatch3 = greenIcon.equals(newShiftPage.getTMAvailableColourForAssignedShift());
+            SimpleUtils.assertOnFail("The available icon's colour is incorrect!", colourMatch3, false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }
