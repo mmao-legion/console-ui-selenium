@@ -2394,7 +2394,7 @@ public class ConfigurationTest extends TestBase {
                 SimpleUtils.fail("Time Event Options List is NOT correct!",false);
             }
             configurationPage.verifyDaysListShowWell();
-            configurationPage.selectDaysForBasicStaffingRule("Tue");
+            configurationPage.verifyDefaultValueAndSelectDaysForBasicStaffingRule("Tue");
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
