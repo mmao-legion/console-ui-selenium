@@ -5244,13 +5244,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
-	public void selectDaysForBasicStaffingRule(String day) throws Exception{
+	public void verifyDefaultValueAndSelectDaysForBasicStaffingRule(String day) throws Exception{
 		//verify all days are selected by default
 		for(WebElement daysOption:daysOptionList){
 			if(daysOption.findElement(By.cssSelector(" input")).getAttribute("class").trim().contains("ng-not-empty")){
 				SimpleUtils.pass(daysOption.findElement(By.cssSelector(" label")).getText().trim() + " is selected by default!");
 			}else {
-				SimpleUtils.fail(daysOption.findElement(By.cssSelector(" label")).getText().trim() + " is NOT selected by default!",false);
+				SimpleUtils.report(daysOption.findElement(By.cssSelector(" label")).getText().trim() + " is NOT selected by default!");
 			}
 		}
 		//select specified days
@@ -5315,8 +5315,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void selectEventPointForBasicStaffingRule(String startEventPoint,String endEventPoint) throws Exception{
+		clickTheElement(startEventPointOptions);
 		Select select1 = new Select(startEventPointOptions);
 		select1.selectByVisibleText(startEventPoint);
+		clickTheElement(endEventPointOptions);
 		Select select2 = new Select(endEventPointOptions);
 		select2.selectByVisibleText(endEventPoint);
 	}
