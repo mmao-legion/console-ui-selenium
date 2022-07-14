@@ -4256,4 +4256,41 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.report("User profile page: The review preferences inner box fail to load! ");
 		return isReviewPreferencesInnerBoxDisplay;
 	}
+
+	@Override
+	public void updateSpecificPreferredOrBusyHoursToAllWeek(String hoursType) throws Exception {
+		String preferredHoursTabText = "Preferred";
+		String busyHoursTabText = "Busy";
+		WebElement availabilityToolTip = null;
+		if (hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase())) {
+			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
+			availabilityToolTip = preferredAvailabilityToolTip;
+		} else {
+			selectMyAvaliabilityEditHoursTabByLabel(busyHoursTabText);
+			availabilityToolTip = busyAvailabilityToolTip;
+		}
+
+		//Delete all availabilities in the week
+		WebElement dayRow = null;
+		for (int dayIndex = 0; dayIndex < 7; dayIndex++) {
+			if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
+				dayRow = myAvailabilityDayOfWeekRows.get(dayIndex);
+				List<WebElement> emptyAvailabilitiesInTheDay = dayRow.findElements(By.cssSelector("div.cursor-empty"));
+				for (int i = 0; i < 2; i++) {
+					click(emptyAvailabilitiesInTheDay.get(i));
+				}
+
+				WebElement rightCell = dayRow.findElement(By.cssSelector("div.cursor-resizableE"));
+				mouseHoverDragandDrop(rightCell, emptyAvailabilitiesInTheDay.get((emptyAvailabilitiesInTheDay.size() - 4) / 2 + 1));
+				waitForSeconds(2);
+
+				if (!availabilityToolTip.getText().toLowerCase().replace(" ", "").contains("12:00am-12:00pm")) {
+					SimpleUtils.fail("Update availabilities fail! ", false);
+				} else
+					SimpleUtils.report("Update availabilities successfully! ");
+			}else{
+				SimpleUtils.fail("Profile Page: 'My Availability section' Day of Week Rows not loaded.", false);
+			}
+		}
+	}
 }
