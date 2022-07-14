@@ -82,4 +82,6 @@ public interface LaborModelPage {
     public void enableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
 
     public boolean verifyWorkRoleStatusInLocationLevel(String workRole);
+
+    public void selectWorkRoles(String workRole) throws Exception;
 }
