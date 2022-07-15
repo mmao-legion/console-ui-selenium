@@ -5460,6 +5460,54 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	public void verifyHistoryButtonNotDisplay() throws Exception{
+		if(!isElementLoaded(historyButton,5)){
+			SimpleUtils.pass("History button doesn't display");
+		}else
+			SimpleUtils.fail("History button display",false);
+	}
+
+	public void verifyHistoryButtonDisplay() throws Exception{
+		if(isElementLoaded(historyButton,5)){
+			SimpleUtils.pass("History button display");
+		}else
+			SimpleUtils.fail("History button doesn't display",false);
+	}
+
+	public void verifyHistoryButtonIsClickable() throws Exception{
+		if(isClickable(historyButton,2)){
+			SimpleUtils.pass("History button is clickable");
+		}else
+			SimpleUtils.fail("History button is not clickable",false);
+	}
+
+	public void verifyCloseIconNotDisplayDefault() throws Exception{
+		if(!isElementLoaded(closeIcon,5)){
+			SimpleUtils.pass("Close icon doesn't display default");
+		}else
+			SimpleUtils.fail("Close icon display default",false);
+	}
+
+	@FindBy(css = "img.lg-slider-pop__title-dismiss")
+	private WebElement closeIcon;
+	public void clickHistoryAndClose() throws Exception{
+		click(historyButton);
+		if(isElementLoaded(closeIcon,5)){
+			click(closeIcon);
+			if(!isElementLoaded(closeIcon,5)){
+				SimpleUtils.pass("Close history successfully");
+			}else
+				SimpleUtils.fail("Close history failed",false);
+		}else
+			SimpleUtils.fail("Close icon load failed",false);
+	}
+
+	public void goToItemInConfiguration(String item) throws Exception {
+		scrollToElement(getDriver().findElement(By.cssSelector("lg-dashboard-card[title = \"" + item + "\"]")));
+		click(getDriver().findElement(By.cssSelector("lg-dashboard-card[title = \"" + item + "\"]")));
+		waitForSeconds(5);
+	}
+
 	@Override
 	public void setLeaveThisPageButton() throws Exception {
 		if (isElementLoaded(warningToast) && isElementLoaded(leaveThisPageButton))
@@ -5486,6 +5534,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}
 	}
+
+	@Override
 	public void addSkillCoverageBasicStaffingRule() throws Exception{
 		selectWorkRoleOfBasicStaffingRule("Any");
 		Select select = new Select(conditionMaxMinExactly);
@@ -5682,13 +5732,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				SimpleUtils.fail("Number of work role is NOT correct in rule list", false);
 			}
 
-			//ANY shifts should be scheduled
+			//ANY/workRoleName shifts should be scheduled
 			String workRoleNameStr = workRoleAndUnit.getText().trim().split(" ")[0];
 			String unitStr = workRoleAndUnit.getText().trim().split(" ")[1];
 			if (workRoleNameStr.equalsIgnoreCase(workRoleName) && unitStr.equalsIgnoreCase(unit)) {
 				SimpleUtils.pass("work Role Name and unit can show correctly in rule list");
-			} else {
-				SimpleUtils.fail("work Role Name and unit can show correctly in rule list", false);
+			}else {
+				SimpleUtils.fail("work Role Name and unit can NOT show correctly in rule list",false);
 			}
 
 			//Sun, Mon, Tue, Wed, Thu, Fri, Sat
@@ -5700,9 +5750,54 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			List<String> daysStr2 = new ArrayList<>(Arrays.asList(daysStr1));
 			if (ListUtils.isEqualList(daysStr2, days)) {
 				SimpleUtils.pass("Days is correct in rule list");
-			} else {
-				SimpleUtils.fail("Days is correct in rule list", false);
+			}else{
+				SimpleUtils.fail("Days is NOT correct in rule list",false);
 			}
+		}
+	}
+	@Override
+	public void verifySkillCoverageBasicStaffingRuleInList() throws Exception{
+		if(areListElementVisible(basicStaffingRulesInList,3)){
+			String workRoleNameStr = workRoleAndUnit.getText().trim().split(" ")[0];
+			if(workRoleNameStr.equalsIgnoreCase("any")){
+				SimpleUtils.pass("Skill coverage rule can show correctly in rule list");
+			}else {
+				SimpleUtils.fail("Skill coverage rule can NOT show correctly in rule list",false);
+			}
+		}
+
+	}
+
+	@FindBy(css="img.setting-rule-delete-icon")
+	private WebElement ruleDeleteIcon;
+	@FindBy(css="span.settings-work-rule-edit-edit-icon")
+	private List<WebElement> editButtonListInRuleList;
+
+	@Override
+	public void verifySkillCoverageBasicStaffingRule(String workRole1,String workRole2) throws Exception {
+		//add skill coverage rule for one work role, other work role will show
+		int beforeBasicStaffingRuleCount = 0;
+		int afterBasicStaffingRuleCount = 0;
+		selectWorkRoleToEdit(workRole1);
+		checkTheEntryOfAddBasicStaffingRule();
+		verifyStaffingRulePageShowWell();
+		addSkillCoverageBasicStaffingRule();
+		clickCheckButtonOfBasicStaffingRule();
+		verifySkillCoverageBasicStaffingRuleInList();
+		beforeBasicStaffingRuleCount = editButtonListInRuleList.size();
+		clickTheElement(saveButtonOnBasicStaffingRule);
+		waitForSeconds(3);
+		selectWorkRoleToEdit(workRole2);
+		verifySkillCoverageBasicStaffingRuleInList();
+		clickTheElement(ruleDeleteIcon);
+		waitForSeconds(2);
+		clickTheElement(saveButtonOnBasicStaffingRule);
+		selectWorkRoleToEdit(workRole1);
+		afterBasicStaffingRuleCount = editButtonListInRuleList.size();
+		if(beforeBasicStaffingRuleCount - afterBasicStaffingRuleCount == 1){
+			SimpleUtils.pass("User can add/delete Skill Coverage Basic Staffing Rule successfully!");
+		}else {
+			SimpleUtils.fail("User can NOT add/delete Skill Coverage Basic Staffing Rule successfully!",false);
 		}
 	}
 

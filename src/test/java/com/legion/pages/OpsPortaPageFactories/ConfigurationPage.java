@@ -169,6 +169,12 @@ public interface ConfigurationPage {
     public void clickCheckButtonOfBasicStaffingRule() throws Exception;
     public void defaultSelectedBadgeOption() throws Exception;
     public void selectBadgesOfBasicStaffingRule(String hasBadgeOrNot, String badgeName) throws Exception;
+    public void verifyHistoryButtonNotDisplay() throws Exception;
+    public void verifyHistoryButtonDisplay() throws Exception;
+    public void verifyHistoryButtonIsClickable() throws Exception;
+    public void verifyCloseIconNotDisplayDefault() throws Exception;
+    public void clickHistoryAndClose() throws Exception;
+    public void goToItemInConfiguration(String item) throws Exception;
     public void setLeaveThisPageButton() throws Exception;
     public void selectWorkRoleOfBasicStaffingRule(String workRoleName) throws Exception;
     public void selectEndTimeEvent(String endTimeEvent) throws Exception;
@@ -188,4 +194,7 @@ public interface ConfigurationPage {
     public void removeAllDemandDriverTemplates() throws Exception;
     public void clickAddOrEditForDriver(String addOrEdit) throws Exception;
     public List<String> getInputStreamInDrivers() throws Exception;
+    public void addSkillCoverageBasicStaffingRule() throws Exception;
+    public void verifySkillCoverageBasicStaffingRule(String workRole1, String workRole2) throws Exception;
+    public void verifySkillCoverageBasicStaffingRuleInList() throws Exception;
 }
