@@ -146,7 +146,7 @@ public interface ConfigurationPage {
     public void checkTheEntryOfAddBasicStaffingRule() throws Exception;
     public boolean verifyWarningInfoForDemandDriver(String warningMsg) throws Exception;
     public void verifyStaffingRulePageShowWell() throws Exception;
-    public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo, String addOrEdit) throws Exception;
+    public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception;
     public void verifyPublishedTemplateAfterEdit(String templateName) throws Exception;
 
     public boolean searchDriverInTemplateDetailsPage(String driverName) throws Exception;
@@ -184,5 +184,8 @@ public interface ConfigurationPage {
     public void selectDaysForBasicStaffingRule(List<String> days) throws Exception;
     public void verifyBasicStaffingRuleIsCorrectInRuleList(String startTimeEvent,String endTimeEvent,String startEventPoint,String endEventPoint,
                                                            String workRoleName,String unit,String condition,List<String> days,String number,
-                                                           String startOffset,String endOffset);
+                                                           String startOffset,String endOffset) throws Exception;
+    public void removeAllDemandDriverTemplates() throws Exception;
+    public void clickAddOrEditForDriver(String addOrEdit) throws Exception;
+    public List<String> getInputStreamInDrivers() throws Exception;
 }

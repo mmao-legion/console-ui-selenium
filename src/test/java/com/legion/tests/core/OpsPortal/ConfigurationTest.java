@@ -60,6 +60,7 @@ public class ConfigurationTest extends TestBase {
         this.createDriver((String)params[0],"83","Window");
         ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
         ToggleAPI.enableToggle(Toggles.EnableDemandDriverTemplate.getValue(), "stoneman@legion.co", "admin11.a");
+        ToggleAPI.enableToggle(Toggles.MixedModeDemandDriverSwitch.getValue(), "stoneman@legion.co", "admin11.a");
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1541,7 +1542,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Very creating demand drivers template successfully")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 0)
     public void verifyCreateDemandDriverTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
@@ -1578,7 +1579,8 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.assertOnFail("There should be a warning message for no drivers", configurationPage.verifyWarningInfoForDemandDriver(noDriverWarningMsg), false);
 
             //Add new demand driver, warning message will show up when no association
-            configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfo, addOrEdit);
+            configurationPage.clickAddOrEditForDriver(addOrEdit);
+            configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfo);
             configurationPage.chooseSaveOrPublishBtnAndClickOnTheBtn("Publish Now");
             SimpleUtils.assertOnFail("There should be a warning message for no association", configurationPage.verifyWarningInfoForDemandDriver(noAssociationWarningMsg), false);
 
@@ -1597,7 +1599,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify demand driver template detail duplicated adding check")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 1)
     public void verifyDemandDriverTemplateDetailsDuplicatedAddingCheckAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateName = "testDemand-NotDelete";
@@ -1636,10 +1638,12 @@ public class ConfigurationTest extends TestBase {
             //Choose an existing template, add a driver with existing name
             configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            configurationPage.addOrEditDemandDriverInTemplate(driverWithExistingName, addOrEdit);
+            configurationPage.clickAddOrEditForDriver(addOrEdit);
+            configurationPage.addOrEditDemandDriverInTemplate(driverWithExistingName);
 
             //Choose an existing template, add a driver with existing Type+Channel+Category
-            configurationPage.addOrEditDemandDriverInTemplate(driverWithExistingCombination, addOrEdit);
+            configurationPage.clickAddOrEditForDriver(addOrEdit);
+            configurationPage.addOrEditDemandDriverInTemplate(driverWithExistingCombination);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1650,7 +1654,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Very demand drivers template as publish now")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 2)
     public void verifyDemandDriverTemplateAsPublishNowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateName = "testDemand-NotDelete";
@@ -1684,7 +1688,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Very demand drivers template details editing")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 3)
     public void verifyDemandDriverTemplateDetailsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
         String templateName = "testDemand-NotDelete";
@@ -1727,11 +1731,13 @@ public class ConfigurationTest extends TestBase {
         //Enter the template, add a driver
         configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
         configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-        configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfo, "Add");
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfo);
         SimpleUtils.assertOnFail("Can not find the driver you search!", configurationPage.searchDriverInTemplateDetailsPage(driverSpecificInfo.get("Name")), false);
 
         //Update the added driver
-        configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfoUpdated, "Edit");
+        configurationPage.clickAddOrEditForDriver("Edit");
+        configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfoUpdated);
         SimpleUtils.assertOnFail("Can not find the driver you search!", configurationPage.searchDriverInTemplateDetailsPage(driverSpecificInfoUpdated.get("Name")), false);
 
         //Remove the added driver
@@ -1991,7 +1997,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify demand drivers template as draft")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 4)
     public void verifyDemandDriverTemplatesAsDraftAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
@@ -2030,11 +2036,13 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             //Search and edit a driver
             configurationPage.searchDriverInTemplateDetailsPage(driverNameToEdit);
-            configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfoUpdated, "Edit");
+            configurationPage.clickAddOrEditForDriver("Edit");
+            configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfoUpdated);
             configurationPage.searchDriverInTemplateDetailsPage(driverSpecificInfoUpdated.get("Name"));
 
             //Add a driver
-            configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfoToAdd, "Add");
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfoToAdd);
             configurationPage.searchDriverInTemplateDetailsPage(driverSpecificInfoToAdd.get("Name"));
             configurationPage.chooseSaveOrPublishBtnAndClickOnTheBtn("Save as Draft");
 
@@ -2050,7 +2058,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify demand drivers template archive")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, dependsOnMethods = {"verifyDemandDriverTemplateAsPublishNowAsInternalAdmin"})
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 5)
     public void verifyDemandDriverTemplatesToArchiveAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
         String templateType = "Demand Drivers";
@@ -2169,6 +2177,714 @@ public class ConfigurationTest extends TestBase {
             }else{
                 SimpleUtils.fail("Total number of default input stream is not correct! ", false);
             }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify default demand driver template when enter a new enterprise.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheDefaultDemandDriverTemplateWhenEnterANewEnterpriseAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+
+            //Go to template association page, delete all templates
+            configurationPage.clickOnSpecifyTemplateName("Default", "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+            configurationPage.deleteOneDynamicGroup("Default");
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.setLeaveThisPageButton();
+
+            //Remove all the current templates
+            configurationPage.removeAllDemandDriverTemplates();
+
+            //Check if default template generated
+            SimpleUtils.assertOnFail("There is no default template generated after delete All!", configurationPage.searchTemplate("Default"), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify input stream in demand driver")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyInputStreamInDemandDriverTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String templateName = "Default";
+            List<String> streamNameList = new ArrayList<>();
+            List<String> streamNamesInDriverPage = new ArrayList<>();
+
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+
+            //Go to settings page, get all the input streams
+            settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+            streamNameList = settingsAndAssociationPage.getStreamNamesInList("All");
+            //Go to driver details page, get all the input streams
+            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+            configurationPage.clickOnSpecifyTemplateName("Default", "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            streamNamesInDriverPage = configurationPage.getInputStreamInDrivers();
+
+            Collections.sort(streamNameList);
+            Collections.sort(streamNamesInDriverPage);
+            if(streamNameList.size()==streamNamesInDriverPage.size()){
+                if(ListUtils.isEqualList(streamNameList, streamNamesInDriverPage)){
+                    SimpleUtils.pass("Input Streams in driver details page and Settings page are totally the same!");
+                }else {
+                    SimpleUtils.fail("Input Streams in driver details page and Settings page are NOT the same!",false);
+                }
+            }else {
+                SimpleUtils.fail("Input Streams in driver details page and Settings page are NOT the same!",false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Forecast page when only default demand driver template exist")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyVisibilityOnForecastPageForDefaultDemandDriverTemplateOnlyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String templateName = "Default";
+            List<String> channelNameList = new ArrayList<>();
+            List<String> categoryNameList = new ArrayList<>();
+            String locationToTest = "Boston";
+
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+            configurationPage.deleteOneDynamicGroup(templateName);
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.setLeaveThisPageButton();
+
+            //Remove all the current templates
+            configurationPage.removeAllDemandDriverTemplates();
+            //Go to Settings tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+            channelNameList = settingsAndAssociationPage.getAllChannelsOrCategories("Channel");
+            categoryNameList = settingsAndAssociationPage.getAllChannelsOrCategories("Category");
+            //Verify channel/category visibility in Forecast page
+            refreshCache("Template");
+            switchToNewWindow();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationToTest);
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+            scheduleCommonPage.goToSchedulePage();
+            forecastPage.clickForecast();
+            salesForecastPage.navigateToSalesForecastTab();
+            //Check visibility for each channel&category
+            for (int i = 0; i < channelNameList.size(); i++){
+                SimpleUtils.assertOnFail("The channel " + channelNameList.get(i) + " should show up in forecast page!",
+                        salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", channelNameList.get(i)), false);
+            }
+            for (int i = 0; i < categoryNameList.size(); i++){
+                SimpleUtils.assertOnFail("The category " + categoryNameList.get(i) + " should show up in forecast page!",
+                        salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryNameList.get(i)), false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Forecast page for one newly created demand driver template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyForecastPageForOneNewlyCreatedDemandDriverTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+        String templateType = "Demand Drivers";
+        String templateName = "testVisibility";
+        HashMap<String, String> visibledriverInfo = new HashMap<String, String>(){
+            {
+                put("Name", "Items:EDW:Enrollments");
+                put("Type", "Items");
+                put("Channel", "EDW");
+                put("Category", "Enrollments");
+                put("Show in App", "Yes");
+                put("Order", "1");
+                put("Forecast Source", "Legion ML");
+                put("Input Stream", "Items:EDW:Enrollments");
+            }
+        };
+        HashMap<String, String> invisibledriverInfo = new HashMap<String, String>(){
+            {
+                put("Name", "Items:EDW:Verifications");
+                put("Type", "Items");
+                put("Channel", "EDW");
+                put("Category", "Verifications");
+                put("Show in App", "No");
+                put("Order", "2");
+                put("Forecast Source", "Imported");
+                put("Input Stream", "Items:EDW:Verifications");
+            }
+        };
+        //Go to Demand Driver template
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(templateType);
+
+        //Go to Templates tab
+        settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+        //Add new demand driver template
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+        //Add two drivers, set up visible and invisible
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(visibledriverInfo);
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(invisibledriverInfo);
+        //Add association and save
+        configurationPage.createDynamicGroup(templateName, "Location Name", location);
+        configurationPage.selectOneDynamicGroup(templateName);
+        //Could publish normally
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+
+        //Verify channel/category visibility in Forecast page
+        refreshCache("Template");
+        switchToNewWindow();
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        ForecastPage forecastPage = pageFactory.createForecastPage();
+        SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+        scheduleCommonPage.goToSchedulePage();
+        forecastPage.clickForecast();
+        salesForecastPage.navigateToSalesForecastTab();
+        SimpleUtils.assertOnFail("The channel EDW should show up in forecast page!",
+                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", visibledriverInfo.get("Channel")), false);
+        SimpleUtils.assertOnFail("The category Enrollments should show up in forecast page!",
+                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  visibledriverInfo.get("Category")), false);
+        SimpleUtils.assertOnFail("The category Verifications should not show up in forecast page!",
+                !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", invisibledriverInfo.get("Category")), false);
+        //Remove the associated locations and templates
+        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        configurationPage.deleteOneDynamicGroup(templateName);
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.setLeaveThisPageButton();
+        configurationPage.deleteTemplate(templateName);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Forecast page for different newly created demand driver template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyForecastPageForDifferentNewlyCreatedDemandDriverTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String templateName1 = "testVisibility_Diff1";
+            String templateName2 = "testVisibility_Diff2";
+            String locationName1 = "Boston";
+            String locationName2 = "Cleveland";
+            HashMap<String, String> invisibleInfo_location1 = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Enrollments");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Enrollments");
+                    put("Show in App", "No");
+                    put("Order", "1");
+                    put("Forecast Source", "Legion ML");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
+            HashMap<String, String> invisibleInfo_location2 = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Verifications");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Verifications");
+                    put("Show in App", "No");
+                    put("Order", "1");
+                    put("Forecast Source", "Imported");
+                    put("Input Stream", "Items:EDW:Verifications");
+                }
+            };
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+
+            //Go to Templates tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+            //Add first demand driver template
+            configurationPage.createNewTemplate(templateName1);
+            configurationPage.clickOnTemplateName(templateName1);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+            //Add one driver, set up visibility
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(invisibleInfo_location1);
+            //Add association and save
+            configurationPage.createDynamicGroup(templateName1, "Location Name", locationName1);
+            configurationPage.selectOneDynamicGroup(templateName1);
+            //Could publish normally
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.publishNowTemplate();
+
+            //Add second demand driver template
+            configurationPage.createNewTemplate(templateName2);
+            configurationPage.clickOnTemplateName(templateName2);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+            //Add one driver, set up visibility
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(invisibleInfo_location2);
+            //Add association and save
+            configurationPage.createDynamicGroup(templateName2, "Location Name", locationName2);
+            configurationPage.selectOneDynamicGroup(templateName2);
+            //Could publish normally
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.publishNowTemplate();
+
+            //Verify channel/category visibility in Forecast page
+            refreshCache("Template");
+            switchToNewWindow();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName1);
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+            scheduleCommonPage.goToSchedulePage();
+            forecastPage.clickForecast();
+            salesForecastPage.navigateToSalesForecastTab();
+            //Check channel/category visibility for location1
+            SimpleUtils.assertOnFail("The channel EDW should not show up in forecast page!",
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", invisibleInfo_location1.get("Channel")), false);
+            SimpleUtils.assertOnFail("The category Verifications should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  invisibleInfo_location2.get("Category")), false);
+            SimpleUtils.assertOnFail("The category Enrollments should not show up in forecast page!",
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", invisibleInfo_location1.get("Category")), false);
+
+            //Check channel/category visibility for location2
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName1);
+            forecastPage.clickForecast();
+            salesForecastPage.navigateToSalesForecastTab();
+            SimpleUtils.assertOnFail("The channel EDW should not show up in forecast page!",
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", invisibleInfo_location2.get("Channel")), false);
+            SimpleUtils.assertOnFail("The category Enrollments should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  invisibleInfo_location1.get("Category")), false);
+            SimpleUtils.assertOnFail("The category Verifications should not show up in forecast page!",
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", invisibleInfo_location2.get("Category")), false);
+            switchToNewWindow();
+
+            //Remove the associated locations and templates
+            configurationPage.clickOnSpecifyTemplateName(templateName1, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+            configurationPage.deleteOneDynamicGroup(templateName1);
+            configurationPage.deleteOneDynamicGroup(templateName2);
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.setLeaveThisPageButton();
+            configurationPage.deleteTemplate(templateName1);
+            configurationPage.deleteTemplate(templateName2);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Forecast page for one newly created and default demand driver template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyForecastPageForOneNewlyCreatedDemandDriverTemplateForDGV2AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+        String templateType = "Demand Drivers";
+        String templateName = "testVisibility_V2";
+        String locationName1 = "Boston_V2";
+        String locationName2 = "Cleveland_V2";
+        HashMap<String, String> invisibleInfo_location = new HashMap<String, String>(){
+            {
+                put("Name", "Items:EDW:Verifications");
+                put("Type", "Items");
+                put("Channel", "EDW");
+                put("Category", "Verifications");
+                put("Show in App", "No");
+                put("Order", "1");
+                put("Forecast Source", "Imported");
+                put("Input Stream", "Items:EDW:Verifications");
+            }
+        };
+        HashMap<String, String> visibleInfo_location = new HashMap<String, String>(){
+            {
+                put("Name", "Items:EDW:Enrollments");
+                put("Type", "Items");
+                put("Channel", "EDW");
+                put("Category", "Enrollments");
+                put("Show in App", "Yes");
+                put("Order", "2");
+                put("Forecast Source", "Legion ML");
+                put("Input Stream", "Items:EDW:Enrollments");
+            }
+        };
+
+        //Go to Demand Driver template
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(templateType);
+
+        //Go to Templates tab
+        settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+
+        //Add first demand driver template
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+        //Add one driver, set up visibility
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(invisibleInfo_location);
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(visibleInfo_location);
+        //Add association and save
+        configurationPage.createDynamicGroup(templateName, "Location Name", locationName1);
+        configurationPage.selectOneDynamicGroup(templateName);
+        //Could publish normally
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+
+        //Verify channel/category visibility in Forecast page
+        refreshCache("Template");
+        switchToNewWindow();
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName1);
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        ForecastPage forecastPage = pageFactory.createForecastPage();
+        SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+        scheduleCommonPage.goToSchedulePage();
+        forecastPage.clickForecast();
+        salesForecastPage.navigateToSalesForecastTab();
+        //Check channel/category visibility for location1
+        SimpleUtils.assertOnFail("The channel EDW should show up in forecast page!",
+                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", visibleInfo_location.get("Channel")), false);
+        SimpleUtils.assertOnFail("The category Verifications should not show up in forecast page!",
+                !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  invisibleInfo_location.get("Category")), false);
+        SimpleUtils.assertOnFail("The category Enrollments should show up in forecast page!",
+                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo_location.get("Category")), false);
+
+        //Check channel/category visibility for location2
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName2);
+        forecastPage.clickForecast();
+        salesForecastPage.navigateToSalesForecastTab();
+        SimpleUtils.assertOnFail("The channel EDW should show up in forecast page!",
+                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", visibleInfo_location.get("Channel")), false);
+        SimpleUtils.assertOnFail("The category Verifications should  show up in forecast page!",
+                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  invisibleInfo_location.get("Category")), false);
+        SimpleUtils.assertOnFail("The category Enrollments should show up in forecast page!",
+                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo_location.get("Category")), false);
+        //Remove the associated locations and templates
+        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        configurationPage.deleteOneDynamicGroup(templateName);
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.setLeaveThisPageButton();
+        configurationPage.archiveOrDeleteTemplate(templateName);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Forecast page for different newly created demand driver template for V2")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyForecastPageForDifferentNewlyCreatedDemandDriverTemplateForDGV2AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String templateName1 = "testVisibility1_V2";
+            String templateName2= "testVisibility2_V2";
+            String locationName1 = "Boston_V2";
+            String locationName2 = "Cleveland_V2";
+            HashMap<String, String> invisibleInfo_location1 = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Enrollments");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Enrollments");
+                    put("Show in App", "No");
+                    put("Order", "1");
+                    put("Forecast Source", "Imported");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
+            HashMap<String, String> visibleInfo_location1 = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Verifications");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Verifications");
+                    put("Show in App", "Yes");
+                    put("Order", "2");
+                    put("Forecast Source", "Legion ML");
+                    put("Input Stream", "Items:EDW:Verifications");
+                }
+            };
+            HashMap<String, String> invisibleInfo_location2 = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Verifications");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Verifications");
+                    put("Show in App", "No");
+                    put("Order", "1");
+                    put("Forecast Source", "Imported");
+                    put("Input Stream", "Items:EDW:Verifications");
+                }
+            };
+            HashMap<String, String> visibleInfo_location2 = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Enrollments");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Enrollments");
+                    put("Show in App", "Yes");
+                    put("Order", "2");
+                    put("Forecast Source", "Legion ML");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
+            //Turn on DynamicGroupV2 toggle
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+
+            //Go to Templates tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+            //Add first demand driver template
+            configurationPage.createNewTemplate(templateName1);
+            configurationPage.searchTemplate("Default");
+            configurationPage.archivePublishedOrDeleteDraftTemplate("Default", "Archive");
+            configurationPage.searchTemplate(templateName1);
+            configurationPage.clickOnTemplateName(templateName1);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+            //Add one driver, set up visibility
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(invisibleInfo_location1);
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(visibleInfo_location1);
+            //Add association and save
+            configurationPage.createDynamicGroup(templateName1, "Location Name", locationName1);
+            configurationPage.selectOneDynamicGroup(templateName1);
+            //Could publish normally
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.publishNowTemplate();
+
+            //Add second demand driver template
+            configurationPage.createNewTemplate(templateName2);
+            configurationPage.clickOnTemplateName(templateName2);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+            //Add one driver, set up visibility
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(invisibleInfo_location2);
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(visibleInfo_location2);
+            //Add association and save
+            configurationPage.createDynamicGroup(templateName2, "Location Name", locationName2);
+            configurationPage.selectOneDynamicGroup(templateName2);
+            //Could publish normally
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.publishNowTemplate();
+
+            //Verify channel/category visibility in Forecast page
+            refreshCache("Template");
+            switchToNewWindow();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName1);
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+            scheduleCommonPage.goToSchedulePage();
+            forecastPage.clickForecast();
+            salesForecastPage.navigateToSalesForecastTab();
+            //Check channel/category visibility for location1
+            SimpleUtils.assertOnFail("The channel EDW should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", visibleInfo_location1.get("Channel")), false);
+            SimpleUtils.assertOnFail("The category Enrollments should not show up in forecast page!",
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  invisibleInfo_location1.get("Category")), false);
+            SimpleUtils.assertOnFail("The category Verifications should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo_location1.get("Category")), false);
+
+            //Check channel/category visibility for location2
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName1);
+            forecastPage.clickForecast();
+            salesForecastPage.navigateToSalesForecastTab();
+            SimpleUtils.assertOnFail("The channel EDW should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", visibleInfo_location2.get("Channel")), false);
+            SimpleUtils.assertOnFail("The category Enrollments should not show up in forecast page!",
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  invisibleInfo_location2.get("Category")), false);
+            SimpleUtils.assertOnFail("The category Verifications should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo_location2.get("Category")), false);
+            //Remove the associated locations and templates
+            configurationPage.archiveOrDeleteAllTemplates();
+            //Turn off DynamicGroupV2 toggle
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Forecast page for newly created demand drivers with new Channel/Category for V2")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyForecastPageForDemandDriversTemplateWithNewChannelAndCategoryAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String templateName = "testVisibility_NewChannelAndCategory";
+            String channelName = "Channel_Gate";
+            String categoryName = "Category_Coffee";
+            String locationName = "Boston";
+            HashMap<String, String> invisibleInfo = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Category_Coffee");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", categoryName);
+                    put("Show in App", "No");
+                    put("Order", "1");
+                    put("Forecast Source", "Imported");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
+            HashMap<String, String> visibleInfo = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:Channel_Gate:Verifications");
+                    put("Type", "Items");
+                    put("Channel", channelName);
+                    put("Category", "Verifications");
+                    put("Show in App", "Yes");
+                    put("Order", "2");
+                    put("Forecast Source", "Imported");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
+            //Turn on DynamicGroupV2 toggle
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Settings tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+            //Add new category in settings.
+            settingsAndAssociationPage.createNewChannelOrCategory("category", categoryName, "This is a test for new Category visibility!");
+            settingsAndAssociationPage.createNewChannelOrCategory("channel", channelName, "This is a test for new Channel visibility!");
+            //Go to Templates tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+            //Add first demand driver template
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnTemplateName(templateName);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+            //Add two drivers, set up visibility
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(invisibleInfo);
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(visibleInfo);
+            //Add association and save
+            configurationPage.createDynamicGroup(templateName, "Location Name", locationName);
+            configurationPage.selectOneDynamicGroup(templateName);
+
+            //Could publish normally
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.publishNowTemplate();
+
+            //Verify channel/category visibility in Forecast page
+            refreshCache("Template");
+            switchToNewWindow();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName);
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+            scheduleCommonPage.goToSchedulePage();
+            forecastPage.clickForecast();
+            salesForecastPage.navigateToSalesForecastTab();
+            //Check channel/category visibility for location
+            SimpleUtils.assertOnFail("The channel EDW should not show up in forecast page!",
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", invisibleInfo.get("Channel")), false);
+            SimpleUtils.assertOnFail("The category Category_Coffee should not show up in forecast page!",
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", invisibleInfo.get("Category")), false);
+            SimpleUtils.assertOnFail("The channel Channel_Gate should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  visibleInfo.get("Channel")), false);
+            SimpleUtils.assertOnFail("The category Verifications should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo.get("Category")), false);
+
+            //Turn off DynamicGroupV2 toggle
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
+            switchToNewWindow();
+            //Remove the associated locations and templates
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+            configurationPage.deleteOneDynamicGroup(templateName);
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.setLeaveThisPageButton();
+            configurationPage.archiveOrDeleteTemplate(templateName);
+
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -451,6 +451,7 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 					for (WebElement filter : filters) {
 						filterLabel = filter.findElement(By.cssSelector("label"));
 						if (filterLabel != null && filterLabel.getText().equalsIgnoreCase(filteryName)) {
+							System.out.println(filterLabel.getText() + " 2: " + filteryName);
 							isExisting =  true;
 							break;
 						}
@@ -458,7 +459,7 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 				}
 			}
 		} else {
-			SimpleUtils.fail("Filters button not found on forcast page!", false);
+			SimpleUtils.fail("Filters button not found on forecast page!", false);
 		}
 		return isExisting;
 	}
