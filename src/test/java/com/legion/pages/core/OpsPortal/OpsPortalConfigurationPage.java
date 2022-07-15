@@ -5485,6 +5485,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}
 	}
+
+	@Override
 	public void addSkillCoverageBasicStaffingRule() throws Exception{
 		selectWorkRoleOfBasicStaffingRule("Any");
 		Select select = new Select(conditionMaxMinExactly);
@@ -5681,13 +5683,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				SimpleUtils.fail("Number of work role is NOT correct in rule list",false);
 			}
 
-			//ANY shifts should be scheduled
+			//ANY/workRoleName shifts should be scheduled
 			String workRoleNameStr = workRoleAndUnit.getText().trim().split(" ")[0];
 			String unitStr= workRoleAndUnit.getText().trim().split(" ")[1];
 			if(workRoleNameStr.equalsIgnoreCase(workRoleName) && unitStr.equalsIgnoreCase(unit)){
 				SimpleUtils.pass("work Role Name and unit can show correctly in rule list");
 			}else {
-				SimpleUtils.fail("work Role Name and unit can show correctly in rule list",false);
+				SimpleUtils.fail("work Role Name and unit can NOT show correctly in rule list",false);
 			}
 
 			//Sun, Mon, Tue, Wed, Thu, Fri, Sat
@@ -5700,8 +5702,53 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if(ListUtils.isEqualList(daysStr2,days)){
 				SimpleUtils.pass("Days is correct in rule list");
 			}else{
-				SimpleUtils.fail("Days is correct in rule list",false);
+				SimpleUtils.fail("Days is NOT correct in rule list",false);
 			}
+		}
+	}
+	@Override
+	public void verifySkillCoverageBasicStaffingRuleInList() throws Exception{
+		if(areListElementVisible(basicStaffingRulesInList,3)){
+			String workRoleNameStr = workRoleAndUnit.getText().trim().split(" ")[0];
+			if(workRoleNameStr.equalsIgnoreCase("any")){
+				SimpleUtils.pass("Skill coverage rule can show correctly in rule list");
+			}else {
+				SimpleUtils.fail("Skill coverage rule can NOT show correctly in rule list",false);
+			}
+		}
+
+	}
+
+	@FindBy(css="img.setting-rule-delete-icon")
+	private WebElement ruleDeleteIcon;
+	@FindBy(css="span.settings-work-rule-edit-edit-icon")
+	private List<WebElement> editButtonListInRuleList;
+
+	@Override
+	public void verifySkillCoverageBasicStaffingRule(String workRole1,String workRole2) throws Exception {
+		//add skill coverage rule for one work role, other work role will show
+		int beforeBasicStaffingRuleCount = 0;
+		int afterBasicStaffingRuleCount = 0;
+		selectWorkRoleToEdit(workRole1);
+		checkTheEntryOfAddBasicStaffingRule();
+		verifyStaffingRulePageShowWell();
+		addSkillCoverageBasicStaffingRule();
+		clickCheckButtonOfBasicStaffingRule();
+		verifySkillCoverageBasicStaffingRuleInList();
+		beforeBasicStaffingRuleCount = editButtonListInRuleList.size();
+		clickTheElement(saveButtonOnBasicStaffingRule);
+		waitForSeconds(3);
+		selectWorkRoleToEdit(workRole2);
+		verifySkillCoverageBasicStaffingRuleInList();
+		clickTheElement(ruleDeleteIcon);
+		waitForSeconds(2);
+		clickTheElement(saveButtonOnBasicStaffingRule);
+		selectWorkRoleToEdit(workRole1);
+		afterBasicStaffingRuleCount = editButtonListInRuleList.size();
+		if(beforeBasicStaffingRuleCount - afterBasicStaffingRuleCount == 1){
+			SimpleUtils.pass("User can add/delete Skill Coverage Basic Staffing Rule successfully!");
+		}else {
+			SimpleUtils.fail("User can NOT add/delete Skill Coverage Basic Staffing Rule successfully!",false);
 		}
 	}
 }
