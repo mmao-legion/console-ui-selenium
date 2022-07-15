@@ -185,4 +185,7 @@ public interface ConfigurationPage {
     public void verifyBasicStaffingRuleIsCorrectInRuleList(String startTimeEvent,String endTimeEvent,String startEventPoint,String endEventPoint,
                                                            String workRoleName,String unit,String condition,List<String> days,String number,
                                                            String startOffset,String endOffset);
+    public void addSkillCoverageBasicStaffingRule() throws Exception;
+    public void verifySkillCoverageBasicStaffingRule(String workRole1, String workRole2) throws Exception;
+    public void verifySkillCoverageBasicStaffingRuleInList() throws Exception;
 }
