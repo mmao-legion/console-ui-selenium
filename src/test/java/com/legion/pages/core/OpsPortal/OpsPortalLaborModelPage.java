@@ -1006,6 +1006,23 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		return flag;
 	}
 
+	@Override
+	public void selectWorkRoles(String workRole) throws Exception {
+		WebElement workRoleSelectBox = getDriver().findElement(By.xpath("//td[contains(text(),'" + workRole + "')]/following-sibling::*[2]/input-field"));
+		boolean isTabFound = false;
+		if (isElementLoaded(workRoleSelectBox)) {
+			for (WebElement subTab : subTabs) {
+					click(workRoleSelectBox);
+					isTabFound = true;
+			}
+			if (isTabFound)
+				SimpleUtils.pass("" + workRole + "' is selected successfully.");
+			else
+				SimpleUtils.fail("'" + workRole + "' is not selected.", true);
+		} else
+			SimpleUtils.fail("'" + workRole + "' is not showing.", false);
+	}
+
 
 }
 

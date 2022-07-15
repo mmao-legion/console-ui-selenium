@@ -3184,7 +3184,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 //	@FindBy(css="lg-tabs.ng-isolate-scope nav div:nth-child(3)")
 	@FindBy(css="nav.lg-tabs__nav>div:nth-last-child(2)")
 	private WebElement templateAssociationBTN;
-	@FindBy(css="lg-button[label=\"Remove\"]")
+	@FindBy(css="lg-button[ng-click=\"$ctrl.removeDynamicGroup(group.id,'remove')\"]")
 	private WebElement dynamicGroupRemoveBTN;
 	@FindBy(css="div[ng-if*=showAction] lg-button[label=\"Edit\"]")
 	private WebElement dynamicGroupEditBTN;
@@ -5244,13 +5244,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	@Override
-	public void selectDaysForBasicStaffingRule(String day) throws Exception{
+	public void verifyDefaultValueAndSelectDaysForBasicStaffingRule(String day) throws Exception{
 		//verify all days are selected by default
 		for(WebElement daysOption:daysOptionList){
 			if(daysOption.findElement(By.cssSelector(" input")).getAttribute("class").trim().contains("ng-not-empty")){
 				SimpleUtils.pass(daysOption.findElement(By.cssSelector(" label")).getText().trim() + " is selected by default!");
 			}else {
-				SimpleUtils.fail(daysOption.findElement(By.cssSelector(" label")).getText().trim() + " is NOT selected by default!",false);
+				SimpleUtils.report(daysOption.findElement(By.cssSelector(" label")).getText().trim() + " is NOT selected by default!");
 			}
 		}
 		//select specified days
@@ -5315,8 +5315,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void selectEventPointForBasicStaffingRule(String startEventPoint,String endEventPoint) throws Exception{
+		clickTheElement(startEventPointOptions);
 		Select select1 = new Select(startEventPointOptions);
 		select1.selectByVisibleText(startEventPoint);
+		clickTheElement(endEventPointOptions);
 		Select select2 = new Select(endEventPointOptions);
 		select2.selectByVisibleText(endEventPoint);
 	}
@@ -5503,5 +5505,250 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		scrollToElement(getDriver().findElement(By.cssSelector("lg-dashboard-card[title = \"" + item + "\"]")));
 		click(getDriver().findElement(By.cssSelector("lg-dashboard-card[title = \"" + item + "\"]")));
 		waitForSeconds(5);
+
+	@Override
+	public void setLeaveThisPageButton() throws Exception {
+		if (isElementLoaded(warningToast) && isElementLoaded(leaveThisPageButton))
+			clickTheElement(leaveThisPageButton);
+		waitForSeconds(3);
+	}
+
+	//added by Fiona
+	@Override
+	public void selectConditionMaxMinExactly(String condition) throws Exception{
+		Select select = new Select(conditionMaxMinExactly);
+		select.selectByVisibleText(condition);
+	}
+	@Override
+	public void selectWorkRoleOfBasicStaffingRule(String workRoleName) throws Exception{
+		if(isElementLoaded(workRoleSelect,3)){
+			Select select = new Select(workRoleSelect);
+			List<WebElement> workRoleList = select.getOptions();
+			for(WebElement work:workRoleList){
+				String workRole = work.getText().trim();
+				if(workRole.equalsIgnoreCase(workRoleName)){
+					select.selectByVisibleText(workRoleName);
+				}
+			}
+		}
+	}
+	public void addSkillCoverageBasicStaffingRule() throws Exception{
+		selectWorkRoleOfBasicStaffingRule("Any");
+		Select select = new Select(conditionMaxMinExactly);
+		WebElement selected = select.getFirstSelectedOption();
+		if(selected.getText().trim().equalsIgnoreCase("A Minimum")){
+			SimpleUtils.pass("When select work role as Any, it will selected as A Minimum automatically!");
+		}else {
+			SimpleUtils.fail("When select work role as Any, it will NOT selected as A Minimum automatically!",false);
+		}
+	}
+
+	//select End Time Event
+	@Override
+	public void selectEndTimeEvent(String endTimeEvent) throws Exception{
+		if(isElementLoaded(conditionMaxMinExactly,2)){
+			clickTheElement(endTimeEventOptions);
+			if(areListElementVisible(endTimeEventOptionsList,3)){
+				for(WebElement w:endTimeEventOptionsList){
+					if(w.getAttribute("innerText").trim().equalsIgnoreCase(endTimeEvent)){
+						clickTheElement(w);
+						break;
+					}
+				}
+			}
+			if(endTimeEventSelected.getAttribute("innerText").trim().equalsIgnoreCase(endTimeEvent)){
+				SimpleUtils.pass("User select end Time Event successfully!");
+			}else {
+				SimpleUtils.fail("User failed to select end Time Event!", false);
+			}
+		}
+	}
+
+	@Override
+	public void selectUnitOptionsOfBasicStaffingRule(String unit) throws Exception{
+		Select select = new Select(unitOptions);
+		select.selectByVisibleText(unit);
+	}
+
+	public void inputNumberOfWorkRoleForBasicStaffingRule(String number) throws Exception{
+		if(isElementLoaded(numberInput,2)){
+			numberInput.click();
+			numberInput.clear();
+			numberInput.sendKeys(number);
+		}else {
+			SimpleUtils.fail("Number of Work Role For Basic Staffing Rule is not showing.",false);
+		}
+	}
+
+	@Override
+	public void inputStartOffsetMinutesOfBasicStaffingRule(String startOffset) throws Exception{
+		if(isElementLoaded(startOffsetMinutes,3)){
+			clickTheElement(startOffsetMinutes);
+			startOffsetMinutes.clear();
+			startOffsetMinutes.sendKeys(startOffset);
+			if(saveRuleIcon.getAttribute("class").contains("enabled")){
+				SimpleUtils.pass("User can input number successfully!");
+			}else {
+				SimpleUtils.fail("User can not input number successfully!",false);
+			}
+		}
+	}
+
+	@Override
+	public void inputEndOffsetMinutesOfBasicStaffingRule(String endOffset) throws Exception{
+		if(isElementLoaded(endOffsetMinutes,3)){
+			clickTheElement(endOffsetMinutes);
+			endOffsetMinutes.clear();
+			endOffsetMinutes.sendKeys(endOffset);
+			if(saveRuleIcon.getAttribute("class").contains("enabled")){
+				SimpleUtils.pass("User can input number successfully!");
+			}else {
+				SimpleUtils.fail("User can not input number successfully!",false);
+			}
+		}
+	}
+
+	@Override
+	public void selectStartEventPointForBasicStaffingRule(String startEventPoint) throws Exception{
+		clickTheElement(startEventPointOptions);
+		Select select1 = new Select(startEventPointOptions);
+		select1.selectByVisibleText(startEventPoint);
+	}
+
+	@Override
+	public void selectEndEventPointForBasicStaffingRule(String endEventPoint) throws Exception{
+		clickTheElement(endEventPointOptions);
+		Select select2 = new Select(endEventPointOptions);
+		select2.selectByVisibleText(endEventPoint);
+	}
+
+	@Override
+	public void selectDaysForBasicStaffingRule(List<String> days) throws Exception{
+		//select specified days
+		//de-selected all checkbox first
+		for(WebElement daysOption:daysOptionList){
+			if(daysOption.findElement(By.cssSelector(" input")).getAttribute("class").trim().contains("ng-not-empty")){
+				clickTheElement(daysOption.findElement(By.cssSelector(" input")));
+			}
+		}
+		//then select specified days
+		for(String day:days){
+			for(WebElement daysOption:daysOptionList){
+				String dayValue = daysOption.findElement(By.cssSelector(" label:first-child")).getAttribute("innerText").trim();
+				if(dayValue.equalsIgnoreCase(day)){
+					clickTheElement(daysOption.findElement(By.cssSelector(" input")));
+					if(daysOption.findElement(By.cssSelector(" input")).getAttribute("class").trim().contains("ng-not-empty")){
+						SimpleUtils.pass("User can select " + day + " successfully!");
+					}else {
+						SimpleUtils.fail("User can NOT select " + day + " successfully!",false);
+					}
+					break;
+				}else {
+					continue;
+				}
+			}
+		}
+	}
+
+
+
+	@Override
+	public void createBasicStaffingRule(String startTimeEvent,String endTimeEvent,String startEventPoint,String endEventPoint,
+										String workRoleName,String unit,String condition,List<String> days,String number,
+										String startOffset,String endOffset) throws Exception{
+		selectStartTimeEvent(startTimeEvent);
+		selectStartEventPointForBasicStaffingRule(startEventPoint);
+		selectEndTimeEvent(endTimeEvent);
+		selectEndEventPointForBasicStaffingRule(endEventPoint);
+		selectWorkRoleOfBasicStaffingRule(workRoleName);
+		selectUnitOptionsOfBasicStaffingRule(unit);
+		selectConditionMaxMinExactly(condition);
+		selectDaysForBasicStaffingRule(days);
+		inputNumberOfWorkRoleForBasicStaffingRule(number);
+		inputStartOffsetMinutesOfBasicStaffingRule(startOffset);
+		inputEndOffsetMinutesOfBasicStaffingRule(endOffset);
+		clickCheckButtonOfBasicStaffingRule();
+	}
+
+	@FindBy(css="div[ng-repeat=\"rule in roleDetails\"] div[ng-if=\"ifStaffingRule()\"]")
+	private List<WebElement> basicStaffingRulesInList;
+	@FindBy(css="div[ng-if=\"ifStaffingRule()\"] span.setting-work-rule-staffing-time-constraint:first-child")
+	private WebElement timeConstraint;
+	@FindBy(css="div[ng-if=\"ifStaffingRule()\"] span.setting-work-rule-staffing-limit-constraint:nth-child(2)")
+	private WebElement limitConstraint;
+	@FindBy(css="div[ng-if=\"ifStaffingRule()\"] span.setting-work-rule-staffing-numeric-value:nth-child(4)")
+	private WebElement workRoleNumbers;
+	@FindBy(css="div[ng-if=\"ifStaffingRule()\"] span.setting-work-rule-staffing-text")
+	private WebElement workRoleAndUnit;
+	@FindBy(css="div[ng-if=\"ifStaffingRule()\"] span.setting-work-rule-staffing-limit-constraint:nth-child(7)")
+	private WebElement timeUnit;
+	@FindBy(css="div[ng-if=\"ifStaffingRule()\"] span.setting-work-rule-staffing-limit-constraint:nth-child(9)")
+	private WebElement daysValue;
+
+	@Override
+	public void verifyBasicStaffingRuleIsCorrectInRuleList(String startTimeEvent,String endTimeEvent,String startEventPoint,String endEventPoint,
+														   String workRoleName,String unit,String condition,List<String> days,String number,
+														   String startOffset,String endOffset){
+		if(areListElementVisible(basicStaffingRulesInList,3)){
+			//Start at 30 minutes after Opening Operating Hours,end at 40 minutes after Opening Operating Hours
+			String[] timeConstraintStr = timeConstraint.getText().trim().split(",");
+
+			//Start at 30 minutes after Opening Operating Hours
+			String[] startTimeConstraintStr = timeConstraintStr[0].split(" ");
+			String startTimeEventStr = timeConstraintStr[0].substring(26);
+			if(startTimeConstraintStr[2].equalsIgnoreCase(startOffset) && startTimeConstraintStr[4].equalsIgnoreCase(startEventPoint)
+					&& startTimeEventStr.equalsIgnoreCase(startTimeEvent)){
+				SimpleUtils.pass("Start offSet, start Event Point and start Time Event is correct!");
+			}else {
+				SimpleUtils.fail("Start offSet, start Event Point and start Time Event is NOT correct!",false);
+			}
+
+			//end at 40 minutes after Opening Operating Hours
+			String[] endTimeConstraintStr = timeConstraintStr[1].split(" ");
+			String endTimeEventStr = timeConstraintStr[1].substring(26);
+			if(endTimeConstraintStr[3].equalsIgnoreCase(endOffset) && endTimeConstraintStr[5].equalsIgnoreCase(endEventPoint)
+					&& endTimeEventStr.equalsIgnoreCase(endTimeEvent)){
+				SimpleUtils.pass("End offSet, end Event Point and end Time Event is correct!");
+			}else {
+				SimpleUtils.fail("End offSet, end Event Point and end Time Event is NOT correct!",false);
+			}
+
+			//limitConstraintStr is such as a maximum
+			String limitConstraintStr = limitConstraint.getText().trim();
+			if(limitConstraintStr.equalsIgnoreCase(condition)){
+				SimpleUtils.pass("Condition is correct in rule list");
+			}else {
+				SimpleUtils.fail("Condition is NOT correct in rule list",false);
+			}
+
+			String workerNumber = workRoleNumbers.getText().trim();
+			if(workerNumber.equalsIgnoreCase(number)){
+				SimpleUtils.pass("Number of work role is correct in rule list");
+			}else {
+				SimpleUtils.fail("Number of work role is NOT correct in rule list",false);
+			}
+
+			//ANY shifts should be scheduled
+			String workRoleNameStr = workRoleAndUnit.getText().trim().split(" ")[0];
+			String unitStr= workRoleAndUnit.getText().trim().split(" ")[1];
+			if(workRoleNameStr.equalsIgnoreCase(workRoleName) && unitStr.equalsIgnoreCase(unit)){
+				SimpleUtils.pass("work Role Name and unit can show correctly in rule list");
+			}else {
+				SimpleUtils.fail("work Role Name and unit can show correctly in rule list",false);
+			}
+
+			//Sun, Mon, Tue, Wed, Thu, Fri, Sat
+			String[] daysStr = daysValue.getText().trim().split(",");
+			String[] daysStr1 = new String[2];
+			for(int i=0;i<daysStr.length;i++){
+				daysStr1[i] = daysStr[i].trim();
+			}
+			List<String> daysStr2= new ArrayList<>(Arrays.asList(daysStr1));
+			if(ListUtils.isEqualList(daysStr2,days)){
+				SimpleUtils.pass("Days is correct in rule list");
+			}else{
+				SimpleUtils.fail("Days is correct in rule list",false);
+			}
+		}
 	}
 }
