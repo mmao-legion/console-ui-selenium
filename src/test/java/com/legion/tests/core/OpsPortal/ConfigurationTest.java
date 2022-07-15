@@ -28,6 +28,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.security.auth.login.Configuration;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.FieldPosition;
@@ -2480,6 +2481,135 @@ public class ConfigurationTest extends TestBase {
             configurationPage.verifyStaffingRulePageShowWell();
             configurationPage.defaultSelectedBadgeOption();
             configurationPage.selectBadgesOfBasicStaffingRule(hasBadgeOrNot,badgeName);
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Audit Log")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void auditLogVerificationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+
+            configurationPage.goToConfigurationPage();
+
+            configurationPage.goToItemInConfiguration("Time & Attendance");
+            configurationPage.searchTemplate("AuditLog");
+            configurationPage.clickOnTemplateName("AuditLog");
+            configurationPage.verifyHistoryButtonDisplay();
+            configurationPage.verifyHistoryButtonIsClickable();
+            configurationPage.verifyCloseIconNotDisplayDefault();
+            configurationPage.clickHistoryAndClose();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+            configurationPage.goToItemInConfiguration("Demand Drivers");
+            configurationPage.searchTemplate("AuditLog");
+            configurationPage.clickOnTemplateName("AuditLog");
+            configurationPage.verifyHistoryButtonDisplay();
+            configurationPage.verifyHistoryButtonIsClickable();
+            configurationPage.verifyCloseIconNotDisplayDefault();
+            configurationPage.clickHistoryAndClose();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+            configurationPage.goToItemInConfiguration("Operating Hours");
+            configurationPage.searchTemplate("AuditLog");
+            configurationPage.clickOnTemplateName("AuditLog");
+            configurationPage.verifyHistoryButtonDisplay();
+            configurationPage.verifyHistoryButtonIsClickable();
+            configurationPage.verifyCloseIconNotDisplayDefault();
+            configurationPage.clickHistoryAndClose();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+            configurationPage.goToItemInConfiguration("Scheduling Policies");
+            configurationPage.searchTemplate("AuditLog");
+            configurationPage.clickOnTemplateName("AuditLog");
+            configurationPage.verifyHistoryButtonDisplay();
+            configurationPage.verifyHistoryButtonIsClickable();
+            configurationPage.verifyCloseIconNotDisplayDefault();
+            configurationPage.clickHistoryAndClose();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+            configurationPage.goToItemInConfiguration("Schedule Collaboration");
+            configurationPage.searchTemplate("AuditLog");
+            configurationPage.clickOnTemplateName("AuditLog");
+            configurationPage.verifyHistoryButtonDisplay();
+            configurationPage.verifyHistoryButtonIsClickable();
+            configurationPage.verifyCloseIconNotDisplayDefault();
+            configurationPage.clickHistoryAndClose();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+            configurationPage.goToItemInConfiguration("Compliance");
+            configurationPage.searchTemplate("AuditLog");
+            configurationPage.clickOnTemplateName("AuditLog");
+            configurationPage.verifyHistoryButtonDisplay();
+            configurationPage.verifyHistoryButtonIsClickable();
+            configurationPage.verifyCloseIconNotDisplayDefault();
+            configurationPage.clickHistoryAndClose();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+            configurationPage.goToItemInConfiguration("Scheduling Rules");
+            configurationPage.searchTemplate("AuditLog");
+            configurationPage.clickOnTemplateName("AuditLog");
+            configurationPage.verifyHistoryButtonDisplay();
+            configurationPage.verifyHistoryButtonIsClickable();
+            configurationPage.verifyCloseIconNotDisplayDefault();
+            configurationPage.clickHistoryAndClose();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+            configurationPage.goToItemInConfiguration("Minors Rules");
+            configurationPage.searchTemplate("AuditLog");
+            configurationPage.clickOnTemplateName("AuditLog");
+            configurationPage.verifyHistoryButtonDisplay();
+            configurationPage.verifyHistoryButtonIsClickable();
+            configurationPage.verifyCloseIconNotDisplayDefault();
+            configurationPage.clickHistoryAndClose();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+            configurationPage.goToItemInConfiguration("Additional Pay Rules");
+            configurationPage.searchTemplate("AuditLog");
+            configurationPage.clickOnTemplateName("AuditLog");
+            configurationPage.verifyHistoryButtonDisplay();
+            configurationPage.verifyHistoryButtonIsClickable();
+            configurationPage.verifyCloseIconNotDisplayDefault();
+            configurationPage.clickHistoryAndClose();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+
+            configurationPage.verifyHistoryButtonNotDisplay();
+            locationsPage.goBack();
+
+            locationsPage.goToUpperFieldsPage();
+            configurationPage.verifyHistoryButtonNotDisplay();
+            locationsPage.goBack();
+
+            locationsPage.getEnterpriseLogoAndDefaultLocationInfo();
+            configurationPage.verifyHistoryButtonNotDisplay();
+            locationsPage.goBack();
+
+            locationsPage.goToGlobalConfigurationInLocations();
+            configurationPage.verifyHistoryButtonNotDisplay();
+            locationsPage.goBack();
+
+            locationsPage.goToDynamicGroup();
+            configurationPage.verifyHistoryButtonNotDisplay();
+            locationsPage.goBack();
         }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

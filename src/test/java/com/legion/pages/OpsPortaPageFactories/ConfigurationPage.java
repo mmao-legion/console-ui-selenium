@@ -169,4 +169,10 @@ public interface ConfigurationPage {
     public void clickCheckButtonOfBasicStaffingRule() throws Exception;
     public void defaultSelectedBadgeOption() throws Exception;
     public void selectBadgesOfBasicStaffingRule(String hasBadgeOrNot, String badgeName) throws Exception;
+    public void verifyHistoryButtonNotDisplay() throws Exception;
+    public void verifyHistoryButtonDisplay() throws Exception;
+    public void verifyHistoryButtonIsClickable() throws Exception;
+    public void verifyCloseIconNotDisplayDefault() throws Exception;
+    public void clickHistoryAndClose() throws Exception;
+    public void goToItemInConfiguration(String item) throws Exception;
 }
