@@ -631,4 +631,26 @@ public class JobTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Dynamic Group Function>In OM Job")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDynamicGroupFunctionInOMJobAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            //go to job tab
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+
+            jobsPage.createDynamicGroup("Create Schedule");
+            
+            jobsPage.verifyDynamicGroupDisplayInSpecifyJobType("Adjust Forecast");
+            jobsPage.verifyDynamicGroupDisplayInSpecifyJobType("Adjust Budget");
+            jobsPage.verifyDynamicGroupDisplayInSpecifyJobType("Release Schedule");
+            jobsPage.verifyDynamicGroupDisplayInSpecifyJobType("Create Schedule");
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

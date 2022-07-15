@@ -5459,6 +5459,53 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	public void verifyHistoryButtonNotDisplay() throws Exception{
+		if(!isElementLoaded(historyButton,5)){
+			SimpleUtils.pass("History button doesn't display");
+		}else
+			SimpleUtils.fail("History button display",false);
+	}
+
+	public void verifyHistoryButtonDisplay() throws Exception{
+		if(isElementLoaded(historyButton,5)){
+			SimpleUtils.pass("History button display");
+		}else
+			SimpleUtils.fail("History button doesn't display",false);
+	}
+
+	public void verifyHistoryButtonIsClickable() throws Exception{
+		if(isClickable(historyButton,2)){
+			SimpleUtils.pass("History button is clickable");
+		}else
+			SimpleUtils.fail("History button is not clickable",false);
+	}
+
+	public void verifyCloseIconNotDisplayDefault() throws Exception{
+		if(!isElementLoaded(closeIcon,5)){
+			SimpleUtils.pass("Close icon doesn't display default");
+		}else
+			SimpleUtils.fail("Close icon display default",false);
+	}
+
+	@FindBy(css = "img.lg-slider-pop__title-dismiss")
+	private WebElement closeIcon;
+	public void clickHistoryAndClose() throws Exception{
+		click(historyButton);
+		if(isElementLoaded(closeIcon,5)){
+			click(closeIcon);
+			if(!isElementLoaded(closeIcon,5)){
+				SimpleUtils.pass("Close history successfully");
+			}else
+				SimpleUtils.fail("Close history failed",false);
+		}else
+			SimpleUtils.fail("Close icon load failed",false);
+	}
+
+	public void goToItemInConfiguration(String item) throws Exception{
+		scrollToElement(getDriver().findElement(By.cssSelector("lg-dashboard-card[title = \"" + item + "\"]")));
+		click(getDriver().findElement(By.cssSelector("lg-dashboard-card[title = \"" + item + "\"]")));
+		waitForSeconds(5);
+
 	@Override
 	public void setLeaveThisPageButton() throws Exception {
 		if (isElementLoaded(warningToast) && isElementLoaded(leaveThisPageButton))
