@@ -5485,6 +5485,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}
 	}
+
 	public void addSkillCoverageBasicStaffingRule() throws Exception{
 		selectWorkRoleOfBasicStaffingRule("Any");
 		Select select = new Select(conditionMaxMinExactly);
@@ -5681,13 +5682,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				SimpleUtils.fail("Number of work role is NOT correct in rule list",false);
 			}
 
-			//ANY shifts should be scheduled
+			//ANY/workRoleName shifts should be scheduled
 			String workRoleNameStr = workRoleAndUnit.getText().trim().split(" ")[0];
 			String unitStr= workRoleAndUnit.getText().trim().split(" ")[1];
 			if(workRoleNameStr.equalsIgnoreCase(workRoleName) && unitStr.equalsIgnoreCase(unit)){
 				SimpleUtils.pass("work Role Name and unit can show correctly in rule list");
 			}else {
-				SimpleUtils.fail("work Role Name and unit can show correctly in rule list",false);
+				SimpleUtils.fail("work Role Name and unit can NOT show correctly in rule list",false);
 			}
 
 			//Sun, Mon, Tue, Wed, Thu, Fri, Sat
@@ -5700,7 +5701,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if(ListUtils.isEqualList(daysStr2,days)){
 				SimpleUtils.pass("Days is correct in rule list");
 			}else{
-				SimpleUtils.fail("Days is correct in rule list",false);
+				SimpleUtils.fail("Days is NOT correct in rule list",false);
 			}
 		}
 	}
