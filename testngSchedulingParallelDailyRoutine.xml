@@ -268,6 +268,7 @@
                     <include name="verifySchedulesWidgetsAsStoreManager"/>
 <!--                    <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" Blocked by SCH-5474/>-->
 <!--                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" Blocked by SCH-5474/>-->
+                    <include name="verifyTheLinkOnComplianceViolationsWidgetAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
