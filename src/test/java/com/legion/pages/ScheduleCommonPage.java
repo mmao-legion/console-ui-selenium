@@ -45,4 +45,5 @@ public interface ScheduleCommonPage {
     public void verifyHeaderOnSchedule() throws Exception;
     public List<String> getYearsFromCalendarMonthYearText() throws Exception;
     public void goToSchedule() throws Exception;
+    public String getActiveWeekStartDayFromSchedule() throws Exception;
 }
