@@ -15,6 +15,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.legion.tests.TestBase.propertyMap;
@@ -249,12 +250,16 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	private  WebElement addMoreBtn;
 	@FindBy(css = "textarea[id=\"omjob\"]")
 	private WebElement formulaInputBox;
-	@FindBy(css = "lg-picker-input[value=\"group.values\"]")
+	//@FindBy(css = "lg-picker-input[value=\"group.values\"]")
+	@FindBy(css = "lg-multiple-select > div > lg-picker-input")
 	private  WebElement criteriaValue;
-	@FindBy(css = "input-field[type=\"checkbox\"]")
+	//@FindBy(css = "input-field[type=\"checkbox\"]")
+	@FindBy(css ="div.select-list")
 	private  List<WebElement> checkboxInCriteriaValue;
-	@FindBy(css = "div.mappingLocation.mt-20.ng-scope > span")
+	@FindBy(css = "div.mappingLocation.mt-20 > span")
 	private  WebElement testBtnInfo;
+	@FindBy(css = "lg-button[label = 'Create']")
+	private WebElement create;
 	public void createNewDynamicGroup(String name,String distriction,String criteria,int index) throws Exception {
 
 		if (isElementEnabled(addDynamicGroupBtn,5)) {
@@ -262,13 +267,15 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			if (isElementEnabled(formOfCreateEditGroup,5)) {
 				groupNameInput.sendKeys(name);
 				groupDescriptionInput.sendKeys(distriction);
-				selectByVisibleText(criteriaSelect,criteria);
+				//selectByVisibleText(criteriaSelect,criteria);
+				selectTheCriteria(criteria);
 				if (!isElementEnabled(formulaInputBox)) {
 					click(criteriaValue);
-					click(checkboxInCriteriaValue.get(0));
+					click(getDriver().findElement(By.cssSelector("lg-picker-input > div > div > ng-transclude > div > div:nth-child(1) > input-field > ng-form>input")));
+					click(criteriaValue);
 					click(testBtn);
 					String testInfo = testBtnInfo.getText().trim();
-					click(okBtnInCreateNewJobPage);
+					click(create);
 					waitForSeconds(3);
 					if (groupRows.size()>0) {
 						SimpleUtils.pass("Dynamic group create successfully");
@@ -277,7 +284,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 				}else
 					formulaInputBox.sendKeys("Parent(1)");
-				click(okBtnInCreateNewJobPage);
+				//click(okBtnInCreateNewJobPage);
 				waitForSeconds(3);
 			}else
 				SimpleUtils.fail("Create or Edit Dynamic Group form load failed",false);
@@ -1315,6 +1322,74 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			}
 		} else {
 			SimpleUtils.fail("Navigation tab are not loaded!", false);
+		}
+	}
+
+	@FindBy(css = "select.ng-pristine")
+	private WebElement jobTypeSelect;
+	@FindBy(css ="div.calendar-body > div:nth-child(7)")
+	private WebElement lastWeek;
+	@FindBy(css = "nav.lg-tabs__nav > div:nth-child(4)")
+	private WebElement dynamicGroup;
+	@FindBy(css = "lg-button[label = 'Create Group']")
+	private WebElement createGroupBtn;
+
+	public void verifyDynamicGroupDisplayInSpecifyJobType(String type) throws Exception{
+		click(createNewJobBtn);
+		jobTypeSelect.sendKeys(type);
+		lastWeek.click();
+		click(okBtnInCreateNewJobPage);
+		click(addLocationBtn);
+		verifyDynamicGroupName();
+		click(dynamicGroup);
+		if(isElementLoaded(createGroupBtn,5)){
+			SimpleUtils.pass("Dynamic group load successfully");
+		}else
+			SimpleUtils.fail("Dynamic group load failed",false);
+		click(cancelBtnInJobPopUpPage);
+		click(backBtnInJobDetailsPage);
+	}
+
+	@FindBy(css = "lg-button[label = 'Remove']")
+	private WebElement remove;
+	public void createDynamicGroup(String type) throws Exception{
+		click(createNewJobBtn);
+		jobTypeSelect.sendKeys(type);
+		lastWeek.click();
+		click(okBtnInCreateNewJobPage);
+		click(addLocationBtn);
+		verifyDynamicGroupName();
+		click(dynamicGroup);
+		SimpleDateFormat dfs = new SimpleDateFormat("MMddHHmmss ");
+		String currentDisTime = dfs.format(new Date());
+		createNewDynamicGroup("AutoCreate" + currentDisTime,"AutoCreateDescription","City",0);
+		click(getDriver().findElement(By.cssSelector("td>div>input-field")));
+		click(remove);
+		click(remove);
+		click(cancelBtnInJobPopUpPage);
+		click(backBtnInJobDetailsPage);
+	}
+
+	@FindBy(css = ".picker-input")
+	private WebElement criteriaSelect0;
+	@FindBy(css = ".lg-search-options__option-wrapper")
+	private List<WebElement> criteriaOptions;
+	private void selectTheCriteria(String criteria) throws Exception {
+		if (isElementLoaded(criteriaSelect0, 5)) {
+			clickTheElement(criteriaSelect0);
+			if (areListElementVisible(criteriaOptions, 10)) {
+				for (WebElement option : criteriaOptions) {
+					if (option.getText().equalsIgnoreCase(criteria)) {
+						clickTheElement(option);
+						SimpleUtils.report("Select the option: " + criteria);
+						break;
+					}
+				}
+			} else {
+				SimpleUtils.fail("Criteria options failed to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Criteria Select failed to load!", false);
 		}
 	}
 }

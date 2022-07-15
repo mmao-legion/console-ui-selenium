@@ -120,4 +120,8 @@ public interface JobsPage {
     public void iCanSelectLocationsViaDynamicGroupInAddLocation(String searchText) throws Exception;
 
     public void verifyDynamicGroupName() throws Exception;
+
+    public void verifyDynamicGroupDisplayInSpecifyJobType(String type) throws Exception;
+
+    public void createDynamicGroup(String type) throws Exception;
 }
