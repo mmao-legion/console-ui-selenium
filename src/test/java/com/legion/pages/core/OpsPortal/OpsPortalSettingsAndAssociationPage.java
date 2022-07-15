@@ -562,6 +562,24 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         return  totalNumber;
     }
 
+    @Override
+    public List<String> getAllChannelsOrCategories(String settingType) throws Exception {
+        List<String> nameList = new ArrayList<>();
+        List<WebElement> settingRows = new ArrayList<>();
+        if (settingType.equalsIgnoreCase("channel")){
+            settingRows = channelRows;
+        }else if (settingType.equalsIgnoreCase("category")) {
+            settingRows = categoryRows;
+        }else {
+            SimpleUtils.fail("verifyType is not correct!", false);
+        }
+        for (WebElement settingRow : settingRows){
+            nameList.add(settingRow.findElement(By.cssSelector("td")).getText());
+            System.out.println("->" + settingRow.findElement(By.cssSelector("td")).getText());
+        }
+        return nameList;
+    }
+
     public boolean verifyIfAllBaseStreamsInListForAggregatedInputStream(List<String> basicStreamNames) throws Exception{
         boolean verifyResult = false;
         List<String> streamNamesInList = new ArrayList<>();
