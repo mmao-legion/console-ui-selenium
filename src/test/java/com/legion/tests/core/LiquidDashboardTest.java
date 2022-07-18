@@ -1449,7 +1449,7 @@ public class LiquidDashboardTest extends TestBase {
                 String startDateOfCurrentWeek = liquidDashboardPage.getActiveWeekStartDayFromComplianceViolationsWidget();
                 liquidDashboardPage.clickViewSchedulesLinkOfComplianceViolationsWidget();
                 String startDateOfActiveWeekFromSchedule = scheduleCommonPage.getActiveWeekStartDayFromSchedule();
-                SimpleUtils.assertOnFail("The start day off current week didn't match! " + "Start date from Compliance Violations Widget is: " + startDateOfCurrentWeek + ", " + "Start date from schedule is: " + startDateOfActiveWeekFromSchedule, startDateOfCurrentWeek.equalsIgnoreCase(startDateOfActiveWeekFromSchedule), false);
+                SimpleUtils.assertOnFail("The start day of current week didn't match! " + "Start date from Compliance Violations Widget is: " + startDateOfCurrentWeek + ", " + " Start date from schedule is: " + startDateOfActiveWeekFromSchedule, startDateOfCurrentWeek.equalsIgnoreCase(startDateOfActiveWeekFromSchedule), false);
             }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
