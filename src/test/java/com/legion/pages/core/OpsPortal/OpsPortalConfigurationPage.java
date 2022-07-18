@@ -3175,7 +3175,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-	@FindBy(css = "lg-search input")
+	@FindBy(css = "lg-search input[placeholder=\"You can search by name and description\"]")
 	private WebElement searchAssociateFiled;
 	@FindBy(css="lg-tabs.ng-isolate-scope nav div:nth-child(1)")
 	private WebElement templateDetailsBTN;
@@ -3303,7 +3303,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement dynamicGroupCriteriaINotNOption;
 	@FindBy(css="input[placeholder=\"Search\"]")
 	private WebElement dynamicGroupCriteriaSearchInput;
-	@FindBy(css="input-field[type=\"checkbox\"] input")
+	@FindBy(css="input-field[type=\"checkbox\"]")
 	private List<WebElement> dynamicGroupCriteriaResults;
 	@FindBy(css="lg-button[label=\"Add More\"]")
 	private WebElement dynamicGroupCriteriaAddMoreLink;
@@ -3319,6 +3319,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement okButtonOnManageDynamicGroupPopup;
 	@FindBy(css="modal[modal-title=\"Manage Dynamic Location Group\"] lg-button[label=\"Cancel\"]")
 	private WebElement cancelButtonOnManageDynamicGroupPopup;
+	@FindBy(css="input-field[placeholder=\"Search\"] input")
+	private WebElement searchCriteriaOptionInput;
 	@Override
 	public void createDynamicGroup(String name,String criteria,String formula) throws Exception{
 		waitForSeconds(3);
@@ -3344,10 +3346,21 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				//set up value
 				clickTheElement(dynamicGroupCriteriaValueInputs.get(1));
 				waitForSeconds(2);
-				if (areListElementVisible(dynamicGroupCriteriaResults, 5)) {
-					SimpleUtils.pass("The current selected Criteria has value options");
-					clickTheElement(dynamicGroupCriteriaResults.get(0));
+
+				if (formula != null && !formula.equals("")){
+					searchCriteriaOptionInput.sendKeys(formula);
 					waitForSeconds(3);
+					if (dynamicGroupCriteriaResults != null && dynamicGroupCriteriaResults.size() > 0){
+						clickTheElement(dynamicGroupCriteriaResults.get(0).findElement(By.cssSelector("input")));
+					}
+				}else if (areListElementVisible(dynamicGroupCriteriaResults, 5)) {
+					SimpleUtils.pass("The current selected Criteria has value options");
+					System.out.println("--- is: " + formula);
+					if (dynamicGroupCriteriaValueInputs.get(1).findElement(By.cssSelector("ng-form")).getAttribute("class").contains("ng-invalid")){
+						searchCriteriaOptionInput.clear();
+						clickTheElement(dynamicGroupCriteriaResults.get(0).findElement(By.cssSelector("input")));
+						waitForSeconds(3);
+					}
 				}
 
 			}
@@ -4825,23 +4838,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css = "tr[ng-repeat=\"rule in $ctrl.sortedRows\"] lg-button[label=\"Edit\"]")
 	private WebElement editBtnForDriver;
 	@Override
-	public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo, String addOrEdit) throws Exception {
+	public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception {
 		String childTag = "";
 		String fieldType = "";
 		Select select = null;
 		List<WebElement> yesOrNoOptions = null;
-
-		if ("Add".equalsIgnoreCase(addOrEdit)){
-			if (isElementLoaded(addBtnForDriver))
-				clickTheElement(addBtnForDriver);
-		}else if("Edit".equalsIgnoreCase(addOrEdit)){
-			if (isElementLoaded(editBtnForDriver,5))
-				click(editBtnForDriver);
-		}else {
-			SimpleUtils.fail("Please choose add or edit mode!", false);
-		}
-		if (isElementLoaded(warningToast) && isElementLoaded(leaveThisPageButton))
-			clickTheElement(leaveThisPageButton);
 
 		if (areListElementVisible(fieldInputList)){
 			for (int i = 0; i < fieldInputList.size() - 1; i++){
@@ -5506,6 +5507,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		click(getDriver().findElement(By.cssSelector("lg-dashboard-card[title = \"" + item + "\"]")));
 		waitForSeconds(5);
 	}
+
 	@Override
 	public void setLeaveThisPageButton() throws Exception {
 		if (isElementLoaded(warningToast) && isElementLoaded(leaveThisPageButton))
@@ -5532,6 +5534,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}
 	}
+
+	@Override
 	public void addSkillCoverageBasicStaffingRule() throws Exception{
 		selectWorkRoleOfBasicStaffingRule("Any");
 		Select select = new Select(conditionMaxMinExactly);
@@ -5688,67 +5692,163 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public void verifyBasicStaffingRuleIsCorrectInRuleList(String startTimeEvent,String endTimeEvent,String startEventPoint,String endEventPoint,
 														   String workRoleName,String unit,String condition,List<String> days,String number,
-														   String startOffset,String endOffset){
-		if(areListElementVisible(basicStaffingRulesInList,3)){
+														   String startOffset,String endOffset) throws Exception {
+		if (areListElementVisible(basicStaffingRulesInList, 3)) {
 			//Start at 30 minutes after Opening Operating Hours,end at 40 minutes after Opening Operating Hours
 			String[] timeConstraintStr = timeConstraint.getText().trim().split(",");
 
 			//Start at 30 minutes after Opening Operating Hours
 			String[] startTimeConstraintStr = timeConstraintStr[0].split(" ");
 			String startTimeEventStr = timeConstraintStr[0].substring(26);
-			if(startTimeConstraintStr[2].equalsIgnoreCase(startOffset) && startTimeConstraintStr[4].equalsIgnoreCase(startEventPoint)
-					&& startTimeEventStr.equalsIgnoreCase(startTimeEvent)){
+			if (startTimeConstraintStr[2].equalsIgnoreCase(startOffset) && startTimeConstraintStr[4].equalsIgnoreCase(startEventPoint)
+					&& startTimeEventStr.equalsIgnoreCase(startTimeEvent)) {
 				SimpleUtils.pass("Start offSet, start Event Point and start Time Event is correct!");
-			}else {
-				SimpleUtils.fail("Start offSet, start Event Point and start Time Event is NOT correct!",false);
+			} else {
+				SimpleUtils.fail("Start offSet, start Event Point and start Time Event is NOT correct!", false);
 			}
 
 			//end at 40 minutes after Opening Operating Hours
 			String[] endTimeConstraintStr = timeConstraintStr[1].split(" ");
 			String endTimeEventStr = timeConstraintStr[1].substring(26);
-			if(endTimeConstraintStr[3].equalsIgnoreCase(endOffset) && endTimeConstraintStr[5].equalsIgnoreCase(endEventPoint)
-					&& endTimeEventStr.equalsIgnoreCase(endTimeEvent)){
+			if (endTimeConstraintStr[3].equalsIgnoreCase(endOffset) && endTimeConstraintStr[5].equalsIgnoreCase(endEventPoint)
+					&& endTimeEventStr.equalsIgnoreCase(endTimeEvent)) {
 				SimpleUtils.pass("End offSet, end Event Point and end Time Event is correct!");
-			}else {
-				SimpleUtils.fail("End offSet, end Event Point and end Time Event is NOT correct!",false);
+			} else {
+				SimpleUtils.fail("End offSet, end Event Point and end Time Event is NOT correct!", false);
 			}
 
 			//limitConstraintStr is such as a maximum
 			String limitConstraintStr = limitConstraint.getText().trim();
-			if(limitConstraintStr.equalsIgnoreCase(condition)){
+			if (limitConstraintStr.equalsIgnoreCase(condition)) {
 				SimpleUtils.pass("Condition is correct in rule list");
-			}else {
-				SimpleUtils.fail("Condition is NOT correct in rule list",false);
+			} else {
+				SimpleUtils.fail("Condition is NOT correct in rule list", false);
 			}
 
 			String workerNumber = workRoleNumbers.getText().trim();
-			if(workerNumber.equalsIgnoreCase(number)){
+			if (workerNumber.equalsIgnoreCase(number)) {
 				SimpleUtils.pass("Number of work role is correct in rule list");
-			}else {
-				SimpleUtils.fail("Number of work role is NOT correct in rule list",false);
+			} else {
+				SimpleUtils.fail("Number of work role is NOT correct in rule list", false);
 			}
 
-			//ANY shifts should be scheduled
+			//ANY/workRoleName shifts should be scheduled
 			String workRoleNameStr = workRoleAndUnit.getText().trim().split(" ")[0];
-			String unitStr= workRoleAndUnit.getText().trim().split(" ")[1];
-			if(workRoleNameStr.equalsIgnoreCase(workRoleName) && unitStr.equalsIgnoreCase(unit)){
+			String unitStr = workRoleAndUnit.getText().trim().split(" ")[1];
+			if (workRoleNameStr.equalsIgnoreCase(workRoleName) && unitStr.equalsIgnoreCase(unit)) {
 				SimpleUtils.pass("work Role Name and unit can show correctly in rule list");
 			}else {
-				SimpleUtils.fail("work Role Name and unit can show correctly in rule list",false);
+				SimpleUtils.fail("work Role Name and unit can NOT show correctly in rule list",false);
 			}
 
 			//Sun, Mon, Tue, Wed, Thu, Fri, Sat
 			String[] daysStr = daysValue.getText().trim().split(",");
 			String[] daysStr1 = new String[2];
-			for(int i=0;i<daysStr.length;i++){
+			for (int i = 0; i < daysStr.length; i++) {
 				daysStr1[i] = daysStr[i].trim();
 			}
-			List<String> daysStr2= new ArrayList<>(Arrays.asList(daysStr1));
-			if(ListUtils.isEqualList(daysStr2,days)){
+			List<String> daysStr2 = new ArrayList<>(Arrays.asList(daysStr1));
+			if (ListUtils.isEqualList(daysStr2, days)) {
 				SimpleUtils.pass("Days is correct in rule list");
 			}else{
-				SimpleUtils.fail("Days is correct in rule list",false);
+				SimpleUtils.fail("Days is NOT correct in rule list",false);
 			}
 		}
+	}
+	@Override
+	public void verifySkillCoverageBasicStaffingRuleInList() throws Exception{
+		if(areListElementVisible(basicStaffingRulesInList,3)){
+			String workRoleNameStr = workRoleAndUnit.getText().trim().split(" ")[0];
+			if(workRoleNameStr.equalsIgnoreCase("any")){
+				SimpleUtils.pass("Skill coverage rule can show correctly in rule list");
+			}else {
+				SimpleUtils.fail("Skill coverage rule can NOT show correctly in rule list",false);
+			}
+		}
+
+	}
+
+	@FindBy(css="img.setting-rule-delete-icon")
+	private WebElement ruleDeleteIcon;
+	@FindBy(css="span.settings-work-rule-edit-edit-icon")
+	private List<WebElement> editButtonListInRuleList;
+
+	@Override
+	public void verifySkillCoverageBasicStaffingRule(String workRole1,String workRole2) throws Exception {
+		//add skill coverage rule for one work role, other work role will show
+		int beforeBasicStaffingRuleCount = 0;
+		int afterBasicStaffingRuleCount = 0;
+		selectWorkRoleToEdit(workRole1);
+		checkTheEntryOfAddBasicStaffingRule();
+		verifyStaffingRulePageShowWell();
+		addSkillCoverageBasicStaffingRule();
+		clickCheckButtonOfBasicStaffingRule();
+		verifySkillCoverageBasicStaffingRuleInList();
+		beforeBasicStaffingRuleCount = editButtonListInRuleList.size();
+		clickTheElement(saveButtonOnBasicStaffingRule);
+		waitForSeconds(3);
+		selectWorkRoleToEdit(workRole2);
+		verifySkillCoverageBasicStaffingRuleInList();
+		clickTheElement(ruleDeleteIcon);
+		waitForSeconds(2);
+		clickTheElement(saveButtonOnBasicStaffingRule);
+		selectWorkRoleToEdit(workRole1);
+		afterBasicStaffingRuleCount = editButtonListInRuleList.size();
+		if(beforeBasicStaffingRuleCount - afterBasicStaffingRuleCount == 1){
+			SimpleUtils.pass("User can add/delete Skill Coverage Basic Staffing Rule successfully!");
+		}else {
+			SimpleUtils.fail("User can NOT add/delete Skill Coverage Basic Staffing Rule successfully!",false);
+		}
+	}
+
+	@Override
+	public void removeAllDemandDriverTemplates() throws Exception {
+		int templateCount = templateNameList.size();
+		if (isTemplateListPageShow()) {
+			SimpleUtils.pass("Demand Driver template list is showing now");
+			System.out.println("template list size is: " + templateNameList.size());
+			for (int i = 0; i < templateCount; i++) {
+				archiveOrDeleteTemplate(templateNameList.get(0).getText());
+			}
+		} else {
+			SimpleUtils.fail("Demand Driver Template list is not loaded well", false);
+		}
+	}
+
+	@Override
+	public void clickAddOrEditForDriver(String addOrEdit) throws Exception {
+		if ("Add".equalsIgnoreCase(addOrEdit)) {
+			if (isElementLoaded(addBtnForDriver, 5))
+				clickTheElement(addBtnForDriver);
+		} else if ("Edit".equalsIgnoreCase(addOrEdit)) {
+			if (isElementLoaded(editBtnForDriver, 5))
+				click(editBtnForDriver);
+		} else {
+			SimpleUtils.fail("Please choose add or edit mode!", false);
+		}
+		if (isElementLoaded(warningToast) && isElementLoaded(leaveThisPageButton))
+			clickTheElement(leaveThisPageButton);
+	}
+
+	@FindBy(css = "input-field[options=\"$ctrl.inputStreamOptions\"]")
+	private WebElement inputStreamSelect;
+
+	@Override
+	public List<String> getInputStreamInDrivers() throws Exception {
+		List<String> streamNameList = new ArrayList<>();
+		Select select = null;
+
+		if (isElementLoaded(inputStreamSelect)) {
+			scrollToElement(inputStreamSelect);
+			select = new Select(inputStreamSelect.findElement(By.cssSelector("select")));
+			for (int i = 0; i < select.getOptions().size(); i++) {
+				if (!select.getOptions().get(i).getText().equals("")){
+					streamNameList.add(select.getOptions().get(i).getText());
+				}
+			}
+		} else {
+			SimpleUtils.fail("No input stream select show up!", false);
+		}
+		return  streamNameList;
 	}
 }
