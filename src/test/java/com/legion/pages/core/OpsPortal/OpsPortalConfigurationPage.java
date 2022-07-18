@@ -5501,11 +5501,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Close icon load failed",false);
 	}
 
-	public void goToItemInConfiguration(String item) throws Exception{
+	public void goToItemInConfiguration(String item) throws Exception {
 		scrollToElement(getDriver().findElement(By.cssSelector("lg-dashboard-card[title = \"" + item + "\"]")));
 		click(getDriver().findElement(By.cssSelector("lg-dashboard-card[title = \"" + item + "\"]")));
 		waitForSeconds(5);
-
+	}
 	@Override
 	public void setLeaveThisPageButton() throws Exception {
 		if (isElementLoaded(warningToast) && isElementLoaded(leaveThisPageButton))
