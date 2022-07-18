@@ -3285,5 +3285,26 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.fail("Shifts are not listed!", false);
         }
     }
+
+    @Override
+    public void convertAllShiftsToOpenInDayView() throws Exception {
+        ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
+        if (areListElementVisible(dayViewAvailableShifts,10)){
+            int count = dayViewAvailableShifts.size();
+            for (int i = 0; i < count; i++) {
+                scheduleShiftTablePage.clickProfileIconOfShiftByIndex(i);
+                if(isConvertToOpenEnable()){
+                    clickOnConvertToOpenShift();
+                    convertToOpenShiftDirectly();
+                    SimpleUtils.pass("The shift is converted to the Open Shift successfully!");
+                    waitForSeconds(2);
+                }else{
+                    continue;
+                }
+            }
+        }else{
+            SimpleUtils.fail("No available shifts in the Day View", false);
+        }
+    }
 }
 
