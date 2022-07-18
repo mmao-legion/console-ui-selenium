@@ -21,6 +21,7 @@ public interface MySchedulePage {
     public int selectOneShiftIsClaimShift(List<String> claimShift) throws Exception;
     public void validateProfilePictureInAShiftClickable() throws Exception;
     public void clickTheShiftRequestToClaimShift(String requestName, String requestUserName) throws Exception;
+    public void claimTheOfferedOpenShift(String requestName) throws Exception;
     public void verifyTheRedirectionOfBackButton() throws Exception;
     public void verifyBackNSubmitBtnLoaded() throws Exception;
     public void verifyClickAcceptSwapButton() throws Exception;
@@ -32,7 +33,7 @@ public interface MySchedulePage {
     public void verifyClickOnSubmitButton() throws Exception;
     public void clickOnShiftByIndex(int index) throws Exception;
     public void	verifyComparableShiftsAreLoaded() throws Exception;
-    public String selectOneTeamMemberToSwap() throws Exception;
+    public void selectOneTeamMemberToSwap(String tmName) throws Exception;
     public void goToSchedulePageAsTeamMember() throws Exception;
     public void gotoScheduleSubTabByText(String subTitle) throws Exception;
     public void	verifyTeamScheduleInViewMode() throws Exception;
@@ -69,4 +70,10 @@ public interface MySchedulePage {
     void verifyShiftsAreSwapped(List<String> swapData) throws Exception;
     public void clickCloseDialogButton () throws Exception;
     public void verifyClickAgreeBtnOnClaimShiftOfferWithMessage(String expectedMessage) throws Exception;
+    public void clickOnDeclineButton() throws Exception;
+    public void selectSchedulFilter(String option) throws Exception;
+    public boolean checkIfTMExitsInCoverOrSwapRequestList (String tmName);
+    public void verifyClickAgreeBtnForSwapWithMessage(String expectedMessage) throws Exception;
+    public int getCountOfCoverOrSwapRequestsInList();
+    public String getFullMonthName(String shortName);
 }

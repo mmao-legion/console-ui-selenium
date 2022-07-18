@@ -129,10 +129,13 @@ public class ConsolidatingFiltersTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Delete all the shifts that are assigned to the team member
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
-
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             // Create new shift for TM1 on first and second day for Clopening violation
+            Thread.sleep(3000);
             newShiftPage.clickOnDayViewAddNewShiftButton();
+            Thread.sleep(3000);
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(1);
@@ -150,7 +153,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             newShiftPage.selectDaysByIndex(1, 1, 1);
             newShiftPage.selectWorkRole(workRoleOfTM1);
             newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("7am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(firstNameOfTM1);
@@ -210,7 +213,7 @@ public class ConsolidatingFiltersTest extends TestBase {
 
             //Check the meal break violation shifts on the third day
             SimpleUtils.assertOnFail("Meal break compliance message display failed",
-                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal"), false);
+                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal Break"), false);
 
     //            //Check the OT violation shifts on the forth day. Blocked by SCH-4250
     //            SimpleUtils.assertOnFail("OT compliance message display failed",
@@ -244,7 +247,7 @@ public class ConsolidatingFiltersTest extends TestBase {
                 if (i==2) {
                     shiftsOfThirdDay = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1);
                     SimpleUtils.assertOnFail("Meal break compliance message display failed",
-                            scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal"), false);
+                            scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal Break"), false);
                 }
 
                 //Check the OT violation shifts on the forth day. Blocked by SCH-4250
@@ -317,6 +320,7 @@ public class ConsolidatingFiltersTest extends TestBase {
 
             // Create schedule if it is not created
             scheduleCommonPage.navigateToNextWeek();
+            Thread.sleep(3000);
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -359,13 +363,6 @@ public class ConsolidatingFiltersTest extends TestBase {
             String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
             if (firstWeekInfo.length() > 11) {
                 firstWeekInfo = firstWeekInfo.trim().substring(10);
-                if (firstWeekInfo.contains("-")) {
-                    String[] temp = firstWeekInfo.split("-");
-                    if (temp.length == 2 && temp[0].contains(" ") && temp[1].contains(" ")) {
-                        firstWeekInfo = temp[0].trim().split(" ")[0] + " " + (temp[0].trim().split(" ")[1].length() == 1 ? "0" + temp[0].trim().split(" ")[1] : temp[0].trim().split(" ")[1])
-                                + " - " + temp[1].trim().split(" ")[0] + " " + (temp[1].trim().split(" ")[1].length() == 1 ? "0" + temp[1].trim().split(" ")[1] : temp[1].trim().split(" ")[1]);
-                    }
-                }
             }
 
             scheduleCommonPage.navigateToNextWeek();

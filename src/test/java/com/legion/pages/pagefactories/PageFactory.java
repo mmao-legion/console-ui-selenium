@@ -1,6 +1,7 @@
 package com.legion.pages.pagefactories;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.*;
+import com.legion.pages.opConfiguration.MealAndRestPage;
 
 /**
  * Yanming
@@ -105,4 +106,5 @@ public interface PageFactory {
     NewShiftPage createNewShiftPage();
 
     SettingsAndAssociationPage createSettingsAndAssociationPage();
+    MealAndRestPage createMealAndRestPage();
 }

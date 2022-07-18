@@ -5,6 +5,7 @@ import com.aventstack.extentreports.Status;
 import com.jayway.restassured.response.Response;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.LoginPage;
+import com.legion.pages.ScheduleCommonPage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
 import com.legion.pages.pagefactories.PageFactory;
 import com.legion.pages.pagefactories.mobile.MobilePageFactory;
@@ -12,6 +13,7 @@ import com.legion.pages.pagefactories.mobile.MobileWebPageFactory;
 import com.legion.test.testrail.APIException;
 import com.legion.test.testrail.TestRailOperation;
 import com.legion.tests.annotations.Enterprise;
+import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.tests.testframework.*;
 import com.legion.utils.*;
 import io.appium.java_client.MobileElement;
@@ -104,13 +106,18 @@ public abstract class TestBase {
     public enum AccessRoles {
         InternalAdmin("InternalAdmin"),
         StoreManager("StoreManager"),
+        StoreManager2("StoreManager2"),
         StoreManagerOtherLocation1("StoreManagerOtherLocation1"),
         TeamLead("TeamLead"),
+        TeamLead2("TeamLead2"),
         TeamMember("TeamMember"),
         TeamMemberOtherLocation1("TeamMemberOtherLocation1"),
         TeamMember2("TeamMember2"),
         StoreManagerLG("StoreManagerLG"),
-        DistrictManager("DistrictManager");
+        DistrictManager("DistrictManager"),
+        DistrictManager2("DistrictManager2"),
+        CustomerAdmin("CustomerAdmin"),
+        CustomerAdmin2("CustomerAdmin2");
         private final String role;
         AccessRoles(final String accessRole) {
             role = accessRole;
@@ -423,8 +430,8 @@ public abstract class TestBase {
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         SimpleUtils.report(getDriver().getCurrentUrl());
         loginPage.loginToLegionWithCredential(username, Password);
-        SimpleUtils.assertOnFail("Failed to login to the application!", loginPage.isLoginSuccess(), false);
         loginPage.verifyNewTermsOfServicePopUp();
+        SimpleUtils.assertOnFail("Failed to login to the application!", loginPage.isLoginSuccess(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
 //        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
@@ -490,6 +497,17 @@ public abstract class TestBase {
         } catch (Exception e) {
             SimpleUtils.fail("Login as: " + roleName + " failed!", false);
         }
+    }
+
+    protected void goToSchedulePageScheduleTab() throws Exception {
+        // Go to Schedule page, Schedule tab
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
     }
 
     public String getCrendentialInfo(String roleName) throws Exception {

@@ -5,6 +5,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.DashboardPage;
 import com.legion.tests.core.ActivityTest;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.hu.Ha;
 import org.junit.rules.ExpectedException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -32,6 +33,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	private WebElement filterTitle;
 	@FindBy (className = "notification-container")
 	private List<WebElement> activityCards;
+
 	@FindBy (css = "[ng-click=\"close()\"]")
 	private WebElement closeActivityFeedBtn;
 	@FindBy (className = "notification-bell-popup-container")
@@ -120,7 +122,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	public void verifyClickOnActivityIcon() throws Exception {
 		if (isElementLoaded(activityBell, 10)) {
 			clickTheElement(activityBell);
-			waitForSeconds(2);
+			waitForSeconds(3);
 			if (areListElementVisible(activityFilters, 10)) {
 				SimpleUtils.pass("Click on Activity Bell icon Successfully!");
 			}else {
@@ -136,7 +138,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		if (areListElementVisible(activityFilters, 10)) {
 			if (index < activityFilters.size()) {
 				clickTheElement(activityFilters.get(index));
-				waitForSeconds(3);
+				waitForSeconds(5);
 				if (isElementLoaded(filterTitle, 10)) {
 					if (filterName.equalsIgnoreCase(filterTitle.getText().replaceAll("\\s*", ""))) {
 						SimpleUtils.pass("Switch to :" + filterTitle.getText() + " tab Successfully!");
@@ -284,25 +286,33 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 						+ ", " + expectedMessage + "! Actual card is: " + messageText, false);
 			}
 		}else {
-			SimpleUtils.fail("Shift Offer Activity failed to Load1", false);
+			SimpleUtils.fail("Shift Offer Activity failed to Load!", false);
 		}
 	}
 
+	@FindBy (css = ".notification-approved")
+	private List<WebElement> approvedSignature;
+
 	@Override
 	public void approveOrRejectShiftOfferRequestOnActivity(String requestUserName, String action) throws Exception {
+		if (areListElementVisible(activityCards, 15)) {
+			SimpleUtils.pass("The request was received by SM!");
+		} else {
+			SimpleUtils.fail("There's no approve request found!", false);
+		}
 		WebElement shiftSwapCard = activityCards.get(0);
 		if (shiftSwapCard != null) {
 			List<WebElement> actionButtons = shiftSwapCard.findElements(By.className("notification-buttons-button"));
 			if (actionButtons != null && actionButtons.size() == 2) {
 				for (WebElement button : actionButtons) {
-					if (action.equalsIgnoreCase(button.getText())) {
-						click(button);
+					if (action.equalsIgnoreCase(button.getText().trim())) {
+						clickTheElement(button);
 						break;
 					}
 				}
 				// Wait for the card to change the status message, such as approved or rejected
-				waitForSeconds(3);
-				if (areListElementVisible(activityCards, 15)) {
+				waitForSeconds(5);
+				if (areListElementVisible(activityCards, 15) && areListElementVisible(approvedSignature, 15)) {
 					WebElement approveOrRejectMessage = activityCards.get(0).findElement(By.className("notification-approved"));
 					if (approveOrRejectMessage != null && approveOrRejectMessage.getText().toLowerCase().contains(action.toLowerCase())) {
 						SimpleUtils.pass(action + " the shift offer request for: " + requestUserName +  " Successfully!");
@@ -329,26 +339,36 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		}
 		return false;
 	}
-
+	@FindBy(css = ".lg-toast")
+	private WebElement msgOnTop;
 	@Override
-	public void verifyApproveShiftOfferRequestAndGetErrorOnActivity(String requestUserName) throws Exception {
+	public void verifyApproveShiftOfferRequestAndGetErrorOnActivity(String requestUserName, String expectedMessage) throws Exception {
 		if (activityCards.size()>0) {
 			for (int i = 0; i<activityCards.size(); i++){
 				WebElement shiftSwapCard = activityCards.get(i);
-				if (i>3){
-					SimpleUtils.fail("Didn't find the right notification!", false);
-				}
+//				if (i>3){
+//					SimpleUtils.fail("Didn't find the right notification!", false);
+//				}
 				List<WebElement> actionButtons = shiftSwapCard.findElements(By.className("notification-buttons-button"));
 				WebElement message = shiftSwapCard.findElement(By.className("notification-content-message"));
 				if (actionButtons != null && actionButtons.size() == 2 && message.getText().contains(requestUserName)) {
 					for (WebElement button : actionButtons) {
 						if ("approve".equalsIgnoreCase(button.getText())) {
 							click(button);
+							if (isElementLoaded(msgOnTop, 20)) {
+								String errorMessage = msgOnTop.getText();
+								if (errorMessage.contains(expectedMessage)) {
+									SimpleUtils.pass("Verified Message shows correctly!");
+								}else {
+									SimpleUtils.fail("Message on top is incorrect, expected is: " + expectedMessage + ", but actual is: " + message, false);
+								}
+							}else {
+								SimpleUtils.fail("Message on top not loaded Successfully!", false);
+							}
 							break;
 						}
 					}
 					// check the status of the card.
-					waitForSeconds(2);
 					SimpleUtils.assertOnFail("Approve and Reject buttons should be there!", areListElementVisible(activityCards.get(i).findElements(By.className("notification-buttons-button"))), false);
 				}
 			}
@@ -422,9 +442,9 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
         String expectedCancelInfo = "Cancelled on ";
     	String expectedMessage = "";
     	if (startTime.equalsIgnoreCase(endTime)) {
-			expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4)) + ".";
+			expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","") + ".";
 		} else {
-			expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","").substring(0,4)+changeDateFormat(startTime.replace(",","").substring(4))+" - " + endTime.replace(",","").substring(0,4)+changeDateFormat(endTime.replace(",","").substring(4)) + ".";
+			expectedMessage = requestUserName +" requested time off on " + startTime.replace(",","") +" - " + endTime.replace(",","") + ".";
 		}
 
         String actualMessage = "";
@@ -476,12 +496,12 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		if (timeOffCard != null) {
 			//check the go to profile link
 			if (isElementLoaded(timeOffCard.findElement(By.cssSelector(".pushout-button")))) {
-				SimpleUtils.pass("The go to pofil link loaded Successfully!");
+				SimpleUtils.pass("The go to pofile link loaded Successfully!");
 				clickTheElement(timeOffCard.findElement(By.cssSelector(".pushout-button")));
 				if(isElementLoaded(workPreferTab))
 					SimpleUtils.pass("The TM's prifile page loaded Successfully!");
 				else
-					SimpleUtils.pass("The TM's prifile page failed to load!");
+					SimpleUtils.fail("The TM's prifile page failed to load!", false);
 			} else {
 				SimpleUtils.fail("The go to profile link failed to load!", false);
 			}
@@ -528,7 +548,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
     @Override
     public void closeActivityWindow() throws Exception {
         if (isElementLoaded(activityBell, 10)) {
-            click(activityBell);
+            clickTheElement(activityBell);
         }else {
             SimpleUtils.fail("Close button is not Loaded Successfully!", false);
         }
@@ -764,4 +784,84 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
             SimpleUtils.fail("Failed to find a new Shift Cover activity!", false);
         }
     }
+
+	@FindBy (className = "notification-buttons-button")
+	private List<WebElement> allActivityButtons;
+
+	@FindBy (css = ".notification-container.unread")
+	private List<WebElement> unreadActivityCards;
+	@Override
+	public void approveOrRejectMultipleShiftOfferRequestOnActivity(String requestUserName, String action, int count) throws Exception {
+    	if (areListElementVisible(unreadActivityCards, 5)
+				&& areListElementVisible(unreadActivityCards, 5)
+				&& unreadActivityCards.size() >= count
+				&& allActivityButtons.size() >=count*2) {
+			int i = 0;
+
+    		for (int j=0; j< activityCards.size(); j++) {
+    			while (i< count) {
+					String activityMessage = activityCards.get(j).findElement(By.className("notification-content-message")).getText();
+    				if (activityCards.get(j).getAttribute("class").contains("unread") && activityMessage.contains(requestUserName)) {
+    					i++;
+						List<WebElement> actionButtons = activityCards.get(j).findElements(By.className("notification-buttons-button"));
+						if (actionButtons != null && actionButtons.size() == 2) {
+							for (WebElement button : actionButtons) {
+								if (action.equalsIgnoreCase(button.getText())) {
+									scrollToElement(button);
+									clickTheElement(button);
+									break;
+								}
+							}
+							// Wait for the card to change the status message, such as approved or rejected
+							waitForSeconds(3);
+							scrollToElement(activityCards.get(j));
+							WebElement approveOrRejectMessage = activityCards.get(j).findElement(By.className("notification-approved"));
+							if (approveOrRejectMessage != null && approveOrRejectMessage.getText().toLowerCase().contains(action.toLowerCase())) {
+								SimpleUtils.pass(action + " the shift offer request for: " + requestUserName +  " Successfully!");
+							} else {
+								SimpleUtils.fail(action + " message failed to load!", false);
+							}
+						}else {
+							SimpleUtils.report("Action buttons: Approve and Reject failed to load!");
+						}
+					} else {
+    					break;
+					}
+				}
+			}
+		}
+	}
+
+
+
+	@FindBy (css = "[ng-repeat=\"a in notification.details.data.timeoff.accrued.accrued\"]")
+	private List<WebElement> balanceHrsInActivity;
+	@Override
+	public HashMap<String, String> getBalanceHrsFromActivity() throws Exception {
+		HashMap<String, String> balanceHrs = new HashMap<>();
+		if (areListElementVisible(balanceHrsInActivity, 10)
+				&& balanceHrsInActivity.size()>0) {
+			for (int i = 0; i < balanceHrsInActivity.size(); i++) {
+				String hrs = balanceHrsInActivity.get(i).getText().split(":")[1].replace("Hrs", "").trim();
+				String timeOffType = balanceHrsInActivity.get(i).getText().split(":")[0];
+				balanceHrs.put(timeOffType, hrs);
+			}
+		}
+		return balanceHrs;
+	}
+
+
+
+	@FindBy (css = "div[ng-if=\"canShowDetails()\"]")
+	private List<WebElement> detailLinksInActivities;
+	@Override
+	public void clickDetailLinksInActivitiesByIndex(int index) throws Exception {
+		HashMap<String, String> balanceHrs = new HashMap<>();
+		if (areListElementVisible(detailLinksInActivities, 5)
+				&& detailLinksInActivities.size()>index) {
+			clickTheElement(detailLinksInActivities.get(index));
+			SimpleUtils.pass("Click the detail link successfully! ");
+		} else
+			SimpleUtils.fail("The detail links fail to load in activities! ", false);
+	}
 }

@@ -8,6 +8,7 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -57,9 +58,12 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = "button.tma-action")
     private WebElement btnSave;
 
+    @FindBy(css = "[ng-click=\"handleNext()\"]")
+    private WebElement btnSaveOnNewCreateShiftPage;
+
     public void customizeNewShiftPage() throws Exception
     {
-        if(isElementLoaded(customizeNewShift,15))
+        if(isElementLoaded(customizeNewShift,35))
         {
             SimpleUtils.pass("Customize New Shift Page loaded Successfully!");
         }
@@ -116,36 +120,75 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         }
     }
 
+
+
+//    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/form/div/div[1]/div[7]//div[contains(@class,'react-select__placeholder')]")
+    @FindBy(xpath = "//textarea//parent::div//parent::div//parent::div//parent::div/preceding-sibling::div[1]//div[contains(@class,'react-select__value-container')]/div[1]")
+    private WebElement assignmentDropDownOnNewCreateShiftPage;
+    @FindBy(className = "react-select__option")
+    private List<WebElement> assignmentOptionsInDropDownList;
     public void clickRadioBtnStaffingOption(String staffingOption) throws Exception {
-        boolean flag = false;
-        int index = -1;
-        if (radioBtnStaffingOptions.size() != 0 && radioBtnShiftTexts.size() != 0 &&
-                radioBtnStaffingOptions.size() == radioBtnShiftTexts.size()) {
+        if (areListElementVisible(radioBtnStaffingOptions, 5)
+                && areListElementVisible(radioBtnShiftTexts, 5)) {
+            boolean flag = false;
+            int index = -1;
+            if (radioBtnStaffingOptions.size() != 0 && radioBtnShiftTexts.size() != 0 &&
+                    radioBtnStaffingOptions.size() == radioBtnShiftTexts.size()) {
 
-            for (WebElement radioBtnShiftText : radioBtnShiftTexts) {
-                index = index + 1;
-                if (radioBtnShiftText.getText().contains(staffingOption)) {
-                    click(radioBtnStaffingOptions.get(index));
-                    SimpleUtils.pass(radioBtnShiftText.getText() + "Radio Button clicked Successfully!");
-                    flag = true;
-                    break;
+                for (WebElement radioBtnShiftText : radioBtnShiftTexts) {
+                    index = index + 1;
+                    if (radioBtnShiftText.getText().contains(staffingOption)) {
+                        click(radioBtnStaffingOptions.get(index));
+                        SimpleUtils.pass(radioBtnShiftText.getText() + "Radio Button clicked Successfully!");
+                        flag = true;
+                        break;
+                    }
                 }
-            }
 
-            if (flag == false) {
-                SimpleUtils.fail("No Radio Button Selected!", false);
-            }
+                if (!flag) {
+                    SimpleUtils.fail("No Radio Button Selected!", false);
+                }
 
-        } else {
-            SimpleUtils.fail("Staffing option Radio Button is not clickable!", false);
-        }
+            } else {
+                SimpleUtils.fail("Staffing option Radio Button is not clickable!", false);
+            }
+        }  else if (isElementLoaded(assignmentDropDownOnNewCreateShiftPage, 5)) {
+            click(assignmentDropDownOnNewCreateShiftPage);
+            SimpleUtils.pass("Assignment button clicked Successfully");
+            if (assignmentOptionsInDropDownList.size() > 0) {
+                for (WebElement assignmentOptions : assignmentOptionsInDropDownList) {
+                    String option = assignmentOptions.getText().toLowerCase();
+                    if (staffingOption.toLowerCase().contains("assign")) {
+                        MyThreadLocal.setAssignTMStatus(true);
+                    } else
+                        MyThreadLocal.setAssignTMStatus(false);
+                    if (option.contains(staffingOption.toLowerCase())) {
+                        click(assignmentOptions);
+                        SimpleUtils.pass(option + " been selected Successfully!");
+                        break;
+                    } else if(!option.contains("auto") && !staffingOption.toLowerCase().contains("auto")) {
+                        click(assignmentOptions);
+                        SimpleUtils.pass(option + " been selected Successfully!");
+                        break;
+                    }else {
+                        SimpleUtils.report(option + " is not selected Successfully!");
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Assignment options size are empty", false);
+            }
+        } else
+            SimpleUtils.fail("Assignment options fail to load on create shift page! ", false);
     }
 
     public void clickOnCreateOrNextBtn() throws Exception {
-        if (isElementLoaded(btnSave, 20)) {
+        if (isElementLoaded(btnSave, 10)) {
             click(btnSave);
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
-        } else {
+        }else if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
+            click(btnSaveOnNewCreateShiftPage);
+            SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
+        }else {
             SimpleUtils.fail("Create or Next Button not clicked Successfully on Customize new Shift page!", false);
         }
     }
@@ -153,7 +196,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = ".tab-set .select .tab-label-text")
     private WebElement selectRecommendedOption;
 
-    @FindBy(css = "div.tma-scroll-table tr")
+    @FindBy(css = "[ng-if=\"hasBestWorkers()\"] div.tma-scroll-table tr")
     private List<WebElement> recommendedScrollTable;
 
     @FindBy(css = ".tma-search-field-input-text")
@@ -255,6 +298,27 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     searchText(propertySearchTeamMember.get("TeamLCMember"));
                 }
             }
+        } else if (areListElementVisible(searchAndRecommendedTMTabs, 20)) {
+            clickTheElement(searchAndRecommendedTMTabs.get(1));
+            waitForSeconds(3);
+            if (areListElementVisible(searchResultsOnNewCreateShiftPage, 5)) {
+                List<WebElement> assignAndOfferButtons = searchResultsOnNewCreateShiftPage.get(0).findElements(By.tagName("button"));
+                    if (MyThreadLocal.getAssignTMStatus()) {
+                        clickTheElement(assignAndOfferButtons.get(0));
+                    } else
+                        clickTheElement(assignAndOfferButtons.get(1));
+                    if (isElementEnabled(btnAssignAnyway, 5)) {
+                        click(btnAssignAnyway);
+                    }
+            } else if (areListElementVisible(searchAndRecommendedTMTabs,5)) {
+                click(searchAndRecommendedTMTabs.get(0));
+                if (getDriver().getCurrentUrl().contains(parameterMap.get("KendraScott2_Enterprise"))) {
+                    searchText(propertySearchTeamMember.get("AssignTeamMember"));
+                } else if (getDriver().getCurrentUrl().contains(parameterMap.get("Coffee_Enterprise"))) {
+                    searchText(propertySearchTeamMember.get("TeamLCMember"));
+                } else
+                    searchText("a");
+            }
         } else {
             SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);
         }
@@ -275,7 +339,19 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 }
             }
 
-        } else {
+        } else if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+            for (int i = 0; i < searchAssignTeamMember.length; i++) {
+                String[] searchTM = searchAssignTeamMember[i].split("\\.");
+                textSearchOnNewCreateShiftPage.sendKeys(searchTM[0]);
+                waitForSeconds(3);
+                if (getScheduleStatus()) {
+                    setTeamMemberName(searchAssignTeamMember[i]);
+                    break;
+                } else {
+                    textSearchOnNewCreateShiftPage.clear();
+                }
+            }
+        }else {
             SimpleUtils.fail("Search text not editable and icon are not clickable", false);
         }
 
@@ -342,10 +418,67 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     }
                 }
             }
+        } else if(areListElementVisible(searchResultsOnNewCreateShiftPage,10)){
+            for(int i=0; i<searchResultsOnNewCreateShiftPage.size();i++){
+                List<WebElement> allStatus= searchResultsOnNewCreateShiftPage.get(i).findElements(By.cssSelector(".MuiGrid-grid-xs-3 .MuiTypography-body2"));
+                List<WebElement> tmInfo = searchResultsOnNewCreateShiftPage.get(i).findElements(By.cssSelector("p.MuiTypography-body1"));
+                String tmAllStatus = "";
+                for (WebElement status: allStatus) {
+                    tmAllStatus = tmAllStatus + " "+status.getText();
+                }
+                MyThreadLocal.setMessageOfTMScheduledStatus(tmAllStatus);
+                if(tmAllStatus.contains("Available")
+                        || tmAllStatus.contains("Unknown")){
+                    List<WebElement> assignAndOfferButtons = searchResultsOnNewCreateShiftPage.get(i).findElements(By.tagName("button"));
+//                    if (MyThreadLocal.getAssignTMStatus()) {
+//                        clickTheElement(assignAndOfferButtons.get(0));
+//                    } else
+//                        clickTheElement(assignAndOfferButtons.get(1));
+//                    if (isElementEnabled(btnAssignAnyway, 5)) {
+//                        click(btnAssignAnyway);
+//                    }
+                    if(tmAllStatus.contains("Minor")){
+                        if (MyThreadLocal.getAssignTMStatus()) {
+                            clickTheElement(assignAndOfferButtons.get(0));
+                        } else
+                            clickTheElement(assignAndOfferButtons.get(1));
+                        ScheduleStatus = true;
+                        break;
+                    } else if(tmAllStatus.contains("Role Violation")){
+                        if (MyThreadLocal.getAssignTMStatus()) {
+                            clickTheElement(assignAndOfferButtons.get(0));
+                        } else
+                            clickTheElement(assignAndOfferButtons.get(1));
+                        displayAlertPopUpForRoleViolation();
+                        setWorkerRole(tmInfo.get(1).getText());
+                        setWorkerLocation(tmInfo.get(2).getText());
+//                        setWorkerShiftTime(searchWorkerSchShiftTime.getText());
+//                        setWorkerShiftDuration(searchWorkerSchShiftDuration.getText());
+                        ScheduleStatus = true;
+                        break;
+                    } else if(tmAllStatus.contains("Will trigger")) {
+                        if (MyThreadLocal.getAssignTMStatus()) {
+                            clickTheElement(assignAndOfferButtons.get(0));
+                        } else
+                            clickTheElement(assignAndOfferButtons.get(1));
+                        if (areListElementVisible(buttonsOnWarningMode, 5)) {
+                            click(buttonsOnWarningMode.get(1));
+                        }
+                        ScheduleStatus = true;
+                        break;
+                    } else {
+                        if (MyThreadLocal.getAssignTMStatus()) {
+                            clickTheElement(assignAndOfferButtons.get(0));
+                        } else
+                            clickTheElement(assignAndOfferButtons.get(1));
+                        ScheduleStatus = true;
+                        break;
+                    }
+                }
+            }
         }else{
             SimpleUtils.fail("Not able to found Available status in SearchResult", false);
         }
-
         return ScheduleStatus;
     }
 
@@ -377,33 +510,73 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().toUpperCase().equals("ASSIGN ANYWAY")) {
                 clickTheElement(btnAssignAnyway);
             }
+        }else if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
+            scrollToElement(btnSaveOnNewCreateShiftPage);
+            waitForSeconds(3);
+            clickTheElement(btnSaveOnNewCreateShiftPage);
+            SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
+            if (areListElementVisible(buttonsOnWarningMode, 10)) {
+                click(buttonsOnWarningMode.get(1));
+            }
         }else{
             SimpleUtils.fail("Offer Or Assign Button is not clickable", false);
         }
     }
 
+
+    @FindBy(css = "[id=\"workRole\"] div.react-select__placeholder")
+    private WebElement workRoleOnNewShiftPage;
+
+    @FindBy(className = "react-select__option")
+    private List<WebElement> dropDownListOnNewCreateShiftPage;
     public void selectWorkRole(String workRoles) throws Exception {
-        if (isElementLoaded(btnWorkRole, 20)) {
-            click(btnWorkRole);
+        if (isElementLoaded(btnWorkRole, 5)) {
+            clickTheElement(btnWorkRole);
             SimpleUtils.pass("Work Role button clicked Successfully");
+            if (listWorkRoles.size() > 0) {
+                for (WebElement listWorkRole : listWorkRoles) {
+                    if (listWorkRole.getText().toLowerCase().contains(workRoles.toLowerCase())) {
+                        click(listWorkRole);
+                        SimpleUtils.pass("Work Role " + workRoles + "selected Successfully");
+                        break;
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Work Roles size are empty", false);
+            }
+        } else if (isElementLoaded(workRoleOnNewShiftPage, 15)) {
+            click(workRoleOnNewShiftPage);
+            SimpleUtils.pass("Work Role button clicked Successfully");
+            if (dropDownListOnNewCreateShiftPage.size() > 0) {
+                for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
+                    if (listWorkRole.getText().toLowerCase().trim().contains(workRoles.toLowerCase().trim())) {
+                        click(listWorkRole);
+                        SimpleUtils.pass("Work Role " + workRoles + "selected Successfully");
+                        break;
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Work Roles size are empty", false);
+            }
         } else {
             SimpleUtils.fail("Work Role button is not clickable", false);
         }
-        if (listWorkRoles.size() > 0) {
-            for (WebElement listWorkRole : listWorkRoles) {
-                if (listWorkRole.getText().toLowerCase().contains(workRoles.toLowerCase())) {
-                    click(listWorkRole);
-                    SimpleUtils.pass("Work Role " + workRoles + "selected Successfully");
-                    break;
-                } else {
-                    SimpleUtils.report("Work Role " + workRoles + " not selected");
-                }
-            }
 
+    }
+
+    @FindBy(id = "shiftsPerDay")
+    private WebElement shiftsPerDay;
+
+    @Override
+    public void setShiftsPerDay(int numberOfShiftPerDay) throws Exception {
+        if (isElementLoaded(shiftsPerDay, 5)) {
+            doubleClick(shiftsPerDay);
+            waitForSeconds(2);
+            shiftsPerDay.sendKeys(Integer.toString(numberOfShiftPerDay));
+            SimpleUtils.pass("Number of shifts per day have been set!");
         } else {
-            SimpleUtils.fail("Work Roles size are empty", false);
+            SimpleUtils.fail("Shifts Per Day is not loaded!", false);
         }
-
     }
 
     @Override
@@ -432,6 +605,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             clickOnCreateOrNextBtn();
             if (ifWarningModeDisplay() && isElementLoaded(okBtnInWarningMode,5))
                 click(okBtnInWarningMode);
+            if (areListElementVisible(buttonsOnWarningMode, 5)) {
+                clickTheElement(buttonsOnWarningMode.get(0));
+            }
             Thread.sleep(2000);
         } else
             SimpleUtils.fail("Day View Schedule edit mode, add new shift button not found for Week Day: '" +
@@ -449,30 +625,47 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public boolean isLocationLoaded() throws Exception {
         if (isElementLoaded(btnLocation, 20))
             return true;
+        else if (isElementLoaded(btnChildLocationOnNewCreateShiftPage))
+            return true;
         else
             return false;
     }
 
     public void selectLocation(String location) throws Exception {
-        if (isElementLoaded(btnLocation, 20)) {
+        if (isElementLoaded(btnLocation, 10)) {
             click(btnLocation);
             SimpleUtils.pass("Location button clicked Successfully");
-        } else {
-            SimpleUtils.fail("Work Role button is not clickable", false);
-        }
-        if (listLocations.size() > 1) {
-            for (WebElement listWorkRole : listLocations) {
-                if (listWorkRole.getText().toLowerCase().contains(location.toLowerCase())) {
-                    click(listWorkRole);
-                    SimpleUtils.pass("Location " + location + "selected Successfully");
-                    break;
-                } else {
-                    SimpleUtils.report("Location " + location + " not selected");
+            if (listLocations.size() > 1) {
+                for (WebElement listWorkRole : listLocations) {
+                    if (listWorkRole.getText().toLowerCase().contains(location.toLowerCase())) {
+                        click(listWorkRole);
+                        SimpleUtils.pass("Location " + location + "selected Successfully");
+                        break;
+                    } else {
+                        SimpleUtils.report("Location " + location + " not selected");
+                    }
                 }
+            } else {
+                SimpleUtils.fail("Location size are empty", false);
             }
-
-        } else {
-            SimpleUtils.fail("Location size are empty", false);
+        } else if (isElementLoaded(btnChildLocationOnNewCreateShiftPage, 5)) {
+            click(btnChildLocationOnNewCreateShiftPage);
+            SimpleUtils.pass("Location button clicked Successfully");
+            if (dropDownListOnNewCreateShiftPage.size() > 1) {
+                for (WebElement childLocation : dropDownListOnNewCreateShiftPage) {
+                    if (childLocation.getText().toLowerCase().contains(location.toLowerCase())) {
+                        click(childLocation);
+                        SimpleUtils.pass("Location " + location + "selected Successfully");
+                        break;
+                    } else {
+                        SimpleUtils.report("Location " + location + " not selected");
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Location size are empty", false);
+            }
+        }else {
+            SimpleUtils.fail("Work Role button is not clickable", false);
         }
     }
 
@@ -480,17 +673,23 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement warningMode;
 
     @FindBy(css = "span.lgn-alert-message")
-    private List<WebElement> warningMessagesInWarningMode;
+    private WebElement warningMessagesInWarningMode;
 
     @FindBy(className = "lgn-action-button-success")
     private WebElement okBtnInWarningMode;
 
+    @FindBy(css = ".MuiDialogContent-root")
+    private WebElement warningModeOnNewCreateShiftModal;
+
     @Override
     public boolean ifWarningModeDisplay() throws Exception {
-        if(isElementLoaded(warningMode, 5)) {
+        if(isElementLoaded(warningMode, 25)) {
             SimpleUtils.pass("Warning mode is loaded successfully");
             return true;
-        } else {
+        } else if (isElementLoaded(warningModeOnNewCreateShiftModal, 5)) {
+            SimpleUtils.pass("Warning mode is loaded successfully");
+            return true;
+        }else {
             SimpleUtils.report("Warning mode fail to load");
             return false;
         }
@@ -504,6 +703,10 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             clearAllSelectedDays();
             if (areListElementVisible(weekDays, 5) && weekDays.size() > 0) {
                 clickTheElement(weekDays.get(0));
+            } else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5)
+                    && weekDaysInNewCreateShiftPage.size() ==7) {
+                clickTheElement(weekDaysInNewCreateShiftPage.get(0)
+                        .findElement(By.cssSelector(".MuiButtonBase-root")).findElement(By.tagName("input")));
             }
             clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
             clickOnCreateOrNextBtn();
@@ -512,6 +715,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     getActiveWeekText() + "'", false);
     }
 
+    @FindBy(css = "[class*=\"MuiGrid-root MuiGrid-item MuiGrid-grid-xs-10\"] [class*=\"MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2\"]")
+    private List<WebElement> weekDaysInNewCreateShiftPage;
     public void clearAllSelectedDays() throws Exception {
         if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
             for (WebElement weekDay : weekDays) {
@@ -519,6 +724,22 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     click(weekDay);
                 }
             }
+        }else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5)
+                && weekDaysInNewCreateShiftPage.size() == 7) {
+            for (WebElement weekDay : weekDaysInNewCreateShiftPage) {
+                if (weekDay.findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("Mui-checked")) {
+                    clickTheElement(weekDay.findElement(By.cssSelector(".MuiButtonBase-root")).findElement(By.tagName("input")));
+                }
+            }
+            if (isElementLoaded(selectDaysWarningMessageOnNewShiftPage, 3)) {
+                String expectedMessage = "At least one day should be selected";
+                if (checkIfSelectDaysWarningMessageIsLoaded()) {
+                    SimpleUtils.pass("The 'at least one day selected' warning message display correctly!");
+                } else
+                    SimpleUtils.fail("The warning message display incorrectly, the expected is: "+ expectedMessage
+                            + " the actual is: "+ selectDaysWarningMessageOnNewShiftPage.getText(), false);
+            } else
+                SimpleUtils.report("The 'at least one day selected' warning message fail to load! ");
         }else{
             SimpleUtils.fail("Weeks Days failed to load!", true);
         }
@@ -526,51 +747,83 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(css = "div.lgn-time-slider-notch-label")
     private List<WebElement> scheduleOperatingHrsOnEditPage;
+    @FindBy(className = "tma-time-slider")
+    private WebElement scheduleOperatingHrsSlider;
+    @FindBy(css = "[id=\"shiftStart\"]")
+    private WebElement shiftStartInputOnNewCreateShiftPage;
+    @FindBy(css = "[id=\"shiftEnd\"]")
+    private WebElement shiftEndInputOnNewCreateShiftPage;
+
     public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception {
-        WebElement element = null;
-        String am = "am";
-        String pm = "pm";
-        if (shiftTime.length() > 2 && (shiftTime.contains(am) || shiftTime.contains(pm))) {
-            if(areListElementVisible(scheduleOperatingHrsOnEditPage, 15)
-                    && scheduleOperatingHrsOnEditPage.size() >0){
-                for (WebElement scheduleOperatingHour: scheduleOperatingHrsOnEditPage){
-                    if (scheduleOperatingHour.getAttribute("class").contains(shiftTime.substring(shiftTime.length() - 2))) {
-                        if(scheduleOperatingHour.getText().equals(shiftTime.substring(0, shiftTime.length() - 2))){
+        if (isElementLoaded(scheduleOperatingHrsSlider, 5)) {
+            WebElement element = null;
+            String am = "am";
+            String pm = "pm";
+            if (shiftTime.length() > 2 && (shiftTime.contains(am) || shiftTime.contains(pm))) {
+                if(areListElementVisible(scheduleOperatingHrsOnEditPage, 15)
+                        && scheduleOperatingHrsOnEditPage.size() >0){
+                    for (WebElement scheduleOperatingHour: scheduleOperatingHrsOnEditPage){
+                        if (scheduleOperatingHour.getAttribute("class").contains(shiftTime.substring(shiftTime.length() - 2))) {
+                            if(scheduleOperatingHour.getText().equals(
+                                    shiftTime.split(":")[0]
+                                            .replace("am", "").replace("pm", "")
+                                            .replace("AM", "").replace("PM", ""))){
+                                element = scheduleOperatingHour;
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else {
+                if(areListElementVisible(scheduleOperatingHrsOnEditPage, 15)
+                        && scheduleOperatingHrsOnEditPage.size() >0){
+                    for (WebElement scheduleOperatingHour: scheduleOperatingHrsOnEditPage){
+                        if(scheduleOperatingHour.getText().equals(shiftTime)){
                             element = scheduleOperatingHour;
                             break;
                         }
                     }
                 }
             }
-        } else {
-            if(areListElementVisible(scheduleOperatingHrsOnEditPage, 15)
-                    && scheduleOperatingHrsOnEditPage.size() >0){
-                for (WebElement scheduleOperatingHour: scheduleOperatingHrsOnEditPage){
-                    if(scheduleOperatingHour.getText().equals(shiftTime)){
-                        element = scheduleOperatingHour;
-                        break;
-                    }
+            if (element == null){
+                SimpleUtils.fail("Cannot found the operating hour on edit operating hour page! ", false);
+            }
+            if(startingPoint.equalsIgnoreCase("End")){
+                if(isElementLoaded(sliderNotchEnd,10) && sliderDroppableCount.size()>0){
+                    SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
+                    mouseHoverDragandDrop(sliderNotchEnd,element);
+                } else{
+                    SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
+                }
+            }else if(startingPoint.equalsIgnoreCase("Start")){
+                if(isElementLoaded(sliderNotchStart,10) && sliderDroppableCount.size()>0){
+                    SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
+                    mouseHoverDragandDrop(sliderNotchStart,element);
+                } else{
+                    SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
                 }
             }
-        }
-        if (element == null){
-            SimpleUtils.fail("Cannot found the operating hour on edit operating hour page! ", false);
-        }
-        if(startingPoint.equalsIgnoreCase("End")){
-            if(isElementLoaded(sliderNotchEnd,10) && sliderDroppableCount.size()>0){
-                SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
-                mouseHoverDragandDrop(sliderNotchEnd,element);
-            } else{
-                SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
+        } else if (isElementLoaded(shiftStartInputOnNewCreateShiftPage, 5)
+                && isElementLoaded(shiftEndInputOnNewCreateShiftPage, 5)) {
+            if (shiftTime.contains("am")) {
+                shiftTime = shiftTime.replace("am","")+ ":00"+"am";
+            } else if (shiftTime.contains("pm")) {
+                shiftTime = shiftTime.replace("pm","")+ ":00"+"pm";
+            } else
+                shiftTime = shiftTime+":00";
+            if(startingPoint.equalsIgnoreCase("Start")){
+                click(shiftEndInputOnNewCreateShiftPage);
+                click(shiftStartInputOnNewCreateShiftPage);
+                shiftStartInputOnNewCreateShiftPage.sendKeys(shiftTime);
+                SimpleUtils.pass("Set shift start time successfully! ");
+            } else {
+                click(shiftStartInputOnNewCreateShiftPage);
+                click(shiftEndInputOnNewCreateShiftPage);
+                shiftEndInputOnNewCreateShiftPage.sendKeys(shiftTime);
+                SimpleUtils.pass("Set shift end time successfully! ");
             }
-        }else if(startingPoint.equalsIgnoreCase("Start")){
-            if(isElementLoaded(sliderNotchStart,10) && sliderDroppableCount.size()>0){
-                SimpleUtils.pass("Shift timings with Sliders loaded on page Successfully for End Point");
-                mouseHoverDragandDrop(sliderNotchStart,element);
-            } else{
-                SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
-            }
-        }
+        } else
+            SimpleUtils.fail("Shift time slider or inputs fail to load on create shift page! ", false);
     }
 
 
@@ -581,7 +834,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         for(int i = 0; i < names.size(); i++) {
             clickOnDayViewAddNewShiftButton();
             customizeNewShiftPage();
-            if(areListElementVisible(listLocationGroup, 10)){
+            if(areListElementVisible(listLocationGroup, 5)
+                    || isElementLoaded(btnChildLocationOnNewCreateShiftPage, 5)){
                 List<String> locations = getAllLocationGroupLocationsFromCreateShiftWindow();
                 selectChildLocInCreateShiftWindow(locations.get((new Random()).nextInt(locations.size()-1)+1));
                 moveSliderAtSomePoint("40", 0, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
@@ -607,6 +861,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             clickOnCreateOrNextBtn();
             if(isElementLoaded(btnAssignAnyway,5))
                 click(btnAssignAnyway);
+            if (areListElementVisible(buttonsOnWarningMode, 5)) {
+                click(buttonsOnWarningMode.get(1));
+            }
             searchTeamMemberByName(names.get(i));
             if(isElementLoaded(btnAssignAnyway,5))
                 click(btnAssignAnyway);
@@ -617,9 +874,23 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(css = "[ng-show=\"hasSearchResults()\"] [ng-repeat=\"worker in searchResults\"]")
     private List<WebElement> searchResults;
-    @Override
+
+    @FindBy(css = "button.MuiButtonBase-root")
+    private List<WebElement> searchAndRecommendedTMTabs;
+
+    @FindBy(css = "[placeholder=\"Search by Team Member, Role, Location or any combination.\"]")
+    private WebElement textSearchOnNewCreateShiftPage;
+
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-container')]/div/div/div/p/parent::*/parent::*/parent::*/parent::*/parent::*/div[contains(@class,'MuiGrid-container')]")
+    private List<WebElement> searchResultsOnNewCreateShiftPage;
+
+    @FindBy(css = ".MuiDialogContent-root button")
+    private List<WebElement> buttonsOnWarningMode;
+
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-grid-xs-3')]/div[1]/p")
+    private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
     public void searchTeamMemberByName(String name) throws Exception {
-        if(areListElementVisible(btnSearchteamMember,15)) {
+        if(areListElementVisible(btnSearchteamMember,5)) {
             if (btnSearchteamMember.size() == 2) {
                 //click(btnSearchteamMember.get(1));
                 if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
@@ -654,7 +925,168 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             }else {
                 SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
             }
-        }
+        } else if (areListElementVisible(searchAndRecommendedTMTabs, 10)) {
+            if (searchAndRecommendedTMTabs.size() == 2) {
+                //click(btnSearchteamMember.get(1));
+                if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+                    textSearchOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+                    textSearchOnNewCreateShiftPage.sendKeys(Keys.DELETE);
+                    textSearchOnNewCreateShiftPage.sendKeys(name);
+                    waitForSeconds(3);
+                    if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
+                        for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
+                            if (areListElementVisible(tmScheduledStatusOnNewCreateShiftPage, 5)) {
+                                String statusMessage = "";
+                                for (WebElement status: tmScheduledStatusOnNewCreateShiftPage) {
+                                    statusMessage = statusMessage + status.getText() + "\n";
+                                }
+                                MyThreadLocal.setMessageOfTMScheduledStatus(statusMessage);
+                            }
+                            List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                            String tmName = tmInfo.get(0).getText();
+                            List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
+                            WebElement assignButton = assignAndOfferButtons.get(0);
+                            WebElement offerButton = assignAndOfferButtons.get(1);
+                            if (tmName != null && assignButton != null && offerButton != null) {
+                                if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                                    if (MyThreadLocal.getAssignTMStatus()) {
+                                        clickTheElement(assignButton);
+                                        SimpleUtils.report("Assign Team Member: " + name + " Successfully!");
+                                    } else {
+                                        clickTheElement(offerButton);
+                                        SimpleUtils.report("Offer Team Member: " + name + " Successfully!");
+                                    }
+                                    waitForSeconds(2);
+                                    if (areListElementVisible(buttonsOnWarningMode, 5)) {
+                                        if (buttonsOnWarningMode.size()==2) {
+                                            if (buttonsOnWarningMode.get(1).getText().toLowerCase().equalsIgnoreCase("assign anyway")){
+                                                clickTheElement(buttonsOnWarningMode.get(1));
+                                                SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }else {
+                                SimpleUtils.fail("Worker name or buttons not loaded Successfully!", false);
+                            }
+                        }
+                    }else {
+                        SimpleUtils.fail("Failed to find the team member!", false);
+                    }
+                }else {
+                    SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+                }
+            }else {
+                SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
+            }
+        } else
+            SimpleUtils.fail("Search team member tab fail to load! ", false);
+    }
+
+    @FindBy(css = ".MuiDialogContent-root")
+    private WebElement overtimeWarningPopup;
+
+    @FindBy(linkText = "Offer anyway")
+    private WebElement offerAnywayBtn;
+
+    @Override
+    public void searchTeamMemberByNameAndAssignOrOfferShift(String name, Boolean isOffering) throws Exception {
+        if(areListElementVisible(btnSearchteamMember,10)) {
+            if (btnSearchteamMember.size() == 2) {
+                //click(btnSearchteamMember.get(1));
+                if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
+                    textSearch.clear();
+                    textSearch.sendKeys(name);
+                    click(searchIcon);
+                    if (areListElementVisible(searchResults, 30)) {
+                        for (WebElement searchResult : searchResults) {
+                            WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-name"));
+                            WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
+                            if (workerName != null && optionCircle != null) {
+                                if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                                    clickTheElement(optionCircle);
+                                    SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                                    waitForSeconds(2);
+                                    if (isElementLoaded(btnAssignAnyway, 5) && btnAssignAnyway.getText().toLowerCase().equalsIgnoreCase("assign anyway")) {
+                                        clickTheElement(btnAssignAnyway);
+                                        SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+                                    }
+                                    break;
+                                }
+                            }else {
+                                SimpleUtils.fail("Worker name or option circle not loaded Successfully!", false);
+                            }
+                        }
+                    }else {
+                        SimpleUtils.fail("Failed to find the team member!", false);
+                    }
+                }else {
+                    SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+                }
+            }else {
+                SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
+            }
+        } else if (areListElementVisible(searchAndRecommendedTMTabs, 10)) {
+            if (searchAndRecommendedTMTabs.size() == 2) {
+                //click(btnSearchteamMember.get(1));
+                if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+                    textSearchOnNewCreateShiftPage.clear();
+                    textSearchOnNewCreateShiftPage.sendKeys(name);
+                    waitForSeconds(3);
+                    if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
+                        for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
+                            if (areListElementVisible(tmScheduledStatusOnNewCreateShiftPage, 5)) {
+                                String statusMessage = "";
+                                for (WebElement status: tmScheduledStatusOnNewCreateShiftPage) {
+                                    statusMessage = statusMessage + status.getText() + "\n";
+                                }
+                                MyThreadLocal.setMessageOfTMScheduledStatus(statusMessage);
+                            }
+                            List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                            String tmName = tmInfo.get(0).getText();
+                            List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
+                            WebElement assignButton = assignAndOfferButtons.get(0);
+                            WebElement offerButton = assignAndOfferButtons.get(1);
+                            if (tmName != null && assignButton != null && offerButton != null) {
+                                if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                                    if (isOffering) {
+                                        clickTheElement(offerButton);
+                                        if (isElementLoaded(overtimeWarningPopup, 10)) {
+                                            if (isElementLoaded(offerAnywayBtn, 5)) {
+                                                click(offerAnywayBtn);
+                                            }
+                                        }
+                                    } else {
+                                        clickTheElement(assignButton);
+                                    }
+                                    SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                                    waitForSeconds(2);
+                                    if (areListElementVisible(buttonsOnWarningMode, 5)) {
+                                        if (buttonsOnWarningMode.size()==2) {
+                                            if (buttonsOnWarningMode.get(1).getText().toLowerCase().equalsIgnoreCase("assign anyway")){
+                                                clickTheElement(buttonsOnWarningMode.get(1));
+                                                SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+                                            }
+                                        }
+                                    }
+                                    break;
+                                }
+                            }else {
+                                SimpleUtils.fail("Worker name or buttons not loaded Successfully!", false);
+                            }
+                        }
+                    }else {
+                        SimpleUtils.fail("Failed to find the team member!", false);
+                    }
+                }else {
+                    SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+                }
+            }else {
+                SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
+            }
+        } else
+            SimpleUtils.fail("Search team member tab fail to load! ", false);
     }
 
 
@@ -671,56 +1103,90 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         }else {
             SimpleUtils.report("Add New Shift '+' button and Create New Shift button not loaded!");
         }
+        waitForSeconds(3);
+        if (checkIfNewCreateShiftPageDisplay()) {
+            MyThreadLocal.setNewCreateShiftUIStatus(true);
+        } else
+            MyThreadLocal.setNewCreateShiftUIStatus(false);
     }
 
     public List<String> getAllLocationGroupLocationsFromCreateShiftWindow() throws Exception{
-        if (isElementLoaded(btnChildLocation, 20)) {
+        List<String> locationGroupLocations = new ArrayList<>();
+        if (isElementLoaded(btnChildLocation, 10)) {
             click(btnChildLocation);
             SimpleUtils.pass("Child location button clicked Successfully");
-        } else {
+            if(areListElementVisible(listLocationGroup, 10) && listLocationGroup.size()>0){
+                for (WebElement location: listLocationGroup){
+                    locationGroupLocations.add(location.getText());
+                }
+                SimpleUtils.pass("Get location group locations from create shift window successfully! ");
+            }else
+                SimpleUtils.fail("Location group dropdown loaded fail! ", false);
+            //close the dropdown list
+            click(btnChildLocation);
+        } else if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
+            click(btnSaveOnNewCreateShiftPage);
+            SimpleUtils.pass("Child location button clicked Successfully");
+
+            if(areListElementVisible(dropDownListOnNewCreateShiftPage, 10) && dropDownListOnNewCreateShiftPage.size()>0){
+                for (WebElement location: dropDownListOnNewCreateShiftPage){
+                    locationGroupLocations.add(location.getText());
+                }
+                SimpleUtils.pass("Get location group locations from create shift window successfully! ");
+            }else
+                SimpleUtils.fail("Location group dropdown loaded fail! ", false);
+            //close the dropdown list
+            click(btnSaveOnNewCreateShiftPage);
+        }else {
             SimpleUtils.fail("Child location button is not clickable", false);
         }
-        List<String> locationGroupLocations = new ArrayList<>();
-        if(areListElementVisible(listLocationGroup, 10) && listLocationGroup.size()>0){
-            for (WebElement location: listLocationGroup){
-                locationGroupLocations.add(location.getText());
-            }
-            SimpleUtils.pass("Get location group locations from create shift window successfully! ");
-        }else
-            SimpleUtils.fail("Location group dropdown loaded fail! ", false);
-
-        //close the dropdown list
-        click(btnChildLocation);
         return locationGroupLocations;
     }
-
-
 
     @FindBy(css = "lgn-drop-down.tma-locations-dropdown button.lgn-dropdown-button")
     private WebElement btnChildLocation;
 
+    @FindBy(xpath = "//div[@id=\"businessId\"]/div/div[1]/div[1]")
+    private WebElement btnChildLocationOnNewCreateShiftPage;
+
     public void selectChildLocInCreateShiftWindow(String location) throws Exception {
-        if (isElementLoaded(btnChildLocation, 20)) {
+        if (isElementLoaded(btnChildLocation, 10)) {
             click(btnChildLocation);
             SimpleUtils.pass("Child location button clicked Successfully");
-        } else {
+            if (listWorkRoles.size() > 0) {
+                for (WebElement listWorkRole : listWorkRoles) {
+                    if (listWorkRole.getText().toLowerCase().contains(location.toLowerCase())) {
+                        click(listWorkRole);
+                        SimpleUtils.pass("Child location " + location + "selected Successfully");
+                        break;
+                    } else {
+                        SimpleUtils.report("Child location" + location + " not selected");
+                    }
+                }
+
+            } else {
+                SimpleUtils.fail("Child location size are empty", false);
+            }
+        } else if (isElementLoaded(btnChildLocationOnNewCreateShiftPage, 5)) {
+            click(btnChildLocationOnNewCreateShiftPage);
+            SimpleUtils.pass("Child location button clicked Successfully");
+            if (dropDownListOnNewCreateShiftPage.size() > 0) {
+                for (WebElement childLocation : dropDownListOnNewCreateShiftPage) {
+                    if (childLocation.getText().toLowerCase().contains(location.toLowerCase())) {
+                        click(childLocation);
+                        SimpleUtils.pass("Child location " + location + "selected Successfully");
+                        break;
+                    } else {
+                        SimpleUtils.report("Child location" + location + " not selected");
+                    }
+                }
+
+            } else {
+                SimpleUtils.fail("Child location size are empty", false);
+            }
+        }else {
             SimpleUtils.fail("Child location button is not clickable", false);
         }
-        if (listWorkRoles.size() > 0) {
-            for (WebElement listWorkRole : listWorkRoles) {
-                if (listWorkRole.getText().toLowerCase().contains(location.toLowerCase())) {
-                    click(listWorkRole);
-                    SimpleUtils.pass("Child location " + location + "selected Successfully");
-                    break;
-                } else {
-                    SimpleUtils.report("Child location" + location + " not selected");
-                }
-            }
-
-        } else {
-            SimpleUtils.fail("Child location size are empty", false);
-        }
-
     }
 
 
@@ -739,12 +1205,33 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     click(weekDays.get(index3));
                     SimpleUtils.report("Select day: " + weekDays.get(index3).getText() + " Successfully!");
                 }
-            }else {
+            } else {
+                SimpleUtils.fail("There is index that out of range: " + index1 + ", " + index2 + ", " + index3 + ", the max value is 6!", false);
+            }
+        }else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5)
+                && weekDaysInNewCreateShiftPage.size() == 7) {
+            if (index1 < weekDaysInNewCreateShiftPage.size()
+                    && index2 < weekDaysInNewCreateShiftPage.size()
+                    && index3 < weekDaysInNewCreateShiftPage.size()) {
+                if (!weekDaysInNewCreateShiftPage.get(index1).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("Mui-checked")) {
+                    clickTheElement(weekDaysInNewCreateShiftPage.get(index1).findElement(By.cssSelector(".MuiButtonBase-root")).findElement(By.tagName("input")));
+                    SimpleUtils.report("Select day: " + index1 + " Successfully!");
+                }
+                if (!weekDaysInNewCreateShiftPage.get(index2).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("Mui-checked")) {
+                    clickTheElement(weekDaysInNewCreateShiftPage.get(index2).findElement(By.cssSelector(".MuiButtonBase-root")).findElement(By.tagName("input")));
+                    SimpleUtils.report("Select day: " + index2 + " Successfully!");
+                }
+                if (!weekDaysInNewCreateShiftPage.get(index3).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("Mui-checked")) {
+                    clickTheElement(weekDaysInNewCreateShiftPage.get(index3).findElement(By.cssSelector(".MuiButtonBase-root")).findElement(By.tagName("input")));
+                    SimpleUtils.report("Select day: " + index3 + " Successfully!");
+                }
+            } else {
                 SimpleUtils.fail("There is index that out of range: " + index1 + ", " + index2 + ", " + index3 + ", the max value is 6!", false);
             }
         }else{
-            SimpleUtils.fail("Weeks Days failed to load!", true);
+            SimpleUtils.fail("Weeks Days failed to load!", false);
         }
+
     }
 
     @Override
@@ -755,6 +1242,16 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 if (!weekDays.get(index).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
                     click(weekDays.get(index));
                     SimpleUtils.report("Select day: " + weekDays.get(index).getText() + " Successfully!");
+                }
+            }else {
+                SimpleUtils.fail("There is index that out of range: " + index + ", the max value is 6!", false);
+            }
+        }else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5) && weekDaysInNewCreateShiftPage.size() == 7) {
+            if (index < weekDaysInNewCreateShiftPage.size()) {
+                WebElement checkBoxOfWeekDay = weekDaysInNewCreateShiftPage.get(index).findElement(By.cssSelector(".MuiButtonBase-root"));
+                if (!checkBoxOfWeekDay.getAttribute("class").contains("Mui-checked")) {
+                    click(checkBoxOfWeekDay);
+                    SimpleUtils.report("Select day: " + weekDaysInNewCreateShiftPage.get(index).getText() + " Successfully!");
                 }
             }else {
                 SimpleUtils.fail("There is index that out of range: " + index + ", the max value is 6!", false);
@@ -770,10 +1267,40 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement okBtnOnConfirm;
     @FindBy(css="[ng-show=\"hasSearchResults()\"] tr.table-row.ng-scope")
     private List<WebElement> searchTMRows;
-    public WebElement selectAndGetTheSelectedTM() throws Exception {
+    public String selectAndGetTheSelectedTM() throws Exception {
         WebElement selectedTM = null;
+        String selectedTMName = "";
 //		waitForSeconds(5);
-        if(areListElementVisible(scheduleSearchTeamMemberStatus,5) || isElementLoaded(scheduleNoAvailableMatchStatus,5)){
+        if (areListElementVisible(searchResultsOnNewCreateShiftPage, 5)) {
+            for (WebElement searchResult: searchResultsOnNewCreateShiftPage) {
+                List<WebElement> allStatus= searchResult.findElements(By.cssSelector(".MuiGrid-grid-xs-3 .MuiTypography-body2"));
+                StringBuilder tmAllStatus = new StringBuilder();
+                for (WebElement status: allStatus) {
+                    tmAllStatus.append(" ").append(status.getText());
+                }
+                if((tmAllStatus.toString().contains("Available") || tmAllStatus.toString().contains("Unknown")) && !tmAllStatus.toString().contains("Assigned to this shift")){
+                    selectedTMName = searchResult.findElements(By.cssSelector("p.MuiTypography-body1")).get(0).getText();
+                    List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
+                    if (MyThreadLocal.getAssignTMStatus()) {
+                        clickTheElement(assignAndOfferButtons.get(0));
+                        SimpleUtils.report("Click Assign button successfully! ");
+                    } else {
+                        if (assignAndOfferButtons.size()==1) {
+                            clickTheElement(assignAndOfferButtons.get(0));
+                            SimpleUtils.report("Only one offer button and click Offer button successfully! ");
+                        } else {
+                            clickTheElement(assignAndOfferButtons.get(1));
+                            SimpleUtils.report("There are both assign and offer button, click offer button successfully! ");
+                        }
+                    }
+                    if (isElementEnabled(btnAssignAnyway, 5)) {
+                        click(btnAssignAnyway);
+                    }
+                    break;
+                }
+            }
+        }else if(areListElementVisible(scheduleSearchTeamMemberStatus,5)
+                || isElementLoaded(scheduleNoAvailableMatchStatus,5)){
             for(int i=0; i<scheduleSearchTeamMemberStatus.size();i++){
                 String statusText = scheduleSearchTeamMemberStatus.get(i).getText();
                 if((statusText.contains("Available") || statusText.contains("Unknown")) && !statusText.contains("Assigned to this shift")){
@@ -782,17 +1309,17 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                         click(okBtnOnConfirm);
                     }
                     selectedTM = searchTMRows.get(i);
+                    selectedTMName = selectedTM.findElement(By.className("worker-edit-search-worker-display-name")).getText();
                     break;
                 }
             }
             if (selectedTM == null) {
                 SimpleUtils.report("Not able to found Available TMs");
             }
-        }else{
-            SimpleUtils.fail("Not able to found Available status in SearchResult", true);
+        } else{
+            SimpleUtils.report("Not able to found Available status in SearchResult");
         }
-
-        return selectedTM;
+        return selectedTMName;
     }
 
     @FindBy(css = "tr.table-row.ng-scope:nth-child(1)")
@@ -803,7 +1330,30 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public String selectTeamMembers() throws Exception {
         String newSelectedTM = null;
         waitForSeconds(5);
-        if (areListElementVisible(recommendedScrollTable, 20)) {
+        if (areListElementVisible(searchAndRecommendedTMTabs, 5)) {
+            if (areListElementVisible(searchResultsOnNewCreateShiftPage, 5)) {
+                newSelectedTM = searchResultsOnNewCreateShiftPage.get(0).findElements(By.cssSelector("p.MuiTypography-body1")).get(0).getText();
+                List<WebElement> assignAndOfferButtons = searchResultsOnNewCreateShiftPage.get(0).findElements(By.tagName("button"));
+                if (MyThreadLocal.getAssignTMStatus()) {
+                    clickTheElement(assignAndOfferButtons.get(0));
+                    SimpleUtils.report("Click Assign button successfully! ");
+                } else {
+                    if (assignAndOfferButtons.size()==1) {
+                        clickTheElement(assignAndOfferButtons.get(0));
+                        SimpleUtils.report("Only one offer button and click Offer button successfully! ");
+                    } else {
+                        clickTheElement(assignAndOfferButtons.get(1));
+                        SimpleUtils.report("There are both assign and offer button, click offer button successfully! ");
+                    }
+                }
+            } else {
+                clickTheElement(searchAndRecommendedTMTabs.get(0));
+                newSelectedTM = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
+            }
+            if(areListElementVisible(buttonsOnWarningMode,5)
+                    && buttonsOnWarningMode.size()==2)
+                click(buttonsOnWarningMode.get(1));
+        }else if (areListElementVisible(recommendedScrollTable, 10)) {
             if (isElementLoaded(selectRecommendedOption, 5)) {
                 String[] txtRecommendedOption = selectRecommendedOption.getText().replaceAll("\\p{P}", "").split(" ");
                 if (Integer.parseInt(txtRecommendedOption[2]) == 0) {
@@ -824,6 +1374,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         } else {
             SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);
         }
+
         return newSelectedTM;
     }
 
@@ -870,26 +1421,43 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         NewShiftPage newShiftPage = new ConsoleNewShiftPage();
         String[] searchAssignTeamMember = searchInput.split(",");
         String selectedTMName = null;
-        if (isElementLoaded(textSearch, 10) && isElementLoaded(searchIcon, 10)) {
+        if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
             for (int i = 0; i < searchAssignTeamMember.length; i++) {
                 String[] searchTM = searchAssignTeamMember[i].split("\\.");
                 textSearch.sendKeys(searchTM[0]);
                 click(searchIcon);
                 waitForSeconds(5);
-                WebElement selectedTM = newShiftPage.selectAndGetTheSelectedTM();
-                if (selectedTM != null) {
-                    selectedTMName = selectedTM.findElement(By.className("worker-edit-search-worker-display-name")).getText();
+                selectedTMName = newShiftPage.selectAndGetTheSelectedTM();
+                if (!selectedTMName.equals("")) {
                     break;
                 } else {
                     textSearch.clear();
                 }
             }
+            if (selectedTMName == null || selectedTMName.isEmpty()) {
+                SimpleUtils.fail("Not able to found Available TMs in SearchResult", false);
+            }
+        } else if (isElementLoaded(textSearchOnNewCreateShiftPage, 10)) {
+            for (int i = 0; i < searchAssignTeamMember.length; i++) {
+                String[] searchTM = searchAssignTeamMember[i].split("\\.");
+                String searchText = searchTM[0];
+//                textSearchOnNewCreateShiftPage.clear();
+                textSearchOnNewCreateShiftPage.sendKeys(searchText);
+                waitForSeconds(3);
+                selectedTMName = newShiftPage.selectAndGetTheSelectedTM();
+                if (!selectedTMName.equals("")) {
+                    break;
+                } else {
+                    clickTheElement(searchAndRecommendedTMTabs.get(1));
+                    clickTheElement(searchAndRecommendedTMTabs.get(0));
+                }
+            }
 
-            if (selectedTMName == null || (selectedTMName != null && selectedTMName.isEmpty())) {
+            if (selectedTMName == null || selectedTMName.isEmpty()) {
                 SimpleUtils.fail("Not able to found Available TMs in SearchResult", false);
             }
 
-        } else {
+        }else {
             SimpleUtils.fail("Search text not editable and icon are not clickable", false);
         }
         return selectedTMName;
@@ -916,6 +1484,11 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
                 if (!weekDays.get(6).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
                     click(weekDays.get(6));
+                }
+            } else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5) && weekDaysInNewCreateShiftPage.size() == 7) {
+                if (!weekDaysInNewCreateShiftPage.get(6).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("Mui-checked")) {
+                    clickTheElement(weekDaysInNewCreateShiftPage.get(6).findElement(By.cssSelector(".MuiButtonBase-root")).findElement(By.tagName("input")));
+                    SimpleUtils.report("Select day: " + 6 + " Successfully!");
                 }
             }
             clickOnCreateOrNextBtn();
@@ -963,80 +1536,60 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = "[ng-click=\"$dismiss()\"] button[ng-click=\"$ctrl.onSubmit({type:'saveas',label:$ctrl.label})\"]")
     private WebElement editOperatingHourCancelButton;
 
-    @FindBy(css = "[ng-click=\"save()\"] button")
+    @FindBy(css = "[ng-click=\"save()\"]")
     private WebElement editOperatingHourSaveButton;
 
     @FindBy(css = "lg-button[label=\"Cancel\"]")
     private WebElement operatingHoursCancelBtn;
 
-
+    @FindBy(css = "lg-button.edit-operating-hours-link")
+    private WebElement editOperatingHoursBtn;
+    @FindBy (css = ".operating-hours-day-list-item.ng-scope")
+    private List<WebElement> operatingHoursDayLists;
     @Override
     public void editOperatingHoursOnScheduleOldUIPage(String startTime, String endTime, List<String> weekDaysToClose) throws Exception {
-        waitForSeconds(6);
-        if (areListElementVisible(operatingHours, 20) && operatingHours.size()==7){
-            for (WebElement operatingHour : operatingHours){
-                WebElement weekDay = operatingHour.findElement(By.cssSelector("td[class=\"ng-binding\"]"));
-                WebElement editButton = operatingHour.findElement(By.cssSelector("span[ng-if=\"canEditWorkingHours\"]"));
-                WebElement openCloseHours = operatingHour.findElement(By.cssSelector("[ng-class=\"{dirty: day.isOverridden}\"]"));
-
-                if (isElementLoaded(weekDay, 5) && !weekDay.getText().equals("")
-                        && isElementLoaded(editButton, 5)
-                        && isElementLoaded(openCloseHours, 5) && !openCloseHours.getText().equals("")){
-                    if (weekDaysToClose.contains(weekDay.getText())){
-                        if (openCloseHours.getText().equalsIgnoreCase("Closed")) {
-                            SimpleUtils.report("Week day: "+weekDay.getText()+" is already closed");
-                        } else{
-                            click(editButton);
-                            if (isElementLoaded(openOrCloseWeekDayButton, 5)){
-                                if (!openOrCloseWeekDayButton.getAttribute("class").contains("switcher-closed")) {
-                                    click(openOrCloseWeekDayButton);
-                                    click(editOperatingHourSaveButton);
-                                    openCloseHours = operatingHour.findElement(By.cssSelector("[ng-class=\"{dirty: day.isOverridden}\"]"));
-                                    if (openCloseHours.getText().equalsIgnoreCase("Closed")){
-                                        SimpleUtils.report("Week day: "+weekDay.getText()+" been closed successfully!");
-                                    } else {
-                                        SimpleUtils.fail("Close week day: "+weekDay.getText()+" failed!", false);
+        if (areListElementVisible(operatingHours, 20) && operatingHours.size()==7 && isElementLoaded(editOperatingHoursBtn, 10)){
+            clickTheElement(editOperatingHoursBtn);
+            if (isElementLoaded(customizeNewShift, 10)) {
+                if (areListElementVisible(operatingHoursDayLists, 15)) {
+                    for (WebElement dayList : operatingHoursDayLists) {
+                        WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+                        if (weekDay != null) {
+                            WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                            if (!weekDaysToClose.contains(weekDay.getText())) {
+                                if (!startTime.equals("") || !endTime.equals("")) {
+                                    if (checkbox.getAttribute("class").contains("ng-empty")) {
+                                        clickTheElement(checkbox);
+                                    }
+                                    List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+                                    String openTime = startNEndTimes.get(0).getAttribute("value");
+                                    String closeTime = startNEndTimes.get(1).getAttribute("value");
+                                    if (!openTime.equals(startTime) || !closeTime.equals(endTime)) {
+                                        startNEndTimes.get(0).clear();
+                                        startNEndTimes.get(1).clear();
+                                        startNEndTimes.get(0).sendKeys(startTime);
+                                        startNEndTimes.get(1).sendKeys(endTime);
                                     }
                                 }
-                            } else{
-                                SimpleUtils.fail("Open Or Close week day button not loaded Successfully!", false);
-                            }
-                        }
-                    } else{
-                        if (!openCloseHours.getText().equalsIgnoreCase(startTime+"-"+endTime)){
-                            click(editButton);
-                            if (openOrCloseWeekDayButton.getAttribute("class").contains("switcher-closed")){
-                                click(openOrCloseWeekDayButton);
-                                SimpleUtils.report("Week day: "+weekDay.getText()+" been opened successfully!");
-                            }
-                            moveSliderAtCertainPoint(endTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-                            moveSliderAtCertainPoint(startTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
-                            clickTheElement(editOperatingHourSaveButton);
-                            waitForSeconds(2);
-                            // If operating hours is consistent with the values wanted to change, then Save button is disabled
-                            if (isElementLoaded(operatingHoursCancelBtn, 5)) {
-                                clickTheElement(operatingHoursCancelBtn);
-                            }
-                            openCloseHours = operatingHour.findElement(By.cssSelector("[ng-class=\"{dirty: day.isOverridden}\"]"));
-                            if (openCloseHours.getText().equalsIgnoreCase(startTime+":00-"+endTime+":00")){
-                                SimpleUtils.report("Week day: "+weekDay.getText()+" been edited successfully!");
-                            } else  if (openCloseHours.getText().equalsIgnoreCase(startTime+"-"+endTime)){
-                                SimpleUtils.report("Week day: "+weekDay.getText()+" been edited successfully!");
-                            } else  if (openCloseHours.getText().equalsIgnoreCase(startTime+"am-"+endTime+"pm")){
-                                SimpleUtils.report("Week day: "+weekDay.getText()+" been edited successfully!");
+
                             } else {
-                                SimpleUtils.fail("Edit week day: "+weekDay.getText()+" failed!", false);
+                                if (!checkbox.getAttribute("class").contains("ng-empty")) {
+                                    clickTheElement(checkbox);
+                                }
                             }
                         } else {
-                            SimpleUtils.report("Week day: "+weekDay.getText()+"'s operating hours already been set as: " + openCloseHours.getText());
+                            SimpleUtils.fail("Failed to find weekday element!", false);
                         }
-
                     }
-                } else{
-                    SimpleUtils.fail("Week days not loaded Successfully!", false);
+                    clickTheElement(editOperatingHourSaveButton);
+                    if (isElementEnabled(editOperatingHoursBtn, 15)) {
+                        SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
+                    } else {
+                        SimpleUtils.fail("Create Schedule: Click on Save the operating hours button failed, Next button is not enabled!", false);
+                    }
                 }
-
-            }
+            } else
+                SimpleUtils.fail("Edit operating hours modal fail to load! ", false);
         }else{
             SimpleUtils.fail("Operating Hours not loaded Successfully!", false);
         }
@@ -1045,10 +1598,53 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @Override
     public void searchTeamMemberByNameNLocation(String name, String location) throws Exception {
-        if(areListElementVisible(btnSearchteamMember,5)) {
+        if (areListElementVisible(searchAndRecommendedTMTabs, 5)) {
+            if (searchAndRecommendedTMTabs.size() == 2) {
+                //click(btnSearchteamMember.get(1));
+                if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+                    textSearchOnNewCreateShiftPage.clear();
+                    textSearchOnNewCreateShiftPage.sendKeys(name);
+                    waitForSeconds(3);
+                    if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
+                        for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
+                            List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                            String tmName = tmInfo.get(0).getText();
+                            String locationName = tmInfo.get(2).getText();
+                            List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
+                            WebElement assignButton = assignAndOfferButtons.get(0);
+                            WebElement offerButton = assignAndOfferButtons.get(1);
+                            if (tmName != null && locationName!=null && assignButton != null && offerButton != null) {
+                                if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())
+                                        && locationName.toLowerCase().trim().replaceAll("\n"," ").contains(location.trim().toLowerCase())) {
+                                    if (MyThreadLocal.getAssignTMStatus()) {
+                                        clickTheElement(assignButton);
+                                    } else
+                                        clickTheElement(offerButton);
+                                    SimpleUtils.report("Select Team Member: " + name + " Successfully!");
+                                    waitForSeconds(2);
+                                    if (areListElementVisible(buttonsOnWarningMode, 5) && buttonsOnWarningMode.get(1).getText().toLowerCase().equalsIgnoreCase("assign anyway")) {
+                                        clickTheElement(buttonsOnWarningMode.get(1));
+                                        SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+                                    }
+                                    break;
+                                }
+                            }else {
+                                SimpleUtils.fail("Worker name or buttons not loaded Successfully!", false);
+                            }
+                        }
+                    }else {
+                        SimpleUtils.fail("Failed to find the team member!", false);
+                    }
+                }else {
+                    SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+                }
+            }else {
+                SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
+            }
+        } else if(areListElementVisible(btnSearchteamMember,15)) {
             if (btnSearchteamMember.size() == 2) {
                 //click(btnSearchteamMember.get(1));
-                if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
+                if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 15)) {
                     textSearch.clear();
                     textSearch.sendKeys(name);
                     click(searchIcon);
@@ -1081,7 +1677,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             }else {
                 SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
             }
-        }
+        } else
+            SimpleUtils.fail("Search team member tab fail to load! ", false);
     }
 
 
@@ -1240,14 +1837,57 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @Override
     public void selectSpecificWorkDay(int dayCountInOneWeek) {
         if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+            SimpleUtils.report("Day count is "+dayCountInOneWeek);
             for (int i = 0; i < dayCountInOneWeek; i++) {
                 if (!weekDays.get(i).getAttribute("class").contains("selected")) {
                     click(weekDays.get(i));
+                    SimpleUtils.pass("Click week day "+i+" successfully! ");
+                }
+            }
+        }else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5) && weekDaysInNewCreateShiftPage.size() == 7) {
+            SimpleUtils.report("Day count is "+dayCountInOneWeek);
+            for (int i = 0; i < dayCountInOneWeek; i++) {
+                if (!weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("checked")
+                        && weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("aria-disabled").contains("false")) {
+                    click(weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")));
+                    SimpleUtils.pass("Click week day "+i+" successfully! ");
                 }
             }
         }else
-            SimpleUtils.fail("week days load failed",true);
+            SimpleUtils.fail("week days load failed",false);
+
     }
+
+    @Override
+    public void selectMultipleOrSpecificWorkDay(int dayCountInOneWeek, Boolean isSingleDay) {
+        if (isSingleDay) {
+            if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+                if (!weekDays.get(dayCountInOneWeek).getAttribute("class").contains("selected")) {
+                    click(weekDays.get(dayCountInOneWeek));
+                }
+            } else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5) && weekDaysInNewCreateShiftPage.size() == 7) {
+                if (!weekDaysInNewCreateShiftPage.get(dayCountInOneWeek).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("checked")) {
+                    click(weekDaysInNewCreateShiftPage.get(dayCountInOneWeek).findElement(By.cssSelector(".MuiButtonBase-root")));
+                }
+            } else
+                SimpleUtils.fail("week days load failed",true);
+        } else {
+                if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+                    for (int i = 0; i < dayCountInOneWeek; i++) {
+                        if (!weekDays.get(i).getAttribute("class").contains("selected")) {
+                            click(weekDays.get(i));
+                        }
+                    }
+                } else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5) && weekDaysInNewCreateShiftPage.size() == 7) {
+                    for (int i = 0; i < dayCountInOneWeek; i++) {
+                        if (!weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("checked")) {
+                            click(weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")));
+                        }
+                    }
+                } else
+                    SimpleUtils.fail("week days load failed",true);
+            }
+        }
 
     @Override
     public List<Integer> selectDaysByCountAndCannotSelectedDate(int count, String cannotSelectedDate) throws Exception {
@@ -1289,12 +1929,47 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             if (selectedCount != count) {
                 SimpleUtils.fail("Create New Shift: Failed to select " + count + " days! Actual is: " + selectedCount + " days!", false);
             }
+        }else if (areListElementVisible(weekDaysInNewCreateShiftPage, 15) && weekDaysInNewCreateShiftPage.size() == 7) {
+            for (int i = 0; i < 7; i++) {
+                if (weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector("span.MuiButtonBase-root"))
+                        .getAttribute("class").contains("Mui-disabled")) {
+                    SimpleUtils.report("Day: " + weekDaysInNewCreateShiftPage.get(i).getText() + " is disabled!");
+                } else {
+                    if (cannotSelectedDate == null || cannotSelectedDate.equals("")) {
+                        if (!weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector("span.MuiButtonBase-root"))
+                                .getAttribute("class").contains("Mui-checked")) {
+                            click(weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector("span.MuiButtonBase-root")));
+                            SimpleUtils.report("Select day: " + weekDaysInNewCreateShiftPage.get(i).getText() + " Successfully!");
+                        }
+                        selectedCount++;
+                        indexes.add(i);
+                    } else {
+                        int date = getWeekDaysNDates().get(weekDaysInNewCreateShiftPage.get(i).getText().substring(0, 3));
+                        int cannotDate = Integer.parseInt(cannotSelectedDate.substring(cannotSelectedDate.length() - 2).trim());
+                        if (date != cannotDate) {
+                            if (!weekDaysInNewCreateShiftPage.get(i).getAttribute("class").contains("week-day-multi-picker-day-selected")) {
+                                click(weekDaysInNewCreateShiftPage.get(i));
+                                SimpleUtils.report("Select day: " + weekDaysInNewCreateShiftPage.get(i).getText() + " Successfully!");
+                            }
+                            selectedCount++;
+                            indexes.add(i);
+                        }
+                    }
+                    if (selectedCount == count) {
+                        SimpleUtils.pass("Create New Shift: Select " + count + " days Successfully!");
+                        break;
+                    }
+                }
+            }
+            if (selectedCount != count) {
+                SimpleUtils.fail("Create New Shift: Failed to select " + count + " days! Actual is: " + selectedCount + " days!", false);
+            }
         }else{
             SimpleUtils.fail("Weeks Days failed to load!", false);
         }
+
         return indexes;
     }
-
 
     @Override
     public void selectWeekDaysByDayName(String dayName) throws Exception {
@@ -1305,6 +1980,20 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 if (weekDayName.equalsIgnoreCase(dayName)){
                     click(weekDays.get(i));
                     SimpleUtils.report("Select day: " + weekDays.get(i).getText() + " Successfully!");
+                    isDayNameExist = true;
+                    break;
+                }
+            }
+            if (!isDayNameExist) {
+                SimpleUtils.fail("This is a wrong day name: "+ dayName+ "The correct day names should be: Mon, TUE, WED, THU, FRI, SAT, SUN", true);
+            }
+        }else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5)
+                && weekDaysInNewCreateShiftPage.size() == 7) {
+            for(int i=0; i< weekDaysInNewCreateShiftPage.size(); i++){
+                String weekDayName = weekDaysInNewCreateShiftPage.get(i).getText().split("\n")[0];
+                if (weekDayName.toLowerCase().contains(dayName.toLowerCase())){
+                    click(weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")));
+                    SimpleUtils.report("Select day: " + weekDaysInNewCreateShiftPage.get(i).getText() + " Successfully!");
                     isDayNameExist = true;
                     break;
                 }
@@ -1333,20 +2022,10 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return allOperatingHrs;
     }
 
-    @FindBy (css = "[ng-click=\"cancelAction()\"]")
-    private WebElement closeButtonOnCustomize;
-    @Override
-    public void clickOnCloseButtonOnCustomizeShiftPage() throws Exception {
-        if (isElementLoaded(closeButtonOnCustomize, 5)) {
-            click(closeButtonOnCustomize);
-        } else
-            SimpleUtils.fail("The close button on custimize shift page fail to load! ", false);
-    }
-
-
-
     @FindBy(css = "div.week-day-multi-picker-day-selected")
     private List<WebElement> selectedDaysOnCreateShiftPage;
+    @FindBy(css = "span.Mui-checked")
+    private List<WebElement> selectedDaysOnNewCreateShiftPage;
 
     @Override
     public List<String> getSelectedDayInfoFromCreateShiftPage() throws Exception {
@@ -1356,8 +2035,13 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 selectedDates.add(selectedDate.getText());
             }
             SimpleUtils.pass("Get selected days info successfully");
+        }else if (areListElementVisible(selectedDaysOnNewCreateShiftPage, 5) && selectedDaysOnNewCreateShiftPage.size()>0) {
+            for (int i=0;i< selectedDaysOnNewCreateShiftPage.size();i++){
+                selectedDates.add(getDriver().findElements(By.xpath("//span[contains(@class,'Mui-checked')]/following-sibling::span")).get(i).getText());
+            }
+            SimpleUtils.pass("Get selected days info successfully");
         }else
-            SimpleUtils.fail("Select days load failed",true);
+            SimpleUtils.fail("Select days load failed",false);
         return selectedDates;
     }
 
@@ -1371,5 +2055,843 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         } else {
             SimpleUtils.fail("Customize New Shift window: Close button not loaded Successfully!", false);
         }
+    }
+
+    @FindBy(css = "[ng-click=\"prevAction()\"]")
+    private WebElement backButton;
+    @FindBy(css = "[ng-click=\"back()\"]")
+    private WebElement backButtonOnNewCreateShiftPage;
+
+    @Override
+    public void clickOnBackButton () throws Exception {
+        if (isElementLoaded(backButton, 5)) {
+            clickTheElement(backButton);
+            SimpleUtils.pass("Click Back button successfully! ");
+        } else if (isElementLoaded(backButtonOnNewCreateShiftPage, 5)) {
+            clickTheElement(backButtonOnNewCreateShiftPage);
+            SimpleUtils.pass("Click Back button successfully! ");
+        }else
+            SimpleUtils.fail("The Back button fail to loaded! ", false);
+
+    }
+
+    public boolean checkIfWarningModalDisplay () throws Exception {
+        boolean checkIfWarningModalDisplay = false;
+        if (isElementLoaded(popUpScheduleOverlap, 10)) {
+            checkIfWarningModalDisplay = true;
+        }
+        return checkIfWarningModalDisplay;
+    }
+
+    @FindBy(css = ".MuiDialogContent-root p")
+    private List<WebElement> warningMessagesInWarningModeOnNewCreaeShiftPage;
+    public String getWarningMessageFromWarningModal () throws Exception {
+        String warningMesssage ="";
+        if (isElementLoaded(warningMessagesInWarningMode, 5)) {
+            warningMesssage= warningMessagesInWarningMode.getText();
+        }else if (areListElementVisible(warningMessagesInWarningModeOnNewCreaeShiftPage, 5)) {
+            for (WebElement message: warningMessagesInWarningModeOnNewCreaeShiftPage) {
+                warningMesssage = warningMesssage + " " + message.getText();
+            }
+            warningMesssage = warningMesssage.replace(" AM", "am").replace(" PM", "pm").replace(":00", "");
+        }else
+            SimpleUtils.fail("The warning message fail to load! ", false);
+        return warningMesssage;
+    }
+
+    public void clickOnOkButtonOnWarningModal () throws Exception {
+        if (isElementLoaded(okBtnInWarningMode, 5)) {
+            clickTheElement(okBtnInWarningMode);
+        }else if (areListElementVisible(buttonsOnWarningMode, 5)) {
+            clickTheElement(buttonsOnWarningMode.get(0));
+        }else
+            SimpleUtils.fail("The OK button fail to load! ", false);
+    }
+
+    @FindBy(css = "div.react-create-shift-modal")
+    private WebElement newCreateShiftModal;
+
+    public boolean checkIfNewCreateShiftPageDisplay() throws Exception {
+        if (isElementLoaded(newCreateShiftModal, 10)) {
+            SimpleUtils.pass("The new create shift modal display! ");
+            return true;
+        } else {
+            SimpleUtils.report("The new create shift modal is not display! ");
+            return false;
+        }
+    }
+
+    public void searchWithOutSelectTM(String tmName) throws Exception {
+        if (isElementLoaded(textSearch, 10) && isElementLoaded(searchIcon, 10)) {
+            textSearch.clear();
+            textSearch.sendKeys(tmName);
+            click(searchIcon);
+            MyThreadLocal.setMessageOfTMScheduledStatus("");
+        } else if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+            textSearchOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+            textSearchOnNewCreateShiftPage.sendKeys(Keys.DELETE);
+            textSearchOnNewCreateShiftPage.sendKeys(tmName);
+            waitForSeconds(3);
+            MyThreadLocal.setMessageOfTMScheduledStatus("");
+        }else {
+            SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+        }
+    }
+
+
+    @FindBy(css = ".MuiInputAdornment-positionEnd svg")
+    private WebElement nextDayIcon;
+    @FindBy(css = "[role=\"tooltip\"]")
+    private WebElement nextDayTooltip;
+    public void checkOrUnCheckNextDayOnCreateShiftModal(boolean toCheck) throws Exception {
+        if (isElementLoaded(nextDayIcon, 10)) {
+            moveToElementAndClick(nextDayIcon);
+            if (isElementLoaded(nextDayTooltip, 5)){
+                if (toCheck) {
+                    if (nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
+                        SimpleUtils.pass("Next day checkbox has already been checked! ");
+                    } else {
+                        clickTheElement(nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root input")));
+                        waitForSeconds(2);
+                        moveToElementAndClick(nextDayIcon);
+                        if (nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
+                            SimpleUtils.pass("Check Next day checkbox successfully! ");
+                        } else
+                            SimpleUtils.fail("Fail to check Next day checkbox! ", false);
+                    }
+                } else {
+                    if (nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
+                        clickTheElement(nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root input")));
+                        waitForSeconds(2);
+                        if (!nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
+                            SimpleUtils.pass("Uncheck Next day checkbox successfully! ");
+                        } else
+                            SimpleUtils.fail("Fail to uncheck Next day checkbox! ", false);
+                    } else {
+                        SimpleUtils.pass("Next day checkbox has already been unchecked! ");
+                    }
+                }
+            }
+        }else {
+            SimpleUtils.fail("Next day icon fail to load! ", false);
+        }
+    }
+
+
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[2]/button")
+    private WebElement clearAssignmentsLink;
+    public void clickClearAssignmentsLink() throws Exception {
+        if (isElementLoaded(clearAssignmentsLink, 5)) {
+            clickTheElement(clearAssignmentsLink);
+            if (!isElementLoaded(clearAssignmentsLink, 3)) {
+                SimpleUtils.pass("Click clear assignments link successfully! ");
+            } else
+                SimpleUtils.fail("Fail to click clear assignments link! ", false);
+        } else
+            SimpleUtils.report("The clear assignments link fail to load! ");
+    }
+
+    @Override
+    public boolean areWorkRoleDisplayOrderCorrect(HashMap<String, Integer> workRoleNOrders) throws Exception {
+        boolean isConsistent = true;
+        if (isElementLoaded(btnWorkRole, 10)) {
+            clickTheElement(btnWorkRole);
+            SimpleUtils.pass("Work Role button clicked Successfully");
+            if (listWorkRoles.size() > 0) {
+                for (int i = 0; i < listWorkRoles.size() - 1; i++) {
+                    int order1 = workRoleNOrders.get(listWorkRoles.get(i).getText().toLowerCase());
+                    int order2 = workRoleNOrders.get(listWorkRoles.get(i + 1).getText().toLowerCase());
+                    if (order1 > order2) {
+                        isConsistent = false;
+                        break;
+                    }
+                }
+            } else {
+                isConsistent = false;
+                SimpleUtils.fail("Work Roles size are empty", false);
+            }
+        } else if (isElementLoaded(workRoleOnNewShiftPage, 5)) {
+            click(workRoleOnNewShiftPage);
+            SimpleUtils.pass("Work Role button clicked Successfully");
+            if (dropDownListOnNewCreateShiftPage.size() > 0) {
+                for (int i = 0; i < dropDownListOnNewCreateShiftPage.size() - 1; i++) {
+                    int order1 = workRoleNOrders.get(dropDownListOnNewCreateShiftPage.get(i).getText().toLowerCase());
+                    int order2 = workRoleNOrders.get(dropDownListOnNewCreateShiftPage.get(i + 1).getText().toLowerCase());
+                    if (order1 > order2) {
+                        isConsistent = false;
+                        break;
+                    }
+                }
+            } else {
+                isConsistent = false;
+                SimpleUtils.fail("Work Roles size are empty", false);
+            }
+        } else {
+            isConsistent = false;
+            SimpleUtils.fail("Work Role button is not clickable", false);
+        }
+        return isConsistent;
+    }
+
+    public boolean checkIfWorkRoleDropDownIsLoadedOnNewCreateShiftPage () throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(workRoleOnNewShiftPage, 5)) {
+            isLoaded = true;
+            SimpleUtils.report("The work role dropdown is loaded on New Create Shift page! ");
+        } else
+            SimpleUtils.report("The work role dropdown is not loaded on New Create Shift page! ");
+        return isLoaded;
+    }
+
+
+
+    public List<String> searchWorkRoleOnNewCreateShiftPage (String workRole) throws Exception {
+        List<String> searchResult = new ArrayList<>();
+        if (isElementLoaded(workRoleOnNewShiftPage, 5)) {
+            click(workRoleOnNewShiftPage);
+            SimpleUtils.pass("Work Role button clicked Successfully");
+            getDriver().findElement(By.cssSelector("[id=\"workRole\"] input")).sendKeys(workRole);
+            if (dropDownListOnNewCreateShiftPage.size() > 0) {
+                for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
+                    searchResult.add(listWorkRole.getText());
+                }
+            } else {
+                SimpleUtils.report("Work Roles size are empty");
+            }
+        } else
+            SimpleUtils.report("The work role dropdown is not loaded on New Create Shift page! ");
+        return searchResult;
+    }
+
+    @FindBy(css = "[id=\"shiftName\"]")
+    private WebElement shiftNameOnNewCreateShiftPage;
+    public boolean checkIfShiftNameInputIsLoadedOnNewCreateShiftPage () throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(shiftNameOnNewCreateShiftPage, 5)) {
+            isLoaded = true;
+            SimpleUtils.report("The shift name input is loaded on New Create Shift page! ");
+        } else
+            SimpleUtils.report("The shift name input is not loaded on New Create Shift page! ");
+        return isLoaded;
+    }
+
+
+    public boolean checkIfShiftStartAndEndInputsAreLoadedOnNewCreateShiftPage () throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(shiftStartInputOnNewCreateShiftPage, 5) &&
+                isElementLoaded(shiftEndInputOnNewCreateShiftPage, 5)) {
+            isLoaded = true;
+            SimpleUtils.report("The shift start and end inputs are loaded on New Create Shift page! ");
+        } else
+            SimpleUtils.report("The shift start and end inputs are not loaded on New Create Shift page! ");
+        return isLoaded;
+    }
+
+    public boolean checkIfNextButtonIsLoadedOnNewCreateShiftPage () throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5) &&
+                btnSaveOnNewCreateShiftPage.getText().equals("NEXT")) {
+            isLoaded = true;
+            SimpleUtils.report("The Next button is loaded on New Create Shift page! ");
+        } else
+            SimpleUtils.report("The Next button is not loaded on New Create Shift page! ");
+        return isLoaded;
+    }
+
+    public boolean checkIfCreateButtonIsLoadedOnNewCreateShiftPage () throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5) &&
+                btnSaveOnNewCreateShiftPage.getText().equals("CREATE")) {
+            isLoaded = true;
+            SimpleUtils.report("The Create button is loaded on New Create Shift page! ");
+        } else
+            SimpleUtils.report("The Create button is not loaded on New Create Shift page! ");
+        return isLoaded;
+    }
+
+    public boolean checkIfCancelButtonIsLoadedOnNewCreateShiftPage () throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(backButtonOnNewCreateShiftPage, 5) &&
+                backButtonOnNewCreateShiftPage.getText().equals("CANCEL")) {
+            isLoaded = true;
+            SimpleUtils.report("The Cancel button is loaded on New Create Shift page! ");
+        } else
+            SimpleUtils.report("The Cancel button is not loaded on New Create Shift page! ");
+        return isLoaded;
+    }
+
+    public boolean checkIfBackButtonIsLoadedOnNewCreateShiftPage () throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(backButtonOnNewCreateShiftPage, 5) &&
+                backButtonOnNewCreateShiftPage.getText().equals("BACK")) {
+            isLoaded = true;
+            SimpleUtils.report("The Back button is loaded on New Create Shift page! ");
+        } else
+            SimpleUtils.report("The Back button is not loaded on New Create Shift page! ");
+        return isLoaded;
+    }
+
+    @FindBy(css = "[id=\"shiftsPerDay\"]")
+    private WebElement shiftPerDayInputOnNewCreateShiftPage;
+    public boolean checkIfShiftPerDayInputIsLoadedOnNewCreateShiftPage () throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(shiftPerDayInputOnNewCreateShiftPage, 5)) {
+            isLoaded = true;
+            SimpleUtils.report("The Shift Per Day input is loaded on New Create Shift page! ");
+        } else
+            SimpleUtils.report("The Shift Per Day input is not loaded on New Create Shift page! ");
+        return isLoaded;
+    }
+
+    public int getShiftPerDayValue () throws Exception {
+        int shiftPerDay = 0;
+        if (isElementLoaded(shiftPerDayInputOnNewCreateShiftPage, 5)) {
+            shiftPerDay = Integer.parseInt(shiftPerDayInputOnNewCreateShiftPage.getAttribute("value"));
+            SimpleUtils.pass("Get the Shift Per Day value successfully! ");
+        } else
+            SimpleUtils.fail("The Shift Per Day input is not loaded on New Create Shift page! ",false);
+        return shiftPerDay;
+    }
+
+
+    public boolean checkIfSelectDaysCheckBoxAreLoadedOnNewCreateShiftPage () throws Exception {
+        boolean isLoaded = false;
+        if (areListElementVisible(weekDaysInNewCreateShiftPage, 5)
+                && weekDaysInNewCreateShiftPage.size()==7) {
+            isLoaded = true;
+            SimpleUtils.report("The select days checkboxes are loaded on New Create Shift page! ");
+        } else
+            SimpleUtils.report("The select days checkboxes are not loaded on New Create Shift page! ");
+        return isLoaded;
+    }
+
+    public boolean checkIfAssignmentDropDownListIsLoadedOnNewCreateShiftPage () throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(assignmentDropDownOnNewCreateShiftPage, 5)) {
+            isLoaded = true;
+            SimpleUtils.report("The Assignment dropdown list is loaded on New Create Shift page! ");
+        } else
+            SimpleUtils.report("The Assignment dropdown list is not loaded on New Create Shift page! ");
+        return isLoaded;
+    }
+
+
+    @FindBy(css = "[name=\"shiftNotes\"]")
+    private WebElement shiftNotesOnNewCreateShiftPage;
+    public boolean checkIfShiftNotesTextAreaIsLoadedOnNewCreateShiftPage () throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(shiftNotesOnNewCreateShiftPage, 5)) {
+            isLoaded = true;
+            SimpleUtils.report("The Shift Notes textarea is loaded on New Create Shift page! ");
+        } else
+            SimpleUtils.report("The Shift Notes textarea is not loaded on New Create Shift page! ");
+        return isLoaded;
+    }
+
+    @FindBy(css = "[ng-click=\"close()\"]")
+    private WebElement closeIconOnNewCreateShiftPage;
+    public boolean checkIfCloseIconIsLoadedOnNewCreateShiftPage () throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(closeIconOnNewCreateShiftPage, 5)) {
+            isLoaded = true;
+            SimpleUtils.report("The Close icon is loaded on New Create Shift page! ");
+        } else
+            SimpleUtils.report("The Close icon is not loaded on New Create Shift page! ");
+        return isLoaded;
+    }
+
+    public void closeNewCreateShiftPage () throws Exception {
+        if (isElementLoaded(closeIconOnNewCreateShiftPage, 5)) {
+            clickTheElement(closeIconOnNewCreateShiftPage);
+            waitForSeconds(3);
+            if (!checkIfNewCreateShiftPageDisplay()) {
+                SimpleUtils.pass("The New Create Shift page been closed successfully! ");
+            } else
+                SimpleUtils.fail("The New Create Shift page fail to close! ", false);
+        } else
+            SimpleUtils.fail("The Close icon is not loaded on New Create Shift page! ", false);
+    }
+
+    @FindBy(xpath = "//div[contains(@id,'workRole')]/following-sibling::p")
+    private WebElement workRoleWarningMessageOnNewShiftPage;
+    public boolean checkIfWorkRoleWarningMessageIsLoaded() throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(workRoleWarningMessageOnNewShiftPage, 5)
+                && workRoleWarningMessageOnNewShiftPage.getText().equalsIgnoreCase("Must select the shift role")) {
+            isLoaded = true;
+            SimpleUtils.report("The work role warning message is loaded! ");
+        } else
+            SimpleUtils.report("The work role warning message is not loaded! ");
+        return isLoaded;
+    }
+
+    @FindBy(xpath = "//div[@id='create-new-shift-react']/div/div/form/div/div/div[7]/div[2]/div/p")
+    private WebElement assignmentWarningMessageOnNewShiftPage;
+    public boolean checkIfAssignmentWarningMessageIsLoaded() throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(assignmentWarningMessageOnNewShiftPage, 5)
+                && assignmentWarningMessageOnNewShiftPage.getText().equalsIgnoreCase("Must select the assignment mode")) {
+            isLoaded = true;
+            SimpleUtils.report("The assignment warning message is loaded! ");
+        } else
+            SimpleUtils.report("The assignment warning message is not loaded! ");
+        return isLoaded;
+    }
+
+    @FindBy(css = "[class*=\"MuiGrid-root MuiGrid-item MuiGrid-grid-xs-10\"] p")
+    private WebElement selectDaysWarningMessageOnNewShiftPage;
+    public boolean checkIfSelectDaysWarningMessageIsLoaded() throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(selectDaysWarningMessageOnNewShiftPage, 5)
+                && selectDaysWarningMessageOnNewShiftPage.getText().equalsIgnoreCase("At least one day should be selected")) {
+            isLoaded = true;
+            SimpleUtils.report("The select days warning message is loaded! ");
+        } else
+            SimpleUtils.report("The select days warning message is not loaded! ");
+        return isLoaded;
+    }
+
+
+    @FindBy(css = "[id=\"shiftStart-helper-text\"]")
+    private WebElement shiftStartWarningMessageOnNewShiftPage;
+    public String getShiftStartWarningMessage() throws Exception {
+        String warningMessage = "";
+        if (isElementLoaded(shiftStartWarningMessageOnNewShiftPage, 5)) {
+            warningMessage = shiftStartWarningMessageOnNewShiftPage.getText();
+            SimpleUtils.report("Get shift start warning message successfully! ");
+        } else
+            SimpleUtils.report("The select days warning message is not loaded! ");
+        return warningMessage;
+    }
+
+    @FindBy(css = "[id=\"shiftEnd-helper-text\"]")
+    private WebElement shiftEndWarningMessageOnNewShiftPage;
+    public String getShiftEndWarningMessage() throws Exception {
+        String warningMessage = "";
+        if (isElementLoaded(shiftEndWarningMessageOnNewShiftPage, 5)) {
+            warningMessage = shiftEndWarningMessageOnNewShiftPage.getText();
+            SimpleUtils.report("Get shift start warning message successfully! ");
+        } else
+            SimpleUtils.report("The select days warning message is not loaded! ");
+        return warningMessage;
+    }
+
+    @FindBy(css = "[id=\"shiftsPerDay-helper-text\"]")
+    private WebElement shiftPerDayWarningMessageOnNewShiftPage;
+    public String getShiftPerDayWarningMessage() throws Exception {
+        String warningMessage = "";
+        if (isElementLoaded(shiftPerDayWarningMessageOnNewShiftPage, 5)) {
+            warningMessage = shiftPerDayWarningMessageOnNewShiftPage.getText();
+            SimpleUtils.report("Get shift per day warning message successfully! ");
+        } else
+            SimpleUtils.report("The select shift per day warning message is not loaded! ");
+        return warningMessage;
+    }
+
+    public void setShiftPerDayOnNewCreateShiftPage (int shiftPerDay) throws Exception {
+        if (isElementLoaded(shiftPerDayInputOnNewCreateShiftPage, 5)) {
+//            shiftPerDayInputOnNewCreateShiftPage.clear();
+            shiftPerDayInputOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+            shiftPerDayInputOnNewCreateShiftPage.sendKeys(Keys.DELETE);
+            shiftPerDayInputOnNewCreateShiftPage.sendKeys(String.valueOf(shiftPerDay));
+            SimpleUtils.report("Set Shift Per Day on New Create Shift page successfully! ");
+        } else
+            SimpleUtils.report("The Shift Per Day input is not loaded on New Create Shift page! ");
+    }
+
+
+    public void moveMouseToSpecificWeekDayOnNewCreateShiftPage (String weekDay) throws Exception {
+        if (areListElementVisible(weekDaysInNewCreateShiftPage, 5)) {
+            for (WebElement day: weekDaysInNewCreateShiftPage) {
+                if (day.getText().contains(weekDay)){
+                    scrollToElement(day);
+                    moveToElementAndClick(day);
+                    SimpleUtils.pass("Move to the specific day on New Create Shift page successfully! ");
+                    break;
+                }
+            }
+        } else
+            SimpleUtils.fail("The select days are not loaded on New Create Shift page! ", false);
+    }
+
+    @FindBy(css = "[role=\"tooltip\"] p")
+    private WebElement closedDayTooltip;
+    public boolean checkClosedDayTooltipIsLoaded() throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(closedDayTooltip, 5)
+                && closedDayTooltip.getText().equalsIgnoreCase("Store Closed")) {
+            isLoaded = true;
+            SimpleUtils.report("The closed day tooltip is loaded! ");
+        } else
+            SimpleUtils.report("The closed day tooltip is not loaded! ");
+        return isLoaded;
+    }
+
+
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div")
+    private List<WebElement> assignAndOfferSections;
+    public boolean checkIfShiftAssignAndOffersSectionsAreLoaded() throws Exception {
+        boolean isLoaded = false;
+        if (areListElementVisible(assignAndOfferSections, 5) && assignAndOfferSections.size()==4) {
+            isLoaded = true;
+            SimpleUtils.report("The shift assign and offer sections are loaded! ");
+        } else
+            SimpleUtils.report("The shift assign and offer sections are not loaded! ");
+        return isLoaded;
+    }
+
+    public String getShiftAssignedMessage() throws Exception {
+        String message = "";
+        if (areListElementVisible(assignAndOfferSections, 5) && assignAndOfferSections.size()==4) {
+            message = assignAndOfferSections.get(0).getText();
+            SimpleUtils.report("Get shift assigned message successfully! ");
+        } else
+            SimpleUtils.fail("The shift assign and offer sections are not loaded! ", false);
+        return message;
+    }
+
+    public String getShiftOffersMessage() throws Exception {
+        String message = "";
+        if (areListElementVisible(assignAndOfferSections, 5) && assignAndOfferSections.size()==4) {
+            message = assignAndOfferSections.get(2).getText();
+            SimpleUtils.report("Get shift offer message successfully! ");
+        } else
+            SimpleUtils.fail("The shift assign and offer sections are not loaded! ", false);
+        return message;
+    }
+
+    @FindBy(css = "[width=\"40\"][fill=\"none\"]")
+    private List<WebElement> openShiftsOnShiftAssignedSections;
+    public int getOpenShiftCountOnShiftAssignedSection() {
+        int openShiftCount = 0;
+        if (areListElementVisible(openShiftsOnShiftAssignedSections, 5)) {
+            openShiftCount = openShiftsOnShiftAssignedSections.size();
+            SimpleUtils.pass("Get open shift count: "+openShiftCount + " successfully! ");
+        } else
+            SimpleUtils.report("There is no open shift on the shift assigned section! ");
+        return openShiftCount;
+    }
+
+    @FindBy(css = "div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-5")
+    private WebElement shiftCardOnSearchTMPage;
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div/div/p")
+    private WebElement noOfShiftPerDayAndDaysScheduled;
+    public int getNoOfShiftPerDayOnSearchTMPage() throws Exception {
+        int noOfShiftPerDay = 0;
+        if (isElementLoaded(noOfShiftPerDayAndDaysScheduled, 5)) {
+            String noOfShiftPerDayMessage = noOfShiftPerDayAndDaysScheduled.getText().split("Days")[0];
+            noOfShiftPerDay = Integer.parseInt(noOfShiftPerDayMessage.split(":")[1].trim());
+            SimpleUtils.pass("Get no of shift per day successfully! ");
+        } else
+            SimpleUtils.fail("The no of shift per day message fail to load! ", false);
+        return noOfShiftPerDay;
+    }
+
+
+    public String getDaysScheduledOnSearchTMPage() throws Exception {
+        String daysScheduled = "";
+        if (isElementLoaded(noOfShiftPerDayAndDaysScheduled, 5)) {
+            String noOfShiftPerDayMessage = noOfShiftPerDayAndDaysScheduled.getText().split(":")[noOfShiftPerDayAndDaysScheduled.getText().split(":").length-1];
+            daysScheduled = noOfShiftPerDayMessage;
+            SimpleUtils.pass("Get days scheduled successfully! ");
+        } else
+            SimpleUtils.fail("The days scheduled message fail to load! ", false);
+        return daysScheduled;
+    }
+
+    public String getShiftCardInfoOnSearchTMPage() throws Exception {
+        String shiftCardInfo = "";
+        if (isElementLoaded(shiftCardOnSearchTMPage, 5)) {
+            shiftCardInfo = shiftCardOnSearchTMPage.getText();
+            SimpleUtils.pass("Get shift card info successfully! ");
+        } else
+            SimpleUtils.fail("The shift card fail to load! ", false);
+        return shiftCardInfo;
+    }
+
+    @FindBy(css = "label.MuiFormControlLabel-labelPlacementEnd")
+    private WebElement assignShiftsForEachDaySwitch;
+    public boolean checkAssignShiftsForEachDaySwitchIsLoaded() throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(assignShiftsForEachDaySwitch, 10)) {
+            isLoaded = true;
+            SimpleUtils.report("Assign shifts for each day switch is loaded successfully! ");
+        } else
+            SimpleUtils.report("Assign shifts for each day switch fail to load! ");
+        return isLoaded;
+    }
+
+    public boolean checkAssignShiftsForEachDaySwitchIfEnabled() throws Exception {
+        boolean isEnabled = false;
+        if (isElementLoaded(assignShiftsForEachDaySwitch, 10)) {
+            if (assignShiftsForEachDaySwitch.findElement
+                    (By.cssSelector("span.MuiSwitch-switchBase")).getAttribute("class").contains("checked")){
+                isEnabled = true;
+                SimpleUtils.report("Assign shifts for each day switch is enabled! ");
+            } else {
+                SimpleUtils.report("Assign shifts for each day switch is not enabled! ");
+            }
+        } else
+            SimpleUtils.fail("Assign shifts for each day switch fail to load! ", false);
+        return isEnabled;
+    }
+
+    public void openOrCloseAssignShiftsForEachDaySwitch(boolean toOpen) throws Exception {
+        if (isElementLoaded(assignShiftsForEachDaySwitch, 10)) {
+            if (toOpen) {
+                if (assignShiftsForEachDaySwitch.findElement
+                        (By.cssSelector("span.MuiSwitch-switchBase")).getAttribute("class").contains("checked")){
+                    SimpleUtils.pass("Assign shifts for each day switch already been open! ");
+                } else {
+                    clickTheElement(assignShiftsForEachDaySwitch.findElement(By.cssSelector("input.MuiSwitch-input")));
+                    if (assignShiftsForEachDaySwitch.findElement
+                            (By.cssSelector("span.MuiSwitch-switchBase")).getAttribute("class").contains("checked")) {
+                        SimpleUtils.pass("Open assign shifts for each day switch successfully! ");
+                    } else
+                        SimpleUtils.fail("Fail to open assign shifts for each day switch! ", false);
+                }
+            } else {
+                if (assignShiftsForEachDaySwitch.findElement
+                        (By.cssSelector("span.MuiSwitch-switchBase")).getAttribute("class").contains("checked")){
+                    clickTheElement(assignShiftsForEachDaySwitch.findElement(By.cssSelector("input.MuiSwitch-input")));
+                    if (!assignShiftsForEachDaySwitch.findElement
+                            (By.cssSelector("span.MuiSwitch-switchBase")).getAttribute("class").contains("checked")) {
+                        SimpleUtils.pass("Close assign shifts for each day switch successfully! ");
+                    } else
+                        SimpleUtils.fail("Fail to close assign shifts for each day switch! ", false);
+                } else {
+                    SimpleUtils.pass("Assign shifts for each day switch already been closed! ");
+                }
+            }
+            SimpleUtils.report("Assign shifts for each day switch is loaded successfully! ");
+        } else
+            SimpleUtils.report("Assign shifts for each day switch fail to load! ");
+    }
+
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[1]/div[1]/div")
+    private List<WebElement> assignShiftsEachDays;
+    public List<String> getAssignShiftsMessageOfEachDays() {
+        List<String> messages = new ArrayList<>();
+        if (areListElementVisible(assignShiftsEachDays, 5)) {
+            for (int i= 0; i< assignShiftsEachDays.size(); i++) {
+                messages.add(assignShiftsEachDays.get(i).getText());
+            }
+            SimpleUtils.report("Get assign shifts message for each day successfully! ");
+        } else
+            SimpleUtils.report("The assign shifts each day is not loaded! ");
+        return messages;
+    }
+
+
+    public List<WebElement> getSearchAndRecommendedResult() {
+        List<WebElement> result = new ArrayList<>();
+        if (areListElementVisible(searchResultsOnNewCreateShiftPage, 5)) {
+            result = searchResultsOnNewCreateShiftPage;
+            SimpleUtils.report("Get search result successfully! ");
+        } else
+            SimpleUtils.report("The assign shifts each day is not loaded! ");
+        return result;
+    }
+
+
+
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[2]/div/div/div")
+    private List<WebElement> assignedShiftsOnShiftAssignedSections;
+    public List<String> getAssignedShiftOnShiftAssignedSection() {
+        List<String> assignedShifts = new ArrayList<>();
+        if (areListElementVisible(assignedShiftsOnShiftAssignedSections, 5)) {
+            for (WebElement shift: assignedShiftsOnShiftAssignedSections) {
+                String tmName = shift.findElement(By.cssSelector("img")).getAttribute("alt");
+                assignedShifts.add(tmName);
+                SimpleUtils.pass("Get assigned shift: "+tmName + " successfully! ");
+            }
+        } else
+            SimpleUtils.report("There is no assigned shift on the shift assigned section! ");
+        return assignedShifts;
+    }
+
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[4]/div/div/div")
+    private List<WebElement> shiftOffersOnShiftAssignedSections;
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[4]/button")
+    private WebElement clearOffersLink;
+    public List<String> getShiftOffersOnShiftAssignedSection() {
+        List<String> shiftOffers = new ArrayList<>();
+        if (areListElementVisible(shiftOffersOnShiftAssignedSections, 5)) {
+            for (WebElement shift: shiftOffersOnShiftAssignedSections) {
+                String tmName = shift.findElement(By.cssSelector("img")).getAttribute("alt");
+                shiftOffers.add(tmName);
+                SimpleUtils.pass("Get assigned shift: "+tmName + " successfully! ");
+            }
+        } else
+            SimpleUtils.report("There is no assigned shift on the shift assigned section! ");
+        return shiftOffers;
+    }
+
+
+    public void clickClearOfferLink() throws Exception {
+        if (isElementLoaded(clearOffersLink, 5)) {
+            clickTheElement(clearOffersLink);
+            if (!isElementLoaded(clearOffersLink, 3)) {
+                SimpleUtils.pass("Click clear offers link successfully! ");
+            } else
+                SimpleUtils.fail("Fail to click offers assignments link! ", false);
+        } else
+            SimpleUtils.report("The clear offers link fail to load! ");
+    }
+
+
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[2]/div/div/button")
+    private List<WebElement> removeIconsForAssignedShift;
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[4]/div/div/button")
+    private List<WebElement> removeIconsForOfferedShift;
+    public void removeAllAssignedShiftByClickRemoveIcon() {
+        if (areListElementVisible(removeIconsForAssignedShift, 5)) {
+            for (WebElement removeIcon: removeIconsForAssignedShift) {
+                clickTheElement(removeIcon);
+                SimpleUtils.pass("Remove one assigned shift successfully! ");
+            }
+        } else
+            SimpleUtils.report("There is no remove icon display on Shift Assigned section! ");
+    }
+
+    public void removeAllOfferedShiftByClickRemoveIcon() {
+        if (areListElementVisible(removeIconsForOfferedShift, 5)) {
+            for (WebElement removeIcon: removeIconsForOfferedShift) {
+                clickTheElement(removeIcon);
+                SimpleUtils.pass("Remove one offered shift successfully! ");
+            }
+        } else
+            SimpleUtils.report("There is no remove icon display on Shift Offers section! ");
+    }
+
+    @FindBy(css = "[data-testid=\"confirm-console-wrapper\"]")
+    private WebElement confirmPopup;
+    @FindBy(css = "[data-testid=\"confirm-console-wrapper\"] button")
+    private List<WebElement> buttonsOnConfirmPopup;
+    @FindBy(css = "[data-testid=\"confirm-console-wrapper\"] div p")
+    private WebElement titleOnConfirmPopup;
+    @FindBy(xpath = "//div[contains(@data-testid,'confirm-console-wrapper')]/p")
+    private WebElement messageOnConfirmPopup;
+    public boolean checkConfirmPopupIsLoaded() throws Exception {
+        boolean isLoaded = false;
+        if (isElementLoaded(confirmPopup, 15)) {
+            isLoaded = true;
+            SimpleUtils.report("The confirm popup is loaded! ");
+        } else
+            SimpleUtils.report("The confirm popup is not loaded! ");
+        return isLoaded;
+    }
+
+    public String getTitleOfConfirmPopup() throws Exception {
+        String title = "";
+        if (isElementLoaded(confirmPopup, 15)) {
+            if(isElementLoaded(titleOnConfirmPopup, 5)) {
+                title = titleOnConfirmPopup.getText();
+                SimpleUtils.report("Get the title on confirm popup successfully! ");
+            } else
+                SimpleUtils.fail("The title on confirm popup fail to load! ", false);
+        } else
+            SimpleUtils.fail("The confirm popup is not loaded! ", false);
+        return title;
+    }
+
+    public String getMessageOfConfirmPopup() throws Exception {
+        String message = "";
+        if (isElementLoaded(confirmPopup, 15)) {
+            if(isElementLoaded(messageOnConfirmPopup, 5)) {
+                message = messageOnConfirmPopup.getText();
+                SimpleUtils.report("Get message on confirm popup successfully! ");
+            } else
+                SimpleUtils.fail("The message on confirm popup fail to load! ", false);
+        } else
+            SimpleUtils.fail("The confirm popup is not loaded! ", false);
+        return message;
+    }
+
+    public void clickOkBtnOnConfirmPopup() throws Exception {
+        if (areListElementVisible(buttonsOnConfirmPopup, 5)
+                && buttonsOnConfirmPopup.size()==2) {
+            clickTheElement(buttonsOnConfirmPopup.get(1));
+            SimpleUtils.report("Click the Ok button successfully! ");
+        } else
+            SimpleUtils.fail("The buttons on confirm popup is not loaded! ", false);
+    }
+
+
+    public void selectAssignShiftDaysByIndex(int index) {
+        if (areListElementVisible(assignShiftsEachDays, 5)) {
+            for (int i= 0; i< assignShiftsEachDays.size(); i++) {
+                if (index == i) {
+                    clickTheElement(assignShiftsEachDays.get(i));
+                    SimpleUtils.pass("Click the assign shift day successfully! ");
+                    break;
+                }
+            }
+            SimpleUtils.report("Get assign shifts message for each day successfully! ");
+        } else
+            SimpleUtils.fail("The assign shifts each days are not loaded! ", false);
+    }
+
+
+    public void selectAssignShiftDaysByDayName(String dayName) {
+        if (areListElementVisible(assignShiftsEachDays, 5)) {
+            for (int i= 0; i< assignShiftsEachDays.size(); i++) {
+                if (assignShiftsEachDays.get(i).getText().toLowerCase().contains(dayName.toLowerCase())) {
+                    clickTheElement(assignShiftsEachDays.get(i));
+                    SimpleUtils.pass("Click the assign shift day successfully! ");
+                    break;
+                }
+            }
+            SimpleUtils.report("Get assign shifts message for each day successfully! ");
+        } else
+            SimpleUtils.fail("The assign shifts each days are not loaded! ", false);
+    }
+
+    public void clickAssignShiftsForEachDaySwitch() throws Exception {
+        if (isElementLoaded(assignShiftsForEachDaySwitch, 10)) {
+            clickTheElement(assignShiftsForEachDaySwitch.findElement(By.cssSelector("input.MuiSwitch-input")));
+            SimpleUtils.report("Click assign shifts for each day switch successfully! ");
+        } else
+            SimpleUtils.report("Assign shifts for each day switch fail to load! ");
+    }
+
+    public void setShiftNotesOnNewCreateShiftPage (String shiftNotes) throws Exception {
+        if (isElementLoaded(shiftNotesOnNewCreateShiftPage, 5)) {
+            shiftNotesOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+            shiftNotesOnNewCreateShiftPage.sendKeys(Keys.DELETE);
+            shiftNotesOnNewCreateShiftPage.sendKeys(String.valueOf(shiftNotes));
+            SimpleUtils.report("Set Shift Notes on New Create Shift page successfully! ");
+        } else
+            SimpleUtils.report("The Shift Notes textarea is not loaded on New Create Shift page! ");
+    }
+
+    public void setShiftNameOnNewCreateShiftPage (String shiftName) throws Exception {
+        if (isElementLoaded(shiftNameOnNewCreateShiftPage, 5)) {
+            shiftNameOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+            shiftNameOnNewCreateShiftPage.sendKeys(Keys.DELETE);
+            shiftNameOnNewCreateShiftPage.sendKeys(String.valueOf(shiftName));
+            SimpleUtils.report("Set shift name on New Create Shift page successfully! ");
+        } else
+            SimpleUtils.report("The shift name input is not loaded on New Create Shift page! ");
+    }
+
+    @FindBy(css = "[class=\"sc-karCPZ chPZcS\"]")
+    private WebElement greyAvailableIcon;
+    @FindBy(css = "[class=\"sc-karCPZ hhDhwY\"]")
+    private WebElement greenAvailableIcon;
+    @FindBy(css = "[class=\"sc-karCPZ pJskc\"]")
+    private WebElement redAvailableIcon;
+    @Override
+    public String getTMAvailableColourForAssignedShift () throws Exception {
+        String availableIconColour = null;
+        if (isElementLoaded(greenAvailableIcon, 5) && greenAvailableIcon.getAttribute("color").contains("#37cf3f")) {
+            return availableIconColour = "#37cf3f";
+        }else if(isElementLoaded(greyAvailableIcon, 5) && greyAvailableIcon.getAttribute("color").contains("grey")){
+            return availableIconColour = "grey";
+        }else if(isElementLoaded(redAvailableIcon, 5) && redAvailableIcon.getAttribute("color").contains("#ff2600")) {
+            return availableIconColour = "#ff2600";
+        }else
+            SimpleUtils.fail("The available icon is not displayed!", false);
+        return null;
     }
 }

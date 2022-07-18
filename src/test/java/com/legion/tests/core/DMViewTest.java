@@ -224,7 +224,7 @@ public class DMViewTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify Compliance Violations widget on Dashboard in DM View")
+    @TestName(description = "Verify Payroll Projection widget on Dashboard in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyPayrollProjectionWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -305,7 +305,7 @@ public class DMViewTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify Refresh feature on Dashboard in DM View")
+    @TestName(description = "Verify Refresh feature on Schedule in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyRefreshFeatureOnScheduleInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -393,7 +393,7 @@ public class DMViewTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify Refresh feature on Dashboard in DM View")
+    @TestName(description = "Verify Refresh feature on Timesheet in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyRefreshFeatureOnTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -479,7 +479,7 @@ public class DMViewTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify Refresh feature on Dashboard in DM View")
+    @TestName(description = "Verify Refresh feature on Compliance in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyRefreshFeatureOnComplianceInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -700,7 +700,7 @@ public class DMViewTest extends TestBase {
 
     @Owner(owner = "Julie")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify the availability of location list and sub location on Timesheet in DM View")
+    @TestName(description = "Verify analytics table on Compliance in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
@@ -835,7 +835,7 @@ public class DMViewTest extends TestBase {
 
     @Owner(owner = "Julie")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify the availability of location list and sub location on Timesheet in DM View")
+    @TestName(description = "Verify TIMESHEET APPROVAL RATE on Timesheet in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTIMESHEETAPPROVALRATEOnTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
@@ -1769,7 +1769,7 @@ public class DMViewTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify the content between weeks on Schedule in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheContentBetweenWeeksOnScheduleInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1786,7 +1786,7 @@ public class DMViewTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
-
+            dashboardPage.clickOnDashboardConsoleMenu();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
@@ -1798,13 +1798,11 @@ public class DMViewTest extends TestBase {
             scheduleDMViewPage.verifySchedulesTableHeaderNames(true, true);
             scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(true,true);
 
-            /*
-            *  comment it because bug: https://legiontech.atlassian.net/browse/LEG-7198
-            *
-            * //Set 'Apply labor budget to schedules?' to No
+            //Set 'Apply labor budget to schedules?' to No
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.updateApplyLaborBudgetToSchedules("No");
+            dashboardPage.clickOnDashboardConsoleMenu();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
             //Validate the smart card and schedule table header for current week
@@ -1813,10 +1811,6 @@ public class DMViewTest extends TestBase {
             scheduleCommonPage.navigateToPreviousWeek();
             scheduleDMViewPage.verifySchedulesTableHeaderNames(false, true);
             scheduleDMViewPage.verifySmartCardsAreLoadedForPastOrFutureWeek(false, true);
-            *
-            *
-            *
-            * */
 
         } catch (Exception e) {
             SimpleUtils.fail(e.toString(),false);
@@ -1824,41 +1818,109 @@ public class DMViewTest extends TestBase {
     }
 
 
+//    @Automated(automated = "Automated")
+//    @Owner(owner = "Mary")
+//    @Enterprise(name = "KendraScott2_Enterprise")
+//    @TestName(description = "Validate analytics table on Schedule in DM View")
+//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+//    public void verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+//        try{
+//            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//
+//            String districtName = dashboardPage.getCurrentDistrict();
+//            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//            locationSelectorPage.reSelectDistrict(districtName);
+//            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+//            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+//            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+//
+//            //Validate the schedule status and hours on schedule list
+//            if (createSchedulePage.isWeekGenerated()){
+//                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//            }
+//            createSchedulePage.createScheduleForNonDGFlowNewUI();
+////            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Current Week");       //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Current Week");
+////            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Current Week");   //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
+//
+//            //Validate the schedule status and hours on schedule list
+//            scheduleCommonPage.navigateToNextWeek();
+//            if (createSchedulePage.isWeekGenerated()){
+//                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//            }
+//            createSchedulePage.createScheduleForNonDGFlowNewUI();
+////            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Next Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Next Week");
+////            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Next Week");        //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
+//
+//            //Validate the schedule status and hours on schedule list
+//            scheduleCommonPage.navigateToPreviousWeek();
+//            scheduleCommonPage.navigateToPreviousWeek();
+//            if (createSchedulePage.isWeekGenerated()){
+//                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//            }
+//            createSchedulePage.createScheduleForNonDGFlowNewUI();
+////            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Previous Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Previous Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
+////            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Previous Week");        //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
+//
+//            //Validate the numbers on Schedule Status Cards
+//            scheduleDMViewPage.verifyTheScheduleStatusAccountOnScheduleStatusCards();
+//        } catch (Exception e) {
+//            SimpleUtils.fail(e.toString(),false);
+//        }
+//    }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Verify Schedule Status on Schedule in DM View on Non TA Env")
+    @TestName(description = "Verify Schedule Status on Schedule in DM View for Not Started schedule on Non TA Env")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyScheduleStatusAndHoursOnScheduleDMViewForNotStartedScheduleOnNonTAEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String districtName = dashboardPage.getCurrentDistrict();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.reSelectDistrict(districtName);
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            //Validate the schedule status and hours on schedule list
+            if (createSchedulePage.isWeekGenerated()){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
 
             //Validate the schedule status and hours on schedule list
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Current Week");   //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Current Week");       //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Current Week");
+            scheduleCommonPage.navigateToNextWeek();
+            if (createSchedulePage.isWeekGenerated()){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
 
             //Validate the schedule status and hours on schedule list
-//            scheduleCommonPage.navigateToNextWeek();
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Next Week");        //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Next Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Next Week");
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
+            if (createSchedulePage.isWeekGenerated()){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
 
-            //Validate the schedule status and hours on schedule list
-//            scheduleCommonPage.navigateToPreviousWeek();
-//            scheduleCommonPage.navigateToPreviousWeek();
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Previous Week");        //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Previous Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Previous Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
+            locationSelectorPage.reSelectDistrict(districtName);
+            dashboardPage.clickOnDashboardConsoleMenu();
+            dashboardPage.clickOnRefreshButton();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Current Week");
+
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Next Week");
+
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Not Started", "Previous Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
 
             //Validate the numbers on Schedule Status Cards
             scheduleDMViewPage.verifyTheScheduleStatusAccountOnScheduleStatusCards();
@@ -1869,7 +1931,148 @@ public class DMViewTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Coffee_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Schedule Status on Schedule in DM View for In progress schedule on Non TA Env")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleStatusAndHoursOnScheduleDMViewForInProgressScheduleOnNonTAEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            //Validate the schedule status and hours on schedule list
+            if (createSchedulePage.isWeekGenerated()){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            //Validate the schedule status and hours on schedule list
+            scheduleCommonPage.navigateToNextWeek();
+            if (createSchedulePage.isWeekGenerated()){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            //Validate the schedule status and hours on schedule list
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
+            if (createSchedulePage.isWeekGenerated()){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            locationSelectorPage.reSelectDistrict(districtName);
+            dashboardPage.clickOnDashboardConsoleMenu();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Current Week");
+
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Next Week");
+
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "In Progress", "Previous Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
+
+            //Validate the numbers on Schedule Status Cards
+            scheduleDMViewPage.verifyTheScheduleStatusAccountOnScheduleStatusCards();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify Schedule Status on Schedule in DM View for Published schedule on Non TA Env")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduleStatusAndHoursOnScheduleDMViewForPublishedScheduleOnNonTAEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsPage.gotoControlsPage();
+            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+            SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
+            controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
+
+            //Set 'Automatically convert unassigned shifts to open shifts when generating the schedule?' set as Yes, all unassigned shifts
+            controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption("Yes, all unassigned shifts");
+
+            String districtName = dashboardPage.getCurrentDistrict();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            //Validate the schedule status and hours on schedule list
+            if (createSchedulePage.isWeekGenerated()){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+            }
+            createSchedulePage.publishActiveSchedule();
+
+            //Validate the schedule status and hours on schedule list
+            scheduleCommonPage.navigateToNextWeek();
+            if (createSchedulePage.isWeekGenerated()){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+            }
+            createSchedulePage.publishActiveSchedule();
+
+            //Validate the schedule status and hours on schedule list
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
+            if (createSchedulePage.isWeekGenerated()){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+            }
+            createSchedulePage.publishActiveSchedule();
+
+            locationSelectorPage.reSelectDistrict(districtName);
+            dashboardPage.clickOnDashboardConsoleMenu();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Current Week");
+
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Next Week");
+
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,false, false, "Published", "Previous Week");      //comment it because bug: https://legiontech.atlassian.net/browse/SCH-2654
+
+            //Validate the numbers on Schedule Status Cards
+            scheduleDMViewPage.verifyTheScheduleStatusAccountOnScheduleStatusCards();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.toString(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify Schedule Status on Schedule in DM View on TA non DG env")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyScheduleStatusAndHoursOnScheduleDMViewOnTANonDGEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1886,22 +2089,22 @@ public class DMViewTest extends TestBase {
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
 
             //Validate the schedule status and hours on schedule list
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Published", "Current Week");
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Not Started", "Current Week");            //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "In Progress", "Current Week");
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Published", "Current Week");
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Not Started", "Current Week");            //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "In Progress", "Current Week");
 
             //Validate the schedule status and hours on schedule list
-//            scheduleCommonPage.navigateToNextWeek();
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Published", "Next Week");
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Not Started", "Next Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "In Progress", "Next Week");
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Published", "Next Week");
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Not Started", "Next Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "In Progress", "Next Week");
 
             //Validate the schedule status and hours on schedule list
-//            scheduleCommonPage.navigateToPreviousWeek();
-//            scheduleCommonPage.navigateToPreviousWeek();
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Published", "Previous Week");   //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Not Started", "Previous Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
-//            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "In Progress", "Previous Week"); //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Published", "Previous Week");   //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "Not Started", "Previous Week");//comment it because bug: https://legiontech.atlassian.net/browse/SCH-1874
+            scheduleDMViewPage.verifyScheduleStatusAndHoursInScheduleList(location,true, false, "In Progress", "Previous Week"); //comment it because bug: https://legiontech.atlassian.net/browse/SCH-1482
 
             //Validate the numbers on Schedule Status Cards
             scheduleDMViewPage.verifyTheScheduleStatusAccountOnScheduleStatusCards();

@@ -234,6 +234,26 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			SimpleUtils.fail("Search work role input box load failed",false);
 			return null;
 	}
+
+	@Override
+	public HashMap<String, String> getAllWorkRoleStyleInfo(String workRoleName) throws Exception {
+		HashMap<String,String> workRoleInfo = new HashMap<>();
+		if (isElementEnabled(serchInputBox, 5)) {
+			serchInputBox.clear();
+			serchInputBox.sendKeys(workRoleName);
+			serchInputBox.sendKeys(Keys.ENTER);
+			waitForSeconds(5);
+			if (workRolesRows.size() > 0) {
+				for (WebElement row : workRolesRows) {
+					workRoleInfo.put(row.findElement(By.cssSelector("button[type='button']")).getText().toLowerCase(),row.findElement(By.cssSelector("lg-work-role-image")).getAttribute("style") );
+				}
+			}else
+				SimpleUtils.report("There are no  work roles that match your criteria.");
+		}else
+			SimpleUtils.fail("Search work role input box load failed",false);
+		return workRoleInfo;
+	}
+
 	@FindBy(css = "input.setting-work-rule-staffing-numeric-value-edit")
 	private List<WebElement> shiftNumberInputAndPriority;
 	@FindBy(css = "div[ng-click=\"saveRuleConfirmation($event)\"]")

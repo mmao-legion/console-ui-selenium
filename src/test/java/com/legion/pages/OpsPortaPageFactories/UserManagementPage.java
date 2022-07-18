@@ -24,6 +24,8 @@ public interface UserManagementPage {
 
     public ArrayList<HashMap<String, String>> getWorkRoleInfo(String workRoleName);
 
+    public HashMap<String, String> getAllWorkRoleStyleInfo(String workRoleName) throws Exception;
+
     public void updateWorkRole(String workRoleName, String colour, String workRole, String hourlyRate, String selectATeamMemberTitle, String defineTheTimeWhenThisRuleApplies, String specifyTheConditionAndNumber, String shiftNumber, String defineTheTypeAndFrequencyOfTimeRequiredAndPriority, String priority) throws Exception;
 
     public void addNewWorkRole(String workRoleName, String colour, String workRole, String hourlyRate, String selectATeamMemberTitle, String defineTheTimeWhenThisRuleApplies, String specifyTheConditionAndNumber, String shiftNumber, String defineTheTypeAndFrequencyOfTimeRequiredAndPriority, String priority) throws Exception;

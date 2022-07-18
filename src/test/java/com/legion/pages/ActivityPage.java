@@ -22,7 +22,7 @@ public interface ActivityPage{
     public void approveOrRejectShiftCoverRequestOnActivity(String requestUserName, String respondUserName, String action, String location) throws Exception;
     public void verifyActivityOfShiftOffer(String requestUserName, String location) throws Exception;
     public void approveOrRejectShiftOfferRequestOnActivity(String requestUserName, String action)throws Exception;
-    public void verifyApproveShiftOfferRequestAndGetErrorOnActivity(String requestUserName) throws Exception;
+    public void verifyApproveShiftOfferRequestAndGetErrorOnActivity(String requestUserName, String expectedMessage) throws Exception;
     public void verifyFiveActivityButtonsLoaded() throws Exception;
     public void goToProfileLinkOnActivity() throws Exception;
     public boolean isActivityContainerPoppedUp() throws Exception;
@@ -36,4 +36,7 @@ public interface ActivityPage{
     public void verifyCancelledMessageOnTheBottomOfTheNotification() throws Exception;
     public void verifyNotificationForUpdateAvailability(String requestName,String isApprovalRequired,String requestOrCancelLabel,String weekInfo,String repeatChange) throws Exception;
     public List<String> getShiftSwapDataFromActivity(String requestUserName, String respondUserName) throws Exception;
+    public void approveOrRejectMultipleShiftOfferRequestOnActivity(String requestUserName, String action, int count) throws Exception;
+    public HashMap<String, String> getBalanceHrsFromActivity() throws Exception;
+    public void clickDetailLinksInActivitiesByIndex(int index) throws Exception;
 }

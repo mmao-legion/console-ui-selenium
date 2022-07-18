@@ -17,7 +17,9 @@
                     <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <!--                   <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5413 -->
                     <!--<include name="verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin" /> we don't have open shifts widget for now-->
-                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin" />
+                    <!--                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewForNotStartedScheduleOnNonTAEnvAsInternalAdmin" />
+                                        <include name="verifyScheduleStatusAndHoursOnScheduleDMViewForInProgressScheduleOnNonTAEnvAsInternalAdmin" />
+                                        <include name="verifyScheduleStatusAndHoursOnScheduleDMViewForPublishedScheduleOnNonTAEnvAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5988 -->
                 </methods>
             </class>
         </classes>
@@ -33,6 +35,7 @@
         </classes>
     </test>
     -->
+    <!--
     <test name="Drag And Drop Test">
         <classes>
             <class name="com.legion.tests.core.DragAndDropTest">
@@ -41,7 +44,7 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test> need update code for the new shift UI been enabled-->
 
     <test name="Delete Schedule Test">
         <classes>
@@ -49,6 +52,27 @@
                 <methods>
                     <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" />
                     <include name="verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Parent Child LG Test">
+        <classes>
+            <class name="com.legion.tests.core.ParentChildLGTest">
+                <methods>
+                    <include name="validateTheLocationFilterOnDemandTabAsInternalAdmin" />
+                    <include name="validateTheLocationFilterOnLabelTabAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="LiquidDashboard Test">
+        <classes>
+            <class name="com.legion.tests.core.LiquidDashboardTest">
+                <methods>
+                    <include name="verifyTheLinkOnComplianceViolationsWidgetAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

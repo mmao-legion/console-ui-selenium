@@ -309,5 +309,18 @@ public interface LocationsPage {
     public void updateFirstDayOfWeek(String day) throws Exception;
     public void addNewDistrictWithFirstDayOfWeek(String level, String districtName, String districtId, String searchChara, int index) throws Exception;
     public void addStaffingRulesForWorkRole(ArrayList staffingRuleCondition) throws Exception;
-    }
 
+    public void clickEditEnterpriseProfile();
+
+    public String getLaborBudgetSettingContent() throws Exception;
+
+    public void turnOnOrTurnOffLaborBudgetToggle(boolean action) throws Exception;
+
+    public void saveTheGlobalConfiguration() throws Exception;
+
+    public void editLaborBudgetSettingContent() throws Exception;
+
+    public String getBudgetGroupSettingContent() throws Exception;
+
+    public void selectBudgetGroup(String optionValue) throws Exception;
+}

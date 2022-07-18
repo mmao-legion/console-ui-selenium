@@ -5,6 +5,7 @@ import com.legion.pages.OpsPortaPageFactories.*;
 import com.legion.pages.core.*;
 import com.legion.pages.core.OpsPortal.*;
 import com.legion.pages.core.schedule.*;
+import com.legion.pages.opConfiguration.MealAndRestPage;
 import org.testng.Reporter;
 
 /**
@@ -198,4 +199,9 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public SettingsAndAssociationPage createSettingsAndAssociationPage() {	return new OpsPortalSettingsAndAssociationPage(); }
+
+	@Override
+	public MealAndRestPage createMealAndRestPage() {
+		return new com.legion.pages.core.opConfiguration.MealAndRestPage();
+	}
 }

@@ -10,6 +10,8 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.security.Key;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.*;
@@ -278,6 +280,19 @@ public class BasePage {
     	}
     	
     }
+
+    public boolean waitForNotExists(WebElement element, long timeOutInSeconds) throws Exception
+    {
+        WebDriverWait tempWait = new WebDriverWait(MyThreadLocal.getDriver(), timeOutInSeconds);
+
+        try {
+            tempWait.until(ExpectedConditions.invisibilityOf(element));
+            return true;
+        }
+        catch (NoSuchElementException | TimeoutException te) {
+            return false;
+        }
+    }
     
     
     public static void waitUntilElementIsVisible(final WebElement element) {
@@ -326,7 +341,7 @@ public class BasePage {
         }
     }
 
-    public void waitForSeconds(long waitSeconds) {
+    public static void waitForSeconds(long waitSeconds) {
         waitSeconds = waitSeconds * 1000;
         Calendar currentTime = Calendar.getInstance();
         long currentTimeMillis = currentTime.getTimeInMillis();
@@ -1009,4 +1024,26 @@ public class BasePage {
 //        }
 //        return  resultList;
 //     }
+
+
+    public static boolean isBelongPeriodTime(String compareTime, String periodTime) throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat("hh:mma");
+        Date startTimeDate1;
+        Date endTimeDate1;
+        Date startTimeDate2;
+        Date endTimeDate2;
+        startTimeDate1 = df.parse(compareTime.split("-")[0].trim());
+        endTimeDate1 = df.parse(compareTime.split("-")[1].trim());
+        startTimeDate2 = df.parse(periodTime.split("-")[0].trim());
+        endTimeDate2 = df.parse(periodTime.split("-")[1].trim());
+
+        if (startTimeDate1.getHours() >= startTimeDate2.getHours()
+                && endTimeDate1.getHours() <= endTimeDate2.getHours()) {
+            SimpleUtils.report("The time :" + compareTime +" is belong to : "+ periodTime);
+            return true;
+        } else {
+            SimpleUtils.report("The time :" + compareTime +" is not belong to : "+ periodTime);
+            return false;
+        }
+    }
 }
