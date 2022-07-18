@@ -2,7 +2,9 @@ package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.ForecastPage;
+import com.legion.pages.ScheduleCommonPage;
 import com.legion.pages.SmartCardPage;
+import com.legion.pages.core.schedule.ConsoleScheduleCommonPage;
 import com.legion.pages.core.schedule.ConsoleSmartCardPage;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.JsonUtil;
@@ -71,10 +73,12 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(xpath = "//*[contains(@class,'day-week-picker-period-active')]/preceding-sibling::div[1]")
 	private WebElement immediatePastToCurrentActiveWeek;
 
-	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@class='number ng-binding']")
+//	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@class='number ng-binding']")
+	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='!hideForecast() && !hasAdjustableRoles']")
 	private WebElement laborSmartCardForecast;
 
-	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='hasBudget()']")
+//	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='hasBudget()']")
+	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='hasBudget() && !hasDayPartFilterOn() && !hasAdjustableRoles']")
 	private WebElement laborSmartCardBudget;
 
 	@FindBy(xpath = "//div[contains(text(),'Holidays')]")
@@ -145,7 +149,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(css = "//div[contains(text(),'Work role')]")
 	private WebElement workRoleFilterTitle;
 
-	@FindBy(xpath = "//input-field[@label-unsafe=\"opt.labelUnsafe\"]")
+	@FindBy(css = "[label=\"Work Role\"] div.lg-filter__category-items input-field.ng-isolate-scope")
 	private List<WebElement> workRoleList;
 
 	@FindBy(css = "span.forecast-prediction-top-legend-entry.ng-binding.ng-scope")
@@ -163,7 +167,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(css = "a.lg-filter__clear.ng-scope.lg-filter__clear-active")
 	private WebElement clearFilterBtn;
 
-	@FindBy(css = "div.lg-filter__wrapper")
+	@FindBy(css = "[label=\"Work Role\"] div.lg-filter__wrapper")
 	private WebElement filterPopup;
 
 	@FindBy(css = "[label=\"Refresh\"]")
@@ -2138,4 +2142,285 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		else
 			SimpleUtils.fail("Forecast Page: Content under labor tab is not loaded",false);
 	}
+
+	@FindBy(css = "[label=\"Locations\"] ng-form [placeholder=\"None\"]")
+	private WebElement locationsFilter;
+
+	public boolean checkIsLocationFilterLoaded() throws Exception {
+		boolean isLocationFilterLoaded = false;
+		if (isElementLoaded(locationsFilter, 20)) {
+			isLocationFilterLoaded = true;
+			SimpleUtils.report("Location filter on Forecast page is loaded! ");
+		} else
+			SimpleUtils.report("Location filter on Forecast page is not loaded! ");
+		return isLocationFilterLoaded;
+	}
+
+	@FindBy(css = "[class=\"lg-filter__wrapper lg-ng-animate space-for-clear-button\"] [value=\"opt.checked\"]")
+	private List<WebElement> locationsInLocationFilter;
+
+	@FindBy(css = "[class=\"lg-filter__wrapper lg-ng-animate space-for-clear-button\"] input[placeholder=\"Search Locations\"]")
+	private WebElement locationSearchInputInLocationFilter;
+
+	public boolean checkIfAllLocationBeenSelected () {
+		boolean ifAllLocationBeenSelected = true;
+		clickTheElement(locationsFilter);
+		if (areListElementVisible(locationsInLocationFilter, 10) && locationsInLocationFilter.size() > 0) {
+			for (WebElement location: locationsInLocationFilter) {
+				if(location.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+					SimpleUtils.report("Location: "+ location.findElement(By.tagName("label")).getText()+ " is selected! ");
+				} else {
+					ifAllLocationBeenSelected = false;
+					SimpleUtils.report("Location: "+ location.findElement(By.tagName("label")).getText()+ " is not selected! ");
+					break;
+				}
+			}
+		} else
+			SimpleUtils.fail("Locations in location filter fail to load! ", false);
+		clickTheElement(locationsFilter);
+		return ifAllLocationBeenSelected;
+	}
+
+
+	public void checkOrUncheckLocationInFilter (boolean ifCheck, String locationName) throws Exception {
+		if (isElementLoaded(locationsFilter, 10)) {
+			boolean isLocationExists = false;
+			clickTheElement(locationsFilter);
+			if (areListElementVisible(locationsInLocationFilter, 10)
+					&& locationsInLocationFilter.size() > 0
+					&& isElementLoaded(locationSearchInputInLocationFilter, 10)) {
+				locationSearchInputInLocationFilter.clear();
+				locationSearchInputInLocationFilter.sendKeys(locationName);
+				for (WebElement location: locationsInLocationFilter) {
+					if (location.findElement(By.tagName("label")).getText().equalsIgnoreCase(locationName)) {
+						isLocationExists = true;
+						if(location.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+							if (ifCheck) {
+								SimpleUtils.pass("Location already been checked! ");
+							} else {
+								clickTheElement(location.findElement(By.tagName("input")));
+								if (location.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
+									SimpleUtils.pass("Location been checked successfully! ");
+								}
+							}
+						} else {
+							if (ifCheck) {
+								clickTheElement(location.findElement(By.tagName("input")));
+								if (location.findElement(By.tagName("input")).getAttribute("class").contains("ng-not-empty")) {
+									SimpleUtils.pass("Location been checked successfully! ");
+								}
+							} else
+								SimpleUtils.pass("Location already been unchecked! ");
+						}
+						break;
+					}
+				}
+				if (!isLocationExists) {
+					SimpleUtils.fail("Location: " + locationName+ " is not exists! ", false);
+				}
+				//To close the filter popup
+				clickTheElement(locationsFilter);
+			} else
+				SimpleUtils.fail("Locations in loction filter fail to load! ", false);
+		} else
+			SimpleUtils.fail("The locations filter fail to load!", false);
+	}
+
+
+	public List<String> getAllLocationsFromFilter () throws Exception {
+		List<String> locations = new ArrayList<>();
+		if (isElementLoaded(locationsFilter, 10)) {
+			clickTheElement(locationsFilter);
+			if (areListElementVisible(locationsInLocationFilter, 10)
+					&& locationsInLocationFilter.size() > 0) {
+				for (WebElement location: locationsInLocationFilter) {
+					locations.add(location.findElement(By.tagName("label")).getText());
+					}
+				} else
+					SimpleUtils.fail("Locations in loction filter fail to load! ", false);
+				//To close the filter popup
+				clickTheElement(locationsFilter);
+		} else
+			SimpleUtils.fail("The locations filter fail to load!", false);
+		return locations;
+	}
+
+	@FindBy(css = "[id=\"forecast-labor-prediction\"] g [style*=\"text\"]")
+	private List<WebElement> attendeesAndHoursInLaborForecastChart;
+	@FindBy(css = "text[text-anchor=\"middle\"]")
+	private List<WebElement> dataOrTimeInLaborForecastChart;
+
+	public HashMap<String, List<String>> getLaborChartCoordinateAxisData() {
+		HashMap<String, List<String>> attendeesAndHoursOfLaborForecast = new HashMap<>();
+		if (areListElementVisible(attendeesAndHoursInLaborForecastChart) && attendeesAndHoursInLaborForecastChart.size()>0) {
+			List<String> attendeesInLaborForecastChart = new ArrayList<>();
+			List<String> hoursInLaborForecastChart = new ArrayList<>();
+			List<String> dataOrTimeInInLaborForecastChart = new ArrayList<>();
+
+			//Get the attendees and hours value
+			for (int i = 0; i<attendeesAndHoursInLaborForecastChart.size(); i++) {
+				if (i%2 == 0) {
+					attendeesInLaborForecastChart.add(attendeesAndHoursInLaborForecastChart.get(i).getText());
+					SimpleUtils.pass("Get a attendee in Labor Forecast chart successfully! ");
+				} else {
+					hoursInLaborForecastChart.add(attendeesAndHoursInLaborForecastChart.get(i).getText());
+					SimpleUtils.pass("Get a hour in Labor Forecast chart successfully! ");
+				}
+			}
+
+			//get the dates or times
+			ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+			if (scheduleCommonPage.isScheduleDayViewActive()) {
+				for (int i = 0; i<dataOrTimeInLaborForecastChart.size()/4; i++) {
+					dataOrTimeInInLaborForecastChart.add(dataOrTimeInLaborForecastChart.get(i*4).getText());
+					SimpleUtils.pass("Get a data/time in Labor Forecast chart successfully! ");
+				}
+			} else {
+				for (int i = 0; i<dataOrTimeInLaborForecastChart.size(); i++) {
+					dataOrTimeInInLaborForecastChart.add(dataOrTimeInLaborForecastChart.get(i).getText());
+					SimpleUtils.pass("Get a data/time in Labor Forecast chart successfully! ");
+				}
+			}
+
+			attendeesAndHoursOfLaborForecast.put("attendees", attendeesInLaborForecastChart);
+			attendeesAndHoursOfLaborForecast.put("hours", hoursInLaborForecastChart);
+			attendeesAndHoursOfLaborForecast.put("dateOrTime", dataOrTimeInInLaborForecastChart);
+			SimpleUtils.pass("Get all attendees and hours in Labor Forecast chart successfully! ");
+		} else
+			SimpleUtils.fail("The attendees and hours in Labor Forecast chart fail to load! ", false);
+		return attendeesAndHoursOfLaborForecast;
+	}
+
+
+
+	@Override
+	public void selectWorkRoleFilterByText(String workRoleLabel) throws Exception {
+		verifyWorkRoleSelection();
+		for (WebElement availableWorkRoleFilter : workRoleList) {
+			if (availableWorkRoleFilter.getText().equalsIgnoreCase(workRoleLabel)) {
+				click(availableWorkRoleFilter);
+				SimpleUtils.pass("Schedule Work Role:'" + availableWorkRoleFilter.getText() + "' Filter selected Successfully!");
+				break;
+			}
+		}
+		if (!filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
+			click(filterButton);
+	}
+
+	@Override
+	public boolean areWorkRoleDisplayOrderCorrectOnLaborForecast(HashMap<String, Integer> workRoleNOrders) throws Exception {
+		boolean isConsistent = true;
+		try {
+			if (isElementLoaded(filterButton, 10)) {
+				clickTheElement(filterButton);
+				if (areListElementVisible(workRoleList, 3)) {
+					for (int i = 0; i < workRoleList.size() - 1; i++) {
+						System.out.println(workRoleList.get(i).findElement(By.cssSelector(".input-label")).getText().toLowerCase().trim());
+						int order1 = workRoleNOrders.get(workRoleList.get(i).findElement(By.cssSelector(".input-label")).getText().toLowerCase().trim());
+						int order2 = workRoleNOrders.get(workRoleList.get(i + 1).findElement(By.cssSelector(".input-label")).getText().toLowerCase().trim());
+						if (order1 > order2) {
+							isConsistent = false;
+							break;
+						}
+					}
+				} else {
+					isConsistent = false;
+				}
+			} else {
+				isConsistent = false;
+				SimpleUtils.fail("Work role filter load failed", false);
+			}
+		} catch (Exception e) {
+			isConsistent = false;
+		}
+		return isConsistent;
+	}
+
+	@FindBy(css = "[class=\"card-carousel-card-table-edit-budget ng-scope\"]")
+	private WebElement laborBudgetEditBtn;
+	@FindBy(css = "[class=\"table-row-field guidance-background tc ng-scope w-50\"] [class=\"row-name-field ng-binding ng-scope\"]")
+	private WebElement guidanceBudget;
+	@FindBy(css = "[ng-class=\"table-row-input-field\"]")
+	private WebElement budgetInputField;
+	@FindBy(css = "[class =\"ok-action-text ng-binding\"]")
+	private WebElement applyBudgetBtn;
+
+	@Override
+	public void goToForecastLaborWeek() throws Exception {
+		if (isElementEnabled(weekViewButton)) {
+			click(weekViewButton);
+			String weekDuration[] = currentActiveWeek.getText().split("\n");
+			SimpleUtils.pass("Current active labor week is " + weekDuration[1]);
+			if (isElementEnabled(laborTab)) {
+				click(laborTab);
+				waitForSeconds(5);
+				if (forecastGraph.size() != 0 && laborSmartCardForecast.getText() != null) {
+					SimpleUtils.pass("Labor Forecast Loaded in Week View Successfully!" + " Labor Forecast is " + laborSmartCardForecast.getText());
+				} else {
+					SimpleUtils.fail("Labor Forecast Not Loaded in Week View", false);
+				}
+			} else {
+				SimpleUtils.fail("Labor subtab of forecast tab not found", false);
+			}
+		} else {
+			SimpleUtils.fail("Week View button not found in Forecast", false);
+		}
+
+	}
+
+	@Override
+	public void editLaborBudgetOnSummarySmartCard() throws Exception {
+		String forecast = laborSmartCardForecast.getText();
+		if (isElementLoaded(laborBudgetEditBtn)) {
+			click(laborBudgetEditBtn);
+			if (isElementLoaded(guidanceBudget)&&isElementLoaded(budgetInputField)) {
+				String guidanceBudgetText = guidanceBudget.getText();
+				budgetInputField.clear();
+				budgetInputField.sendKeys(guidanceBudgetText);
+				if(isElementLoaded (applyBudgetBtn)){
+					clickTheElement(applyBudgetBtn);
+					waitForSeconds(5);
+					String budget = laborSmartCardBudget.getText();
+					SimpleUtils.assertOnFail("The budget is not updated correctly",forecast.matches(budget),false);
+				}else{
+					SimpleUtils.fail("The apply button is not loaded!", false);
+				}
+			} else {
+				SimpleUtils.fail("The guidance budget or budget input field is not loaded!", false);
+			}
+		}
+	}
+
+	@Override
+	public void clearLaborBudgetOnSummarySmartCard() throws Exception {
+		if (isElementLoaded(laborBudgetEditBtn)) {
+			click(laborBudgetEditBtn);
+			if (isElementLoaded(guidanceBudget)&&isElementLoaded(budgetInputField)) {
+				budgetInputField.clear();
+				if(isElementLoaded (applyBudgetBtn)){
+					clickTheElement(applyBudgetBtn);
+					waitForSeconds(3);
+				}else{
+					SimpleUtils.fail("The apply button is not loaded!", false);
+				}
+			} else {
+				SimpleUtils.fail("The guidance budget or budget input field is not loaded!", false);
+			}
+		}
+	}
+
+	@Override
+	public String getLaborBudgetOnSummarySmartCard() throws Exception {
+		String BudgetValue = null;
+		if (isElementLoaded(laborSmartCardBudget)) {
+			BudgetValue = laborSmartCardBudget.getText().trim();
+			return BudgetValue;
+		} else {
+			SimpleUtils.fail("The edited budget on forecast page is not loaded!", false);
+		}
+		return null;
+	}
+
+
+
 }

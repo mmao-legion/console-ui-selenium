@@ -97,7 +97,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
 
     public HashMap<String, Float> updateScheduleHoursAndWages(HashMap<String, Float> scheduleHoursAndWages,
                                                                      String hours, String hoursAndWagesKey) {
-        if (!SimpleUtils.isNumeric(hours)){
+        if (!SimpleUtils.isNumeric(hours.replace(",",""))){
             hours = "0";
         }
         scheduleHoursAndWages.put(hoursAndWagesKey, Float.valueOf(hours.replaceAll(",","")));
@@ -368,7 +368,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     }
 
 
-    @FindBy (css = "[ng-if=\"(scheduleSmartCard.unassignedShifts || scheduleSmartCard.outsideOperatingHoursShifts) && hasSchedule()\"] .card-carousel-card")
+    @FindBy (css = "[ng-if=\"(scheduleSmartCard.minorBlockingViolations || scheduleSmartCard.unassignedShifts || scheduleSmartCard.outsideOperatingHoursShifts) && hasSchedule()\"] .card-carousel-card")
     private WebElement requiredActionSmartCard;
     @FindBy (css = "[ng-click=\"smartCardShiftFilter('Requires Action')\"]")
     private WebElement viewShiftsBtnOnRequiredActionSmartCard;
@@ -522,18 +522,28 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     private List<WebElement> smartCards;
     @FindBy (className = "card-carousel-link")
     private List<WebElement> cardLinks;
+
+    @FindBy (css = ".sch-grid-container")
+    private WebElement shiftGrid;
+
     @Override
     public void clickLinkOnSmartCardByName(String linkName) throws Exception {
-        if (areListElementVisible(cardLinks, 5)) {
-            for (WebElement cardLink : cardLinks) {
-                if (cardLink.getText().equalsIgnoreCase(linkName)) {
-                    clickTheElement(cardLink);
-                    SimpleUtils.pass("Click the link: " + linkName + " Successfully!");
-                    break;
+        if (isElementLoaded(shiftGrid, 20)) {
+            waitForSeconds(3);
+            if (areListElementVisible(cardLinks, 10)) {
+                for (WebElement cardLink : cardLinks) {
+                    if (cardLink.getText().equalsIgnoreCase(linkName)) {
+                        clickTheElement(cardLink);
+                        waitForSeconds(2);
+                        SimpleUtils.pass("Click the link: " + linkName + " Successfully!");
+                        break;
+                    }
                 }
+            }else {
+                SimpleUtils.report("There are no smart card links!");
             }
-        }else {
-            SimpleUtils.report("There are no smart card links!");
+        } else {
+            SimpleUtils.fail("Failed for loading shift grid view!", false);
         }
     }
 
@@ -543,7 +553,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         if (areListElementVisible(smartCards, 5)) {
             for (WebElement smartCard : smartCards) {
                 WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
-                if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {
+                if (title != null && title.getText().trim().contains(cardName)) {
                     WebElement h1 = smartCard.findElement(By.tagName("h1"));
                     String h1Title = h1 == null ? "" : h1.getText();
                     if (h1Title.contains(" ")) {
@@ -708,7 +718,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         }
     }
 
-    @FindBy(css = "[ng-if=\"controlPanel.editMode !== 'edit' || controlPanel.isPublished\"] .card-carousel-card-smart-card-required")
+    @FindBy(css = "[ng-if=\"controlPanel.fns.getVisibility('PUBLISH') && hasSchedule() && controlPanel.canPublish\"] .card-carousel-card-smart-card-required")
     private WebElement scheduleNotPublishedSmartCard;
 
     @Override
@@ -735,32 +745,114 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     }
 
 
-    @FindBy (css = "[ng-if=\"scheduleSmartCard.unassignedShifts && scheduleSmartCard.outsideOperatingHoursShifts\"] .col-fx-1")
+    @FindBy (css = "[ng-if=\"requiredActionsCount >= 2\"] .col-fx-1")
     private List<WebElement> unassignedAndOOOHMessageOnActionRequiredSmartCard;
 
-    @FindBy (css = "[ng-if=\"!scheduleSmartCard.outsideOperatingHoursShifts\"]")
+    @FindBy (css = "[ng-if=\"scheduleSmartCard.unassignedShifts && requiredActionsCount === 1\"]")
     private WebElement unassignedMessageOnActionRequiredSmartCard;
 
-    @FindBy (css = "[ng-if=\"!scheduleSmartCard.unassignedShifts\"]")
+    @FindBy (css = "[ng-if=\"scheduleSmartCard.outsideOperatingHoursShifts && requiredActionsCount === 1\"]")
     private WebElement oOOHMessageOnActionRequiredSmartCard;
 
+    @FindBy (css = "[ng-if=\"scheduleSmartCard.minorBlockingViolations && requiredActionsCount === 1\"]")
+    private WebElement minorViolationMessageOnActionRequiredSmartCard;
+
     @Override
-    public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception {
-        HashMap<String, String> unassignedAndOOOHMessage = new HashMap<String, String>();
+    public HashMap<String, String> getMessageFromActionRequiredSmartCard() throws Exception {
+        HashMap<String, String> messageOnSmartCard = new HashMap<String, String>();
         if (isElementLoaded(requiredActionSmartCard, 5)) {
             if (areListElementVisible(unassignedAndOOOHMessageOnActionRequiredSmartCard, 5)) {
-                unassignedAndOOOHMessage.put("unassigned", unassignedAndOOOHMessageOnActionRequiredSmartCard.get(0).getText());
-                unassignedAndOOOHMessage.put("OOOH", unassignedAndOOOHMessageOnActionRequiredSmartCard.get(1).getText());
+                boolean hasUnassignedMessage = false;
+                boolean hasOOOHMessage = false;
+                boolean hasMinorViolationMessage = false;
+                for (WebElement message: unassignedAndOOOHMessageOnActionRequiredSmartCard) {
+                    String firstMessage = message.findElement(By.tagName("div")).getText();
+                    switch (firstMessage) {
+                        case "Unassigned":
+                            messageOnSmartCard.put("unassigned", message.getText());
+                            hasUnassignedMessage = true;
+                        case "Outside Operating Hours":
+                            messageOnSmartCard.put("OOOH", message.getText());
+                            hasOOOHMessage = true;
+                        case "Minor Violation":
+                            messageOnSmartCard.put("minorViolation", message.getText());
+                            hasMinorViolationMessage = true;
+                    }
+                }
+                if (!hasUnassignedMessage) {
+                    messageOnSmartCard.put("unassigned", "");
+                }
+                if (!hasOOOHMessage) {
+                    messageOnSmartCard.put("OOOH", "");
+                }
+                if (!hasMinorViolationMessage) {
+                    messageOnSmartCard.put("minorViolation", "");
+                }
             } else if (isElementLoaded(unassignedMessageOnActionRequiredSmartCard, 5)) {
-                unassignedAndOOOHMessage.put("unassigned", unassignedMessageOnActionRequiredSmartCard.getText());
-                unassignedAndOOOHMessage.put("OOOH", "");
+                messageOnSmartCard.put("unassigned", unassignedMessageOnActionRequiredSmartCard.getText());
+                messageOnSmartCard.put("OOOH", "");
+                messageOnSmartCard.put("minorViolation", "");
             } else if (isElementLoaded(oOOHMessageOnActionRequiredSmartCard, 5)) {
-                unassignedAndOOOHMessage.put("OOOH", oOOHMessageOnActionRequiredSmartCard.getText());
-                unassignedAndOOOHMessage.put("unassigned", "");
-            } else
+                messageOnSmartCard.put("OOOH", oOOHMessageOnActionRequiredSmartCard.getText());
+                messageOnSmartCard.put("unassigned", "");
+                messageOnSmartCard.put("minorViolation", "");
+            } else if (isElementLoaded(minorViolationMessageOnActionRequiredSmartCard, 5)) {
+                messageOnSmartCard.put("OOOH", "");
+                messageOnSmartCard.put("unassigned", "");
+                messageOnSmartCard.put("minorViolation", minorViolationMessageOnActionRequiredSmartCard.getText());
+            }else
                 SimpleUtils.fail("No available message display on Action Required smart card! ", false);
         } else
             SimpleUtils.fail("Required Action smart card fail to load! ", false);
-        return unassignedAndOOOHMessage;
+        return messageOnSmartCard;
     }
+
+
+    @FindBy (css = "div.card-carousel-card-blue")
+    private WebElement masterTemplateSmartCard;
+    @FindBy (css = "[ng-click=\"toggleTemplateView()\"]")
+    private WebElement viewTemplateLinkOnMasterTemplateSmartCard;
+
+    public void clickViewTemplateLinkOnMasterTemplateSmartCard() throws Exception {
+        if (isElementLoaded(masterTemplateSmartCard, 10)) {
+            if (isElementLoaded(viewTemplateLinkOnMasterTemplateSmartCard, 5)) {
+                clickTheElement(viewTemplateLinkOnMasterTemplateSmartCard);
+                SimpleUtils.pass("Click View Template link successfully! ");
+            } else
+                SimpleUtils.fail("The View Template link on Master Template smard card fail to load! ", false);
+        } else
+            SimpleUtils.fail("The Master Template smart card fail to load! ", false);
+    }
+
+    @FindBy (xpath = "//div[contains(text(), \"Weekly Budget\")]/following-sibling::h1[1]")
+    private WebElement budgetHoursOnWeeklyBudget;
+    @Override
+    public String getBudgetValueFromWeeklyBudgetSmartCard(String cardName) throws Exception {
+        String weeklyBudgetValue;
+        if (areListElementVisible(smartCards, 15)) {
+            for (WebElement smartCard : smartCards) {
+                WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
+                if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {
+                    weeklyBudgetValue = budgetHoursOnWeeklyBudget.getText();
+                    return weeklyBudgetValue;
+                }
+            }
+        }else{
+            SimpleUtils.fail("The Smart Cards on the Schedule page are not loaded correctly!", false);
+        }
+        return null;
+    }
+
+    @Override
+    public String getBudgetValueFromScheduleBudgetSmartCard() throws Exception {
+        if (isElementLoaded(scheduleSmartCard, 3)) {
+            WebElement ScheduleBudgetSmartCard = scheduleSmartCard.findElement(By.cssSelector("[ng-if=\"scheduleSmartCard.guidanceSummary !== null\"]"));
+            return ScheduleBudgetSmartCard.getText().trim();
+        }else{
+            SimpleUtils.fail("The Schedule Smart Card on the Schedule page is not loaded correctly!", false);
+        }
+        return null;
+    }
+
+
 }

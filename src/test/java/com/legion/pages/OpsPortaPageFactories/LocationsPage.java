@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface LocationsPage {
 
-    public void clickModelSwitchIconInDashboardPage(String value);
+    public void clickModelSwitchIconInDashboardPage(String value) throws Exception;
 
     public boolean isOpsPortalPageLoaded() throws Exception;
 
@@ -253,4 +253,18 @@ public interface LocationsPage {
     public void cancelBtnOnImportExportPopUpWinsIsClickable();
 
     public void clickOnExportBtn();
+
+    public void clickEditEnterpriseProfile();
+
+    public String getLaborBudgetSettingContent() throws Exception;
+
+    public void turnOnOrTurnOffLaborBudgetToggle(boolean action) throws Exception;
+
+    public void saveTheGlobalConfiguration() throws Exception;
+
+    public void editLaborBudgetSettingContent() throws Exception;
+
+    public String getBudgetGroupSettingContent() throws Exception;
+
+    public void selectBudgetGroup(String optionValue) throws Exception;
 }

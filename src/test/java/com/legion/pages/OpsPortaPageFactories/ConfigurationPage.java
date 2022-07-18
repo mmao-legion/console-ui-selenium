@@ -112,4 +112,15 @@ public interface ConfigurationPage {
     public void archiveOrDeleteAllTemplates() throws Exception;
     public void clickOnTemplateDetailTab() throws Exception;
     public void deleteSpecifyDynamicEmployeeGroupsInList(String groupName) throws Exception;
+    public void verifyMinorRulesTileIsLoaded() throws Exception;
+    public boolean checkIfMinorSectionsLoaded () throws Exception;
+    public void clickOnBackButton () throws Exception;
+    public void verifyTheContentOnSpecificCard(String cardName, List<String> content) throws Exception;
+    public void setStrictlyEnforceMinorViolations(String yesOrNo) throws Exception;
+    public boolean isStrictlyEnforceMinorViolationSettingEnabled() throws Exception;
+    public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception;
+    public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception;
+    public void verifySpecificAssociationIsSaved(String name) throws Exception;
+    public boolean checkIfApproveShiftInHomeLocationSettingEnabled() throws Exception;
+    public void updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(String option) throws Exception;
 }

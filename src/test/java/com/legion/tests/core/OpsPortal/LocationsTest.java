@@ -33,7 +33,7 @@ public class LocationsTest extends TestBase {
     public enum modelSwitchOperation{
 
         Console("Console"),
-        OperationPortal("Operation Portal");
+        OperationPortal("Control Center");
 
         private final String value;
         modelSwitchOperation(final String newValue) {

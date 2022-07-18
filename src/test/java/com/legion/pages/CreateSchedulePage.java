@@ -26,6 +26,7 @@ public interface CreateSchedulePage {
     public void createScheduleForNonDGFlowNewUIWithGivingParameters(String day, String startTime, String endTime) throws Exception;
     public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception;
     public void editOperatingHoursWithGivingPrameters(String day, String startTime, String endTime) throws Exception;
+    public void editOperatingHoursWithGivingPrameters(String startTime, String endTime) throws Exception;
     public void fillBudgetValues(List<WebElement> element) throws Exception;
     public void editTheOperatingHoursForLGInPopupWinodw(List<String> weekDaysToClose) throws Exception;
     public float createScheduleForNonDGByWeekInfo(String weekInfo, List<String> weekDaysToClose, List<String> copyShiftAssignments) throws Exception;
@@ -56,5 +57,14 @@ public interface CreateSchedulePage {
     public void clickOnSchedulePublishButton() throws Exception;
     public void clickConfirmBtnOnPublishConfirmModal() throws Exception;
     public void copyAllPartialSchedule () throws Exception;
+    public boolean checkOnlyCopyShiftsSwitchDisplayOrNot () throws Exception;
+    public boolean checkOnlyCopyShiftsSwitchEnableOrNot () throws Exception;
+    public void turnOnOrTurnOffOnlyCopyShiftsSwitch (boolean action) throws Exception;
+    public boolean checkOnlyCopyPartialAssignmentSwitchEnableOrNot () throws Exception;
+    public void checkoutSchedule();
+    public void confirmDeleteSchedule() throws Exception;
+    public boolean checkIfCheckOutButtonLoaded() throws Exception;
+    public void isGenerateButtonNotClickable() throws Exception;
+    public void verifyTooltipForUnclickableCreateScheduleBtn() throws Exception;
 
 }

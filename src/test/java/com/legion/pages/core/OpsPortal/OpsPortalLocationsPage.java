@@ -2,18 +2,19 @@ package com.legion.pages.core.OpsPortal;
 
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
+import com.legion.pages.LoginPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-
-import java.text.SimpleDateFormat;
+import org.openqa.selenium.support.ui.Select;
 import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -67,7 +68,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	@Override
-	public void clickModelSwitchIconInDashboardPage(String value) {
+	public void clickModelSwitchIconInDashboardPage(String value) throws Exception {
 		waitForSeconds(3);
 		if (isElementEnabled(modeSwitchIcon, 30)) {
 			clickTheElement(modeSwitchIcon);
@@ -82,7 +83,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 			}
 			switchToNewWindow();
-
+			LoginPage loginPage = new ConsoleLoginPage();
+			loginPage.verifyNewTermsOfServicePopUp();
 		} else
 			SimpleUtils.fail("mode switch img load failed", false);
 
@@ -252,7 +254,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css = "input[placeholder*=\"You can search by name, id, district, country, state and city.\"]")
+	@FindBy(css = "input[placeholder*=\"You can search by name, id, district and city.\"]")
 	private WebElement searchInput;
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
@@ -570,7 +572,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}
 
 		} else {
-			SimpleUtils.fail("Search input is not clickable", true);
+			SimpleUtils.fail("Search input is not clickable", false);
 		}
 
 	}
@@ -1917,7 +1919,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement searchBoxInCriteriaValue;
 	@FindBy(css = "input-field[type=\"checkbox\"]")
 	private List<WebElement> checkboxInCriteriaValue;
-	@FindBy(css = "modal[modal-title=\"Remove Dynamic Group\"]")
+	@FindBy(css = "modal[modal-title=\"Remove Dynamic Employee Group\"]")
 	private WebElement removeDGPopup;
 	@FindBy(css = "ng-transclude.lg-modal__body")
 	private WebElement removeDGPopupDes;
@@ -2063,7 +2065,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	public boolean isRemoveDynamicGroupPopUpShowing() {
-		if (isElementEnabled(removeDGPopup, 5) && removeDGPopupDes.getText().contains("Are you sure you want to remove this dynamic group?")
+		if (isElementEnabled(removeDGPopup, 5) && removeDGPopupDes.getText().contains("Are you sure you want to remove this dynamic employee group?")
 				&& isElementEnabled(removeBtnInRemovDGPopup, 5)) {
 			SimpleUtils.pass("Remove dynamic group page show well");
 			return true;
@@ -2170,6 +2172,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "div.daypart-container tbody tr")
 	private List<WebElement> dayPartsList;
 
+	@Override
 	public void goToGlobalConfigurationInLocations() throws Exception {
 		waitForSeconds(10);
 		if (isElementLoaded(globalConfigurationInLocations, 20)) {
@@ -3114,6 +3117,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public List<HashMap<String, String>> getLocationTemplateInfoInLocationLevel() {
 		List<HashMap<String, String>> templateInfo = new ArrayList<>();
+		MyThreadLocal.getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]"));
 		if (areListElementVisible(templateRows, 5)) {
 			for (WebElement s : templateRows) {
 				HashMap<String, String> templateInfoInEachRow = new HashMap<>();
@@ -3492,5 +3496,111 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		latitude.sendKeys("34.3416");
 		longitude.sendKeys("108.9398");
 	}
+
+	@FindBy(css = ".lg-dashboard-card__header--enterpriseprofiledashboard")
+	private WebElement enterpriseProfile;
+
+	@FindBy(css = "[ng-click=\"editEnterprise()\"]")
+	private WebElement editEnterpriseProfile;
+
+	@Override
+	public void clickEditEnterpriseProfile() {
+		if (isElementEnabled(enterpriseProfile, 10)) {
+			click(enterpriseProfile);
+			if (isClickable(editEnterpriseProfile, 15)) {
+				click(editEnterpriseProfile);
+				SimpleUtils.pass("Button for edit enterprise profile is clickable!");
+			} else
+				SimpleUtils.fail("Button for edit enterprise profile is not clickable!", false);
+		}
+	}
+
+
+	@FindBy(css = "form-section[form-title=\"Budget Management\"] [question-title*=\"Display labor budget in schedules?\"]")
+	private WebElement laborBudgetSection;
+	@Override
+	public String getLaborBudgetSettingContent() throws Exception{
+		if (isElementLoaded(laborBudgetSection, 10)){
+			return laborBudgetSection.findElement(By.cssSelector(".lg-question-input__text.ng-binding")).getText();
+		}
+		return "";
+	}
+
+	@Override
+	public void editLaborBudgetSettingContent() throws Exception{
+		int index = 0;
+		if (isElementLoaded(editOnGlobalConfigPage, 10)){
+			clickTheElement(editOnGlobalConfigPage);
+			SimpleUtils.assertOnFail("Global config page is editable!", isElementLoaded(saveButtonOnGlobalConfiguration,3), false);
+
+		}else{
+			SimpleUtils.fail("Edit button on global config page load failed!", false);
+		}
+	}
+
+	@FindBy(css = "form-section[form-title=\"Budget Management\"] [question-title*=\"Display labor budget in schedules?\"] [class*=\"buttonLabel ng-binding\"]")
+	private List<WebElement> yesOrNoBtn;
+	@Override
+	public void turnOnOrTurnOffLaborBudgetToggle(boolean yesOrNo) throws Exception {
+		String content = getLaborBudgetSettingContent();
+		int index;
+		if (isElementLoaded(laborBudgetSection, 10)
+				&& (content.contains("Display labor budget in schedules?"))){
+			if (isElementLoaded(laborBudgetSection.findElement(By.cssSelector(".ng-scope.ng-isolate-scope")),10)){
+				if(yesOrNo){
+					index = 0;
+					clickTheElement(yesOrNoBtn.get(index));
+					SimpleUtils.pass("Toggle is turned on!");
+				}else {
+					index = 1;
+					clickTheElement(yesOrNoBtn.get(index));
+					SimpleUtils.pass("Toggle is turned off!");
+				}
+			} else {
+				SimpleUtils.fail("Toggle fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Labor Budget section fail to load!", false);
+		}
+	}
+
+	@FindBy(css = "form-section[form-title=\"Budget Management\"] [question-title*=\"Input budget by location or break down by work role or job title?\"]")
+	private WebElement budgetGroupSelection;
+	@FindBy(css = "form-section[form-title=\"Budget Management\"] [question-title*=\"Input budget by location or break down by work role or job title?\"] [ng-required*=\"$ctrl.required\"]")
+	private WebElement budgetGroup;
+
+	@Override
+	public String getBudgetGroupSettingContent() throws Exception{
+		if (isElementLoaded(budgetGroupSelection, 10)){
+			return budgetGroupSelection.findElement(By.cssSelector(".lg-question-input__text.ng-binding")).getText();
+		}
+		return "";
+	}
+
+	@Override
+	public void selectBudgetGroup(String optionValue) throws Exception {
+		String content = getBudgetGroupSettingContent();
+		if (isElementLoaded(budgetGroupSelection, 10)
+				&& (content.contains("Input budget by location or break down by work role or job title?"))){
+			Select selectedBudgetGroup = new Select(budgetGroup);
+			selectedBudgetGroup.selectByVisibleText(optionValue);
+			SimpleUtils.report("Select '" + optionValue + "' as the WeekOT");
+			waitForSeconds(2);
+		} else {
+			SimpleUtils.fail("Budget group section fail to load!", false);
+		}
+	}
+
+	@Override
+	public void saveTheGlobalConfiguration() throws Exception {
+		int index = 0;
+		if(isElementLoaded(saveButtonOnGlobalConfiguration,3)){
+			clickTheElement(saveButtonOnGlobalConfiguration);
+			Thread.sleep(3);
+			SimpleUtils.assertOnFail("Global Configuration page not saved successfully!", isElementLoaded(editOnGlobalConfigPage,3), false);
+		}
+	}
+
+
 }
 

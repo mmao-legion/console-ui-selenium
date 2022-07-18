@@ -5,6 +5,7 @@ import com.legion.pages.OpsPortaPageFactories.*;
 import com.legion.pages.core.*;
 import com.legion.pages.core.OpsPortal.*;
 import com.legion.pages.core.schedule.*;
+import com.legion.pages.opConfiguration.MealAndRestPage;
 import org.testng.Reporter;
 
 /**
@@ -192,4 +193,9 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public NewShiftPage createNewShiftPage() { return new ConsoleNewShiftPage(); }
+
+	@Override
+	public MealAndRestPage createMealAndRestPage() {
+		return new com.legion.pages.core.opConfiguration.MealAndRestPage();
+	}
 }

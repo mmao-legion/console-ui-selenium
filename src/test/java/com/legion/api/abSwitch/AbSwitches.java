@@ -1,6 +1,6 @@
 package com.legion.api.abSwitch;
 
-public enum abSwitches {
+public enum AbSwitches {
     TwentyFourHourTimeFormat("24hTimeFormat"),
 
     SkipUsernamePasswordLogin("SkipUsernamePasswordLogin"),
@@ -165,10 +165,14 @@ public enum abSwitches {
 
     UseLegionAccural("UseLegionAccural"),
 
-    LocationStat("LocationStat");
+    LocationStat("LocationStat"),
+
+    ScheduleEditShiftTimeNew( "ScheduleEditShiftTimeNew"),
+
+    NewCreateShift("NewCreateShift");
     private final String value;
 
-    abSwitches(final String newValue) {
+    AbSwitches(final String newValue) {
         value = newValue;
     }
 

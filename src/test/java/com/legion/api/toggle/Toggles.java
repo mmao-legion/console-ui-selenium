@@ -4,7 +4,9 @@ public enum Toggles {
 
     UseLegionAccrual("UseLegionAccrual"),
     MinorRulesTemplate("MinorRulesTemplate"),
-    ScheduleShowFullNames("ScheduleShowFullNames");
+    ScheduleShowFullNames("ScheduleShowFullNames"),
+    MealAndRestTemplate("MealAndRestTemplate"),
+    ScheduleEditShiftTimeNew( "ScheduleEditShiftTimeNew");
 
     private final String value;
 

@@ -33,6 +33,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="[class=\"tb-wrapper ng-scope\"] lg-dashboard-card h1")
 	private List<WebElement> configurationCardsList;
 
+	@FindBy(css = ".lg-dashboard-card")
+	private List<WebElement> configurationCards;
+
 	@FindBy(css="div.card-carousel-card-title")
 	private List<WebElement> smartCardsList;
 
@@ -42,14 +45,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="div.lg-tab-toolbar__search")
 	private WebElement searchField;
 
-	@FindBy(css="[class=\"lg-table ng-scope\"] tbody")
+	@FindBy(css="[class=\"lg-table lg-templates-table-improved ng-scope\"] .lg-templates-table-improved__grid-row.ng-scope")
 	private List<WebElement> templatesList;
 
-	@FindBy(css="[class=\"lg-table ng-scope\"] button span.ng-binding")
+	@FindBy(css="[class=\"lg-table lg-templates-table-improved ng-scope\"] button span.ng-binding")
 	private List<WebElement> templateNameList;
 	@FindBy(css="lg-eg-status[type='Draft']")
 	private List<WebElement> templateDraftStatusList;
-	@FindBy(css="td.toggle i[class=\"fa fa-caret-right\"]")
+	@FindBy(css="div.toggle i[class=\"fa fa-caret-right\"]")
 	private WebElement templateToggleButton;
 
 	@FindBy(css="lg-button[label=\"Edit\"]")
@@ -112,7 +115,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="sub-content-box[box-title=\"Days of Week\"]")
 	private WebElement daysOfWeekSection;
 
-	@FindBy(css="[box-title=\"Dynamic Group\"]")
+	@FindBy(css="[title=\"Dynamic Employee Groups\"] div")
 	private WebElement dynamicGroupSection;
 
 	@FindBy(css="sub-content-box[box-title=\"Time of Day\"]")
@@ -160,6 +163,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public enum DynamicEmployeeGroupLabels {
 
 		MinorRule("Minor Rule"),
+		MealAndRest("MealAndRest"),
 		DifferentialPay("Differential Pay");
 
 		private final String value;
@@ -217,6 +221,24 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			return value;
 		}
 	}
+
+	public enum DynamicEmployeeGroupWorkRoleCriteria {
+
+		EventManager("Event Manager"),
+		GeneralManager("General Manager"),
+		TeamMember("Team Member Corporate-Theatre");
+
+		private final String value;
+
+		DynamicEmployeeGroupWorkRoleCriteria(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
 	@Override
 	public void goToConfigurationPage() throws Exception {
 		if (isElementEnabled(configurationTab,15)) {
@@ -338,7 +360,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public boolean isTemplateListPageShow() throws Exception {
 		boolean flag = false;
-			if(templatesList.size()!=0 && isElementEnabled(newTemplateBTN, 5) && isElementEnabled(searchField, 5)){
+			if(areListElementVisible(templatesList, 10)
+					&& templatesList.size()!=0
+					&& isElementEnabled(newTemplateBTN, 10)
+					&& isElementEnabled(searchField, 10)){
 				SimpleUtils.pass("Template landing page shows well");
 				flag = true;
 			}else{
@@ -352,11 +377,11 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public void clickOnTemplateName(String templateType) throws Exception {
 		if(isTemplateListPageShow()){
-			String classValue = templatesList.get(0).findElement(By.cssSelector("tr")).getAttribute("class");
+			String classValue = templatesList.get(0).getAttribute("class");
 			if(classValue!=null && classValue.contains("hasChildren")){
 				clickTheElement(templateToggleButton);
 				waitForSeconds(3);
-				clickTheElement(templatesList.get(0).findElements(By.cssSelector("button")).get(1));
+				clickTheElement(getDriver().findElement(By.cssSelector("[ng-repeat=\"child in item.childTemplate\"] button")));
 				waitForSeconds(20);
 				if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
 				&&isElementEnabled(templateDetailsPageForm)){
@@ -433,12 +458,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			searchTemplate(templateName);
 			for(int i=0;i<templateNameList.size();i++){
 				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(templateName)){
-					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
 						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 						waitForSeconds(3);
 						if(editOrViewMode!=null && editOrViewMode.toLowerCase().contains("edit")){
-							clickTheElement(templatesList.get(i).findElement(By.cssSelector("tr.child-row.ng-scope button")));
+							clickTheElement(getDriver().findElement(By.cssSelector("[ng-repeat=\"child in item.childTemplate\"] button")));
 						}else{
 							clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
 						}
@@ -475,7 +500,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		if(isElementEnabled(editButton, 10)){
 			clickTheElement(editButton);
 			waitForSeconds(3);
-			if(isElementEnabled(editTemplatePopupPage)){
+			if(isElementEnabled(editTemplatePopupPage, 5)){
 				SimpleUtils.pass("Click edit button successfully!");
 				clickTheElement(okButton);
 				if(isElementEnabled(dropdownArrowButton)){
@@ -1642,9 +1667,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement successMsg;
 
 	public void displaySuccessMessage() throws Exception {
-		if (isElementLoaded(successMsg, 20) && successMsg.getText().contains("Success!")) {
-			SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
-			waitForSeconds(2);
+		if (isElementLoaded(successMsg, 20)) {
+			if ( successMsg.getText().contains("Success")) {
+				SimpleUtils.pass("Success message displayed successfully." + successMsg.getText());
+				waitForSeconds(2);
+			} else
+				SimpleUtils.report("The message should include 'Success', but the actual is: "+successMsg.getText());
 		} else {
 			SimpleUtils.report("Success pop up not displayed successfully.");
 			waitForSeconds(3);
@@ -1683,6 +1711,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			click(publishTemplateButton);
 			if(isElementLoaded(publishTemplateConfirmModal, 5)){
 				click(okButtonOnPublishTemplateConfirmModal);
+				waitForSeconds(3);
 				displaySuccessMessage();
 			} else
 				SimpleUtils.fail("Publish template confirm modal fail to load", false);
@@ -1844,7 +1873,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
 					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
 				}
-				if(isElementEnabled(saveAsDraftButton, 5)){
+				if(isElementEnabled(saveAsDraftButton, 5)
+						&& isElementLoaded(templateDetailsAssociateTab, 10)
+						&& isElementLoaded(templateDetailsBTN, 10)
+						&& isElementLoaded(templateExternalAttributesBTN, 10)){
 					SimpleUtils.pass("User can click continue button successfully!");
 					clickTheElement(saveAsDraftButton);
 					waitForSeconds(5);
@@ -2517,6 +2549,23 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 
 	@Override
+	public boolean checkIfApproveShiftInHomeLocationSettingEnabled() throws Exception {
+		boolean isApproveShiftInHomeLocationSettingEnabled = false;
+		if (isElementLoaded(approveShiftInHomeLocationSetting,10)){
+			scrollToElement(approveShiftInHomeLocationSetting);
+			if (approveShiftInHomeLocationSetting.findElement(By.cssSelector(".lg-button-group-first")).getAttribute("class").contains("selected")){
+				isApproveShiftInHomeLocationSettingEnabled = true;
+				SimpleUtils.pass("'Is approval required by Manager when an employee claims an Open Shift in a home location?!' setting is enabled! ");
+			} else {
+				SimpleUtils.report("'Is approval required by Manager when an employee claims an Open Shift in a home location?!' setting is disabled! ");
+			}
+		} else {
+			SimpleUtils.fail("'Is approval required by Manager when an employee claims an Open Shift in a home location?!' setting is not loaded!", false);
+		}
+		return  isApproveShiftInHomeLocationSettingEnabled;
+	}
+
+	@Override
 	public void enableOrDisableApproveShiftInNonHomeLocationSetting(String yesOrNo) throws Exception {
 		if (isElementLoaded(approveShiftInNonHomeLocationSetting,10)){
 			scrollToElement(approveShiftInNonHomeLocationSetting);
@@ -2664,7 +2713,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="modal[modal-title=\"Remove Dynamic Group\"] lg-button[label=\"Remove\"]")
 	private WebElement dynamicGroupRemoveBTNOnDialog;
 
-
+	@Override
 	public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception{
 		if(isElementEnabled(templateAssociationBTN,10)){
 			scrollToElement(templateAssociationBTN);
@@ -2744,6 +2793,27 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 		clickTheElement(saveBTNOnAssociationPage);
 		waitForSeconds(10);
+	}
+
+	@Override
+	public void verifySpecificAssociationIsSaved(String name) throws Exception {
+		boolean isSelected = false;
+		searchOneDynamicGroup(name);
+		if (areListElementVisible(templateAssociationRows, 5) && templateAssociationRows.size() > 0) {
+			for (WebElement row: templateAssociationRows) {
+				String associationName = row.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+				if (associationName.equals(name)) {
+					WebElement radioBtn = row.findElement(By.cssSelector("[type=\"radio\"]"));
+					if (radioBtn.getAttribute("checked").equals("true")) {
+						isSelected = true;
+						SimpleUtils.pass("Dynamic Group: " + name + " is selected successfully!");
+					}
+				}
+			}
+		}
+		if (!isSelected) {
+			SimpleUtils.fail("Dynamic Group: " + name + " is not selected!", false);
+		}
 	}
 
 	@FindBy(css="div.groupAction lg-button[ng-click=\"$ctrl.addDynamicGroup()\"] button")
@@ -3094,7 +3164,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	private boolean isItMultipVersion() {
-		String classValue = templatesList.get(0).findElement(By.cssSelector("tr")).getAttribute("class");
+		String classValue = templatesList.get(0).getAttribute("class");
 		if (classValue != null && classValue.contains("hasChildren")) {
 			return true;
 		} else
@@ -3108,7 +3178,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				&& templateNameList.size()>0) {
 			for (int i = 0; i< templateNameList.size(); i++) {
 				if (templateNameList.get(i).getText().equalsIgnoreCase(templateName)) {
-					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
 						clickTheElement(templateToggleButton);
 						waitForSeconds(3);
@@ -3182,7 +3252,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			searchTemplate(templateName);
 			for(int i=0;i<templateNameList.size();i++){
 				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(templateName)){
-					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
 						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 						waitForSeconds(3);
@@ -3337,14 +3407,20 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement labelsSelector;
 	@FindBy(css = ".item.ng-scope")
 	private List<WebElement> labelsItems;
-	@FindBy(css = "[value=\"group.values\"] input[placeholder=\"Select...\"]")
+	@FindBy(css = "[class=\"input-form ng-pristine ng-invalid ng-invalid-required ng-valid-pattern ng-valid-maxlength\"] input[placeholder=\"Select...\"]")
 	private List<WebElement> subCriteriaSelector;
-	@FindBy(css = "[value=\"group.values\"] .item.ng-scope input-field")
+	@FindBy(css = ".select-list-item")
 	private List<WebElement> subCriteriaSelectorItems;
 	@FindBy(css = "input[placeholder=\"Search Label\"]")
 	private WebElement searchLabelBox;
 	@FindBy(css = "div.new-label")
 	private WebElement newLabel;
+	@FindBy(css = ".lg-search-options__option")
+	private List<WebElement> criteriaSelectorItems;
+	@FindBy(css = "[class=\"lg-picker-input__wrapper lg-ng-animate\"]")
+	private WebElement pickerPopup;
+	@FindBy(css = "input[placeholder=\"Search\"]")
+	private WebElement searchInput;
 
 	@Override
 	public void createNewDynamicEmployeeGroup(String groupTitle, String description, String groupLabels, List<String> groupCriteria) throws Exception {
@@ -3374,34 +3450,69 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 						}
 					}
 				}
+				//To close the label pick popup
+				if (isElementLoaded(pickerPopup, 5)){
+					clickTheElement(newLabel);
+				}
+
 				//Add more criteria if criteria more than 1
 				if (groupCriteria.size()>1) {
 					for (int i=0; i< groupCriteria.size()-2; i++) {
 						clickTheElement(addMoreBtn);
 					}
 				}
+				waitForSeconds(3);
 				//Select criteria and sub-criteria
 				if (criteriaSelectors.size() == groupCriteria.size()) {
 					for (int i = 0; i< groupCriteria.size(); i++) {
-						String criteria = groupCriteria.get(i).split("-")[0];
-						String subCriteria = groupCriteria.get(i).split("-")[1];
+						String criteria = "";
+						String subCriteria = "";
+						if (groupCriteria.get(i).contains("&")) {
+							criteria = groupCriteria.get(i).split("&")[0];
+							subCriteria = groupCriteria.get(i).split("&")[1];
+						} else if (groupCriteria.get(i).contains("-")) {
+							criteria = groupCriteria.get(i).split("-")[0];
+							subCriteria = groupCriteria.get(i).split("-")[1];
+						}
 						//Select criteria
-						selectByVisibleText(criteriaSelectors.get(i), criteria);
+						clickTheElement(criteriaSelectors.get(i));
+						if (areListElementVisible(criteriaSelectorItems, 15)) {
+							for (WebElement item: criteriaSelectorItems) {
+								if (item.getText().equalsIgnoreCase(criteria)){
+									clickTheElement(item);
+									break;
+								}
+							}
+						} else
+							SimpleUtils.fail("Criteria selector items fail to load! ", false);
+//						selectByVisibleText(criteriaSelectors.get(i), criteria);
 						waitForSeconds(3);
 						//Select sub-criteria
 						clickTheElement(subCriteriaSelector.get(i));
+						/*if (isElementLoaded(searchInput, 5)) {
+							searchInput.sendKeys(subCriteria);
+							waitForSeconds(1);
+							subCriteriaSelectorItems = getDriver().findElements(By.cssSelector(".select-list-item"));
+						}*/
 						for (WebElement item: subCriteriaSelectorItems) {
 							if (item.getText().equalsIgnoreCase(subCriteria)) {
 								clickTheElement(item.findElement(By.tagName("input")));
 								break;
+							} else {
+								SimpleUtils.report("Expected: " + subCriteria + ", actual is: " + item.getText() + ".");
 							}
 						}
 					}
-				}
+				} else
+					SimpleUtils.fail("Criteria selector fail to load! ", false);
 
 				//Click on OK button
 				clickTheElement(okButton);
+				waitForSeconds(15);
 				displaySuccessMessage();
+				if (isManagerDGpopShowWell()) {
+					SimpleUtils.fail("Fail to save the Dynamic Employee Group! ", false);
+				}
 			} else
 				SimpleUtils.fail("Manage Dynamic Group window load failed", false);
 		} else
@@ -3409,14 +3520,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 
-	@FindBy(css = "modal[modal-title=\"Manage Dynamic Group\"]>div")
+	@FindBy(css = "modal[modal-title=\"Manage Dynamic Employee Group\"]>div")
 	private WebElement managerDGpop;
 	@FindBy(css = "input[aria-label=\"Group Name\"]")
 	private WebElement groupNameInput;
 	@FindBy(css = "input-field[value=\"$ctrl.dynamicGroup.description\"] >ng-form>input")
 	private WebElement groupDescriptionInput;
 
-	@FindBy(css = "select.ng-pristine.ng-empty.ng-valid.ng-valid-required")
+	@FindBy(css = "input[placeholder=\"Select one\"]")
 	private List<WebElement> criteriaSelectors;
 
 	@FindBy(css = "lg-button[label=\"Test\"]")
@@ -3444,7 +3555,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void archiveOrDeleteAllTemplates() throws Exception {
-		if(isTemplateListPageShow()){
+		if(isElementLoaded(newTemplateBTN, 15) && isElementLoaded(searchTemplateInputBox, 10)){
 			SimpleUtils.pass("Labor model template list is showing now");
 			if (areListElementVisible(templateNameList, 20) && templatesList.size()>0) {
 				int j = 0;
@@ -3455,9 +3566,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				}
 
 			}else
-				SimpleUtils.fail("There are no template in the list",false);
+				SimpleUtils.report("There are no template in the list");
 		}else {
-			SimpleUtils.fail("Labor model template list is not loaded well",false);
+			SimpleUtils.fail("Template list page is not loaded well",false);
 		}
 	}
 
@@ -3503,4 +3614,147 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Published template was archived",false);
 	}
 
+
+
+	@FindBy(css = "[title=\"Minors Rules\"] div")
+	private WebElement minorRulesTile;
+	@Override
+	public void verifyMinorRulesTileIsLoaded() throws Exception {
+		if (isElementLoaded(minorRulesTile, 10)) {
+			String textOnTile1 = "Scheduling Rules for Minors";
+			String textOnTile2 = "Min/Max Hours for school days and non-school days";
+			String textOnTile3 = "Min/Max Hours for school weeks and non-school weeks";
+			String textOnTile4 = "Meal and Rest break rules for minors";
+			String messageOnTile = minorRulesTile.findElement(By.className("lg-dashboard-card__body")).getText();
+			if (messageOnTile.contains(textOnTile1)
+					&& messageOnTile.contains(textOnTile2)
+					&& messageOnTile.contains(textOnTile3)
+					&& messageOnTile.contains(textOnTile4)) {
+				SimpleUtils.pass("The message on the Minor Rule tile display correctly! ");
+			} else
+				SimpleUtils.fail("The message on the Minor Rule tile display incorrectly! ", false);
+		} else
+			SimpleUtils.fail("Minor Rules tile fail to loaded! ", false);
+	}
+
+
+	@FindBy(css = "[form-title=\"Minor Schedule by Week\"]")
+	private WebElement minorScheduleByWeekSection;
+
+	@FindBy(css = "[form-title=\"Minor Schedule by Day\"]")
+	private WebElement minorScheduleByDaySection;
+
+	public boolean checkIfMinorSectionsLoaded () throws Exception {
+		boolean ifSectionLoaded = false;
+		if (isElementLoaded(minorScheduleByWeekSection, 5)
+				&& isElementLoaded(minorScheduleByDaySection, 5)) {
+			ifSectionLoaded = true;
+			SimpleUtils.pass("The sections display correctly on the minor template page! ");
+		} else
+			SimpleUtils.report("The sections display incorrectly on the minor template page! ");
+		return ifSectionLoaded;
+	}
+
+	public void clickOnBackButton () throws Exception {
+		if (isElementLoaded(backButton, 5)) {
+			clickTheElement(backButton);
+			if(isElementEnabled(leaveThisPageButton)){
+				clickTheElement(leaveThisPageButton);
+				waitForSeconds(2);
+			}
+			SimpleUtils.pass("Click back button successfully! ");
+		} else
+			SimpleUtils.fail("Back button fail to loaded! ", false);
+	}
+
+	@Override
+	public void verifyTheContentOnSpecificCard(String cardName, List<String> content) throws Exception {
+		if (areListElementVisible(configurationCards, 5) && configurationCards.size() > 0) {
+			for (WebElement card : configurationCards) {
+				if (card.findElement(By.tagName("h1")).getText().equalsIgnoreCase(cardName)) {
+					WebElement body = card.findElement(By.className("lg-dashboard-card__body"));
+					String bodyText = body.getText();
+					String [] temp = bodyText.split("\n");
+					List<String> actualContent = Arrays.asList(temp);
+					if (actualContent.containsAll(content) && content.containsAll(actualContent)) {
+						SimpleUtils.pass("The content on card: " + cardName + " is correct!");
+					} else {
+						SimpleUtils.fail("The content on card: " + cardName + " is incorrect!", false);
+					}
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("Cards failed to load on Configuration page!", false);
+		}
+	}
+
+	@FindBy(css ="[question-title=\"Strictly enforce minor violations?\"] yes-no")
+	private WebElement yesNoForStrictlyEnforceMinorViolations;
+	@Override
+	public void setStrictlyEnforceMinorViolations(String yesOrNo) throws Exception {
+		if (isElementLoaded(yesNoForStrictlyEnforceMinorViolations,10)){
+			scrollToElement(yesNoForStrictlyEnforceMinorViolations);
+			if (yesOrNo.equalsIgnoreCase("yes")){
+				if (isElementLoaded(yesNoForStrictlyEnforceMinorViolations.findElement(By.cssSelector(".lg-button-group-first")),10)){
+					click(yesNoForStrictlyEnforceMinorViolations.findElement(By.cssSelector(".lg-button-group-first")));
+					SimpleUtils.pass("Turned on 'Strictly enforce minor violations?' setting successfully! ");
+				} else {
+					SimpleUtils.fail("Yes button fail to load!", false);
+				}
+			} else if (yesOrNo.equalsIgnoreCase("no")){
+				if (isElementLoaded(yesNoForStrictlyEnforceMinorViolations.findElement(By.cssSelector(".lg-button-group-last")),10)){
+					click(yesNoForStrictlyEnforceMinorViolations.findElement(By.cssSelector(".lg-button-group-last")));
+					SimpleUtils.pass("Turned off 'Strictly enforce minor violations?' setting successfully! ");
+				} else {
+					SimpleUtils.fail("No button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.warn("You have to input the right command: yes or no");
+			}
+		} else {
+			SimpleUtils.fail("'Strictly enforce minor violations?' setting is not loaded!", false);
+		}
+	}
+
+
+	@Override
+	public boolean isStrictlyEnforceMinorViolationSettingEnabled() throws Exception {
+		boolean isStrictlyEnforceMinorViolationSettingEnabled = false;
+		if (isElementLoaded(yesNoForStrictlyEnforceMinorViolations, 25)) {
+			if (yesNoForStrictlyEnforceMinorViolations.
+					findElement(By.cssSelector(".lg-button-group-first")).getAttribute("class").contains("selected")){
+				isStrictlyEnforceMinorViolationSettingEnabled = true;
+			}
+		}else
+			SimpleUtils.fail("Strictly enforce minor violation setting fail to load! ", false);
+		return isStrictlyEnforceMinorViolationSettingEnabled;
+	}
+
+	@FindBy(css = "question-input[question-title=\"Can a manager add another locations' employee in schedule before the employee''s home location has published the schedule?\"] input-field")
+	private WebElement canManagerAddAnotherLocationsEmployeeInSchedule;
+	@Override
+	public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception {
+
+		WebElement confSelect = canManagerAddAnotherLocationsEmployeeInSchedule.findElement(By.cssSelector("select"));
+		if(isElementLoaded(confSelect,5)) {
+			selectByVisibleText(confSelect,option);
+			displaySuccessMessage();
+		} else{
+			SimpleUtils.fail("Can a manager add another locations' employee in schedule before the employee's home location has published the schedule? input field not loaded.", false);
+		}
+	}
+
+	@FindBy(css = "question-input[question-title=\"Labor Preferences for Forecast Summary Smartcard\"] select[ng-change=\"$ctrl.handleChange()\"]")
+	private WebElement laborPreferencesForForecastSummarySmartcardSettingDropdown;
+	@Override
+	public void updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(String option) throws Exception {
+		if (isElementLoaded(laborPreferencesForForecastSummarySmartcardSettingDropdown, 10)) {
+			Select dropdown = new Select(laborPreferencesForForecastSummarySmartcardSettingDropdown);
+			dropdown.selectByVisibleText(option);
+			SimpleUtils.pass("OP Page: Global Configuration: Schedules : Labor Preferences for Forecast Summary Smartcard settings been changed successfully");
+		} else {
+			SimpleUtils.fail("OP Page: Global Configuration: Schedules : Labor Preferences for Forecast Summary Smartcard settings dropdown list not loaded.", false);
+		}
+	}
 }
