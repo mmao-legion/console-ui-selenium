@@ -1,11 +1,15 @@
 package com.legion.pages.OpsPortaPageFactories;
 
+import org.openqa.selenium.WebElement;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public interface ConfigurationPage {
     public void goToConfigurationPage() throws Exception;
+    public int historyRecordLimitCheck(String templateName) throws Exception;
+    public void changeOHtemp() throws Exception;
     public void checkAllTemplateCards() throws Exception;
     public boolean isTemplateListPageShow() throws Exception;
     public void clickOnConfigurationCrad(String templateType) throws Exception;
@@ -47,6 +51,8 @@ public interface ConfigurationPage {
     public void addMultipleAdvanceStaffingRule(String workRole,List<String> days) throws Exception;
     public void editAdvanceStaffingRule(String shiftsNumber) throws Exception;
     public void deleteAdvanceStaffingRule() throws Exception;
+    public void OHListPageCheck() throws Exception;
+    public void createOHTemplateUICheck(String tpname) throws Exception;
     public void verifyClockInDisplayAndSelect(List<String> clockInGroup) throws Exception;
     public void setWFS(String wfsMode);
     public void selectWFSGroup(String wfsName) throws Exception;
@@ -85,7 +91,7 @@ public interface ConfigurationPage {
                                                                   String endEvent,String endOffsetTime,String endEventPoint,String endTimeUnit,
                                                                   List<String> days,String shiftsNumber) throws Exception;
     public void selectOneDynamicGroup(String dynamicGroupName) throws Exception;
-    public void publishNewTemplate(String templateName,String name,String criteria,String formula) throws Exception;
+    public void publishNewTemplate(String templateName,String dynamicGName,String criteria,String formula) throws Exception;
     public void moveSliderAtSomePoint(int moveCount, String value) throws Exception;
     public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) throws Exception;
     public void createDynamicGroup(String name,String criteria,String formula) throws Exception;
@@ -111,7 +117,86 @@ public interface ConfigurationPage {
     public void createNewDynamicEmployeeGroup(String groupTitle, String description, String groupLabels, List<String> groupCriteria) throws Exception;
     public void archiveOrDeleteAllTemplates() throws Exception;
     public void clickOnTemplateDetailTab() throws Exception;
+    public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception;
     public void deleteSpecifyDynamicEmployeeGroupsInList(String groupName) throws Exception;
+    public void clickOnBackBtnOnTheTemplateDetailAndListPage() throws Exception;
+    public void chooseSaveOrPublishBtnAndClickOnTheBtn(String button) throws Exception;
+    public void clickEdit() throws Exception;
+    public void clickOK() throws Exception;
+    public void verifyTimeOff() throws Exception;
+    public void verifymaxNumEmployeesInput(String num) throws Exception;
+    public void switchToControlWindow() throws Exception;
+    public void verifyMultipleTemplateListUI(String templateName) throws Exception;
+    public void publishAtDifferentTimeTemplate(String templateName,String dynamicGName,String criteria,String formula,String button,int effectiveDate) throws Exception;
+    public void createFutureTemplateBasedOnExistingTemplate(String templateName,String button,int date,String editOrViewMode) throws Exception;
+    public void createDraftForEachPublishInMultipleTemplate(String templateName,String button,String editOrViewMode) throws Exception;
+    public HashMap<String, List<String>> verifyMenuListForMultipleTemplate(String templateName) throws Exception;
+    public void expandMultipleVersionTemplate(String templateName) throws Exception;
+    public void verifyButtonsShowingOnPublishedTemplateDetailsPage() throws Exception;
+    public void verifyButtonsShowingOnDraftTemplateDetailsPage() throws Exception;
+    public void createMultipleTemplateForAllTypeOfTemplate(String templateName,String dynamicGpName,String criteriaType,String criteriaValue,String button,int date,String editOrViewMode) throws Exception;
+    public void archiveMultipleTemplate(String templateName) throws Exception;
+    public void verifyAdvanceStaffRuleFromLocationLevel(List<String> advanceStaffingRule) throws Exception;
+    public void verifyAdvanceStaffRuleStatusFromLocationLevel(List<String> advanceStaffingRuleStatus) throws Exception;
+    public void changeAdvanceStaffRuleStatusFromLocationLevel(int i) throws Exception;
+    public void verifyCanNotAddAdvancedStaffingRuleFromTemplateLevel() throws Exception;
+    public void verifyCanNotEditDeleteAdvancedStaffingRuleFromTemplateLevel() throws Exception;
+    public String updateEffectiveDateOfFutureTemplate(String templateName,String button,int date) throws Exception;
+    public List<String> getEffectiveDateForTemplate(String templateName) throws Exception;
+    public void checkTheEntryOfAddBasicStaffingRule() throws Exception;
+    public boolean verifyWarningInfoForDemandDriver(String warningMsg) throws Exception;
+    public void verifyStaffingRulePageShowWell() throws Exception;
+    public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception;
+    public void verifyPublishedTemplateAfterEdit(String templateName) throws Exception;
+
+    public boolean searchDriverInTemplateDetailsPage(String driverName) throws Exception;
+    public void clickRemove() throws Exception;
+    public void selectStartTimeEvent(String startTimeEvent) throws Exception;
+    public void verifyConditionAndNumberFiledCanShowWell() throws Exception;
+    public void verifyNumberInputFieldOfBasicStaffingRule() throws Exception;
+    public List<String> verifyWorkRoleListOfBasicStaffingRule() throws Exception;
+    public void verifyUnitOptionsListOfBasicStaffingRule() throws Exception;
+    public void verifyStartEndOffsetMinutesShowingByDefault() throws Exception;
+    public void verifyStartEndEventPointOptionsList() throws Exception;
+    public List<String> verifyStartEndTimeEventOptionsList() throws Exception;
+    public void verifyDefaultValueAndSelectDaysForBasicStaffingRule(String day) throws Exception;
+    public void verifyDaysListShowWell() throws Exception;
+    public void setSpecifiedHours(String start, String end) throws Exception;
+    public void selectEventPointForBasicStaffingRule(String startEventPoint,String endEventPoint) throws Exception;
+    public void verifyBeforeAndAfterDayPartsShouldBeSameWhenSetAsDayParts(String dayParts1,String dayParts2,String startEventPoint,String endEventPoint) throws Exception;
+    public void verifyWorkforceSharingGroup() throws Exception;
+    public void verifyCrossAndCheckButtonOfBasicStaffingRule() throws Exception;
+    public void clickCheckButtonOfBasicStaffingRule() throws Exception;
+    public void defaultSelectedBadgeOption() throws Exception;
+    public void selectBadgesOfBasicStaffingRule(String hasBadgeOrNot, String badgeName) throws Exception;
+    public void verifyHistoryButtonNotDisplay() throws Exception;
+    public void verifyHistoryButtonDisplay() throws Exception;
+    public void verifyHistoryButtonIsClickable() throws Exception;
+    public void verifyCloseIconNotDisplayDefault() throws Exception;
+    public void clickHistoryAndClose() throws Exception;
+    public void goToItemInConfiguration(String item) throws Exception;
+    public void setLeaveThisPageButton() throws Exception;
+    public void selectWorkRoleOfBasicStaffingRule(String workRoleName) throws Exception;
+    public void selectEndTimeEvent(String endTimeEvent) throws Exception;
+    public void selectConditionMaxMinExactly(String condition) throws Exception;
+    public void selectUnitOptionsOfBasicStaffingRule(String unit) throws Exception;
+    public void inputStartOffsetMinutesOfBasicStaffingRule(String startOffset) throws Exception;
+    public void inputEndOffsetMinutesOfBasicStaffingRule(String endOffset) throws Exception;
+    public void createBasicStaffingRule(String startTimeEvent,String endTimeEvent,String startEventPoint,String endEventPoint,
+                                        String workRoleName,String unit,String condition,List<String> days,String number,
+                                        String startOffset,String endOffset) throws Exception;
+    public void selectStartEventPointForBasicStaffingRule(String startEventPoint) throws Exception;
+    public void selectEndEventPointForBasicStaffingRule(String endEventPoint) throws Exception;
+    public void selectDaysForBasicStaffingRule(List<String> days) throws Exception;
+    public void verifyBasicStaffingRuleIsCorrectInRuleList(String startTimeEvent,String endTimeEvent,String startEventPoint,String endEventPoint,
+                                                           String workRoleName,String unit,String condition,List<String> days,String number,
+                                                           String startOffset,String endOffset) throws Exception;
+    public void removeAllDemandDriverTemplates() throws Exception;
+    public void clickAddOrEditForDriver(String addOrEdit) throws Exception;
+    public List<String> getInputStreamInDrivers() throws Exception;
+    public void addSkillCoverageBasicStaffingRule() throws Exception;
+    public void verifySkillCoverageBasicStaffingRule(String workRole1, String workRole2) throws Exception;
+    public void verifySkillCoverageBasicStaffingRuleInList() throws Exception;
     public void verifyMinorRulesTileIsLoaded() throws Exception;
     public boolean checkIfMinorSectionsLoaded () throws Exception;
     public void clickOnBackButton () throws Exception;
@@ -119,7 +204,6 @@ public interface ConfigurationPage {
     public void setStrictlyEnforceMinorViolations(String yesOrNo) throws Exception;
     public boolean isStrictlyEnforceMinorViolationSettingEnabled() throws Exception;
     public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception;
-    public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception;
     public void verifySpecificAssociationIsSaved(String name) throws Exception;
     public boolean checkIfApproveShiftInHomeLocationSettingEnabled() throws Exception;
     public void updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(String option) throws Exception;

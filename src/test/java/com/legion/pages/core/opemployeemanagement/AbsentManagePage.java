@@ -2,13 +2,11 @@ package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
 import com.legion.utils.SimpleUtils;
-import org.glassfish.grizzly.impl.SafeFutureImpl;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import javax.lang.model.util.SimpleAnnotationValueVisitor6;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,13 +41,13 @@ public class AbsentManagePage extends BasePage {
     private WebElement cancelCreatingTemp;
     @FindBy(css = "lg-button[label='Continue']>button")
     private WebElement continueCreatingTemp;
-    @FindBy(css = "table.lg-table.ng-scope>thead>tr>th")
+    @FindBy(css = "div.lg-templates-table-improved__grid-row--header>div span")
     private List<WebElement> templateTableHeaders;
     @FindBy(css = "lg-search>input-field input")
     private WebElement templateSearchBox;
     @FindBy(css = "div.lg-search-icon.ng-scope")
     private WebElement searchIcon;
-    @FindBy(css = "table.lg-table.ng-scope>tbody>tr:first-child>td:nth-child(2)>lg-button>button")
+    @FindBy(css = "div.lg-templates-table-improved__grid-row.ng-scope>div>lg-button.name")
     private List<WebElement> templateNameOfSearchResult;
     @FindBy(css = "table.lg-table.ng-scope>tbody>tr:first-child>td:nth-child(4)")
     private List<WebElement> creatorOfSearchResult;
@@ -64,14 +62,14 @@ public class AbsentManagePage extends BasePage {
     private List<WebElement> smartCardTitle;
     @FindBy(css = "span.card-carousel-link.ng-binding.ng-scope")
     private List<WebElement> smartCardLink;
-    @FindBy(css = "table.lg-table.ng-scope>tbody>tr>td:nth-child(3)>lg-eg-status")
+    @FindBy(css = "lg-eg-status")
     private List<WebElement> templateStatus;
 
     @FindBy(css = "i.fa.fa-caret-right")
     private WebElement caretRight;
     @FindBy(css = "i.fa.fa-caret-down")
     private WebElement caretDown;
-    @FindBy(css = "tbody>tr.child-row>td:nth-child(2)>lg-button")
+    @FindBy(css = "div.lg-templates-table-improved__grid-row.child-row>div>lg-button")
     private WebElement theChildTemplate;
 
     @FindBy(css = "div.lg-paged-search h4")
@@ -85,7 +83,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement historyCloseButton;
     @FindBy(css = "div.lg-slider-pop>div.lg-slider-pop__content li:last-child")
     private WebElement createdRecordInHistory;
-    @FindBy(css = "lg-button[label='Archive']>button")
+    @FindBy(css = "form-buttons lg-button[label='Archive']>button")
     private WebElement archiveButton;
     @FindBy(css = "lg-button[label='Delete']>button")
     private WebElement deleteButton;
@@ -122,9 +120,9 @@ public class AbsentManagePage extends BasePage {
     //template lever
     @FindBy(css = "question-input[question-title='Can employees request time off ?'] h3")
     private WebElement canEmployeeRequestLabel;
-    @FindBy(css = "yes-no lg-button-group>div>div:nth-child(1)")
+    @FindBy(css = "yes-no lg-button-group>div>div.lg-button-group-first")
     private WebElement templateLeverCanRequestYes;
-    @FindBy(css = "yes-no lg-button-group>div>div:nth-child(2)")
+    @FindBy(css = "yes-no lg-button-group>div>div.lg-button-group-last")
     private WebElement templateLeverCanRequestNo;
     @FindBy(css = "question-input[question-title='Weekly limit (Time Off + Hours Worked)'] h3")
     private WebElement weeklyLimitLabel;
@@ -167,7 +165,7 @@ public class AbsentManagePage extends BasePage {
     @FindBy(css = "div.lg-single-calendar-date-wrapper>div:nth-child(20)")
     private WebElement dayChosen;
     //
-    @FindBy(css = "form-buttons:nth-child(2)>div:nth-child(2)>lg-button:nth-child(2)>button.ng-scope.pre-saveas")
+    @FindBy(css = "button.pre-saveas")
     private WebElement saveTemplate;
 
     //template association
@@ -210,6 +208,76 @@ public class AbsentManagePage extends BasePage {
     @FindBy(css = "modal form p.lg-modal__content.lg-modal__text")
     private WebElement removeConfirmMes;
 
+    //associate
+    @FindBy(css = "lg-search[placeholder='You can search by name, label and description']>input-field input")
+    private WebElement associateSearch;
+
+    //Promotion part
+    @FindBy(css = "div.promotion-setting h1")
+    private WebElement promotionTitle;
+    @FindBy(css = "div.promotion-setting lg-button>button")
+    private WebElement promotionRuleAddButton;
+    @FindBy(css = "modal[modal-title='Create New Accrual Promotion'] h1")
+    private WebElement promotionModalTitle;
+    @FindBy(css = "input-field[label='Promotion Name'] input")
+    private WebElement promotionNameInput;
+    @FindBy(css = "lg-select[label='Criteria'] ng-form")
+    private WebElement promotionCriteriaType;
+    @FindBy(css = "lg-picker-input[label='Criteria'] div[title='Job Title']")
+    private WebElement criteriaByJobTitle;
+    @FindBy(css = "lg-picker-input[label='Criteria'] div[title='Engagement Status']")
+    private WebElement criteriaByEngagementStatus;
+    @FindBy(css = "lg-multiple-select[label='Before'] lg-picker-input")
+    private WebElement criteriaBefore;
+    @FindBy(css = "input[aria-label='Before']+label+div.input-faked")
+    private WebElement multiSelectPlaceHolder;
+    @FindBy(css = "lg-multiple-select lg-search input")
+    private WebElement criteriaBeforeSearchInput;
+    @FindBy(css = "lg-select[label='After'] lg-search input")
+    private WebElement criteriaAfterSearchInput;
+    @FindBy(css = "div.select-list-item input-field[label='Senior Ambassador']>ng-form")
+    private WebElement jobTitleAsSeniorAmbassador;
+    @FindBy(css = "div.select-list-item input-field[label='WA Ambassador']>ng-form")
+    private WebElement jobTitleAsWAAmbassador;
+    @FindBy(css = "lg-select[label='After'] lg-picker-input")
+    private WebElement criteriaAfter;
+    @FindBy(css = "lg-picker-input[label='After'] div.lg-search-options__scroller>div:nth-child(1)>div")
+    private WebElement jobTitleAfterPromotion;
+    @FindBy(css = "inline-input+div>lg-button[label='Add More']>button")
+    private WebElement criteriaAddMoreButton;
+    @FindBy(css = "div.promotion-action+div>lg-button[label='Add More']>button")
+    private WebElement transferAddMoreButton;
+    @FindBy(css = "lg-picker-input [label='Before']")
+    private WebElement engagementBefore;
+    @FindBy(css = "lg-picker-input[label='Before'] div[title='PartTime']")
+    private WebElement partTimeBefore;
+    @FindBy(css = "lg-picker-input [label='After']")
+    private WebElement engagementAfter;
+    @FindBy(css = "lg-picker-input[label='After'] div[title='FullTime']")
+    private WebElement fullTimeAfter;
+    @FindBy(css = "input-field[label='Balance before promotion']")
+    private WebElement balanceBeforePromotion;
+    @FindBy(css = "input-field[label='Balance after promotion']")
+    private WebElement balanceAfterPromotion;
+    @FindBy(css = "lg-select[label='Balance before promotion'] lg-search input")
+    private WebElement balanceSearchInputB;
+    @FindBy(css = "lg-select[label='Balance before promotion'] div.lg-search-options__scroller>div>div")
+    private WebElement balanceSearchResultB;
+    @FindBy(css = "lg-select[label='Balance after promotion'] lg-search input")
+    private WebElement balanceSearchInputA;
+    @FindBy(css = "lg-select[label='Balance after promotion'] div.lg-search-options__scroller>div>div")
+    private WebElement balanceSearchResultA;
+    @FindBy(css = "div.promotion-setting table.lg-table tr>td:nth-child(1)")
+    private List<WebElement> promotionRuleNames;
+    @FindBy(css = "div.promotion-setting table tr:nth-child(2)>td:nth-child(2)>lg-button[label='Edit']")
+    private WebElement promotionEditButton;
+    @FindBy(css = "div.promotion-setting table tr:nth-child(2)>td:nth-child(2)>lg-button[label='Remove']")
+    private WebElement promotionRemoveButton;
+    @FindBy(css = "modal[modal-title='Remove Accrual Promotion'] h1.lg-modal__title")
+    private WebElement removeModalTitle;
+    @FindBy(css = "modal[modal-title='Remove Accrual Promotion'] general-form p")
+    private WebElement removeModalContent;
+
     //home page methods
     public void back() {
         backButton.click();
@@ -232,25 +300,43 @@ public class AbsentManagePage extends BasePage {
     }
 
     public boolean isNewTemplateButtonDisplayedAndEnabled() {
-        return newTemplateButton.isDisplayed() && newTemplateButton.isEnabled();
+        try {
+            if (isElementLoaded(newTemplateButton, 20) && isElementEnabled(newTemplateButton, 20)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    public void createANewTemplate(String tempName, String tempDesc) {
-        newTemplateButton.click();
-        templateName.clear();
-        templateName.sendKeys(tempName);
-        templateDesc.clear();
-        templateDesc.sendKeys(tempDesc);
+    public void createANewTemplate(String tempName, String tempDesc) throws Exception {
+        if (isElementLoaded(newTemplateButton, 20)) {
+            newTemplateButton.click();
+            if (isElementLoaded(templateName, 10) && isElementLoaded(templateDesc, 10)) {
+                templateName.clear();
+                templateName.sendKeys(tempName);
+                templateDesc.clear();
+                templateDesc.sendKeys(tempDesc);
+            } else {
+                SimpleUtils.fail("Absence Management Page: Click on New Template button failed!", false);
+            }
+        } else {
+            SimpleUtils.fail("Absence Management Page: New Template button failed to load!", false);
+        }
     }
 
     public void cancel() {
         cancelCreatingTemp.click();
     }
+
     @FindBy(css = ".walkme-action-destroy-1.wm-close-link")
     private WebElement closeWakeme;
+
     public void submit() throws Exception {
         continueCreatingTemp.click();
-        if (isElementLoaded(closeWakeme,10)){
+        if (isElementLoaded(closeWakeme, 10)) {
             click(closeWakeme);
         }
     }
@@ -270,11 +356,20 @@ public class AbsentManagePage extends BasePage {
     public void search(String searchText) {
         templateSearchBox.clear();
         templateSearchBox.sendKeys(searchText);
-        searchIcon.click();
+        //searchIcon.click();
+        waitForSeconds(3);
     }
 
     public String noMatch() {
         return noMatchMessage.getText();
+    }
+
+    public boolean isNoMatchMessageDisplayed() {
+        return isElementDisplayed(noMatchMessage);
+    }
+
+    public int templateNumber() {
+        return templateNameOfSearchResult.size();
     }
 
     public String getResult() {
@@ -383,6 +478,7 @@ public class AbsentManagePage extends BasePage {
 
     public void archivePublishedTemplate() {
         archiveButton.click();
+
     }
 
     public boolean isDeleteButtonDisplayed() {
@@ -401,8 +497,10 @@ public class AbsentManagePage extends BasePage {
         associationTab.click();
     }
 
-    public void associateTemplate() {
+    public void associateTemplate(String groupName) {
         switchToAssociation();
+        associateSearch.clear();
+        associateSearch.sendKeys(groupName);
         theFirstAssociateGroup.click();
         scrollToBottom();
         saveAssociate.click();
@@ -433,7 +531,8 @@ public class AbsentManagePage extends BasePage {
         return titleBreadCrumb.getText();
     }
 
-    public void configureTemplate(String templateName) {
+    public void configureTemplate(String templateName) throws Exception {
+        waitForSeconds(3);
         search(templateName);
         clickInDetails();
         waitForSeconds(5);
@@ -487,16 +586,16 @@ public class AbsentManagePage extends BasePage {
         return weeklyLimitHrs.getText();
     }
 
-    public void viewTimeOffConfigure(String timeOff) {
+    public void viewTimeOffConfigure(String timeOff) throws Exception {
         search(timeOff);
         isButtonClickable(view);
         System.out.println("View button is shown and clickable!");
         view.click();
     }
 
-    public void configureTimeOffRules(String timeOff) {
+    public void configureTimeOffRules(String timeOff) throws Exception {
         search(timeOff);
-        waitForSeconds(3);
+        waitForSeconds(5);
         if (isButtonClickable(configure)) {
             System.out.println("Configure button is shown and clickable!");
             configure.click();
@@ -520,7 +619,7 @@ public class AbsentManagePage extends BasePage {
         }
     }
 
-    public void removeTimeOffRules(String timeOff) {
+    public void removeTimeOffRules(String timeOff) throws Exception {
         search(timeOff);
         if (isButtonClickable(remove)) {
             System.out.println("Remove button is shown and clickable!");
@@ -536,6 +635,7 @@ public class AbsentManagePage extends BasePage {
 
     public void saveTemplateAs(String method) {
         scrollToBottom();
+        waitForSeconds(2);
         saveAsDrop.click();
         switch (method) {
             case "Save as draft":
@@ -650,10 +750,11 @@ public class AbsentManagePage extends BasePage {
 
     @FindBy(css = ".time-off-reason-setting tr.ng-scope")
     private List<WebElement> timeOffReasons;
+
     public void removeTimeOffReasons(String timeOffReasonName) {
-        if (areListElementVisible(timeOffReasons, 10) && timeOffReasons.size()>0) {
-            for (WebElement reason: timeOffReasons) {
-                if (reason.findElement(By.cssSelector(".one-line-overflow")).getText().equalsIgnoreCase(timeOffReasonName)){
+        if (areListElementVisible(timeOffReasons, 10) && timeOffReasons.size() > 0) {
+            for (WebElement reason : timeOffReasons) {
+                if (reason.findElement(By.cssSelector(".one-line-overflow")).getText().equalsIgnoreCase(timeOffReasonName)) {
                     clickTheElement(reason.findElement(By.cssSelector("[label=\"Remove\"]")));
                     okCreatingTimeOff();
                     System.out.println("Delete the time off reason successfull!");
@@ -662,5 +763,117 @@ public class AbsentManagePage extends BasePage {
             }
         } else
             System.out.println("There is no time off reason been listed!");
+    }
+
+    //promotion part
+    public String getPromotionSettingTitle() {
+        scrollToBottom();
+        return promotionTitle.getText();
+    }
+
+    public boolean isAddButtonDisplayedAndClickable() {
+        return isElementDisplayed(promotionRuleAddButton) && isButtonClickable(promotionRuleAddButton);
+    }
+
+    public void addPromotionRule() {
+        promotionRuleAddButton.click();
+        waitForSeconds(3);
+    }
+
+    public String getPromotionModalTitle() {
+        return promotionModalTitle.getText();
+    }
+
+    public void setPromotionName(String promotionName) {
+        promotionNameInput.clear();
+        promotionNameInput.sendKeys(promotionName);
+    }
+
+    public void addCriteriaByJobTitle() {//Job Title & Engagement Status
+        promotionCriteriaType.click();
+        criteriaByJobTitle.click();
+        criteriaBefore.click();
+        criteriaBeforeSearchInput.clear();
+        criteriaBeforeSearchInput.sendKeys("Senior Ambassador");
+        jobTitleAsSeniorAmbassador.click();
+        criteriaBeforeSearchInput.clear();
+        criteriaBeforeSearchInput.sendKeys("WA Ambassador");
+        waitForSeconds(3);
+        jobTitleAsWAAmbassador.click();
+        criteriaAfter.click();
+        criteriaAfterSearchInput.clear();
+        criteriaAfterSearchInput.sendKeys("General Manager");
+        jobTitleAfterPromotion.click();
+    }
+
+    public void addCriteriaByEngagementStatus() {
+        promotionCriteriaType.click();
+        criteriaByEngagementStatus.click();
+        engagementBefore.click();
+        partTimeBefore.click();
+        engagementAfter.click();
+        fullTimeAfter.click();
+    }
+
+    public String getJobTitleSelectedBeforePromotion() {
+        return multiSelectPlaceHolder.getText();
+    }
+
+    public boolean verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion(String jobTitleSelectBefore) {
+        criteriaAfter.click();
+        criteriaAfterSearchInput.clear();
+        criteriaAfterSearchInput.sendKeys(jobTitleSelectBefore);
+        return jobTitleAfterPromotion.isEnabled();
+    }
+
+    public void setPromotionAction(String balanceB, String balanceA) {
+        //before
+        balanceBeforePromotion.click();
+        balanceSearchInputB.clear();
+        balanceSearchInputB.sendKeys(balanceB);
+        balanceSearchResultB.click();
+        //after
+        balanceAfterPromotion.click();
+        balanceSearchInputA.clear();
+        balanceSearchInputA.sendKeys(balanceA);
+        balanceSearchResultA.click();
+    }
+
+    public ArrayList getPromotionRuleName() {
+        return getWebElementsLabels(promotionRuleNames);
+    }
+
+    public void EditPromotionRule() {
+        promotionEditButton.click();
+    }
+
+    public void removePromotionRule() {
+        promotionRemoveButton.click();
+    }
+
+    public String getRemovePromotionRuleModalTitle() {
+        return removeModalTitle.getText();
+    }
+
+    public String getRemovePromotionRuleModalContent() {
+        return removeModalContent.getText();
+    }
+
+    public boolean isTherePromotionRule(){
+        Boolean hasPromotionRule=true;
+        if(!isElementDisplayed(promotionEditButton)){
+            hasPromotionRule=false;
+        }
+     return hasPromotionRule;
+    }
+
+    @FindBy(css = "div.text-danger.text-invalid-range.ng-binding")
+    private WebElement noEnoughMessage;
+
+    public void verifyNotEnoughMessageDisplay(){
+        if(noEnoughMessage.isDisplayed()){
+            SimpleUtils.pass("Error message display");
+        }else
+            SimpleUtils.fail("Error message doesn't display",false);
     }
 }

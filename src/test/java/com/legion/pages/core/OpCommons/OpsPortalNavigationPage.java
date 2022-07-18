@@ -26,7 +26,7 @@ public class OpsPortalNavigationPage extends BasePage {
     private WebElement location;
     @FindBy(css = "i.fa.fa-tasks.fs-20")
     private WebElement jobs;
-    @FindBy(css = "div.console-navigation-item.ng-scope:nth-child(7)")
+    @FindBy(css = "[title=\"Employee Management\"]")
     private WebElement employeeManagement;
     @CacheLookup
     @FindBy(css = "i.fa.fa-sign-out.fs-24")
@@ -59,8 +59,8 @@ public class OpsPortalNavigationPage extends BasePage {
 
     public void navigateToEmployeeManagement() {
         try {
-            if (employeeManagement.isDisplayed()) {
-                employeeManagement.click();
+            if (isElementLoaded(employeeManagement, 20)) {
+                clickTheElement(employeeManagement);
             } else {
                 System.out.println("EmployeeManagement Module is not enabled!");
             }
@@ -69,6 +69,7 @@ public class OpsPortalNavigationPage extends BasePage {
     }
 
     public void logout() {
+        scrollToElement(logout);
         logout.click();
     }
 

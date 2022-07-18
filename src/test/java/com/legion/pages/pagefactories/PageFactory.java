@@ -49,6 +49,7 @@ public interface PageFactory {
     ActivityPage createConsoleActivityPage();
 
     LocationsPage createOpsPortalLocationsPage();
+    PlanPage createConsolePlanPage();
 
     LiquidDashboardPage createConsoleLiquidDashboardPage();
 
@@ -104,5 +105,6 @@ public interface PageFactory {
 
     NewShiftPage createNewShiftPage();
 
+    SettingsAndAssociationPage createSettingsAndAssociationPage();
     MealAndRestPage createMealAndRestPage();
 }

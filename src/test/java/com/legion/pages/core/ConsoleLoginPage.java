@@ -24,7 +24,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     
     /* Aug 03- Zorang Team- Variables declaration*/
     
-    @FindBy(css="input[placeholder*='Usernam']")
+    @FindBy(css="input[ng-model=\"username\"]")
     private WebElement userNameField;
     
     @FindBy(css="[ng-model='password']")

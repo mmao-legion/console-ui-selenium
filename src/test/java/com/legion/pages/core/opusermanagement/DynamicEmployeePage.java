@@ -2,10 +2,12 @@ package com.legion.pages.core.opusermanagement;
 
 import com.legion.pages.BasePage;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
 
 
 import java.util.ArrayList;
@@ -41,14 +43,18 @@ public class DynamicEmployeePage extends BasePage {
     private WebElement searchButton;
     @FindBy(css = "div.mt-10.new-label")
     private WebElement newLabel;
+    @FindBy(css = ".item .input-label")
+    private WebElement existingLabel;
     //Work Role/Exempt/Minor/Employment Type/Employment Status/Badge/Custom
-    @FindBy(css = "input-field[placeholder='Select One'] select")
+    @FindBy(css = "input-field[placeholder='Select one']")
     private WebElement criteria;
-    @FindBy(css = "div.fl-left.GroupValues.ng-scope>lg-picker-input")
+    @FindBy(css = ".lg-search-options__option")
+    private List<WebElement> criteriaOptions;
+    @FindBy(css = "[on-open=\"$ctrl.options && $ctrl.onOpenOptionList()\"]")
     private WebElement valueButton;
-    @FindBy(css = "div.fl-left.GroupValues.ng-scope div.item.ng-scope>input-field")//need to get attribute label
+    @FindBy(css = ".select-list-item input-field")//need to get attribute label
     private List<WebElement> valueList;
-    @FindBy(css = "div.fl-left.GroupValues.ng-scope div.item.ng-scope:nth-child(1)>input-field>ng-form>input")
+    @FindBy(css = ".select-list-item:nth-child(1) input")
     private WebElement theFirstCriteriaOption;
     @FindBy(css = "div.ml-10.fl-left.addGroupBtn>lg-button>button")
     private WebElement addMoreButton;
@@ -76,6 +82,8 @@ public class DynamicEmployeePage extends BasePage {
     private WebElement cancelInRemoveModal;
     @FindBy(css = "modal lg-button[label='Remove']>button")
     private WebElement removeInRemoveModal;
+    @FindBy(css = ".mappingLocation [ng-if*='isUserDynamicGroup']")
+    private WebElement userMatching;
 
     public void back() {
         backButton.click();
@@ -85,22 +93,37 @@ public class DynamicEmployeePage extends BasePage {
         addGroupButton.click();
     }
 
-    public String getModalTitle() {
-        return dynamicGroupModalTitle.getText();
+    public String getModalTitle() throws Exception{
+        if (isElementLoaded(dynamicGroupModalTitle, 10)) {
+            return dynamicGroupModalTitle.getText();
+        } else {
+            return null;
+        }
     }
 
-    public List<String> getCriteriaValues(String criteriaName) {
-        Select cri = new Select(criteria);
-        cri.selectByVisibleText(criteriaName);
+    public List<String> getCriteriaValues(String criteriaName) throws Exception {
+        if (isElementLoaded(criteria, 5)) {
+            clickTheElement(criteria);
+            if (areListElementVisible(criteriaOptions, 5)) {
+                for (WebElement option : criteriaOptions) {
+                    if (option.getText().equalsIgnoreCase(criteriaName)) {
+                        clickTheElement(option);
+                        break;
+                    }
+                }
+            }
+        }
         valueButton.click();
         ArrayList<String> value = new ArrayList<String>();
-        for (WebElement val : valueList) {
-            value.add(val.getAttribute("label"));
+        if (areListElementVisible(valueList, 10)) {
+            for (WebElement val : valueList) {
+                value.add(val.getAttribute("label"));
+            }
         }
         return value;
     }
 
-    public void editEmployeeGroup(String name, String desc, String lab, String criName) {
+    public void editEmployeeGroup(String name, String desc, String lab, String criName) throws Exception {
         groupName.clear();
         groupName.sendKeys(name);
         groupDesc.clear();
@@ -108,22 +131,42 @@ public class DynamicEmployeePage extends BasePage {
         setLabel(lab);
         setCriteria(criName);
         test.click();
+        waitUntilElementIsVisible(userMatching);
     }
 
     public void setLabel(String lab) {
         labels.click();
         labelSearchBox.clear();
         labelSearchBox.sendKeys(lab);
-        newLabel.click();
+        try {
+            if (isElementLoaded(newLabel, 5)) {
+                newLabel.click();
+            } else if (isElementLoaded(existingLabel, 5)) {
+                existingLabel.click();
+            }
+        } catch (Exception e) {
+            // Do nothing
+        }
         labels.click();
     }
 
-    public void setCriteria(String criteriaName) {
-        Select cri = new Select(criteria);
-        cri.selectByVisibleText(criteriaName);
-        valueButton.click();
-        theFirstCriteriaOption.click();
-        valueButton.click();
+    public void setCriteria(String criteriaName) throws Exception {
+        if (isElementLoaded(criteria, 5)) {
+            clickTheElement(criteria);
+            if (areListElementVisible(criteriaOptions, 5)) {
+                for (WebElement option : criteriaOptions) {
+                    if (option.getText().equalsIgnoreCase(criteriaName)) {
+                        clickTheElement(option);
+                        break;
+                    }
+                }
+            }
+            valueButton.click();
+            if (isElementLoaded(theFirstCriteriaOption, 5)) {
+                theFirstCriteriaOption.click();
+            }
+            valueButton.click();
+        }
     }
 
     public void searchGroup(String nameLabelOrDesc) {
@@ -131,8 +174,10 @@ public class DynamicEmployeePage extends BasePage {
         searchBox.sendKeys(nameLabelOrDesc);
     }
 
-    public void edit() {
-        editButton.click();
+    public void edit() throws Exception {
+        if (isElementLoaded(editButton, 10)) {
+            clickTheElement(editButton);
+        }
     }
 
     //remove
@@ -148,18 +193,68 @@ public class DynamicEmployeePage extends BasePage {
         removeInRemoveModal.click();
     }
 
-    public void cancelRemove() {
-        cancelInRemoveModal.click();
+    public void cancelRemove() throws Exception {
+        if (isElementLoaded(cancelInRemoveModal, 5)) {
+            clickTheElement(cancelInRemoveModal);
+        }
     }
 
     //create
-    public void cancelCreating() {
-        cancelButtonInModal.click();
+    public void cancelCreating() throws Exception {
+        if (isElementLoaded(cancelButtonInModal, 5)) {
+            clickTheElement(cancelButtonInModal);
+        }
     }
 
     public void saveCreating() {
-        okButtonInModal.click();
+        waitForSeconds(3);
+        clickTheElement(okButtonInModal);
     }
 
+    @FindBy(css = "[ng-repeat=\"group in filterdynamicGroups\"]")
+    private List<WebElement> dynamicGroups;
+    public void removeSpecificGroup(String groupName) {
+        String removeWarningMsg = "Are you sure you want to remove this dynamic employee group?";
+        searchGroup(groupName);
+        if (areListElementVisible(dynamicGroups, 5)) {
+            for (WebElement group : dynamicGroups){
+                clickTheElement(group.findElement(By.cssSelector("td.tr lg-button:nth-child(2)>button")));
+                Assert.assertEquals(getContentOfRemoveModal(), removeWarningMsg, "Failed to open the remove modal!");
+                removeTheGroup();
+            }
+        } else
+            SimpleUtils.report("The group: " +groupName +" is not exists! ");
+    }
 
+    @FindBy(css = "div.lg-filter input-field[placeholder='Labels'] ng-form")
+    private WebElement labelInput;
+    @FindBy(css = "div.lg-filter__category-items div input-field")
+    private List<WebElement> labelList;
+
+    public void searchGroupWithLabel(String labelName) {
+        labelInput.click();
+        for (WebElement label : labelList) {
+            if (label.findElement(By.cssSelector("label.input-label")).getText().trim().contains(labelName)) {
+                label.click();
+                break;
+            }
+        }
+    }
+
+    @FindBy(css = "tr[ng-repeat='group in filterdynamicGroups']")
+    private List<WebElement> groupList;
+
+    public void verifyGroupIsSearched(String groupName) {
+        boolean flag = false;
+        for (WebElement group : groupList) {
+            if (group.findElement(By.cssSelector("td:nth-child(1)")).getText().trim().contains(groupName)) {
+                SimpleUtils.pass("The group: " + groupName + " is exists! ");
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) {
+            SimpleUtils.fail("The group: " + groupName + " is exists! ", true);
+        }
+    }
 }

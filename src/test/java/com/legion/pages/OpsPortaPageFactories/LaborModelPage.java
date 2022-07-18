@@ -7,7 +7,8 @@ import java.util.List;
 public interface LaborModelPage {
 
     public void goToLaborModelTile() throws Exception;
-
+    public void goToTaskDetail(String taksName) throws Exception;
+    public void checkCustomFormulaCoding(String keyword) throws Exception;
     public void clickOnSpecifyTemplateName(String template_name, String edit) throws Exception;
 
     public void clickOnLaborModelTab() throws Exception;
@@ -67,4 +68,20 @@ public interface LaborModelPage {
     public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtTemplateLevel() throws Exception;
 
     public void publishNowTemplate() throws Exception;
+
+    public void verifyEntryOfLaborModelSubscription() throws Exception;
+
+    public void exportLaborModelSubscriptionCsv() throws Exception;
+
+    public void verifyImportLocationLevelWorkRoleSubscription();
+
+    public boolean verifyImportLocationWorkRolePageShow();
+
+    public void disableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
+
+    public void enableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
+
+    public boolean verifyWorkRoleStatusInLocationLevel(String workRole);
+
+    public void selectWorkRoles(String workRole) throws Exception;
 }

@@ -1,10 +1,14 @@
 package com.legion.tests.core.OpsPortal;
 
+import com.alibaba.fastjson.JSONObject;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
+import com.legion.pages.core.ConsoleLocationSelectorPage;
+import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
+import com.legion.pages.core.opemployeemanagement.TimeOffPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -12,9 +16,13 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.tests.data.CredentialDataProviderSource;
-import com.legion.utils.JsonUtil;
-import com.legion.utils.SimpleUtils;
+import com.legion.utils.*;
+import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -30,51 +38,66 @@ public class LocationsTest extends TestBase {
 
     private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
     private static HashMap<String, String> propertyCustomizeMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ScheduleCustomizeNewShift.json");
-    public enum modelSwitchOperation{
+
+    public enum modelSwitchOperation {
 
         Console("Console"),
         OperationPortal("Control Center");
 
         private final String value;
+
         modelSwitchOperation(final String newValue) {
             value = newValue;
         }
-        public String getValue() { return value; }
+
+        public String getValue() {
+            return value;
+        }
     }
-    public enum locationGroupSwitchOperation{
+
+    public enum locationGroupSwitchOperation {
 
         MS("Parent Child"),
         PTP("Peer to Peer");
 
         private final String value;
+
         locationGroupSwitchOperation(final String newValue) {
             value = newValue;
         }
-        public String getValue() { return value; }
+
+        public String getValue() {
+            return value;
+        }
     }
 
-    public enum ohSliderDroppable{
+    public enum ohSliderDroppable {
         StartPoint("Start"),
         EndPoint("End");
         private final String value;
+
         ohSliderDroppable(final String newValue) {
             value = newValue;
         }
-        public String getValue() { return value; }
+
+        public String getValue() {
+            return value;
+        }
     }
+
     @Override
     @BeforeMethod()
-    public void firstTest(Method testMethod, Object[] params) throws Exception{
+    public void firstTest(Method testMethod, Object[] params) throws Exception {
         try {
-            this.createDriver((String)params[0],"83","Window");
+            this.createDriver((String) params[0], "83", "Window");
             visitPage(testMethod);
-            loginToLegionAndVerifyIsLoginDone((String)params[1], (String)params[2],(String)params[3]);
+            loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
 //          AdminPage adminPage = pageFactory.createConsoleAdminPage();
 //          adminPage.goToAdminTab();
 //          adminPage.rebuildSearchIndex();
 //            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 //            dashboardPage.navigateToDashboard();
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -84,18 +107,18 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = " create a Type Regular location with effective date as a past date")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateRegularLocationWithAllFieldsAndNavigateAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateRegularLocationWithAllFieldsAndNavigateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-            String currentTime =  dfs.format(new Date());
-            String locationName = "AutoCreate" +currentTime;
-            int index =0;
+            String currentTime = dfs.format(new Date());
+            String locationName = "AutoCreate" + currentTime;
+            int index = 0;
             String searchCharactor = "No touch";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -104,9 +127,9 @@ public class LocationsTest extends TestBase {
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
             //add new regular location
-            locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);
+            locationsPage.addNewRegularLocationWithAllFields(locationName, searchCharactor, index);
 
-               //search created location blocked by https://legiontech.atlassian.net/browse/OPS-2757
+            //search created location blocked by https://legiontech.atlassian.net/browse/OPS-2757
 //            if (locationsPage.searchNewLocation(locationName)) {
 //                SimpleUtils.pass("Create new location successfully: "+locationName);
 //            }else
@@ -123,27 +146,28 @@ public class LocationsTest extends TestBase {
 //            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
 //            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
 //                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()) , false);
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
-      //mock location creation is blocked by https://legiontech.atlassian.net/browse/OPS-2503
+
+    //mock location creation is blocked by https://legiontech.atlassian.net/browse/OPS-2503
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "create a Type MOCK location that based on a ENABLED status regular location ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateMockLocationAndNavigateAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
-       try{
-            String currentTime =  TestBase.getCurrentTime().substring(4);
-            String locationName = "AutoCreate" +currentTime;
-            int index =0;
+    public void verifyCreateMockLocationAndNavigateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String currentTime = TestBase.getCurrentTime().substring(4);
+            String locationName = "AutoCreate" + currentTime;
+            int index = 0;
             String searchCharactor = "Checkpoint 1";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -152,16 +176,16 @@ public class LocationsTest extends TestBase {
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
             //add one mock location，first create one new location and then to mock that -to avoid duplication
-            locationsPage.addNewRegularLocationWithAllFields(locationName,searchCharactor, index);
+            locationsPage.addNewRegularLocationWithAllFields(locationName, searchCharactor, index);
             // Wait for some seconds so that the newly created location can be searched out
             locationsPage.searchNewLocation(locationName);
-            locationsPage.addNewMockLocationWithAllFields(locationName,index);
+            locationsPage.addNewMockLocationWithAllFields(locationName, index);
             //search created location
-            if (locationsPage.searchNewLocation(locationName+"-MOCK")) {
+            if (locationsPage.searchNewLocation(locationName + "-MOCK")) {
                 SimpleUtils.pass("Create new mock location successfully");
-                locationsPage.disableLocation(locationName+"-MOCK");
-            }else
-                SimpleUtils.fail("Create new location failed or can't search created location",true);
+                locationsPage.disableLocation(locationName + "-MOCK");
+            } else
+                SimpleUtils.fail("Create new location failed or can't search created location", true);
 //            ArrayList<HashMap<String, String>> locationInfoDetails =locationsPage.getLocationInfo(locationName);
 //            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
 //            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -174,30 +198,30 @@ public class LocationsTest extends TestBase {
 //           schedulePage.clickOnScheduleSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue());
 //           SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
 //                   schedulePage.verifyActivatedSubTab(ScheduleNewUITest.SchedulePageSubTabText.Forecast.getValue()) , false);
-       } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
-//     NSO location is blocked by https://legiontech.atlassian.net/browse/OPS-2757
+    //     NSO location is blocked by https://legiontech.atlassian.net/browse/OPS-2757
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Create a Type NSO location with below conditions successfully")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateNSOLocationAndNavigateAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
-        try{
+    public void verifyCreateNSOLocationAndNavigateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-            String currentTime =  dfs.format(new Date());
-            String locationName = "AutoCreateNSO" +currentTime;
-            int index =0;
+            String currentTime = dfs.format(new Date());
+            String locationName = "AutoCreateNSO" + currentTime;
+            int index = 0;
             String searchCharactor = "No touch";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -205,11 +229,11 @@ public class LocationsTest extends TestBase {
             locationsPage.validateItemsInLocations();
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
-            locationsPage.addNewNSOLocation(locationName,searchCharactor, index);
+            locationsPage.addNewNSOLocation(locationName, searchCharactor, index);
             if (locationsPage.searchNewLocation(getLocationName())) {
                 SimpleUtils.pass("Create new NSO location successfully");
-            }else
-                SimpleUtils.fail("Create new location failed or can't search created location",true);
+            } else
+                SimpleUtils.fail("Create new location failed or can't search created location", true);
 
             //go to console to and vigate to NSO
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
@@ -217,7 +241,7 @@ public class LocationsTest extends TestBase {
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
 
 
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -227,15 +251,15 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify disable the Type Regular locations")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDisableEnableLocationFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
-        try{
-            String searchInputText="status:Enabled";
-            String disableLocationName ="";
+    public void verifyDisableEnableLocationFunctionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            String searchInputText = "status:Enabled";
+            String disableLocationName = "";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -246,7 +270,7 @@ public class LocationsTest extends TestBase {
             disableLocationName = locationsPage.disableLocation(searchInputText);
             locationsPage.enableLocation(disableLocationName);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -257,14 +281,14 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Cancel to export or import locations")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCancelToExportOrImportLocationsAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
-        try{
+    public void verifyCancelToExportOrImportLocationsAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -277,7 +301,7 @@ public class LocationsTest extends TestBase {
             locationsPage.cancelBtnOnImportExportPopUpWinsIsClickable();
             locationsPage.clickOnExportBtn();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -287,28 +311,23 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Export all/specific location function")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyExportLocationDistrictAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
-        try{
-            int index =0;
-            String searchCharactor = "*";
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+    public void verifyExportLocationDistrictAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        int index = 0;
+        String searchCharactor = "*";
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
-            //go to sub-locations
-            locationsPage.goToSubLocationsInLocationsPage();
-            locationsPage.verifyExportAllLocationDistrict();
-            locationsPage.verifyExportSpecificLocationDistrict(searchCharactor,index);
-
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        //check locations item
+        locationsPage.validateItemsInLocations();
+        //go to sub-locations
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.verifyExportAllLocationDistrict();
+        locationsPage.verifyExportSpecificLocationDistrict(searchCharactor, index);
     }
 
     @Automated(automated = "Automated")
@@ -316,15 +335,15 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify UpperFields list page and search function")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpperFieldsListPageAndSearchFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyUpperFieldsListPageAndSearchFunctionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
-            String[] searchInfo = {"BU1","Level: District","Level: Region","status:enabled","status: disabled"};
+        try {
+            String[] searchInfo = {"BU1", "Level: District", "Level: Region", "status:enabled", "status: disabled"};
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -335,18 +354,17 @@ public class LocationsTest extends TestBase {
             if (locationsPage.verifyUpperFieldListShowWellOrNot()) {
                 locationsPage.verifyBackBtnFunction();
                 locationsPage.goToUpperFieldsPage();
-                locationsPage.verifyPaginationFunctionInDistrict();
-            }else
-                SimpleUtils.fail("UpperFields list page loading failed",false);
+                locationsPage.verifyPageNavigationFunctionInDistrict();
+            } else
+                SimpleUtils.fail("UpperFields list page loading failed", false);
 
             locationsPage.verifySearchUpperFieldsFunction(searchInfo);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
 
     }
-
 
 
     @Automated(automated = "Automated")
@@ -354,36 +372,36 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Add New Upperfields with different level")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddUpperFieldsWithDiffLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddUpperFieldsWithDiffLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
-                String currentTime =  TestBase.getCurrentTime().substring(4);
-                String upperfieldsName = currentTime;
-                String upperfieldsId = currentTime;
-                String searchChara = "test";
-                int index = 0;
+        try {
+            String currentTime = TestBase.getCurrentTime().substring(4);
+            String upperfieldsName = currentTime;
+            String upperfieldsId = currentTime;
+            String searchChara = "test";
+            int index = 0;
 
-                DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-                SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
-                //go to locations tab
-                locationsPage.clickOnLocationsTab();
-                //check locations item
-                locationsPage.validateItemsInLocations();
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //check locations item
+            locationsPage.validateItemsInLocations();
 
-                //get organization hierarchy info
-                locationsPage.goToGlobalConfigurationInLocations();
-                ArrayList<HashMap<String ,String>> organizationHierarchyInfo = locationsPage.getOrganizationHierarchyInfo();
-                locationsPage.goBackToLocationsTab();
-                //go to sub-upperfield  tab
-                locationsPage.goToUpperFieldsPage();
-                locationsPage.verifyBackBtnInCreateNewUpperfieldPage();
-                locationsPage.addNewUpperfieldsWithoutParentAndChild( upperfieldsName, upperfieldsId,searchChara,index,organizationHierarchyInfo);
+            //get organization hierarchy info
+            locationsPage.goToGlobalConfigurationInLocations();
+            ArrayList<HashMap<String, String>> organizationHierarchyInfo = locationsPage.getOrganizationHierarchyInfo();
+            locationsPage.goBackToLocationsTab();
+            //go to sub-upperfield  tab
+            locationsPage.goToUpperFieldsPage();
+            locationsPage.verifyBackBtnInCreateNewUpperfieldPage();
+            locationsPage.addNewUpperfieldsWithoutParentAndChild(upperfieldsName, upperfieldsId, searchChara, index, organizationHierarchyInfo);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
 
@@ -394,19 +412,19 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify disable and enable upperfield")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDisableEnableUpperFieldFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyDisableEnableUpperFieldFunctionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-       try{
+        try {
             String disableAction = "Disable";
             String enableAction = "Enable";
-           String searchChara = "status:Disabled";
-           int index = 0;
+            String searchChara = "status:Disabled";
+            int index = 0;
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -414,64 +432,20 @@ public class LocationsTest extends TestBase {
             locationsPage.validateItemsInLocations();
             //go to sub-district  tab
             locationsPage.goToUpperFieldsPage();
-           String upperfieldsName = "";
-           ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo(searchChara);
-           for (int i = 0; i <upperfieldInfo.size() ; i++) {
-               if (upperfieldInfo.get(i).get("upperfieldStatus").equalsIgnoreCase("DISABLED") &&
-                       upperfieldInfo.get(i).get("numOfLocations").equals("0")) {
-                   upperfieldsName = upperfieldInfo.get(i).get("upperfieldName");
-                   break;
-               }
-           }
+            String upperfieldsName = "";
+            ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo(searchChara);
+            for (int i = 0; i < upperfieldInfo.size(); i++) {
+                if (upperfieldInfo.get(i).get("upperfieldStatus").equalsIgnoreCase("DISABLED") &&
+                        upperfieldInfo.get(i).get("numOfLocations").equals("0")) {
+                    upperfieldsName = upperfieldInfo.get(i).get("upperfieldName");
+                    break;
+                }
+            }
             //disable and enable upperfield
-            locationsPage.disableEnableUpperfield(upperfieldsName,enableAction);
-            locationsPage.disableEnableUpperfield(upperfieldsName,disableAction);
+            locationsPage.disableEnableUpperfield(upperfieldsName, enableAction);
+            locationsPage.disableEnableUpperfield(upperfieldsName, disableAction);
 
-       } catch (Exception e){
-           SimpleUtils.fail(e.getMessage(), false);
-       }
-
-    }
-
-    @Automated(automated = "Automated")
-    @Owner(owner = "Estelle")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify update upperfield")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpdateUpperFieldFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
-
-        try{
-
-            String upperfieldsName = "RegionNoTouch";
-            String searchChara = "re";
-            int index = 1;
-            String districtLevel = "District";
-            String regionLevel = "Region";
-
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-
-            //go to locations tab
-            locationsPage.clickOnLocationsTab();
-            //check locations item
-            locationsPage.validateItemsInLocations();
-            //go to sub-district  tab
-            locationsPage.goToUpperFieldsPage();
-
-            //update upperfield
-            String updateUpperfield = locationsPage.updateUpperfield(upperfieldsName, upperfieldsName,  searchChara, index, districtLevel);
-
-            ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo(updateUpperfield);
-            if (upperfieldInfo.get(0).get("upperfieldLevel").equalsIgnoreCase("District")) {
-                SimpleUtils.pass("Upperfield update successfully");
-                locationsPage.updateUpperfield(updateUpperfield, updateUpperfield,  searchChara, index, regionLevel);
-            }else
-                SimpleUtils.fail("Upperfield update failed",false);
-
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
 
@@ -480,14 +454,51 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify update upperfield")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUpdateUpperFieldFunctionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        String upperfieldsName = "RegionNoTouch";
+        String searchChara = "re";
+        int index = 1;
+        String districtLevel = "District";
+        String regionLevel = "Region";
+
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        //check locations item
+        locationsPage.validateItemsInLocations();
+        //go to sub-district  tab
+        locationsPage.goToUpperFieldsPage();
+
+        //update upperfield
+        String updateUpperfield = locationsPage.updateUpperfield(upperfieldsName, upperfieldsName, searchChara, index, districtLevel);
+
+        ArrayList<HashMap<String, String>> upperfieldInfo = locationsPage.getUpperfieldsInfo(updateUpperfield);
+        if (upperfieldInfo.get(0).get("upperfieldLevel").equalsIgnoreCase("District")) {
+            SimpleUtils.pass("Upperfield update successfully");
+            locationsPage.updateUpperfield(updateUpperfield, updateUpperfield, searchChara, index, regionLevel);
+        } else
+            SimpleUtils.fail("Upperfield update failed", false);
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Estelle")
+    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify cancel creating upperfield")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCancelCreatingUpperfieldFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyCancelCreatingUpperfieldFunctionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
 
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
-            String currentTime =  dfs.format(new Date()).trim();
+            String currentTime = dfs.format(new Date()).trim();
             String upperfieldsName = currentTime;
             String upperfieldsId = currentTime;
             String level = "District";
@@ -496,7 +507,7 @@ public class LocationsTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -506,9 +517,9 @@ public class LocationsTest extends TestBase {
             locationsPage.goToUpperFieldsPage();
 
             //cancel creating upperfield
-            locationsPage.cancelCreatingUpperfield(level,upperfieldsName,upperfieldsId);
+            locationsPage.cancelCreatingUpperfield(level, upperfieldsName, upperfieldsId);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
 
@@ -519,15 +530,15 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify upperfield smartcard data")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpperFieldSmartCardDataAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyUpperFieldSmartCardDataAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -540,19 +551,19 @@ public class LocationsTest extends TestBase {
 
             HashMap<String, Integer> upperfieldSmartCardInfo = locationsPage.getUpperfieldsSmartCardInfo();
             locationsPage.searchUpperFields("Status:Enabled");
-            int  searchResultNum = locationsPage.getSearchResultNum();
-            if (searchResultNum==upperfieldSmartCardInfo.get("Enabled")) {
+            int searchResultNum = locationsPage.getSearchResultNum();
+            if (searchResultNum == upperfieldSmartCardInfo.get("Enabled")) {
                 SimpleUtils.pass("Enabled data in smart card is correct");
-            }else
-                SimpleUtils.fail("Enabled data in smart card not equals upperfield list data",false);
+            } else
+                SimpleUtils.fail("Enabled data in smart card not equals upperfield list data", false);
             locationsPage.searchUpperFields("Status:Disabled");
-            int  searchResultNumforDisable = locationsPage.getSearchResultNum();
-            if (searchResultNumforDisable==upperfieldSmartCardInfo.get("Disabled")) {
+            int searchResultNumforDisable = locationsPage.getSearchResultNum();
+            if (searchResultNumforDisable == upperfieldSmartCardInfo.get("Disabled")) {
                 SimpleUtils.pass("Disabled data in smart card is correct");
-            }else
-                SimpleUtils.fail("Disabled data in smart card not equals upperfield list data",false);
+            } else
+                SimpleUtils.fail("Disabled data in smart card not equals upperfield list data", false);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
 
@@ -574,7 +585,7 @@ public class LocationsTest extends TestBase {
 //            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 //            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
 //            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-//            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+//            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 //
 //            //go to locations tab
 //            locationsPage.clickOnLocationsTab();
@@ -601,14 +612,14 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Global dynamic group in Locations tab  ")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyGlobalDynamicGroupFunctionInLocationsTabAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyGlobalDynamicGroupFunctionInLocationsTabAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
-            String currentTime =  dfs.format(new Date()).trim();
-            String groupNameForWFS = "AutoWFS" +currentTime;
-            String groupNameForCloIn = "AutoClockIn" +currentTime;
-            String description = "AutoCreate" +currentTime;
+            String currentTime = dfs.format(new Date()).trim();
+            String groupNameForWFS = "AutoWFS" + currentTime;
+            String groupNameForCloIn = "AutoClockIn" + currentTime;
+            String description = "AutoCreate" + currentTime;
             String criteria = "Location Name";
             String criteriaUpdate = "Country";
             String searchText = "AutoCreate";
@@ -616,7 +627,7 @@ public class LocationsTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -628,19 +639,19 @@ public class LocationsTest extends TestBase {
             //remove existing dynamic group
             locationsPage.iCanDeleteExistingWFSDG();
             //create new workforce sharing dynamic group
-            String locationNum = locationsPage.addWorkforceSharingDGWithOneCriteria(groupNameForWFS,description,criteria);
-            String locationNumAftUpdate = locationsPage.updateWFSDynamicGroup(groupNameForWFS,criteriaUpdate);
+            String locationNum = locationsPage.addWorkforceSharingDGWithOneCriteria(groupNameForWFS, description, criteria);
+            String locationNumAftUpdate = locationsPage.updateWFSDynamicGroup(groupNameForWFS, criteriaUpdate);
             if (!locationNumAftUpdate.equalsIgnoreCase(locationNum)) {
                 SimpleUtils.pass("Update workforce sharing dynamic group successfully");
             }
             locationsPage.searchClockInDynamicGroup(searchText);
             locationsPage.iCanDeleteExistingClockInDG();
-            String locationNumForClockIn = locationsPage.addClockInDGWithOneCriteria(groupNameForCloIn,description,criteria);
-            String locationNumForClockInAftUpdate = locationsPage.updateClockInDynamicGroup(groupNameForCloIn,criteriaUpdate);
+            String locationNumForClockIn = locationsPage.addClockInDGWithOneCriteria(groupNameForCloIn, description, criteria);
+            String locationNumForClockInAftUpdate = locationsPage.updateClockInDynamicGroup(groupNameForCloIn, criteriaUpdate);
             if (!locationNumForClockInAftUpdate.equalsIgnoreCase(locationNumForClockIn)) {
                 SimpleUtils.pass("Update clock in dynamic group successfully");
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
 
@@ -652,16 +663,16 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Global dynamic group for Clock in")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyGlobalDynamicGroupInClockInFunctionAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyGlobalDynamicGroupInClockInFunctionAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
 
             List<String> clockInGroup = new ArrayList<>();
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -678,11 +689,11 @@ public class LocationsTest extends TestBase {
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(templateType);
-            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnSpecifyTemplateName(templateName, mode);
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.verifyClockInDisplayAndSelect(clockInGroup);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
 
@@ -693,16 +704,16 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify abnormal scenarios")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyGlobalDynamicGroupAbnormalScenariosAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyGlobalDynamicGroupAbnormalScenariosAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
 
             List<String> wfsGroup = new ArrayList<>();
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -715,7 +726,7 @@ public class LocationsTest extends TestBase {
             locationsPage.verifyCreateExistingDGAndGroupNameIsNull(wfsGroup.get(0));
 
 
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
 
@@ -726,101 +737,98 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Global dynamic group for Workforce Sharing")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyGlobalDynamicGroupInWFSAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyGlobalDynamicGroupInWFSAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
-            String templateType = "Schedule Collaboration";
-            String mode = "edit";
-            String templateName = "UsedByAuto_NoTouchNoDelete";
-            String wfsMode = "Yes";
-            String wfsName = "WFS";
-            String locationName = "OMLocation16";
-            String criteria = "Custom";
+        String templateType = "Schedule Collaboration";
+        String mode = "edit";
+        String templateName = "UsedByAuto_NoTouchNoDelete";
+        String wfsMode = "Yes";
+        String wfsName = "WFS";
+        String locationName = "EstelleUsingLocation";
+        String criteria = "Custom";
 
-            List<String> wfsGroup = new ArrayList<>();
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-            scheduleCommonPage.navigateToNextWeek();
-            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if(isActiveWeekGenerated){
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                newShiftPage.clickOnDayViewAddNewShiftButton();
-                newShiftPage.customizeNewShiftPage();
-                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
-                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
-                }
-                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
-                newShiftPage.clickOnCreateOrNextBtn();
-                newShiftPage.searchTeamMemberByName("aglae");
-                if (!shiftOperatePage.verifyWFSFunction()) {
-                    //to check WFS group exist or not
-                    LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-                    locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-                    SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-
-                    //go to locations tab
-                    locationsPage.clickOnLocationsTab();
-                    //check dynamic group item
-                    locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
-                    //go to dynamic group
-                    locationsPage.goToDynamicGroup();
-                    wfsGroup = locationsPage.getWFSGroupFromGlobalConfig();
-                    for (int i = 0; i <wfsGroup.size() ; i++) {
-                        if (wfsGroup.get(i).contains(wfsName)) {
-                            SimpleUtils.report("Workforce sharing group for automation existing");
-                            break;
-                        }else
-                            locationsPage.addWorkforceSharingDGWithOneCriteria(wfsName,"Used by auto",criteria);
-                    }
-
-                    //to check wfs is on or off in schedule collaboration configuration page
-                    ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-                    configurationPage.goToConfigurationPage();
-                    configurationPage.clickOnConfigurationCrad(templateType);
-                    configurationPage.clickOnSpecifyTemplateName(templateName,mode);
-                    configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-                    configurationPage.setWFS(wfsMode);
-                    configurationPage.selectWFSGroup(wfsName);
-                    configurationPage.publishNowTheTemplate();
-
-                    //go to schedule to generate schedule
-
-                    locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-                    SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-                }else
-                    SimpleUtils.pass("Workforce sharing function work well");
-
-            } else {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                newShiftPage.clickOnDayViewAddNewShiftButton();
-                newShiftPage.customizeNewShiftPage();
-                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
-                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
-                }
-                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
-                newShiftPage.clickOnCreateOrNextBtn();
-                newShiftPage.searchTeamMemberByName("Aglae");
-                if (!shiftOperatePage.verifyWFSFunction()) {
-                    SimpleUtils.fail("Workforce sharing function work failed",false);
-                }else
-                    SimpleUtils.pass("Workforce sharing function work well");
+        List<String> wfsGroup = new ArrayList<>();
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.navigateToNextWeek();
+        boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (isActiveWeekGenerated) {
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
             }
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName("Aglae");
+            if (!shiftOperatePage.verifyWFSFunction()) {
+                //to check WFS group exist or not
+                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+                //go to locations tab
+                locationsPage.clickOnLocationsTab();
+                //check dynamic group item
+                locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
+                //go to dynamic group
+                locationsPage.goToDynamicGroup();
+                wfsGroup = locationsPage.getWFSGroupFromGlobalConfig();
+                for (int i = 0; i < wfsGroup.size(); i++) {
+                    if (wfsGroup.get(i).contains(wfsName)) {
+                        SimpleUtils.report("Workforce sharing group for automation existing");
+                        break;
+                    } else
+                        locationsPage.addWorkforceSharingDGWithOneCriteria(wfsName, "Used by auto", criteria);
+                }
+
+                //to check wfs is on or off in schedule collaboration configuration page
+                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+                configurationPage.goToConfigurationPage();
+                configurationPage.clickOnConfigurationCrad(templateType);
+                configurationPage.clickOnSpecifyTemplateName(templateName, mode);
+                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                configurationPage.setWFS(wfsMode);
+                configurationPage.selectWFSGroup(wfsName);
+                configurationPage.publishNowTheTemplate();
+
+                //go to schedule to generate schedule
+
+                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+                SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            } else
+                SimpleUtils.pass("Workforce sharing function work well");
+
+        } else {
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+            }
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName("Aglae");
+
+            if (!shiftOperatePage.verifyWFSFunction()) {
+                SimpleUtils.fail("Workforce sharing function work failed", false);
+            } else
+                SimpleUtils.pass("Workforce sharing function work well");
         }
     }
 
@@ -829,101 +837,96 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Parent formula in Workforce Sharing")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyParentFormulaInWFSAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyParentFormulaInWFSAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        String templateType = "Schedule Collaboration";
+        String mode = "edit";
+        String templateName = "ParentFormular";
+        String wfsMode = "Yes";
+        String wfsName = "WFS";
+        String locationName = "EstelleUsingLocation";
+        String criteria = "Custom";
 
-        try{
-            String templateType = "Schedule Collaboration";
-            String mode = "edit";
-            String templateName = "ParentFormular";
-            String wfsMode = "Yes";
-            String wfsName = "WFS";
-            String locationName = "SeaTac AirportSEA";
-            String criteria = "Custom";
-
-            List<String> wfsGroup = new ArrayList<>();
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-            scheduleCommonPage.navigateToNextWeek();
-            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if(isActiveWeekGenerated){
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                newShiftPage.clickOnDayViewAddNewShiftButton();
-                newShiftPage.customizeNewShiftPage();
-                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
-                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
-                }
-                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
-                newShiftPage.clickOnCreateOrNextBtn();
-                newShiftPage.searchTeamMemberByName("Brisa");
-                if (!shiftOperatePage.verifyWFSFunction()) {
-                    //to check WFS group exist or not
-                    LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-                    locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-                    SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-
-                    //go to locations tab
-                    locationsPage.clickOnLocationsTab();
-                    //check dynamic group item
-                    locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
-                    //go to dynamic group
-                    locationsPage.goToDynamicGroup();
-                    wfsGroup = locationsPage.getWFSGroupFromGlobalConfig();
-                    for (int i = 0; i <wfsGroup.size() ; i++) {
-                        if (wfsGroup.get(i).contains(wfsName)) {
-                            SimpleUtils.report("Workforce sharing group for automation existing");
-                            break;
-                        }else
-                            locationsPage.addWorkforceSharingDGWithOneCriteria(wfsName,"Used by auto",criteria);
-                    }
-
-                    //to check wfs is on or off in schedule collaboration configuration page
-                    ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-                    configurationPage.goToConfigurationPage();
-                    configurationPage.clickOnConfigurationCrad(templateType);
-                    configurationPage.clickOnSpecifyTemplateName(templateName,mode);
-                    configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-                    configurationPage.setWFS(wfsMode);
-                    configurationPage.selectWFSGroup(wfsName);
-                    configurationPage.publishNowTheTemplate();
-
-                    //go to schedule to generate schedule
-
-                    locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-                    SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-                }else
-                    SimpleUtils.pass("Workforce sharing function work well");
-
-            } else {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                newShiftPage.clickOnDayViewAddNewShiftButton();
-                newShiftPage.customizeNewShiftPage();
-                if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
-                } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
-                    newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
-                }
-                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
-                newShiftPage.clickOnCreateOrNextBtn();
-                newShiftPage.searchTeamMemberByName("Alysha");
-                if (!shiftOperatePage.verifyWFSFunction()) {
-                    SimpleUtils.fail("Workforce sharing function work failed",false);
-                }else
-                    SimpleUtils.pass("Workforce sharing function work well");
+        List<String> wfsGroup = new ArrayList<>();
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+        scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.navigateToNextWeek();
+        boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+        if (isActiveWeekGenerated) {
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
             }
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName("Brisa");
+            if (!shiftOperatePage.verifyWFSFunction()) {
+                //to check WFS group exist or not
+                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+                //go to locations tab
+                locationsPage.clickOnLocationsTab();
+                //check dynamic group item
+                locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
+                //go to dynamic group
+                locationsPage.goToDynamicGroup();
+                wfsGroup = locationsPage.getWFSGroupFromGlobalConfig();
+                for (int i = 0; i < wfsGroup.size(); i++) {
+                    if (wfsGroup.get(i).contains(wfsName)) {
+                        SimpleUtils.report("Workforce sharing group for automation existing");
+                        break;
+                    } else
+                        locationsPage.addWorkforceSharingDGWithOneCriteria(wfsName, "Used by auto", criteria);
+                }
+
+                //to check wfs is on or off in schedule collaboration configuration page
+                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+                configurationPage.goToConfigurationPage();
+                configurationPage.clickOnConfigurationCrad(templateType);
+                configurationPage.clickOnSpecifyTemplateName(templateName, mode);
+                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                configurationPage.setWFS(wfsMode);
+                configurationPage.selectWFSGroup(wfsName);
+                configurationPage.publishNowTheTemplate();
+
+                //go to schedule to generate schedule
+
+                locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+                SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            } else
+                SimpleUtils.pass("Workforce sharing function work well");
+
+        } else {
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("AMBASSADOR"));
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
+                newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
+            }
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName("Alysha");
+            if (!shiftOperatePage.verifyWFSFunction()) {
+                SimpleUtils.fail("Workforce sharing function work failed", false);
+            } else
+                SimpleUtils.pass("Workforce sharing function work well");
         }
     }
 
@@ -932,19 +935,19 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify default value of Organization Hierarchy")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDefaultOrganizationHierarchyShowAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyDefaultOrganizationHierarchyShowAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToGlobalConfigurationInLocations();
             locationsPage.verifyDefaultOrganizationHierarchy();
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -954,10 +957,10 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate add edit remove organization hierarchy")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddEditRemoveOrganizationHierarchyAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddEditRemoveOrganizationHierarchyAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
-            List<String> hierarchyNames = new ArrayList<String>(){{
+        try {
+            List<String> hierarchyNames = new ArrayList<String>() {{
                 add("AutoDistrcit");
                 add("AutoRegion");
                 add("AutoBU");
@@ -966,7 +969,7 @@ public class LocationsTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToGlobalConfigurationInLocations();
@@ -974,7 +977,7 @@ public class LocationsTest extends TestBase {
             locationsPage.deleteOrganizationHierarchy(hierarchyNames);
             locationsPage.updateOrganizationHierarchyDisplayName();
             locationsPage.updateEnableUpperfieldViewOfHierarchy();
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -984,20 +987,20 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "abnormal cases of hierarchy")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAbnormalCasesOfOrganizationHierarchyAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyAbnormalCasesOfOrganizationHierarchyAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToGlobalConfigurationInLocations();
             locationsPage.abnormalCaseOfEmptyDisplayNameForHierarchy();
             locationsPage.abnormalCaseOfLongDisplayNameForHierarchy();
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -1008,121 +1011,116 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify user can see template value via click template name in location level and compare")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUserCanSeeEachTypeOfTemViaClickingTemNameAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyUserCanSeeEachTypeOfTemViaClickingTemNameAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
             String locationName = "OMLocation16";
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
-            List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            Map<String, HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevelNew();
             locationsPage.canGoToAssignmentRoleViaTemNameInLocationLevel();
-            List<HashMap<String,String>> workRolesListInAssignmentRules = locationsPage.getAssignmentRolesInLocationLevel();
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToOperationHoursViaTemNameInLocationLevel();
+            locationsPage.clickActionsForTemplate("Operating Hours","View");
             String contextInOHTemplate = locationsPage.getOHTemplateValueInLocationLevel();
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToSchedulingRulesViaTemNameInLocationLevel();
-            List<HashMap<String,String>> contextInScheRulesTemplate = locationsPage.getScheRulesTemplateValueInLocationLevel();
+            locationsPage.clickActionsForTemplate("Scheduling Rules","View");
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToScheduleCollaborationViaTemNameInLocationLevel();
+            locationsPage.clickActionsForTemplate("Schedule Collaboration","View");
             String contextInScheCollTemplate = locationsPage.getScheCollTemplateValueInLocationLevel();
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToTAViaTemNameInLocationLevel();
+            locationsPage.clickActionsForTemplate("Time and Attendance","View");
             String contextInTATemplate = locationsPage.getTATemplateValueInLocationLevel();
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToSchedulingPoliciesViaTemNameInLocationLevel();
+            locationsPage.clickActionsForTemplate("Scheduling Policies","View");
             String contextInSchedulingPoliciesTemplate = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToComplianceViaTemNameInLocationLevel();
+            locationsPage.clickActionsForTemplate("Compliance","View");
             String contextInComplianceTemplate = locationsPage.getComplianceTemplateValueInLocationLevel();
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.canGoToLaborModelViaTemNameInLocationLevel();
-            List<HashMap<String,String>> workRolesListInLaborModel = locationsPage.getLaborModelInLocationLevel();
+            locationsPage.clickActionsForTemplate("Labor Model","View");
             locationsPage.backToConfigurationTabInLocationLevel();
 
             //go to configuration tab to check each template value in template level
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
             userManagementPage.clickOnUserManagementTab();
             userManagementPage.goToWorkRolesTile();
-            List<HashMap<String,String>> workRolesListInGlobal = locationsPage.getAssignmentRolesInLocationLevel();
+            List<HashMap<String, String>> workRolesListInGlobal = locationsPage.getAssignmentRolesInLocationLevel();
             //get template level info of Operation hours
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(1).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(1).get("Template Name"),"view");
+                    configurationPage.clickOnConfigurationCrad(templateInfo.get("Operating Hours").get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get("Operating Hours").get("Template Name"), "view");
             String specificOHInTemplateLevel = locationsPage.getOHTemplateValueInLocationLevel();
+
             //get template level info of Scheduling rules
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(2).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(2).get("Template Name"),"view");
-            List<HashMap<String,String>> specificSchRolesInTemplateLevel = locationsPage.getScheRulesTemplateValueInLocationLevel();
+            configurationPage.clickOnConfigurationCrad(templateInfo.get("Scheduling Rules").get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get("Scheduling Rules").get("Template Name"), "view");
+            List<HashMap<String, String>> specificSchRolesInTemplateLevel = locationsPage.getScheRulesTemplateValueInConfigurationLevel();
 
             //get template level info of Scheduling collaboration
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(3).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(3).get("Template Name"),"view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get("Schedule Collaboration").get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get("Schedule Collaboration").get("Template Name"), "view");
             String specificSchCollInTemplateLevel = locationsPage.getScheCollTemplateValueInLocationLevel();
 
             //get template level info of TA
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad("Time & Attendance");
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(4).get("Template Name"),"view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get("Time and Attendance").get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get("Time and Attendance").get("Template Name"), "view");
             String specificTAInTemplateLevel = locationsPage.getTATemplateValueInLocationLevel();
 
             //get template level info of Schedule policy
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(5).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(5).get("Template Name"),"view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get("Scheduling Policies").get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get("Scheduling Policies").get("Template Name"), "view");
             String specificSchPolicyInTemplateLevel = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
 
             //get template level info of Compliance
             configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateInfo.get(6).get("Template Type"));
-            configurationPage.clickOnSpecifyTemplateName(templateInfo.get(6).get("Template Name"),"view");
+            configurationPage.clickOnConfigurationCrad(templateInfo.get("Compliance").get("Template Type"));
+            configurationPage.clickOnSpecifyTemplateName(templateInfo.get("Compliance").get("Template Name"), "view");
             String specificComplianceInTemplateLevel = locationsPage.getTATemplateValueInLocationLevel();
 
             //go to labor model tab to get specific template value
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
             laborModelPage.clickOnLaborModelTab();
             laborModelPage.goToLaborModelTile();
-            laborModelPage.clickOnSpecifyTemplateName(templateInfo.get(7).get("Template Name"),"view");
-            List<HashMap<String,String>> workRolesListInLaborModelTemplateLevel = laborModelPage.getLaborModelInTemplateLevel();
+            laborModelPage.clickOnSpecifyTemplateName(templateInfo.get("Labor Model").get("Template Name"), "view");
+            List<HashMap<String, String>> workRolesListInLaborModelTemplateLevel = laborModelPage.getLaborModelInTemplateLevel();
 
             //compare location level value with template level
             if (contextInOHTemplate.equalsIgnoreCase(specificOHInTemplateLevel)) {
                 SimpleUtils.pass("Operation Hours template value in location level equals to template level");
-            }else
-                SimpleUtils.fail("Operation Hours template value in location level doesn't equals to template level",false);
+            } else
+                SimpleUtils.fail("Operation Hours template value in location level doesn't equals to template level", false);
 
             if (contextInSchedulingPoliciesTemplate.contains(specificSchPolicyInTemplateLevel)) {
                 SimpleUtils.pass("Schedule Policy value in location level equals to template level");
-            }else
-                SimpleUtils.fail("Schedule Policy value in location level doesn't equals to template level",false);
-
+            } else
+                SimpleUtils.fail("Schedule Policy value in location level doesn't equals to template level", false);
 
             if (contextInScheCollTemplate.contains(specificSchCollInTemplateLevel)) {
                 SimpleUtils.pass("Schedule Collaboration template value in location level equals to template level");
-            }else
-                SimpleUtils.fail("Schedule Collaboration template value in location level doesn't equals to template level",false);
+            } else
+                SimpleUtils.fail("Schedule Collaboration template value in location level doesn't equals to template level", false);
 
             if (contextInTATemplate.contains(specificTAInTemplateLevel)) {
                 SimpleUtils.pass("Time Attendance value in location level equals to template level");
-            }else
-                SimpleUtils.fail("Time Attendance value in location level doesn't equals to template level",false);
-
+            } else
+                SimpleUtils.fail("Time Attendance value in location level doesn't equals to template level", false);
 
             if (contextInComplianceTemplate.contains(specificComplianceInTemplateLevel)) {
                 SimpleUtils.pass("Compliance template value in location level equals to template level");
-            }else
-                SimpleUtils.fail("Compliance template value in location level doesn't equals to template level",false);
-
+            } else
+                SimpleUtils.fail("Compliance template value in location level doesn't equals to template level", false);
 
 //            String[] contextInScheRulesTemplateAft = contextInScheRulesTemplate.toArray(new String[]{});
 //            String[] specificSchRolesInTemplateLevelAft = specificSchRolesInTemplateLevel.toArray(new String[]{});
@@ -1147,68 +1145,69 @@ public class LocationsTest extends TestBase {
 //                SimpleUtils.fail("Labor model in location level doesn't equals to template level",false);
 
 
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
     @Automated(automated = "Automated")
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "View template of Scheduling policy schedule collaboration TA and Compliance")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
 
             String locationName = "OMLocation16";
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
-            List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
             //get template level info of Scheduling collaboration
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(3).get("Template Type"),"View");
+            locationsPage.clickActionsForTemplate("Schedule Collaboration", "View");
             String specificSchCollInTemplateLevel = locationsPage.getScheCollTemplateValueInLocationLevel();
             if (!(specificSchCollInTemplateLevel == null)) {
                 SimpleUtils.pass("Can view Scheduling collaboration successfully via view button in location level");
-            }else
-                SimpleUtils.fail("View Scheduling collaboration via view button in location level failed",false);
+            } else
+                SimpleUtils.fail("View Scheduling collaboration via view button in location level failed", false);
 
             locationsPage.backToConfigurationTabInLocationLevel();
 
 
             //get template level info of TA
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(4).get("Template Type"),"View");
+            locationsPage.clickActionsForTemplate("Time and Attendance", "View");
             String contextInTATemplate = locationsPage.getTATemplateValueInLocationLevel();
             if (!(contextInTATemplate == null)) {
                 SimpleUtils.pass("Can view Time Attendance successfully via view button in location level");
-            }else
-                SimpleUtils.fail("View Time Attendance via view button in location level failed",false);
+            } else
+                SimpleUtils.fail("View Time Attendance via view button in location level failed", false);
             locationsPage.backToConfigurationTabInLocationLevel();
 
             //get template level info of Schedule policy
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(5).get("Template Type"),"View");
+            locationsPage.clickActionsForTemplate("Scheduling Policies", "View");
             String contextInSchedulingPoliciesTemplate = locationsPage.getSchedulingPoliciesTemplateValueInLocationLevel();
             if (!(contextInSchedulingPoliciesTemplate == null)) {
                 SimpleUtils.pass("Can view Scheduling Policies successfully via view button in location level");
-            }else
-                SimpleUtils.fail("View Scheduling Policies via view button in location level failed",false);
+            } else
+                SimpleUtils.fail("View Scheduling Policies via view button in location level failed", false);
             locationsPage.backToConfigurationTabInLocationLevel();
 
             //get template level info of Compliance
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"),"View");
+            locationsPage.clickActionsForTemplate("Compliance", "View");
             String contextInComplianceTemplate = locationsPage.getComplianceTemplateValueInLocationLevel();
             if (!(contextInComplianceTemplate == null)) {
                 SimpleUtils.pass("Can view Compliance successfully via view button in location level");
-            }else
-                SimpleUtils.fail("View Compliance via view button in location level failed",false);
+            } else
+                SimpleUtils.fail("View Compliance via view button in location level failed", false);
             locationsPage.backToConfigurationTabInLocationLevel();
 
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -1218,50 +1217,34 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Overridden scheduling rules template in location level")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOverriddenSchedulingRulesInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyOverriddenSchedulingRulesInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
 
             String locationName = "OMLocation16";
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
-            List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(2).get("Template Type"),"View");
-//            List<HashMap<String,String>> initial = locationsPage.getScheRulesTemplateValueInLocationLevel();
+            locationsPage.clickActionsForTemplate("Scheduling Rules","View");
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(2).get("Template Type"),"Edit");
+            locationsPage.clickActionsForTemplate("Scheduling Rules","Edit");
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToWorkRolesWithStaffingRules();
             configurationPage.deleteBasicStaffingRule();
             configurationPage.saveBtnIsClickable();
             configurationPage.saveBtnIsClickable();
-            List<HashMap<String,String>>  templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftOverridden.get(2).get("Overridden").equalsIgnoreCase("Yes")) {
-//                locationsPage.viewBtnForSchedulingRulesBtnIsClickable();
-//                List<HashMap<String,String>> schedulingRulesDetailsAftOverridden = locationsPage.getScheRulesTemplateValueInLocationLevel();
-//                if (!schedulingRulesDetailsAftOverridden.equals(initial)) {
-                SimpleUtils.pass("Overridden scheduling rules successfully");
-//                }
-            }else
-                SimpleUtils.fail("Overridden scheduling rules failed",false);
-
+            locationsPage.verifyOverrideStatusAtLocationLevel("Scheduling Rules","Yes");
             //reset
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(2).get("Template Type"),"Reset");
-            List<HashMap<String,String>>  templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftReset.get(2).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Reset scheduling rules successfully");
-            } else
-                SimpleUtils.fail("Reset scheduling rules failed",false);
-        } catch (Exception e){
+            locationsPage.clickActionsForTemplate("Scheduling Rules","Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Scheduling Rules","No");
+
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -1271,46 +1254,35 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Overridden Operating Hours template in location level")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOverriddenOperatingHoursInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyOverriddenOperatingHoursInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
 
             String locationName = "OMLocation16";
             int moveCount = 4;
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
-            List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(1).get("Template Type"),"View");
+            locationsPage.clickActionsForTemplate("Operating Hours", "View");
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(1).get("Template Type"),"Edit");
+            locationsPage.clickActionsForTemplate("Operating Hours", "Edit");
+
             locationsPage.editBtnIsClickableInBusinessHours();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            configurationPage.moveSliderAtSomePoint(moveCount, ohSliderDroppable.EndPoint.getValue());
             locationsPage.selectDayInWorkingHoursPopUpWin(6);
             configurationPage.saveBtnIsClickable();
             configurationPage.saveBtnIsClickable();
-            List<HashMap<String,String>>  templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftOverridden.get(1).get("Overridden").equalsIgnoreCase("Yes")) {
-                SimpleUtils.pass("Overridden Operating Hours successfully");
-            }else
-                SimpleUtils.fail("Overridden Operating Hours failed",false);
-
+            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "Yes");
             //reset
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(1).get("Template Type"),"Reset");
-            List<HashMap<String,String>>  templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftReset.get(1).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Reset Operating Hours successfully");
-            } else
-                SimpleUtils.fail("Reset Operating Hours failed",false);
-        } catch (Exception e){
+            locationsPage.clickActionsForTemplate("Operating Hours", "Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "No");
+
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -1320,26 +1292,25 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Overridden assignment rules template in location level")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOverriddenAssignmentRulesInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyOverriddenAssignmentRulesInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
 
             String locationName = "OMLocation16";
             String workRoleName = "ForAutomation";
             int index = 0;
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
-            List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(0).get("Template Type"),"View");
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            locationsPage.clickActionsForTemplate("Assignment Rules", "View");
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(0).get("Template Type"),"Edit");
+            locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
             userManagementPage.verifySearchWorkRole(workRoleName);
             userManagementPage.goToWorkRolesDetails(workRoleName);
@@ -1347,22 +1318,13 @@ public class LocationsTest extends TestBase {
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.saveBtnIsClickable();
             configurationPage.saveBtnIsClickable();
-
-            List<HashMap<String,String>>  templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftOverridden.get(0).get("Overridden").equalsIgnoreCase("Yes")) {
-                SimpleUtils.pass("Overridden Assignment Rules successfully");
-            }else
-                SimpleUtils.fail("Overridden Assignment Rules failed",false);
+            locationsPage.verifyOverrideStatusAtLocationLevel("Assignment Rules","Yes");
 
             //reset
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(0).get("Template Type"),"Reset");
-            List<HashMap<String,String>>  templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftReset.get(0).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Reset Assignment Rules successfully");
-            } else
-                SimpleUtils.fail("Reset Assignment Rules failed",false);
-        } catch (Exception e){
+            locationsPage.clickActionsForTemplate("Assignment Rules", "Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Assignment Rules","No");
+
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -1372,94 +1334,85 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Overridden Labor model template in location level")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOverriddenLaborModelInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyOverriddenLaborModelInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
 
             String locationName = "OMLocation16";
             String workRoleName = "ForAutomation";
             int index = 0;
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
-            List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            locationsPage.clickActionsForTemplate("Labor Model", "View");
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Edit");
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
             laborModelPage.overriddenLaborModelRuleInLocationLevel(index);
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.saveBtnIsClickable();
-
-            List<HashMap<String,String>>  templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftOverridden.get(7).get("Overridden").equalsIgnoreCase("Yes")) {
-                SimpleUtils.pass("Overridden Labor Model successfully");
-            }else
-                SimpleUtils.fail("Overridden Labor Model failed",false);
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
 
             //reset
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Reset");
-            List<HashMap<String,String>>  templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftReset.get(7).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Reset Labor Model successfully");
-            } else
-                SimpleUtils.fail("Reset Labor Model failed",false);
-        } catch (Exception e){
+            locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","No");
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
+//    Blocked by https://legiontech.atlassian.net/browse/OPS-4525
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "User can view the default location level external attribute")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDefaultValueOfExternalAttributesInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyDefaultValueOfExternalAttributesInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
 
             String locationName = "AutoUsingByFiona1";
             String templateName = "AutoUsingByFiona";
             String label = "External Attributes";
-            String attributeName ="AutoUsingAttribute";
+            String attributeName = "AutoUsingAttribute";
             String attributeValueUpdate = "23";
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
 
             //Compare template level external attributes in location tab and configuration tab
             laborModelPage.clickOnLaborModelTab();
             laborModelPage.goToLaborModelTile();
-            laborModelPage.clickOnSpecifyTemplateName("AutoUsingByFiona","view");
+            laborModelPage.clickOnSpecifyTemplateName("AutoUsingByFiona", "view");
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-            HashMap<String,List<String>>  templateLevelAttributesInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+            HashMap<String, List<String>> templateLevelAttributesInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
             locationsPage.canGoToLaborModelViaTemNameInLocationLevel();
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-            HashMap<String,List<String>>  templateLevelAttributesInfoInLocation = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
-            for(String key:templateLevelAttributesInfoInLocation.keySet()){
-                for(String key1:templateLevelAttributesInfoInTemplate.keySet()){
-                    if(key.equals(key1)){
+            HashMap<String, List<String>> templateLevelAttributesInfoInLocation = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+            for (String key : templateLevelAttributesInfoInLocation.keySet()) {
+                for (String key1 : templateLevelAttributesInfoInTemplate.keySet()) {
+                    if (key.equals(key1)) {
                         List<String> templateValuesInLocation = templateLevelAttributesInfoInLocation.get(key1);
                         List<String> valuesInTemplate = templateLevelAttributesInfoInTemplate.get(key);
 
-                        if(templateValuesInLocation.get(0).equals(valuesInTemplate.get(0))){
+                        if (templateValuesInLocation.get(0).equals(valuesInTemplate.get(0))) {
                             SimpleUtils.pass("The template level attribute " + key + " in location is correct.");
                             break;
-                        }else{
-                            SimpleUtils.fail("The template level attribute " + key + " in location is NOT correct.",false);
+                        } else {
+                            SimpleUtils.fail("The template level attribute " + key + " in location is NOT correct.", false);
                         }
                     }
                 }
@@ -1467,29 +1420,29 @@ public class LocationsTest extends TestBase {
 
             //Compare location level default external attributes value should be same with template level.
             locationsPage.backToConfigurationTabInLocationLevel();
-            List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
             if (templateInfo.get(7).get("Overridden").equalsIgnoreCase("No")) {
                 SimpleUtils.pass("Labor model template is not overridden at location level");
-            } else{
+            } else {
                 SimpleUtils.pass("Labor model template is already overridden at location level");
                 locationsPage.editLocationBtnIsClickableInLocationDetails();
-                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Reset");
+                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Reset");
             }
 
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "View");
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-            HashMap<String,List<String>>  locationLevelAttributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
-            for(String key:templateLevelAttributesInfoInLocation.keySet()){
-                for(String key1:locationLevelAttributesInfoInLocation.keySet()){
-                    if(key.equals(key1)){
+            HashMap<String, List<String>> locationLevelAttributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
+            for (String key : templateLevelAttributesInfoInLocation.keySet()) {
+                for (String key1 : locationLevelAttributesInfoInLocation.keySet()) {
+                    if (key.equals(key1)) {
                         List<String> valuesInTemplate = templateLevelAttributesInfoInLocation.get(key1);
                         List<String> valuesInLocation = locationLevelAttributesInfoInLocation.get(key);
 
-                        if(valuesInTemplate.get(0).equals(valuesInLocation.get(0))){
+                        if (valuesInTemplate.get(0).equals(valuesInLocation.get(0))) {
                             SimpleUtils.pass("The location level attribute " + key + " in location is correct.");
                             break;
-                        }else{
-                            SimpleUtils.fail("The location level attribute " + key + " in location is NOT correct.",false);
+                        } else {
+                            SimpleUtils.fail("The location level attribute " + key + " in location is NOT correct.", false);
                         }
                     }
                 }
@@ -1498,15 +1451,15 @@ public class LocationsTest extends TestBase {
             //After update template level attributes, the location level will updated accordingly.
             laborModelPage.clickOnLaborModelTab();
             laborModelPage.goToLaborModelTile();
-            laborModelPage.clickOnSpecifyTemplateName(templateName,"edit");
+            laborModelPage.clickOnSpecifyTemplateName(templateName, "edit");
             laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-            laborModelPage.updateAttributeValueInTemplate(attributeName,attributeValueUpdate);
+            laborModelPage.updateAttributeValueInTemplate(attributeName, attributeValueUpdate);
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Details");
             laborModelPage.publishNowTemplate();
-            laborModelPage.clickOnSpecifyTemplateName(templateName,"view");
+            laborModelPage.clickOnSpecifyTemplateName(templateName, "view");
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-            HashMap<String,List<String>>  templateLevelAttributesInfoInTemplate1 = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+            HashMap<String, List<String>> templateLevelAttributesInfoInTemplate1 = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
@@ -1514,24 +1467,24 @@ public class LocationsTest extends TestBase {
             locationsPage.goToConfigurationTabInLocationLevel();
             locationsPage.canGoToLaborModelViaTemNameInLocationLevel();
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-            HashMap<String,List<String>>  locationLevelAttributesInfoInLocation1 = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
+            HashMap<String, List<String>> locationLevelAttributesInfoInLocation1 = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
 
-            for(String key:templateLevelAttributesInfoInTemplate1.keySet()){
-                for(String key1:locationLevelAttributesInfoInLocation1.keySet()){
-                    if(key.equals(key1)){
+            for (String key : templateLevelAttributesInfoInTemplate1.keySet()) {
+                for (String key1 : locationLevelAttributesInfoInLocation1.keySet()) {
+                    if (key.equals(key1)) {
                         List<String> valuesInGlobal = templateLevelAttributesInfoInTemplate1.get(key1);
                         List<String> valuesInTemplate = locationLevelAttributesInfoInLocation1.get(key);
 
-                        if(valuesInGlobal.get(0).equals(valuesInTemplate.get(0))){
+                        if (valuesInGlobal.get(0).equals(valuesInTemplate.get(0))) {
                             SimpleUtils.pass("The location level attribute " + key + " in location is updated according to template correctly.");
                             break;
-                        }else{
-                            SimpleUtils.fail("The location level attribute " + key + " in location is NOT updated correctly.",false);
+                        } else {
+                            SimpleUtils.fail("The location level attribute " + key + " in location is NOT updated correctly.", false);
                         }
                     }
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -1541,20 +1494,20 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "User can update location level external attributes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUpdateExternalAttributesInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyUpdateExternalAttributesInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
-        try{
+        try {
             String locationName = "AutoUsingByFiona1";
             String label = "External Attributes";
-            String attributeName ="AutoUsingAttribute";
-            Random random=new Random();
-            int number=random.nextInt(90)+10;
+            String attributeName = "AutoUsingAttribute";
+            Random random = new Random();
+            int number = random.nextInt(90) + 10;
             String attributeValue = String.valueOf(number);
             String attributeDescription = attributeName + attributeValue;
 
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
 
             //override location level external attributes
@@ -1562,60 +1515,54 @@ public class LocationsTest extends TestBase {
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
-            List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfo.get(7).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Labor model template is not overridden at location level");
-                locationsPage.editLocationBtnIsClickableInLocationDetails();
-            } else{
-                SimpleUtils.pass("Labor model template is already overridden at location level");
-                locationsPage.editLocationBtnIsClickableInLocationDetails();
-                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Reset");
-            }
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfosInLocationLevel();
+            locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+            locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","No");
 
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Edit");
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-            locationsPage.updateLocationLevelExternalAttributes(attributeName,attributeValue,attributeDescription);
+            locationsPage.updateLocationLevelExternalAttributes(attributeName, attributeValue, attributeDescription);
 
-            List<HashMap<String,String>>  templateInfo1 = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfo1.get(7).get("Overridden").equalsIgnoreCase("Yes")) {
-                SimpleUtils.pass("User can override location level external attributes successfully");
-            } else{
-                SimpleUtils.pass("User can NOT override location level external attributes successfully");
-            }
+            List<HashMap<String, String>> templateInfo1 = locationsPage.getLocationTemplateInfosInLocationLevel();
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
+
 
 //          Check the value is updated correct or not?
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
+            locationsPage.clickActionsForTemplate("Labor Model", "View");
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-            HashMap<String,List<String>>  locationLevelAttributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
-            for(String key:locationLevelAttributesInfoInLocation.keySet()){
-                if(key.equals(attributeName)){
+            HashMap<String, List<String>> locationLevelAttributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
+            for (String key : locationLevelAttributesInfoInLocation.keySet()) {
+                if (key.equals(attributeName)) {
                     List<String> valuesInLocation = locationLevelAttributesInfoInLocation.get(key);
-                    if(valuesInLocation.get(0).equals(attributeValue)){
+                    if (valuesInLocation.get(0).equals(attributeValue)) {
                         SimpleUtils.pass("User can update location level external attributes successfully");
-                    }else {
-                        SimpleUtils.fail("User can update location level external attributes successfully",false);
+                    } else {
+                        SimpleUtils.fail("User can't update location level external attributes successfully", false);
                     }
+                    break;
                 }
-                break;
             }
 
             //After update location level attributes, check template level will NOT updated
             locationsPage.backToConfigurationTabInLocationLevel();
             locationsPage.canGoToLaborModelViaTemNameInLocationLevel();
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-            HashMap<String,List<String>>  templateLevelAttributesInfoInLocation = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
-            for(String key:templateLevelAttributesInfoInLocation.keySet()){
-                if(key.equals(attributeName)){
+            HashMap<String, List<String>> templateLevelAttributesInfoInLocation = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+            for (String key : templateLevelAttributesInfoInLocation.keySet()) {
+                if (key.equals(attributeName)) {
                     List<String> templateValuesInLocation = templateLevelAttributesInfoInLocation.get(key);
-                    if(!templateValuesInLocation.get(0).equals(attributeValue)){
+                    if (!templateValuesInLocation.get(0).equals(attributeValue)) {
                         SimpleUtils.pass("Template level external attributes is not updated after updating location level attributes");
-                    }else {
-                        SimpleUtils.fail("Template level external attributes is updated after updating location level attributes",false);
+                    } else {
+                        SimpleUtils.fail("Template level external attributes is updated after updating location level attributes", false);
                     }
+                    break;
                 }
-                break;
+
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -1625,20 +1572,20 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "External Attribute E2E")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyExternalAttributeE2EAsInternalAdminForUpperFieldTile(String username, String password, String browser, String location) throws Exception {
+    public void verifyExternalAttributeE2EAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
 
         String locationName = "AutoUsingByFiona1";
         String label = "External Attributes";
-        String attributeName ="AutoUsingAttribute";
-        Random random=new Random();
-        int number=random.nextInt(90)+10;
+        String attributeName = "AutoUsingAttribute";
+        Random random = new Random();
+        int number = random.nextInt(90) + 10;
         String attributeValue = String.valueOf(number);
         String attributeDescription = attributeName + attributeValue;
         HashMap<String, Float> hoursAndWedgetInSummary = new HashMap<>();
 
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
         LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
 
         //override location level external attributes
@@ -1646,34 +1593,26 @@ public class LocationsTest extends TestBase {
         locationsPage.goToSubLocationsInLocationsPage();
         locationsPage.goToLocationDetailsPage(locationName);
         locationsPage.goToConfigurationTabInLocationLevel();
-        List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-        if (templateInfo.get(7).get("Overridden").equalsIgnoreCase("No")) {
-            SimpleUtils.pass("Labor model template is not overridden at location level");
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-        } else{
-            SimpleUtils.pass("Labor model template is already overridden at location level");
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Reset");
-        }
+        locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+        locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+        locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
+        locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","No");
 
-        locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Edit");
+        locationsPage.clickActionsForTemplate("Labor Model", "Edit");
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-        locationsPage.updateLocationLevelExternalAttributes(attributeName,attributeValue,attributeDescription);
+        locationsPage.updateLocationLevelExternalAttributes(attributeName, attributeValue, attributeDescription);
 
-        List<HashMap<String,String>>  templateInfo1 = locationsPage.getLocationTemplateInfoInLocationLevel();
-        if (templateInfo1.get(7).get("Overridden").equalsIgnoreCase("Yes")) {
-            SimpleUtils.pass("User can override location level external attributes successfully");
-        } else{
-            SimpleUtils.pass("User can NOT override location level external attributes successfully");
-        }
+        locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
 
         locationsPage.clickModelSwitchIconInDashboardPage(ConfigurationTest.modelSwitchOperation.Console.getValue());
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
         scheduleOverviewPage.loadScheduleOverview();
-        ForecastPage ForecastPage  = pageFactory.createForecastPage();
+        ForecastPage ForecastPage = pageFactory.createForecastPage();
         ForecastPage.clickForecast();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.navigateToNextWeek();
         ForecastPage.clickOnLabor();
         ForecastPage.verifyLaborForecastCanLoad();
         //After click on refresh, page should get refresh and back to previous page only
@@ -1686,16 +1625,16 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Location Level External Attributes Description")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationLevelExternalAttributesDescriptionAsInternalAdminForUpperFieldTile(String username, String password, String browser, String location) throws Exception {
+    public void verifyLocationLevelExternalAttributesDescriptionAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
 
-        SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
-        String currentTime=dfs.format(new Date()).trim();
-        String attributeName="AutoCreate"+currentTime;
-        Random random=new Random();
-        int number=random.nextInt(90)+10;
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+        String currentTime = dfs.format(new Date()).trim();
+        String attributeName = "AutoCreate" + currentTime;
+        Random random = new Random();
+        int number = random.nextInt(90) + 10;
         String attributeValue = String.valueOf(number);
         String attributeDescription = attributeName + "Des";
-        String attributeValueUpdate = String.valueOf(number+1);
+        String attributeValueUpdate = String.valueOf(number + 1);
         String attributeDescriptionUpdate = "Update123@";
         String label = "External Attributes";
         HashMap<String, List<String>> attributesInfoInGlobal = new HashMap<>();
@@ -1705,7 +1644,7 @@ public class LocationsTest extends TestBase {
 
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
         //go to LaborStandardRepository - External Attributes
         LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
@@ -1716,10 +1655,10 @@ public class LocationsTest extends TestBase {
         //Create attributes
         laborModelPage.clickOnEditButton();
         laborModelPage.clickOnAddAttributeButton();
-        laborModelPage.createNewAttribute(attributeName,attributeValue,attributeDescription);
+        laborModelPage.createNewAttribute(attributeName, attributeValue, attributeDescription);
         laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
         attributesInfoInGlobal = laborModelPage.getValueAndDescriptionForEachAttributeAtGlobalLevel();
-        for(String key:attributesInfoInGlobal.keySet()) {
+        for (String key : attributesInfoInGlobal.keySet()) {
             if (key.equals(attributeName)) {
                 List<String> valuesInGlobal = attributesInfoInGlobal.get(key);
                 if (valuesInGlobal.get(0).equals(attributeValue) && valuesInGlobal.get(1).equals(attributeDescription)) {
@@ -1736,19 +1675,16 @@ public class LocationsTest extends TestBase {
         locationsPage.goToSubLocationsInLocationsPage();
         locationsPage.goToLocationDetailsPage(locationName);
         locationsPage.goToConfigurationTabInLocationLevel();
-        List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-        if (templateInfo.get(7).get("Overridden").equalsIgnoreCase("No")) {
-            SimpleUtils.pass("Labor model template is not overridden at location level");
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
-        } else{
-            SimpleUtils.pass("Labor model template is already overridden at location level");
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Reset");
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
-        }
+        List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfosInLocationLevel();
+        locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+        locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+        locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
+        locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","No");
+
+        locationsPage.clickActionsForTemplate("Labor Model", "View");
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
         attributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
-        for(String key:attributesInfoInLocation.keySet()) {
+        for (String key : attributesInfoInLocation.keySet()) {
             if (key.equals(attributeName)) {
                 List<String> valuesInLocation = attributesInfoInLocation.get(key);
                 if (valuesInLocation.get(0).equals(attributeValue) && valuesInLocation.get(1).equals(attributeDescription)) {
@@ -1765,24 +1701,22 @@ public class LocationsTest extends TestBase {
         locationsPage.goToSubLocationsInLocationsPage();
         locationsPage.goToLocationDetailsPage(locationName);
         locationsPage.goToConfigurationTabInLocationLevel();
-        locationsPage.editLocationBtnIsClickableInLocationDetails();
-        List<HashMap<String,String>>  templateInfo1 = locationsPage.getLocationTemplateInfoInLocationLevel();
-        locationsPage.actionsForEachTypeOfTemplate(templateInfo1.get(7).get("Template Type"),"Edit");
+        locationsPage.clickActionsForTemplate("Labor Model", "Edit");
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-        locationsPage.updateLocationLevelExternalAttributes(attributeName,attributeValueUpdate,attributeDescriptionUpdate);
+        locationsPage.updateLocationLevelExternalAttributes(attributeName, attributeValueUpdate, attributeDescriptionUpdate);
 
         //Check the location level external attributes updated correct or not?
-        List<HashMap<String,String>>  templateInfo2 = locationsPage.getLocationTemplateInfoInLocationLevel();
-        locationsPage.actionsForEachTypeOfTemplate(templateInfo2.get(7).get("Template Type"),"View");
+        List<HashMap<String, String>> templateInfo2 = locationsPage.getLocationTemplateInfosInLocationLevel();
+        locationsPage.clickActionsForTemplate("Labor Model", "View");
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
         attributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
-        for(String key:attributesInfoInLocation.keySet()){
-            if(key.equals(attributeName)){
+        for (String key : attributesInfoInLocation.keySet()) {
+            if (key.equals(attributeName)) {
                 List<String> valuesInLocation = attributesInfoInLocation.get(key);
-                if(valuesInLocation.get(1).equals(attributeDescriptionUpdate)){
+                if (valuesInLocation.get(1).equals(attributeDescriptionUpdate)) {
                     SimpleUtils.pass("User can update location level external attributes description successfully");
-                }else {
-                    SimpleUtils.fail("User failed to update location level external attributes description.",false);
+                } else {
+                    SimpleUtils.fail("User failed to update location level external attributes description.", false);
                 }
             }
             break;
@@ -1793,13 +1727,13 @@ public class LocationsTest extends TestBase {
         locationsPage.canGoToLaborModelViaTemNameInLocationLevel();
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
         attributesInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
-        for(String key:attributesInfoInTemplate.keySet()){
-            if(key.equals(attributeName)){
+        for (String key : attributesInfoInTemplate.keySet()) {
+            if (key.equals(attributeName)) {
                 List<String> templateValuesInLocation = attributesInfoInTemplate.get(key);
-                if(templateValuesInLocation.get(1).equals(attributeDescription)){
+                if (templateValuesInLocation.get(1).equals(attributeDescription)) {
                     SimpleUtils.pass("Template level external attributes description of " + key + " is not updated after updating location level attributes");
-                }else {
-                    SimpleUtils.fail("Template level external attributes description of "+ key + " is updated after updating location level attributes",false);
+                } else {
+                    SimpleUtils.fail("Template level external attributes description of " + key + " is updated after updating location level attributes", false);
                 }
             }
             break;
@@ -1810,7 +1744,7 @@ public class LocationsTest extends TestBase {
         laborModelPage.goToLaborStandardRepositoryTile();
         laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
         attributesInfoInGlobal = laborModelPage.getValueAndDescriptionForEachAttributeAtGlobalLevel();
-        for(String key:attributesInfoInGlobal.keySet()) {
+        for (String key : attributesInfoInGlobal.keySet()) {
             if (key.equals(attributeName)) {
                 List<String> valuesInGlobal = attributesInfoInGlobal.get(key);
                 if (valuesInGlobal.get(1).equals(attributeDescription)) {
@@ -1827,15 +1761,17 @@ public class LocationsTest extends TestBase {
         locationsPage.goToSubLocationsInLocationsPage();
         locationsPage.goToLocationDetailsPage(locationName);
         locationsPage.goToConfigurationTabInLocationLevel();
-        List<HashMap<String,String>>  templateInfo3 = locationsPage.getLocationTemplateInfoInLocationLevel();
-        locationsPage.editLocationBtnIsClickableInLocationDetails();
-        locationsPage.actionsForEachTypeOfTemplate(templateInfo3.get(7).get("Template Type"),"Reset");
-        locationsPage.actionsForEachTypeOfTemplate(templateInfo3.get(7).get("Template Type"),"View");
+        locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+        locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+        locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
+        locationsPage.clickActionsForTemplate("Labor Model", "View");
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
         HashMap<String, List<String>> attributesInfoInLocationAfterReset = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
-        for(String key:attributesInfoInLocationAfterReset.keySet()) {
+        for (String key : attributesInfoInLocationAfterReset.keySet()) {
             if (key.equals(attributeName)) {
                 List<String> valuesInLocation = attributesInfoInLocationAfterReset.get(key);
+                SimpleUtils.report(valuesInLocation.get(1));
+                SimpleUtils.report(attributeDescription);
                 if (valuesInLocation.get(1).equals(attributeDescription)) {
                     SimpleUtils.pass("The attribute description of " + key + " in location level is reseted successfully!");
                     break;
@@ -1851,20 +1787,148 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "NSOLocation_Enhancements")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyNSOLocationEnhancementsCheckAsInternalAdminForUpperFieldTile(String username, String password, String browser, String location) throws Exception {
-        try {
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
-            String currentTime = dfs.format(new Date());
-            String locationName = "ENH_NSO_AutoTestLocation";
-            setLocationName(locationName);
-            int index = 0;
-            String searchCharactor = "No touch";
+    public void verifyNSOLocationEnhancementsCheckAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+        String currentTime = dfs.format(new Date());
+        String locationName = "ENH_NSO_AutoTestLocation";
+        setLocationName(locationName);
+        int index = 0;
+        String searchCharactor = "No touch";
 
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsGroupTestInOP.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        //check locations item
+        locationsPage.validateItemsInLocations();
+        //go to sub-locations tab
+        locationsPage.goToSubLocationsInLocationsPage();
+        //add new NSO location
+//            locationsPage.addNewNSOLocation(locationName, searchCharactor,index);
+        //check the location created successfully
+        if (locationsPage.searchNewLocation(getLocationName())) {
+            SimpleUtils.pass("Create new NSO location successfully");
+        } else
+            SimpleUtils.fail("Create new location failed or can't search created location", true);
+        closeCurrentWindow();
+        //go to console to and navigate to NSO to verify internal admin can see the location
+        switchToConsoleWindow();
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+        //verify customer admin user can see created status location
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+        /// Login as customer admin user
+        String fileName = "UsersCredentials.json";
+        fileName = System.getProperty("enterprise") + fileName;
+        HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+        Object[][] internalCustomerAdminCredentials = userCredentials.get("InternalCustomerAdmin");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(internalCustomerAdminCredentials[0][0]), String.valueOf(internalCustomerAdminCredentials[0][1])
+                , String.valueOf(internalCustomerAdminCredentials[0][2]));
+        String consoleWindow1 = getDriver().getWindowHandle();
+        //check customer admin user can see the NSO created location
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+        //check customer admin user can see Created status NSO location in locations function.
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsGroupTestInOP.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        //check locations item
+        locationsPage.validateItemsInLocations();
+        //go to sub-locations tab
+        locationsPage.goToSubLocationsInLocationsPage();
+        if (locationsPage.searchNewLocation(getLocationName())) {
+            SimpleUtils.pass("Internal Customer Admin can see the NSO location successfully");
+        } else
+            SimpleUtils.fail("Internal Customer Admin can not see the NSO location", true);
+        closeCurrentWindow();
+        switchToConsoleWindow();
+        //verify  DM user can not see the NSO location at navigator, but can see Created status NSO location in locations function.
+        loginPage.logOut();
+        Object[][] districtManagerCredentials = userCredentials.get("DistrictManager");
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(districtManagerCredentials[0][0]), String.valueOf(districtManagerCredentials[0][1])
+                , String.valueOf(districtManagerCredentials[0][2]));
+        //check DM user can see the NSO created location--as DM and TM can not naviagte to OPs, so ignore the cases
+        if (!locationSelectorPage.findLocationByMagnifyGlassIcon(locationName)) {
+            SimpleUtils.pass("District Manager can not see the NSO location successfully");
+        } else
+            SimpleUtils.fail("District Manager can see the NSO location", true);
+        //check SM user can't see Created status NSO location in navigation,can't see Created status NSO location in locations function.
+        loginPage.logOut();
+        loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+        //loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1]), String.valueOf(TMCredentials[0][2]));
+        //check DM user can see the NSO created location
+        if (!locationSelectorPage.findLocationByMagnifyGlassIcon(locationName)) {
+            SimpleUtils.pass("SM user can not see the NSO location successfully");
+        } else
+            SimpleUtils.fail("SM user can see the NSO location", true);
+
+    }
+
+
+    @FindBy(css = "lg-search[fire-on-edit=\"$ctrl.fireSearchOnEdit\"] input")
+    private WebElement locationSearchInput;
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Location common features test")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationCommonFeatureAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+        String currentTime1 = dfs.format(new Date());
+        String locationName1 = "AutoTestLocationCheck"+currentTime1;
+        int index = 0;
+        String searchCharactor = "No touch";
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsGroupTestInOP.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        //check locations item
+        locationsPage.validateItemsInLocations();
+        //go to sub-locations tab
+        locationsPage.goToSubLocationsInLocationsPage();
+        //location page UI check
+        locationsPage.locationPageCommonFeatureCheck();
+        //create a regular location with effective day as today
+        locationsPage.addNewRegularLocationWithDate(locationName1,searchCharactor, index,0);
+        //check the location status
+        if(locationsPage.searchLocationAndGetStatus(currentTime1).equals("ENABLED"))
+            SimpleUtils.pass("New created location with today as effective day is enabled");
+        else
+            SimpleUtils.report("New created location with today as effective day status is incorrect");
+        String currentTime2 = dfs.format(new Date());
+        String locationName2 = "AutoTestLocationCheck"+currentTime2;
+        //create a regular location with effective day as a future date
+        locationsPage.addNewRegularLocationWithDate(locationName2,searchCharactor, index,-5);
+        //check the location status
+        if(locationsPage.searchLocationAndGetStatus(currentTime2).equals("CREATED"))
+            SimpleUtils.pass("New created location with future effective day is created");
+        else
+            SimpleUtils.report("New created location with future effective day status is incorrect");
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Source Location")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationSourceTypeSelectAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsGroupTestInOP.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -1872,71 +1936,544 @@ public class LocationsTest extends TestBase {
             locationsPage.validateItemsInLocations();
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
-            //add new NSO location
-//            locationsPage.addNewNSOLocation(locationName, searchCharactor,index);
-            //check the location created successfully
-            if (locationsPage.searchNewLocation(getLocationName())) {
-                SimpleUtils.pass("Create new NSO location successfully");
-            }else
-                SimpleUtils.fail("Create new location failed or can't search created location",true);
-            closeCurrentWindow();
-            //go to console to and navigate to NSO to verify internal admin can see the location
-            switchToConsoleWindow();
-            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
-            //verify customer admin user can see created status location
-            LoginPage loginPage=pageFactory.createConsoleLoginPage();
-            loginPage.logOut();
-            /// Login as customer admin user
-            String fileName = "UsersCredentials.json";
-            fileName = System.getProperty("enterprise") + fileName;
-            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
-            Object[][] internalCustomerAdminCredentials = userCredentials.get("InternalCustomerAdmin");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(internalCustomerAdminCredentials[0][0]), String.valueOf(internalCustomerAdminCredentials[0][1])
-                    , String.valueOf(internalCustomerAdminCredentials[0][2]));
-            String consoleWindow1 = getDriver().getWindowHandle();
-            //check customer admin user can see the NSO created location
-            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
-            //check customer admin user can see Created status NSO location in locations function.
+            //location page UI check
+            locationsPage.locationSourceTypeCheck();
+            //create a regular/Mock/NSO location as been covered in other test scenarios.
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Add display name in location level template page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationDiaplayNameAtTempLevelAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        try {
+            String locationName = "Checkpoint A";
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsGroupTestInOP.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             //go to locations tab
             locationsPage.clickOnLocationsTab();
             //check locations item
             locationsPage.validateItemsInLocations();
             //go to sub-locations tab
             locationsPage.goToSubLocationsInLocationsPage();
-            if (locationsPage.searchNewLocation(getLocationName())) {
-                SimpleUtils.pass("Internal Customer Admin can see the NSO location successfully");
-            }else
-                SimpleUtils.fail("Internal Customer Admin can not see the NSO location",true);
-            closeCurrentWindow();
-            switchToConsoleWindow();
-            //verify  DM user can not see the NSO location at navigator, but can see Created status NSO location in locations function.
-            loginPage.logOut();
-            Object[][] districtManagerCredentials = userCredentials.get("DistrictManager");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(districtManagerCredentials[0][0]), String.valueOf(districtManagerCredentials[0][1])
-                    , String.valueOf(districtManagerCredentials[0][2]));
-            //check DM user can see the NSO created location--as DM and TM can not naviagte to OPs, so ignore the cases
-            if (!locationSelectorPage.findLocationByMagnifyGlassIcon(locationName)) {
-                SimpleUtils.pass("District Manager can not see the NSO location successfully");
-            }else
-                SimpleUtils.fail("District Manager can see the NSO location",true);
-            //check SM user can't see Created status NSO location in navigation,can't see Created status NSO location in locations function.
-            loginPage.logOut();
-            Object[][] TMCredentials = userCredentials.get("TeamMember");
-            loginToLegionAndVerifyIsLoginDone(String.valueOf(TMCredentials[0][0]), String.valueOf(TMCredentials[0][1])
-                    , String.valueOf(TMCredentials[0][2]));
-            //check DM user can see the NSO created location
-            if (!locationSelectorPage.findLocationByMagnifyGlassIcon(locationName)) {
-                SimpleUtils.pass("SM user can not see the NSO location successfully");
-            }else
-                SimpleUtils.fail("SM user can see the NSO location",true);
-
-
+            //location page UI check
+            locationsPage.checkEveryLocationTemplateConfig(locationName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
 
     }
+
+    public int getHttpStatusCode(String[] httpResponse) {
+        return Integer.parseInt(httpResponse[0]);
     }
+
+    private String logIn() {
+        //header
+        HashMap<String, String> loginHeader = new HashMap<String, String>();
+        //body
+        String loginString = "{\"enterpriseName\":\"opauto\",\"userName\":\"fiona+58@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
+        //post request
+        String[] postResponse = HttpUtil.httpPost(Constants.loginUrlRC, loginHeader, loginString);
+        Assert.assertEquals(getHttpStatusCode(postResponse), 200, "Failed to login!");
+        String sessionId = postResponse[1];
+        return sessionId;
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Download translation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDownloadTranslationAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToGlobalConfigurationInLocations();
+
+        locationsPage.verifyDownloadTransaltionsButtonisClicked();
+
+        String sessionId = logIn();
+
+        String reponse[] = HttpUtil.httpGet0(Constants.downloadTransation1,sessionId,null);
+
+        if(reponse[0].equals("200")){
+            if(reponse[1].contains("locale") && reponse[1].contains("category") && reponse[1].contains("resourceKey") && reponse[1].contains("translation")){
+                SimpleUtils.pass("Download translations successfully");
+            }
+        }else{
+            SimpleUtils.fail("Download translations failed",false);
+        }
+
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Upload translation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyUploadTranslationAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToGlobalConfigurationInLocations();
+
+        locationsPage.verifyUploadTransaltionsButtonisClicked();
+
+        String sessionId = logIn();
+        String reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadTransation,sessionId,"\\console-ui-selenium\\src\\test\\resources\\uploadFile\\Translationstrings.csv");
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Fiscal calendar configuration")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyUserCanUploadFiscalCalendarOfSM(String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsGroupTestInOP.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            locationsPage.verifyUploadFiscalCalendarButtonisClicked();
+            //upload valid fiscal calender file
+            String sessionId = logIn();
+            String reponse = HttpUtil.fileUploadByHttpPost(Constants.uploadFiscalCalendar, sessionId, "\\console-ui-selenium\\src\\test\\resources\\uploadFile\\FisaclCalendarFiles\\FiscalCalendar-2022-2.csv");
+            //download the uploaded fiscal calendar file
+            locationsPage.downloadFiscalCalendar("2022", "Monday");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Template localization permission")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyTemplateLocalizationPermissionOfDM(String username, String password, String browser, String location) throws Exception {
+        try {
+
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            //Assignment Rules
+            String[] action = {"View"};
+            locationsPage.verifyActionsForTemplate("Assignment Rules", action);
+            //Scheduling Rules
+            locationsPage.verifyActionsForTemplate("Scheduling Rules", action);
+            //Labor Model
+            String[] actions = {"View", "Edit"};
+            locationsPage.verifyActionsForTemplate("Labor Model", actions);
+            //Operating Hours
+            locationsPage.verifyActionsForTemplate("Operating Hours", actions);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Override Advance staffing rule in location level")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOverriddenAdvanceStaffingRuleInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            locationsPage.clickActionsForTemplate("Scheduling Rules", "Edit");
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.selectWorkRoleToEdit("AMBASSADOR");
+            //Verify location level advance staffing rules should be aligned with template level
+            List<String> advanceStaffRuleStatues = new ArrayList<>();
+            advanceStaffRuleStatues.add("Start at 0 minutes at Opening Business Hours, end at 0 minutes at Closing Business Hours, 1 of AMBASSADOR shift should be scheduled per Sun, Mon, Tue, Wed, Thu, Fri, Sat .");
+            configurationPage.verifyAdvanceStaffRuleFromLocationLevel(advanceStaffRuleStatues);
+            //Verify location level advance staffing rules should be enabled by default
+            advanceStaffRuleStatues = new ArrayList<>();
+            advanceStaffRuleStatues.add("This rule is enabled for this location.");
+            configurationPage.verifyAdvanceStaffRuleStatusFromLocationLevel(advanceStaffRuleStatues);
+            //Verify user can't add location level advance staffing rules.
+            configurationPage.verifyCanNotAddAdvancedStaffingRuleFromTemplateLevel();
+            //Verify user can't edit/delete location level location level advance staffing rules.
+            configurationPage.verifyCanNotEditDeleteAdvancedStaffingRuleFromTemplateLevel();
+            //Verify user can disable location level location level advance staffing rules.
+            configurationPage.changeAdvanceStaffRuleStatusFromLocationLevel(0);
+            advanceStaffRuleStatues.clear();
+            advanceStaffRuleStatues.add("This rule is disabled for this location.");
+            configurationPage.verifyAdvanceStaffRuleStatusFromLocationLevel(advanceStaffRuleStatues);
+            //Verify user can enable location level location level advance staffing rules.
+            //Verify the template level advance staffing Rules should not be changed after disable/enable location level advance staffing Rules.
+            configurationPage.changeAdvanceStaffRuleStatusFromLocationLevel(0);
+            advanceStaffRuleStatues.clear();
+            advanceStaffRuleStatues.add("This rule is enabled for this location.");
+            configurationPage.verifyAdvanceStaffRuleStatusFromLocationLevel(advanceStaffRuleStatues);
+            //Verify user can reset location level advance staffing rule successfully.
+            configurationPage.changeAdvanceStaffRuleStatusFromLocationLevel(0);
+            configurationPage.saveBtnIsClickable();
+            configurationPage.saveBtnIsClickable();
+            locationsPage.clickActionsForTemplate("Scheduling Rules", "Reset");
+            //Verify schdule can be generated correctly according to location level advance staffing rule which has been overridden.
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Assignment Rules content and enable/disable rule/add Badge")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAssignmentRulesInLocationLevelAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try {
+            String locationName = "locationAutoCreateForYang";
+            String workRoleName = "AMBASSADOR";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            //Validate location - configuration tab should have assignment rules template.
+            //Validate user can view location level assignment rules template
+            locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
+            //Validate location level assignment rules template should be aligned with global level by default.
+            locationsPage.searchWorkRoleInAssignmentRuleTemplate(workRoleName);
+            String assignmentRule = "Ambassador";
+            locationsPage.verifyAssignmentRulesFromLocationLevel(assignmentRule);
+            //Validate user can enable location level assignment rules template.
+            //Validate user can disable location level assignment rules template.
+            locationsPage.changeAssignmentRuleStatusFromLocationLevel("disable");
+            locationsPage.changeAssignmentRuleStatusFromLocationLevel("enable");
+            //Validate user can update badges at location level assignment rules template.;
+            locationsPage.addBadgeAssignmentRuleStatusFromLocationLevel("20210713152098");
+            //Validate Overridden column for assignment rules template at location level.
+            locationsPage.verifyOverrideStatusAtLocationLevel("Assignment Rules","Yes");
+            //Validate Last Modified Date and Last Modified By column for assignment rules template at location level.
+            //Validate user can reset location level assignment rules template.
+            locationsPage.clickActionsForTemplate("Assignment Rules", "Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Assignment Rules","No");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Assignment Rules")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAssignmentRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try {
+            String workRoleName = "AMBASSADOR";
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+            userManagementPage.verifySearchWorkRole(workRoleName);
+            userManagementPage.verifyEditBtnIsClickable();
+            userManagementPage.goToWorkRolesDetails(workRoleName);
+            userManagementPage.addAssignmentRule("DM Planer", "At all Hours", "At least", 2, 1, "20210713152098");
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            //Validate the new added assignment rules at global level should be enabled at location level by default.
+            locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
+            locationsPage.searchWorkRoleInAssignmentRuleTemplate("AMBASSADOR");
+            String assignmentRuleTitle = "DM Planer";
+            locationsPage.verifyAssignmentRulesFromLocationLevel(assignmentRuleTitle);
+            //Validate the location level assignment rule's badge info should not be changed after updating global assignment rules when
+            //Validate the global assignment rules should not be changed after change one location level assignment rule.
+            userManagementPage.verifyAssignmentRuleBadge(assignmentRuleTitle, "20210713152098");
+            //Validate user can't update priority at location level assignment rules.
+            locationsPage.verifyAssignmentRulePriorityCannotBeEdit(assignmentRuleTitle);
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+            userManagementPage.verifySearchWorkRole(workRoleName);
+            userManagementPage.verifyEditBtnIsClickable();
+            userManagementPage.goToWorkRolesDetails(workRoleName);
+            userManagementPage.deleteAssignmentRule(assignmentRuleTitle);
+            //Validate that the global level assignment rule can work well when location didn't have location level assignment rules.
+            //Validate that the location level assignment rule can work well when have location level assignment rules.
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.VerifyStaffListInSchedule("AMBASSADOR");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify that different user can edit forecast data, then he can generate demand based schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyDifferentLegionUserCanGenerateScheduleAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyy MMM dd");
+            String currentTime = dfs.format(new Date());
+            String locationName = "yangUsingNSOLocation";
+            LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName("A B");
+            teamPage.isProfilePageLoaded();
+            teamPage.goToTeam();
+            teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            ForecastPage forecastPage  = pageFactory.createForecastPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.goToSpecificWeekByDate(currentTime);
+            scheduleCommonPage.clickOnFirstWeekInWeekPicker();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            //check the location status
+            if(locationsPage.searchLocationAndGetStatus(locationName).equals("ENABLED"))
+                SimpleUtils.pass("New created location with today as effective day is enabled");
+            else
+                SimpleUtils.report("New created location with today as effective day status is incorrect");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify that different legion user can see created status NSO location by default.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyDifferentLegionUserCanSeeCreatedLocationAsDM(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyy MMM dd");
+            String currentTime = dfs.format(new Date());
+            String locationName = "yangUsingNSOLocation";
+            LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+            ForecastPage forecastPage  = pageFactory.createForecastPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            forecastPage.verifyEditBtnNotVisible();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Enterprise Profile")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyEnterpriseProfileAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.clickOnEnterpriseProfileCard();
+            locationsPage.updateEnterpriseProfileDetailInfo();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Split override/reset of Work Role and Location Attribute")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void VerifySplitOverrideResetOfWorkRoleAndLocationAttributeAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            //Verify Overridden sign is changed once there is modification for Work Role.
+            //Verify Overridden sign is changed once there is modification for External Attribute
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.overriddenLaborModelRuleInLocationLevel(1);
+            laborModelPage.clickOnSaveButton();
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("External Attributes");
+            laborModelPage.updateAttributeValueInTemplate("LongLane", "1");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
+            //Verify modify and reset is split for work role and external attribute
+            locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+            //Verify reset work role will not reset external attribute
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+            locationsPage.resetLocationLevelExternalAttributesInLaborModelTemplate();
+            locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","No");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify can not change location relationship for location group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyCanNotChangeLocationRelationshipForLocationGroupAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String parentLocationName = "AutoImport_LGP2P_To_SpecificDistrict";
+            String childLocationName = "AutoImport_LGP2P_Child1";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(parentLocationName);
+            locationsPage.verifyLocationRelationshipForLocationGroup("Parent");
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(childLocationName);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.verifyLocationRelationshipForLocationGroup("Child");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify the first day of week field on district/upperfield page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    public void verifyFirstDayOfWeekFieldAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+            consoleNavigationPage.searchLocation("000forAuto");
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            dashboardPage.getWeekFromDate("Tuesday");
+
+            consoleNavigationPage.searchLocation("000forBU");
+            dashboardPage.getWeekFromDate("Thursday");
+
+            consoleNavigationPage.searchLocation("000forRegion");
+            dashboardPage.getWeekFromDate("Wednesday");
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            locationsPage.clickOnLocationsTab();
+
+            locationsPage.goToUpperFieldsPage();
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+            SimpleDateFormat bufs = new SimpleDateFormat("yyMMddHHmmss ");
+            SimpleDateFormat regionfs = new SimpleDateFormat("MMddHHmmss ");
+            String currentDisTime = dfs.format(new Date());
+            String currentBUTime = bufs.format(new Date());
+            String currentRegionTime = regionfs.format(new Date());
+            String districtName = "AutoCreateDistrict" + currentDisTime;
+            String buName = "AutoCreateBU" + currentBUTime;
+            String regionName = "AutoCreateRegion" + currentRegionTime;
+            locationsPage.addNewDistrictWithFirstDayOfWeek("District", districtName,currentDisTime,"",0);
+            locationsPage.searchUpperFields(districtName);
+            locationsPage.addNewDistrictWithFirstDayOfWeek("BU", buName,currentBUTime,"",1);
+            locationsPage.searchUpperFields(buName);
+            locationsPage.addNewDistrictWithFirstDayOfWeek("Region", regionName,currentRegionTime,"",2);
+            locationsPage.searchUpperFields(regionName);
+            locationsPage.goBack();
+
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation("NancyTest");
+            locationsPage.checkFirstDayOfWeekNotDisplay();
+            locationsPage.goBack();
+            locationsPage.goBack();
+
+            locationsPage.goToUpperFieldsPage();
+            locationsPage.searchUpperFields("000forAuto");
+            locationsPage.checkFirstDayOfWeekDisplay();
+            locationsPage.updateFirstDayOfWeek("Tuesday");
+
+            locationsPage.searchUpperFields("000forRegion");
+            locationsPage.checkFirstDayOfWeekDisplay();
+            locationsPage.updateFirstDayOfWeek("Wednesday");
+
+            locationsPage.searchUpperFields("000forBU");
+            locationsPage.checkFirstDayOfWeekDisplay();
+            locationsPage.updateFirstDayOfWeek("Thursday");
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+}

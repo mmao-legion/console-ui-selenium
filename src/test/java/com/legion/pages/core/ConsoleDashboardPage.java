@@ -11,6 +11,7 @@ import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 
+import cucumber.api.java8.Da;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -1010,6 +1011,10 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@FindBy(css = "lg-select[search-hint=\"Search District\"]")
 	private WebElement currentDistrict;
+
+	@FindBy(css = ".search-icon")
+	private WebElement searchIcon;
+
 	@Override
 	public String getCurrentDistrict() throws Exception {
 		if (isElementLoaded(currentDistrict,5)) {
@@ -1348,17 +1353,19 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		}
 	}
 
-	@FindBy(css = "div.lg-search-options__scroller div.lg-search-options__option.lg-search-options__subLabel")
+	@FindBy(css = "div.lg-search-options__option")
 	private List<WebElement> distrcitsListInDashboardPage;
 	@Override
 	public List<String> getDistrcitListInDashboard() throws Exception{
-		click(currentDistrict);
+		click(searchIcon);
 		waitForSeconds(3);
 		if (locationsListInDashboardPage.size()>0) {
 			List<String> districtList = new ArrayList<String>();
 			for (WebElement district: distrcitsListInDashboardPage
 			) {
-				districtList.add(district.getText().split("\n")[0]);
+				if (district.isDisplayed()) {
+					districtList.add(district.getText().split("\n")[0]);
+				}
 			}
 			return districtList;
 		}
@@ -3190,5 +3197,57 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			SimpleUtils.report("Up Coming shifts are not loaded!");
 		}
 		return shifts;
+	}
+
+	private String getMonthFromCharToNum(String month){
+		if(month.equals("Jan")){
+			month = "01";
+		}else if(month.equals("Feb")){
+			month = "02";
+		}else if(month.equals("Mar")){
+			month = "03";
+		}else if(month.equals("Apr")){
+			month = "04";
+		}else if(month.equals("May")){
+			month = "05";
+		}else if(month.equals("Jun")){
+			month = "06";
+		}else if(month.equals("Jul")){
+			month = "07";
+		}else if(month.equals("Aug")){
+			month = "08";
+		}else if(month.equals("Sep")){
+			month = "09";
+		}else if(month.equals("Oct")){
+			month = "10";
+		}else if(month.equals("Nov")){
+			month = "11";
+		}else if(month.equals("Dec")){
+			month = "12";
+		}else {
+			System.out.println("No such Month!");
+		}
+		return month;
+	}
+
+	public void getWeekFromDate(String sun) throws Exception{
+		if(isElementLoaded(upperfieldWeekOnDashboard)){
+			String monthChar = upperfieldWeekOnDashboard.getText().substring(8,11);
+			String monthNum = getMonthFromCharToNum(monthChar);
+			String day = upperfieldWeekOnDashboard.getText().substring(12,14);
+			SimpleDateFormat year = new SimpleDateFormat("yyyy");
+			Date yearDate = new Date();
+			String yearString = year.format(yearDate);
+			String dateString = yearString.concat(monthNum).concat(day);
+			SimpleDateFormat dt = new SimpleDateFormat("yyyyMMdd");
+			Date week = dt.parse(dateString);
+			SimpleDateFormat wk = new SimpleDateFormat("EEEE");
+			String sat = wk.format(week);
+			if(sat.equals(sun)){
+				SimpleUtils.pass("Fisrt day of week in dashboard is correct");
+			}else
+				SimpleUtils.fail("First day of week in dashboard is wrong",false);
+		}else
+			SimpleUtils.fail("Enter dashboard page failed",false);
 	}
 }

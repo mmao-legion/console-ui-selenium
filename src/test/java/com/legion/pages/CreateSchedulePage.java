@@ -57,6 +57,7 @@ public interface CreateSchedulePage {
     public void clickOnSchedulePublishButton() throws Exception;
     public void clickConfirmBtnOnPublishConfirmModal() throws Exception;
     public void copyAllPartialSchedule () throws Exception;
+    public void createScheduleForNonDGFlowNewUIWithoutUpdateOH() throws Exception;
     public boolean checkOnlyCopyShiftsSwitchDisplayOrNot () throws Exception;
     public boolean checkOnlyCopyShiftsSwitchEnableOrNot () throws Exception;
     public void turnOnOrTurnOffOnlyCopyShiftsSwitch (boolean action) throws Exception;

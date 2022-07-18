@@ -205,6 +205,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(css = "[ng-if=\"!!getSummaryField('totalActualUnits')\"]")
 	private List<WebElement> actualDataInSightSmartCard;
 
+	@FindBy(css = "label.input-label")
+	private List<WebElement> workRoleListNew;
+
 
 	public ConsoleForecastPage() {
 		PageFactory.initElements(getDriver(), this);
@@ -2141,6 +2144,34 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			SimpleUtils.pass("Forecast Page: Content under labor tab should be loaded successfully");
 		else
 			SimpleUtils.fail("Forecast Page: Content under labor tab is not loaded",false);
+	}
+	
+	@Override
+	public void verifyEditBtnNotVisible() throws Exception {
+		if (!(isElementLoaded(editForecastBtn,10) && editForecastBtn.isDisplayed()))
+			SimpleUtils.pass("Forecast Page: Edit button failed to load");
+		else
+			SimpleUtils.fail("Forecast Page: Edit button is visible",false);
+	}
+
+	@Override
+	public void verifyWorkRoleInList(String workRoleName) throws Exception {
+		boolean flag = false;
+		if (isElementLoaded(filterButton, 10)) {
+			clickTheElement(filterButton);
+			for (WebElement workRole : workRoleListNew) {
+				if (workRole.getText().trim().contains(workRoleName)) {
+					SimpleUtils.pass(workRoleName + "is exist");
+					flag = true;
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("Work role filter load failed", false);
+		}
+		if (!flag) {
+			SimpleUtils.fail(workRoleName + " not is exist", true);
+		}
 	}
 
 	@FindBy(css = "[label=\"Locations\"] ng-form [placeholder=\"None\"]")

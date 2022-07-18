@@ -1,7 +1,7 @@
 {
   "Location_Name": "AutoCreation",
   "Location_Id": "456789",
-  "Time_Zone": "America/New_York",
+  "Time_Zone": "America/New_York (UTC-04:00)",
   "Location_Address": "automationtesting",
   "Country": "United States",
   "City": "Alabama",

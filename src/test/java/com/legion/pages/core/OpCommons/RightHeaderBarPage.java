@@ -87,5 +87,8 @@ public class RightHeaderBarPage extends BasePage {
         }
     }
 
-
+    public void switchToMyProfile() {
+        userAvatar.click();
+        myProfile.click();
+    }
 }

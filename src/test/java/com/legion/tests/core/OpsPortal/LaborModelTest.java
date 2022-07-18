@@ -29,7 +29,7 @@ public class LaborModelTest extends TestBase {
 
     public enum modelSwitchOperation{
         Console("Console"),
-        OperationPortal("Operation Portal");
+        OperationPortal("Control Center");
 
         private final String value;
         modelSwitchOperation(final String newValue) {
@@ -48,7 +48,7 @@ public class LaborModelTest extends TestBase {
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
     }
 
@@ -58,7 +58,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify create delete and publish labor model template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyUserCanCreateDeleteAndPublishLaborModelTemplateAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyUserCanCreateDeleteAndPublishLaborModelTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime=dfs.format(new Date()).trim();
@@ -84,7 +84,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Global External Attributes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreateUpdateAndDeleteNewAttributeFunctionAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyCreateUpdateAndDeleteNewAttributeFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime=dfs.format(new Date()).trim();
@@ -155,7 +155,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template level external attributes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTemplateLevelAttributeFunctionAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyTemplateLevelAttributeFunctionAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime=dfs.format(new Date()).trim();
@@ -228,11 +228,45 @@ public class LaborModelTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Lizzy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Custom formula configuration in task detail")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyColorCodingInTaskDetailAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String taskName="CodeColorTest";
+            String label = "Tasks";
+            //navigate to labor model
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            //go to labor model repository
+            laborModelPage.goToLaborStandardRepositoryTile();
+            laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+            LaborModelRepositoryPage repositoryPage = new LaborModelRepositoryPage();
+            //check the test task
+            repositoryPage.searchByTaskORLabel(taskName);
+            Boolean searched=repositoryPage.getTheSearchedTaskName().equalsIgnoreCase(taskName) || repositoryPage.getTheSearchedLabel().equalsIgnoreCase(taskName);
+            Assert.assertTrue(searched, "Failed to load the task that search by task name or label!");
+            if(searched){
+                SimpleUtils.pass("Find the searched task!");
+                //enter the task detail
+                laborModelPage.goToTaskDetail(taskName);
+                //check custom color coding
+                laborModelPage.checkCustomFormulaCoding("p_OffsetAndStart");}
+            else
+                SimpleUtils.fail("Not find the searched task, please add it!",false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Add update disable tasks")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddEditSearchAndDisableTasksAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddEditSearchAndDisableTasksAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
             navigationPage.navigateToLaborModelPage();
@@ -339,7 +373,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Description of External Attributes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDescriptionOfExternalAttributesAsInternalAdminForLaborModel(String browser, String username, String password, String location) throws Exception {
+    public void verifyDescriptionOfExternalAttributesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime=dfs.format(new Date()).trim();
@@ -417,14 +451,14 @@ public class LaborModelTest extends TestBase {
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
             List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfo.get(7).get("Overridden").equalsIgnoreCase("No")) {
+            if (templateInfo.get(6).get("Overridden").equalsIgnoreCase("No")) {
                 SimpleUtils.pass("Labor model template is not overridden at location level");
-                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
+                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"),"View");
             } else{
                 SimpleUtils.pass("Labor model template is already overridden at location level");
                 locationsPage.editLocationBtnIsClickableInLocationDetails();
-                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Reset");
-                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
+                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"),"Reset");
+                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"),"View");
             }
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
             attributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
@@ -444,4 +478,172 @@ public class LaborModelTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify the entry of override location level work role by csv")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheEntryOfOverrideLocationLevelWorkRoleByCsvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateName="AutoUsingByFiona";
+            String mode="edit";
+            //go to specify template detail page - check the labor model subscription entry
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
+            laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Association");
+            laborModelPage.verifyEntryOfLaborModelSubscription();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify export Location Subscription of labor model template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportLocationSubscriptionOfLaborModelTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateName="AutoUsingByFiona";
+            String mode="edit";
+            //go to specify template detail page - check the labor model subscription entry
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
+            laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Association");
+            laborModelPage.verifyEntryOfLaborModelSubscription();
+            laborModelPage.exportLaborModelSubscriptionCsv();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify import Location Subscription of labor model template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyImportLocationSubscriptionOfLaborModelTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateName="AutoUsingByFiona";
+            String mode="edit";
+            //go to specify template detail page - check the labor model subscription entry
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
+            laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Association");
+            laborModelPage.verifyEntryOfLaborModelSubscription();
+//            laborModelPage.verifyImportLocationLevelWorkRoleSubscription();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Update Work Role subscription via csv")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUpdateWorkRoleSubscriptionViaCsvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String locationName="AutoUsingForLaborBudget";
+            String templateName="AutoUsingByLocationLevelWorkRole";
+            String workRole="Mgr on Duty";
+            String mode="edit";
+            boolean flag;
+            boolean flag1;
+            //go to location level to check the work role status
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "View");
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            flag = laborModelPage.verifyWorkRoleStatusInLocationLevel(workRole);
+            //go to labor model template to check upload csv to update location level work role status
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            laborModelPage.clickOnSpecifyTemplateName(templateName,mode);
+            laborModelPage.clickOnEditButtonOnTemplateDetailsPage();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Association");
+            laborModelPage.verifyEntryOfLaborModelSubscription();
+//            if(flag){
+//                laborModelPage.disableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
+//            }else {
+//                laborModelPage.enableLocationLevelWorkRoleSubscriptionInLaborModelTemplate();
+//            }
+            laborModelPage.clickOnSaveButton();
+            laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel("Details");
+            laborModelPage.publishNowTemplate();
+            //go to location to check location level work role again
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo1 = locationsPage.getLocationTemplateInfoInLocationLevel();
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo1.get(7).get("Template Type"), "View");
+            flag1 = laborModelPage.verifyWorkRoleStatusInLocationLevel(workRole);
+//            if(flag != flag1){
+//                SimpleUtils.pass("User update work role by upload csv successfully!");
+//            }else {
+//                SimpleUtils.fail("User update work role by upload csv failed!",true);
+//            }
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify user can view and update location level labor model template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOverriddenLaborModelInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+
+        try {
+
+            String locationName = "OMLocation16";
+            String workRoleName = "ForAutomation";
+            int index = 0;
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "View");
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Edit");
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.overriddenLaborModelRuleInLocationLevel(index);
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.saveBtnIsClickable();
+
+            List<HashMap<String, String>> templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
+            if (templateInfoAftOverridden.get(7).get("Overridden").equalsIgnoreCase("Yes")) {
+                SimpleUtils.pass("Overridden Labor Model successfully");
+            } else
+                SimpleUtils.fail("Overridden Labor Model failed", false);
+
+            //reset
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Reset");
+            List<HashMap<String, String>> templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
+            if (templateInfoAftReset.get(7).get("Overridden").equalsIgnoreCase("No")) {
+                SimpleUtils.pass("Reset Labor Model successfully");
+            } else
+                SimpleUtils.fail("Reset Labor Model failed", false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
