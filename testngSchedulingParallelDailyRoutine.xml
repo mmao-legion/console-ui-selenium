@@ -206,6 +206,7 @@
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWillChangedAccordinglyAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTablWhenThereIsNoShiftBeenScheduledAsTeamMember" />
                     <include name="validateTheApprovedOrRejectedAvailabilitiesRequestShouldNotBeAbleToOperateAsTeamMember" />
+                    <include name="validateManagersCanConvertToOpenShiftAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
