@@ -4,7 +4,10 @@ public enum Toggles {
 
     UseLegionAccrual("UseLegionAccrual"),
     MinorRulesTemplate("MinorRulesTemplate"),
+    DynamicGroupV2("DynamicGroupV2"),
     ScheduleShowFullNames("ScheduleShowFullNames"),
+    EnableDemandDriverTemplate("EnableDemandDriverTemplate"),
+    MixedModeDemandDriverSwitch("MixedModeDemandDriverSwitch"),
     MealAndRestTemplate("MealAndRestTemplate"),
     ScheduleEditShiftTimeNew( "ScheduleEditShiftTimeNew");
 

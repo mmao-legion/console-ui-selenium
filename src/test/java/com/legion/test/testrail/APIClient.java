@@ -149,7 +149,7 @@ public class APIClient
 				return sendRequest(method,  uri,  data);
 			} catch (Exception e) {
 				System.err.println("Retry "+(i+1)+" time fail! more info: "+e.getMessage()+"\n"+ e.getStackTrace());
-				Thread.sleep(10);
+				Thread.sleep(3000);
 			}
 		}
 		return null;

@@ -1,14 +1,19 @@
 package com.legion.pages.OpsPortaPageFactories;
 
+import org.openqa.selenium.WebElement;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface LocationsPage {
 
     public void clickModelSwitchIconInDashboardPage(String value) throws Exception;
+    public void setLaborBudgetLevel(boolean isCentral,String level);
 
     public boolean isOpsPortalPageLoaded() throws Exception;
+    public void locationSourceTypeCheck() throws Exception;
 
     public void clickOnLocationsTab() throws Exception;
 
@@ -23,6 +28,9 @@ public interface LocationsPage {
     public void addNewRegularLocationWithAllFields(String locationName, String searchCharactor, int index) throws Exception;
 
     public void addNewMockLocationWithAllFields(String searchCharactor, int index) throws Exception;
+    public void addNewRegularLocationWithDate(String locaname,String searchCharactor, int index,int fromToday) throws Exception;
+    public void locationPageCommonFeatureCheck() throws Exception;
+    public void checkEveryLocationTemplateConfig(String locName) throws Exception;
 
     public void verifyImportLocationDistrict();
 
@@ -33,6 +41,7 @@ public interface LocationsPage {
     public void addNewNSOLocation(String locationName, String searchCharactor, int index) throws Exception;
 
     public String disableLocation(String autoCreate) throws Exception;
+    public String searchLocationAndGetStatus(String locaname) throws Exception;
 
     public void verifyExportAllLocationDistrict();
 
@@ -116,13 +125,15 @@ public interface LocationsPage {
 
     public void goToDynamicGroup();
 
+    public void clickOnAddBtnForSharingDynamicLocationGroup() throws Exception;
+
     public String addWorkforceSharingDGWithOneCriteria(String groupName, String description, String criteria) throws Exception;
 
     public void iCanDeleteExistingWFSDG();
 
     public String updateWFSDynamicGroup(String groupName, String criteriaUpdate) throws Exception;
 
-    public void verifyPaginationFunctionInDistrict() throws Exception;
+    public void verifyPageNavigationFunctionInDistrict() throws Exception;
 
     public List<String> getAllDayPartsFromGlobalConfiguration() throws Exception;
 
@@ -232,7 +243,7 @@ public interface LocationsPage {
 
     public void okBtnIsClickable() throws Exception;
 
-    public void goToScheduleRulesListAtLocationLevel(String workRole);
+    public void goToScheduleRulesListAtLocationLevel(String workRole) throws Exception;
 
     public void editBtnIsClickableInBusinessHours();
 
@@ -253,6 +264,51 @@ public interface LocationsPage {
     public void cancelBtnOnImportExportPopUpWinsIsClickable();
 
     public void clickOnExportBtn();
+
+    public void verifyTitleForWorkforceSharingLocationGroup() throws Exception;
+
+    public void clickOnCancelBtnOnSharingDynamicLocationGroupWindow() throws Exception;
+    public void checkLocationGroupSetting(String locationName) throws Exception;
+    public void checkLocationNavigation(String locationName) throws Exception;
+
+    public void verifyDownloadTransaltionsButtonisClicked() throws Exception;
+    public void verifyUploadTransaltionsButtonisClicked() throws Exception;
+
+    public void resetLaborModel() throws Exception;
+
+    public List<HashMap<String, String>> getScheRulesTemplateValueInConfigurationLevel();
+
+    public void verifyUploadFiscalCalendarButtonisClicked() throws Exception;
+
+    public void downloadFiscalCalendar(String fiscalYear, String startDayOfWeek) throws Exception;
+    public List<HashMap<String, String>> getLocationTemplateInfosInLocationLevel();
+    public void verifyActionsForTemplate(String templateName, String[] action) ;
+    public void clickActionsForTemplate(String templateName, String action);
+    public void searchWorkRoleInAssignmentRuleTemplate(String workRole) throws Exception;
+    public void verifyAssignmentRulesFromLocationLevel(String assignmentRule) throws Exception;
+    public void changeAssignmentRuleStatusFromLocationLevel(String status) throws Exception;
+    public void addBadgeAssignmentRuleStatusFromLocationLevel(String badgeName) throws Exception;
+    public void verifyAssignmentRulePriorityCannotBeEdit(String assignmentRuleTitle) throws Exception;
+    public void verifyOverrideStatusAtLocationLevel(String templateName, String flag) throws Exception;
+    public Map<String, HashMap<String, String>> getLocationTemplateInfoInLocationLevelNew() ;
+    public void resetLocationLevelExternalAttributesInLaborModelTemplate()throws Exception;
+    public void updateEnterpriseProfileDetailInfo() throws Exception;
+    public void clickOnEnterpriseProfileCard() throws Exception;
+    public String editWFSDynamicGroup(String groupName, String criteriaUpdate) throws Exception;
+    public void removedSearchedWFSDG() throws Exception;
+    public void verifyDuplicatedDGErrorMessage() throws Exception;
+    public void verifyCriteriaList() throws Exception;
+    public void eidtExistingDGP() throws Exception;
+    public void goToAssignmentRuleOfSearchedLocation(String locationName) throws Exception;
+    public void verifyBadgeInLocation() throws Exception;
+    public void addWorkforceSharingDGWithMutiplyCriteria() throws Exception;
+    public void verifyLocationRelationshipForLocationGroup(String locationGroup) throws Exception;
+    public void checkFirstDayOfWeekDisplay() throws Exception;
+    public void checkFirstDayOfWeekNotDisplay() throws Exception;
+    public void goBack() throws Exception;
+    public void updateFirstDayOfWeek(String day) throws Exception;
+    public void addNewDistrictWithFirstDayOfWeek(String level, String districtName, String districtId, String searchChara, int index) throws Exception;
+    public void addStaffingRulesForWorkRole(ArrayList staffingRuleCondition) throws Exception;
 
     public void clickEditEnterpriseProfile();
 

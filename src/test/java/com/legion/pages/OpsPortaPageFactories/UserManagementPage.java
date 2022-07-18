@@ -83,4 +83,78 @@ public interface UserManagementPage {
     public void enableAssignmentRulesInLocationLevel(int index);
 
     public void overriddenAssignmentRule(int index);
-}
+
+    public void verifyPlanItemInUserManagementAccessRoleTab() throws Exception;
+
+    public int getIndexOfRolesInPermissionsTable(String role) throws Exception;
+
+    public boolean verifyPermissionIsCheckedOrNot(int index) throws Exception;
+
+    public void goToUserDetailPage(String users) throws Exception;
+
+    public int verifyAccessRoleSelected() throws Exception;
+
+    public void verifyHistoryDeductType() throws Exception;
+
+    public void goToJobTitleAccess() throws Exception;
+
+    public void clickAddJobTitle() throws Exception;
+
+    public void inputJobTitleName(String name) throws Exception;
+
+    public void selectAccessRole() throws Exception;
+
+    public void saveJobTitle() throws Exception;
+
+    public void cancelJobTitle() throws Exception;
+
+    public void searchJobTitle(String name) throws Exception;
+
+    public void removeJobTitle() throws Exception;
+
+    public boolean isHourlyRateExist() throws Exception;
+
+    public void clickShowRate() throws Exception;
+
+    public void clickHideShowRate() throws Exception;
+
+    public String getHourlyRateValue() throws Exception;
+
+    public void verifyViewHourlyRate() throws Exception;
+
+    public void clickProfile() throws Exception;
+
+    public void goBack() throws Exception;
+
+    public boolean profileViewPermissionExist() throws Exception;
+
+    public Integer verifyProfilePermission() throws Exception;
+
+    public void clickManage() throws Exception;
+
+    public void verifyRecalculatePermission() throws Exception;
+
+    public void clickRefreshBalances() throws Exception;
+
+    public void verifyRefreshBalancesNotDisplayed() throws Exception;
+
+    public void addAssignmentRule(String teamMemberTitle, String assignmentRuleTime, String assignmentCondition, int staffingNumericValue, int priority, String badge) throws Exception;
+
+    public void deleteAssignmentRule(String teamMemberTitle) throws Exception;
+
+    public void verifyAssignmentRuleBadge(String teamMemberTitle, String badge) throws Exception;
+
+    public void goToJobTitleGroup() throws Exception;
+
+    public void verifyJobTitleGroupTabDisplay() throws Exception;
+
+    public void verifyBadgesList(String workRoleName) throws Exception;
+
+    public void searchBadge(String badgeInfo) throws Exception;
+
+    public void updateBadge() throws Exception;
+
+    public void clickLeaveThisPage() throws Exception;
+
+    public void verifyBadgeInWorkRole() throws Exception;
+    }

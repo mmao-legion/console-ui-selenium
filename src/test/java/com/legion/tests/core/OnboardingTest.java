@@ -147,7 +147,7 @@ public class OnboardingTest extends TestBase {
 
         // Switch to OP side to get the setting for current location
         locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
         locationsPage.clickOnLocationsTab();
         locationsPage.goToSubLocationsInLocationsPage();
         locationsPage.searchLocation(currentLocation);               ;
@@ -512,7 +512,7 @@ public class OnboardingTest extends TestBase {
             // Switch to OP side to get the setting for current location
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.searchLocation(currentLocation);               ;

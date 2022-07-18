@@ -19,7 +19,7 @@ public class UsersAndRolesPage extends BasePage {
     // Added by Sophia
     @FindBy(css = "div.lg-page-heading__breadcrumbs>a")
     private WebElement backButton;
-    @FindBy(css = "div.lg-tabs>nav>div:nth-child(4)")
+    @FindBy(css = "div.lg-tabs>nav>div:nth-child(5)")
     private WebElement badgesTab;
     @FindBy(css = "lg-badge-management tr>td:nth-child(2)>lg-button")//need to get label
     private List<WebElement> badgesList;
@@ -46,12 +46,10 @@ public class UsersAndRolesPage extends BasePage {
         for (int i = 1; i <= pageNum; i++) {
             for (WebElement bad : badgesList) {
                 badges.add(bad.getAttribute("label"));
-                System.out.println(bad.getAttribute("label"));
             }
             if (i < pageNum) {
                 nextPageArrow.click();
             }
-
         }
         return badges;
     }

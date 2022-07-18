@@ -17,7 +17,7 @@ public class OpsPortalUserManagementPanelPage extends BasePage {
     private WebElement workRoles;
     @FindBy(css = "[title='Users and Roles']")
     private WebElement usersAndRoles;
-    @FindBy(css = "lg-dashboard-card[title='Dynamic Groups']")
+    @FindBy(css = "lg-dashboard-card[title='Dynamic Employee Groups']")
     private WebElement dynamicGroups;
 
     public void goToWorkRolesPage() {

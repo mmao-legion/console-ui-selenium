@@ -224,7 +224,7 @@ public class DMViewTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify Compliance Violations widget on Dashboard in DM View")
+    @TestName(description = "Verify Payroll Projection widget on Dashboard in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyPayrollProjectionWidgetOnDashboardInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -305,7 +305,7 @@ public class DMViewTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify Refresh feature on Dashboard in DM View")
+    @TestName(description = "Verify Refresh feature on Schedule in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyRefreshFeatureOnScheduleInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -393,7 +393,7 @@ public class DMViewTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify Refresh feature on Dashboard in DM View")
+    @TestName(description = "Verify Refresh feature on Timesheet in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyRefreshFeatureOnTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -479,7 +479,7 @@ public class DMViewTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify Refresh feature on Dashboard in DM View")
+    @TestName(description = "Verify Refresh feature on Compliance in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyRefreshFeatureOnComplianceInDMViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -700,7 +700,7 @@ public class DMViewTest extends TestBase {
 
     @Owner(owner = "Julie")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify the availability of location list and sub location on Timesheet in DM View")
+    @TestName(description = "Verify analytics table on Compliance in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAnalyticsTableOnComplianceInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
@@ -835,7 +835,7 @@ public class DMViewTest extends TestBase {
 
     @Owner(owner = "Julie")
     @Enterprise(name = "DGStage_Enterprise")
-    @TestName(description = "Verify the availability of location list and sub location on Timesheet in DM View")
+    @TestName(description = "Verify TIMESHEET APPROVAL RATE on Timesheet in DM View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTIMESHEETAPPROVALRATEOnTimesheetInDMViewAsInternalAdmin(String browser, String username, String password, String location) {
         try {
@@ -1821,7 +1821,7 @@ public class DMViewTest extends TestBase {
 //    @Automated(automated = "Automated")
 //    @Owner(owner = "Mary")
 //    @Enterprise(name = "KendraScott2_Enterprise")
-//    @TestName(description = "Verify Schedule Status on Schedule in DM View on Non TA Env")
+//    @TestName(description = "Validate analytics table on Schedule in DM View")
 //    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 //    public void verifyScheduleStatusAndHoursOnScheduleDMViewOnNonTAEnvAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 //        try{

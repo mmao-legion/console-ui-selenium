@@ -2894,7 +2894,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = "[label=\"Save\"] button")
 	private List<WebElement> saveBtnsOfProfile;
 
-	@FindBy(css = "[on-action=\"editProfile()\"] [label=\"Edit\"] button")
+	@FindBy(css = "[ng-click=\"editUserProfile()\"]")
 	private WebElement editBtnOfProfile;
 
 	@FindBy(xpath = "//div[contains(text(),\"NAME\")]/../span")
@@ -3053,7 +3053,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = "lg-button[ng-click=\"$ctrl.conformation($ctrl.resetPassword)\"]")
 	private WebElement resetPasswordInActionsSection;
 
-	@FindBy(css = "lg-button[ng-click=\"$ctrl.onAction()\"]")
+	@FindBy(css = "lg-button[ng-click=\"editUserProfile()\"]")
 	private WebElement editUserProfileButton;
 
 	@FindBy(css = "button.lgn-action-button-light")

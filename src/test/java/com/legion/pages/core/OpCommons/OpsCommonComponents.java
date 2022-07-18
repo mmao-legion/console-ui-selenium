@@ -43,7 +43,7 @@ public class OpsCommonComponents extends BasePage {
     @FindBy(css = "div.lg-single-calendar-date-wrapper>div:nth-child(20)")
     private WebElement dayChosen;
     //save
-    @FindBy(css = "form-buttons:nth-child(2)>div:nth-child(2)>lg-button:nth-child(2)>button.ng-scope.pre-saveas")
+    @FindBy(css = "button.pre-saveas")
     private WebElement saveTemplate;
 
     //Associate
@@ -116,4 +116,17 @@ public class OpsCommonComponents extends BasePage {
         searchIcon.click();
     }
 
+    @FindBy(css = "lg-button[label= 'Leave this page']>button")
+    private WebElement leaveThisPageButton;
+
+    public void leaveThisPage(){
+        leaveThisPageButton.click();
+    }
+
+    @FindBy(css = "lg-button[label='Delete']>button")
+    private WebElement deleteButton;
+
+    public void deleteConfirm(){
+        deleteButton.click();
+    }
 }

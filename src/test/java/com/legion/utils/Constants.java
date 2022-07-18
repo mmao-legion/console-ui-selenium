@@ -22,4 +22,30 @@ public class Constants {
     public static final String ManualOnboard = "Manual Onboard";
     public static final String ControlEnterprice = "Vailqacn_Enterprise";
     public static final String OpEnterprice = "CinemarkWkdy_Enterprise";
+
+    //accrual
+    public static final String loginUrlRC ="https://rc-enterprise.dev.legion.work/legion/authentication/login";
+    public static final String getTemplateByWorkerId ="https://rc-enterprise.dev.legion.work/legion/configTemplate/getTemplateByWorkerAndType";
+    public static final String deleteAccrualByWorkerId ="https://rc-enterprise.dev.legion.work/legion/accrual/deleteAccrualByWorkerId";
+    public static final String runAccrualJobWithSimulateDateAndWorkerId="https://rc-enterprise.dev.legion.work/legion/accrual/runAccrualJobWithSimulateDateAndWorkerId";
+    public static final String toggles ="https://rc-enterprise.dev.legion.work/legion/toggles";
+    public static final String getHoliday ="https://rc-enterprise.dev.legion.work/legion/metadata/getHolidays";
+
+    //downloadTranslation
+    public static final String downloadTransation1 ="https://rc-enterprise.dev.legion.work/legion/translation/downloadTranslations";
+
+    //accessRole
+    public static final String uploadUserAccessRole ="https://rc-enterprise.dev.legion.work/legion/integration/uploadUserAccessRole";
+
+    //uploadTranslation
+    public static final String uploadTransation ="https://rc-enterprise.dev.legion.work/legion/translation/uploadTranslations";
+
+    //copyWorkRolesFromControlsToOP
+    public static final String copyWorkRole ="https://rc-enterprise.dev.legion.work/legion/configTemplate/copyWorkRolesFromControlsToOP";
+
+    //uploadFiscalCalendar
+    public static final String uploadFiscalCalendar = "https://rc-enterprise.dev.legion.work/legion/fiscalCalendars/upload";
+
+    //refreshCache
+    public static final String refreshCache = "https://rc-enterprise.dev.legion.work/legion/cache/refreshCache";
 }

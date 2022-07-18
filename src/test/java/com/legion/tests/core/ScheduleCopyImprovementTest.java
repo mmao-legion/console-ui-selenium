@@ -82,7 +82,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
-            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage("Operation Portal");
+            opsPortalLocationsPage.clickModelSwitchIconInDashboardPage("Control Center");
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.goToTemplateDetailsPage("Schedule Collaboration");
@@ -759,7 +759,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.searchLocation(location);               ;
@@ -793,7 +793,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
         } else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.searchLocation(location);               ;

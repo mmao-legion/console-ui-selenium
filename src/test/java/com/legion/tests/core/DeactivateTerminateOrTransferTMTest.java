@@ -45,7 +45,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             //Click on Configuration tab -> Schedule collaboration tile
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.searchLocation(location);               ;
@@ -103,7 +103,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             //Click on Configuration tab -> Schedule collaboration tile
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.searchLocation(location);               ;
@@ -210,7 +210,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             //Click on Configuration tab -> Schedule collaboration tile
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.searchLocation(location);               ;
@@ -316,7 +316,7 @@ public class DeactivateTerminateOrTransferTMTest extends TestBase {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             //Click on Configuration tab -> Schedule collaboration tile
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.searchLocation(location);               ;

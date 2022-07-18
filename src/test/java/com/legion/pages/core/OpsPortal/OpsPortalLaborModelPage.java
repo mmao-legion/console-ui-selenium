@@ -10,6 +10,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,9 +46,10 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}else
 			SimpleUtils.fail("Work Roles Tile load failed",false);
 	}
-	@FindBy(css="[class=\"lg-table ng-scope\"] tbody")
+	@FindBy(css="div.lg-templates-table-improved__grid-row.ng-scope")
+// @FindBy(css="[ng-repeat-start=\"item in $ctrl.sortedRows\"]")
 	private List<WebElement> templatesList;
-	@FindBy(css="[class=\"lg-table ng-scope\"] button span.ng-binding")
+	@FindBy(css="lg-button.name button span.ng-binding")
 	private List<WebElement> templateNameList;
 	@FindBy(css="span[class=\"lg-paged-search__showing top-right-action-button ng-scope\"] button")
 	private WebElement newTemplateBTN;
@@ -93,14 +95,15 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 			searchTemplate(template_name);
 			for(int i=0;i<templateNameList.size();i++){
 				if(templateNameList.get(i).getText()!=null && templateNameList.get(i).getText().trim().equals(template_name)){
-					String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+					String classValue = templatesList.get(i).getAttribute("class");
 					if(classValue!=null && classValue.contains("hasChildren")){
 						clickTheElement(templatesList.get(i).findElement(By.className("toggle")));
 						waitForSeconds(3);
 						if(editOrViewMode!=null && editOrViewMode.toLowerCase().contains("edit")){
-							clickTheElement(templatesList.get(i).findElement(By.cssSelector("tr.child-row.ng-scope button")));
+							clickTheElement(templateNameList.get(i+1));
+// 							clickTheElement(getDriver().findElement(By.cssSelector(".child-row button")));
 						}else{
-							clickTheElement(templatesList.get(i).findElement(By.cssSelector("button")));
+							clickTheElement(templatesList.get(i).findElement(By.tagName("button")));
 						}
 						waitForSeconds(15);
 						if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
@@ -133,7 +136,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	@Override
 	public void clickOnLaborModelTab() throws Exception {
 		if(isElementLoaded(laborModelTab,15)){
-			click(laborModelTab);
+			clickTheElement(laborModelTab);
 			if (isElementLoaded(laborModelTile,5)) {
 				SimpleUtils.pass("Labor model tab is clickable");
 			}
@@ -518,6 +521,9 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	private WebElement deleteAttributeButton;
 	@FindBy(css="div.lg-modal h1 div")
 	private WebElement disableExternalAttributePopupTitle;
+	@FindBy(css="table[ng-if=\"$ctrl.filteredTasks.length\"] tr[ng-repeat=\"task in $ctrl.filteredTasks\"]")
+	private List<WebElement> taskDataRows;
+
 
 	@Override
 	public boolean checkDeleteAttributeButtonForEachAttribute() throws Exception {
@@ -590,6 +596,16 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 
 	@FindBy(css="div.lg-modal lg-button[label=\"Cancel\"] button")
 	private WebElement cancelButtonOnDeleteAttributeDialog;
+    @FindBy(css="sub-content-box[box-title=\"Task Details\"] h2")
+	private  WebElement taskDetailTitle;
+	@FindBy(css="lg-button[label=\"View\"] button")
+	private  List<WebElement> taskViewActions;
+	@FindBy(css="div.task-formula-content.form-control")
+	private  WebElement taskFormulaContent;
+
+
+
+
 
 	@Override
 	public void clickOkBtnOnDeleteAttributeDialog() throws Exception {
@@ -660,6 +676,59 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	}
 
 	@Override
+	public void goToTaskDetail(String taksName) throws Exception {
+		if (areListElementVisible(taskDataRows,10) && taskDataRows.size() > 0) {
+			for (WebElement taskName : taskDataRows) {
+				if(taskName.findElement(By.cssSelector("lg-button[ng-click=\"$ctrl.gotoDetail(task)\"] button")).getText().equals(taksName)){
+					SimpleUtils.pass("Find the searched task, it's name is:"+taksName);
+					//click the task to enter its detail
+					clickTheElement(taskName.findElement(By.cssSelector("lg-button[ng-click=\"$ctrl.gotoDetail(task)\"] button")));
+					break;
+				}
+				else
+					SimpleUtils.fail("Not find the searched task, pleas add the tested task!",false);
+			}
+		} else
+			SimpleUtils.fail("Labor Model Page not load any tasks data!", false);
+	}
+
+	@Override
+	public void checkCustomFormulaCoding(String keyword) throws Exception {
+		boolean matched=false;
+		if(isElementLoaded(taskDetailTitle,10)){
+			SimpleUtils.pass("Task detail loaded successfully!");
+			//check the view action for configurations
+			if(areListElementVisible(taskViewActions,5)){
+				SimpleUtils.pass("The view actions are supported in taks detail page");
+				//check the color coding
+				for(int ind=0;ind<taskViewActions.size();ind++){
+					clickTheElement(taskViewActions.get(ind));
+					waitForSeconds(2);
+					if (isElementLoaded(taskFormulaContent, 10)) {
+						for (WebElement keywd : taskFormulaContent.findElements(By.cssSelector(".lg-task-timing__custom"))) {
+							if (keywd.getText().trim().equals(keyword)) {
+								SimpleUtils.pass("Find the matched keyword in the formula!");
+								matched = true;
+								//continue to check the style of the keyword
+								String keyStyle = keywd.getAttribute("style");
+								SimpleUtils.assertOnFail("The formula not get colored!", keyStyle.contains("color: rgb(0, 72, 169)"), false);
+							}
+						}
+						SimpleUtils.assertOnFail("There was no keywords matched the colored formula", matched, false);
+					} else
+						SimpleUtils.fail("No custom formula content laoded!", false);
+					//close the detail
+					clickTheElement(cancelBtnInImportSubscribedLocationsPage);
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("Task detail page failed to loaded",false);
+	}
+
+
+
+	@Override
 	public void archivePublishedOrDeleteDraftTemplate(String templateName, String action) throws Exception {
 		ConfigurationPage configurationPage = new OpsPortalConfigurationPage();
 		if(isTemplateListPageShow()){
@@ -685,7 +754,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 	}
 
 	public boolean isItMultipVersion(int i) {
-		String classValue = templatesList.get(i).findElement(By.cssSelector("tr")).getAttribute("class");
+		String classValue = templatesList.get(i).getAttribute("class");
 		if (classValue != null && classValue.contains("hasChildren")) {
 			return true;
 		} else
@@ -793,6 +862,167 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 		}else
 			SimpleUtils.fail("Publish template dropdown button load failed",false);
 	}
+	// added by Fiona
+    @FindBy(css="nav.lg-tabs__nav>div:nth-last-child(2)")
+    private WebElement templateAssociationBTN;
+	@FindBy(xpath="//img[contains(@src, 'location')]/following-sibling::span")
+	private WebElement locationSubscription;
+	@FindBy(css="lg-button[label=\"Import\"] button")
+	private WebElement locationSubscriptionImportButton;
+	@FindBy(css="lg-button[label=\"Export\"] button")
+	private WebElement locationSubscriptionExportButton;
+
+	@Override
+	public void verifyEntryOfLaborModelSubscription() throws Exception {
+		scrollToBottom();
+		if(isElementLoaded(locationSubscription,5) && isElementEnabled(locationSubscriptionImportButton,5) && isElementEnabled(locationSubscriptionExportButton,5)){
+			SimpleUtils.pass("The Labor Model Subscription can show well");
+		}else {
+			SimpleUtils.fail("The Labor Model Subscription can NOT show well",false);
+		}
+	}
+
+	@Override
+	public void exportLaborModelSubscriptionCsv() throws Exception{
+		scrollToBottom();
+		if (isElementEnabled(locationSubscriptionExportButton,5) ) {
+			click(locationSubscriptionExportButton);
+			SimpleUtils.pass("Export button is clickable and can download file");
+		}else
+			SimpleUtils.fail("Export button load failed",false);
+	}
+
+	@FindBy(css="div.lg-modal__title-icon")
+	private WebElement importLocationsWorkRolePageTitle;
+	@FindBy(css="div [ng-if=\"!chooseFile && !checkValid\"]")
+	private WebElement contextOfUpload;
+	@FindBy(css = "lg-button[label=\"Cancel\"]")
+	private WebElement cancelBtnInImportSubscribedLocationsPage;
+	@FindBy(css = "lg-button[label=\"Import\"]")
+	private WebElement importBtnInSubscribedLocationsPage;
+	@FindBy(css = "input[type=\"file\"]")
+	private WebElement uploaderFileInputBtn;
+	@FindBy(css = "lg-button[label=\"OK\"]")
+	private WebElement okBtnInImportLocationPage;
+	@FindBy(css=".lg-toast>span")
+	private WebElement toast;
+
+	@Override
+	public void verifyImportLocationLevelWorkRoleSubscription() {
+		String pth = System.getProperty("user.dir");
+		if (isElementEnabled(locationSubscriptionImportButton, 5)) {
+			click(locationSubscriptionImportButton);
+			if (verifyImportLocationWorkRolePageShow()) {
+				SimpleUtils.pass("Import location level work role page show well");
+			} else
+				SimpleUtils.fail("Import location level work role page load failed", true);
+			uploaderFileInputBtn.sendKeys( pth + "/src/test/resources/WorkerRoleSubscription.csv");
+			waitForSeconds(5);
+			click(importBtnInSubscribedLocationsPage);
+			waitUntilElementIsVisible(toast);
+			if(toast.getText().trim().contains("Success")){
+				SimpleUtils.pass("Import location work role successfully!");
+			}else {
+				SimpleUtils.fail("Import location work role failed!",false);
+			}
+		} else
+			SimpleUtils.fail("Import button load failed", true);
+	}
+
+	@Override
+	public boolean verifyImportLocationWorkRolePageShow(){
+		String uploadText = "Upload csv file here";
+		if (isElementEnabled(importLocationsWorkRolePageTitle, 5) && isElementEnabled(contextOfUpload)
+				&& isElementEnabled(importBtnInSubscribedLocationsPage) &&
+				isElementEnabled(cancelBtnInImportSubscribedLocationsPage)) {
+			if (contextOfUpload.getText().trim().contains(uploadText)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void disableLocationLevelWorkRoleSubscriptionInLaborModelTemplate() {
+		String pth = System.getProperty("user.dir");
+		if (isElementEnabled(locationSubscriptionImportButton, 5)) {
+			click(locationSubscriptionImportButton);
+			if (verifyImportLocationWorkRolePageShow()) {
+				SimpleUtils.pass("Import location level work role page show well");
+			} else
+				SimpleUtils.fail("Import location level work role page load failed", true);
+			uploaderFileInputBtn.sendKeys(pth + "/src/test/resources/AutoUsingForLaborBudgetDisable.csv");
+			waitForSeconds(5);
+			click(importBtnInSubscribedLocationsPage);
+			waitUntilElementIsVisible(toast);
+			if(toast.getText().trim().contains("Success")){
+				SimpleUtils.pass("Import location work role successfully!");
+			}else {
+				SimpleUtils.fail("Import location work role failed!",false);
+			}
+		}
+	}
+
+	@Override
+	public void enableLocationLevelWorkRoleSubscriptionInLaborModelTemplate() {
+		String pth = System.getProperty("user.dir");
+		if (isElementEnabled(locationSubscriptionImportButton, 5)) {
+			click(locationSubscriptionImportButton);
+			if (verifyImportLocationWorkRolePageShow()) {
+				SimpleUtils.pass("Import location level work role page show well");
+			} else
+				SimpleUtils.fail("Import location level work role page load failed", true);
+			uploaderFileInputBtn.sendKeys(pth + "/src/test/resources/AutoUsingForLaborBudgetEnable.csv");
+			waitForSeconds(5);
+			click(importBtnInSubscribedLocationsPage);
+			waitUntilElementIsVisible(toast);
+			if(toast.getText().trim().contains("Success")){
+				SimpleUtils.pass("Import location work role successfully!");
+			}else {
+				SimpleUtils.fail("Import location work role failed!",false);
+			}
+		} else
+			SimpleUtils.fail("Import button load failed", true);
+	}
+
+	@Override
+	public boolean verifyWorkRoleStatusInLocationLevel(String workRole) {
+		boolean flag = false;
+		waitForSeconds(5);
+		if (workRolesInLocationLevel.size() > 0) {
+			for (WebElement workRolesInLocationLevel : workRolesInLocationLevel) {
+				String workRoleName = workRolesInLocationLevel.findElement(By.cssSelector("div.workRole")).getText().trim();
+				if (workRoleName.equalsIgnoreCase(workRole)) {
+					if (workRolesInLocationLevel.findElement(By.cssSelector("input")).getAttribute("class").contains("not-empty")) {
+						flag = true;
+					}
+					break;
+				}else {
+					continue;
+				}
+			}
+		} else
+			SimpleUtils.report("There is no assignment rule");
+		return flag;
+	}
+
+	@Override
+	public void selectWorkRoles(String workRole) throws Exception {
+		WebElement workRoleSelectBox = getDriver().findElement(By.xpath("//td[contains(text(),'" + workRole + "')]/following-sibling::*[2]/input-field"));
+		boolean isTabFound = false;
+		if (isElementLoaded(workRoleSelectBox)) {
+			for (WebElement subTab : subTabs) {
+					click(workRoleSelectBox);
+					isTabFound = true;
+			}
+			if (isTabFound)
+				SimpleUtils.pass("" + workRole + "' is selected successfully.");
+			else
+				SimpleUtils.fail("'" + workRole + "' is not selected.", true);
+		} else
+			SimpleUtils.fail("'" + workRole + "' is not showing.", false);
+	}
+
 
 }
 

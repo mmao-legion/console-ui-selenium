@@ -1,9 +1,12 @@
 package com.legion.pages.core.oplabormodel;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import javax.xml.crypto.dsig.SignatureMethod;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -67,7 +70,7 @@ public class LaborModelTemplateDetailPage extends BasePage {
     private WebElement publishNow;
     @FindBy(css = "div.saveas-list.ng-scope>h3:nth-child(3)")
     private WebElement publishLater;
-    @FindBy(css = "lg-button[label='Save as draft']>button.ng-scope.pre-saveas")
+    @FindBy(css = "button.pre-saveas")
     private WebElement preSaveAs;
 
     @FindBy(css = "lg-tab[tab-title='Details'] lg-button[label='Cancel']>button")
@@ -81,8 +84,11 @@ public class LaborModelTemplateDetailPage extends BasePage {
         backButton.click();
     }
 
-    public void edit() {
-        editButton.click();
+    public void edit() throws Exception {
+        if (isElementLoaded(editButton, 5)) {
+            clickTheElement(editButton);
+        } else
+            SimpleUtils.fail("Edit button fail to load! ", false);
     }
 
     public void close() {
@@ -136,7 +142,7 @@ public class LaborModelTemplateDetailPage extends BasePage {
     }
 
     public void okInModal() {
-        okButtonInModal.click();
+        clickTheElement(okButtonInModal);
     }
 
     public void selectTasks(String taskName) {
@@ -153,6 +159,7 @@ public class LaborModelTemplateDetailPage extends BasePage {
     public void save(String Patter) {
         scrollToElement(saveDropsButton);
         saveDropsButton.click();
+        waitForSeconds(3);
         switch (Patter) {
             case "Save as draft":
                 saveAsDraft.click();
@@ -164,12 +171,13 @@ public class LaborModelTemplateDetailPage extends BasePage {
                 publishLater.click();
                 break;
         }
+        waitForSeconds(3);
         preSaveAs.click();
     }
 
     public void cancel() {
-        cancelButton.click();
-        cancelEditing.click();
+        clickTheElement(cancelButton);
+        clickTheElement(cancelEditing);
     }
 
 }

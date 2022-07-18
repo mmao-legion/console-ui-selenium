@@ -1646,12 +1646,14 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public HashMap<String, String> getTheHoursNTheCountOfTMsForEachWeekDays() throws Exception {
         HashMap<String, String> hoursNTeamMembersCount = new HashMap<>();
-        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() >= 7) {
-            for (WebElement weekDayDimension : weekDayDimensions) {
-                WebElement weekDay = weekDayDimension.findElement(By.className("sch-calendar-day-label"));
-                WebElement hoursNCount = weekDayDimension.findElement(By.className("sch-calendar-day-summary"));
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
+            for (int i = 0; i < weekDayDimensions.size(); i++) {
+                WebElement weekDay = weekDayDimensions.get(i).findElement(By.className("sch-calendar-day-label"));
+                WebElement hoursNCount = weekDayDimensions.get(i).findElement(By.className("sch-calendar-day-summary"));
+                List<WebElement> shiftsInSameDay = getDriver().findElements(By.cssSelector("[data-day-index=\"" + i +"\"] .week-schedule-shift-wrapper"));
                 if (weekDay != null && hoursNCount != null) {
-                    hoursNTeamMembersCount.put(weekDay.getText(), hoursNCount.getText());
+                    hoursNTeamMembersCount.put(weekDay.getText(), hoursNCount.getText().split(" ")[0] +
+                            hoursNCount.getText().split(" ")[1] + " " + shiftsInSameDay.size() + "TMs");
                     SimpleUtils.report("Schedule Week View Page: Get the week day: " + weekDay.getText() + " and the count of hours" +
                             ", TMs are: " + hoursNCount.getText());
                 } else {

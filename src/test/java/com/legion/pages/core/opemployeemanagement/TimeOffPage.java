@@ -1,14 +1,20 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.testng.Assert;
+
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static java.lang.Integer.parseInt;
 
 public class TimeOffPage extends BasePage {
     public TimeOffPage() {
@@ -16,10 +22,10 @@ public class TimeOffPage extends BasePage {
     }
 
     // Added by Sophia
-    @FindBy(css = "span[title=' Allene Mante']")
-    private WebElement teamMember;
     @FindBy(css = "timeoff-management div.collapsible-title")
     private WebElement timeOffTab;
+    @FindBy(css = "div.lg-toast")
+    private WebElement toastMessage;
     //
     @FindBy(css = "lg-button[label='Create time off']>button")
     private WebElement createTimeOff;//New Time Off Request
@@ -46,6 +52,12 @@ public class TimeOffPage extends BasePage {
     private WebElement nextMonth;
     @FindBy(css = "div.ranged-calendar__day.ng-binding.ng-scope.real-day")
     private List<WebElement> daysOnCalendar;
+    @FindBy(css = "div.ranged-calendar__day.ng-binding.ng-scope.real-day.is-today.in-range")
+    private WebElement currentDay;
+    @FindBy(css = "div.ranged-calendar__month-name")
+    private WebElement targetMonth;
+    @FindBy(css = "a.calendar-nav-left")
+    private WebElement calendarNavArrow;
     @FindBy(css = "div.ranged-calendar__day.ng-binding.ng-scope.real-day")
     private WebElement timeOffEndDay;
     @FindBy(css = "all-day-control[options='startOptions'] lgn-check-box[checked='options.fullDay']>div")
@@ -66,6 +78,8 @@ public class TimeOffPage extends BasePage {
     //balance board
     @FindBy(css = "div.balance-wrapper>div>span.count-block-label")
     private List<WebElement> timeOffTypes;
+    @FindBy(css = "div.balance-wrapper>div:nth-child(1) span.count-block-counter-hours")
+    private WebElement annualLeaveBal;
 
     //Edit time off balance
     @FindBy(css = "div.balance-action lg-button[label='Edit']>button")
@@ -75,18 +89,65 @@ public class TimeOffPage extends BasePage {
     @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tbody tr:nth-child(3)>td:nth-child(3) input")
     private WebElement floatingHolidayInput;
     @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tbody tr:nth-child(4)>td:nth-child(3) input")
+    private WebElement ptoInput;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tbody tr:nth-child(5)>td:nth-child(3) input")
     private WebElement sickInput;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tr:last-child>td:nth-child(3) input")
+    private WebElement theLastTimeOffInputInEditModal;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] table.lg-table tr.ng-scope>td:first-child")
+    private List<WebElement> timeOffs;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] table.lg-table td>input-field input")
+    private List<WebElement> editInputs;
+    @FindBy(css = "modal[modal-title='Edit Time Off Balance'] tbody tr")
+    private List<WebElement> editTr;
 
     //history
     @FindBy(css = "div.balance-action lg-button[label='History']>button")
     private WebElement historyButton;
+    @FindBy(css = "h1.lg-slider-pop__title img.lg-slider-pop__title-dismiss")
+    private WebElement historyCloseButton;
+    @FindBy(css = "ul.session>li")
+    private List<WebElement> historyItems;
+    @FindBy(css = "ul.session>li div.templateInfo")
+    private List<WebElement> balanceChanges;
+    @FindBy(css = "ul.session>li p")
+    private List<WebElement> accrualDates;
 
-    public void goToTeamMemberDetail() {
-        teamMember.click();
-        waitForSeconds(5);
+    //time off request
+    @FindBy(css = "span.request-status.request-status-Approved")
+    private WebElement approveStatus;
+    @FindBy(css = "span.request-buttons-reject")
+    private WebElement rejectButton;
+    @FindBy(css = "div.timeoff-requests-request.row-fx")
+    private List<WebElement> timeOffRequests;
+
+    //balance check
+    @FindBy(css = "div.balance-wrapper Span.count-block-label.ng-binding")
+    private List<WebElement> timeOffKeys;
+    @FindBy(css = "div.balance-wrapper Span.count-block-counter-hours")
+    private List<WebElement> balances;
+
+    //TimeSheet
+    @FindBy(css = "lg-button[label='Add Timeclock']>button")
+    private WebElement addTimeClockBtn;
+    @FindBy(css = "modal[modal-title='Add Timeclock'] input-field[label='date'] ng-form")
+    private WebElement dateForm;
+    //
+
+    public String getToastMessage() {
+        return toastMessage.getText();
+    }
+
+    public void goToTeamMemberDetail(String memberName) {
+        String teamMemCssLocator = "span[title=' " + memberName + "']";
+        WebElement teamMem = getDriver().findElement(By.cssSelector(teamMemCssLocator));
+        scrollToElement(teamMem);
+        teamMem.click();
     }
 
     public void switchToTimeOffTab() {
+        waitForSeconds(15);
+        scrollToElement(timeOffTab);
         timeOffTab.click();
     }
 
@@ -135,20 +196,14 @@ public class TimeOffPage extends BasePage {
 
     public void takePartialDay(int startDateIndex, int endDateIndex) {
         if (isPartialDayEnabled()) {
-            startDatePartialDayCheckBox.click();
-            endDatePartialDayCheckBox.click();
+            //endDatePartialDayCheckBox.click();
             daysOnCalendar.get(startDateIndex).click();
             daysOnCalendar.get(endDateIndex).click();
+            startDatePartialDayCheckBox.click();
             waitForSeconds(5);
         } else {
             System.out.println("This type of time off can't request partial day!");
         }
-    }
-
-    public void takeAllDayLeave(int startDateIndex, int endDateIndex) {
-        daysOnCalendar.get(startDateIndex).click();
-        daysOnCalendar.get(endDateIndex).click();
-        waitForSeconds(5);
     }
 
     public void createTimeOff(String timeOffReason, boolean takePartialDay, int startDateIndex, int endDateIndex) {
@@ -160,18 +215,30 @@ public class TimeOffPage extends BasePage {
         }
     }
 
-    public String getRequestErrorMessage() {
-        return requestErrorMessage.getText();
+    public void takeAllDayLeave(int startDateIndex, int endDateIndex) {
+        daysOnCalendar.get(startDateIndex).click();
+        daysOnCalendar.get(endDateIndex).click();
+        waitForSeconds(5);
     }
 
-    public void editTimeOffBalance(String annualB, String floatingB, String sickB) {
-        editButton.click();
-        annualLeaveInput.click();
-        annualLeaveInput.sendKeys("annualB");
-        floatingHolidayInput.clear();
-        floatingHolidayInput.sendKeys("floatingB");
-        sickInput.clear();
-        sickInput.sendKeys("sickB");
+    public void createOneDayTimeOff(String timeOffReason, String month, boolean takePartialDay, int startDateIndex, int endDateIndex) {
+        selectTimeOff(timeOffReason);
+        goToTargetMonth(month);
+        if (takePartialDay) {
+            takePartialDay(startDateIndex, endDateIndex);
+        } else {
+            takeAllDayLeave(startDateIndex, endDateIndex);
+        }
+    }
+
+    public void createManyDaysTimeOff(String timeOffReason, String month, int startDateIndex, int endDateIndex) {
+        selectTimeOff(timeOffReason);
+        goToTargetMonth(month);
+        takeAllDayLeave(startDateIndex, endDateIndex);
+    }
+
+    public String getRequestErrorMessage() {
+        return requestErrorMessage.getText();
     }
 
     public ArrayList<String> getTimeOffTypes() {
@@ -187,5 +254,154 @@ public class TimeOffPage extends BasePage {
         return timeOffOpts;
     }
 
+    public String getAnnualLeaveBalance() {
+        return annualLeaveBal.getText();
+    }
+
+    public void rejectTimeOffRequest() {
+        approveStatus.click();
+        if (isElementDisplayed(rejectButton)) {
+            rejectButton.click();
+        } else {
+            System.out.println("The reject button doesn't displayed!");
+        }
+    }
+
+    public int getCurrentDay() {
+        String day = currentDay.getText();
+        return parseInt(day);
+    }
+
+    public HashMap<String, String> getTimeOffBalance() {
+        ArrayList<String> keys = getWebElementsText(timeOffKeys);
+        ArrayList<String> values = getWebElementsText(balances);
+        HashMap timeOffBalance = new HashMap();
+        int mapSize = keys.size();
+        for (int i = 0; i < mapSize; i++) {
+            timeOffBalance.put(keys.get(i), values.get(i));
+        }
+        return timeOffBalance;
+    }
+
+    public void editTheLastTimeOff(String balance) {
+        editButton.click();
+        theLastTimeOffInputInEditModal.clear();
+        theLastTimeOffInputInEditModal.sendKeys(balance);
+    }
+
+    public void editTimeOff(HashMap<String, String> editNameValues) {
+        editButton.click();
+        ArrayList<String> timeOffNames = getWebElementsText(timeOffs);
+        for (String key : editNameValues.keySet()
+        ) {
+            int index = timeOffNames.indexOf(key);
+            editInputs.get(index).clear();
+            editInputs.get(index).sendKeys(editNameValues.get(key));
+        }
+    }
+
+    public HashMap<String, String> getAccrualHistory() {
+        historyButton.click();
+        HashMap<String, String> history = new HashMap();
+        int size = getAccrualHistorySize();
+        for (int i = 0; i < size; i++) {
+            history.put(balanceChanges.get(i).getText(), accrualDates.get(i).getText());
+        }
+        historyCloseButton.click();
+        return history;
+    }
+
+    public int getAccrualHistorySize() {
+        return historyItems.size();
+    }
+
+    //month
+    @FindBy(css = "ranged-calendar.ng-isolate-scope")
+    private WebElement Month;
+
+    //cancel button
+    @FindBy(css = "lg-button[label=Cancel]")
+    private WebElement cancelButton;
+
+    public String getMonth() {
+        return Month.getText().substring(0, 3);
+    }
+
+    public void cancelTimeOffRequest() throws Exception {
+        if (isElementLoaded(cancelButton, 5)) {
+            click(cancelButton);
+        }
+    }
+
+    @FindBy(css = "div.timeoff-requests-request.row-fx.cursor-pointer")
+    private List<WebElement> timeOffList;
+
+    public Integer getTimeOffSize() throws Exception {
+        return timeOffList.size();
+    }
+
+    @FindBy(css = "span[data-tootik='Cancel']")
+    private WebElement cancelCreatedTimeOff;
+
+    public void cancelCreatedTimeOffRequest() throws Exception {
+        waitForSeconds(5);
+        scrollToElement(timeOffList.get(1));
+        clickTheElement(timeOffList.get(1));
+        clickTheElement(cancelCreatedTimeOff);
+    }
+
+    @FindBy(xpath = "//span[contains(@class,'request-status')]")
+    private List<WebElement> timeOffStatus;
+
+    public void verifyTimeOffStatus() throws Exception {
+        waitForSeconds(5);
+        if (timeOffStatus.get(2).getAttribute("innerText").toUpperCase().equals("CANCELLED") && timeOffStatus.get(3).getAttribute("innerText").toUpperCase().equals("REJECTED") && timeOffStatus.get(4).getAttribute("innerText").toUpperCase().equals("APPROVED")) {
+            SimpleUtils.pass("Time off status is correct");
+        } else
+            SimpleUtils.fail("Time off status is wrong", false);
+    }
+
+    public String getWorkerId() {
+        String url = getDriver().getCurrentUrl();
+        return url.substring(url.lastIndexOf('/') + 1);
+    }
+
+    public int getTimeOffRequestNum() {
+        return timeOffRequests.size();
+    }
+
+    public String getTimeOffRequestDate(int index) {
+        return timeOffRequests.get(index).findElement(By.cssSelector("div.request-date")).getText();
+    }
+
+    public String getTimeOffRequestType(int index) {
+        return timeOffRequests.get(index).findElement(By.cssSelector("div.request-body")).getText();
+    }
+
+    public String getTimeOffRequestStatus(int index) {
+        return timeOffRequests.get(index).findElement(By.cssSelector("div.request-stat.text-right.col-fx-1")).getText();
+    }
+
+    public void goToTargetMonth(String month) {
+        while (!targetMonth.getText().equals(month)) {//"March 2022"
+            calendarNavArrow.click();
+        }
+    }
+
+    public void editTimeOffBalance(String timeOff, String bal) {
+        editButton.click();
+        int timeOffNum = editTr.size() - 1;
+        for (int i = 1; i <= timeOffNum; i++) {
+            String timeOffName = editTr.get(i).findElement(By.cssSelector("td:nth-child(1)")).getText();
+            if (timeOffName.contains(timeOff)) {
+                WebElement inputBox = editTr.get(i).findElement(By.cssSelector("td:nth-child(3)>input-field input"));
+                inputBox.clear();
+                inputBox.sendKeys(bal);
+                break;
+            }
+        }
+    }
+
 
 }
+

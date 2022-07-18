@@ -432,7 +432,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary/Estelle")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Vailqacn_Enterprise")
 	@TestName(description = "Verify the Schedule functionality - Week View - Context Menu")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyScheduleFunctionalityWeekViewAsInternalAdmin(String username, String password, String browser, String location)
