@@ -900,6 +900,8 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
         if (!flag) {
             SimpleUtils.fail("Staff name is not showing", true);
         }
+    }
+
     @FindBy(css = ".day-week-picker-period-active")
     private WebElement activeWeek;
 

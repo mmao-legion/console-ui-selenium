@@ -204,7 +204,6 @@ public interface ConfigurationPage {
     public void setStrictlyEnforceMinorViolations(String yesOrNo) throws Exception;
     public boolean isStrictlyEnforceMinorViolationSettingEnabled() throws Exception;
     public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception;
-    public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception;
     public void verifySpecificAssociationIsSaved(String name) throws Exception;
     public boolean checkIfApproveShiftInHomeLocationSettingEnabled() throws Exception;
     public void updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(String option) throws Exception;

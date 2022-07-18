@@ -144,7 +144,7 @@ public class OpsPortalWorkRolesPage extends BasePage {
         goToWorkRoleDetails();//go to work role details page
     }
 
-    public void addNewWorkRole() {
+    public void addNewWorkRole() throws Exception {
         waitForSeconds(2);
         clickEditButton();
         addWorkRoleButton.click();//go to work role details page

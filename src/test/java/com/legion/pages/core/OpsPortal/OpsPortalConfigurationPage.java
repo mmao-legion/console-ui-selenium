@@ -5954,14 +5954,15 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			scrollToElement(inputStreamSelect);
 			select = new Select(inputStreamSelect.findElement(By.cssSelector("select")));
 			for (int i = 0; i < select.getOptions().size(); i++) {
-				if (!select.getOptions().get(i).getText().equals("")){
+				if (!select.getOptions().get(i).getText().equals("")) {
 					streamNameList.add(select.getOptions().get(i).getText());
 				}
 			}
 		} else {
 			SimpleUtils.fail("No input stream select show up!", false);
 		}
-		return  streamNameList;
+		return streamNameList;
+	}
 
 
 	@FindBy(css = "[title=\"Minors Rules\"] div")
