@@ -11,14 +11,12 @@ import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
-import java.io.File;
 import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -3333,7 +3331,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			for (int i = 0; i < locationDetailsLinks.size(); i++) {
 				if (locationDetailsLinks.size() > 0) {
 					click(locationDetailsLinks.get(i));
-					if (isElementEnabled(editLocationBtn, 15)) {
+					if (tabsInLocations.size() > 0) {
 						SimpleUtils.pass("Go to location details page successfully");
 						break;
 					} else
@@ -4965,6 +4963,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
-
+	@Override
+	public void sMGoToSubLocationsInLocationsPage() throws Exception {
+		if (isElementLoaded(locationsInLocations, 5)) {
+			click(locationsInLocations);
+			waitForSeconds(8);
+		} else
+			SimpleUtils.fail("locations tab load failed in location overview page", false);
+	}
 }
 
