@@ -6106,4 +6106,70 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("OP Page: Global Configuration: Schedules : Labor Preferences for Forecast Summary Smartcard settings dropdown list not loaded.", false);
 		}
 	}
+
+	@FindBy(css="lg-template-forecast-source question-input")
+	private List<WebElement> forecastConfigurations;
+	@FindBy(css="tr[ng-repeat*=\"item in $ctrl.forecastSourceData.aggregated\"]")
+	private List<WebElement> aggregatedFields;
+	@Override
+	public void verifyForDerivedDemandDriverUI(String derivedType, String remoteType) throws Exception {
+		Select sourceSelect = null;
+		Select remoteTypeSelect = null;
+
+		if (derivedType.equals("Legion ML") || derivedType.equals("Imported")){
+			SimpleUtils.fail("It's not a derived demand driver type!", false);
+		}
+		if (areListElementVisible(forecastConfigurations)) {
+			if (forecastConfigurations.get(0).getAttribute("question-title").contains("Forecast Source")) {
+				sourceSelect = new Select(forecastConfigurations.get(0).findElement(By.cssSelector("select")));
+				sourceSelect.selectByVisibleText(derivedType);
+
+				if (forecastConfigurations.size() > 1
+						&& forecastConfigurations.get(1).getAttribute("question-title").contains("Input Stream")){
+					SimpleUtils.fail("Input Stream should not show up for Derived demand driver!", false);
+				}
+				if (derivedType.equals("Remote")){
+					if (forecastConfigurations.get(1).getAttribute("question-title").contains("Remote Location")
+							&& forecastConfigurations.get(1).getAttribute("question-title").contains("Parent Location")){
+						remoteTypeSelect = new Select(forecastConfigurations.get(1).findElement(By.cssSelector("select")));
+						remoteTypeSelect.selectByVisibleText(remoteType);
+						if (remoteType.equals("Remote Location")
+								&& forecastConfigurations.get(2).getAttribute("question-title").contains("Remote Location")){
+							SimpleUtils.pass("Remote:Remote Location demand driver UI is correct!");
+						}else if (remoteType.equals("Parent Location")
+								&& forecastConfigurations.get(2).getAttribute("question-title").contains("Parent Level")){
+							SimpleUtils.pass("Remote:Parent Location demand driver UI is correct!");
+						}else{
+							SimpleUtils.fail("Please check the remote type or the UI field!", false);
+						}
+					}else {
+						SimpleUtils.fail("Remote demand driver UI is not correct!", false);
+					}
+				}else if (derivedType.equals("Distributed")){
+					if (forecastConfigurations.get(1).getAttribute("question-title").equals("Source Demand Driver")
+							&& forecastConfigurations.get(2).getAttribute("question-title").equals("Distribution of Demand Driver")){
+						SimpleUtils.pass("Distributed demand driver UI is correct!");
+					}else {
+						SimpleUtils.fail("Distributed demand driver UI is not correct!", false);
+					}
+				}else if (derivedType.equals("Aggregated")){
+					if (aggregatedFields != null && aggregatedFields.size() > 0){
+						SimpleUtils.pass("Aggregated demand driver UI is correct!");
+					}else {
+						SimpleUtils.fail("Aggregated demand driver UI is not correct!", false);
+					}
+				}else{
+					SimpleUtils.fail("Derived demand driver type not exist!", false);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void clickOnCancelButton() throws Exception {
+		if (isElementLoaded(cancelButton)){
+			clickTheElement(cancelButton);
+			setLeaveThisPageButton();
+		}
+	}
 }
