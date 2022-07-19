@@ -1120,7 +1120,7 @@ public class UserManagementTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Yang")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Add labels to dynamic user group")
+    @TestName(description = "Verify user can see template value via click template name if user only have template localization permission")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddLabelsToDynamicUserGroupAsSM(String browser, String username, String password, String location) throws Exception {
         try {
