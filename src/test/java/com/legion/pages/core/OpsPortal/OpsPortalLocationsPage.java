@@ -2342,6 +2342,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private List<WebElement> checkboxInCriteriaValue;
 	@FindBy(css = "modal[modal-title=\"Remove Dynamic Location Group\"]")
 	private WebElement removeDGPopup;
+	@FindBy(css = "modal[modal-title=\"Remove Dynamic Employee Group\"]")
+	private WebElement removeDEGPopup;
 	@FindBy(css = "ng-transclude.lg-modal__body")
 	private WebElement removeDGPopupDes;
 	@FindBy(css = "lg-button[label=\"Remove\"]")
@@ -2566,6 +2568,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(removeDGPopup, 5) && removeDGPopupDes.getText().contains("Are you sure you want to remove this dynamic location group?")
 				&& isElementEnabled(removeBtnInRemovDGPopup, 5)) {
 			SimpleUtils.pass("Remove dynamic group page show well");
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isRemoveDynamicEmployeeGroupPopUpShowing() {
+		if (isElementEnabled(removeDEGPopup, 5) && removeDGPopupDes.getText().contains("Are you sure you want to remove this dynamic employee group?")
+				&& isElementEnabled(removeBtnInRemovDGPopup, 5)) {
+			SimpleUtils.pass("Remove dynamic employee group page show well");
 			return true;
 		}
 		return false;

@@ -3176,7 +3176,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             if (isCheck) {
                 if (isElementLoaded(nextDayImg, 10)) {
                     if (nextDayImg.getAttribute("src").contains("next-day")) {
-                        clickTheElement(nextDayImg);
+                        if (!isElementLoaded(nextDayPopup, 3)) {
+                            clickTheElement(nextDayImg);
+                        }
                         clickTheElement(nextDayPopup.findElement(By.cssSelector(".input-form input")));
                         if (!nextDayImg.getAttribute("src").contains("next-day")) {
                             SimpleUtils.pass("The next day checkbox been checked successfully! ");
@@ -3190,7 +3192,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             } else {
                 if (isElementLoaded(nextDayImg, 10)) {
                     if (!nextDayImg.getAttribute("src").contains("next-day")) {
-                        clickTheElement(nextDayImg);
+                        if (!isElementLoaded(nextDayPopup, 3)) {
+                            clickTheElement(nextDayImg);
+                        }
                         clickTheElement(nextDayPopup.findElement(By.cssSelector(".input-form input")));
                         if (nextDayImg.getAttribute("src").contains("next-day")) {
                             SimpleUtils.pass("The next day checkbox been unchecked successfully! ");

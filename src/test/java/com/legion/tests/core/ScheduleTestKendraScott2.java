@@ -6307,7 +6307,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					!shiftOperatePage.checkIfUpdateButtonEnabled(),false);
 
 
-			shiftTime = "8:00 am-11:00 pm";
+			shiftTime = "08:00 am-11:00 pm";
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
 			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");

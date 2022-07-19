@@ -737,6 +737,7 @@ public class DragAndDropTest extends TestBase {
             teamPage.rejectAllTheTimeOffRequests();
             Thread.sleep(5000);
             teamPage.goToTeam();
+            Thread.sleep(5000);
             teamPage.searchAndSelectTeamMemberByName(firstNameOfTM2);
             profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
             teamPage.rejectAllTheTimeOffRequests();
