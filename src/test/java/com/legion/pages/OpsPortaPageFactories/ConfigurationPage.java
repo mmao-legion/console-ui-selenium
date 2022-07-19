@@ -207,4 +207,6 @@ public interface ConfigurationPage {
     public void verifySpecificAssociationIsSaved(String name) throws Exception;
     public boolean checkIfApproveShiftInHomeLocationSettingEnabled() throws Exception;
     public void updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(String option) throws Exception;
+    public void verifyForDerivedDemandDriverUI(String derivedType, String remoteType) throws Exception;
+    public void clickOnCancelButton() throws Exception;
 }

@@ -536,6 +536,17 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                 streamNames.add(inputStreamRow.findElement(By.cssSelector("td:first-child span")).getText());
             }
         }
+        while (isElementLoaded(settingsTypes.get(2).findElement(By.cssSelector(".lg-pagination__arrow--right")), 5)
+                && !settingsTypes.get(2).findElement(By.cssSelector(".lg-pagination__arrow--right")).getAttribute("class").contains("disabled")) {
+            clickTheElement(settingsTypes.get(2).findElement(By.cssSelector(".lg-pagination__arrow--right")));
+            for (WebElement inputStreamRow : inputStreamRows){
+                if(streamType.equalsIgnoreCase(inputStreamRow.findElements(By.cssSelector("td")).get(1).getText())){
+                    streamNames.add(inputStreamRow.findElement(By.cssSelector("td:first-child span")).getText());
+                }else if (streamType.equalsIgnoreCase("All")){
+                    streamNames.add(inputStreamRow.findElement(By.cssSelector("td:first-child span")).getText());
+                }
+            }
+        }
         return  streamNames;
     }
 
