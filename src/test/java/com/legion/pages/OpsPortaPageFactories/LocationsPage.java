@@ -323,4 +323,6 @@ public interface LocationsPage {
     public String getBudgetGroupSettingContent() throws Exception;
 
     public void selectBudgetGroup(String optionValue) throws Exception;
-}
+
+    public void sMGoToSubLocationsInLocationsPage() throws Exception;
+    }
