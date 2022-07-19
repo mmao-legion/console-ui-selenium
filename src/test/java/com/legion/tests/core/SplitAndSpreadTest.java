@@ -66,7 +66,7 @@ public class SplitAndSpreadTest extends TestBase {
             //Go to OP page
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.searchLocation(location);               ;
@@ -595,7 +595,7 @@ public class SplitAndSpreadTest extends TestBase {
                 //Go to OP page
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
                 locationsPage.clickOnLocationsTab();
                 locationsPage.goToSubLocationsInLocationsPage();
                 locationsPage.searchLocation(location);               ;
@@ -1188,6 +1188,7 @@ public class SplitAndSpreadTest extends TestBase {
 
             // Create schedule if it is not created
             scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -1219,13 +1220,16 @@ public class SplitAndSpreadTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             // Edit the Schedule
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Delete all the shifts that are assigned to the team member
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
-            shiftOperatePage.deleteTMShiftInWeekView("Open");
-
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             // Create new shift for TM1 on first day
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
@@ -1263,7 +1267,7 @@ public class SplitAndSpreadTest extends TestBase {
 
             // Save the Schedule
             scheduleMainPage.saveSchedule();
-
+            createSchedulePage.publishActiveSchedule();
             //  Click on the open shift -> Offer Team Members, click on Recommended TMs, check the TM list
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Open");
@@ -1295,8 +1299,8 @@ public class SplitAndSpreadTest extends TestBase {
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
-            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
-            createSchedulePage.publishActiveSchedule();
+//            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+//            createSchedulePage.publishActiveSchedule();
 
             //Check if the daily OT setting enabled
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -1332,6 +1336,7 @@ public class SplitAndSpreadTest extends TestBase {
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();
             // Validate that smartcard is available to recipient team member
             String smartCard = "WANT MORE HOURS?";

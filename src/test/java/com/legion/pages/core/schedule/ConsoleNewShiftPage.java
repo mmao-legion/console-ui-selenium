@@ -175,7 +175,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     }
                 }
             } else {
-                SimpleUtils.fail("Work Roles size are empty", false);
+                SimpleUtils.fail("Assignment options size are empty", false);
             }
         } else
             SimpleUtils.fail("Assignment options fail to load on create shift page! ", false);
@@ -539,8 +539,6 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                         click(listWorkRole);
                         SimpleUtils.pass("Work Role " + workRoles + "selected Successfully");
                         break;
-                    } else {
-                        SimpleUtils.report("Work Role " + workRoles + " not selected");
                     }
                 }
             } else {
@@ -551,12 +549,10 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.pass("Work Role button clicked Successfully");
             if (dropDownListOnNewCreateShiftPage.size() > 0) {
                 for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
-                    if (listWorkRole.getText().toLowerCase().contains(workRoles.toLowerCase())) {
+                    if (listWorkRole.getText().toLowerCase().trim().contains(workRoles.toLowerCase().trim())) {
                         click(listWorkRole);
                         SimpleUtils.pass("Work Role " + workRoles + "selected Successfully");
                         break;
-                    } else {
-                        SimpleUtils.report("Work Role " + workRoles + " not selected");
                     }
                 }
             } else {
@@ -1841,16 +1837,20 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @Override
     public void selectSpecificWorkDay(int dayCountInOneWeek) {
         if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
+            SimpleUtils.report("Day count is "+dayCountInOneWeek);
             for (int i = 0; i < dayCountInOneWeek; i++) {
                 if (!weekDays.get(i).getAttribute("class").contains("selected")) {
                     click(weekDays.get(i));
+                    SimpleUtils.pass("Click week day "+i+" successfully! ");
                 }
             }
         }else if (areListElementVisible(weekDaysInNewCreateShiftPage, 5) && weekDaysInNewCreateShiftPage.size() == 7) {
+            SimpleUtils.report("Day count is "+dayCountInOneWeek);
             for (int i = 0; i < dayCountInOneWeek; i++) {
                 if (!weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("checked")
                         && weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("aria-disabled").contains("false")) {
                     click(weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")));
+                    SimpleUtils.pass("Click week day "+i+" successfully! ");
                 }
             }
         }else
@@ -2041,7 +2041,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             }
             SimpleUtils.pass("Get selected days info successfully");
         }else
-            SimpleUtils.fail("Select days load failed",true);
+            SimpleUtils.fail("Select days load failed",false);
         return selectedDates;
     }
 
@@ -2873,5 +2873,25 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.report("Set shift name on New Create Shift page successfully! ");
         } else
             SimpleUtils.report("The shift name input is not loaded on New Create Shift page! ");
+    }
+
+    @FindBy(css = "[class=\"sc-karCPZ chPZcS\"]")
+    private WebElement greyAvailableIcon;
+    @FindBy(css = "[class=\"sc-karCPZ hhDhwY\"]")
+    private WebElement greenAvailableIcon;
+    @FindBy(css = "[class=\"sc-karCPZ pJskc\"]")
+    private WebElement redAvailableIcon;
+    @Override
+    public String getTMAvailableColourForAssignedShift () throws Exception {
+        String availableIconColour = null;
+        if (isElementLoaded(greenAvailableIcon, 5) && greenAvailableIcon.getAttribute("color").contains("#37cf3f")) {
+            return availableIconColour = "#37cf3f";
+        }else if(isElementLoaded(greyAvailableIcon, 5) && greyAvailableIcon.getAttribute("color").contains("grey")){
+            return availableIconColour = "grey";
+        }else if(isElementLoaded(redAvailableIcon, 5) && redAvailableIcon.getAttribute("color").contains("#ff2600")) {
+            return availableIconColour = "#ff2600";
+        }else
+            SimpleUtils.fail("The available icon is not displayed!", false);
+        return null;
     }
 }

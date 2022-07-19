@@ -598,10 +598,9 @@ public class DragAndDropTest extends TestBase {
 
             // Create schedule if it is not created
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (isWeekGenerated){
-                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            if (!isWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
             // Edit the Schedule
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
@@ -736,7 +735,9 @@ public class DragAndDropTest extends TestBase {
             String myTimeOffLabel = "Time Off";
             profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
             teamPage.rejectAllTheTimeOffRequests();
+            Thread.sleep(5000);
             teamPage.goToTeam();
+            Thread.sleep(5000);
             teamPage.searchAndSelectTeamMemberByName(firstNameOfTM2);
             profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
             teamPage.rejectAllTheTimeOffRequests();
@@ -2132,7 +2133,7 @@ public class DragAndDropTest extends TestBase {
             List<WebElement> newAddedShifts = scheduleShiftTablePage.getOneDayShiftByName(1, "open");
             SimpleUtils.assertOnFail("The expected new added shifts count is "+selectedShiftCount
                             + " The actual new added shift count is:"+newAddedShifts.size(),
-                    newAddedShifts.size()==0, false);
+                    newAddedShifts.size()==2, false);
 
             scheduleMainPage.saveSchedule();
             newAddedShifts = scheduleShiftTablePage.getOneDayShiftByName(1, "open");

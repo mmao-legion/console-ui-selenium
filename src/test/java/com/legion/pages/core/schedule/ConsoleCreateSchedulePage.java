@@ -410,6 +410,47 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         }
     }
 
+    @Override
+    public void createScheduleForNonDGFlowNewUIWithoutUpdateOH() throws Exception {
+        String subTitle = "Confirm Operating Hours";
+        waitForSeconds(3);
+        if (isElementLoaded(generateSheduleButton,120)) {
+            clickTheElement(generateSheduleButton);
+            openBudgetPopUp();
+            if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
+                    && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
+                waitForSeconds(3);
+                clickTheElement(nextButtonOnCreateSchedule);
+                checkEnterBudgetWindowLoadedForNonDG();
+                selectWhichWeekToCopyFrom("SUGGESTED");
+                clickOnFinishButtonOnCreateSchedulePage();
+                switchToManagerViewToCheckForSecondGenerate();
+            }else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
+                click(generateSheduleForEnterBudgetBtn);
+                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                    checkoutSchedule();
+                    switchToManagerViewToCheckForSecondGenerate();
+                } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+                    updateAndGenerateSchedule();
+                    switchToManagerViewToCheckForSecondGenerate();
+                } else {
+                    SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
+                }
+            } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
+                updateAndGenerateSchedule();
+                switchToManagerViewToCheckForSecondGenerate();
+            } else if (isElementEnabled(checkOutTheScheduleButton,20)) {
+                checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
+                SimpleUtils.pass("Schedule Generated Successfully!");
+                switchToManagerViewToCheckForSecondGenerate();
+            } else {
+                SimpleUtils.fail("Not able to generate schedule Successfully!", false);
+            }
+        }else {
+            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+        }
+    }
+
     public void generateScheduleFromCreateNewScheduleWindow(String activeWeekText) throws Exception {
         if (isElementEnabled(copySchedulePopUp, 5)) {
             SimpleUtils.pass("Copy From Schedule Window opened for week " + activeWeekText);
@@ -815,7 +856,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         }
     }
 
-
+    @FindBy(css = ".schedule-success")
+    private WebElement generateScheduleSuccessImg;
     @Override
     public void createScheduleForNonDGFlowNewUIWithGivingTimeRange(String startTime, String endTime) throws Exception {
         String subTitle = "Confirm Operating Hours";
@@ -836,7 +878,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                         clickTheElement(nextButtonOnCreateSchedule);
                     }
                 }
-                if (isElementEnabled(checkOutTheScheduleButton, 10)) {
+//                waitForSeconds(3);
+                if (isElementEnabled(generateScheduleSuccessImg, 5)) {
                     checkoutSchedule();
                 } else {
                     selectWhichWeekToCopyFrom("SUGGESTED");
@@ -1775,4 +1818,34 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         return isLoaded;
 
     }
+    
+  @Override
+    public void isGenerateButtonNotClickable() throws Exception {
+        if (isElementLoaded(scheduleGenerateButton) && isClickable(scheduleGenerateButton,5)){
+            if(!(isElementLoaded(generateModalTitle))){
+                SimpleUtils.pass("The Create Schedule button is unclickable!");
+            }else{
+                SimpleUtils.fail("The Create Schedule button is clickable!", false);
+            }
+        } else {
+            SimpleUtils.fail("The Create Schedule button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void verifyTooltipForUnclickableCreateScheduleBtn() throws Exception {
+        if (isElementLoaded(scheduleGenerateButton) && isClickable(scheduleGenerateButton,5)){
+            mouseToElement(scheduleGenerateButton);
+            String tooltipText = "The schedule can not be created because the budget is missing";
+            if(tooltipText.equalsIgnoreCase(scheduleGenerateButton.getAttribute("tooltip"))){
+                SimpleUtils.pass("Tooltip is expected!");
+            }else{
+                SimpleUtils.fail("Tooltip should display when mouse hover the create schedule button!", false);
+            }
+        } else {
+            SimpleUtils.fail("The Create Schedule button is not loaded!", false);
+        }
+    }
+
 }
+

@@ -83,14 +83,15 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.closeWidget(widgetType.Todays_Forecast.getValue());
         liquidDashboardPage.switchOnWidget(widgetType.Todays_Forecast.getValue());
 
-
-        //verify switch off Timesheet_Approval_Status widget
-        liquidDashboardPage.switchOffWidget(widgetType.Timesheet_Approval_Status.getValue());
-        //verify switch on Timesheet_Approval_Status widget
-        liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
-        //verify close Timesheet_Approval_Status widget
-        liquidDashboardPage.closeWidget(widgetType.Timesheet_Approval_Status.getValue());
-        liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
+        if (dashboardPage.isTimesheetConsoleMenuDisplay()) {
+            //verify switch off Timesheet_Approval_Status widget
+            liquidDashboardPage.switchOffWidget(widgetType.Timesheet_Approval_Status.getValue());
+            //verify switch on Timesheet_Approval_Status widget
+            liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
+            //verify close Timesheet_Approval_Status widget
+            liquidDashboardPage.closeWidget(widgetType.Timesheet_Approval_Status.getValue());
+            liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Status.getValue());
+        }
 
 /*
         //verify switch off Timesheet_Approval_Rate widget
@@ -102,13 +103,13 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.switchOnWidget(widgetType.Timesheet_Approval_Rate.getValue());
 */
 
-        //verify switch off Alerts widget
+ /*       //verify switch off Alerts widget
         liquidDashboardPage.switchOffWidget(widgetType.Alerts.getValue());
         //verify switch on Alerts widget
         liquidDashboardPage.switchOnWidget(widgetType.Alerts.getValue());
         //verify close Alerts widget
         liquidDashboardPage.closeWidget(widgetType.Alerts.getValue());
-        liquidDashboardPage.switchOnWidget(widgetType.Alerts.getValue());
+        liquidDashboardPage.switchOnWidget(widgetType.Alerts.getValue());*/
 
 /*
         //verify switch off Swaps_Covers widget
@@ -171,9 +172,11 @@ public class LiquidDashboardTest extends TestBase {
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Schedules.getValue());
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Starting_Soon.getValue());
         //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Swaps_Covers.getValue());
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Alerts.getValue());
+        //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Alerts.getValue());
         //liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Timesheet_Approval_Rate.getValue());
-        liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Timesheet_Approval_Status.getValue());
+        if (dashboardPage.isTimesheetConsoleMenuDisplay()) {
+            liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Timesheet_Approval_Status.getValue());
+        }
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Helpful_Links.getValue());
         liquidDashboardPage.verifyUpdateTimeInfoIcon(widgetType.Todays_Forecast.getValue());
         //verify search input
@@ -1411,6 +1414,42 @@ public class LiquidDashboardTest extends TestBase {
                 }
             }else {
                 SimpleUtils.report("No upcoming shifts loaded!");
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Ting")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Verify the link on Compliance Violations widget")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheLinkOnComplianceViolationsWidgetAsInternalAdmin(String browser, String username, String password, String location) {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+
+            // Enable Compliance Violation widget
+            liquidDashboardPage.enterEditMode();
+            liquidDashboardPage.switchOnWidget(widgetType.Compliance_Violation.getValue());
+            liquidDashboardPage.saveAndExitEditMode();
+
+            String enterprise = System.getProperty("enterprise");
+
+            // TA enabled enterprise
+            if (enterprise.equalsIgnoreCase("vailqacn")) {
+                SimpleUtils.assertOnFail("View Schedules link should not be able to displayed for TA enabled enterprise", !liquidDashboardPage.checkViewSchedulesLinkOfComplianceViolationsSection(), false);
+            }
+
+            // None TA enterprise
+            if (enterprise.equalsIgnoreCase("kendrascott2")) {
+                String startDateOfCurrentWeek = liquidDashboardPage.getActiveWeekStartDayFromComplianceViolationsWidget();
+                liquidDashboardPage.clickViewSchedulesLinkOfComplianceViolationsWidget();
+                String startDateOfActiveWeekFromSchedule = scheduleCommonPage.getActiveWeekStartDayFromSchedule();
+                SimpleUtils.assertOnFail("The start day of current week didn't match! " + "Start date from Compliance Violations Widget is: " + startDateOfCurrentWeek + ", " + " Start date from schedule is: " + startDateOfActiveWeekFromSchedule, startDateOfCurrentWeek.equalsIgnoreCase(startDateOfActiveWeekFromSchedule), false);
             }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

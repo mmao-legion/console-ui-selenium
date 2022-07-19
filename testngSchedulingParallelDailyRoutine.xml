@@ -42,6 +42,7 @@
                     <include name="verifyShiftInfoInPersonalMyScheduleAsInternalAdmin"/>
                     <include name="verifyShiftInfoInPersonalMyPreferenceAsInternalAdmin"/>
                     <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
+                    <include name="verifyTheFunctionalityOfGreenOrGreyAvailableAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
@@ -135,6 +136,8 @@
                     <!--                    <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" /> need disable Continuous Operation-->
                     <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
+                    <include name="verifyTheBudgetHoursWhenByLocationAsInternalAdmin" />
+                    <include name="verifyTheNoBudgetPermissionForSMAsInternalAdmin" />
                                    </methods>
                                </class>
                            </classes>
@@ -198,11 +201,12 @@
                     <include name="validateTheAvailableLeftHrsDisplayAs168WhenAddFullAvailabilitiesAsTeamMember" />
                     <include name="validateTheAvailableLeftHrsDisplayCorrectlyWhenUpdateAvailabilitiesAsTeamMember" />
                     <include name="validateTheAvailableLeftHrsWhenTMHasShiftsOnTheWeekAsTeamMember" />
-<!--                    <include name="validateTimeOffOnAvailabilityTableAsTeamMember" /> -->
+                    <include name="validateTimeOffOnAvailabilityTableAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWithScheduledShiftAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWillChangedAccordinglyAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTablWhenThereIsNoShiftBeenScheduledAsTeamMember" />
                     <include name="validateTheApprovedOrRejectedAvailabilitiesRequestShouldNotBeAbleToOperateAsTeamMember" />
+                    <include name="validateManagersCanConvertToOpenShiftAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -266,6 +270,7 @@
                     <include name="verifySchedulesWidgetsAsStoreManager"/>
 <!--                    <include name="verifyNoContentInStartingSoonWidgetAsInternalAdmin" Blocked by SCH-5474/>-->
 <!--                    <include name="verifyTheContentOfAlertWidgetAsStoreManager" Blocked by SCH-5474/>-->
+                    <include name="verifyTheLinkOnComplianceViolationsWidgetAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>

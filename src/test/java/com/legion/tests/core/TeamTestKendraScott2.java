@@ -29,6 +29,8 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -1624,6 +1626,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			String firstNameOfTM = tmFullName.split(" ")[0];
 			String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
@@ -1683,7 +1686,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			//Go to Time Off tab and create time off on the same week
 			profileNewUIPage.selectProfilePageSubSectionByLabel(timeoffLabel);
 			String timeOffExplanationText = "Sample Explanation Text";
-			profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.Vacation.getValue(), timeOffExplanationText, fromDate1, 0);
+			profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.JuryDuty.getValue(), timeOffExplanationText, fromDate1, 0);
 
 			//Go the Preference and check the time off will display
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
@@ -1693,6 +1696,13 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.assertOnFail("The time offs fail to load on availability table" ,
 					timeOffsLength.size() == 1
 							&& timeOffsLength.get(0).equalsIgnoreCase("24.0 hrs"), false);
+			//Edit the steps for SCH-657
+			profileNewUIPage.clickAvailabilityEditButton();
+			timeOffsLength = profileNewUIPage.getTimeOffsLengthOnAvailabilityTable();
+			SimpleUtils.assertOnFail("The time offs fail to load on availability table" ,
+					timeOffsLength.size() == 1
+							&& timeOffsLength.get(0).equalsIgnoreCase("24.0 hrs"), false);
+			controlsNewUIPage.clickOnCancelBtn();
 			//Check the available left hrs, the hrs will not change
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
 			totalHoursValue = availabilityData.get("totalHoursValue").toString();
@@ -2090,6 +2100,155 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(secondWeek, "reject");
 			profileNewUIPage.verifyTheApprovedOrRejectedAvailabilityRequestCannotBeOperated(secondWeek);
 		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate managers can convert to Open Shift on current day and past days")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void validateManagersCanConvertToOpenShiftAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			String accessRoleTab = "Access Roles";
+			String permissionSection = "Schedule";
+			String permission = "Edit Past Schedule";
+			String actionOn = "on";
+			//Go to the configuration page and set the labor budget and By Location
+			if (isLocationUsingControlsConfiguration){
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsSchedulingPolicies();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+				controlsNewUIPage.selectBudgetGroupNonOP("By Location");
+
+				//Go to Users and Roles page
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the Edit Past Schedule permission for SM & DM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				String role = "Store Manager";
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
+				role = "Area Manager";
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(240000);
+
+			}else {
+				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+				SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+				locationsPage.clickOnLocationsTab();
+				locationsPage.goToGlobalConfigurationInLocations();
+				locationsPage.editLaborBudgetSettingContent();
+				locationsPage.turnOnOrTurnOffLaborBudgetToggle(true);
+				locationsPage.selectBudgetGroup("By Location");
+				locationsPage.saveTheGlobalConfiguration();
+
+				//Go to Users and Roles page and switch to the Access Roles sub tab
+				ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+				userManagementPage.clickOnUserManagementTab();
+				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+				userManagementPage.goToUserAndRoles();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the Edit Past Schedule permission for SM & DM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				String role = "CinemarkStoreManager";
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
+				role = "CinemarkDistrictManager";
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(240000);
+
+				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
+					//Back to the console page
+					switchToConsoleWindow();
+				}
+			}
+
+			//Go to schedule page and re-generate the schedule for current & past weeks
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			scheduleCommonPage.clickOnWeekView();
+			scheduleCommonPage.navigateToPreviousWeek();
+			boolean isPreviousActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isPreviousActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			//Login as SM, generate the schedule
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			Thread.sleep(60000);
+			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+
+			//Switch to the DayView and convert one shift to the Open Shift.
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			scheduleCommonPage.clickOnDayView();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.convertAllShiftsToOpenInDayView();
+			scheduleMainPage.saveSchedule();
+
+			//Switch the previous week and convert one past shift to the Open Shift.
+			scheduleCommonPage.clickOnWeekView();
+			scheduleCommonPage.navigateToPreviousWeek();
+			scheduleCommonPage.clickOnDayView();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.convertAllShiftsToOpenInDayView();
+			scheduleMainPage.saveSchedule();
+
+			//Login as DM, generate the schedule
+			loginPage.logOut();
+			Thread.sleep(5000);
+			loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+
+			//Switch to the DayView and convert one shift to the Open Shift.
+			scheduleCommonPage.clickOnDayView();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.convertAllShiftsToOpenInDayView();
+			scheduleMainPage.saveSchedule();
+
+			//Switch the previous week and convert one past shift to the Open Shift.
+			scheduleCommonPage.clickOnWeekView();
+			scheduleCommonPage.navigateToPreviousWeek();
+			scheduleCommonPage.clickOnDayView();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.convertAllShiftsToOpenInDayView();
+			scheduleMainPage.saveSchedule();
+
+		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}

@@ -443,6 +443,7 @@ public class ScheduleCoverageTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "08:00pm");
+            Thread.sleep(3000);
             HashMap<String, String> scheduleHrs = scheduleShiftTablePage.getHrsOnTooltipOfScheduleSummaryHoursByIndex(0);
             float differenceHrs = Float.parseFloat(scheduleHrs.get("differenceHrs"));
             boolean hasArrowImgBeforeChange = differenceHrs != 0;
@@ -477,7 +478,7 @@ public class ScheduleCoverageTest extends TestBase {
                         arrowImgsBeforeChange+2 == arrowImgs.size(), false);
             SimpleUtils.assertOnFail("The arrow img should be yellow and up, actual is: "+arrowImgs.get(0),
                     arrowImgs.get(0).equalsIgnoreCase("yellow up"), false);
-        arrowImgsBeforeChange = arrowImgs.size();
+            arrowImgsBeforeChange = arrowImgs.size();
 
             scheduleHrs = scheduleShiftTablePage.getHrsOnTooltipOfScheduleSummaryHoursByIndex(0);
             //Edit the schedule, increase the shift duration, let the coverage == 25%

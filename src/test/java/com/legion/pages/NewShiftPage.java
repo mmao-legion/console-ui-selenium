@@ -109,5 +109,6 @@ public interface NewShiftPage {
     public void clickAssignShiftsForEachDaySwitch() throws Exception;
     public void setShiftNotesOnNewCreateShiftPage (String shiftNotes) throws Exception;
     public void setShiftNameOnNewCreateShiftPage (String shiftName) throws Exception;
+    public String getTMAvailableColourForAssignedShift () throws Exception;
 
 }

@@ -1,5 +1,6 @@
 package com.legion.tests.core.opEmployeeManagement;
 
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.opemployeemanagement.AbsentManagePage;
 import com.legion.pages.core.opemployeemanagement.EmployeeManagementPanelPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffReasonConfigurationPage;
@@ -28,7 +29,9 @@ public class AbsentManagementTemplateTest extends TestBase {
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String) params[1], (String) params[2], (String) params[3]);
         RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         modelSwitchPage.switchToOpsPortal();
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
     }
 
     @Automated(automated = "Automated")
@@ -36,7 +39,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Employee manage tab and absence management tile")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyEmployeeManagementModuleAndDashboardAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) {
+    public void verifyEmployeeManagementModuleAndDashboardAsInternalAdmin(String browser, String username, String password, String location) {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
         navigationPage.navigateToEmployeeManagement();
@@ -44,24 +47,23 @@ public class AbsentManagementTemplateTest extends TestBase {
         //verify the absent management dashboard card content
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
         String dashboardText = panelPage.getDashboardCardContent();
-        Assert.assertEquals(dashboardText, "Absence Management\n" +
+        Assert.assertEquals(dashboardText, "Time Off Management\n" +
                 "Configure Time Offs\n" +
                 "Time Off Reasons\n" +
                 "Time Off Accrual Rules", "Invalid content on dashboard card!");
         SimpleUtils.pass("Succeeded in validating Absent Management dashboard card content!");
     }
 
-
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Templates list page validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAddEditSearchAndDisableTemplateAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
+    public void verifyAddEditSearchAndDisableTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToAbsentManagementPage();
+        panelPage.goToTimeOffManagementPage();
         //verify that there are 2 tabs in absent manage
         AbsentManagePage absentManagePage = new AbsentManagePage();
         Assert.assertTrue(absentManagePage.isTemplateTabDisplayed(), "Template tab on absent manage page didn't show!");
@@ -150,11 +152,11 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Settings page validation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyActionsInSettingsTabAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
+    public void verifyActionsInSettingsTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToAbsentManagementPage();
+        panelPage.goToTimeOffManagementPage();
 
         AbsentManagePage absentManagePage = new AbsentManagePage();
         absentManagePage.switchToSettings();
@@ -242,29 +244,34 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTemplateDetailsAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
+    public void verifyTemplateDetailsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToAbsentManagementPage();
+        panelPage.goToTimeOffManagementPage();
         AbsentManagePage absentManagePage = new AbsentManagePage();
-
         absentManagePage.search("AutoTest_Accrual");
-        int i = 0;
-        while (i< 100 && !absentManagePage.getResult().equalsIgnoreCase("")) {
-            absentManagePage.clickInDetails();
-            SimpleUtils.pass("Succeeded in validating removing time off rules works well!");
-
-            absentManagePage.deleteTheTemplate();
-            absentManagePage.okToActionInModal(true);
-            absentManagePage.search("AutoTest_Accrual");
-            i++;
+        int maxNumOfTemp=absentManagePage.templateNumber() * 2;
+        for (int i = 0; i < maxNumOfTemp; i++) {
+            if (!absentManagePage.isNoMatchMessageDisplayed()) {
+                absentManagePage.clickInDetails();
+                if (absentManagePage.isDeleteButtonDisplayed()) {
+                    absentManagePage.deleteTheTemplate();
+                    absentManagePage.okToActionInModal(true);
+                } else {
+                    absentManagePage.archivePublishedTemplate();
+                    absentManagePage.okToActionInModal(true);
+                }
+                i++;
+                absentManagePage.search("AutoTest_Accrual");
+            }
         }
+
         Random random = new Random();
         String tempName = "AutoTest_Accrual" + random.nextInt(100);
         absentManagePage.createANewTemplate(tempName, "accrual test");
         absentManagePage.submit();
-//        absentManagePage.closeWelcomeModal();
+        //absentManagePage.closeWelcomeModal();
         absentManagePage.saveTemplateAs("Save as draft");
         SimpleUtils.pass("Succeeded in creating template: " + tempName + " !");
 
@@ -283,7 +290,7 @@ public class AbsentManagementTemplateTest extends TestBase {
 
         //switch between details and associations
         absentManagePage.switchToAssociation();
-        Assert.assertEquals(absentManagePage.getTemplateAssociationTitle(), "Dynamic Groups", "Failed to switch to association page!");
+        Assert.assertEquals(absentManagePage.getTemplateAssociationTitle(), "Dynamic Employee Groups", "Failed to switch to association page!");
         absentManagePage.switchToDetails();
         Assert.assertEquals(absentManagePage.getCanEmployeeRequestLabel(), "Can employees request time off ?", "Failed to switch to details page!");
         SimpleUtils.pass("Succeeded in validating switch between details and association!");
@@ -321,28 +328,36 @@ public class AbsentManagementTemplateTest extends TestBase {
         SimpleUtils.pass("Succeeded in validating template lever--can employee request toggle!");
         absentManagePage.back();
 
-        //publish later after associating
+        //publish after associating
         absentManagePage.configureTemplate(tempName);
-        absentManagePage.associateTemplate();
+        absentManagePage.associateTemplate("OML16ForAuto");
         SimpleUtils.pass("Succeeded in associating the template!");
         absentManagePage.switchToDetails();
-        absentManagePage.saveTemplateAs("Publish later");
+        //configure a rule before publish
+        absentManagePage.configureTimeOffRules("Annual Leave");
+        TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
+        configurationPage.setTimeOffRequestRuleAs("Employee can request ?", true);
+        configurationPage.setTimeOffRequestRuleAs("Employee can request partial day ?", true);
+        configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
+        configurationPage.saveTimeOffConfiguration(true);
+        absentManagePage.saveTemplateAs("Publish now");
 
         absentManagePage.search(tempName);
-        Assert.assertTrue(absentManagePage.getTemplateStatus().get(0).equals("Pending"), "Failed to save the template as publish later!");
-        SimpleUtils.pass("Succeeded in saving as publish later!");
+        Assert.assertTrue(absentManagePage.getTemplateStatus().get(0).equals("Published"), "Failed to save the template as publish later!");
+        SimpleUtils.pass("Succeeded in saving as publish now!");
 
-        //publish now
-        absentManagePage.configureTemplate(tempName);
-        absentManagePage.saveTemplateAs("Publish now");
+        //Publish at different time
+        /*absentManagePage.configureTemplate(tempName);
+        absentManagePage.saveTemplateAs("Publish later");
         absentManagePage.search(tempName);
         Assert.assertTrue(absentManagePage.getTemplateStatus().get(0).equals("Published"), "Failed to save the template as publish now!");
-        SimpleUtils.pass("Succeeded in saving as publish now!");
+        SimpleUtils.pass("Succeeded in saving as publish now!");*/
 
         //validate there are 2 versions
         absentManagePage.configureTemplate(tempName);
         absentManagePage.saveTemplateAs("Save as draft");
         absentManagePage.search(tempName);
+        absentManagePage.caretDown();
         Assert.assertTrue(absentManagePage.getTemplateStatus().size() == 2 && absentManagePage.getTemplateStatus().get(0).equals("Published") && absentManagePage.getTemplateStatus().get(1).equals("Draft"));
         SimpleUtils.pass("Succeeded in saving as draft on a published version!");
 
@@ -364,7 +379,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         SimpleUtils.pass("Succeeded in marking as default template!");
 
         //archive
-        absentManagePage.search(tempName);
+        //absentManagePage.search(tempName);
         absentManagePage.clickInDetails();
         //verify archive button displays well!
         Assert.assertTrue(absentManagePage.isArchiveButtonDisplayed(), "Archive button should display here!");
@@ -383,11 +398,11 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOffConfigurationAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOffConfigurationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToAbsentManagementPage();
+        panelPage.goToTimeOffManagementPage();
         AbsentManagePage absentManagePage = new AbsentManagePage();
 
         //Create a new template
@@ -395,7 +410,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         String tempName = "AutoTest_Accrual" + random.nextInt(1000);
         absentManagePage.createANewTemplate(tempName, "accrual test");
         absentManagePage.submit();
-//        absentManagePage.closeWelcomeModal();
+        //absentManagePage.closeWelcomeModal();
         absentManagePage.saveTemplateAs("Save as draft");
         SimpleUtils.pass("Succeeded in creating template: " + tempName + " !");
 
@@ -422,8 +437,10 @@ public class AbsentManagementTemplateTest extends TestBase {
         SimpleUtils.pass("Succeeded in validating distribution method options!");
 
         //add service lever
-        configurationPage.addServiceLever();
-        configurationPage.addSecondServiceLever();
+        /*configurationPage.addServiceLever();
+        configurationPage.addSecondServiceLever();*/
+        configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
+        configurationPage.addSpecifiedServiceLever(2, "24", "6", "30");
 
         configurationPage.saveTimeOffConfiguration(true);
 
@@ -469,11 +486,11 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOffRequestRulesAsInternalAdminForEmployeeManagement(String browser, String username, String password, String location) throws Exception {
+    public void verifyTimeOffRequestRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToAbsentManagementPage();
+        panelPage.goToTimeOffManagementPage();
         AbsentManagePage absentManagePage = new AbsentManagePage();
 
         //Create a new template
@@ -481,7 +498,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         String tempName = "AutoTest_Accrual" + random.nextInt(1000);
         absentManagePage.createANewTemplate(tempName, "accrual test");
         absentManagePage.submit();
-//        absentManagePage.closeWelcomeModal();
+        //absentManagePage.closeWelcomeModal();
         absentManagePage.saveTemplateAs("Save as draft");
         SimpleUtils.pass("Succeeded in creating template: " + tempName + " !");
 
@@ -516,7 +533,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         configurationPage.setProbationUnitAsMonths();
         configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "5");
 
-        configurationPage.addServiceLever();
+        configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
         configurationPage.saveTimeOffConfiguration(true);
         //verify results of above action
         absentManagePage.configureTimeOffRules(timeOffReason);
@@ -583,7 +600,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     public ArrayList<String> accrualStarted() {
         ArrayList<String> accrualStarted = new ArrayList<String>();
         accrualStarted.add("Hire Date");
-        accrualStarted.add("Seniority Date");
+        //accrualStarted.add("Seniority Date"); this one has been disabled.
         accrualStarted.add("Specified Date");
         return accrualStarted;
     }
@@ -592,7 +609,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         ArrayList<String> accrualEnd = new ArrayList<String>();
         accrualEnd.add("");
         accrualEnd.add("Hire Date");
-        accrualEnd.add("Seniority Date");
+        //accrualEnd.add("Seniority Date");
         accrualEnd.add("Specified Date");
         return accrualEnd;
     }
@@ -603,6 +620,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         distribution.add("Weekly");
         distribution.add("Worked Hours");
         distribution.add("Lump Sum");
+        distribution.add("Specified Date");
         distribution.add("None");
         return distribution;
     }

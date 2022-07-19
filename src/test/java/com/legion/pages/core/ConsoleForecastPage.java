@@ -73,10 +73,12 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(xpath = "//*[contains(@class,'day-week-picker-period-active')]/preceding-sibling::div[1]")
 	private WebElement immediatePastToCurrentActiveWeek;
 
-	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@class='number ng-binding']")
+//	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@class='number ng-binding']")
+	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='!hideForecast() && !hasAdjustableRoles']")
 	private WebElement laborSmartCardForecast;
 
-	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='hasBudget()']")
+//	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='hasBudget()']")
+	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='hasBudget() && !hasDayPartFilterOn() && !hasAdjustableRoles']")
 	private WebElement laborSmartCardBudget;
 
 	@FindBy(xpath = "//div[contains(text(),'Holidays')]")
@@ -202,6 +204,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 	@FindBy(css = "[ng-if=\"!!getSummaryField('totalActualUnits')\"]")
 	private List<WebElement> actualDataInSightSmartCard;
+
+	@FindBy(css = "label.input-label")
+	private List<WebElement> workRoleListNew;
 
 
 	public ConsoleForecastPage() {
@@ -2140,6 +2145,34 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		else
 			SimpleUtils.fail("Forecast Page: Content under labor tab is not loaded",false);
 	}
+	
+	@Override
+	public void verifyEditBtnNotVisible() throws Exception {
+		if (!(isElementLoaded(editForecastBtn,10) && editForecastBtn.isDisplayed()))
+			SimpleUtils.pass("Forecast Page: Edit button failed to load");
+		else
+			SimpleUtils.fail("Forecast Page: Edit button is visible",false);
+	}
+
+	@Override
+	public void verifyWorkRoleInList(String workRoleName) throws Exception {
+		boolean flag = false;
+		if (isElementLoaded(filterButton, 10)) {
+			clickTheElement(filterButton);
+			for (WebElement workRole : workRoleListNew) {
+				if (workRole.getText().trim().contains(workRoleName)) {
+					SimpleUtils.pass(workRoleName + "is exist");
+					flag = true;
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("Work role filter load failed", false);
+		}
+		if (!flag) {
+			SimpleUtils.fail(workRoleName + " not is exist", true);
+		}
+	}
 
 	@FindBy(css = "[label=\"Locations\"] ng-form [placeholder=\"None\"]")
 	private WebElement locationsFilter;
@@ -2333,4 +2366,92 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		}
 		return isConsistent;
 	}
+
+	@FindBy(css = "[class=\"card-carousel-card-table-edit-budget ng-scope\"]")
+	private WebElement laborBudgetEditBtn;
+	@FindBy(css = "[class=\"table-row-field guidance-background tc ng-scope w-50\"] [class=\"row-name-field ng-binding ng-scope\"]")
+	private WebElement guidanceBudget;
+	@FindBy(css = "[ng-class=\"table-row-input-field\"]")
+	private WebElement budgetInputField;
+	@FindBy(css = "[class =\"ok-action-text ng-binding\"]")
+	private WebElement applyBudgetBtn;
+
+	@Override
+	public void goToForecastLaborWeek() throws Exception {
+		if (isElementEnabled(weekViewButton)) {
+			click(weekViewButton);
+			String weekDuration[] = currentActiveWeek.getText().split("\n");
+			SimpleUtils.pass("Current active labor week is " + weekDuration[1]);
+			if (isElementEnabled(laborTab)) {
+				click(laborTab);
+				waitForSeconds(5);
+				if (forecastGraph.size() != 0 && laborSmartCardForecast.getText() != null) {
+					SimpleUtils.pass("Labor Forecast Loaded in Week View Successfully!" + " Labor Forecast is " + laborSmartCardForecast.getText());
+				} else {
+					SimpleUtils.fail("Labor Forecast Not Loaded in Week View", false);
+				}
+			} else {
+				SimpleUtils.fail("Labor subtab of forecast tab not found", false);
+			}
+		} else {
+			SimpleUtils.fail("Week View button not found in Forecast", false);
+		}
+
+	}
+
+	@Override
+	public void editLaborBudgetOnSummarySmartCard() throws Exception {
+		String forecast = laborSmartCardForecast.getText();
+		if (isElementLoaded(laborBudgetEditBtn)) {
+			click(laborBudgetEditBtn);
+			if (isElementLoaded(guidanceBudget)&&isElementLoaded(budgetInputField)) {
+				String guidanceBudgetText = guidanceBudget.getText();
+				budgetInputField.clear();
+				budgetInputField.sendKeys(guidanceBudgetText);
+				if(isElementLoaded (applyBudgetBtn)){
+					clickTheElement(applyBudgetBtn);
+					waitForSeconds(5);
+					String budget = laborSmartCardBudget.getText();
+					SimpleUtils.assertOnFail("The budget is not updated correctly",forecast.matches(budget),false);
+				}else{
+					SimpleUtils.fail("The apply button is not loaded!", false);
+				}
+			} else {
+				SimpleUtils.fail("The guidance budget or budget input field is not loaded!", false);
+			}
+		}
+	}
+
+	@Override
+	public void clearLaborBudgetOnSummarySmartCard() throws Exception {
+		if (isElementLoaded(laborBudgetEditBtn)) {
+			click(laborBudgetEditBtn);
+			if (isElementLoaded(guidanceBudget)&&isElementLoaded(budgetInputField)) {
+				budgetInputField.clear();
+				if(isElementLoaded (applyBudgetBtn)){
+					clickTheElement(applyBudgetBtn);
+					waitForSeconds(3);
+				}else{
+					SimpleUtils.fail("The apply button is not loaded!", false);
+				}
+			} else {
+				SimpleUtils.fail("The guidance budget or budget input field is not loaded!", false);
+			}
+		}
+	}
+
+	@Override
+	public String getLaborBudgetOnSummarySmartCard() throws Exception {
+		String BudgetValue = null;
+		if (isElementLoaded(laborSmartCardBudget)) {
+			BudgetValue = laborSmartCardBudget.getText().trim();
+			return BudgetValue;
+		} else {
+			SimpleUtils.fail("The edited budget on forecast page is not loaded!", false);
+		}
+		return null;
+	}
+
+
+
 }

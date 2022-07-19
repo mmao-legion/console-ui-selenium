@@ -2,6 +2,7 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -64,6 +65,48 @@ public class ConsoleControlsPage extends BasePage implements ControlsPage{
 		} else
 			SimpleUtils.fail("Controls Console Menu not loaded Successfully!", false);
 	}
-	
 
+	@FindBy(css = "[title='Tasks and Work Roles']")
+	private WebElement tasksAndWorkRoles;
+	@Override
+	public void goToTaskAndWorkRolePage() throws Exception{
+		if (isElementLoaded(tasksAndWorkRoles, 5)) {
+			click(tasksAndWorkRoles);
+			SimpleUtils.pass("Tasks and work roles is clickable");
+		}else
+			SimpleUtils.fail("tasks and work roles loaded failed",false);
+	}
+
+	@FindBy(css = "div.lg-tabs__nav-item.ng-binding.ng-scope:nth-child(2)")
+	private WebElement workRoles;
+	@Override
+	public void goToWorkRolePage() throws Exception{
+		if (isElementLoaded(workRoles, 5)) {
+			click(workRoles);
+			SimpleUtils.pass("Work roles is clickable");
+		}else
+			SimpleUtils.fail("Work roles loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label='Auto']>button")
+	private WebElement firstWorkRole;
+	@Override
+	public void goToFirstWorkRoleDetail() throws Exception{
+		if (isElementLoaded(firstWorkRole, 5)) {
+			click(firstWorkRole);
+			SimpleUtils.pass("Add work role button is clickable");
+		}else
+			SimpleUtils.fail("Add wWork role button loaded failed",false);
+	}
+
+	@FindBy(xpath = "//rule-container[3]/div/div/div[1]/div[2]/span[1]/img")
+	private WebElement assignmentRuleAddButton;
+	@FindBy(id = "workRoleConstraintDropDown")
+	private WebElement teamMemberTitleButton;
+
+	@Override
+	public void goToTeamMemberSearchBox() throws Exception{
+		assignmentRuleAddButton.click();
+		teamMemberTitleButton.click();
+	}
 }

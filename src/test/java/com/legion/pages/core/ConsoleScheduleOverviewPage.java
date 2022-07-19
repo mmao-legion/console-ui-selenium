@@ -693,4 +693,18 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		} else
 			SimpleUtils.fail("The View Group Schedule Button fail to load! ", false);
 	}
+
+	@Override
+	public String getCurrentWeekBudgetHours() throws Exception {
+		String budgetHours;
+		WebElement currentWeek = overviewTableRows.get(0);
+		if (isElementLoaded(currentWeek)) {
+			budgetHours = currentWeek.findElement(By.cssSelector("[ng-if = \"hasBudget\"] [ng-if = \"row.budgetHours\"]")).getText();
+			SimpleUtils.pass("Catch the budget hours successfully!");
+			return budgetHours;
+		}else{
+			SimpleUtils.fail("The current week is not listed on the first line",false);
+		}
+		return null;
+	}
 }

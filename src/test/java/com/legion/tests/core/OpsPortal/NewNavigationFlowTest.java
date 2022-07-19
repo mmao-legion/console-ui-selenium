@@ -2,6 +2,7 @@ package com.legion.tests.core.OpsPortal;
 
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -10,6 +11,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.apache.commons.collections.ListUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -21,7 +23,7 @@ public class NewNavigationFlowTest extends TestBase {
     public enum modelSwitchOperation{
 
         Console("Console"),
-        OperationPortal("Operation Portal");
+        OperationPortal("Control Center");
 
         private final String value;
         modelSwitchOperation(final String newValue) {
@@ -44,7 +46,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate manager location for one user in controls")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyManagerLocationForOneUserInControlsInControlsInternalAdminForNewNavigationFlow(String browser, String username, String password, String location) throws Exception {
+    public void verifyManagerLocationForOneUserInControlsInControlsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -84,7 +86,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyGlobalSearchFunctionOnNavigatorAsInternalCustomerAdmin(String browser, String username, String password, String location) throws Exception {
 
-        String[]  upperFieldList = {"HQ","OMLocation16","District-ForAutomation","ENH_NSO_AutoTestLocation","BU-ForAutomation"};
+        String[]  upperFieldList = {"HQ","SeaTac AirportSEA","District-ForAutomation","ENH_NSO_AutoTestLocation","BU3"};
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -345,7 +347,7 @@ public class NewNavigationFlowTest extends TestBase {
         List<String> navigateTextAftNavUpForDM = locationSelectorPage.getNavigatorValue();
         String[] navigateTextAftNavUpForDMToStr = navigateTextAftNavUpForDM.toArray(new String[]{});
         String[] navigateDefaultTextForDMToStr = navigateDefaultTextForDM.toArray(new String[]{});
-        if (!Arrays.equals(navigateTextAftNavUpForDMToStr,navigateDefaultTextForDMToStr)) {
+        if (Arrays.equals(navigateTextAftNavUpForDMToStr,navigateDefaultTextForDMToStr)) {
             SimpleUtils.pass("DM can navigate up one or more level successfully");
         }else
             SimpleUtils.fail("Navigate up one or more level failed",false);
@@ -353,9 +355,7 @@ public class NewNavigationFlowTest extends TestBase {
         loginPage.logOut();
 
         //verify navigation function by SM
-        Object[][]teamMemberCredentialsF=userCredentials.get("StoreManager");
-        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield(String.valueOf(teamMemberCredentialsF[0][0]),String.valueOf(teamMemberCredentialsF[0][1])
-                ,String.valueOf(teamMemberCredentialsF[0][2]));
+        loginAsDifferentRole(AccessRoles.StoreManager.getValue());
         dashboardPage.clickOnSubMenuOnProfile("My Profile");
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         HashMap<String, String> userHRProfileInfo  = profileNewUIPage.getOneUserHRProfileInfo();
@@ -375,7 +375,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate location profile page in controls")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationProfilePageInControlsAsInternalAdminForNewNavigationFlow(String browser, String username, String password, String location) throws Exception {
+    public void verifyLocationProfilePageInControlsAsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -400,7 +400,7 @@ public class NewNavigationFlowTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate location list in Timesheet page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLocationListFunctionInTimesheetAsInternalAdminForNewNavigationFlow(String browser, String username, String password, String location) throws Exception {
+    public void verifyLocationListFunctionInTimesheetAsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
 
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -495,19 +495,20 @@ public class NewNavigationFlowTest extends TestBase {
 //            SimpleUtils.fail("After back to dashboard page the location info was changed",true);
 //
 //    }
-    @Automated(automated = "Automated")
-    @Owner(owner = "Fiona")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate navigation bar view for admin user")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDashboardViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
-        locationSelectorPage.isDMView();
-    }
+//    This case is not applicable for new navigator
+//    @Automated(automated = "Automated")
+//    @Owner(owner = "Fiona")
+//    @Enterprise(name = "Op_Enterprise")
+//    @TestName(description = "Validate navigation bar view for admin user")
+//    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+//    public void verifyDashboardViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+//
+//        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+//        SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
+//        locationSelectorPage.isDMView();
+//    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
@@ -532,38 +533,33 @@ public class NewNavigationFlowTest extends TestBase {
     @TestName(description = "Validate search district function in navigation bar")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNavigationBarSearchDistrictFunctionInternalAdmin(String browser, String username, String password, String location) throws Exception {
-
-        String searchDistrictText = "*";
-
-        List<Integer> districtsCountOnDashboardPage = new ArrayList<>();
-
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
 
-        //Search districts in Navigation
-        districtsCountOnDashboardPage = locationSelectorPage.searchDistrict(searchDistrictText);
+//        get current Region name
+        Map<String, String> upperFields = locationSelectorPage.getSelectedUpperFields();
+        String regionName = upperFields.get("Region");
+
+//        get all districts in this region
+        List<String> districtsNames = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList("District");
 
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
         //go to locations tab
         locationsPage.clickOnLocationsTab();
-        //go to sub-district tab
+        //go to upperField tab
         locationsPage.goToUpperFieldsPage();
-
-        //get the count of all enabled status districts in location-district smart card
-        int alldistrictsCountOnDistrcitsPage = locationsPage.getTotalEnabledDistrictsCount();
-
-        //get the count of search result of distrcits in navigation
-        int allLocationsInDashboardPage = districtsCountOnDashboardPage.get(0);
+        List<String> districtListInRegionDetailsPage = locationsPage.getLocationsInDistrict(regionName);
+        Collections.sort(districtListInRegionDetailsPage);
 
         //compare above two data
-        if (allLocationsInDashboardPage == alldistrictsCountOnDistrcitsPage) {
-            SimpleUtils.pass("User can search district on dashboard page successfully");
+        if (ListUtils.isEqualList(districtsNames, districtListInRegionDetailsPage)) {
+            SimpleUtils.pass("The districts can show well in navigator");
         } else {
-            SimpleUtils.fail("The district searching function can't works", true);
+            SimpleUtils.fail("The district list is not correct!", false);
         }
     }
 
@@ -578,7 +574,7 @@ public class NewNavigationFlowTest extends TestBase {
 
         //change district to show all locations
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.changeDistrict("add district via con");
+        locationSelectorPage.changeDistrict("Fiona");
 
         String searchLocationText = "*";
         Thread.sleep(4000);
@@ -594,7 +590,7 @@ public class NewNavigationFlowTest extends TestBase {
         //go to OPS -> Locations -> District function
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
         //go to locations tab
         locationsPage.clickOnLocationsTab();
         //go to sub-district tab
@@ -626,16 +622,14 @@ public class NewNavigationFlowTest extends TestBase {
     @TestName(description = "Validated navigation bar show after switch to other tabs and then return to dashboard page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        String districtName="OMDistrict1";
-        String locationName="OMLocation2";
+        String districtName="Fiona";
+        String locationName="FionaUsingLocation";
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
 
-        locationSelectorPage.changeDistrict(districtName);
-        Thread.sleep(4000);
-        locationSelectorPage.changeLocation(locationName);
+        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName);
 
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
@@ -693,12 +687,11 @@ public class NewNavigationFlowTest extends TestBase {
     public void verifyNavigationBarRecentlyViewListAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         List<String> searchDistrictsList = new ArrayList<String>(){{
-            add("District1002");
-            add("District1003");
-            add("OMDistrict1");
-            add("1204-1");
-            add("add district via con");
-            add("DistrictEmpty001");
+            add("Fiona");
+            add("NavigationTest");
+            add("ClearDistrict");
+            add("DistrictNavigation1");
+            add("DistrictNavigation2");
         }};
 
         List<String> finalDistrictsList = new ArrayList<String>();
@@ -722,12 +715,109 @@ public class NewNavigationFlowTest extends TestBase {
             if(finalDistrictsList.get(i).equals(searchDistrictsList.get(i))){
                 SimpleUtils.pass("The " + (i+1) + " location is " + finalDistrictsList.get(i));
             }else{
-                SimpleUtils.fail("The order of districts list is NOT correct",true);
+                SimpleUtils.fail("The order of districts list is NOT correct",false);
 
             }
         }
         }else {
-            SimpleUtils.fail("The count of districts is NOT correct",true);
+            SimpleUtils.fail("The count of districts is NOT correct",false);
         }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Persist console tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPersistConsoleTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        SimpleUtils.assertOnFail("Navigation Bar - Location field not loaded successfuly!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
+
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("verifyMock");
+
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+
+        consoleNavigationPage.verifyOnlyComplianceIsGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
+        consoleNavigationPage.verifyTeamPageIsNormal();
+        consoleNavigationPage.navigateTo("Compliance");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Timesheet");
+        consoleNavigationPage.verifytimeSheetPageIsNormal();
+        consoleNavigationPage.navigateTo("Schedule");
+        consoleNavigationPage.verifySchedulePageIsNormal();
+
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("ClearDistrict");
+
+        consoleNavigationPage.verifyOnlyTeamIsGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Compliance");
+        consoleNavigationPage.verifyCompliancePageIsNormal();
+        consoleNavigationPage.navigateTo("Schedule");
+        consoleNavigationPage.verifySchedulePageForDisIsNormal();
+        consoleNavigationPage.navigateTo("Timesheet");
+        consoleNavigationPage.verifytimeSheetPageForDisIsNormal();
+
+        consoleNavigationPage.navigateTo("logout");
+
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+dm@legion.co", "admin11.a","");
+
+        consoleNavigationPage.verifyFourTabAreGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Compliance");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Schedule");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Timesheet");
+        consoleNavigationPage.verifyPageEmpty();
+
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("Region20210818053401");
+
+        consoleNavigationPage.navigateTo("dashboard");
+        consoleNavigationPage.verifyFourTabAreGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Compliance");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Schedule");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Timesheet");
+        consoleNavigationPage.verifyPageEmpty();
+
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("ClearDistrict");
+
+        consoleNavigationPage.verifyOnlyTeamIsGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Compliance");
+        consoleNavigationPage.verifyCompliancePageIsNormal();
+        consoleNavigationPage.navigateTo("Schedule");
+        consoleNavigationPage.verifySchedulePageForDisIsNormal();
+        consoleNavigationPage.navigateTo("Timesheet");
+        consoleNavigationPage.verifytimeSheetPageForDisIsNormal();
+
+
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("verifyMock");
+
+        consoleNavigationPage.navigateTo("dashboard");
+        consoleNavigationPage.verifyOnlyComplianceIsGray();
+        consoleNavigationPage.verifyOtherTableIsNormal();
+        consoleNavigationPage.navigateTo("Team");
+        consoleNavigationPage.verifyTeamPageIsNormal();
+        consoleNavigationPage.navigateTo("Compliance");
+        consoleNavigationPage.verifyPageEmpty();
+        consoleNavigationPage.navigateTo("Schedule");
+        consoleNavigationPage.verifySchedulePageIsNormal();
+        consoleNavigationPage.navigateTo("Timesheet");
+        consoleNavigationPage.verifytimeSheetPageIsNormal();
     }
 }

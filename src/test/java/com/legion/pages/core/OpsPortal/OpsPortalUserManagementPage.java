@@ -3,7 +3,9 @@ package com.legion.pages.core.OpsPortal;
 import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -821,7 +823,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	public void goToUserAndRoles() {
 		if (isElementEnabled(usersAndRolesCard,5)) {
 			click(usersAndRolesCard);
-			waitForSeconds(15);
+		//	waitForSeconds(15);
 			if (isElementEnabled(addNewUserBtn,5)) {
 				SimpleUtils.pass("Can go to Users and Roles page successfully");
 			}else
@@ -843,13 +845,13 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		}
 
 	}
-	@FindBy(css = "div.table-row:nth-child(2)>div:nth-child(1)")
+	@FindBy(css = "div.table-row:nth-child(6)>div:nth-child(1)")
 	private WebElement templateLocalization;
 	@FindBy(css = "div.table-row:nth-child(3)>div:nth-child(1)")
 	private WebElement createEditTemplates;
-	@FindBy(css = "div.table-row:nth-child(4)>div:nth-child(1)")
+	@FindBy(css = "div.table-row:nth-child(8)>div:nth-child(1)")
 	private WebElement operationManagement;
-	@FindBy(css = "div.table-row:nth-child(5)>div:nth-child(1)")
+	@FindBy(css = "div.table-row:nth-child(9)>div:nth-child(1)")
 	private WebElement viewTemplate;
 	@Override
 	public void verifyManageItemInUserManagementAccessRoleTab() throws Exception {
@@ -966,5 +968,666 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			SimpleUtils.report("There is no assignment rule");
 	}
 
+	@FindBy(css = "div.table-row:nth-child(2)>div:nth-child(1)")
+	private WebElement archiveBudgetPlanScenario;
+	@FindBy(css = "div.table-row:nth-child(3)>div:nth-child(1)")
+	private WebElement viewBudgetPlan;
+	@FindBy(css = "div.table-row:nth-child(4)>div:nth-child(1)")
+	private WebElement setBudgetPlanInEffect;
+	@FindBy(css = "div.table-row:nth-child(5)>div:nth-child(1)")
+	private WebElement approveBudgetPlan;
+	@FindBy(css = "div.table-row:nth-child(6)>div:nth-child(1)")
+	private WebElement submitForReview;
+	@FindBy(css = "div.table-row:nth-child(7)>div:nth-child(1)")
+	private WebElement createBudgetPlanScenario;
+	@FindBy(css = "div.table-row:nth-child(8)>div:nth-child(1)")
+	private WebElement createBudgetPlan;
+	@FindBy(css="div.table-row:nth-child(1)>div[ng-repeat]")
+	private List<WebElement> accessRolesList;
+	@FindBy(css="div.table-container.ng-scope div[ng-repeat=\"permission in value\"]")
+	private List<WebElement> permissionsList;
+
+
+	@Override
+	public void verifyPlanItemInUserManagementAccessRoleTab() throws Exception {
+		if (areListElementVisible(accessRolePermissions,5)) {
+			for (WebElement element: accessRolePermissions){
+				if (element.getText().equalsIgnoreCase("Plan")){
+					clickTheElement(element);
+					if (createBudgetPlanScenario.getText().contains("Create Budget Plan Scenario")&& archiveBudgetPlanScenario.getText().contains("Archive Budget Plan Scenario")
+							&& viewBudgetPlan.getText().contains("View Budget Plan") && setBudgetPlanInEffect.getText().contains("Set Budget Plan in Effect")
+							&& createBudgetPlan.getText().contains("Create Budget Plan") && approveBudgetPlan.getText().contains("Approve Budget Plan")
+					        && submitForReview.getText().contains("Submit for Review")) {
+						SimpleUtils.pass("Plan permission items loaded successfully!");
+					}else
+						SimpleUtils.fail("Plan permission items loaded failed",false);
+				}
+			}
+		}else
+			SimpleUtils.fail("Access Role Permissions items load failed",false);
+	}
+
+	@Override
+	public int getIndexOfRolesInPermissionsTable(String role) throws Exception {
+		int index = 0;
+		if(areListElementVisible(accessRolesList,5)){
+			for(WebElement accessRole:accessRolesList){
+				if(accessRole.getText().trim().equalsIgnoreCase(role)){
+					index  = accessRolesList.indexOf(accessRole);
+					break;
+				}
+			}
+		}
+		return index;
+	}
+
+    @Override
+	public boolean verifyPermissionIsCheckedOrNot(int index) throws Exception{
+		boolean flag = false;
+		if(areListElementVisible(permissionsList,5)){
+			for(WebElement permission:permissionsList){
+				WebElement permissionValue = permission.findElements(By.cssSelector("div[ng-repeat]")).get(index);
+				String permissionName = permission.findElement(By.cssSelector("div[title]")).getText().trim();
+				if(permissionValue.getAttribute("checked") != null){
+					SimpleUtils.pass(permissionName + " is checked already!");
+					flag = true;
+				}else {
+					SimpleUtils.report(permissionName + " is NOT checked!");
+				}
+			}
+		}
+		return flag;
+	}
+
+	@FindBy(css = "input[placeholder='You can search by name, job title, location, etc.']")
+	private WebElement usersSearchBox;
+	@FindBy(css = "lg-button.ng-isolate-scope")
+	private WebElement user;
+
+	@Override
+	public void goToUserDetailPage(String users) throws Exception{
+		if (isElementEnabled(accessRoleTab,5)) {
+			highlightElement(usersSearchBox);
+			usersSearchBox.sendKeys(users);
+			usersSearchBox.sendKeys(Keys.ENTER);
+			waitForSeconds(3);
+			if(isElementEnabled(user,5)){
+				highlightElement(user);
+				click(user);
+			}else
+				SimpleUtils.fail("user " + users + "search failed",false);
+		}else{
+			SimpleUtils.fail("usersSearchBox loaded failed",false);
+		}
+	}
+
+	@FindBy(css = "input-field[label='HR'] input")
+	private WebElement HR;
+	@FindBy(css = "input-field[label='Operations Manager'] input")
+	private WebElement OperationsManager;
+	@FindBy(css = "input-field[label='Communications'] input")
+	private WebElement Communications;
+	@FindBy(css = "input-field[label='Budget Planner'] input")
+	private WebElement BudgetPlanner;
+
+	public int verifyAccessRoleSelected() throws Exception{
+		waitForSeconds(10);
+		BasePage.scrollToBottom();
+		if (isElementLoaded(HR,10) && isElementLoaded(OperationsManager,10) && isElementLoaded(Communications,10) && isElementLoaded(BudgetPlanner,10)) {
+			int flag;
+			if(HR.isSelected() && OperationsManager.isSelected() && Communications.isSelected() && BudgetPlanner.isSelected()){
+				flag = 1;
+			}else if(!HR.isSelected() && !OperationsManager.isSelected() && !Communications.isSelected() && !BudgetPlanner.isSelected()){
+				flag = 2;
+			}else
+				flag =3;
+
+			return flag;
+		}else{
+			SimpleUtils.fail("access role loaded failed",false);
+			return 0;
+		}
+	}
+
+	@FindBy(css = "timeoff-management div.collapsible-title")
+	private WebElement timeOffTab;
+	@FindBy(css = "div.balance-action lg-button[label='History']>button")
+	private WebElement history;
+	@FindBy(css = "div#logContainer.lg-slider-pop__content.mt-20")
+	private WebElement historyDetail;
+
+	@Override
+	public void verifyHistoryDeductType() throws Exception {
+		if(isElementEnabled(timeOffTab,10)){
+			highlightElement(timeOffTab);
+			click(timeOffTab);
+			if(isElementEnabled(history,5)){
+				highlightElement(history);
+				click(history);
+				if(isElementEnabled(historyDetail,5)){
+					highlightElement(historyDetail);
+					if (historyDetail.getText().contains("max carryover") && historyDetail.getText().contains("max available") && historyDetail.getText().contains("annual earn limit")){
+						SimpleUtils.pass("deducted type display");
+					}else
+						SimpleUtils.fail("deducted type doesn't display",false);
+				}else
+					SimpleUtils.fail("user history detail loaded failed",false);
+			}else
+				SimpleUtils.fail("user history loaded failed",false);
+		}else
+			SimpleUtils.fail("user time off tab loaded failed",false);
+	}
+
+	@FindBy(xpath = "//nav[@class='lg-tabs__nav']/div[3]")
+	private WebElement jobTitleAccess;
+
+	public void goToJobTitleAccess() throws Exception{
+		if(isElementEnabled(jobTitleAccess,5)){
+			click(jobTitleAccess);
+			SimpleUtils.pass("Job Title Access is clickable");
+		}else
+			SimpleUtils.fail("Job Title Access loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label='Add Job Title']>button")
+	private WebElement addJobTitle;
+
+	public void clickAddJobTitle() throws Exception{
+		if(isElementEnabled(addJobTitle,5)){
+			click(addJobTitle);
+			SimpleUtils.pass("Add job title is clickable");
+		}else
+			SimpleUtils.fail("Add job title loaded failed",false);
+	}
+
+	@FindBy(css = "input[placeholder='Name of Job Title']")
+	private WebElement jobTitleName;
+
+	public void inputJobTitleName(String name) throws Exception{
+		if(isElementLoaded(jobTitleName,5)){
+			jobTitleName.sendKeys(name);
+			SimpleUtils.pass("Input job title name successfully");
+		}else
+			SimpleUtils.fail("Job title name input box loaded failed",false);
+	}
+
+	@FindBy(css = "input[aria-label='Admin']")
+	private WebElement accessRole;
+
+	public void selectAccessRole() throws Exception{
+		if(isElementLoaded(accessRole,5)){
+			click(accessRole);
+			SimpleUtils.pass("Select access role successfully");
+		}else
+			SimpleUtils.fail("Access role loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label='Save']>button")
+	private WebElement saveJobTitleButton;
+
+	public void saveJobTitle() throws Exception{
+		if(isElementLoaded(saveJobTitleButton,5)){
+			click(saveJobTitleButton);
+			SimpleUtils.pass("Save job title successfully");
+		}else
+			SimpleUtils.fail("Job title save button loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label='cancel']>button")
+	private WebElement cancelJobTitleButton;
+
+	public void cancelJobTitle() throws Exception{
+		if(isElementLoaded(cancelJobTitleButton,5)){
+			click(cancelJobTitleButton);
+			SimpleUtils.pass("Cancel job title successfully");
+		}else
+			SimpleUtils.fail("Cancel title save button loaded failed",false);
+	}
+
+	@FindBy(css = "input[placeholder='You can search by employee job title.']")
+	private WebElement searchJobTitleInputBox;
+	@FindBy(css ="td.ng-binding")
+	private WebElement searchJobTitleResult;
+
+	public void searchJobTitle(String name) throws Exception{
+		if(isElementLoaded(searchJobTitleInputBox,5)){
+			searchJobTitleInputBox.clear();
+			searchJobTitleInputBox.sendKeys(name);
+			if(isElementLoaded(searchJobTitleResult,5)){
+				SimpleUtils.pass("Search job title " + name + " successfully");
+			}else
+				SimpleUtils.fail("Job title is not match with searched",false);
+		}else
+			SimpleUtils.fail("Job title search input box loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label = 'Remove']>button")
+	private WebElement removeJobTitleButton;
+
+	public void removeJobTitle() throws Exception{
+		if(isElementLoaded(removeJobTitleButton,5)){
+			click(removeJobTitleButton);
+			SimpleUtils.pass("Remove job title successfully");
+		}else
+			SimpleUtils.fail("Remove job title button loaded failed",false);
+	}
+
+	@FindBy(css = "lg-button[label = 'Show Rate']>button")
+	private WebElement showRate;
+	@FindBy(css = "lg-button[label = 'Hide Rate']>button")
+	private WebElement hideRate;
+	@FindBy(css = "div[ng-if='canViewHourlyRate']>div.value.ng-binding")
+	private WebElement hourlyRate;
+
+	public boolean isHourlyRateExist() throws Exception{
+		if(!isExist(showRate)&&!isExist(hideRate)&&!isExist(hourlyRate))
+			return false;
+		else
+			return true;
+	}
+
+	public void clickShowRate() throws Exception{
+		if(isElementLoaded(showRate,5)){
+			click(showRate);
+			SimpleUtils.pass("Click show rate button successfully");
+		}else
+			SimpleUtils.fail("Show rate button loaded failed",false);
+	}
+
+	public void clickHideShowRate() throws Exception{
+		if(isElementLoaded(hideRate,5)){
+			click(hideRate);
+			SimpleUtils.pass("Click hide rate button successfully");
+		}else
+			SimpleUtils.fail("Hide rate button loaded failed",false);
+	}
+
+	public String getHourlyRateValue() throws Exception{
+		String hourly = "";
+		if(isElementLoaded(hourlyRate,5)){
+			scrollToElement(hourlyRate);
+			hourly = hourlyRate.getAttribute("innerText");
+		}else
+			SimpleUtils.fail("Hide rate value loaded failed",false);
+		return hourly;
+	}
+
+	@FindBy(css = "div[title = ' View Hourly Rate']")
+	private WebElement viewHourlyRate;
+
+	public void verifyViewHourlyRate() throws Exception{
+		if(isElementLoaded(viewHourlyRate,5)){
+			if(viewHourlyRate.getText().equals("View Hourly Rate"))
+				SimpleUtils.pass("View hourly rate permission text is correct");
+			else
+				SimpleUtils.fail("View hourly rate permission text is wrong",false);
+		}else{
+			SimpleUtils.fail("View hourly rate display failed",false);
+		}
+	}
+
+	@FindBy(css = "div.group.ng-scope:nth-child(8)")
+	private WebElement profile;
+
+	public void clickProfile() throws Exception{
+		if(isElementLoaded(profile,5)){
+			click(profile);
+			SimpleUtils.pass("Click profile successfully");
+		}else{
+			SimpleUtils.fail("profile loaded failed",false);
+		}
+	}
+
+	@FindBy(css = "span[ng-click= 'back()']")
+	private WebElement backButton;
+
+	public void goBack() throws Exception{
+		scrollToTop();
+		if(isElementLoaded(backButton,5)){
+			click(backButton);
+			SimpleUtils.pass("Click back button successfully");
+		}else{
+			SimpleUtils.fail("Back button loaded failed",false);
+		}
+	}
+
+	@FindBy(css = "div[title = ' View Employee Phone']")
+	private WebElement viewEmployeePhone;
+	@FindBy(css = "div[title = ' View Employee Email']")
+	private WebElement viewEmployeeEmail;
+	@FindBy(css = "div[title = ' View Employee Address']")
+	private WebElement viewEmployeeAddress;
+	@FindBy(css = "div[title = ' View Employee Work Preferences']")
+	private WebElement viewEmployeeWorkPreferences;
+	@FindBy(css = "div[title = ' View Employee Work Preferences Requests']")
+	private WebElement viewEmployeeWorkPreferencesRequests;
+	@FindBy(css = "div[title = ' View Employee Time Off']")
+	private WebElement viewEmployeeTimeOff;
+	@FindBy(css = "div[title = ' View Employee Time Off Requests']")
+	private WebElement viewEmployeeTimeOffRequests;
+
+	public boolean profileViewPermissionExist() throws Exception{
+		if(isElementDisplayed(viewHourlyRate) && isElementDisplayed(viewEmployeePhone) && isElementDisplayed(viewEmployeeEmail) && isElementDisplayed(viewEmployeeAddress) && isElementDisplayed(viewEmployeeTimeOffRequests)
+				&& isElementDisplayed(viewEmployeeWorkPreferences) && isElementDisplayed(viewEmployeeWorkPreferencesRequests) && isElementDisplayed(viewEmployeeTimeOff))
+			return true;
+		else
+			return false;
+	}
+
+	@FindBy(css = "div[ng-if = '(isViewMode() || (!isMe && !tm.worker.requiresOnboarding)) && canViewEmployeeAddress']")
+	private WebElement profileAddress;
+	@FindBy(css = "span.email.ng-binding")
+	private WebElement profileEmail;
+	@FindBy(css = "span.phone.ng-binding")
+	private WebElement profilePhone;
+	@FindBy(css = "div:nth-child(2) > collapsible > collapsible-base > div > div.collapsible-title > div.collapsible-title-text")
+	private WebElement workPreferences;
+	@FindBy(css = "lg-button[label = 'Edit']>button")
+	private WebElement createWorkPreferences;
+	@FindBy(css = "timeoff-management div.collapsible-title")
+	private WebElement timeOff;
+	@FindBy(css = "lg-button[label = 'Create time off']>button")
+	private WebElement createTimeOff;
+	@FindBy(css = "div[ng-if = 'canViewEmployeeAddress']>div.value.ng-binding")
+	private WebElement HRFileAddress;
+
+	public Integer verifyProfilePermission() throws Exception {
+		waitForSeconds(3);
+		if (isElementDisplayed(HRFileAddress) && isElementDisplayed(profileAddress) && isElementDisplayed(profileEmail) && isElementDisplayed(profilePhone) && isElementDisplayed(workPreferences) && isElementDisplayed(timeOff)) {
+			click(workPreferences);
+			if (isExist(createWorkPreferences)) {
+				click(timeOff);
+				if (isExist(createTimeOff)) {
+					return 0;
+				} else {
+					return 1;
+				}
+			} else {
+				return 2;
+			}
+		}else{
+			return 3;
+		}
+	}
+
+	@FindBy(css = "div.group.ng-scope:nth-child(7)")
+	private WebElement manage;
+
+	public void clickManage() throws Exception{
+		if(isElementLoaded(manage,5)){
+			click(manage);
+			SimpleUtils.pass("Click manage successfully");
+		}else{
+			SimpleUtils.fail("manage loaded failed",false);
+		}
+	}
+
+	@FindBy(css = "div[title = ' Recalculate Accrual Balance']")
+	private WebElement recalculatePermission;
+
+	public void verifyRecalculatePermission() throws Exception{
+		if(isElementLoaded(recalculatePermission,5)){
+			if(recalculatePermission.getText().equals("Recalculate Accrual Balance"))
+				SimpleUtils.pass("Recalculate Accrual Balance text is correct");
+			else
+				SimpleUtils.fail("Recalculate Accrual Balance text is wrong",false);
+		}else
+			SimpleUtils.fail("Recalculate Accrual Balance display failed",false);
+	}
+
+	@FindBy(css = "lg-button[label = 'Refresh Balances']>button")
+	private WebElement refreshBalances;
+
+	public void clickRefreshBalances() throws Exception{
+		if(isElementLoaded(refreshBalances,5)){
+			click(refreshBalances);
+			SimpleUtils.pass("Click Refresh Balances successfully");
+		}else
+			SimpleUtils.fail("Refresh Balances display failed",false);
+	}
+
+	public void verifyRefreshBalancesNotDisplayed() throws Exception{
+		if(!isElementLoaded(refreshBalances,5)){
+			SimpleUtils.pass("Refresh Balances button doesn't display");
+		}else{
+			SimpleUtils.fail("Refresh Balances button display",false);
+		}
+	}
+
+	@FindBy(css = "span.settings-work-role-details-edit-add-icon")
+	private WebElement addAssignmentRuleIcon;
+	@FindBy(xpath = "//div[contains(@class, 'settings-work-rule-save-icon settings-work-rule-save-icon-enabled')]")
+	private WebElement assignmentRuleSaveIcon;
+	@FindBy(xpath = "//div[@class = 'settings-work-rule-add-assignment-definition-selector row']//button")
+	private WebElement  teamMemberTitleButton;
+	@FindBy(xpath = "//div[@class = 'settings-work-rule-add-assignment-definition-selector row']//a")
+	private List<WebElement>  teamMemberTitleList;
+	@FindBy(xpath = "//div[@class = 'row settings-work-rule-add-staffing-definition-selector']//button")
+	private WebElement  assignmentRuleTimeButton;
+	@FindBy(xpath = "//div[@class = 'row settings-work-rule-add-staffing-definition-selector']//a")
+	private List<WebElement>  assignmentRuleTimeList;
+	@FindBy(xpath = "//div[@class = 'row settings-work-rule-add-assignment-definition-selector']//button")
+	private WebElement  assignmentConditionButton;
+	@FindBy(xpath = "//div[@class = 'row settings-work-rule-add-assignment-definition-selector']//a")
+	private List<WebElement>  assignmentConditionList;
+	@FindBy(xpath = "//input[contains(@class, 'setting-work-rule-staffing-numeric-value-edit')]")
+	private List<WebElement>  assignmentRuleInput;
+	@FindBy(xpath = "//lg-template-assignment-rule//span[contains(@class, 'setting-work-rule-assignment-title')]")
+	private List<WebElement>  assignmentRulesTitle;
+	public void addAssignmentRule(String teamMemberTitle, String assignmentRuleTime, String assignmentCondition, int staffingNumericValue, int priority, String badge) throws Exception{
+		addAssignmentRuleIcon.click();
+		teamMemberTitleButton.click();
+		if(teamMemberTitleList.size()>0){
+		for(WebElement tMTitle: teamMemberTitleList ){
+			if(tMTitle.getText().contains(teamMemberTitle)){
+				tMTitle.click();
+				break;
+			}
+		}}
+		assignmentRuleTimeButton.click();
+		if(assignmentRuleTimeList.size()>0){
+		for(WebElement aMTime: assignmentRuleTimeList ){
+			if(aMTime.getText().contains(assignmentRuleTime)){
+				aMTime.click();
+				break;
+			}
+		}}
+		assignmentConditionButton.click();
+		if(assignmentConditionList.size()>0){
+			for(WebElement aMCondition: assignmentConditionList ){
+			if(aMCondition.getText().contains(assignmentCondition)){
+				aMCondition.click();
+				break;
+			}
+		}}
+		assignmentRuleInput.get(0).sendKeys(String.valueOf(staffingNumericValue));
+		assignmentRuleInput.get(1).sendKeys(String.valueOf(priority));
+		addBadgeAssignmentRule(badge);
+		boolean isAssignmentRuleExit = false;
+		for(WebElement title: assignmentRulesTitle ){
+			if(title.getText().contains(teamMemberTitle)){
+				SimpleUtils.pass("assignment Rule add successfully");
+				isAssignmentRuleExit = true;
+				break;
+			}
+		}
+		if (!isAssignmentRuleExit){
+			SimpleUtils.fail("assignment Rule add failed",false);
+		}
+		click(saveBtn);
+		click(saveBtn);
+	}
+
+	@FindBy(xpath = "//button[@ng-click='confirmDeleteAction()']")
+	private WebElement  deleteConfirmButton;
+	public void deleteAssignmentRule(String teamMemberTitle) throws Exception {
+		WebElement title = getDriver().findElement(By.xpath("//lg-template-assignment-rule//span[contains(text(), '" + teamMemberTitle + "')]/parent::div/following::div[1]//span[2]"));
+		if (isExist(getDriver().findElement(By.xpath("//lg-template-assignment-rule//span[contains(text(), '" + teamMemberTitle + "')]/parent::div/following::div[1]//span[2]")))) {
+			getDriver().findElement(By.xpath("//lg-template-assignment-rule//span[contains(text(), '" + teamMemberTitle + "')]/parent::div/following::div[1]//span[2]")).click();
+			SimpleUtils.pass("assignment Rule exist");
+			if(isElementLoaded(deleteConfirmButton)){
+				deleteConfirmButton.click();
+			}
+			click(saveBtn);
+			click(saveBtn);
+		}else{
+			SimpleUtils.fail("assignment Rule not exist", false);
+		}
+
+	}
+
+	public void verifyAssignmentRuleBadge(String teamMemberTitle, String badge) throws Exception{
+		for(WebElement title: assignmentRulesTitle ){
+			if(title.getText().contains(teamMemberTitle)){
+				SimpleUtils.pass("assignment Rule exist");
+				if(isExist(title.findElement(By.xpath("/parent::*/work-role-badges-list/div']")))){
+					if(title.findElement(By.xpath("/parent::*/work-role-badges-list/div']")).getAttribute("data-tootik").trim().contains(badge)){
+						SimpleUtils.pass("badge is exist");
+					}else{
+						SimpleUtils.fail("badge is not exist",false);
+					};
+				}else {
+					SimpleUtils.fail("badge is not exist",false);
+				}
+			}else{
+				SimpleUtils.fail("assignment Rule not exist",false);
+			}
+		}
+	}
+
+	@FindBy(xpath = "//span[contains(text(),'Badge required')]//parent::div")
+	private WebElement badgeRequiredButton;
+	@FindBy(xpath = "//lg-search/input-field//input")
+	private WebElement badgeSearchInput;
+	@FindBy(css = "tr[ng-repeat=\"badge in filteredAndSortedBadges() track by badge.name\"]")
+	private List<WebElement> badgeListInAssignmentRuleTemplate;
+	@FindBy(xpath = "//work-role-badges-list/div")
+	private List<WebElement> addedBadges;
+
+	public void addBadgeAssignmentRule(String badgeName) throws Exception {
+		badgeRequiredButton.click();
+		if (isElementLoaded(badgeSearchInput, 5)) {
+			badgeSearchInput.clear();
+			badgeSearchInput.sendKeys(badgeName);
+			waitForSeconds(2);
+
+			if (areListElementVisible(badgeListInAssignmentRuleTemplate, 5)) {
+				for (WebElement s : badgeListInAssignmentRuleTemplate) {
+					String workRoleName = s.findElement(By.cssSelector("td:nth-child(2)")).getText().trim();
+					if (workRoleName.contains(badgeName)) {
+						s.findElement(By.cssSelector("td input-field")).click();
+						waitForSeconds(2);
+						break;
+					}
+				}
+			}
+		}
+		assignmentRuleSaveIcon.click();
+		if (addedBadges.size() > 0) {
+			if (addedBadges.get(0).getAttribute("data-tootik").trim().contains(badgeName)) {
+				SimpleUtils.pass("Badge is added");
+			} else {
+				SimpleUtils.fail("Badge is added failed", false);
+			}
+		}
+	}
+
+	@FindBy(css = "div.lg-tabs__nav-item:nth-child(4)")
+	private WebElement jobTitleGroup;
+
+	public void goToJobTitleGroup() throws Exception{
+		if(isExist(jobTitleGroup)) {
+			click(jobTitleGroup);
+			SimpleUtils.pass("Job title group is exist");
+		}
+		else
+			SimpleUtils.fail("Job title group is not exist",false);
+	}
+
+	@FindBy(css = "lg-button[label= 'Add Job Title Group']")
+	private WebElement addJobTitleGroupButton;
+	@FindBy(css = "input.ng-pristine.ng-scope.ng-empty.ng-invalid.ng-invalid-required.ng-valid-pattern.ng-valid-maxlength.ng-touched")
+	private WebElement inputJobTitleGroup;
+	@FindBy(css = "div.lg-select")
+	private WebElement HRJobTitleSelect;
+	@FindBy(css = "input[placeholder = 'Search']")
+	private WebElement inputSearch;
+	@FindBy(css = "div.lg-search-options__option.ng-binding.lg-search-options__subLabel")
+	private WebElement jobTitleList;
+	@FindBy(css = "table.lg-table.ng-scope")
+	private WebElement jobTitleGroupTab;
+
+	public void verifyJobTitleGroupTabDisplay() throws Exception{
+		if(isExist(jobTitleGroupTab)){
+			SimpleUtils.pass("Job title group table display");
+		}else
+			SimpleUtils.fail("Job title group table doesn't display",false);
+	}
+
+	@FindBy(css = "div.search-message")
+	private WebElement badgesText;
+	@FindBy(css = "td:nth-child(1) > lg-button > button > span > span")
+	private WebElement workRolesRow;
+
+	public void verifyBadgesList(String workRoleName) throws Exception{
+		click(editBtnInWorkRole);
+		click(addWorkRoleBtn);
+		click(addAssignmentRuleIcon);
+		click(badgeRequiredButton);
+		click(badgeSearchInput);
+		if(badgeListInAssignmentRuleTemplate.size() == 20){
+			if(badgesText.getAttribute("innerText").contains("Only 20 of the") && badgesText.getAttribute("innerText").contains("results are displayed in the list, you can use the search box to search for other badges."))
+				SimpleUtils.pass("Badge list size is 20 and text is correct");
+			else
+				SimpleUtils.fail("Badge text is wrong",false);
+		}else
+			SimpleUtils.fail("Badge list size is not 20",false);
+	}
+
+	public void searchBadge(String badgeInfo) throws Exception{
+		badgeSearchInput.clear();
+		badgeSearchInput.sendKeys(badgeInfo);
+		if(badgeListInAssignmentRuleTemplate.size() == 1){
+			SimpleUtils.pass("Search badge successfully");
+		}else
+			SimpleUtils.fail("Search badge failed",false);
+	}
+
+	@FindBy(css = "input-field[type = 'checkbox'] > ng-form > input")
+	private WebElement badgeCheckBox;
+	@FindBy(css = "div.settings-work-rule-save-icon")
+	private WebElement confirmIcon;
+
+	public void updateBadge() throws Exception{
+		click(badgeCheckBox);
+		waitForSeconds(2);
+		click(confirmIcon);
+		click(saveBtn);
+		if(isElementLoaded(jobTitleGroupTab)){
+			SimpleUtils.pass("Update badge successfullly");
+		}else
+			SimpleUtils.fail("Update badge failed",false);
+		click(saveBtn);
+	}
+
+	public void clickLeaveThisPage() throws Exception{
+		if(isExist(leaveThisPageBtn)){
+			click(leaveThisPageBtn);
+			SimpleUtils.pass("Click leave this page button successfully");
+		}else
+			SimpleUtils.fail("Leave this page button is not exist",false);
+	}
+
+	@FindBy(css ="span.settings-work-rule-edit-edit-icon>i")
+	private WebElement pencil;
+	@FindBy(css = "div.ng-scope.lg-button-group-last")
+	private WebElement badgeRequired;
+
+	public void verifyBadgeInWorkRole() throws Exception{
+		click(workRolesRow);
+		clickTheElement(pencil);
+		click(badgeRequired);
+		click(badgeSearchInput);
+	}
 }
 

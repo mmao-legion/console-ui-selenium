@@ -1,6 +1,7 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -154,10 +155,18 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     private List<WebElement> accrualStartDate;
     @FindBy(css = "question-input[question-title='Accrual End Date'] select")
     private List<WebElement> accrualEndDate;
+
     @FindBy(css = "question-input[question-title='Reinstatement Months'] input")
     private WebElement reinstatementMonth;
     @FindBy(css = "question-input[question-title='Distribution Method'] select")
     private WebElement distributionMethods;
+
+    //Allowance in days
+    @FindBy(css = "question-input[question-title='Allowance in days'] input-field input")
+    private WebElement allowanceInPut;
+    @FindBy(css = "question-input[question-title='Allowance in days'] input-field select")
+    private WebElement allowanceInSelect;
+
     //Distribution type
     @FindBy(css = "question-input[question-title='Distribution type'] select")
     private WebElement distributionType;
@@ -174,20 +183,60 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     private List<WebElement> secondServiceLeverInput;
     @FindBy(css = "table.lg-table.service-level tr")
     private List<WebElement> serviceLeverNum; //size-1
-
-
-    //service lever
     @FindBy(css = "table.lg-table.service-level td.add-button>lg-button[label='+ Add']>button")
     private WebElement addButtonForServiceLever;
     @FindBy(css = "table.lg-table.service-level td>div>span.remove")
     private WebElement removeButtonForServiceLever;
+
+    //GM holiday part
+    @FindBy(css = "div.table-wrapper.ng-scope>table.lg-table tr:nth-child(1)>th:nth-child(1)")
+    private WebElement gMHolidayDate;
+    @FindBy(css = "div.table-wrapper.ng-scope td.add-button>lg-button>button")
+    private WebElement addButtonForDistribution;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(2) input-field[placeholder='Select...']")
+    private WebElement dateSelect;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(2) input-field[placeholder='Search']>ng-form>input")
+    private WebElement dateSearch;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(2) div.lg-search-options__scroller>div>div")
+    private WebElement dateSearchResult;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(2)>td:nth-child(2) input")
+    private WebElement firstHourInput;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-last-child(2) span.remove.ng-binding")
+    private WebElement lastRemoveButton;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(3) input-field[placeholder='Select...']")
+    private WebElement dateSelect2;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(3) input-field[placeholder='Search']>ng-form>input")
+    private WebElement dateSearch2;
+    @FindBy(css = "div.table-wrapper.ng-scope tr:nth-child(3) div.lg-search-options__scroller>div>div")
+    private WebElement dateSearchResult2;
+    @FindBy(css = "div.error-msg.ng-binding")
+    private WebElement errorMes;
+    @FindBy(css = "table.lg-table.service-level tr:nth-child(2)>td:nth-child(1) input")
+    private WebElement serviceLever0;
+    @FindBy(css = "div.lg-search-options__scroller>div>div")
+    private List<WebElement> holidayList;
+
+    //Fixed days
+    @FindBy(css = "question-input[question-title='Distribution type'] select")
+    private WebElement distributionTypeSelect;
+    @FindBy(css = "div.eligibility-rule.lg-question-input")
+    private WebElement eligibilityRuleText;
+    @FindBy(css = "div.eligibility-rule.lg-question-input>input-field:first-of-type input")
+    private WebElement eligibilityHours;
+    @FindBy(css = "div.eligibility-rule.lg-question-input>input-field:last-of-type input")
+    private WebElement eligibilityDays;
+    @FindBy(css = "div.dt-container>div.table-wrapper.ng-scope tr:nth-child(1)>th:nth-child(1)")
+    private WebElement fixedDaysLabel;
+    @FindBy(css = "div.dt-container>div.table-wrapper.ng-scope tr:nth-child(2)>td:nth-child(1) input")
+    private WebElement fixedHours;
+    @FindBy(css = "div.dt-container>div.table-wrapper.ng-scope tr:nth-child(2)>td:nth-child(2) input")
+    private WebElement accruedHours;
 
     //submit
     @FindBy(css = "lg-button[label='Cancel']>button")
     private WebElement cancelButton;
     @FindBy(css = "lg-button[label='Save']>button")
     private WebElement saveButton;
-
 
     //back
     public void back() {
@@ -376,13 +425,40 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         }
     }
 
-    //Accrual part
+    //Accrual engine part
     public ArrayList<String> getAccrualStartOptions() {
         return getSelectOptions(accrualStartDate.get(0));
     }
 
     public ArrayList<String> getAccrualEndOptions() {
         return getSelectOptions(accrualEndDate.get(0));
+    }
+
+    public void setAccrualPeriod(String startDateType, String endDateType, String sMonth, String sDate, String eMonth, String eDate) {
+        scrollToBottom();
+        Select startType = new Select(accrualStartDate.get(0));
+        startType.selectByVisibleText(startDateType);//"Hire Date","Specified Date"
+        if (startDateType.contains("Specified")) {
+            Select monSelect = new Select(accrualStartDate.get(1));
+            monSelect.selectByVisibleText(sMonth);
+            Select dateSelect = new Select(accrualStartDate.get(2));
+            dateSelect.selectByVisibleText(sDate);
+        }
+        Select endType = new Select(accrualEndDate.get(0));
+        endType.selectByVisibleText(endDateType);//"","Hire Date","Specified Date"
+        if (endDateType.contains("Specified")) {
+            Select monSelect = new Select(accrualEndDate.get(1));
+            monSelect.selectByVisibleText(eMonth);
+            Select dateSelect = new Select(accrualEndDate.get(2));
+            dateSelect.selectByVisibleText(eDate);
+        }
+    }
+
+    public void setAllowanceInDays(String allowanceType, String days) {
+        Select typeSelect = new Select(allowanceInSelect);
+        typeSelect.selectByVisibleText(allowanceType);
+        allowanceInPut.clear();
+        allowanceInPut.sendKeys(days);
     }
 
     public void setReinstatementMonth(String reinMonth) {
@@ -400,25 +476,37 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         select.selectByVisibleText(distributionMethod);
     }
 
-    public void addServiceLever() {
-        scrollToElement(addButtonForServiceLever);
-        addButtonForServiceLever.click();
-        firstServiceLeverInput.get(1).clear();
-        firstServiceLeverInput.get(1).sendKeys("120");
+    public void setAnnualEarn(List<WebElement> serviceLeverInput, String annualEarn) {
+        serviceLeverInput.get(1).clear();
+        serviceLeverInput.get(1).sendKeys(annualEarn);
     }
 
-    public void setMaxAvailableHours(String maxAvailableHours){
-        firstServiceLeverInput.get(3).clear();
-        firstServiceLeverInput.get(3).sendKeys(maxAvailableHours);
+    public void setMaxCarryover(List<WebElement> serviceLeverInput, String maxCarryover) {
+        serviceLeverInput.get(2).clear();
+        serviceLeverInput.get(2).sendKeys(maxCarryover);
     }
 
-    public void addSecondServiceLever() {
+    public void setMaxAvailableHours(List<WebElement> serviceLeverInput, String maxAvailableHours) {
+        serviceLeverInput.get(3).clear();
+        serviceLeverInput.get(3).sendKeys(maxAvailableHours);
+    }
+
+    public void addSpecifiedServiceLever(int serviceLever, String annualEarn, String maxCarryover, String maxAvailableHours) {
         scrollToElement(addButtonForServiceLever);
         addButtonForServiceLever.click();
-        secondServiceLeverInput.get(0).clear();
-        secondServiceLeverInput.get(0).sendKeys("5");
-        secondServiceLeverInput.get(1).clear();
-        secondServiceLeverInput.get(1).sendKeys("240");
+        List<WebElement> serviceLeverInput = null;
+        if (serviceLever == 0) {
+            serviceLeverInput = firstServiceLeverInput;
+        } else if (serviceLever == 2) {
+            serviceLeverInput = secondServiceLeverInput;
+            serviceLeverInput.get(0).clear();
+            serviceLeverInput.get(0).sendKeys("2");
+        } else {
+            System.out.println("Need to add new serviceLeverInput locator!");
+        }
+        setAnnualEarn(serviceLeverInput, annualEarn);
+        setMaxCarryover(serviceLeverInput, maxCarryover);
+        setMaxAvailableHours(serviceLeverInput, maxAvailableHours);
     }
 
     public int getServiceLeverNum() {
@@ -448,6 +536,86 @@ public class TimeOffReasonConfigurationPage extends BasePage {
             cancelButton.click();
         }
         waitForSeconds(5);
+    }
+
+    public String getDistributionType(){
+        return gMHolidayDate.getText();
+    }
+
+    public void setDateDistribution(String holiday, String hour){
+        dateSearch.clear();
+        dateSearch.sendKeys(holiday);
+        dateSearchResult.click();
+        firstHourInput.clear();
+        firstHourInput.sendKeys(hour);
+    }
+
+    public void removeHolidayFromTheDistribution(){
+        scrollToBottom();
+        waitForSeconds(3);
+        lastRemoveButton.click();
+    }
+
+    public boolean verifyHolidayUsedCanNotBeSelectedAgain(String holiday){
+        boolean canNotSelect=false;
+        addButtonForDistribution.click();
+        dateSelect2.click();
+        dateSearch2.clear();
+        dateSearch2.sendKeys(holiday);
+        try {
+            dateSearchResult2.click();
+        } catch (ElementNotInteractableException exception) {
+            canNotSelect=true;
+        } ;
+        return canNotSelect;
+    }
+
+    public String getErrorMessage(){
+        return errorMes.getText();
+    }
+
+    public void showDistributionOfSpecifiedServiceLever0(){
+        serviceLever0.click();
+    }
+
+    public ArrayList<String> getHolidayList() {
+        dateSelect.click();
+        return getWebElementsText(holidayList);
+    }
+
+    public String getEligibilityTitle() {
+        scrollToElement(eligibilityRuleText);
+        waitForSeconds(2);
+        return eligibilityRuleText.getText();
+    }
+
+    public void setEligibilityRule(String hrs, String Days) {
+        eligibilityHours.clear();
+        eligibilityHours.sendKeys(hrs);
+        eligibilityDays.clear();
+        eligibilityDays.sendKeys(Days);
+    }
+
+    public ArrayList<String> getWorkedHoursDistributionTypeOptions(){
+        Select disType = new Select(distributionType);
+        List<WebElement> opt=disType.getOptions();
+        return getWebElementsText(opt);
+    }
+
+    public void setDistributionType(String disTy) {//Total Hours, Rate, Fixed Days
+        Select disType = new Select(distributionType);
+        disType.selectByVisibleText(disTy);
+    }
+
+    public void setFixedDaysDistribution(String workedHrs, String accrualHrs) {
+        fixedHours.clear();
+        fixedHours.sendKeys(workedHrs);
+        accruedHours.clear();
+        accruedHours.sendKeys(accrualHrs);
+        waitForSeconds(2);
+    }
+    public String getFixedDaysLabel(){
+        return fixedDaysLabel.getText();
     }
 
 }

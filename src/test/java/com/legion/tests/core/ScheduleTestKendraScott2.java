@@ -10,8 +10,11 @@ import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.utils.JsonUtil;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -429,7 +432,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary/Estelle")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Vailqacn_Enterprise")
 	@TestName(description = "Verify the Schedule functionality - Week View - Context Menu")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyScheduleFunctionalityWeekViewAsInternalAdmin(String username, String password, String browser, String location)
@@ -2521,7 +2524,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Mary")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Vailqacn_Enterprise")
 	@TestName(description = "Verify assign TM message: If SM wants to schedule a TM from another location and schedule hasn’t been generated or published yet")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
 	public void verifyAssignTMMessageWhenScheduleTMToAnotherLocationWithHomeLocationScheduleNotBeenGeneratedOrPublishedAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
@@ -2532,7 +2535,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			controlsPage.gotoControlsPage();
@@ -6304,7 +6307,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					!shiftOperatePage.checkIfUpdateButtonEnabled(),false);
 
 
-			shiftTime = "8:00 am-11:00 pm";
+			shiftTime = "08:00 am-11:00 pm";
 			shiftOperatePage.setShiftTimesOnEditShiftTimePage(shiftTime.split("-")[0], shiftTime.split("-")[1], false);
 			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
@@ -6446,5 +6449,333 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		}
 	}
 
+//	@Automated(automated = "Automated")
+//	@Owner(owner = "Cosimo")
+//	@Enterprise(name = "KendraScott2_Enterprise")
+//	@TestName(description = "Verify the budget hours when inputting by Location")
+//	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+//	public void verifyTheSumOfEachWorkRoleBudgetConsistentWithTotalBudgetOnSTAFFCardAsInternalAdmin(String username, String password, String browser, String location)
+//			throws Exception {
+//		try {
+//			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+//			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+//			ForecastPage forecastPage = pageFactory.createForecastPage();
+//			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//
+//			//Go to the configuration page and set the labor budget and By Location
+//			if (isLocationUsingControlsConfiguration){
+//				controlsNewUIPage.clickOnControlsConsoleMenu();
+//				controlsNewUIPage.clickOnControlsSchedulingPolicies();
+//				controlsNewUIPage.clickOnGlobalLocationButton();
+//				controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+//				controlsNewUIPage.selectBudgetGroupNonOP("By Location");
+//			}else {
+//				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+//				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+//				SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+//				locationsPage.clickOnLocationsTab();
+//				locationsPage.goToGlobalConfigurationInLocations();
+//				locationsPage.editLaborBudgetSettingContent();
+//				locationsPage.turnOnOrTurnOffLaborBudgetToggle(true);
+//				locationsPage.selectBudgetGroup("By Location");
+//				locationsPage.saveTheGlobalConfiguration();
+//				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
+//					//Back to the console page
+//					switchToConsoleWindow();
+//				}
+//			}
+//
+//			//Go to the forecast labor tab
+//			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+//			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Forecast.getValue());
+//			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Forecast.getValue()), false);
+//
+//			//Edit the budget
+//			forecastPage.goToForecastLaborWeek();
+//			forecastPage.editLaborBudgetOnSummarySmartCard();
+//			Float laborBudget = Float.parseFloat((forecastPage.getLaborBudgetOnSummarySmartCard().trim()));
+//
+//			//Go to WeekView tab and un-generate the schedule
+//			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+//			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+//			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+//			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Schedule.getValue()), false);
+//			scheduleCommonPage.clickOnWeekView();
+//			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+//			if (isActiveWeekGenerated) {
+//				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//			}
+//			Thread.sleep(5000);
+//
+//			//Check the budget value in the staff card
+//			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+//			Float budgetValue = scheduleShiftTablePage.getTotalBudgetFromSTAFFSmartCard();
+//			float totalBudget = 0;
+//			for(int i = 0; i < budgetValues.size()-1; i++){
+//				totalBudget = totalBudget + budgetValues.get(i);
+//			}
+//			SimpleUtils.assertOnFail("The budget on Staff Card is not consisting with the edited value on Forecast page!",laborBudget == totalBudget,false);
+//
+//		} catch (Exception e) {
+//			SimpleUtils.fail(e.getMessage(), false);
+//		}
+//	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the budget hours when inputting by Location")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheBudgetHoursWhenByLocationAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			ForecastPage forecastPage = pageFactory.createForecastPage();
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+
+			//Go to the configuration page and set the labor budget and By Location
+			if (isLocationUsingControlsConfiguration){
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsSchedulingPolicies();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+				controlsNewUIPage.selectBudgetGroupNonOP("By Location");
+				Thread.sleep(240000);
+			}else {
+				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+				SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+				locationsPage.clickOnLocationsTab();
+				locationsPage.goToGlobalConfigurationInLocations();
+				locationsPage.editLaborBudgetSettingContent();
+				locationsPage.turnOnOrTurnOffLaborBudgetToggle(true);
+				locationsPage.selectBudgetGroup("By Location");
+				locationsPage.saveTheGlobalConfiguration();
+				Thread.sleep(240000);
+				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
+					//Back to the console page
+					switchToConsoleWindow();
+				}
+			}
+
+			//Go to the forecast labor tab
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Forecast.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Forecast.getValue()), false);
+
+			//Edit the budget
+			forecastPage.goToForecastLaborWeek();
+			forecastPage.editLaborBudgetOnSummarySmartCard();
+			String laborBudget = forecastPage.getLaborBudgetOnSummarySmartCard().trim();
+			String laborBudgetExpend = forecastPage.getLaborBudgetOnSummarySmartCard().trim() + " Hours";
+			forecastPage.verifyRefreshBtnInLaborWeekView();
+
+			//Go to WeekView tab and un-generate the schedule
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), false);
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+
+			//Check the budget value in the smartcard
+			smartCardPage.isSpecificSmartCardLoaded("Weekly Budget");
+			String weeklyBudget = smartCardPage.getBudgetValueFromWeeklyBudgetSmartCard("Weekly Budget");
+			SimpleUtils.assertOnFail("The budget on weekly view is not consisting with the edited value on Forecast page!",laborBudgetExpend.equals(weeklyBudget),false);
+
+			//Check the budget value in the staff card
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			String staffBudget = scheduleShiftTablePage.getTotalBudgetFromSTAFFSmartCard();
+			SimpleUtils.assertOnFail("The budget on Staff Card is not consisting with the edited value on Forecast page!",laborBudget.equals(staffBudget),false);
+
+			//Generate a new schedule and check the budget value in the schedule smart card
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+			scheduleCommonPage.clickOnWeekView();
+			String smartCardBudget = smartCardPage.getBudgetValueFromScheduleBudgetSmartCard();
+			SimpleUtils.assertOnFail("The budget on Schedule Smart Card is not consisting with the edited value on Forecast page!",laborBudget.equals(smartCardBudget),false);
+
+			//Go to Overview tab and check the current week's budget
+			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), false);
+			String overviewBudget = scheduleOverviewPage.getCurrentWeekBudgetHours().trim();
+			SimpleUtils.assertOnFail("The budget on Schedule Smart Card is not consisting with the edited value on Forecast page!",laborBudget.equals(overviewBudget),false);
+
+			//Go to DM overview tab and check the current week's budget
+			String districtName = dashboardPage.getCurrentDistrict();
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.reSelectDistrict(districtName);
+			ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+			String DMViewBudget = String.valueOf(scheduleDMViewPage.getBudgetedHourOfScheduleInDMViewByLocation(location)).trim();
+			SimpleUtils.assertOnFail("The budget on Schedule Smart Card is not consisting with the budget on DM view page!",laborBudget.equals(DMViewBudget),false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the functionality of Create Schedule button when SM doesn't have permission \"Manage Budget\"")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheNoBudgetPermissionForSMAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			ForecastPage forecastPage = pageFactory.createForecastPage();
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			String accessRoleTab = "Access Roles";
+			String permissionSection = "Schedule";
+			String permission = "Manage Budget";
+			String actionOff = "off";
+			String actionOn = "on";
+			//Go to the configuration page and set the labor budget and By Location
+			if (isLocationUsingControlsConfiguration){
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsSchedulingPolicies();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+				controlsNewUIPage.selectBudgetGroupNonOP("By Location");
+
+				//Go to Users and Roles page
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the Manage Budget permission for SM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection,permission,actionOff);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(240000);
+
+			}else {
+				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+				SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+				locationsPage.clickOnLocationsTab();
+				locationsPage.goToGlobalConfigurationInLocations();
+				locationsPage.editLaborBudgetSettingContent();
+				locationsPage.turnOnOrTurnOffLaborBudgetToggle(true);
+				locationsPage.selectBudgetGroup("By Location");
+				locationsPage.saveTheGlobalConfiguration();
+
+				//Go to Users and Roles page and switch to the Access Roles sub tab
+				ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+				userManagementPage.clickOnUserManagementTab();
+				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+				userManagementPage.goToUserAndRoles();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the Manage Budget permission for SM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection,permission,actionOff);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(240000);
+
+				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
+					//Back to the console page
+					switchToConsoleWindow();
+				}
+			}
+
+			//Go to forecast page, clear the budget value
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Forecast.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Forecast.getValue()), false);
+			forecastPage.goToForecastLaborWeek();
+			forecastPage.clearLaborBudgetOnSummarySmartCard();
+			forecastPage.verifyRefreshBtnInLaborWeekView();
+
+			//Un-generate the schedule
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+
+			//Login as SM, check the Create Schedule button is disabled
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			Thread.sleep(60000);
+			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			createSchedulePage.isGenerateButtonNotClickable();
+
+			//Verify the tooltips when mouse hovering the Create Schedule button
+			createSchedulePage.verifyTooltipForUnclickableCreateScheduleBtn();
+
+			//Login as Internal Admin, add Manage Budget permission back to the SM
+			loginPage.logOut();
+			Thread.sleep(3000);
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			Boolean isLocationUsingControlsConfigurationTwice = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			if (isLocationUsingControlsConfigurationTwice){
+				//Add permission on Controls
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection,permission,actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(240000);
+
+			}else{
+				//Add permission on OP
+				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+				SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+				ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+				userManagementPage.clickOnUserManagementTab();
+				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+				userManagementPage.goToUserAndRoles();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection,permission,actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(240000);
+				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
+					//Back to the console page
+					switchToConsoleWindow();
+				}
+
+				//Login as SM, check the Create Schedule button is enabled
+				loginPage.logOut();
+				Thread.sleep(60000);
+				loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+				SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+				scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+				scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
 
 }

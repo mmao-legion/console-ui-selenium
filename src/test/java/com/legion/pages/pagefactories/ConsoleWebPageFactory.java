@@ -28,7 +28,10 @@ public class ConsoleWebPageFactory implements PageFactory {
     public TeamPage createConsoleTeamPage() {
     	return new ConsoleTeamPage();
     }
-
+	@Override
+	public PlanPage createConsolePlanPage() {
+		return new ConsolePlanPage();
+	}
     @Override
     public AnalyticsPage createConsoleAnalyticsPage() {
     	return new ConsoleAnalyticsPage();
@@ -193,6 +196,9 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public NewShiftPage createNewShiftPage() { return new ConsoleNewShiftPage(); }
+
+	@Override
+	public SettingsAndAssociationPage createSettingsAndAssociationPage() {	return new OpsPortalSettingsAndAssociationPage(); }
 
 	@Override
 	public MealAndRestPage createMealAndRestPage() {

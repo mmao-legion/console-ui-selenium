@@ -40,4 +40,5 @@ public interface ScheduleOverviewPage {
 	public int getDaysBetweenFinalizeDateAndScheduleStartDate(String finalizeByDate, String scheduleStartDate) throws Exception;
 	public void clickOnLastWeek() throws Exception;
 	public void clickOnViewGroupScheduleButton() throws Exception;
+	public String getCurrentWeekBudgetHours() throws Exception;
 }

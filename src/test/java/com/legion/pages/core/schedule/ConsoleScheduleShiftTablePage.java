@@ -1665,12 +1665,14 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public HashMap<String, String> getTheHoursNTheCountOfTMsForEachWeekDays() throws Exception {
         HashMap<String, String> hoursNTeamMembersCount = new HashMap<>();
-        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() >= 7) {
-            for (WebElement weekDayDimension : weekDayDimensions) {
-                WebElement weekDay = weekDayDimension.findElement(By.className("sch-calendar-day-label"));
-                WebElement hoursNCount = weekDayDimension.findElement(By.className("sch-calendar-day-summary"));
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
+            for (int i = 0; i < weekDayDimensions.size(); i++) {
+                WebElement weekDay = weekDayDimensions.get(i).findElement(By.className("sch-calendar-day-label"));
+                WebElement hoursNCount = weekDayDimensions.get(i).findElement(By.className("sch-calendar-day-summary"));
+                List<WebElement> shiftsInSameDay = getDriver().findElements(By.cssSelector("[data-day-index=\"" + i +"\"] .week-schedule-shift-wrapper"));
                 if (weekDay != null && hoursNCount != null) {
-                    hoursNTeamMembersCount.put(weekDay.getText(), hoursNCount.getText());
+                    hoursNTeamMembersCount.put(weekDay.getText(), hoursNCount.getText().split(" ")[0] +
+                            hoursNCount.getText().split(" ")[1] + " " + shiftsInSameDay.size() + "TMs");
                     SimpleUtils.report("Schedule Week View Page: Get the week day: " + weekDay.getText() + " and the count of hours" +
                             ", TMs are: " + hoursNCount.getText());
                 } else {
@@ -3298,6 +3300,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 && daySummaries.size()> 0
                 && index<daySummaries.size()) {
             scrollToElement(daySummaries.get(index));
+            waitForSeconds(3);
             moveToElementAndClick(daySummaries.get(index));
             tooltip = getHrsOnTooltip();
         } else if (areListElementVisible(daySummariesInDayView, 5)
@@ -4210,7 +4213,6 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             SimpleUtils.report("There is no bulk selected shifts! ");
     }
 
-
     @Override
     public void verifyGroupCannotbeCollapsedNExpanded() throws Exception {
         if (areListElementVisible(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")),10)){
@@ -4306,5 +4308,22 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else
             SimpleUtils.fail("Group by Location: The action popup fail to load!! ", false);
         return buttonNames;
+    }
+    
+    @FindBy(css = "[ng-class=\"hideItem('staffing.guidance')\"]")
+    private WebElement staffSmartCard;
+    @Override
+    public String getTotalBudgetFromSTAFFSmartCard() throws Exception {
+        String totalBudgetFromSTAFFSmartCard = null;
+        if (isElementLoaded(staffSmartCard,3)) {
+            if (areListElementVisible(budgetedHoursOnSTAFF,3)) {
+                totalBudgetFromSTAFFSmartCard = budgetedHoursOnSTAFF.get(budgetedHoursOnSTAFF.size()-1).getText();
+            } else {
+                SimpleUtils.fail("The budgets are not loaded correctly on the STAFF Card!", false);
+            }
+        } else {
+            SimpleUtils.fail("The STAFF Card is not loaded correctly!", false);
+        }
+        return totalBudgetFromSTAFFSmartCard;
     }
 }

@@ -3854,7 +3854,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	public void clickOnCancelBtn() throws Exception {
 		if (isElementLoaded(cancelBtn)) {
-			click(cancelBtn);
+			scrollToElement(cancelBtn);
+			clickTheElement(cancelBtn);
 			SimpleUtils.pass("Cancel button clicked successfully.");
 		} else
 			SimpleUtils.report("Cancel Button not loaded.");
@@ -6124,6 +6125,49 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 	}
 
+	@Override
+	public void turnOnOrOffSpecificPermissionForSpecificRoles(String section, String roles, String permission, String action) throws Exception {
+		if (areListElementVisible(accessSections,10)){
+			for (WebElement accessSection : accessSections){
+				if (accessSection.findElement(By.tagName("span")).getText().equalsIgnoreCase(section)){
+					if (!accessSection.findElement(By.cssSelector("div")).getAttribute("class").contains("expand")){
+						clickTheElement(accessSection.findElement(By.tagName("span")));
+					}
+					int index = getTheIndexByAccessRolesName(roles, accessSection);
+					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".table-row"));
+					for (WebElement permissionTemp : permissions){
+						String s = permissionTemp.getText();
+						if (s!=null && s.toLowerCase().contains(permission.toLowerCase())){
+							SimpleUtils.pass("Found permission: "+ permission);
+							List<WebElement> permissionInputs = permissionTemp.findElements(By.tagName("input"));
+							if (permissionInputs.size()>index) {
+								if (permissionInputs.get(index).getAttribute("class").contains("ng-not-empty")) {
+									if (action.equalsIgnoreCase("on")) {
+										SimpleUtils.pass(permission + " already on!");
+									} else {
+										clickTheElement(permissionInputs.get(index));
+										SimpleUtils.pass(permission + " unChecked!");
+									}
+								} else {
+									if (action.equalsIgnoreCase("off")) {
+										SimpleUtils.pass(permission + " already off!");
+									} else {
+										clickTheElement(permissionInputs.get(index));
+										SimpleUtils.pass(permission + " Checked!");
+									}
+								}
+								break;
+							}
+						}
+					}
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("No access item loaded!", false);
+		}
+	}
+
 	private int getTheIndexByAccessRolesName(String roleName, WebElement accessSection) throws Exception {
 		int index = -1;
 		if (accessSection != null) {
@@ -7547,7 +7591,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement allowEmployeeClaimOTOpenShift;
 	public boolean checkIfEmployeeCanClaimOTOpenShift() throws Exception {
 		boolean isAllowEmployeeClaimOTOpenShift = false;
-		if (isElementLoaded(allowEmployeeClaimOTOpenShift, 20)) {
+		if (isElementLoaded(allowEmployeeClaimOTOpenShift, 30)) {
 			if (allowEmployeeClaimOTOpenShift.findElement(By.cssSelector(".lg-button-group-first"))
 					.getAttribute("class").contains("selected")) {
 				isAllowEmployeeClaimOTOpenShift = true;
@@ -7558,4 +7602,30 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("'Allow employees claim open shift at overtime rate' setting fail to load! ", false);
 		return isAllowEmployeeClaimOTOpenShift;
 	}
+
+	@FindBy(css = "form-section[form-title=\"Budget\"] [question-title*=\"Input budget by location or break down by work role or job title?\"]")
+	private WebElement budgetGroupSelectionNonOP;
+	@FindBy(css = "form-section[form-title=\"Budget\"] [question-title*=\"Input budget by location or break down by work role or job title?\"] [ng-required*=\"$ctrl.required\"]")
+	private WebElement budgetGroupNonOP;
+	@Override
+	public String getBudgetGroupSettingContentNonOP() throws Exception{
+		if (isElementLoaded(budgetGroupSelectionNonOP, 10)){
+			return budgetGroupSelectionNonOP.findElement(By.cssSelector(".lg-question-input__text.ng-binding")).getText();
+		}
+		return "";
+	}
+	@Override
+	public void selectBudgetGroupNonOP(String optionValue) throws Exception {
+		String content = getBudgetGroupSettingContentNonOP();
+		if (isElementLoaded(budgetGroupSelectionNonOP, 10)
+				&& (content.contains("Input budget by location or break down by work role or job title?"))){
+			Select selectedBudgetGroupNonOP = new Select(budgetGroupNonOP);
+			selectedBudgetGroupNonOP.selectByVisibleText(optionValue);
+			SimpleUtils.report("Select '" + optionValue + "' as the budget group");
+			waitForSeconds(2);
+		} else {
+			SimpleUtils.fail("Budget group section fail to load!", false);
+		}
+	}
+
 }

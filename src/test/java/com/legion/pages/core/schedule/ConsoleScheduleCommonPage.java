@@ -8,6 +8,7 @@ import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.an.E;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -848,5 +849,72 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
                 SimpleUtils.fail("Edit not Displayed on Schedule page", true);
             }
         }
+    }
+
+    @Override
+    public void clickOnFirstWeekInWeekPicker() throws Exception {
+        WebElement scheduleCalendarActiveWeek = MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active"));
+        if (isElementLoaded(scheduleCalendarActiveWeek)){
+            clickTheElement(scheduleCalendarActiveWeek);
+        }
+    }
+
+    public Map<String, String> getSelectedWeekInfo() throws Exception{
+        Map<String, String> dayInfo = new HashMap<>();
+        WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active"));
+        String[] activeDay = activeWeek.getText().replace("\n", " ").split(" ");
+
+        dayInfo.put("weekDay", activeDay[0].substring(0, 3));
+        dayInfo.put("month", activeDay[3]);
+        dayInfo.put("day", activeDay[4]);
+        dayInfo.put("year", getYearsFromCalendarMonthYearText().get(0));
+        return dayInfo;
+    }
+
+    @Override
+    public boolean isSpecifyDayEqualWithFirstDayOfActivateWeek(String day) throws Exception {
+        boolean flag = true;
+        String date = getSelectedWeekInfo().get("day");
+        if (Integer.parseInt(day) == Integer.parseInt(date)) {
+            SimpleUtils.pass("Template effective day is the first day of selected week.");
+        } else {
+            flag = false;
+            SimpleUtils.fail("Template effective day is the first day of selected week.", true);
+        }
+        return flag;
+    }
+
+
+    @FindBy(xpath = "//table[@class='generate-schedule-staffing']//tr[@class]/td[2]")
+    private List<WebElement> staffNameList;
+
+    public void VerifyStaffListInSchedule(String name) throws Exception {
+        boolean flag = false;
+        for (int i = 0; i < staffNameList.size(); i++) {
+            if (staffNameList.get(i).getText().contains(name)) {
+                SimpleUtils.pass("Staff name is showing");
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) {
+            SimpleUtils.fail("Staff name is not showing", true);
+        }
+    }
+
+    @FindBy(css = ".day-week-picker-period-active")
+    private WebElement activeWeek;
+
+    @Override
+    public String getActiveWeekStartDayFromSchedule() throws Exception {
+        String dayStartOfTheWeek = "";
+        if (isElementLoaded(activeWeek, 10)) {
+            dayStartOfTheWeek = activeWeek.getText().split("\n")[1].trim();
+            dayStartOfTheWeek = dayStartOfTheWeek.replaceAll(" ", "").split("-")[0].toLowerCase();
+        } else {
+            SimpleUtils.fail("Active week is not loaded!", false);
+        }
+
+        return dayStartOfTheWeek;
     }
 }

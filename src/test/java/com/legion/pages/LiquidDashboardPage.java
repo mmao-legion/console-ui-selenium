@@ -46,4 +46,7 @@ public interface LiquidDashboardPage {
     public void verifyNoContentOfSwapsNCoversWidget() throws Exception;
     public int getApprovalRateOnTARWidget() throws Exception;
     public void verifyTheContentOfSwapNCoverWidget(String swapOrCover) throws Exception;
+    public void clickViewSchedulesLinkOfComplianceViolationsWidget() throws Exception;
+    public boolean checkViewSchedulesLinkOfComplianceViolationsSection() throws Exception;
+    public String getActiveWeekStartDayFromComplianceViolationsWidget() throws Exception;
 }
