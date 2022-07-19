@@ -3986,7 +3986,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				int i = 0;
 				while (deleteIconsDynamicEmployeeGroupList.size()>0 && i< 50) {
 					click(deleteIconsDynamicEmployeeGroupList.get(0));
-					if (opsPortalLocationsPage.isRemoveDynamicGroupPopUpShowing()) {
+					if (opsPortalLocationsPage.isRemoveDynamicEmployeeGroupPopUpShowing()) {
 						click(removeBtnInRemoveDGPopup);
 						displaySuccessMessage();
 					} else
