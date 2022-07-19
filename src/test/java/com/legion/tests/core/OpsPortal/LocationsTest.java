@@ -1011,7 +1011,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify user can see template value via click template name in location level and compare")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUserCanSeeEachTypeOfTemViaClickingTemNameAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
@@ -1154,7 +1154,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "View template of Scheduling policy schedule collaboration TA and Compliance")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
