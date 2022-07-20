@@ -3350,7 +3350,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-	@FindBy(css="lg-button[ng-click=\"$ctrl.addDynamicGroup()\"] button")
+	@FindBy(css="lg-button[ng-click*=\"addDynamicGroup()\"] button")
 	private WebElement addDynamicGroupButton;
 	@FindBy(css="div.lg-modal h1.lg-modal__title div")
 	private WebElement manageDynamicGroupPopupTitle;
@@ -3396,7 +3396,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void createDynamicGroup(String name,String criteria,String formula) throws Exception{
 		waitForSeconds(3);
 		clickOnAssociationTabOnTemplateDetailsPage();
-		clickTheElement(addDynamicGroupButton);
+		if(isElementLoaded(addDynamicGroupButton,2)) {
+			clickTheElement(addDynamicGroupButton);
+		}
 		if(isElementEnabled(manageDynamicGroupPopupTitle,5)){
 			SimpleUtils.pass("User click add DynamicGroup button successfully!");
 			clickTheElement(dynamicGroupName);
