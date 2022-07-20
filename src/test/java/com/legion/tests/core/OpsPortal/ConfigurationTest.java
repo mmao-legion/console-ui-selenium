@@ -1281,7 +1281,6 @@ public class ConfigurationTest extends TestBase {
             String categoryEditName = "CategoryTest-Update";
             String description = "This is a test for Category configuration!";
             String verifyType = "category";
-            String locationName = "AutoCreate20220227202919";
 
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -1295,7 +1294,7 @@ public class ConfigurationTest extends TestBase {
             //Verify newly added category is in Forecast page
             switchToNewWindow();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName);
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1415,7 +1414,6 @@ public class ConfigurationTest extends TestBase {
             String channelEditName = "ChannelTest-Update";
             String description = "This is a test for channel configuration!";
             String verifyType = "channel";
-            String locationName = "AutoCreate20220227202919";
 
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -1429,7 +1427,7 @@ public class ConfigurationTest extends TestBase {
             //Verify newly added channel is in Forecast page
             switchToNewWindow();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName);
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -2988,136 +2986,6 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.clickAddOrEditForDriver("Add");
             configurationPage.verifyForDerivedDemandDriverUI(derivedType, null);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-    }
-
-    @Automated(automated = "Automated")
-    @Owner(owner = "Jane")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate Creation&Modification for Remote Demand Driver.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreationAndEditForRemoteDemandDriverAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
-            String templateType = "Demand Drivers";
-            String templateName = "testCreation_Remote";
-            HashMap<String, String> parentLocationDriver = new HashMap<String, String>(){
-                {
-                    put("Name", "RemoteLocationDriver");
-                    put("Type", "Items");
-                    put("Channel", "EDW");
-                    put("Category", "Enrollments");
-                    put("Show in App", "Yes");
-                    put("Order", "1");
-                    put("Forecast Source", "Remote");
-                    put("Specify Remote Location/Parent Location", "Parent Location");
-                    put("Parent Level", "2");
-                }
-            };
-            HashMap<String, String> remoteLocationDriver = new HashMap<String, String>(){
-                {
-                    put("Name", "ParentLocationDriver");
-                    put("Type", "Items");
-                    put("Channel", "EDW");
-                    put("Category", "Verifications");
-                    put("Show in App", "Yes");
-                    put("Order", "1");
-                    put("Forecast Source", "Remote");
-                    put("Specify Remote Location/Parent Location", "Remote Location");
-                    put("Choose Remote Location", "Boston");
-                }
-            };
-
-            //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
-            refreshPage();
-            //Go to Demand Driver template
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
-            configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateType);
-            //Go to Template tab
-            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
-            configurationPage.createNewTemplate(templateName);
-            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
-            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            //Add a Remote:ParentLocation demand driver
-            configurationPage.clickAddOrEditForDriver("Add");
-            configurationPage.addOrEditDemandDriverInTemplate(parentLocationDriver);
-
-
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
-    }
-
-    @Automated(automated = "Automated")
-    @Owner(owner = "Jane")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate Creation&Modification for Distributed Demand Driver.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyCreationAndEditForDistributedDemandDriverAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        try {
-            String templateType = "Demand Drivers";
-            String templateName = "testCreation_Distributed";
-            HashMap<String, String> distributeddDriver = new HashMap<String, String>(){
-                {
-                    put("Name", "Items:Distributed");
-                    put("Type", "Items");
-                    put("Channel", "EDW");
-                    put("Category", "Enrollments");
-                    put("Show in App", "Yes");
-                    put("Order", "1");
-                    put("Forecast Source", "Distributed");
-                    put("Input Stream", "Items:EDW:Enrollments");
-                }
-            };
-            HashMap<String, String> itemDriver = new HashMap<String, String>(){
-                {
-                    put("Name", "Items:EDW");
-                    put("Type", "Items");
-                    put("Channel", "EDW");
-                    put("Category", "Verifications");
-                    put("Show in App", "Yes");
-                    put("Order", "1");
-                    put("Forecast Source", "Imported");
-                    put("Input Stream", "Items:EDW:Enrollments");
-                }
-            };
-            HashMap<String, String> amountDriver = new HashMap<String, String>(){
-                {
-                    put("Name", "Items:Distributed");
-                    put("Type", "Items");
-                    put("Channel", "EDW");
-                    put("Category", "Enrollments");
-                    put("Show in App", "Yes");
-                    put("Order", "1");
-                    put("Forecast Source", "Distributed");
-                    put("Input Stream", "Items:EDW:Enrollments");
-                }
-            };
-
-            //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
-            refreshPage();
-            //Go to Demand Driver template
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
-            configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateType);
-            //Go to Template tab
-            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
-            configurationPage.createNewTemplate(templateName);
-            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
-            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            //Add a Distributed demand driver
-            configurationPage.clickAddOrEditForDriver("Add");
-            configurationPage.addOrEditDemandDriverInTemplate(distributeddDriver);
-
-
             ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
