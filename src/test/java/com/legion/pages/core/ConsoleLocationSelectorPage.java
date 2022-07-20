@@ -1644,6 +1644,8 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             } else
                 SimpleUtils.fail("The upper field name fail to load! ", false);
         }
+        //To close the dropdown list
+        clickTheElement(upperFieldSelectorButton);
         return upperFieldNames;
     }
 

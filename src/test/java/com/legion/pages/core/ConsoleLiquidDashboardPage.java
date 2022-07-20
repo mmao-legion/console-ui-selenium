@@ -840,18 +840,37 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
         }
     }
 
-    @FindBy (css = ".MuiBox-root.jss10 div div div div div div")
-    private List<WebElement> dataOnComplianceWidget;
+    @FindBy (css = "lg-compliance[label=\"'dashboard:compliance-violations' | $t\"]")
+    private WebElement dataOnComplianceWidget;
     @Override
     public List<String> getDataOnComplianceViolationWidget() throws Exception {
+        //0: Past week Total Hours, 1: Past week Violations, 2: Past week Locations
+        //3: Current week Total Hours, 4: Current week Violations, 5: Current week Locations
+        //6: Future week Total Hours, 7: Future week Violations, 8: Future week Locations
         List<String> resultList= new ArrayList<String>();
-        if (areListElementVisible(dataOnComplianceWidget,10)){
-            for (int i=0;i<dataOnComplianceWidget.size();i++){
-                String numberOnComplianceWidget = dataOnComplianceWidget.get(i).findElement(By.cssSelector("div")).getText();
+        if (isElementLoaded(dataOnComplianceWidget,10)){
+            List<WebElement> dataOnWidget = dataOnComplianceWidget.findElements(By.cssSelector("div.dms-number-x-large"));
+            List<WebElement> carouselIndicators = dataOnComplianceWidget.findElements(By.cssSelector(".cus-carousel-indicators li"));
+            //Go to past week
+            clickTheElement(carouselIndicators.get(0));
+            for (int i=0;i<3;i++){
+                String numberOnComplianceWidget = dataOnWidget.get(i).getText();
+                resultList.add(numberOnComplianceWidget);
+            }
+            //Go to current week
+            clickTheElement(carouselIndicators.get(1));
+            for (int i=3;i<6;i++){
+                String numberOnComplianceWidget = dataOnWidget.get(i).getText();
+                resultList.add(numberOnComplianceWidget);
+            }
+            //Go to future week
+            clickTheElement(carouselIndicators.get(2));
+            for (int i=6;i<9;i++){
+                String numberOnComplianceWidget = dataOnWidget.get(i).getText();
                 resultList.add(numberOnComplianceWidget);
             }
         } else {
-            SimpleUtils.fail("data on Compliance violation widget fail to load!",true);
+            SimpleUtils.fail("data on Compliance violation widget fail to load!",false);
         }
         return resultList;
     }

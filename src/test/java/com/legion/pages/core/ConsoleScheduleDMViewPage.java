@@ -424,7 +424,8 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         List<String> textFromChart = new ArrayList<>();
         if (areListElementVisible(textFromTheChartInLocationSummarySmartCard, 15)&&textFromTheChartInLocationSummarySmartCard.size()!=0){
             for(int i=0;i<textFromTheChartInLocationSummarySmartCard.size();i++){
-                textFromChart.add(textFromTheChartInLocationSummarySmartCard.get(i).getText());
+                textFromChart.add(textFromTheChartInLocationSummarySmartCard.get(i)
+                        .getText().replace(",", "").split(" ")[0]);
             }
             SimpleUtils.report("Get text from the chart in location summary smart card successfully! ");
         } else{
@@ -1912,5 +1913,24 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             }
         } else
             SimpleUtils.fail("Schedules Table Headers on Schedule DM view loaded fail! ", false);
+    }
+
+
+    @Override
+    public boolean checkIfLocationExistOnDMViewAnalyticsTable(String locationName){
+        boolean isLocationExist = false;
+        if(areListElementVisible(schedulesInDMView, 10) && schedulesInDMView.size()!=0){
+            for (WebElement scheduleInDMView:schedulesInDMView){
+                String scheduleLocationName = scheduleInDMView.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_UNTOUCHED\"]")).getText();
+                if(scheduleLocationName.contains(locationName)){
+                    isLocationExist = true;
+                    SimpleUtils.pass("Click the schedule of "+ locationName+ " successfully! ");
+                    break;
+                }
+            }
+        }  else{
+            SimpleUtils.fail("Click schedule in DM View failed, there is no schedules display in DM view" , false);
+        }
+        return isLocationExist;
     }
 }
