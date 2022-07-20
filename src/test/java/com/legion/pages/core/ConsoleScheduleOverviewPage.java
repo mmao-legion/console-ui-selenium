@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.legion.utils.JsonUtil;
+import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
@@ -412,11 +413,21 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 			float guidanceHours = Float.valueOf(weekHoursElement.get(0).getText().split(" ")[0].replace(",",""));
 			float scheduledHours = Float.valueOf(weekHoursElement.get(1).getText().split(" ")[0].replace(",",""));
 			float otherHours = Float.valueOf(weekHoursElement.get(2).getText().split(" ")[0].replace(",",""));
+			float projectedHours = Float.valueOf(weekHoursElement.get(3).getText().split(" ")[0].replace(",",""));
 			weekHours.put("guidanceHours", guidanceHours);
 			weekHours.put("scheduledHours", scheduledHours);
 			weekHours.put("otherHours", otherHours);
+			weekHours.put("projectedHours", projectedHours);
 
-		}
+		} else if (weekHoursElement.size() == 3) {
+			float guidanceHours = Float.valueOf(weekHoursElement.get(0).getText().split(" ")[0].replace(",",""));
+			float scheduledHours = Float.valueOf(weekHoursElement.get(1).getText().split(" ")[0].replace(",",""));
+			float otherHours = Float.valueOf(weekHoursElement.get(2).getText().split(" ")[0].replace(",",""));
+			weekHours.put("guidanceHours", guidanceHours);
+			weekHours.put("scheduledHours", scheduledHours);
+			weekHours.put("otherHours", otherHours);
+		} else
+			SimpleUtils.fail("The week hours fail to load! ", false);
 		return weekHours;
 	}
 
@@ -662,4 +673,38 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		return days;
 	}
 
+
+	public void clickOnLastWeek() throws Exception {
+		if(isElementLoaded(leftAngle,10)){
+			click(leftAngle);
+		}
+		if (isElementLoaded(lastWeekNavigation,10)){
+			click(lastWeekNavigation);// click on last in overview page
+		}
+	}
+
+
+	@FindBy (css = "[label=\"View Group Schedule\"] button")
+	private WebElement viewGroupScheduleButton;
+	public void clickOnViewGroupScheduleButton() throws Exception {
+		if(isElementLoaded(viewGroupScheduleButton,10)){
+			click(viewGroupScheduleButton);
+			SimpleUtils.pass("Click on View Group Schedule Button successfully! ");
+		} else
+			SimpleUtils.fail("The View Group Schedule Button fail to load! ", false);
+	}
+
+	@Override
+	public String getCurrentWeekBudgetHours() throws Exception {
+		String budgetHours;
+		WebElement currentWeek = overviewTableRows.get(0);
+		if (isElementLoaded(currentWeek)) {
+			budgetHours = currentWeek.findElement(By.cssSelector("[ng-if = \"hasBudget\"] [ng-if = \"row.budgetHours\"]")).getText();
+			SimpleUtils.pass("Catch the budget hours successfully!");
+			return budgetHours;
+		}else{
+			SimpleUtils.fail("The current week is not listed on the first line",false);
+		}
+		return null;
+	}
 }

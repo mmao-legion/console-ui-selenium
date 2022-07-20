@@ -139,7 +139,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
         if (isElementLoaded(scheduleDayViewButton)) {
             if (!scheduleDayViewButton.getAttribute("class").toString().contains("enabled")) {
-                click(scheduleDayViewButton);
+                clickTheElement(scheduleDayViewButton);
             }
             SimpleUtils.pass("Schedule Page day view loaded successfully!");
         } else {
@@ -314,12 +314,13 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
     @FindBy(css = "div.sub-navigation-view-link")
     private List<WebElement> ScheduleSubTabsElement;
-    @FindBy(css = "div.sub-navigation-view-link.active")
+    @FindBy(css = "[slider-settings=\"schedulingSettings\"] div.sub-navigation-view-link.active")
     private WebElement activatedSubTabElement;
 
     @Override
     public void clickOnScheduleSubTab(String subTabString) throws Exception {
-        if (ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
+        waitForSeconds(5);
+        if (areListElementVisible(ScheduleSubTabsElement, 10) && ScheduleSubTabsElement.size() != 0 && !verifyActivatedSubTab(subTabString)) {
             for (WebElement ScheduleSubTabElement : ScheduleSubTabsElement) {
                 if (ScheduleSubTabElement.getText().equalsIgnoreCase(subTabString)) {
                     waitForSeconds(5);
@@ -340,6 +341,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
     @Override
     public Boolean verifyActivatedSubTab(String SubTabText) throws Exception {
+        waitForSeconds(2);
         if (isElementLoaded(activatedSubTabElement,15)) {
             if (activatedSubTabElement.getText().toUpperCase().contains(SubTabText.toUpperCase())) {
                 return true;
@@ -419,6 +421,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
     @Override
     public String getActiveWeekText() throws Exception {
+        waitForSeconds(1);
         if (isElementLoaded(MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")),15))
             return MyThreadLocal.getDriver().findElement(By.className("day-week-picker-period-active")).getText().replace("\n", " ");
         return "";
@@ -537,22 +540,6 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
     }
 
-
-    public int getMinutesFromTime(String time) {
-        int minutes = 0;
-        if (time.contains(":")) {
-            String minute = time.split(":")[1].substring(0, time.split(":")[1].length()-2).trim();
-            minutes = (Integer.parseInt(time.split(":")[0].trim())) * 60 + Integer.parseInt(minute);
-        }else {
-            minutes = Integer.parseInt(time.substring(0, time.length()-2)) * 60;
-        }
-        if (time.toLowerCase().endsWith("pm")) {
-            minutes += 12 * 60;
-        }
-        return minutes;
-    }
-
-
     @FindBy (css = "div.day-week-picker-period")
     private List<WebElement> dayPickerAllDaysInDayView;
     @Override
@@ -652,6 +639,8 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
     private WebElement shiftOfferTime;
     @FindBy(className = "shift-swap-modal-table-shift-status")
     private List<WebElement> shiftStatus;
+    @FindBy(css = ".loading-icon")
+    private WebElement loadingIcon;
 
     @Override
     public void navigateToNextWeek() throws Exception {
@@ -667,10 +656,14 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
                 clickTheElement(calendarNavigationNextWeekArrow);
                 if (areListElementVisible(currentWeeks, 5)) {
                     clickTheElement(currentWeeks.get(0));
+                    waitUntilElementIsInVisible(loadingIcon);
+                    waitForSeconds(10);
                     SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(0).getText() + "' Successfully!");
                 }
             }else {
                 clickTheElement(currentWeeks.get(currentWeekIndex + 1));
+                waitUntilElementIsInVisible(loadingIcon);
+                waitForSeconds(10);
                 SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(currentWeekIndex + 1).getText() + "' Successfully!");
             }
         }else {
@@ -907,5 +900,21 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
         if (!flag) {
             SimpleUtils.fail("Staff name is not showing", true);
         }
+    }
+
+    @FindBy(css = ".day-week-picker-period-active")
+    private WebElement activeWeek;
+
+    @Override
+    public String getActiveWeekStartDayFromSchedule() throws Exception {
+        String dayStartOfTheWeek = "";
+        if (isElementLoaded(activeWeek, 10)) {
+            dayStartOfTheWeek = activeWeek.getText().split("\n")[1].trim();
+            dayStartOfTheWeek = dayStartOfTheWeek.replaceAll(" ", "").split("-")[0].toLowerCase();
+        } else {
+            SimpleUtils.fail("Active week is not loaded!", false);
+        }
+
+        return dayStartOfTheWeek;
     }
 }

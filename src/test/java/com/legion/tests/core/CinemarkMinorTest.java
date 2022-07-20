@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 
+import com.legion.api.cache.CacheAPI;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.DashboardPage;
@@ -9,38 +10,50 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.ProfileNewUIPage;
 import com.legion.pages.TeamPage;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
+import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.*;
 import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.Constants;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.sl.In;
+import org.jsoup.Connection;
 import org.openqa.selenium.WebElement;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.testng.internal.annotations.IAfterClass;
 
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.util.*;
+
+import static java.time.LocalDate.*;
 
 public class CinemarkMinorTest extends TestBase {
 
     private static HashMap<String, String> cinemarkSetting14N15 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/CinemarkMinorSettings.json");
     private static HashMap<String, String> cinemarkSetting16N17 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/CinemarkMinorSettings16N17.json");
     private static HashMap<String, String> cinemarkMinors = JsonUtil.getPropertiesFromJsonFile("src/test/resources/CinemarkMinorsData.json");
-
+    private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
+    private static String minorWorkRole = scheduleWorkRoles.get("TEAM_MEMBER_CORPORATE_THEATRE");
 
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception {
         try {
+            CacheAPI.refreshTemplateCache("stoneman@legion.co", "admin11.a");
             this.createDriver((String) params[0], "69", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
-            if (MyThreadLocal.getCurrentComplianceTemplate()==null || MyThreadLocal.getCurrentComplianceTemplate().equals("")){
-                getAndSetDefaultTemplate((String) params[3]);
-            }
+//            if (MyThreadLocal.getCurrentComplianceTemplate()==null || MyThreadLocal.getCurrentComplianceTemplate().equals("")){
+//                getAndSetDefaultTemplate((String) params[3]);
+//            }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -120,7 +133,18 @@ public class CinemarkMinorTest extends TestBase {
         public String getValue() { return value; }
     }
 
-
+    public enum minorNames{
+        Minor13("Minor13"),
+        Minor14("Minor14"),
+        Minor15("Minor15"),
+        Minor16("Minor16"),
+        Minor17("Minor17");
+        private final String value;
+        minorNames(final String newValue) {
+            value = newValue;
+        }
+        public String getValue() { return value; }
+    }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Nora")
@@ -132,7 +156,6 @@ public class CinemarkMinorTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -410,7 +433,7 @@ public class CinemarkMinorTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "05:00AM", "11:00PM");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = shiftOperatePage.getRandomWorkRole();
-            shiftOperatePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor14"));
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(cinemarkMinors.get("Minor14"));
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
@@ -442,14 +465,14 @@ public class CinemarkMinorTest extends TestBase {
                 weekdayIndexes.add(0);
 
             // Validate weekday should apply the settings of school day
-            WebElement newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(weekdayIndexes.get(0)));
+            WebElement newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14").split(" ")[0]).get(weekdayIndexes.get(0)));
             if (newAddedShift != null && scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
                 SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
             else
                 SimpleUtils.fail("Get new added shift failed", false);
 
             // Validate weekend should apply the settings of non school day
-            newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(5));
+            newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14").split(" ")[0]).get(5));
             if (newAddedShift != null && scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + schoolWeekMaxScheduleHrs + " hrs"))
                 SimpleUtils.pass("Schedule Page: Weekday applies the settings of non school day");
             else
@@ -458,7 +481,7 @@ public class CinemarkMinorTest extends TestBase {
 
             // Validate holiday should apply the settings of non school day
             if (holidays != null) {
-                newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14")).get(holidayIndexes.get(0)));
+                newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(cinemarkMinors.get("Minor14").split(" ")[0]).get(holidayIndexes.get(0)));
                 if (newAddedShift != null) {
                     if (holidayIndexes.size() == 5 && scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max " + nonSchoolWeekMaxScheduleHrs + " hrs"))
                         SimpleUtils.pass("Schedule Page: Holiday applies the settings of non school day");
@@ -648,7 +671,16 @@ public class CinemarkMinorTest extends TestBase {
             //Go to OP page
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            MyThreadLocal.setCurrentComplianceTemplate(templateTypeAndName.get("Compliance"));
+
             //go to Configuration
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsComplianceSection();
@@ -722,14 +754,22 @@ public class CinemarkMinorTest extends TestBase {
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             String districtName = dashboardPage.getCurrentDistrict();
 
             //Go to OP page
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            MyThreadLocal.setCurrentComplianceTemplate(templateTypeAndName.get("Compliance"));
             //go to Configuration
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsComplianceSection();
@@ -777,12 +817,13 @@ public class CinemarkMinorTest extends TestBase {
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = shiftOperatePage.getRandomWorkRole();
-            shiftOperatePage.deleteTMShiftInWeekView(cinemarkMinors.get("Minor17"));
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(cinemarkMinors.get("Minor17"));
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(0,0,0);
             newShiftPage.selectWorkRole(workRole);
-            newShiftPage.moveSliderAtSomePoint("8", 20, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("5:00pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchText(cinemarkMinors.get("Minor17"));
@@ -885,7 +926,15 @@ public class CinemarkMinorTest extends TestBase {
             //Go to OP page
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            MyThreadLocal.setCurrentComplianceTemplate(templateTypeAndName.get("Compliance"));
             //go to Configuration
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsComplianceSection();
@@ -955,10 +1004,13 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime1 = "7am,1pm";
             String shiftTime2 = "9am,4pm";
             String shiftTime3 = "8am,2pm";
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String scheduleFromToTime = "8am - 4pm";
             String scheduleMaxHours = "6";
             String selectWeekDayName = "Mon";
+//            setStrictlyEnforceMinorViolationSetting("No");
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            dashboardPage.clickOnDashboardConsoleMenu();
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3,
                     workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
         } catch (Exception e){
@@ -974,14 +1026,24 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
-            String minorName = "Minor17";
+            String minorName = getMinorName();
             String shiftTime1 = "8am,1pm";
             String shiftTime2 = "9am,4pm";
             String shiftTime3 = "9am,2pm";
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String scheduleFromToTime = "8:30am - 4pm";
             String scheduleMaxHours = "5";
             String selectWeekDayName = "Mon";
+            if (minorName.contains("14")
+                    ||minorName.contains("15"))  {
+                shiftTime1 = "7am,1pm";
+                shiftTime2 = "9am,4pm";
+                shiftTime3 = "8am,2pm";
+                workRole = minorWorkRole;
+                scheduleFromToTime = "8am - 4pm";
+                scheduleMaxHours = "6";
+                selectWeekDayName = "Mon";
+            }
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
                     scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
         } catch (Exception e){
@@ -1001,7 +1063,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime1 = "8am,3pm";
             String shiftTime2 = "9am,5pm";
             String shiftTime3 = "11am,4pm";
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String scheduleFromToTime = "8:30am - 5pm";
             String scheduleMaxHours = "5";
             String selectWeekDayName = "Fri";
@@ -1020,14 +1082,24 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
-            String minorName = "Minor17";
+            String minorName = getMinorName();
             String shiftTime1 = "8am,1pm";
             String shiftTime2 = "9am,5pm";
             String shiftTime3 = "9am,2pm";
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String scheduleFromToTime = "9am - 5pm";
             String scheduleMaxHours = "6";
             String selectWeekDayName = "Fri";
+            if (minorName.contains("14")
+                    ||minorName.contains("15")) {
+                shiftTime1 = "8am,3pm";
+                shiftTime2 = "9am,5pm";
+                shiftTime3 = "11am,4pm";
+                workRole = minorWorkRole;
+                scheduleFromToTime = "8:30am - 5pm";
+                scheduleMaxHours = "5";
+                selectWeekDayName = "Fri";
+            }
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
                     scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
         } catch (Exception e){
@@ -1046,7 +1118,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime1 = "8am,3pm";
             String shiftTime2 = "9am,6pm";
             String shiftTime3 = "9am,3pm";
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String scheduleFromToTime = "9am - 6pm";
             String scheduleMaxHours = "7";
             String selectWeekDayName = "Sat";
@@ -1066,14 +1138,24 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
-            String minorName = "Minor17";
+            String minorName = getMinorName();
             String shiftTime1 = "8am,1pm";
             String shiftTime2 = "10am,7pm";
             String shiftTime3 = "10am,2pm";
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String scheduleFromToTime = "9:30am - 7pm";
             String scheduleMaxHours = "7";
             String selectWeekDayName = "Sat";
+            if (minorName.contains("14")
+                    ||minorName.contains("15")) {
+                shiftTime1 = "8am,3pm";
+                shiftTime2 = "9am,6pm";
+                shiftTime3 = "9am,3pm";
+                workRole = minorWorkRole;
+                scheduleFromToTime = "9am - 6pm";
+                scheduleMaxHours = "7";
+                selectWeekDayName = "Sat";
+            }
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole,
                     scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
         } catch (Exception e){
@@ -1094,7 +1176,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime1 = "8am,3pm";
             String shiftTime2 = "10am,9pm";
             String shiftTime3 = "10am,4pm";
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String scheduleFromToTime = "9:30am - 9pm";
             String scheduleMaxHours = "9";
             String selectWeekDayName = "Sun";
@@ -1113,14 +1195,24 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
-            String minorName = "Minor17";
+            String minorName = getMinorName();
             String shiftTime1 = "8am,1pm";
             String shiftTime2 = "10am,8pm";
             String shiftTime3 = "10am,2pm";
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String scheduleFromToTime = "10am - 8pm";
             String scheduleMaxHours = "8";
             String selectWeekDayName = "Sun";
+            if (minorName.contains("14")
+                    ||minorName.contains("15")) {
+                shiftTime1 = "8am,3pm";
+                shiftTime2 = "10am,9pm";
+                shiftTime3 = "10am,4pm";
+                workRole = minorWorkRole;
+                scheduleFromToTime = "9:30am - 9pm";
+                scheduleMaxHours = "9";
+                selectWeekDayName = "Sun";
+            }
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, false, selectWeekDayName);
 
         } catch (Exception e){
@@ -1139,7 +1231,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime1 = "8am,3pm";
             String shiftTime2 = "10am,10pm";
             String shiftTime3 = "10am,4pm";
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String scheduleFromToTime = "10am - 10pm";
             String scheduleMaxHours = "10";
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
@@ -1157,13 +1249,22 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
-            String minorName = "Minor17";
+            String minorName = getMinorName();
             String shiftTime1 = "8am,1pm";
             String shiftTime2 = "11am,10pm";
             String shiftTime3 = "11am,7pm";
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String scheduleFromToTime = "10:30am - 10pm";
             String scheduleMaxHours = "9";
+            if (minorName.contains("14")
+                    ||minorName.contains("15")) {
+                shiftTime1 = "8am,3pm";
+                shiftTime2 = "10am,10pm";
+                shiftTime3 = "10am,4pm";
+                workRole = minorWorkRole;
+                scheduleFromToTime = "10am - 10pm";
+                scheduleMaxHours = "10";
+            }
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
 
         } catch (Exception e){
@@ -1195,24 +1296,28 @@ public class CinemarkMinorTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();
         }
-        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-        if (isWeekGenerated){
-            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-        }
         Thread.sleep(5000);
-        List<String> toCloseDays = new ArrayList<>();
-        //newShiftPage.editOperatingHoursOnScheduleOldUIPage("6am", "11pm", toCloseDays);
-        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+        boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+//        if (isWeekGenerated){
+//            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//        }
+//        Thread.sleep(5000);
+//        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+        if (!isWeekGenerated) {
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+        }
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1.split(" ")[0]);
         scheduleMainPage.saveSchedule();
         if(smartCardPage.isRequiredActionSmartCardLoaded()){
-            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+//            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteAllOOOHShiftInWeekView();
             scheduleMainPage.saveSchedule();
         }
+        Thread.sleep(5000);
         createSchedulePage.publishActiveSchedule();
 
         //Create new shift with shift time is not during the minor setting for TM
@@ -1230,11 +1335,17 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.selectWorkRole(workRole);
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
-        newShiftPage.searchText(firstNameOfTM1);
+        newShiftPage.searchWithOutSelectTM(firstNameOfTM1);
 
+        //check the violation message in Status column
+        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime.toLowerCase()), false);
+        Thread.sleep(5000);
+        shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
+        Thread.sleep(5000);
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage1 = "As a minor, "+firstNameOfTM1+" should be scheduled from "+ scheduleFromToTime;
+            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+" should be scheduled from "+ scheduleFromToTime;
             String warningMessage2 = "Please confirm that you want to make this change.";
             String messageInWarningMode = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
             if (messageInWarningMode.contains(warningMessage1)&& messageInWarningMode.contains(warningMessage2)){
@@ -1246,23 +1357,22 @@ public class CinemarkMinorTest extends TestBase {
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
-
-        //check the violation message in Status column
-        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
-                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime), false);
-
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
-
+        Thread.sleep(5000);
         //check the compliance smart card
         SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
                 smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
         smartCardPage.clickViewShift();
         //check the violation in i icon popup of new create shift
-        WebElement newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        WebElement newAddedShift = scheduleShiftTablePage.
+                getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1.split(" ")[0]).get(0));
+        String expectMessage = "Minor hrs "+ scheduleFromToTime;
+        String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString().replace(":00 ", "").replace(":30 ", ":30").toLowerCase();
         if (newAddedShift != null) {
-            SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
-                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor hrs "+ scheduleFromToTime), false);
+            SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! the expect is: "+expectMessage
+                            +" the actual is:"+actualMessage,
+                    actualMessage.contains(expectMessage.toLowerCase()), false);
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
 
@@ -1271,7 +1381,7 @@ public class CinemarkMinorTest extends TestBase {
         scheduleMainPage.clickOnFilterBtn();
         //Create new shift with shift hours is more than minor setting for TM1
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1.split(" ")[0]);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1292,7 +1402,7 @@ public class CinemarkMinorTest extends TestBase {
 
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage1 = "As a minor, "+firstNameOfTM1+"'s daily schedule should not exceed "+ scheduleMaxHours +" hours";
+            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+"'s daily schedule should not exceed "+ scheduleMaxHours +" hours";
             String warningMessage2 = "Please confirm that you want to make this change.";
             if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
                     && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
@@ -1314,7 +1424,7 @@ public class CinemarkMinorTest extends TestBase {
                 smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
         smartCardPage.clickViewShift();
         //check the violation in i icon popup of new create shift
-        newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1.split(" ")[0]).get(0));
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
                     scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max "+scheduleMaxHours+" hrs"), false);
@@ -1326,7 +1436,8 @@ public class CinemarkMinorTest extends TestBase {
         scheduleMainPage.clickOnFilterBtn();
         //Create new shift that not avoid the minor settings for TM1
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        Thread.sleep(3000);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1.split(" ")[0]);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1343,7 +1454,7 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.selectWorkRole(workRole);
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
-        newShiftPage.searchText(firstNameOfTM1);
+        newShiftPage.searchWithOutSelectTM(firstNameOfTM1);
         SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
                 !shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
@@ -1359,9 +1470,10 @@ public class CinemarkMinorTest extends TestBase {
 
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
-
+        Thread.sleep(5000);
         //check the violation in i icon popup of new create shift
-        newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
+        newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1.split(" ")[0]).get(0));
+        Thread.sleep(3000);
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("There should no minor warning message display on the i icon when shift is not avoid the minor setting! ",
                     !scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor"), false);
@@ -1382,7 +1494,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "10am,4pm";
             int needCreateShiftsNumber1 = 4;
             int needCreateShiftsNumber2 = 2;
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String maxOfDays = "4";
             String maxOfScheduleHours = "15";
             verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
@@ -1406,7 +1518,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "10am,4pm";
             int needCreateShiftsNumber1 = 5;
             int needCreateShiftsNumber2 = 2;
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String maxOfDays = "5";
             String maxOfScheduleHours = "16";
             verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
@@ -1430,7 +1542,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "10am,5pm";
             int needCreateShiftsNumber1 = 6;
             int needCreateShiftsNumber2 = 2;
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String maxOfDays = "6";
             String maxOfScheduleHours = "17";
             verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
@@ -1448,14 +1560,24 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
-            String minorName = "Minor17";
+            String minorName = getMinorName();
             String shiftTime1 = "11am,1pm";
             String shiftTime2 = "11am,4pm";
             int needCreateShiftsNumber1 = 6;
             int needCreateShiftsNumber2 = 4;
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String maxOfDays = "6";
             String maxOfScheduleHours = "18";
+            if (minorName.contains("14")
+                    || minorName.contains("15")) {
+                shiftTime1 = "10am,1pm";
+                shiftTime2 = "10am,4pm";
+                needCreateShiftsNumber1 = 4;
+                needCreateShiftsNumber2 = 2;
+                workRole = minorWorkRole;
+                maxOfDays = "4";
+                maxOfScheduleHours = "15";
+            }
             verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
                     needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, true, false);
 
@@ -1471,14 +1593,24 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
-            String minorName = "Minor17";
+            String minorName = getMinorName();
             String shiftTime1 = "11am,1pm";
             String shiftTime2 = "11am,4pm";
             int needCreateShiftsNumber1 = 4;
             int needCreateShiftsNumber2 = 3;
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String maxOfDays = "4";
             String maxOfScheduleHours = "16";
+            if (minorName.contains("14")
+                    || minorName.contains("15")) {
+                shiftTime1 = "11am,1pm";
+                shiftTime2 = "10am,4pm";
+                needCreateShiftsNumber1 = 5;
+                needCreateShiftsNumber2 = 2;
+                workRole = minorWorkRole;
+                maxOfDays = "5";
+                maxOfScheduleHours = "16";
+            }
             verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
                     needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, true);
 
@@ -1494,14 +1626,24 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
-            String minorName = "Minor17";
+            String minorName = getMinorName();
             String shiftTime1 = "11am,1pm";
             String shiftTime2 = "11am,5pm";
             int needCreateShiftsNumber1 = 5;
             int needCreateShiftsNumber2 = 3;
-            String workRole = "Team Member Corporate-Theatre";
+            String workRole = minorWorkRole;
             String maxOfDays = "5";
             String maxOfScheduleHours = "17";
+            if (minorName.contains("14")
+                    || minorName.contains("15")) {
+                shiftTime1 = "11am,1pm";
+                shiftTime2 = "10am,5pm";
+                needCreateShiftsNumber1 = 6;
+                needCreateShiftsNumber2 = 2;
+                workRole = minorWorkRole;
+                maxOfDays = "6";
+                maxOfScheduleHours = "17";
+            }
             verifyWeekOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, workRole, needCreateShiftsNumber1,
                     needCreateShiftsNumber2, maxOfDays, maxOfScheduleHours, false, false);
 
@@ -1521,7 +1663,6 @@ public class CinemarkMinorTest extends TestBase {
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -1542,16 +1683,17 @@ public class CinemarkMinorTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
         }
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-        if (isWeekGenerated){
-            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//        if (isWeekGenerated){
+//            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//        }
+//        Thread.sleep(3000);
+//        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+        if (!isWeekGenerated) {
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         }
-//        List<String> toCloseDays = new ArrayList<>();
-        //newShiftPage.editOperatingHoursOnScheduleOldUIPage("6", "23", toCloseDays);
-        Thread.sleep(3000);
-        createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         String firstNameOfTM1 = cinemarkMinors.get(minorName);
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1.split(" ")[0]);
         scheduleMainPage.saveSchedule();
 
         //Create new shift with shift time is not during the minor setting for TM
@@ -1581,16 +1723,20 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.selectWorkRole(workRole);
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
+        newShiftPage.clickClearAssignmentsLink();
         newShiftPage.searchText(firstNameOfTM1);
+
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage1 = "As a minor, "+firstNameOfTM1+"'s weekly schedule should not exceed "+ maxOfDays +" days";
+            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+"'s weekly schedule should not exceed "+ maxOfDays +" days";
             String warningMessage2 = "Please confirm that you want to make this change.";
-            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
-                    && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+            String actualMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
+            if (actualMessage.contains(warningMessage1)
+                    && actualMessage.contains(warningMessage2)){
                 SimpleUtils.pass("The message in warning mode display correctly! ");
             } else
-                SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
+                SimpleUtils.fail("The message in warning mode display incorrectly! "+ "the expect is:" +warningMessage1 +" and "+ warningMessage2
+                        + " the actual is: "+ actualMessage, false);
             shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
@@ -1607,7 +1753,7 @@ public class CinemarkMinorTest extends TestBase {
                 smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
         smartCardPage.clickViewShift();
         //check the violation in i icon popup of new create shift
-        WebElement newAddedShift = scheduleShiftTablePage.getOneDayShiftByName(needCreateShiftsNumber1, firstNameOfTM1).get(0);
+        WebElement newAddedShift = scheduleShiftTablePage.getOneDayShiftByName(needCreateShiftsNumber1, firstNameOfTM1.split(" ")[0]).get(0);
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
                     scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max "+ maxOfDays+ " days"), false);
@@ -1619,7 +1765,7 @@ public class CinemarkMinorTest extends TestBase {
         smartCardPage.verifyClearFilterFunction();
         //Create new shift with shift hours is more than minor setting for TM1
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1.split(" ")[0]);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1651,7 +1797,7 @@ public class CinemarkMinorTest extends TestBase {
 
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage1 = "As a minor, "+firstNameOfTM1+"'s weekly schedule should not exceed "+ maxOfScheduleHours +" hours";
+            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+"'s weekly schedule should not exceed "+ maxOfScheduleHours +" hours";
             String warningMessage2 = "Please confirm that you want to make this change.";
             if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
                     && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
@@ -1673,7 +1819,7 @@ public class CinemarkMinorTest extends TestBase {
         SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
                 smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
         smartCardPage.clickViewShift();
-        newAddedShift = scheduleShiftTablePage.getOneDayShiftByName(needCreateShiftsNumber2, firstNameOfTM1).get(0);
+        newAddedShift = scheduleShiftTablePage.getOneDayShiftByName(needCreateShiftsNumber2, firstNameOfTM1.split(" ")[0]).get(0);
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
                     scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor weekly max "+maxOfScheduleHours+" hrs"), false);
@@ -1821,98 +1967,88 @@ public class CinemarkMinorTest extends TestBase {
             configurationPage.goToUserManagementPage();
             configurationPage.goToDynamicEmployeeGroupPage();
             //delete all dynamic employee group
-            configurationPage.deleteSpecifyDynamicEmployeeGroupsInList("Group-ForAuto");
+            String minor15GroupTitle = "Minor15Group-ForAuto";
+            configurationPage.deleteSpecifyDynamicEmployeeGroupsInList(minor15GroupTitle);
             //create a User Group for 13 year old minors
             List<String> groupCriteriaList = new ArrayList<>();
-            groupCriteriaList.clear();
-            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
-                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.LessThan14.getValue());
-            String minor13GroupTitle = "Minor13Group-ForAuto";
-            String minor13GroupDescription = "Minor13-Description-ForAuto";
-            configurationPage.createNewDynamicEmployeeGroup(minor13GroupTitle, minor13GroupDescription,
-                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            String minor14GroupTitle = "Minor14Group-ForAuto";
-            String minor14GroupDescription = "Minor14-Description-ForAuto";
-            groupCriteriaList.clear();
-            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
-                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals14.getValue());
-            configurationPage.createNewDynamicEmployeeGroup(minor14GroupTitle, minor14GroupDescription,
-                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            String minor15GroupTitle = "Minor15Group-ForAuto";
+//            groupCriteriaList.clear();
+//            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+//                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.LessThan14.getValue());
+//            String minor13GroupTitle = "Minor13Group-ForAuto";
+//            String minor13GroupDescription = "Minor13-Description-ForAuto";
+//            configurationPage.createNewDynamicEmployeeGroup(minor13GroupTitle, minor13GroupDescription,
+//                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+//            Thread.sleep(10000);
+//            String minor14GroupTitle = "Minor14Group-ForAuto";
+//            String minor14GroupDescription = "Minor14-Description-ForAuto";
+//            groupCriteriaList.clear();
+//            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+//                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals14.getValue());
+//            configurationPage.createNewDynamicEmployeeGroup(minor14GroupTitle, minor14GroupDescription,
+//                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+//            Thread.sleep(10000);
+
             String minor15GroupDescription = "Minor15-Description-ForAuto";
             groupCriteriaList.clear();
             groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
                     +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals15.getValue());
             configurationPage.createNewDynamicEmployeeGroup(minor15GroupTitle, minor15GroupDescription,
                     OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            String minor16GroupTitle = "Minor16Group-ForAuto";
-            String minor16GroupDescription = "Minor16-Description-ForAuto";
-            groupCriteriaList.clear();
-            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
-                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals16.getValue());
-            configurationPage.createNewDynamicEmployeeGroup(minor16GroupTitle, minor16GroupDescription,
-                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-            String minor17GroupTitle = "Minor17Group-ForAuto";
-            String minor17GroupDescription = "Minor17-Description-ForAuto";
-            groupCriteriaList.clear();
-            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
-                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals17.getValue());
-            configurationPage.createNewDynamicEmployeeGroup(minor17GroupTitle, minor17GroupDescription,
-                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-
+//            Thread.sleep(10000);
+//            String minor16GroupTitle = "Minor16Group-ForAuto";
+//            String minor16GroupDescription = "Minor16-Description-ForAuto";
+//            groupCriteriaList.clear();
+//            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+//                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals16.getValue());
+//            configurationPage.createNewDynamicEmployeeGroup(minor16GroupTitle, minor16GroupDescription,
+//                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+//            Thread.sleep(10000);
+//            String minor17GroupTitle = "Minor17Group-ForAuto";
+//            String minor17GroupDescription = "Minor17-Description-ForAuto";
+//            groupCriteriaList.clear();
+//            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+//                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals17.getValue());
+//            configurationPage.createNewDynamicEmployeeGroup(minor17GroupTitle, minor17GroupDescription,
+//                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+//            Thread.sleep(10000);
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
-            configurationPage.archiveOrDeleteAllTemplates();
-            String minor13TemplateName = "Minor13Template-ForAuto";
-            createMinor13N14N15TemplateAndSetMinorSettings(minor13TemplateName, minor13GroupTitle);
-            String minor14TemplateName = "Minor14Template-ForAuto";
-            createMinor13N14N15TemplateAndSetMinorSettings(minor14TemplateName, minor14GroupTitle);
             String minor15TemplateName = "Minor15Template-ForAuto";
+            configurationPage.archiveOrDeleteTemplate(minor15TemplateName);
+//            String minor17TemplateName = "Minor17Template-ForAuto";
+//            createMinor16N17TemplateAndSetMinorSettings(minor17TemplateName, minor17GroupTitle);
+//            String minor14TemplateName = "Minor14Template-ForAuto";
+//            createMinor13N14N15TemplateAndSetMinorSettings(minor14TemplateName, minor14GroupTitle);
+//            String minor13TemplateName = "Minor13Template-ForAuto";
+//            createMinor13N14N15TemplateAndSetMinorSettings(minor13TemplateName, minor13GroupTitle);
+
             createMinor13N14N15TemplateAndSetMinorSettings(minor15TemplateName, minor15GroupTitle);
-            String minor16TemplateName = "Minor16Template-ForAuto";
-            createMinor16N17TemplateAndSetMinorSettings(minor16TemplateName, minor16GroupTitle);
-            String minor17TemplateName = "Minor17Template-ForAuto";
-            createMinor16N17TemplateAndSetMinorSettings(minor17TemplateName, minor17GroupTitle);
-            switchToConsoleWindow();
-            //wait for 5 mins for catch
-            TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            for (int i = 0; i< 5; i++) {
-                teamPage.goToTeam();
-                teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-                Thread.sleep(60000);
-            }
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String minor13Name = "Minor13 Cinemark13";
-            String minor14Name = "Minor14 Cinemark14";
-            String minor15Name = "Minor15 Cinemark15";
-            String minor16Name = "Minor16 Cinemark16";
-            String minor17Name = "Minor17 Cinemark17";
+//            String minor16TemplateName = "Minor16Template-ForAuto";
+//            createMinor16N17TemplateAndSetMinorSettings(minor16TemplateName, minor16GroupTitle);
 
-            verifyTemplateNameOnProfilePage(minor13Name, minor13TemplateName);
-//            teamPage.searchAndSelectTeamMemberByName(minor13Name);
-//            SimpleUtils.assertOnFail("The minor rule template name of Minor 13 display incorrectly! ",
-//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor13TemplateName), false);
-            verifyTemplateNameOnProfilePage(minor14Name, minor14TemplateName);
-//            teamPage.goToTeam();
-//            teamPage.searchAndSelectTeamMemberByName(minor14Name);
-//            SimpleUtils.assertOnFail("The minor rule template name of Minor 14 display incorrectly! ",
-//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor14TemplateName), false);
-            verifyTemplateNameOnProfilePage(minor15Name, minor15TemplateName);
-//            teamPage.goToTeam();
-//            teamPage.searchAndSelectTeamMemberByName(minor15Name);
-//            SimpleUtils.assertOnFail("The minor rule template name of Minor 15 display incorrectly! ",
-//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor15TemplateName), false);
-            verifyTemplateNameOnProfilePage(minor16Name, minor16TemplateName);
-//            teamPage.goToTeam();
-//            teamPage.searchAndSelectTeamMemberByName(minor16Name);
-//            SimpleUtils.assertOnFail("The minor rule template name of Minor 16 display incorrectly! ",
-//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor16TemplateName), false);
-            verifyTemplateNameOnProfilePage(minor17Name, minor17TemplateName);
-//            teamPage.goToTeam();
-//            teamPage.searchAndSelectTeamMemberByName(minor17Name);
-//            SimpleUtils.assertOnFail("The minor rule template name of Minor 17 display incorrectly! ",
-//                    profileNewUIPage.getMinorRuleTemplateName().equals(minor17TemplateName), false);
-
+//            Thread.sleep(3000);
+//            switchToConsoleWindow();
+//            LoginPage loginPage = new ConsoleLoginPage();
+//            loginPage.verifyNewTermsOfServicePopUp();
+//            //wait for 5 mins for catch
+//            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+//            for (int i = 0; i< 10; i++) {
+//                teamPage.goToTeam();
+//                teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+//                Thread.sleep(60000);
+//            }
+//            //refresh cache
+//            CacheAPI.refreshTemplateCache("stoneman@legion.co", "admin11.a");
+//            String minor13Name = cinemarkMinors.get("Minor13");
+//            String minor14Name = cinemarkMinors.get("Minor14");
+//            String minor15Name = cinemarkMinors.get("Minor15");
+//            String minor16Name = cinemarkMinors.get("Minor16");
+//            String minor17Name = cinemarkMinors.get("Minor17");
+//            verifyTemplateNameOnProfilePage(minor17Name, minor17TemplateName);
+//            verifyTemplateNameOnProfilePage(minor14Name, minor14TemplateName);
+//            verifyTemplateNameOnProfilePage(minor13Name, minor13TemplateName);
+//            verifyTemplateNameOnProfilePage(minor15Name, minor15TemplateName);
+//            verifyTemplateNameOnProfilePage(minor16Name, minor16TemplateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }
@@ -1927,6 +2063,7 @@ public class CinemarkMinorTest extends TestBase {
         cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.School_Week.getValue()).split(",")[1]);
         cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.Non_School_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Non_School_Week.getValue()).split(",")[1]);
         cinemarkMinorPage.setMinorRuleByWeek(minorRuleWeekType.Summer_Week.getValue(),cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[0],cinemarkSetting14N15.get(minorRuleWeekType.Summer_Week.getValue()).split(",")[1]);
+        Thread.sleep(5000);
         cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
         cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
         cinemarkMinorPage.setMinorRuleByDay(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue(), cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[0], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",")[2]);
@@ -1969,9 +2106,10 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.goToTeam();
             teamPage.searchAndSelectTeamMemberByName(minorName);
             name = profileNewUIPage.getMinorRuleTemplateName();
+            CacheAPI.refreshTemplateCache("stoneman@legion.co", "admin11.a");
             i++;
         }
-        SimpleUtils.assertOnFail("The minor rule template name of "+templateName+" display incorrectly! ",
+        SimpleUtils.assertOnFail("The minor rule template name of "+templateName+" display incorrectly! The actual is: "+name,
                 name.equalsIgnoreCase(templateName), false);
 
     }
@@ -2011,5 +2149,221 @@ public class CinemarkMinorTest extends TestBase {
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate auto scheduler will respect the Minors Rules")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAutoScheduleRespectTheMinorsRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            scheduleCommonPage.clickOnDayView();
+            String minor14 = cinemarkMinors.get("Minor14");
+            String minor15 = cinemarkMinors.get("Minor15");
+            String minor16 = cinemarkMinors.get("Minor16");
+            String minor17 = cinemarkMinors.get("Minor17");
+            List<String> minorNames = new ArrayList<>();
+            minorNames.add(minor14);
+            minorNames.add(minor15);
+            minorNames.add(minor16);
+            minorNames.add(minor17);
+            for (int i = 0; i< 7;i++) {
+                scheduleCommonPage.navigateDayViewWithIndex(i);
+                for (String minorName : minorNames) {
+                    List<WebElement> shifts = scheduleShiftTablePage.getShiftsByNameOnDayView(minorName.split(" ")[0]);
+                    if (shifts.size() >0) {
+                        switch (scheduleCommonPage.getActiveDayInfo().get("weekDay")) {
+                            case "Fri":
+                                for (WebElement shift : shifts) {
+                                    int index = scheduleShiftTablePage.getTheIndexOfShift(shift);
+                                    String shiftTime = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(index).get(2);
+                                    String[] settingTimes;
+                                    if (minorName.contains("14") || minorName.contains("15")) {
+                                        settingTimes =  cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",");
+                                        SimpleUtils.assertOnFail("The shift time should belong to the minor setting period time! ",
+                                                BasePage.isBelongPeriodTime(shiftTime, settingTimes[0].replace(" ", "") +"-" + settingTimes[1].replace(" ", "")),
+                                                false);
+
+                                    } else if (minorName.contains("16") || minorName.contains("17")) {
+                                        settingTimes =  cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_NoSchoolTomorrow.getValue()).split(",");
+                                        SimpleUtils.assertOnFail("The shift time should belong to the minor setting period time! ",
+                                                BasePage.isBelongPeriodTime(shiftTime, settingTimes[0].replace(" ", "") +"-" + settingTimes[1].replace(" ", "")),
+                                                false);
+                                    }
+                                }
+                                break;
+                            case "Sat":
+                                for (WebElement shift : shifts) {
+                                    int index = scheduleShiftTablePage.getTheIndexOfShift(shift);
+                                    String shiftTime = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(index).get(2);
+                                    String[] settingTimes;
+                                    if (minorName.contains("14") || minorName.contains("15")) {
+                                        settingTimes =  cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",");
+                                        SimpleUtils.assertOnFail("The shift time should belong to the minor setting period time! ",
+                                                BasePage.isBelongPeriodTime(shiftTime, settingTimes[0].replace(" ", "") +"-" + settingTimes[1].replace(" ", "")),
+                                                false);
+
+                                    } else if (minorName.contains("16") || minorName.contains("17")) {
+                                        settingTimes =  cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_NoSchoolTomorrow.getValue()).split(",");
+                                        SimpleUtils.assertOnFail("The shift time should belong to the minor setting period time! ",
+                                                BasePage.isBelongPeriodTime(shiftTime, settingTimes[0].replace(" ", "") +"-" + settingTimes[1].replace(" ", "")),
+                                                false);
+                                    }
+                                }
+                                break;
+                            case "Sun":
+                                for (WebElement shift : shifts) {
+                                    int index = scheduleShiftTablePage.getTheIndexOfShift(shift);
+                                    String shiftTime = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(index).get(2);
+                                    String[] settingTimes;
+                                    if (minorName.contains("14") || minorName.contains("15")) {
+                                        settingTimes =  cinemarkSetting14N15.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",");
+                                        SimpleUtils.assertOnFail("The shift time should belong to the minor setting period time! ",
+                                                BasePage.isBelongPeriodTime(shiftTime, settingTimes[0].replace(" ", "") +"-" + settingTimes[1].replace(" ", "")),
+                                                false);
+
+                                    } else if (minorName.contains("16") || minorName.contains("17")) {
+                                        settingTimes =  cinemarkSetting16N17.get(minorRuleDayType.NoSchoolToday_SchoolTomorrow.getValue()).split(",");
+                                        SimpleUtils.assertOnFail("The shift time should belong to the minor setting period time! ",
+                                                BasePage.isBelongPeriodTime(shiftTime, settingTimes[0].replace(" ", "") +"-" + settingTimes[1].replace(" ", "")),
+                                                false);
+                                    }
+                                }
+                                break;
+                            default:
+                                for (WebElement shift : shifts) {
+                                    int index = scheduleShiftTablePage.getTheIndexOfShift(shift);
+                                    String shiftTime = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(index).get(2);
+                                    String[] settingTimes;
+                                    if (minorName.contains("14") || minorName.contains("15")) {
+                                        settingTimes =  cinemarkSetting14N15.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",");
+                                        SimpleUtils.assertOnFail("The shift time should belong to the minor setting period time! ",
+                                                BasePage.isBelongPeriodTime(shiftTime, settingTimes[0].replace(" ", "") +"-" + settingTimes[1].replace(" ", "")),
+                                                false);
+
+                                    } else if (minorName.contains("16") || minorName.contains("17")) {
+                                        settingTimes =  cinemarkSetting16N17.get(minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",");
+                                        SimpleUtils.assertOnFail("The shift time should belong to the minor setting period time! ",
+                                                BasePage.isBelongPeriodTime(shiftTime, settingTimes[0].replace(" ", "")+"-" + settingTimes[1].replace(" ", "")),
+                                                false);
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "validate recommendation will respect the Minors Rules")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyRecommendationRespectTheMinorsRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            String minor14 = cinemarkMinors.get("Minor14");
+            String minor15 = cinemarkMinors.get("Minor15");
+            String minor16 = cinemarkMinors.get("Minor16");
+            String minor17 = cinemarkMinors.get("Minor17");
+            List<String> minorNames = new ArrayList<>();
+            minorNames.add(minor14);
+            minorNames.add(minor15);
+            minorNames.add(minor16);
+            minorNames.add(minor17);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(minor14.split(" ")[0]);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(minor15.split(" ")[0]);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(minor16.split(" ")[0]);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(minor17.split(" ")[0]);
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(minorWorkRole);
+            newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
+            for (String minorName: minorNames) {
+                SimpleUtils.assertOnFail("The minor: "+ minorName +" should list in recommendation list! ",
+                        shiftOperatePage.checkIfTMExistsInRecommendedTab(minorName), false);
+            }
+
+            newShiftPage.clickOnBackButton();
+            newShiftPage.moveSliderAtCertainPoint("7am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
+            for (String minorName: minorNames) {
+                SimpleUtils.assertOnFail("The minor: "+ minorName +" should NOT list in recommendation list! ",
+                        !shiftOperatePage.checkIfTMExistsInRecommendedTab(minorName), false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+    private String getMinorName(){
+        String minorName = "";
+        LocalDate date = now();
+        String dayOfWeek = date.getDayOfWeek().toString();
+        if (dayOfWeek.equalsIgnoreCase("Monday")
+                ||dayOfWeek.equalsIgnoreCase("Tuesday")
+                ||dayOfWeek.equalsIgnoreCase("Wednesday") ) {
+            minorName = minorNames.Minor14.getValue();
+        } else
+            minorName = minorNames.Minor17.getValue();
+        SimpleUtils.pass("Get minor user: "+minorName+ " successfully! ");
+        return minorName;
     }
 }

@@ -661,7 +661,7 @@
 //		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
 //		newShiftPage.customizeNewShiftPage();
 //		schedulePage.compareCustomizeStartDay(textStartDay);
-//		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+//		newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
 //		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleTestKendraScott2.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 //		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
 //		newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));
@@ -831,7 +831,7 @@
 ////		String textStartDay = schedulePage.clickNewDayViewShiftButtonLoaded();
 ////		newShiftPage.customizeNewShiftPage();
 ////		schedulePage.compareCustomizeStartDay(textStartDay);
-////		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+////		newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
 ////		newShiftPage.moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME"),  ScheduleTestKendraScott2.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 ////		HashMap<String, String> shiftTimeSchedule = schedulePage.calculateHourDifference();
 ////		newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole"));

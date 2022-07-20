@@ -15741,7 +15741,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
 //    private WebElement oOOHMessageOnActionRequiredSmartCard;
 //
 //    @Override
-//    public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception {
+//    public HashMap<String, String> getMessageFromActionRequiredSmartCard() throws Exception {
 //        HashMap<String, String> unassignedAndOOOHMessage = new HashMap<String, String>();
 //        if (isElementLoaded(requiredActionSmartCard, 5)) {
 //            if (areListElementVisible(unassignedAndOOOHMessageOnActionRequiredSmartCard, 5)) {

@@ -1013,8 +1013,8 @@ public class UserManagementTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Yang")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Work Role E2E And Copy work role")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @TestName(description = "Work Role E2E")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyWorkRoleE2EAndCopyWorkRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
             String locationName = "locationAutoCreateForYang";
@@ -1112,6 +1112,33 @@ public class UserManagementTest extends TestBase {
             dynamicEmployeePage.searchGroupWithLabel("autoTesNew");
             dynamicEmployeePage.verifyGroupIsSearched(employeeGroupName);
             dynamicEmployeePage.removeSpecificGroup(employeeGroupName);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify user can see template value via click template name if user only have template localization permission")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddLabelsToDynamicUserGroupAsSM(String browser, String username, String password, String location) throws Exception {
+        try {
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.sMGoToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            //Assignment Rules
+            String[] action = {"View"};
+            locationsPage.verifyActionsForTemplate("Assignment Rules", action);
+            //Scheduling Rules
+            locationsPage.verifyActionsForTemplate("Scheduling Rules", action);
+            //Labor Model
+            locationsPage.verifyActionsForTemplate("Labor Model", action);
+            //Operating Hours
+            locationsPage.verifyActionsForTemplate("Operating Hours", action);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

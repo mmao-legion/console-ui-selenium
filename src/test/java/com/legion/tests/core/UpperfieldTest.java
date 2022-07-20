@@ -1700,7 +1700,11 @@ public class UpperfieldTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+            dashboardPage.clickOnDashboardConsoleMenu();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String districtName = selectedUpperFields.get(District);
@@ -1727,8 +1731,8 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!",
                     scheduleDMViewPage.isScheduleDMView(), false);
 
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
-
+            SimpleUtils.assertOnFail("The district: " + districtName+ " should be listed in the table! ",
+                    scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().contains(districtName), false);
             //Validate changing regions
             String[] upperFields2 = null;
             if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))) {
@@ -1741,7 +1745,8 @@ public class UpperfieldTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(Region, regionName2);
             SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!",
                     scheduleDMViewPage.isScheduleDMView(), false);
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName2);
+            SimpleUtils.assertOnFail("The district: " + districtName2+ " should be listed in the table! ",
+                    scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().contains(districtName2), false);
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
@@ -1801,8 +1806,8 @@ public class UpperfieldTest extends TestBase {
 
             SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!",
                     scheduleDMViewPage.isScheduleDMView(), false);
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
-
+            SimpleUtils.assertOnFail("The region: " + regionName+ " should be listed in the table! ",
+                    scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().contains(regionName), false);
             //Validate changing BUs
             String[] upperFields3 = null;
             if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))) {
@@ -1816,7 +1821,8 @@ public class UpperfieldTest extends TestBase {
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName2);
             SimpleUtils.assertOnFail("Schedule BU view page not loaded Successfully!",
                     scheduleDMViewPage.isScheduleDMView(), false);
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName2);
+            SimpleUtils.assertOnFail("The region: " + regionName2+ " should be listed in the table! ",
+                    scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().contains(regionName2), false);
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
             selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
@@ -1926,7 +1932,6 @@ public class UpperfieldTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
@@ -3943,7 +3948,13 @@ public class UpperfieldTest extends TestBase {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            controlsNewUIPage.clickOnGlobalLocationButton();
+            controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+            dashboardPage.clickOnDashboardConsoleMenu();
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
@@ -4005,7 +4016,7 @@ public class UpperfieldTest extends TestBase {
                         (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (float)(Math.round((budgetHourOnSummaryCard - projectedHours)*100))/100) == 0, false);
             } else if ((budgetHourOnSummaryCard - projectedHours)<0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (float)(Math.round((budgetHourOnSummaryCard - projectedHours)*100))/100) == 0, false);
+                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) + (float)(Math.round((budgetHourOnSummaryCard - projectedHours)*100))/100) == 0, false);
             }
 
             //Verify current week Projected Hours displays.
@@ -4053,12 +4064,12 @@ public class UpperfieldTest extends TestBase {
             for (Float f: data){
                 projectedHours = projectedHours + f;
             }
-            if ((budgetHourOnSummaryCard - projectedHours)>=0){
+            if ((budgetHourOnSummaryCard - projectedHours)>0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
                         (Math.abs(valuesFromRegionSummaryCard.get("▼")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
             } else {
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromRegionSummaryCard.get("▲")) + (budgetHourOnSummaryCard - projectedHours)) == 0, false);
 
             }
             //Verify past week Clocked Hours displays.
@@ -4139,7 +4150,7 @@ public class UpperfieldTest extends TestBase {
             }
             if ((budgetHourOnSummaryCard - projectedHours)<0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) - (float)(Math.round((budgetHourOnSummaryCard - projectedHours)*100))/100) == 0, false);
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) + (float)(Math.round((budgetHourOnSummaryCard - projectedHours)*100))/100) == 0, false);
             }
 
             //Verify current week Projected Hours displays.
@@ -4187,12 +4198,12 @@ public class UpperfieldTest extends TestBase {
             for (Float f: data){
                 projectedHours = projectedHours + f;
             }
-            if ((budgetHourOnSummaryCard - projectedHours)>=0){
+            if ((budgetHourOnSummaryCard - projectedHours)>0){
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
                         (Math.abs(valuesFromDistrictSummaryCard.get("▼")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
             } else {
                 SimpleUtils.assertOnFail("Difference hours is inconsistent!",
-                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) - (budgetHourOnSummaryCard - projectedHours)) == 0, false);
+                        (Math.abs(valuesFromDistrictSummaryCard.get("▲")) + (budgetHourOnSummaryCard - projectedHours)) == 0, false);
 
             }
             //Verify past week Clocked Hours displays.
@@ -4304,8 +4315,8 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!", scheduleDMViewPage.isScheduleDMView(), false);
 
             // Validate the region list
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(regionName);
-
+            SimpleUtils.assertOnFail("The region: " + regionName+ " should be listed in the table! ",
+                    scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().contains(regionName), false);
             // Validate click one region
             scheduleDMViewPage.clickOnLocationNameInDMView(regionName);
 
@@ -4379,8 +4390,8 @@ public class UpperfieldTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule Region view page not loaded Successfully!", scheduleDMViewPage.isScheduleDMView(), false);
 
             // Validate the district list
-            scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(districtName);
-
+            SimpleUtils.assertOnFail("The district: " + districtName+ " should be listed in the table! ",
+                    scheduleDMViewPage.getLocationsInScheduleDMViewLocationsTable().contains(districtName), false);
             // Validate click one district
             scheduleDMViewPage.clickOnLocationNameInDMView(districtName);
 

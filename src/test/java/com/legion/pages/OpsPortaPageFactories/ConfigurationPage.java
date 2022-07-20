@@ -197,4 +197,16 @@ public interface ConfigurationPage {
     public void addSkillCoverageBasicStaffingRule() throws Exception;
     public void verifySkillCoverageBasicStaffingRule(String workRole1, String workRole2) throws Exception;
     public void verifySkillCoverageBasicStaffingRuleInList() throws Exception;
+    public void verifyMinorRulesTileIsLoaded() throws Exception;
+    public boolean checkIfMinorSectionsLoaded () throws Exception;
+    public void clickOnBackButton () throws Exception;
+    public void verifyTheContentOnSpecificCard(String cardName, List<String> content) throws Exception;
+    public void setStrictlyEnforceMinorViolations(String yesOrNo) throws Exception;
+    public boolean isStrictlyEnforceMinorViolationSettingEnabled() throws Exception;
+    public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception;
+    public void verifySpecificAssociationIsSaved(String name) throws Exception;
+    public boolean checkIfApproveShiftInHomeLocationSettingEnabled() throws Exception;
+    public void updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(String option) throws Exception;
+    public void verifyForDerivedDemandDriverUI(String derivedType, String remoteType) throws Exception;
+    public void clickOnCancelButton() throws Exception;
 }

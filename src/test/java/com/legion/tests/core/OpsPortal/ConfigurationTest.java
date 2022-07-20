@@ -1469,8 +1469,8 @@ public class ConfigurationTest extends TestBase {
     public void verifyInputStreamsConfigurationInSettingsForDemandDriverTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
-            String inputStreamName1 = "InputStreamTest-Base";
-            String inputStreamName2 = "InputStreamTest-Aggregated";
+            String inputStreamName1 = "InputStream-Base";
+            String inputStreamName2 = "InputStream-Aggregated";
             String verifyType = "input stream";
 
             //input stream specification information to add
@@ -2886,6 +2886,107 @@ public class ConfigurationTest extends TestBase {
             configurationPage.setLeaveThisPageButton();
             configurationPage.archiveOrDeleteTemplate(templateName);
 
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Check UI for Distributed demand driver page.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyForDistributedDemandDriverUIAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String templateName = "testDistributed";
+            String derivedType = "Distributed";
+
+            //Turn on EnableTahoeStorage toggle
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            refreshPage();
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Settings tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.verifyForDerivedDemandDriverUI(derivedType, null);
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Check UI for Remote demand driver page.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyForRemoteDemandDriverUIAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String templateName = "testRemote";
+            String derivedType = "Remote";
+            String remoteType = "Remote Location";
+            String parentType = "Parent Location";
+
+            //Turn on EnableTahoeStorage toggle
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            refreshPage();
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Settings tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.verifyForDerivedDemandDriverUI(derivedType, remoteType);
+            configurationPage.clickOnCancelButton();
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.verifyForDerivedDemandDriverUI(derivedType, parentType);
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Check UI for Aggregated demand driver page.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyForAggregatedDemandDriverUIAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String templateName = "testAggregated";
+            String derivedType = "Aggregated";
+
+            //Turn on EnableTahoeStorage toggle
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            refreshPage();
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Template tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.verifyForDerivedDemandDriverUI(derivedType, null);
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

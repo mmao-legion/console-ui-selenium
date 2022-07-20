@@ -38,6 +38,8 @@
                     <include name="validateApproveAvailabilityRequestAsStoreManager" />
                     <include name="validateRejectAvailabilityRequestAsStoreManager" />
                     <include name="validateCreateAvailabilityRequestWithoutApprovalAsInternalAdmin" />
+                    <include name="validateErrorMessageWhenThereIsRecurringPendingAvailabilityRequestAsStoreManager" />
+                    <include name="validateErrorMessageWhenThereIsNoRecurringPendingAvailabilityRequestAsStoreManager"/>
                 </methods>
             </class>
         </classes>

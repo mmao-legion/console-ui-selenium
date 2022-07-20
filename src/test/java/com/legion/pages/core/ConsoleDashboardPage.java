@@ -98,7 +98,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     @FindBy(css = ".col-sm-6.text-right")
     private WebElement currentTime;
 
-	@FindBy(css = ".sc-lgWdIC.cRRXke")
+	@FindBy(css = ".sc-jNHgKk.hqnPlN div")
 	private List<WebElement> districtTimeOnDashboard;
 
 	@FindBy(css = ".sc-ksPmiX.erKuMX")
@@ -204,7 +204,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
     public Boolean isDashboardPageLoaded() throws Exception
     {
-    	if(isElementLoaded(dashboardSection, 10) || isElementEnabled(tmDashboradSection, 10))
+    	waitForSeconds(1);
+    	if(isElementLoaded(dashboardSection, 20) || isElementEnabled(tmDashboradSection, 20))
     	{
     		SimpleUtils.pass("Dashboard loaded successfully");
     		return true;
@@ -950,9 +951,26 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(xpath = "//*[contains(text(),'Refresh')]")
 	private WebElement refreshButton;
 
-	@FindBy(xpath = "//i[contains(@class,'fa fa-clock-o ng-scope')]/following-sibling::span")
+	@FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div/div/div/p")
 	private WebElement lastUpdatedIcon;
 
+	@FindBy(xpath = "//div[contains(@class,'last-updated-countdown')]/span[1]")
+	private WebElement lastUpdatedIconOnSMDashboard;
+	@Override
+	public void clickOnRefreshButtonOnSMDashboard() throws Exception {
+		waitForSeconds(3);
+		if (isElementLoaded(refreshButton, 20)) {
+			clickTheElement(refreshButton);
+			waitForSeconds(2);
+			if(isElementLoaded(lastUpdatedIconOnSMDashboard, 120)
+					&& lastUpdatedIconOnSMDashboard.getText().equalsIgnoreCase("JUST UPDATED")){
+				SimpleUtils.pass("Click on Refresh button Successfully!");
+			} else
+				SimpleUtils.fail("Refresh timeout! ", false);
+		} else {
+			SimpleUtils.fail("Refresh button not Loaded!", false);
+		}
+	}
 
 	@Override
 	public void clickOnRefreshButton() throws Exception {
@@ -960,7 +978,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		if (isElementLoaded(refreshButton, 20)) {
 			clickTheElement(refreshButton);
 			waitForSeconds(2);
-			if(isElementLoaded(lastUpdatedIcon, 60) && lastUpdatedIcon.getText().equalsIgnoreCase("JUST UPDATED")){
+			if(isElementLoaded(lastUpdatedIcon, 120)
+					&& lastUpdatedIcon.getText().equalsIgnoreCase("JUST UPDATED")){
 				SimpleUtils.pass("Click on Refresh button Successfully!");
 			} else
 				SimpleUtils.fail("Refresh timeout! ", false);
@@ -2415,8 +2434,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 
 	public Map<String, Integer> getAllScheduleStatusFromSchedulePublishStatusWidget() throws Exception {
-
-        int scheduleNumber = Integer.parseInt(widgetsOnUpperFieldDashboard.get(2).findElements(By.cssSelector("[class=\"tick\"]")).get(1).getText());
+        LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
+        int scheduleNumber = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList("Location").size();
         int notStartedNumberForCurrentWeek = (Double.valueOf(schedulePublishStatus.get(1).getAttribute("height"))).intValue();
         int inProgressForCurrentWeek = (Double.valueOf(schedulePublishStatus.get(2).getAttribute("height"))).intValue();
         int publishedForCurrentWeek = (Double.valueOf(schedulePublishStatus.get(3).getAttribute("height"))).intValue();
@@ -2428,30 +2447,27 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
         int publishedForTheWeekAfterNext = (Double.valueOf(schedulePublishStatus.get(9).getAttribute("height"))).intValue();
 
         Map<String, Integer> scheduleStatusFromSchedulePublisStatusWidget = new HashMap<>();
-        int r = 10;
-        r = rate(scheduleNumber, notStartedNumberForCurrentWeek, inProgressForCurrentWeek, publishedForCurrentWeek);
-        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForCurrentWeek", notStartedNumberForCurrentWeek / r);
-        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForCurrentWeek", inProgressForCurrentWeek / r);
-        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForCurrentWeek", publishedForCurrentWeek / r);
+        float r = rate(scheduleNumber, notStartedNumberForCurrentWeek, inProgressForCurrentWeek, publishedForCurrentWeek);
+        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForCurrentWeek", Math.round(notStartedNumberForCurrentWeek / r));
+        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForCurrentWeek", Math.round(inProgressForCurrentWeek / r));
+        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForCurrentWeek", Math.round(publishedForCurrentWeek / r));
 
         r = rate(scheduleNumber, notStartedNumberForNextWeek, inProgressForNextWeek, publishedForNextWeek);
-        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForNextWeek", notStartedNumberForNextWeek / r);
-        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForNextWeek", inProgressForNextWeek / r);
-        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForNextWeek", publishedForNextWeek / r);
+        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForNextWeek", Math.round(notStartedNumberForNextWeek / r));
+        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForNextWeek", Math.round(inProgressForNextWeek / r));
+        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForNextWeek", Math.round(publishedForNextWeek / r));
 
         r = rate(scheduleNumber, notStartedNumberForTheWeekAfterNext, inProgressForTheWeekAfterNext, publishedForTheWeekAfterNext);
-        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForTheWeekAfterNext", notStartedNumberForTheWeekAfterNext / r);
-        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForTheWeekAfterNext", inProgressForTheWeekAfterNext / r);
-        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForTheWeekAfterNext", publishedForTheWeekAfterNext / r);
+        scheduleStatusFromSchedulePublisStatusWidget.put("notStartedNumberForTheWeekAfterNext", Math.round(notStartedNumberForTheWeekAfterNext / r));
+        scheduleStatusFromSchedulePublisStatusWidget.put("inProgressForTheWeekAfterNext", Math.round(inProgressForTheWeekAfterNext / r));
+        scheduleStatusFromSchedulePublisStatusWidget.put("publishedForTheWeekAfterNext", Math.round(publishedForTheWeekAfterNext / r));
 
         return scheduleStatusFromSchedulePublisStatusWidget;
 
     }
 
-    private int rate(int sum, int a, int b, int c) throws Exception {
-        int r = 10;
-		while (a + b + c != sum * r)
-			r++;
+    private float rate(int sum, int a, int b, int c) throws Exception {
+		float r = Float.valueOf(a + b + c) / sum;
         return r;
     }
 
@@ -2790,7 +2806,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	private List<WebElement> scheduledHoursTitles;
 
 	@FindBy(css = "[data-testid$=\"-hours\"]")
-	private List<WebElement> bugetedScheduledProjectedHours;
+	private List<WebElement> budgetedScheduledProjectedHours;
 
 	@FindBy(css = "[data-testid=\"locations-within-budget\"] span")
 	private WebElement projectedWithinBudgetCaret;
@@ -2928,13 +2944,13 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			if (isElementLoaded(orgSummaryWidgetTitle, 5)
 					&& orgSummaryWidgetTitle.getText().contains(org + " Summary")
 					&& areListElementVisible(scheduledHoursTitles, 5)
-					&& scheduledHoursTitles.size() == 3
+					&& scheduledHoursTitles.size() == 5
 					&& scheduledHoursTitles.get(0).getText().equalsIgnoreCase("Budgeted")
 					&& scheduledHoursTitles.get(1).getText().equalsIgnoreCase("Scheduled")
 					&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
-					&& areListElementVisible(bugetedScheduledProjectedHours, 5)
-					&& bugetedScheduledProjectedHours.size() == 5
-					&& (isClockEnable? isElementLoaded(projectedHoursAsCurrentTime, 5): true)
+					&& areListElementVisible(budgetedScheduledProjectedHours, 5)
+					&& budgetedScheduledProjectedHours.size() == 3
+					&& (!isClockEnable || isElementLoaded(projectedHoursAsCurrentTime, 5))
 					&& isElementLoaded(projectedWithinBudgetCaret, 5)
 					&& isElementLoaded(projectedOverBudgetCaret, 5)
 					&& areListElementVisible(projectedWithInOrOverBudgetLocations, 5)
@@ -2955,8 +2971,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 					&& scheduledHoursTitles.get(0).getText().equalsIgnoreCase("Guidance")
 					&& scheduledHoursTitles.get(1).getText().equalsIgnoreCase("Scheduled")
 					&& scheduledHoursTitles.get(2).getText().equalsIgnoreCase("Projected")
-					&& areListElementVisible(bugetedScheduledProjectedHours, 5)
-					&& bugetedScheduledProjectedHours.size() == 3
+					&& areListElementVisible(budgetedScheduledProjectedHours, 5)
+					&& budgetedScheduledProjectedHours.size() == 3
 					&& isElementLoaded(projectedHoursAsCurrentTime,5)
 					&& isElementLoaded(projectedWithinBudgetCaret, 5)
 					&& isElementLoaded(projectedOverBudgetCaret, 5)

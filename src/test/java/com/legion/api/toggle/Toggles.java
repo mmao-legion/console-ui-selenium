@@ -7,7 +7,11 @@ public enum Toggles {
     DynamicGroupV2("DynamicGroupV2"),
     ScheduleShowFullNames("ScheduleShowFullNames"),
     EnableDemandDriverTemplate("EnableDemandDriverTemplate"),
-    MixedModeDemandDriverSwitch("MixedModeDemandDriverSwitch");
+    MixedModeDemandDriverSwitch("MixedModeDemandDriverSwitch"),
+    MealAndRestTemplate("MealAndRestTemplate"),
+    ScheduleEditShiftTimeNew( "ScheduleEditShiftTimeNew"),
+    EnableTahoeStorage("EnableTahoeStorage");
+
     private final String value;
 
     Toggles(final String newValue) {
