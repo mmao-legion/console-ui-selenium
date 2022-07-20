@@ -6312,7 +6312,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			shiftTimeOnShiftCard = shiftInfo.get("shiftTime");
 			SimpleUtils.assertOnFail("The shift times on inputs and shift card should be consistent, the time in inputs: "
-					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, shiftTime.equals(shiftTimeOnShiftCard), false);
+					+ shiftTime + " the time on shift card: "+ shiftTimeOnShiftCard, "8:00 am-11:00 pm".equals(shiftTimeOnShiftCard), false);
 			compliance = "Shift ends too late (max: 9:00 PM)";
 			complianceFromEditShiftTimePage = shiftOperatePage.getEditShiftTimeCompliance();
 			SimpleUtils.assertOnFail("The compliance on edit shift time page display incorrectly. The expected: "
