@@ -3350,7 +3350,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-	@FindBy(css="div.groupAction lg-button[ng-click=\"$ctrl.addDynamicGroup()\"] button")
+	@FindBy(css="lg-button[ng-click=\"$ctrl.addDynamicGroup()\"] button")
 	private WebElement addDynamicGroupButton;
 	@FindBy(css="div.lg-modal h1.lg-modal__title div")
 	private WebElement manageDynamicGroupPopupTitle;
