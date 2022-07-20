@@ -3229,15 +3229,15 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
 
-            configurationPage.goToItemInConfiguration("Demand Drivers");
-            configurationPage.searchTemplate("AuditLog");
-            configurationPage.clickOnTemplateName("AuditLog");
-            configurationPage.verifyHistoryButtonDisplay();
-            configurationPage.verifyHistoryButtonIsClickable();
-            configurationPage.verifyCloseIconNotDisplayDefault();
-            configurationPage.clickHistoryAndClose();
-            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+//            configurationPage.goToItemInConfiguration("Demand Drivers");
+//            configurationPage.searchTemplate("AuditLog");
+//            configurationPage.clickOnTemplateName("AuditLog");
+//            configurationPage.verifyHistoryButtonDisplay();
+//            configurationPage.verifyHistoryButtonIsClickable();
+//            configurationPage.verifyCloseIconNotDisplayDefault();
+//            configurationPage.clickHistoryAndClose();
+//            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+//            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
 
             configurationPage.goToItemInConfiguration("Operating Hours");
             configurationPage.searchTemplate("AuditLog");
