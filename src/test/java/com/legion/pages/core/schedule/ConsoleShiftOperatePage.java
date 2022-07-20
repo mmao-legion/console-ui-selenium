@@ -275,7 +275,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = ".sch-search")
     private WebElement searchIcon;
-    private boolean isAssignTeamMemberShowWell() throws Exception {
+    public boolean isAssignTeamMemberShowWell() throws Exception {
         if (isElementLoaded(titleInSelectTeamMemberWindow,3) && areListElementVisible(btnSearchteamMember,3)
                 && isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
             SimpleUtils.pass("Assign Team Member pop up window show well");
@@ -2342,6 +2342,34 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     }
 
+    @Override
+    public void searchTMOnAssignPage(String NameOfTM) throws Exception {
+        ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();
+        if (shiftOperatePage.isAssignTeamMemberShowWell()) {
+            textSearch.clear();
+            textSearch.sendKeys(NameOfTM);
+            clickTheElement(searchIcon);
+            if(isElementLoaded(firstTableRow) && firstnameOfTM.getText().trim().contains(NameOfTM)){
+                SimpleUtils.pass("The searched TM is displayed correctly!");
+            }else{
+                SimpleUtils.fail("The searched TM is not displayed!", false);
+            }
+        }else {
+            SimpleUtils.fail("The Assign TM dialog is not loaded correctly!", false);
+        }
+    }
+
+    @Override
+    public void clickOnAssignButton() throws Exception {
+        waitForSeconds(2);
+        if (isElementLoaded(btnAssign, 5) && btnAssign.getText().equalsIgnoreCase("ASSIGN")) {
+            click(btnAssign);
+            SimpleUtils.report("Assign Team Member: Click on 'ASSIGN' button Successfully!");
+        }else{
+            SimpleUtils.fail("Assign Team Member: 'ASSIGN' button fail to load!", false);
+        }
+    }
+
 
     @FindBy(css = ".worker-edit-availability-status")
     private WebElement messageForSelectTM;
@@ -2681,6 +2709,18 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
     }
 
+    @Override
+    public void verifyMultipleAlertMessageIsExpected(String messageExpected1, String messageExpected2, String messageExpected3) throws Exception {
+        if (isElementLoaded(alertMessage,5)){
+            if (alertMessage.getText() != null && !alertMessage.getText().equals("") && alertMessage.getText().contains(messageExpected1) && alertMessage.getText().contains(messageExpected2) && alertMessage.getText().contains(messageExpected3)){
+                SimpleUtils.pass("The message is expected!");
+            } else {
+                SimpleUtils.fail("No message you expected! Actual message is " + alertMessage.getText(), false );
+            }
+        } else {
+            SimpleUtils.fail("The alert message for selecting TM failed to loaded", false);
+        }
+    }
 
     @Override
     public boolean verifyWFSFunction() {
