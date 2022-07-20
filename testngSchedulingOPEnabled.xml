@@ -564,6 +564,11 @@ SCH-5862-->
                     <include name="verifyTheActionForEachPeerLocationsInDifferentStatusAsInternalAdmin" />
                     <include name="verifyCopyOrMoveShiftsToSubLocationsInSameDayUsingLocationGroupAsInternalAdmin" />
                     <!--                   <include name="verifyTheStatusOfP2PInDMViewsAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7076-->
+                    <include name="verifyDataMatchInDistrictSummaryWidgetOnDashboardInRegionViewWhenItIncludesLGAsInternalAdmin" />
+                    <include name="verifyDataMatchInLocationSummaryWidgetOnDashboardInDMViewWhenItIncludesLGAsInternalAdmin" />
+                    <!--         <include name="verifyAnalyticsTableOnScheduleInDMViewWhenItIncludesLGAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7121-->
+                    <include name="verifyAnalyticsTableOnComplianceInDMViewWhenItIncludesLGAsInternalAdmin" />
+                    <include name="verifyAnalyticsTableOnTimesheetInDMViewWhenItIncludesLGAsInternalAdmin" />
                                     </methods>
                                 </class>
                             </classes>
