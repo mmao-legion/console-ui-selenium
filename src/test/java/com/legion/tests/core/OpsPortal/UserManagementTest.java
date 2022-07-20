@@ -1014,7 +1014,7 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Yang")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Work Role E2E")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyWorkRoleE2EAndCopyWorkRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
             String locationName = "locationAutoCreateForYang";

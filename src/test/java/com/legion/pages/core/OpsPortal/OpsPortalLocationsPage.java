@@ -4328,6 +4328,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public void clickActionsForTemplate(String templateName, String action) {
+		scrollToBottom();
 		List<WebElement> actions = getDriver().findElements(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span/span[2]"));
 		actions.add(getDriver().findElement(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span[1]")));
 		String actionNew = action;
