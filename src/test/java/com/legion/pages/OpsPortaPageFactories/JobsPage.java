@@ -124,4 +124,12 @@ public interface JobsPage {
     public void verifyDynamicGroupDisplayInSpecifyJobType(String type) throws Exception;
 
     public void createDynamicGroup(String type) throws Exception;
+
+    public void addWorkforceSharingDGWithMutiplyCriteria() throws Exception;
+
+    public void verifyDuplicatedDGErrorMessage() throws Exception;
+
+    public void editFirstDynamicGroup() throws Exception;
+
+    public void removeFirstDynamicGroup() throws Exception;
 }
