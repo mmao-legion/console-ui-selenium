@@ -2204,7 +2204,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			//Login as SM, generate the schedule
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-			Thread.sleep(60000);
+			Thread.sleep(240000);
 			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -2228,7 +2228,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			//Login as DM, generate the schedule
 			loginPage.logOut();
-			Thread.sleep(5000);
+			Thread.sleep(60000);
 			loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
