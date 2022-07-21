@@ -4972,5 +4972,17 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		} else
 			SimpleUtils.fail("locations tab load failed in location overview page", false);
 	}
+
+	@Override
+	public boolean isOverrideStatusAtLocationLevel(String templateName) throws Exception {
+		boolean flag = false;
+		if (isEleExist("//td[contains(text(),'" + templateName + "')]/following-sibling::*[2]/span")) {
+			SimpleUtils.report("Template is overridden");
+			flag = true;
+		}else{
+			SimpleUtils.report("Template is not overridden");
+		}
+		return flag;
+	}
 }
 

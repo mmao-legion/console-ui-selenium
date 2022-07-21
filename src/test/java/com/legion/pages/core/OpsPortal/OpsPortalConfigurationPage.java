@@ -2397,11 +2397,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				if(isElementEnabled(welcomeCloseButton, 5)){
 					clickTheElement(welcomeCloseButton);
 				}
-				if(isElementEnabled(taTemplateSpecialField, 5)){
-					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
-					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
-					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
-				}
+//				if(isElementEnabled(taTemplateSpecialField, 5)){
+//					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
+//					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
+//					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
+//				}
+				scrollToBottom();
 				if(isElementEnabled(saveAsDraftButton, 5)
 						&& isElementLoaded(templateDetailsAssociateTab, 10)
 						&& isElementLoaded(templateDetailsBTN, 10)
