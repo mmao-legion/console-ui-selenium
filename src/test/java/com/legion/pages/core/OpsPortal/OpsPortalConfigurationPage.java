@@ -122,7 +122,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css="sub-content-box[box-title=\"Days of Week\"]")
 	private WebElement daysOfWeekSection;
 
-	@FindBy(css="[title=\"Dynamic Employee Groups\"] div")
+	@FindBy(css="[box-title=\"Dynamic Group\"]")
 	private WebElement dynamicGroupSection;
 
 	@FindBy(css="sub-content-box[box-title=\"Time of Day\"]")
@@ -1098,6 +1098,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				&& isElementEnabled(mealAndRestBreaksSection) && isElementEnabled(numberOfShiftsSection)
 				&& isElementEnabled(badgesSection) && isElementEnabled(cancelButton)){
 			SimpleUtils.pass("New advanced staffing rule page shows well");
+			scrollToBottom();
 		}else{
 			SimpleUtils.fail("New advanced staffing rule page doesn't show well",false);
 		}
