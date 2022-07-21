@@ -6855,7 +6855,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			while ((firstNameOfTM1.equalsIgnoreCase("open")
 					|| firstNameOfTM1.equalsIgnoreCase("unassigned")) && shiftCount < 100) {
 				shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-				firstNameOfTM1  = shiftInfo.get(0);
+				firstNameOfTM1 = shiftInfo.get(0);
 				shiftCount++;
 			}
 			String workRole1= shiftInfo.get(4);
@@ -6866,7 +6866,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					|| firstNameOfTM2.equalsIgnoreCase("unassigned")
 					|| firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1)) && shiftCount2 < 100) {
 				shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-				firstNameOfTM2  = shiftInfo.get(0);
+				firstNameOfTM2 = shiftInfo.get(0);
+				shiftCount2++;
 			}
 
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -7005,7 +7006,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			while ((firstNameOfTM1.equalsIgnoreCase("open")
 					|| firstNameOfTM1.equalsIgnoreCase("unassigned")) && shiftCount < 100) {
 				shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-				firstNameOfTM1  = shiftInfo.get(0);
+				firstNameOfTM1 = shiftInfo.get(0);
 				shiftCount++;
 			}
 
@@ -7015,7 +7016,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					|| firstNameOfTM2.equalsIgnoreCase("unassigned")
 					|| firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1)) && shiftCount2 < 100) {
 				shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-				firstNameOfTM2  = shiftInfo.get(0);
+				firstNameOfTM2 = shiftInfo.get(0);
+				shiftCount2++;
 			}
 
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -7092,7 +7094,4 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
-
-
-
 }
