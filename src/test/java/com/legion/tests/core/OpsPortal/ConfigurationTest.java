@@ -1281,6 +1281,7 @@ public class ConfigurationTest extends TestBase {
             String categoryEditName = "CategoryTest-Update";
             String description = "This is a test for Category configuration!";
             String verifyType = "category";
+            String locationName = "AutoCreate20220227202919";
 
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -1294,7 +1295,7 @@ public class ConfigurationTest extends TestBase {
             //Verify newly added category is in Forecast page
             switchToNewWindow();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1414,6 +1415,7 @@ public class ConfigurationTest extends TestBase {
             String channelEditName = "ChannelTest-Update";
             String description = "This is a test for channel configuration!";
             String verifyType = "channel";
+            String locationName = "AutoCreate20220227202919";
 
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -1427,7 +1429,7 @@ public class ConfigurationTest extends TestBase {
             //Verify newly added channel is in Forecast page
             switchToNewWindow();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();

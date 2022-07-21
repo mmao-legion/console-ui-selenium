@@ -218,7 +218,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			click(dynamicGroupTabAftClickAddLocationBtn);
 			if (groupRows.size()>0) {
 				for (WebElement eachRow: groupRows) {
-					WebElement groupNameInEachRow = eachRow.findElement(By.cssSelector("td:nth-child(2)"));
+					WebElement groupNameInEachRow = eachRow.findElement(By.cssSelector("td:nth-child(2) div span"));
 					WebElement checkBoxOfEachGroup = eachRow.findElement(By.cssSelector("td>div>input-field"));
 					if (groupNameInEachRow.getText().equalsIgnoreCase(searchText) ||groupNameInEachRow.getText().contains(searchText)) {
 						click(checkBoxOfEachGroup);
