@@ -377,7 +377,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		@Automated(automated = "Automated")
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "KendraScott2_Enterprise")
-		@TestName(description = "Verify the Schedule functionality >  Compliance smartcard")
+		@TestName(description = "Verify the Schedule functionality > Compliance smartcard")
 		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
 		public void verifyComplianceSmartCardFunctionality(String username, String password, String browser, String location)
 				throws Exception {
