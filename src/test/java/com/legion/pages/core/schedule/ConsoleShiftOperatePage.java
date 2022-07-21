@@ -1230,7 +1230,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             return true;
         }
         else{
-            SimpleUtils.fail("Convert To Open option is not enable/available on Pop Over Style ",false);
+            SimpleUtils.fail("Convert To Open option is not enable/available on Pop Over Style ",true);
             return false;
         }
     }
