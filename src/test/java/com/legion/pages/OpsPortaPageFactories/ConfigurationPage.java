@@ -209,4 +209,6 @@ public interface ConfigurationPage {
     public void updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(String option) throws Exception;
     public void verifyForDerivedDemandDriverUI(String derivedType, String remoteType) throws Exception;
     public void clickOnCancelButton() throws Exception;
+    public void clickHistoryButton() throws Exception;
+    public void verifyRecordIsClickable() throws Exception;
 }
