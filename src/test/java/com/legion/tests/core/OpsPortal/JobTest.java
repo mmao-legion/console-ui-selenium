@@ -3,6 +3,7 @@ package com.legion.tests.core.OpsPortal;
 import com.legion.pages.LoginPage;
 import com.legion.pages.OpsPortaPageFactories.JobsPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -628,6 +629,33 @@ public class JobTest extends TestBase {
             jobsPage.verifyExportResultFunction();
 
         } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Dynamic Group Function>In OM Job Automated")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDynamicGroupFunctionInOMJobAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            //go to job tab
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            jobsPage.iCanEnterJobsTab();
+
+            jobsPage.addWorkforceSharingDGWithMutiplyCriteria();
+            jobsPage.verifyDuplicatedDGErrorMessage();
+            jobsPage.editFirstDynamicGroup();
+            jobsPage.removeFirstDynamicGroup();
+
+            jobsPage.createDynamicGroup("Create Schedule");
+            
+            jobsPage.verifyDynamicGroupDisplayInSpecifyJobType("Adjust Forecast");
+            jobsPage.verifyDynamicGroupDisplayInSpecifyJobType("Adjust Budget");
+            jobsPage.verifyDynamicGroupDisplayInSpecifyJobType("Release Schedule");
+            jobsPage.verifyDynamicGroupDisplayInSpecifyJobType("Create Schedule");
+        }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }

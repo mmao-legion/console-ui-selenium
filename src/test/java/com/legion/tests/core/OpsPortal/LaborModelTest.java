@@ -451,14 +451,22 @@ public class LaborModelTest extends TestBase {
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
             List<HashMap<String,String>>  templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfo.get(6).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Labor model template is not overridden at location level");
-                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"),"View");
-            } else{
+//            if (templateInfo.get(7).get("Overridden").equalsIgnoreCase("No")) {
+//                SimpleUtils.pass("Labor model template is not overridden at location level");
+//                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
+//            } else{
+//                SimpleUtils.pass("Labor model template is already overridden at location level");
+//                locationsPage.editLocationBtnIsClickableInLocationDetails();
+//                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"Reset");
+//                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"),"View");
+//            }
+            if(locationsPage.isOverrideStatusAtLocationLevel("Labor Model")){
                 SimpleUtils.pass("Labor model template is already overridden at location level");
-                locationsPage.editLocationBtnIsClickableInLocationDetails();
-                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"),"Reset");
-                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(6).get("Template Type"),"View");
+                locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+                locationsPage.clickActionsForTemplate("Labor Model", "View");
+            }else {
+                SimpleUtils.pass("Labor model template is not overridden at location level");
+                locationsPage.clickActionsForTemplate("Labor Model", "View");
             }
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
             attributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();

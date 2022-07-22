@@ -407,7 +407,6 @@ public class InboxTest extends TestBase {
             SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
             controlsNewUIPage.clickOnControlsComplianceSection();
             SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
-            controlsNewUIPage.turnGFEToggleOnOrOff(true);
 
             // Turn on VSL to verify VSL info
             controlsNewUIPage.turnVSLToggleOnOrOff(true);

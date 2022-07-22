@@ -626,7 +626,7 @@ public interface SchedulePage {
 //	public List<WebElement> getAllShiftsOfOneTM(String name) throws Exception;
 //	public String getWholeMessageFromActionRequiredSmartCard() throws Exception;
 //	public String getTooltipOfPublishButton() throws Exception;
-//	public HashMap<String, String> getUnassignedAndOOOHMessageFromActionRequiredSmartCard() throws Exception;
+//	public HashMap<String, String> getMessageFromActionRequiredSmartCard() throws Exception;
 //	public boolean isDragAndDropConfirmPageLoaded() throws Exception;
 //	public void verifyUngenerateButtonIsRemoved() throws Exception;
 //	public List<String> getYearsFromCalendarMonthYearText() throws Exception;

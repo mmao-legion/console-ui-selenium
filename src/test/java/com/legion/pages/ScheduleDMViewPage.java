@@ -46,4 +46,10 @@ public interface ScheduleDMViewPage {
     public HashMap<String, String> getBudgetNScheduledHoursFromSmartCardOnDGEnv() throws Exception;
     public void clickSpecificLocationInDMViewAnalyticTable(String location) throws Exception;
     public boolean hasNextWeek() throws Exception;
+    public List<Float> validateScheduleAndBudgetedHours() throws Exception;
+    public void compareHoursFromScheduleAndDashboardPage(List<Float> totalHoursFromSchTbl) throws Exception;
+    public float getProjectedOverBudget();
+    public void compareHoursFromScheduleSmartCardAndDashboardSmartCard(List<Float> totalHoursFromSchTbl) throws Exception;
+    public void compareProjectedWithinBudget(float totalCountProjectedOverBudget) throws Exception;
+    public void verifyP2PSchedulesTableHeaderNames(boolean isApplyBudget) throws Exception;
 }

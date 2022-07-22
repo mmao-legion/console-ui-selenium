@@ -15,6 +15,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.testng.Assert;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.legion.tests.TestBase.propertyMap;
@@ -217,7 +218,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			click(dynamicGroupTabAftClickAddLocationBtn);
 			if (groupRows.size()>0) {
 				for (WebElement eachRow: groupRows) {
-					WebElement groupNameInEachRow = eachRow.findElement(By.cssSelector("td:nth-child(2)"));
+					WebElement groupNameInEachRow = eachRow.findElement(By.cssSelector("td:nth-child(2) div span"));
 					WebElement checkBoxOfEachGroup = eachRow.findElement(By.cssSelector("td>div>input-field"));
 					if (groupNameInEachRow.getText().equalsIgnoreCase(searchText) ||groupNameInEachRow.getText().contains(searchText)) {
 						click(checkBoxOfEachGroup);
@@ -247,14 +248,18 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	private  WebElement criteriaSelect;
 	@FindBy(css = "lg-button[label=\"Add More\"]")
 	private  WebElement addMoreBtn;
-	@FindBy(css = "textarea[id=\"omjob\"]")
+	@FindBy(css = "textarea[autocorrect = 'off']")
 	private WebElement formulaInputBox;
-	@FindBy(css = "lg-picker-input[value=\"group.values\"]")
+	//@FindBy(css = "lg-picker-input[value=\"group.values\"]")
+	@FindBy(css = "lg-multiple-select > div > lg-picker-input")
 	private  WebElement criteriaValue;
-	@FindBy(css = "input-field[type=\"checkbox\"]")
+	//@FindBy(css = "input-field[type=\"checkbox\"]")
+	@FindBy(css ="div.select-list")
 	private  List<WebElement> checkboxInCriteriaValue;
-	@FindBy(css = "div.mappingLocation.mt-20.ng-scope > span")
+	@FindBy(css = "div.mappingLocation.mt-20 > span")
 	private  WebElement testBtnInfo;
+	@FindBy(css = "lg-button[label = 'Create']")
+	private WebElement create;
 	public void createNewDynamicGroup(String name,String distriction,String criteria,int index) throws Exception {
 
 		if (isElementEnabled(addDynamicGroupBtn,5)) {
@@ -262,13 +267,15 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			if (isElementEnabled(formOfCreateEditGroup,5)) {
 				groupNameInput.sendKeys(name);
 				groupDescriptionInput.sendKeys(distriction);
-				selectByVisibleText(criteriaSelect,criteria);
+				//selectByVisibleText(criteriaSelect,criteria);
+				selectTheCriteria(criteria);
 				if (!isElementEnabled(formulaInputBox)) {
 					click(criteriaValue);
-					click(checkboxInCriteriaValue.get(0));
+					click(getDriver().findElement(By.cssSelector("lg-picker-input > div > div > ng-transclude > div > div:nth-child(1) > input-field > ng-form>input")));
+					click(criteriaValue);
 					click(testBtn);
 					String testInfo = testBtnInfo.getText().trim();
-					click(okBtnInCreateNewJobPage);
+					click(create);
 					waitForSeconds(3);
 					if (groupRows.size()>0) {
 						SimpleUtils.pass("Dynamic group create successfully");
@@ -277,7 +284,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 				}else
 					formulaInputBox.sendKeys("Parent(1)");
-				click(okBtnInCreateNewJobPage);
+				//click(okBtnInCreateNewJobPage);
 				waitForSeconds(3);
 			}else
 				SimpleUtils.fail("Create or Edit Dynamic Group form load failed",false);
@@ -1316,5 +1323,187 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 		} else {
 			SimpleUtils.fail("Navigation tab are not loaded!", false);
 		}
+	}
+
+	@FindBy(css = "select.ng-pristine")
+	private WebElement jobTypeSelect;
+	@FindBy(css ="div.calendar-body > div:nth-child(7)")
+	private WebElement lastWeek;
+	@FindBy(css = "nav.lg-tabs__nav > div:nth-child(4)")
+	private WebElement dynamicGroup;
+	@FindBy(css = "lg-button[label = 'Create Group']")
+	private WebElement createGroupBtn;
+
+	public void verifyDynamicGroupDisplayInSpecifyJobType(String type) throws Exception{
+		click(createNewJobBtn);
+		jobTypeSelect.sendKeys(type);
+		lastWeek.click();
+		click(okBtnInCreateNewJobPage);
+		click(addLocationBtn);
+		verifyDynamicGroupName();
+		click(dynamicGroup);
+		if(isElementLoaded(createGroupBtn,5)){
+			SimpleUtils.pass("Dynamic group load successfully");
+		}else
+			SimpleUtils.fail("Dynamic group load failed",false);
+		click(cancelBtnInJobPopUpPage);
+		click(backBtnInJobDetailsPage);
+	}
+
+	@FindBy(css = "lg-button[label = 'Remove']")
+	private WebElement remove;
+	public void createDynamicGroup(String type) throws Exception{
+		click(createNewJobBtn);
+		jobTypeSelect.sendKeys(type);
+		lastWeek.click();
+		click(okBtnInCreateNewJobPage);
+		click(addLocationBtn);
+		verifyDynamicGroupName();
+		click(dynamicGroup);
+		SimpleDateFormat dfs = new SimpleDateFormat("MMddHHmmss ");
+		String currentDisTime = dfs.format(new Date());
+		createNewDynamicGroup("AutoCreate" + currentDisTime,"AutoCreateDescription","City",0);
+		click(getDriver().findElement(By.cssSelector("td>div>input-field")));
+		removeFirstDynamicGroup();
+	}
+
+	public void addWorkforceSharingDGWithMutiplyCriteria() throws Exception {
+		String testInfo = "";
+		click(createNewJobBtn);
+		jobTypeSelect.sendKeys("Adjust Forecast");
+		lastWeek.click();
+		click(okBtnInCreateNewJobPage);
+		click(addLocationBtn);
+		verifyDynamicGroupName();
+		verifyNoDistrictInTitle();
+		click(dynamicGroup);
+
+		//verifyExistingGroupDetails();
+
+		click(addDynamicGroupBtn);
+
+		groupNameInput.sendKeys("AutoCreateMutiply");
+		selectTheCriteria("State");
+		click(criteriaValue);
+		click(getDriver().findElement(By.cssSelector("lg-picker-input > div > div > ng-transclude > div > div:nth-child(1) > input-field > ng-form>input")));
+		click(criteriaValue);
+
+		click(addMoreBtn);
+		click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > input-field")));
+		click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > div > ng-transclude > lg-search-options > div > div > div:nth-child(5) > div")));
+		click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-cascade-select > lg-multiple-select > div > lg-picker-input > div > input-field")));
+		click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-cascade-select > lg-multiple-select > div > lg-picker-input > div > div > ng-transclude > div > div:nth-child(1) > input-field")));
+
+		click(addMoreBtn);
+		click(getDriver().findElement(By.cssSelector("div:nth-child(5) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > input-field")));
+		click(getDriver().findElement(By.cssSelector("div:nth-child(5) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > div > ng-transclude > lg-search-options > div > div > div:nth-child(10) > div")));
+		scrollToElement(formulaInputBox);
+		System.out.println(getDriver().findElement(By.cssSelector("div.CodeMirror")).getAttribute("innerText"));
+		if(getDriver().findElement(By.cssSelector("div.CodeMirror")).getAttribute("innerText").contains("Enter your expression. The dynamic location group will only be created if the expresion evaluates to be true.")){
+			SimpleUtils.pass("Custom formula description info is correct");
+		}else
+			SimpleUtils.fail("Custom formula description info is wrong",false);
+		formulaInputBox.sendKeys("Parent(1)");
+
+		click(create);
+	}
+
+	@FindBy(css = "span.lg-toast__simple-text")
+	private WebElement errorMessage;
+	public void verifyDuplicatedDGErrorMessage() throws Exception{
+		click(addDynamicGroupBtn);
+		groupNameInput.sendKeys("AutoCreateMutiply");
+		selectTheCriteria("State");
+		click(criteriaValue);
+		click(getDriver().findElement(By.cssSelector("lg-picker-input > div > div > ng-transclude > div > div:nth-child(1) > input-field > ng-form>input")));
+		click(criteriaValue);
+		click(create);
+		if(isExist(errorMessage)){
+			if(errorMessage.getAttribute("innerText").contains("Existing group can not create")){
+				SimpleUtils.pass("DynamicGroup duplicated error meaasge is correct");
+			}else
+				SimpleUtils.fail("DynamicGroup duplicated error meaasge is wrong",false);
+
+		}else
+			SimpleUtils.fail("DynamicGroup duplicated error meaasge doesn't display",false);
+	}
+
+	@FindBy(css = "lg-button[label = 'Edit']")
+	private WebElement Edit;
+	@FindBy(css = "lg-button[label = 'Done']")
+	private WebElement Done;
+
+	public void editFirstDynamicGroup() throws Exception{
+		click(getDriver().findElement(By.cssSelector("td>div>input-field")));
+		click(Edit);
+		groupNameInput.clear();
+		groupNameInput.sendKeys("AutoCreateMutiplyUpdate");
+		selectTheCriteria("Country");
+		click(criteriaValue);
+		click(getDriver().findElement(By.cssSelector("lg-picker-input > div > div > ng-transclude > div > div:nth-child(1) > input-field > ng-form>input")));
+		click(criteriaValue);
+		click(Done);
+	}
+
+	public void removeFirstDynamicGroup() throws Exception{
+		click(remove);
+		click(remove);
+
+		click(cancelBtnInJobPopUpPage);
+		click(backBtnInJobDetailsPage);
+	}
+
+	@FindBy(css = ".picker-input")
+	private WebElement criteriaSelect0;
+	@FindBy(css = ".lg-search-options__option-wrapper")
+	private List<WebElement> criteriaOptions;
+	private void selectTheCriteria(String criteria) throws Exception {
+		if (isElementLoaded(criteriaSelect0, 5)) {
+			clickTheElement(criteriaSelect0);
+			if (areListElementVisible(criteriaOptions, 10)) {
+				for (WebElement option : criteriaOptions) {
+					if (option.getText().equalsIgnoreCase(criteria)) {
+						clickTheElement(option);
+						SimpleUtils.report("Select the option: " + criteria);
+						break;
+					}
+				}
+			} else {
+				SimpleUtils.fail("Criteria options failed to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Criteria Select failed to load!", false);
+		}
+	}
+
+	public void verifyNoDistrictInTitle() throws Exception{
+		System.out.println(navForAddLocation);
+		if(!navForAddLocation.getAttribute("innerText").contains("District")){
+			SimpleUtils.pass("Thers is no district in location title collect table");
+		}else
+			SimpleUtils.fail("Thers is  district in location title collect table",false);
+	}
+
+	@FindBy(css = "div.legendTitle")
+	private WebElement groupNameInDetailPage;
+	@FindBy(css ="label.input-label")
+	private WebElement groupNameLable;
+	@FindBy(css = "label.description_Title")
+	private WebElement decriptionLabel;
+	@FindBy(css = "label.formulaTitle")
+	private WebElement criteriaLabel;
+
+	public void verifyExistingGroupDetails() throws Exception{
+		click(getDriver().findElement(By.cssSelector("td>div>input-field")));
+		scrollToElement(okBtnInCreateNewJobPage);
+		if(isElementLoaded(groupNameInDetailPage) && isElementLoaded(groupNameLable) && isElementLoaded(decriptionLabel) && isElementLoaded(criteriaLabel)
+		&& isElementLoaded(testBtn) && isElementLoaded(Edit) && isElementLoaded(remove) && isElementLoaded(groupNameInput) && isElementLoaded(criteriaValue)){
+			if(groupNameInDetailPage.getAttribute("innerText").equals(groupNameInput.getAttribute("innerText")) && groupNameLable.getAttribute("innerText").equals("Group Name*")
+			&& decriptionLabel.getAttribute("innerText").contains("Description") && criteriaLabel.getAttribute("innerText").equals("Criteria")){
+				SimpleUtils.pass("Group detail page text is correct");
+			}else
+				SimpleUtils.fail("Group detail page text is wrong",false);
+		}else
+			SimpleUtils.fail("Some item don't display for group detail page",false);
 	}
 }

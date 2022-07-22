@@ -37,4 +37,6 @@ public interface SettingsAndAssociationPage {
     public void verifyInputStreamInList(HashMap<String, String> inputStreamInfo, WebElement searchResultElement) throws Exception;
     public List<String> getStreamNamesInList(String streamType) throws Exception;
     public int getTotalNumberForChannelOrCategory(String streamType) throws Exception;
+
+    public List<String> getAllChannelsOrCategories(String settingType) throws Exception;
 }

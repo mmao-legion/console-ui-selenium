@@ -2,14 +2,9 @@ package com.legion.tests.core;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import com.legion.pages.*;
-
-import java.util.Map;
 
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
@@ -17,6 +12,7 @@ import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.pages.core.ConsoleGmailPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.utils.Constants;
+import com.legion.utils.MyThreadLocal;
 import cucumber.api.java.hu.Ha;
 import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.formula.ptg.ControlPtg;
@@ -33,6 +29,8 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -84,27 +82,12 @@ public class TeamTestKendraScott2 extends TestBase{
 			SimpleUtils.fail(e.getMessage(), false);
 		}
 	  }
-	 @Automated(automated = "Manual")
-	 @Owner(owner = "Gunjan")
-	 @Enterprise(name = "KendraScott2_Enterprise")
-	 @TestName(description = "LEG-4978: In Team Page ,Coverage section is not displayed for LegionTech for Nov 4- Nov 10")
-	 @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
-	 public void coverageForTeamPageNotWorking(String username, String password, String browser, String location)
-	          throws Exception
-	 {
-	       SimpleUtils.pass("Login to leginTech Successfully");
-	       SimpleUtils.pass("Successfully opened the Team Page");
-	       SimpleUtils.pass("Click on Coverage tab");
-	       SimpleUtils.fail("assert coverage page should load and show data",false);
-
-	  }
-
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Gunjan")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate Team Search and Coverage in Team Tab")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
+	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class, enabled = false)
 	public void validateTeamTabAsStoreManager(String username, String password, String browser, String location)
 			throws Exception
 	{
@@ -124,7 +107,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	@Owner(owner = "Naval")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "TP-157: Team Tab :- Verify whether Manager is able to approve Time Off request")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class, enabled = false)
 	public void VerifyWhetherManagerCanApproveTimeOffRequestAsTeamMember(String browser, String username, String password, String location)
 			throws Exception
 	{
@@ -149,7 +132,7 @@ public class TeamTestKendraScott2 extends TestBase{
         			+"', status found as '"+requestStatus+"'.", false);
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
 		loginPage.logOut();
-		
+
         // Login as Store Manager
         String fileName = "UsersCredentials.json";
         fileName = SimpleUtils.getEnterprise(controlEnterprice)+fileName;
@@ -167,15 +150,15 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.searchAndSelectTeamMemberByName(username);
 		String TeamMemberProfileSubSectionLabel = "Time Off";
         profileNewUIPage.selectProfilePageSubSectionByLabel(TeamMemberProfileSubSectionLabel);
-        requestStatus = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabel, 
+        requestStatus = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabel,
         		timeOffExplanationText, getTimeOffStartTime(), getTimeOffEndTime());
         if(requestStatus.toLowerCase().contains(timeOffRequestStatus.Approved.getValue().toLowerCase()))
         	SimpleUtils.pass("Team Page: Time Off request Approved By Store Manager reflected on Team Page.");
         else
         	SimpleUtils.fail("Team Page: Time Off request Approved By Store Manager not reflected on Team Page.", false);
-        
+
         loginPage.logOut();
-        
+
         // Login as Team Member Again
         loginToLegionAndVerifyIsLoginDone(username, password, location);
         profileNewUIPage.clickOnProfileConsoleMenu();
@@ -192,12 +175,12 @@ public class TeamTestKendraScott2 extends TestBase{
           	SimpleUtils.fail("Profile Page: New Time Off Request status is '"+requestStatus
           			+"' after Store Manager Approved the request.", false);
 	}
-	
+
 	@Automated(automated = "Automated")
 	@Owner(owner = "Naval")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "TP-157: Team Tab :- Verify whether Manager is able to approve Time Off request")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class, enabled = false)
 	public void VerifyWhetherManagerCanRejectTimeOffRequestAsTeamMember(String browser, String username, String password, String location)
 			throws Exception
 	{
@@ -222,7 +205,7 @@ public class TeamTestKendraScott2 extends TestBase{
         			+"', status found as '"+requestStatus+"'.", false);
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
 		loginPage.logOut();
-		
+
         // Login as Store Manager
         String fileName = "UsersCredentials.json";
         fileName = SimpleUtils.getEnterprise(controlEnterprice)+fileName;
@@ -240,15 +223,15 @@ public class TeamTestKendraScott2 extends TestBase{
 		teamPage.searchAndSelectTeamMemberByName(username);
 		String TeamMemberProfileSubSectionLabel = "Time Off";
         profileNewUIPage.selectProfilePageSubSectionByLabel(TeamMemberProfileSubSectionLabel);
-        requestStatus = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabel, 
+        requestStatus = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabel,
         		timeOffExplanationText, getTimeOffStartTime(), getTimeOffEndTime());
         if(requestStatus.toLowerCase().contains(timeOffRequestStatus.Rejected.getValue().toLowerCase()))
         	SimpleUtils.pass("Team Page: Time Off request Rejected By Store Manager reflected on Team Page.");
         else
         	SimpleUtils.fail("Team Page: Time Off request Rejected By Store Manager not reflected on Team Page.", false);
-        
+
         loginPage.logOut();
-        
+
         // Login as Team Member Again
         loginToLegionAndVerifyIsLoginDone(username, password, location);
         profileNewUIPage.clickOnProfileConsoleMenu();
@@ -521,7 +504,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Nora")
-	@Enterprise(name = "KendraScott2_Enterprise")
+	@Enterprise(name = "Vailqacn_Enterprise")
 	@TestName(description = "Verify the Team functionality > Work Preferences")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -740,412 +723,7 @@ public class TeamTestKendraScott2 extends TestBase{
 		SimpleUtils.assertOnFail("SM shouldn't be able to view profile info in employee view", !scheduleShiftTablePage.isProfileIconsClickable(), false);
 	}
 
-	@Automated(automated ="Automated")
-	@Owner(owner = "Haya")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate create change availability request")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void validateCreateChangeAvailabilityRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
-		// Login with Store Manager Credentials
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		// Set availability policy
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
 
-		dashboardPage.navigateToDashboard();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		controlsPage.gotoControlsPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-		controlsNewUIPage.clickOnControlsSchedulingPolicies();
-		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-		controlsNewUIPage.clickOnGlobalLocationButton();
-		String isApprovalRequired = "Required for all changes";
-		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
-		LoginPage loginPage = pageFactory.createConsoleLoginPage();
-		loginPage.logOut();
-
-		//Login as Team Member to change availability
-		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
-		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-		profileNewUIPage.getNickNameFromProfile();
-		String myWorkPreferencesLabel = "My Work Preferences";
-		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-		//cancel all availability change requests firstly.
-		profileNewUIPage.cancelAllPendingAvailabilityRequest();
-		//Update Preferred Hours
-		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
-			profileNewUIPage.clickNextWeek();
-		}
-		String weekInfo = profileNewUIPage.getAvailabilityWeek();
-		int sliderIndex = 1;
-		double hours = 0.5;//move 1 metric 0.5h right----increase
-		String leftOrRightDuration = "Right";
-		String hoursType = "Preferred";
-		String repeatChanges = "This week only";
-		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-				hours, repeatChanges);
-		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours, repeatChanges);
-		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-				hours, repeatChanges);
-		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours*2, repeatChanges);
-
-		//cancel all availability change requests again.
-		profileNewUIPage.cancelAllPendingAvailabilityRequest();
-		hours = -0.5;//move 1 metric 0.5h left----decrease
-		leftOrRightDuration = "Left";
-		hoursType = "Preferred";
-		repeatChanges = "repeat forward";
-		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-				hours, repeatChanges);
-		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours, repeatChanges);
-		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-				hours, repeatChanges);
-		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours*2, repeatChanges);
-		SimpleUtils.assertOnFail("Pending count should be 1.", "1".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Haya")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate cancel Change Availability Request")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void validateCancelAvailabilityRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
-		// Login with Store Manager Credentials
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		// Set availability policy
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-		dashboardPage.navigateToDashboard();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		controlsPage.gotoControlsPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-		controlsNewUIPage.clickOnControlsSchedulingPolicies();
-		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-		controlsNewUIPage.clickOnGlobalLocationButton();
-		String isApprovalRequired = "Required for all changes";
-		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
-		LoginPage loginPage = pageFactory.createConsoleLoginPage();
-		loginPage.logOut();
-
-		//Login as Team Member to change availability
-		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
-		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-		profileNewUIPage.getNickNameFromProfile();
-		String myWorkPreferencesLabel = "My Work Preferences";
-		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-		//cancel all availability change requests firstly.
-		profileNewUIPage.cancelAllPendingAvailabilityRequest();
-		//Update Preferred Hours
-		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
-			profileNewUIPage.clickNextWeek();
-		}
-		String weekInfo = profileNewUIPage.getAvailabilityWeek();
-		int sliderIndex = 1;
-		double hours = 0.5;//move 1 metric 0.5h right----increase
-		String leftOrRightDuration = "Right";
-		String hoursType = "Preferred";
-		String repeatChanges = "This week only";
-		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-				hours, repeatChanges);
-		profileNewUIPage.verifyTheLatestAvailabilityRequestInfo(weekInfo, hours, repeatChanges);
-		SimpleUtils.assertOnFail("Pending count should be 1.", "1".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
-		//cancel availability change requests.
-		profileNewUIPage.cancelAllPendingAvailabilityRequest();
-		SimpleUtils.assertOnFail("Pending count should be 0.", "0".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Haya")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate SM approve change availability request")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void validateApproveAvailabilityRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
-		// Login with Store Manager Credentials
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		// Set availability policy
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-		dashboardPage.navigateToDashboard();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		controlsPage.gotoControlsPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-		controlsNewUIPage.clickOnControlsSchedulingPolicies();
-		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-		controlsNewUIPage.clickOnGlobalLocationButton();
-		String isApprovalRequired = "Required for all changes";
-		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
-		LoginPage loginPage = pageFactory.createConsoleLoginPage();
-		loginPage.logOut();
-
-		//Login as Team Member to change availability
-		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
-		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-		String requestUserName = profileNewUIPage.getNickNameFromProfile();
-		String myWorkPreferencesLabel = "My Work Preferences";
-		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-		//cancel all availability change requests firstly.
-		profileNewUIPage.cancelAllPendingAvailabilityRequest();
-		//Update Preferred Hours
-		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
-			profileNewUIPage.clickNextWeek();
-		}
-		String weekInfo = profileNewUIPage.getAvailabilityWeek();
-		String oldAvailableHrs = profileNewUIPage.getAvailableHoursForSpecificWeek();
-		int sliderIndex = 1;
-		double hours = -0.5;//move 1 metric 0.5h left----decrease
-		String leftOrRightDuration = "Right";
-		String hoursType = "Preferred";
-		String repeatChanges = "This week only";
-		String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-				hours, repeatChanges);
-		loginPage.logOut();
-
-		//Login as store manager to approve the request.
-		loginAsDifferentRole(AccessRoles.StoreManager.getValue());
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.searchAndSelectTeamMemberByName(requestUserName);
-		String workPreferencesLabel = "Work Preferences";
-		profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
-		String approvedCount = profileNewUIPage.getCountForStatus("approved");
-		profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(weekInfo, "Approve");
-		if (SimpleUtils.isNumeric(approvedCount)){
-			int approvedNum = Integer.valueOf(approvedCount);
-			SimpleUtils.assertOnFail("Approved count should be 1 more than before.", String.valueOf((approvedNum+1)).equalsIgnoreCase(profileNewUIPage.getCountForStatus("approved").trim()), false);
-		} else {
-			SimpleUtils.fail("Count is not numeric", false);
-		}
-		while (!weekInfo.equalsIgnoreCase(profileNewUIPage.getAvailabilityWeek())){
-			profileNewUIPage.clickNextWeek();
-		}
-		SimpleUtils.assertOnFail("Available hours didn't change to the new version!", newAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
-		SimpleUtils.assertOnFail("Pending count should be 0.", "0".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
-
-		//SCH-4997
-		//Go to reject a approved request.
-//		profileNewUIPage.rejectSpecificApprovedAvailabilityRequest(weekInfo);
-//		SimpleUtils.assertOnFail("Available hours should change back to the old version!", oldAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
-//		SimpleUtils.assertOnFail("Approved count should be the same as before.", approvedCount.equalsIgnoreCase(profileNewUIPage.getCountForStatus("approved").trim()), false);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Haya")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate cancelled/approved/rejected and dated request has no option when clicking the request")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void validateCancelledAvailabilityHasNoOptionRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
-		// Login with Store Manager Credentials
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		// Set availability policy
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-		dashboardPage.navigateToDashboard();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		controlsPage.gotoControlsPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-		controlsNewUIPage.clickOnControlsSchedulingPolicies();
-		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-		controlsNewUIPage.clickOnGlobalLocationButton();
-		String isApprovalRequired = "Required for all changes";
-		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
-		LoginPage loginPage = pageFactory.createConsoleLoginPage();
-		loginPage.logOut();
-
-		//Login as Team Member to change availability
-		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
-		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-		String requestUserName = profileNewUIPage.getNickNameFromProfile();
-		String myWorkPreferencesLabel = "My Work Preferences";
-		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-		//cancel all availability change requests firstly.
-		profileNewUIPage.cancelAllPendingAvailabilityRequest();
-		//Update Preferred Hours
-		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
-			profileNewUIPage.clickNextWeek();
-		}
-		int sliderIndex = 1;
-		double hours = -0.5;//move 1 metric 0.5h left----decrease
-		String leftOrRightDuration = "Right";
-		String hoursType = "Preferred";
-		String repeatChanges = "This week only";
-		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-				hours, repeatChanges);
-		loginPage.logOut();
-
-		//Login as store manager to check cancelled request.
-		loginAsDifferentRole(AccessRoles.StoreManager.getValue());
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.searchAndSelectTeamMemberByName(requestUserName);
-		String workPreferencesLabel = "Work Preferences";
-		profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
-		profileNewUIPage.verifyClickCancelledAvalabilityRequest();
-
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Haya")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate SM reject change availability request")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void validateRejectAvailabilityRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
-		// Login with Store Manager Credentials
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		// Set availability policy
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-		dashboardPage.navigateToDashboard();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		controlsPage.gotoControlsPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-		controlsNewUIPage.clickOnControlsSchedulingPolicies();
-		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-		controlsNewUIPage.clickOnGlobalLocationButton();
-		String isApprovalRequired = "Required for all changes";
-		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
-		LoginPage loginPage = pageFactory.createConsoleLoginPage();
-		loginPage.logOut();
-
-		//Login as Team Member to change availability
-		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
-		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-		String requestUserName = profileNewUIPage.getNickNameFromProfile();
-		String myWorkPreferencesLabel = "My Work Preferences";
-		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-		//cancel all availability change requests firstly.
-		profileNewUIPage.cancelAllPendingAvailabilityRequest();
-		//Update Preferred Hours
-		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
-			profileNewUIPage.clickNextWeek();
-		}
-		String weekInfo = profileNewUIPage.getAvailabilityWeek();
-		String oldAvailableHrs = profileNewUIPage.getAvailableHoursForSpecificWeek();
-		int sliderIndex = 1;
-		double hours = 0.5;//move 1 metric 0.5h left----decrease
-		String leftOrRightDuration = "Right";
-		String hoursType = "Preferred";
-		String repeatChanges = "This week only";
-		String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-				hours, repeatChanges);
-		loginPage.logOut();
-
-		//Login as store manager to reject the request.
-		loginAsDifferentRole(AccessRoles.StoreManager.getValue());
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.searchAndSelectTeamMemberByName(requestUserName);
-		String workPreferencesLabel = "Work Preferences";
-		profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
-		String rejectedCount = profileNewUIPage.getCountForStatus("rejected");
-		profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(weekInfo, "Reject");
-		if (SimpleUtils.isNumeric(rejectedCount)){
-			int rejectedNum = Integer.valueOf(rejectedCount);
-			SimpleUtils.assertOnFail("Rejected count should be 1 more than before.", String.valueOf((rejectedNum+1)).equalsIgnoreCase(profileNewUIPage.getCountForStatus("rejected").trim()), false);
-		} else {
-			SimpleUtils.fail("Count is not numeric", false);
-		}
-		while (!weekInfo.equalsIgnoreCase(profileNewUIPage.getAvailabilityWeek())){
-			profileNewUIPage.clickNextWeek();
-		}
-		SimpleUtils.assertOnFail("Available hours didn't change to the old version!", oldAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
-		SimpleUtils.assertOnFail("Pending count should be 0.", "0".equalsIgnoreCase(profileNewUIPage.getCountForStatus("pending").trim()), false);
-	}
-
-	@Automated(automated ="Automated")
-	@Owner(owner = "Haya")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate create change Availability request without approval")
-	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-	public void validateCreateAvailabilityRequestWithoutApprovalAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-		// Login with Internal Admin Credentials
-		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-		// Set availability policy
-		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-		controlsPage.gotoControlsPage();
-		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
-		controlsNewUIPage.clickOnControlsSchedulingPolicies();
-		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-		controlsNewUIPage.clickOnGlobalLocationButton();
-		String isApprovalRequired = "Not required";
-		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
-		LoginPage loginPage = pageFactory.createConsoleLoginPage();
-		loginPage.logOut();
-
-		//Login as Team Member to change availability
-		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
-		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-		String requestUserName = profileNewUIPage.getNickNameFromProfile();
-		String myWorkPreferencesLabel = "My Work Preferences";
-		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
-		//cancel all availability change requests firstly.
-		profileNewUIPage.cancelAllPendingAvailabilityRequest();
-		//Update Preferred Hours
-		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
-			profileNewUIPage.clickNextWeek();
-		}
-		String weekInfo = profileNewUIPage.getAvailabilityWeek();
-		int sliderIndex = 1;
-		double hours = 0.5;//move 1 metric 0.5h left----decrease
-		String leftOrRightDuration = "Right";
-		String hoursType = "Preferred";
-		String repeatChanges = "This week only";
-		String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
-				hours, repeatChanges);
-		SimpleUtils.assertOnFail("Available hours should be the new version.", newAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
-		loginPage.logOut();
-
-		//Login as admin to check and set back the setting.
-		loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-		TeamPage teamPage = pageFactory.createConsoleTeamPage();
-		teamPage.goToTeam();
-		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-		teamPage.searchAndSelectTeamMemberByName(requestUserName);
-		String workPreferencesLabel = "Work Preferences";
-		profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
-		while (!profileNewUIPage.getAvailabilityWeek().equalsIgnoreCase(weekInfo)){
-			profileNewUIPage.clickNextWeek();
-		}
-		SimpleUtils.assertOnFail("Available hours should be the new version.", newAvailableHrs.equalsIgnoreCase(profileNewUIPage.getAvailableHoursForSpecificWeek()), false);
-
-
-		controlsPage.gotoControlsPage();
-		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-		controlsNewUIPage.clickOnControlsSchedulingPolicies();
-		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-		controlsNewUIPage.clickOnGlobalLocationButton();
-		isApprovalRequired = "Required for all changes";
-		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(isApprovalRequired);
-	}
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Mary")
@@ -1576,5 +1154,1102 @@ public class TeamTestKendraScott2 extends TestBase{
 		expectedButtons.add(Constants.SendUsername);
 		expectedButtons.add(Constants.ResetPassword);
 		teamPage.verifyTheButtonsInActions(expectedButtons);
+	}
+
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Haya")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate there is no error warning when no overlap exists when SM edit the availabilities for TM")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateErrorMessageWhenThereIsNoRecurringPendingAvailabilityRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
+		// Login with Store Manager Credentials
+		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		// Set availability policy
+		ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+		controlsPage.gotoControlsPage();
+		ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		dashboardPage.navigateToDashboard();
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+		controlsPage.gotoControlsPage();
+		SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+
+		controlsNewUIPage.clickOnControlsSchedulingPolicies();
+		SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+		controlsNewUIPage.clickOnGlobalLocationButton();
+//        String isApprovalRequired = "Required for all changes";
+		controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(AvailabilityApprovalRequiredTest.AvailabilityApprovalRequiredOptions.RequiredForAllChanged.getValue());
+		LoginPage loginPage = pageFactory.createConsoleLoginPage();
+		loginPage.logOut();
+
+		//Login as Team Member to change availability
+		loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+		String requestUserName = profileNewUIPage.getNickNameFromProfile();
+		String myWorkPreferencesLabel = "My Work Preferences";
+		profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+		//cancel all availability change requests firstly.
+		profileNewUIPage.cancelAllPendingAvailabilityRequest();
+		//Update Preferred Hours
+		while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+			profileNewUIPage.clickNextWeek();
+		}
+		int sliderIndex = 1;
+		double hours = 0.5;//move 1 metric 0.5h right----increase
+		String leftOrRightDuration = "Right";
+		String hoursType = "Preferred";
+		String repeatChanges = "This week only";
+		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+				hours, repeatChanges);
+		loginPage.logOut();
+
+		//log in as SM, go to the Roster page, search out the TM.
+		loginToLegionAndVerifyIsLoginDone(username, password, location);
+		TeamPage teamPage = pageFactory.createConsoleTeamPage();
+		teamPage.goToTeam();
+		teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+		teamPage.searchAndSelectTeamMemberByName(requestUserName);
+		String workPreferencesLabel = "Work Preferences";
+		profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+		profileNewUIPage.clickAvailabilityEditButton();
+		SimpleUtils.assertOnFail("Error message shouldn't show up!", !profileNewUIPage.verifyErrorMessageForEditAvailabilityShowsUpOrNot(), false);
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the available left hrs display as 0 when delete all Availabilities")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateTheAvailableLeftHrsDisplayAs0WhenDeleteAllAvailabilitiesAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		try{
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+			String firstNameOfTM = tmFullName.split(" ")[0];
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			Thread.sleep(5000);
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
+					dashboardPage.isDashboardPageLoaded() , false);
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(tmFullName);
+			String timeOffLabel = "Time Off";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(timeOffLabel);
+			profileNewUIPage.cancelAllTimeOff();
+			profileNewUIPage.rejectAllTimeOff();
+			String workPreferencesLabel = "Work Preferences";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.cancelAllPendingAvailabilityRequest();
+			profileNewUIPage.clickNextWeek();
+			profileNewUIPage.clickAvailabilityEditButton();
+			profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
+			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
+			String totalHoursValue = availabilityData.get("totalHoursValue").toString();
+			String remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+			SimpleUtils.assertOnFail("The total and remaining hrs should be 0, but the actual are: "
+							+ totalHoursValue +" and "+ remainingHoursValue,
+					totalHoursValue.equals("0.0")&&remainingHoursValue.equals("0.0"), false);
+			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+			availabilityData = profileNewUIPage.getMyAvailabilityData();
+			totalHoursValue = availabilityData.get("totalHoursValue").toString();
+			remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+			SimpleUtils.assertOnFail("The total and remaining hrs should be 0, but the actual are: "
+							+ totalHoursValue +" and "+ remainingHoursValue,
+					totalHoursValue.equals("0.0")&&remainingHoursValue.equals("0.0"), false);
+
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Work Preferences");
+			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
+			Thread.sleep(5000);
+			availabilityData = profileNewUIPage.getMyAvailabilityData();
+			totalHoursValue = availabilityData.get("totalHoursValue").toString();
+			remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+			SimpleUtils.assertOnFail("The total and remaining hrs should be 0, but the actual are: "
+							+ totalHoursValue +" and "+ remainingHoursValue,
+					totalHoursValue.equals("0.0")&&remainingHoursValue.equals("0.0"), false);
+		} catch (Exception e){
+		SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the available left hrs display as 168 when add full Availabilities")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateTheAvailableLeftHrsDisplayAs168WhenAddFullAvailabilitiesAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		try{
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			Thread.sleep(3000);
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
+					dashboardPage.isDashboardPageLoaded() , false);
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(tmFullName);
+			String timeOffLabel = "Time Off";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(timeOffLabel);
+			profileNewUIPage.cancelAllTimeOff();
+			profileNewUIPage.rejectAllTimeOff();
+			String workPreferencesLabel = "Work Preferences";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.cancelAllPendingAvailabilityRequest();
+			Thread.sleep(3000);
+			profileNewUIPage.clickNextWeek();
+			profileNewUIPage.clickAvailabilityEditButton();
+			for (int i=0; i<7;i++) {
+				profileNewUIPage.updatePreferredOrBusyHoursToAllDay(i, "Preferred");
+			}
+//			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
+//			String totalHoursValue = availabilityData.get("totalHoursValue").toString();
+//			String remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+//			SimpleUtils.assertOnFail("The total and remaining hrs should be 168, but the actual are: "
+//							+ totalHoursValue +" and "+ remainingHoursValue,
+//					totalHoursValue.equals("168.0")&&remainingHoursValue.equals("168.0"), false);
+			Thread.sleep(3000);
+			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.refreshTheBrowser();
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.clickNextWeek();
+			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
+			String totalHoursValue = availabilityData.get("totalHoursValue").toString();
+			String remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+			SimpleUtils.assertOnFail("The total and remaining hrs should be 168, but the actual are: "
+							+ totalHoursValue +" and "+ remainingHoursValue,
+					totalHoursValue.equals("168.0")&&remainingHoursValue.equals("168.0"), false);
+
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Work Preferences");
+			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
+			availabilityData = profileNewUIPage.getMyAvailabilityData();
+			totalHoursValue = availabilityData.get("totalHoursValue").toString();
+			remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+			SimpleUtils.assertOnFail("The total and remaining hrs should be 168, but the actual are: "
+							+ totalHoursValue +" and "+ remainingHoursValue,
+					totalHoursValue.equals("168.0")&&remainingHoursValue.equals("168.0"), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the available left hrs will display correctly when update Availabilities")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateTheAvailableLeftHrsDisplayCorrectlyWhenUpdateAvailabilitiesAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		try{
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			Thread.sleep(3000);
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
+					dashboardPage.isDashboardPageLoaded() , false);
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(tmFullName);
+			String timeOffLabel = "Time Off";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(timeOffLabel);
+			profileNewUIPage.cancelAllTimeOff();
+			profileNewUIPage.rejectAllTimeOff();
+			String workPreferencesLabel = "Work Preferences";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.cancelAllPendingAvailabilityRequest();
+			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
+			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
+			String totalHoursValueBeforeChange = availabilityData.get("totalHoursValue").toString();
+			String remainingHoursValueBeforeChange = availabilityData.get("remainingHoursValue").toString();
+			int sliderIndex = 0;
+			double hours = -0.5;
+			String repeatChanges = "This week only";
+			String leftOrRightDuration = "Right";
+			String hoursType = "Preferred";
+			profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+					hours, repeatChanges);
+			availabilityData = profileNewUIPage.getMyAvailabilityData();
+			String totalHoursValueAfterChange = availabilityData.get("totalHoursValue").toString();
+			String remainingHoursValueAfterChange = availabilityData.get("remainingHoursValue").toString();
+			SimpleUtils.assertOnFail("The total hrs should been changed, the actual is: " +totalHoursValueBeforeChange,
+					!totalHoursValueBeforeChange.equals(totalHoursValueAfterChange), false);
+			SimpleUtils.assertOnFail("The remaining hrs should been changed, the actual is: " +remainingHoursValueAfterChange,
+					!remainingHoursValueBeforeChange.equals(remainingHoursValueAfterChange), false);
+
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Work Preferences");
+			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
+			availabilityData = profileNewUIPage.getMyAvailabilityData();
+			totalHoursValueAfterChange = availabilityData.get("totalHoursValue").toString();
+			remainingHoursValueAfterChange = availabilityData.get("remainingHoursValue").toString();
+			SimpleUtils.assertOnFail("The total hrs should been changed, the actual is: " +totalHoursValueBeforeChange,
+					!totalHoursValueBeforeChange.equals(totalHoursValueAfterChange), false);
+			SimpleUtils.assertOnFail("The remaining hrs should been changed, the actual is: " +remainingHoursValueAfterChange,
+					!remainingHoursValueBeforeChange.equals(remainingHoursValueAfterChange), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+
+	}
+
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the available left hrs when TM has shifts on the week")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateTheAvailableLeftHrsWhenTMHasShiftsOnTheWeekAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		try{
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+			String firstNameOfTM = tmFullName.split(" ")[0];
+			String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
+			String timeOffLabel = "Time Off";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(timeOffLabel);
+			profileNewUIPage.cancelAllTimeOff();
+			profileNewUIPage.rejectAllTimeOff();
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
+					dashboardPage.isDashboardPageLoaded() , false);
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+
+			//Create one shift for TM1 with shift time as 8am-2pm
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			scheduleMainPage.clickOnFilterBtn();
+			scheduleMainPage.selectJobTitleFilterByText(jobTitle);
+			String workRole = shiftOperatePage.getRandomWorkRole();
+			scheduleMainPage.clickOnFilterBtn();
+			scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+			scheduleMainPage.clickOnFilterBtn();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+			scheduleMainPage.saveSchedule();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectSpecificWorkDay(1);
+			newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmFullName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
+			Thread.sleep(5000);
+			//Create all day's avalabilities on the day that has shift scheduled
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			teamPage.searchAndSelectTeamMemberByName(tmFullName);
+			String workPreferencesLabel = "Work Preferences";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.cancelAllPendingAvailabilityRequest();
+			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
+			profileNewUIPage.clickAvailabilityEditButton();
+			profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
+			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+			profileNewUIPage.clickAvailabilityEditButton();
+			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+			Thread.sleep(5000);
+			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+//			locationSelectorPage.refreshTheBrowser();
+//			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.clickNextWeek();
+			profileNewUIPage.clickPreviousWeek();
+			Thread.sleep(5000);
+			//The message should display as '18 of 24 Available hrs left'
+			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
+			String totalHoursValue = availabilityData.get("totalHoursValue").toString();
+			String remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+			SimpleUtils.assertOnFail("The total and remaining hrs should be 24 and 18, but the actual are: "
+							+ totalHoursValue +" and "+ remainingHoursValue,
+					totalHoursValue.equals("24.0")&&remainingHoursValue.equals("18.0"), false);
+
+			//Remove the availabilities
+			profileNewUIPage.clickAvailabilityEditButton();
+			profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
+			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+			//The message should display as '0 of 0 Available hrs left'
+			availabilityData = profileNewUIPage.getMyAvailabilityData();
+			totalHoursValue = availabilityData.get("totalHoursValue").toString();
+			remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+			SimpleUtils.assertOnFail("The total and remaining hrs should be 0 and 0, but the actual are: "
+							+ totalHoursValue +" and "+ remainingHoursValue,
+					totalHoursValue.equals("0.0")&&remainingHoursValue.equals("0.0"), false);
+
+			//Add the availabilities again
+			profileNewUIPage.clickAvailabilityEditButton();
+			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+//			locationSelectorPage.refreshTheBrowser();
+//			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.clickNextWeek();
+			profileNewUIPage.clickPreviousWeek();
+			Thread.sleep(5000);
+			//The message should display as '18 of 24 Available hrs left'
+			availabilityData = profileNewUIPage.getMyAvailabilityData();
+			totalHoursValue = availabilityData.get("totalHoursValue").toString();
+			remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+			SimpleUtils.assertOnFail("The total and remaining hrs should be 24 and 18, but the actual are: "
+							+ totalHoursValue +" and "+ remainingHoursValue,
+					totalHoursValue.equals("24.0")&&remainingHoursValue.equals("18.0"), false);
+
+			//Go to the schedule and remove the TM's shift
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
+
+			//Go to Roster, search and go to TM1's preference page, Check the Available left hrs
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(tmFullName);
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			Thread.sleep(10000);
+			profileNewUIPage.clickNextWeek();
+			Thread.sleep(5000);
+			//The message should display as '24 of 24 Available hrs left'
+			availabilityData = profileNewUIPage.getMyAvailabilityData();
+			totalHoursValue = availabilityData.get("totalHoursValue").toString();
+			remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+			SimpleUtils.assertOnFail("The total and remaining hrs should be 24 and 24, but the actual are: "
+							+ totalHoursValue +" and "+ remainingHoursValue,
+					totalHoursValue.equals("24.0")&&remainingHoursValue.equals("24.0"), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+
+	}
+
+
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the time off on availability table")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateTimeOffOnAvailabilityTableAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		try{
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			profileNewUIPage.getTimeOffsLengthOnAvailabilityTable();
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+			String firstNameOfTM = tmFullName.split(" ")[0];
+			String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
+					dashboardPage.isDashboardPageLoaded() , false);
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+
+			//Go to Roster, search and go to TM1's preference page
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(tmFullName);
+			String workPreferencesLabel = "Work Preferences";
+			String timeoffLabel = "Time Off";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.cancelAllPendingAvailabilityRequest();
+			profileNewUIPage.clickNextWeek();
+			Thread.sleep(5000);
+			if (profileNewUIPage.getTimeOffsLengthOnAvailabilityTable().size() != 0) {
+				profileNewUIPage.selectProfilePageSubSectionByLabel(timeoffLabel);
+				profileNewUIPage.cancelAllTimeOff();
+				profileNewUIPage.rejectAllTimeOff();
+				profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			}
+			//Create full availabilities on the week
+			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
+			String totalHoursValue = availabilityData.get("totalHoursValue").toString();
+			String remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+			if (!totalHoursValue.equals("168.0") || !remainingHoursValue.equals("168.0")) {
+				profileNewUIPage.clickAvailabilityEditButton();
+				for (int i=0; i<7;i++) {
+					profileNewUIPage.updatePreferredOrBusyHoursToAllDay(i, "Preferred");
+				}
+				profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+				availabilityData = profileNewUIPage.getMyAvailabilityData();
+				totalHoursValue = availabilityData.get("totalHoursValue").toString();
+				remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+				SimpleUtils.assertOnFail("The total and remaining hrs should be 168, but the actual are: "
+								+ totalHoursValue +" and "+ remainingHoursValue,
+						totalHoursValue.equals("168.0")&&remainingHoursValue.equals("168.0"), false);
+			}
+			String currentYear = getCurrentTime().substring(0, 4);
+			String fromDate1 = currentYear + " " +profileNewUIPage.getAvailabilityWeek().split("-")[0];
+			String fromDate2 = currentYear + " " +profileNewUIPage.getAvailabilityWeek().split("-")[1];
+
+			//Go to Time Off tab and create time off on the same week
+			profileNewUIPage.selectProfilePageSubSectionByLabel(timeoffLabel);
+			String timeOffExplanationText = "Sample Explanation Text";
+			profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.JuryDuty.getValue(), timeOffExplanationText, fromDate1, 0);
+
+			//Go the Preference and check the time off will display
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.clickNextWeek();
+			profileNewUIPage.clickPreviousWeek();
+			List<String> timeOffsLength = profileNewUIPage.getTimeOffsLengthOnAvailabilityTable();
+			SimpleUtils.assertOnFail("The time offs fail to load on availability table" ,
+					timeOffsLength.size() == 1
+							&& timeOffsLength.get(0).equalsIgnoreCase("24.0 hrs"), false);
+			//Edit the steps for SCH-657
+			profileNewUIPage.clickAvailabilityEditButton();
+			timeOffsLength = profileNewUIPage.getTimeOffsLengthOnAvailabilityTable();
+			SimpleUtils.assertOnFail("The time offs fail to load on availability table" ,
+					timeOffsLength.size() == 1
+							&& timeOffsLength.get(0).equalsIgnoreCase("24.0 hrs"), false);
+			controlsNewUIPage.clickOnCancelBtn();
+			//Check the available left hrs, the hrs will not change
+			availabilityData = profileNewUIPage.getMyAvailabilityData();
+			totalHoursValue = availabilityData.get("totalHoursValue").toString();
+			remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+			SimpleUtils.assertOnFail("The total and remaining hrs should be 168, but the actual are: "
+							+ totalHoursValue +" and "+ remainingHoursValue,
+					totalHoursValue.equals("168.0")&&remainingHoursValue.equals("168.0"), false);
+			//Go to Time Off tab and reject the time off
+			profileNewUIPage.selectProfilePageSubSectionByLabel(timeoffLabel);
+			profileNewUIPage.rejectAllTimeOff();
+			//Go the Preference and check the time off, time off will been removed
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.clickNextWeek();
+			profileNewUIPage.clickPreviousWeek();
+			SimpleUtils.assertOnFail("It should has no time off on availability table",
+					profileNewUIPage.getTimeOffsLengthOnAvailabilityTable().size() == 0, false);
+			//Check the available left hrs, the hrs will not change
+			availabilityData = profileNewUIPage.getMyAvailabilityData();
+			totalHoursValue = availabilityData.get("totalHoursValue").toString();
+			remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
+			SimpleUtils.assertOnFail("The total and remaining hrs should be 168, but the actual are: "
+							+ totalHoursValue +" and "+ remainingHoursValue,
+					totalHoursValue.equals("168.0")&&remainingHoursValue.equals("168.0"), false);
+
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the scheduled shifts and hrs on Availability table when there are shift been scheduled")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateTheScheduledShiftAndHrsOnAvailabilityTableWithScheduledShiftAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		try{
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+			String firstNameOfTM = tmFullName.split(" ")[0];
+			String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			Thread.sleep(3000);
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
+					dashboardPage.isDashboardPageLoaded() , false);
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+
+			//Create one shift with shift time as 8am-2pm for TM1 per days
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			scheduleMainPage.clickOnFilterBtn();
+			scheduleMainPage.selectJobTitleFilterByText(jobTitle);
+			String workRole = shiftOperatePage.getRandomWorkRole();
+			scheduleMainPage.clickOnFilterBtn();
+			scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+			scheduleMainPage.clickOnFilterBtn();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+			scheduleMainPage.saveSchedule();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectSpecificWorkDay(7);
+			newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmFullName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
+
+			//Go to Roster, search and go to TM1's preference page
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			locationSelectorPage.refreshTheBrowser();
+			teamPage.searchAndSelectTeamMemberByName(tmFullName);
+			String workPreferencesLabel = "Work Preferences";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.cancelAllPendingAvailabilityRequest();
+			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
+			Thread.sleep(2000);
+			profileNewUIPage.clickAvailabilityEditButton();
+			profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
+			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
+			locationSelectorPage.refreshTheBrowser();
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			profileNewUIPage.clickNextWeek();
+			//There are 7 shifts display and scheduled hrs display as 42
+			List<String> availableShiftsOnAvailabilityTable = profileNewUIPage.getAvailableShiftsOnAvailabilityTable();
+			SimpleUtils.assertOnFail("It should have 7 shifts in availability table, but actual is: "+availableShiftsOnAvailabilityTable.size(),
+					availableShiftsOnAvailabilityTable.size() == 7, false);
+			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
+			String scheduleHoursValue = availabilityData.get("scheduleHoursValue").toString();
+			SimpleUtils.assertOnFail("The scheduled hrs should be 38.5 in availability table, but actual is: "+scheduleHoursValue,
+					scheduleHoursValue.equals("38.5"), false);
+
+			//Login as TM1
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Work Preferences");
+			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
+			Thread.sleep(2000);
+			availableShiftsOnAvailabilityTable = profileNewUIPage.getAvailableShiftsOnAvailabilityTable();
+			SimpleUtils.assertOnFail("It should have 7 shifts in availability table, but actual is: "+availableShiftsOnAvailabilityTable.size(),
+					availableShiftsOnAvailabilityTable.size() == 7, false);
+			availabilityData = profileNewUIPage.getMyAvailabilityData();
+			scheduleHoursValue = availabilityData.get("scheduleHoursValue").toString();
+			SimpleUtils.assertOnFail("The scheduled hrs should be 42 in availability table, but actual is: "+scheduleHoursValue,
+					scheduleHoursValue.equals("38.5"), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+
+
+	}
+
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the scheduled shifts and hrs will change on Availability table when update the scheduled shifts")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateTheScheduledShiftAndHrsOnAvailabilityTableWillChangedAccordinglyAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		try{
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+			String firstNameOfTM = tmFullName.split(" ")[0];
+			String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			Thread.sleep(3000);
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
+					dashboardPage.isDashboardPageLoaded() , false);
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if(!isActiveWeekGenerated){
+				createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+				//Create one shift with shift time as 8am-2pm for TM1 per days
+				ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+				ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+				ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+				scheduleMainPage.clickOnFilterBtn();
+				scheduleMainPage.selectJobTitleFilterByText(jobTitle);
+				String workRole = shiftOperatePage.getRandomWorkRole();
+				scheduleMainPage.clickOnFilterBtn();
+				scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+				scheduleMainPage.clickOnFilterBtn();
+				scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+				shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+				scheduleMainPage.saveSchedule();
+				scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+				NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+				newShiftPage.clickOnDayViewAddNewShiftButton();
+				newShiftPage.customizeNewShiftPage();
+				newShiftPage.clearAllSelectedDays();
+				newShiftPage.selectSpecificWorkDay(7);
+				newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+				newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+				newShiftPage.selectWorkRole(workRole);
+				newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+				newShiftPage.clickOnCreateOrNextBtn();
+				newShiftPage.searchTeamMemberByName(tmFullName);
+				newShiftPage.clickOnOfferOrAssignBtn();
+				scheduleMainPage.saveSchedule();
+				createSchedulePage.publishActiveSchedule();
+			}
+			//Update one shift of TM1
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			WebElement shiftsOfTM = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM).get(0);
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.editTheShiftTimeForSpecificShift(shiftsOfTM, "8am", "8pm");
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
+
+			//Go to Roster, search and go to TM1's preference page
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(tmFullName);
+			String workPreferencesLabel = "Work Preferences";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
+			Thread.sleep(2000);
+			//There are 7 shifts display and scheduled hrs display as 42
+			List<String> availableShiftsOnAvailabilityTable = profileNewUIPage.getAvailableShiftsOnAvailabilityTable();
+			SimpleUtils.assertOnFail("It should have 7 shifts in availability table, but actual is: "+availableShiftsOnAvailabilityTable.size(),
+					availableShiftsOnAvailabilityTable.size() == 7, false);
+			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
+			String scheduleHoursValue = availabilityData.get("scheduleHoursValue").toString();
+			SimpleUtils.assertOnFail("The scheduled hrs should be 44.5 in availability table, but actual is: "+scheduleHoursValue,
+					scheduleHoursValue.equals("44.5"), false);
+
+			//Login as TM1
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Work Preferences");
+			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
+			Thread.sleep(2000);
+			availableShiftsOnAvailabilityTable = profileNewUIPage.getAvailableShiftsOnAvailabilityTable();
+			SimpleUtils.assertOnFail("It should have 7 shifts in availability table, but actual is: "+availableShiftsOnAvailabilityTable.size(),
+					availableShiftsOnAvailabilityTable.size() == 7, false);
+			availabilityData = profileNewUIPage.getMyAvailabilityData();
+			scheduleHoursValue = availabilityData.get("scheduleHoursValue").toString();
+			SimpleUtils.assertOnFail("The scheduled hrs should be 44.5 in availability table, but actual is: "+scheduleHoursValue,
+					scheduleHoursValue.equals("44.5"), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+
+	}
+
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the scheduled shifts and hrs on Availability table when there is no shift been scheduled")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateTheScheduledShiftAndHrsOnAvailabilityTablWhenThereIsNoShiftBeenScheduledAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		try{
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+			String firstNameOfTM = tmFullName.split(" ")[0];
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			Thread.sleep(3000);
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
+					dashboardPage.isDashboardPageLoaded() , false);
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if(!isActiveWeekGenerated){
+				createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+			}
+			//Remove all shifts for TM1
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
+			//Go to Roster, search and go to TM1's preference page
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(tmFullName);
+			String workPreferencesLabel = "Work Preferences";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
+			Thread.sleep(2000);
+			//There are 7 shifts display and scheduled hrs display as 42
+			List<String> availableShiftsOnAvailabilityTable = profileNewUIPage.getAvailableShiftsOnAvailabilityTable();
+			SimpleUtils.assertOnFail("It should have 7 shifts in availability table, but actual is: "+availableShiftsOnAvailabilityTable.size(),
+					availableShiftsOnAvailabilityTable.size() == 0, false);
+			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
+			String scheduleHoursValue = availabilityData.get("scheduleHoursValue").toString();
+			SimpleUtils.assertOnFail("The scheduled hrs should be 0 in availability table, but actual is: "+scheduleHoursValue,
+					scheduleHoursValue.equals("0.0"), false);
+
+			//Login as TM1
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Work Preferences");
+			Thread.sleep(5000);
+			profileNewUIPage.clickNextWeek();
+			Thread.sleep(2000);
+			availableShiftsOnAvailabilityTable = profileNewUIPage.getAvailableShiftsOnAvailabilityTable();
+			SimpleUtils.assertOnFail("It should have 7 shifts in availability table, but actual is: "+availableShiftsOnAvailabilityTable.size(),
+					availableShiftsOnAvailabilityTable.size() == 0, false);
+			availabilityData = profileNewUIPage.getMyAvailabilityData();
+			scheduleHoursValue = availabilityData.get("scheduleHoursValue").toString();
+			SimpleUtils.assertOnFail("The scheduled hrs should be 0 in availability table, but actual is: "+scheduleHoursValue,
+					scheduleHoursValue.equals("0.0"), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@Automated(automated ="Automated")
+	@Owner(owner = "Mary")
+//	@Enterprise(name = "Vailqacn_Enterprise")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the approved or rejected availabilities request should not be able to operate")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
+	public void validateTheApprovedOrRejectedAvailabilitiesRequestShouldNotBeAbleToOperateAsTeamMember(String browser, String username, String password, String location) throws Exception {
+		try{
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			profileNewUIPage.clickOnUserProfileImage();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+			String firstNameOfTM = tmFullName.split(" ")[0];
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			String preferencesLabel = "My Work Preferences";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(preferencesLabel);
+			profileNewUIPage.cancelAllPendingAvailabilityRequest();
+			while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
+				profileNewUIPage.clickNextWeek();
+			}
+
+			String firstWeek = profileNewUIPage.getAvailabilityWeek();
+			String repeatChanges = "This week only";
+			String leftOrRightDuration = "Right";
+			String hoursType = "Preferred";
+			HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
+//			if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
+				int sliderIndex = 1;
+				double hours = -0.5;//move 1 metric 0.5h left
+				profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+						hours, repeatChanges);
+//			} else {
+//				profileNewUIPage.clickAvailabilityEditButton();
+//				profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
+//				profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
+//			}
+
+			profileNewUIPage.clickNextWeek();
+			String secondWeek = profileNewUIPage.getAvailabilityWeek();
+			myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
+//			if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
+				sliderIndex = 1;
+				hours = -0.5;//move 1 metric 0.5h left
+				profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
+						hours, repeatChanges);
+//			} else {
+//				profileNewUIPage.clickAvailabilityEditButton();
+//				profileNewUIPage.updatePreferredOrBusyHoursToAllDay(3, hoursType);
+//				profileNewUIPage.saveMyAvailabilityEditMode(repeatChanges);
+//			}
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
+					dashboardPage.isDashboardPageLoaded() , false);
+			teamPage.goToTeam();
+			teamPage.searchAndSelectTeamMemberByName(firstNameOfTM);
+			profileNewUIPage.selectProfilePageSubSectionByLabel("Work Preferences");
+			profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(firstWeek, "approve");
+			profileNewUIPage.verifyTheApprovedOrRejectedAvailabilityRequestCannotBeOperated(firstWeek);
+			profileNewUIPage.approveOrRejectSpecificPendingAvailabilityRequest(secondWeek, "reject");
+			profileNewUIPage.verifyTheApprovedOrRejectedAvailabilityRequestCannotBeOperated(secondWeek);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate managers can convert to Open Shift on current day and past days")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void validateManagersCanConvertToOpenShiftAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			String accessRoleTab = "Access Roles";
+			String permissionSection = "Schedule";
+			String permission = "Edit Past Schedule";
+			String actionOn = "on";
+			//Go to the configuration page and set the labor budget and By Location
+			if (isLocationUsingControlsConfiguration){
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsSchedulingPolicies();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
+				controlsNewUIPage.selectBudgetGroupNonOP("By Location");
+
+				//Go to Users and Roles page
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the Edit Past Schedule permission for SM & DM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				String role = "Store Manager";
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
+				role = "Area Manager";
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(240000);
+
+			}else {
+				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+				SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+				locationsPage.clickOnLocationsTab();
+				locationsPage.goToGlobalConfigurationInLocations();
+				locationsPage.editLaborBudgetSettingContent();
+				locationsPage.turnOnOrTurnOffLaborBudgetToggle(true);
+				locationsPage.selectBudgetGroup("By Location");
+				locationsPage.saveTheGlobalConfiguration();
+
+				//Go to Users and Roles page and switch to the Access Roles sub tab
+				ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+				userManagementPage.clickOnUserManagementTab();
+				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+				userManagementPage.goToUserAndRoles();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the Edit Past Schedule permission for SM & DM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				String role = "CinemarkStoreManager";
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
+				role = "CinemarkDistrictManager";
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(240000);
+
+				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
+					//Back to the console page
+					switchToConsoleWindow();
+				}
+			}
+
+			//Go to schedule page and re-generate the schedule for current & past weeks
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			scheduleCommonPage.clickOnWeekView();
+			scheduleCommonPage.navigateToPreviousWeek();
+			boolean isPreviousActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isPreviousActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			//Login as SM, generate the schedule
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			Thread.sleep(60000);
+			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+
+			//Switch to the DayView and convert one shift to the Open Shift.
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			scheduleCommonPage.clickOnDayView();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.convertAllShiftsToOpenInDayView();
+			scheduleMainPage.saveSchedule();
+
+			//Switch the previous week and convert one past shift to the Open Shift.
+			scheduleCommonPage.clickOnWeekView();
+			scheduleCommonPage.navigateToPreviousWeek();
+			scheduleCommonPage.clickOnDayView();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.convertAllShiftsToOpenInDayView();
+			scheduleMainPage.saveSchedule();
+
+			//Login as DM, generate the schedule
+			loginPage.logOut();
+			Thread.sleep(5000);
+			loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+
+			//Switch to the DayView and convert one shift to the Open Shift.
+			scheduleCommonPage.clickOnDayView();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.convertAllShiftsToOpenInDayView();
+			scheduleMainPage.saveSchedule();
+
+			//Switch the previous week and convert one past shift to the Open Shift.
+			scheduleCommonPage.clickOnWeekView();
+			scheduleCommonPage.navigateToPreviousWeek();
+			scheduleCommonPage.clickOnDayView();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.convertAllShiftsToOpenInDayView();
+			scheduleMainPage.saveSchedule();
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 }

@@ -257,6 +257,8 @@ public interface ProfileNewUIPage {
 
 	public void clickAvailabilityEditButton() throws Exception;
 
+	public boolean verifyErrorMessageForEditAvailabilityShowsUpOrNot() throws Exception;
+
 	public void saveMyAvailabilityEditMode(String availabilityChangesRepeat ) throws Exception;
 
 	public String getStatusOnProfilePage () throws Exception;
@@ -281,7 +283,7 @@ public interface ProfileNewUIPage {
 
 	public String getAvailableHoursForSpecificWeek() throws Exception;
 
-	public void rejectSpecificApprovedAvailabilityRequest(String availabilityWeek) throws Exception;
+	public void verifyTheApprovedOrRejectedAvailabilityRequestCannotBeOperated(String availabilityWeek) throws Exception;
 
 	public void approveSpecificRejectedAvailabilityRequest(String availabilityWeek) throws Exception;
 
@@ -291,4 +293,11 @@ public interface ProfileNewUIPage {
 
 	public String getMessageFromAlertDialog () throws Exception;
 	public String getMinorRuleTemplateName () throws Exception;
+	public String getToolTipMessageOfAvailabilityLockIcon() throws Exception;
+	public String getJobTitleFromProfilePage() throws Exception;
+	public List<String> getAvailableShiftsOnAvailabilityTable ();
+	public List<String> getTimeOffsLengthOnAvailabilityTable ();
+	public HashMap<String, String> getTimeOffBalanceHrs ();
+	public boolean checkIfReviewPreferencesInnerBoxDisplay () throws Exception;
+	public void updateSpecificPreferredOrBusyHoursToAllWeek(String hoursType) throws Exception;
 }

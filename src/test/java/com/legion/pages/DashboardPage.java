@@ -156,4 +156,5 @@ public interface DashboardPage {
     public void clickOnViewSchedulesOnOrgSummaryWidget() throws Exception;
     public List<HashMap<String, String>> getAllUpComingShiftsInfo() throws Exception;
     public void getWeekFromDate(String sun) throws Exception;
+    public void clickOnRefreshButtonOnSMDashboard() throws Exception;
 }

@@ -21,7 +21,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
 
     @FindBy(css = "tbody[ng-repeat=\"item in $ctrl.sortedRows\"] .default")
     private WebElement defaultTemplate;
-    @FindBy(css = "tbody[ng-repeat=\"item in $ctrl.sortedRows\"] .child-row.ng-scope lg-button.name")
+    @FindBy(css = ".child-row span.ng-binding")
     private WebElement childTemplate;
     @FindBy(css = "div[class=\"console-navigation-item-label Configuration\"]")
     private WebElement configurationTabInOP;
@@ -161,7 +161,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
 
     @FindBy(css = ".saveas-drop")
     private WebElement saveDrop;
-    @FindBy(css = ".ng-scope.pre-saveas")
+    @FindBy(css = ".pre-saveas")
     private WebElement doActionBtn;
     @FindBy(css = "lg-button[label=\"Cancel\"]")
     private WebElement cancelBtnForTemplate;
@@ -173,7 +173,8 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
             if (isElementLoaded(getDriver().findElement(By.cssSelector("h3[ng-click*=\""+action+"\"]")),5)){
                 WebElement actionOption = getDriver().findElement(By.cssSelector("h3[ng-click*=\""+action+"\"]"));
                 click(actionOption);
-                click(doActionBtn);
+                waitForSeconds(2);
+                clickTheElement(doActionBtn);
             } else {
                 SimpleUtils.fail("Option is not loaded!", false);
             }
@@ -201,7 +202,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
 
     @FindBy(css = "input[placeholder*=\"search\"]")
     private WebElement searchInput;
-    @FindBy(css = "tbody[ng-repeat*=\"item\"]")
+    @FindBy(css = "[ng-repeat-start=\"item in $ctrl.sortedRows\"]")
     private List<WebElement> templateList;
     @Override
     public void findDefaultTemplate(String templateName) throws Exception {
@@ -210,15 +211,14 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
             searchInput.sendKeys(templateName);
             waitForSeconds(2);
             //click(defaultTemplate);
-            templateList = getDriver().findElements(By.cssSelector("tbody[ng-repeat*=\"item\"]"));
+            templateList = getDriver().findElements(By.cssSelector("[ng-repeat-start=\"item in $ctrl.sortedRows\"]"));
             if (areListElementVisible(templateList,10) && templateList.size()>0){
                 for (int i = 0; i < templateList.size(); i++) {
-                    WebElement template = getDriver().findElements(By.cssSelector("tbody[ng-repeat*=\"item\"]")).get(i);
+                    WebElement template = getDriver().findElements(By.cssSelector("[ng-repeat-start=\"item in $ctrl.sortedRows\"]")).get(i);
                     if (template.findElement(By.cssSelector("span.ng-binding")).getText().equalsIgnoreCase(templateName)) {
-                        if (!template.findElement(By.tagName("tr")).getAttribute("class").contains("expanded")) {
+                        if (template.getAttribute("class").contains("hasChildren")) {
                             waitForSeconds(3);
-                            moveToElementAndClick(template.findElements(By.cssSelector("td.toggle")).get(0));
-                            //click(template.findElement(By.cssSelector("td.toggle")));
+                            moveToElementAndClick(template.findElement(By.cssSelector(".toggle")));
                         }
                         if (isElementLoaded(childTemplate, 10)) {
                             click(childTemplate);
@@ -374,7 +374,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
     }
 
 
-    @FindBy (css = "[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")
+    @FindBy (css = "[ng-if=\"checkFormTemplates()\"] [ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")
     private List<WebElement> minorDataFields;
     @Override
     public void setMinorRuleByDay(String type, String from, String to, String maxOfHrs) throws Exception {
@@ -384,6 +384,7 @@ public class ConsoleCinemarkMinorPage extends BasePage implements CinemarkMinorP
                 selectOptionForMinorRule(minorDataFields.get(6), from);
                 //selectByVisibleText(dataFields.get(7),to);
                 selectOptionForMinorRule(minorDataFields.get(7), to);
+                scrollToElement(minorDataFields.get(8));
                 minorDataFields.get(8).clear();
                 minorDataFields.get(8).sendKeys(maxOfHrs);
                 SimpleUtils.pass(type+" set");

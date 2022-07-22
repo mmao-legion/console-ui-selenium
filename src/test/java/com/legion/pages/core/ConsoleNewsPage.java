@@ -55,7 +55,7 @@ public class ConsoleNewsPage extends BasePage implements NewsPage {
 	@FindBy(css = "div[id=\"newsfeed-container\"]")
 	private WebElement newsFeedSection;
 
-	@FindBy(css = "lg-button[label=\"Save\"]")
+	@FindBy(css = "lg-button[label=\"Post\"]")
 	private WebElement saveButton;
 
 	@FindBy(css = "[data-testid=\"feed-list-wrapper\"] article")

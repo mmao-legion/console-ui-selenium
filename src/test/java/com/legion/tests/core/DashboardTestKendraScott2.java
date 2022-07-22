@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import com.legion.pages.*;
+import com.legion.utils.MyThreadLocal;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -33,32 +34,6 @@ public class DashboardTestKendraScott2 extends TestBase {
 		} catch (Exception e){
 			SimpleUtils.fail(e.toString(), false);
 		}
-	}
-
-	@Automated(automated = "Manual")
-	@Owner(owner = "Gunjan")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "LEG-4961: Should be able to set Location at Global Level")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void navigateToDashboardFromGlobalSetting(String username, String password, String browser, String location) throws Exception {
-		SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
-		SimpleUtils.pass("Click on Settings menu");
-		SimpleUtils.pass("Go back to Dashboard assert Dashboard loaded Successfully");
-		SimpleUtils.pass("Click on Settings menu again");
-		SimpleUtils.pass("Click on Global icon present next to Settings at top left section");
-		SimpleUtils.pass("Navigate back to Dashboard Page");
-		SimpleUtils.pass("assert Dashboard page is Loaded Successfully!");
-	}
-
-	@Automated(automated = "Manual")
-	@Owner(owner = "Gunjan")
-	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "LEG-5231: Team Lead Should not see Today's Forecast and Projected Demand Graph present in Dashboard Section")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void todayForecastAndProjectedDemandGraphTeamLead(String username, String password, String browser, String location) throws Exception {
-		SimpleUtils.pass("Login into LegionCooffee2 Application Successfully!");
-		SimpleUtils.pass("Navigate to Dashboard Page Successfully!");
-		SimpleUtils.fail("assert Today's Forecast and Projected Demand Graph should not be present for Team lead and Team member", false);
 	}
 
 	@Automated(automated = "Automated")
@@ -263,16 +238,9 @@ public class DashboardTestKendraScott2 extends TestBase {
 	@Owner(owner = "Nora")
 	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Verify Dashboard functionality")
-	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyDashboardFunctionality(String browser, String username, String password, String location) throws Exception {
-		HashMap<String, String> upComingShifts = new HashMap<>();
-		HashMap<String, String> fourShifts = new HashMap<>();
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyDashboardFunctionalityAsTeamLead(String browser, String username, String password, String location) throws Exception {
 		DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-
-		ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
-		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 		dashboardPage.verifyDashboardPageLoadedProperly();
 		// Verify the Welcome section
 		ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -280,71 +248,6 @@ public class DashboardTestKendraScott2 extends TestBase {
 		dashboardPage.verifyTheWelcomeMessage(nickName);
 		// Verify Today's forecast section > Projected Demand graph is present
 		dashboardPage.isProjectedDemandGraphShown();
-
-		// Make sure schedule is published
-		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-		SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
-		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-		boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-		if (isActiveWeekGenerated) {
-			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-		}
-		createSchedulePage.createScheduleForNonDGFlowNewUI();
-		createSchedulePage.publishActiveSchedule();
-		dashboardPage.navigateToDashboard();
-
-		HashMap<String, String> hoursOnDashboard = dashboardPage.getHoursFromDashboardPage();
-		String dateFromDashboard = dashboardPage.getCurrentDateFromDashboard();
-		String timeFromDashboard = dashboardPage.getCurrentTimeFromDashboard();
-
-
-		SimpleUtils.assertOnFail("'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(
-				ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
-		// Verify View Today's schedule button is working and navigating to the schedule page[Current date in day view]
-		scheduleCommonPage.isScheduleForCurrentDayInDayView(dateFromDashboard);
-		HashMap<String, String> hoursOnSchedule = smartCardPage.getHoursFromSchedulePage();
-		// Verify scheduled and other hours are matching with the Schedule smart card of Schedule page
-		if (hoursOnDashboard != null && hoursOnSchedule != null) {
-			if (hoursOnDashboard.equals(hoursOnSchedule)) {
-				SimpleUtils.pass("Data Source for Budget, Scheduled and Other are consistent with the data on schedule page!");
-			} else {
-				SimpleUtils.fail("Data Source for Budget, Scheduled and Other are inconsistent with the data " +
-						"on schedule page!", false);
-			}
-		} else {
-			SimpleUtils.fail("Failed to get the hours!", false);
-		}
-		// Verify that Starting soon shifts and Scheduled hours are not showing when current week's schedule is in Guidance or Draft
-		if (!createSchedulePage.isGenerateButtonLoaded()) {
-			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-			createSchedulePage.isGenerateButtonLoaded();
-		}
-		dashboardPage.navigateToDashboard();
-		boolean startingSoonLoaded = dashboardPage.isStartingSoonLoaded();
-		HashMap<String, String> hours = dashboardPage.getHoursFromDashboardPage();
-		// LEG-8474: When schedule of Current week is in Guidance, still data is showing on Dashboard
-		// TODO: following check will fail since LEG-8474
-		dashboardPage.verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(startingSoonLoaded, hours.get("Scheduled"));
-		// Verify starting soon section
-
-		scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-		if (!createSchedulePage.isPublishButtonLoaded()) {
-			createSchedulePage.createScheduleForNonDGFlowNewUI();
-		}
-		createSchedulePage.publishActiveSchedule();
-		dashboardPage.navigateToDashboard();
-		dashboardPage.verifyDashboardPageLoadedProperly();
-		startingSoonLoaded = dashboardPage.isStartingSoonLoaded();
-		boolean isStartingTomorrow = dashboardPage.isStartingTomorrow();
-		if (startingSoonLoaded) {
-			upComingShifts = dashboardPage.getUpComingShifts();
-
-			scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-			fourShifts = scheduleShiftTablePage.getFourUpComingShifts(isStartingTomorrow, timeFromDashboard);
-			scheduleShiftTablePage.verifyUpComingShiftsConsistentWithSchedule(upComingShifts, fourShifts);
-		} else {
-			SimpleUtils.fail("Shifts failed to load on Dashboard when the schedule is published!", false);
-		}
 	}
 
 	@Automated(automated = "Automated")
@@ -418,7 +321,7 @@ public class DashboardTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "Vailqacn_Enterprise")
 	@TestName(description = "Validate the left navigation menu on login using CA (Customer Admin) access")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin(String browser, String username, String password, String location) throws Exception {
@@ -554,5 +457,60 @@ public class DashboardTestKendraScott2 extends TestBase {
 		Thread.sleep(5000);
 		loginPage.logOut();
 		loginPage.verifyLoginPageIsLoaded();
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Validate user can logout successfully when login and do nothing")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyUserCanLogoutWhenLoginAndDoNothingAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		try{
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			//Get users
+			String fileName = "UsersCredentials.json";
+			if (System.getProperty("env")!=null && System.getProperty("env").toLowerCase().contains("rel")){
+				fileName = "Release"+ MyThreadLocal.getEnterprise()+fileName;
+			} else {
+				fileName = MyThreadLocal.getEnterprise() + fileName;
+			}
+			HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+			String simpleClassName = getCurrentClassName();
+			Object[][] adminCredentials = userCredentials.get(AccessRoles.InternalAdmin.getValue() + "Of" + simpleClassName);
+			Object[][] smCredentials = userCredentials.get(AccessRoles.StoreManager.getValue() + "Of" + simpleClassName);
+			Object[][] tlCredentials = userCredentials.get(AccessRoles.TeamLead.getValue() + "Of" + simpleClassName);
+			Object[][] tmCredentials = userCredentials.get(AccessRoles.TeamMember.getValue() + "Of" + simpleClassName);
+			Object[][] dmCredentials = userCredentials.get(AccessRoles.DistrictManager.getValue() + "Of" + simpleClassName);
+			Object[][] caCredentials = userCredentials.get(AccessRoles.CustomerAdmin.getValue() + "Of" + simpleClassName);
+
+
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+
+			loginPage.loginToLegionWithCredential(String.valueOf(adminCredentials[0][0]), String.valueOf(adminCredentials[0][1]));
+			loginPage.logOut();
+			loginPage.verifyLoginPageIsLoaded();
+			loginPage.loginToLegionWithCredential(String.valueOf(smCredentials[0][0]), String.valueOf(smCredentials[0][1]));
+			loginPage.logOut();
+			loginPage.verifyLoginPageIsLoaded();
+			loginPage.loginToLegionWithCredential(String.valueOf(tlCredentials[0][0]), String.valueOf(tlCredentials[0][1]));
+			loginPage.logOut();
+			loginPage.verifyLoginPageIsLoaded();
+			loginPage.loginToLegionWithCredential(String.valueOf(tmCredentials[0][0]), String.valueOf(tmCredentials[0][1]));
+			loginPage.logOut();
+			loginPage.verifyLoginPageIsLoaded();
+			loginPage.loginToLegionWithCredential(String.valueOf(dmCredentials[0][0]), String.valueOf(dmCredentials[0][1]));
+			loginPage.logOut();
+			loginPage.verifyLoginPageIsLoaded();
+			loginPage.loginToLegionWithCredential(String.valueOf(caCredentials[0][0]), String.valueOf(caCredentials[0][1]));
+			loginPage.logOut();
+			loginPage.verifyLoginPageIsLoaded();
+
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 }

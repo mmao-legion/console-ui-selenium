@@ -120,4 +120,16 @@ public interface JobsPage {
     public void iCanSelectLocationsViaDynamicGroupInAddLocation(String searchText) throws Exception;
 
     public void verifyDynamicGroupName() throws Exception;
+
+    public void verifyDynamicGroupDisplayInSpecifyJobType(String type) throws Exception;
+
+    public void createDynamicGroup(String type) throws Exception;
+
+    public void addWorkforceSharingDGWithMutiplyCriteria() throws Exception;
+
+    public void verifyDuplicatedDGErrorMessage() throws Exception;
+
+    public void editFirstDynamicGroup() throws Exception;
+
+    public void removeFirstDynamicGroup() throws Exception;
 }

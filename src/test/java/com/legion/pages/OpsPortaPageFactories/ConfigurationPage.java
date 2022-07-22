@@ -146,7 +146,7 @@ public interface ConfigurationPage {
     public void checkTheEntryOfAddBasicStaffingRule() throws Exception;
     public boolean verifyWarningInfoForDemandDriver(String warningMsg) throws Exception;
     public void verifyStaffingRulePageShowWell() throws Exception;
-    public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo, String addOrEdit) throws Exception;
+    public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception;
     public void verifyPublishedTemplateAfterEdit(String templateName) throws Exception;
 
     public boolean searchDriverInTemplateDetailsPage(String driverName) throws Exception;
@@ -159,7 +159,7 @@ public interface ConfigurationPage {
     public void verifyStartEndOffsetMinutesShowingByDefault() throws Exception;
     public void verifyStartEndEventPointOptionsList() throws Exception;
     public List<String> verifyStartEndTimeEventOptionsList() throws Exception;
-    public void selectDaysForBasicStaffingRule(String day) throws Exception;
+    public void verifyDefaultValueAndSelectDaysForBasicStaffingRule(String day) throws Exception;
     public void verifyDaysListShowWell() throws Exception;
     public void setSpecifiedHours(String start, String end) throws Exception;
     public void selectEventPointForBasicStaffingRule(String startEventPoint,String endEventPoint) throws Exception;
@@ -169,5 +169,44 @@ public interface ConfigurationPage {
     public void clickCheckButtonOfBasicStaffingRule() throws Exception;
     public void defaultSelectedBadgeOption() throws Exception;
     public void selectBadgesOfBasicStaffingRule(String hasBadgeOrNot, String badgeName) throws Exception;
+    public void verifyHistoryButtonNotDisplay() throws Exception;
+    public void verifyHistoryButtonDisplay() throws Exception;
+    public void verifyHistoryButtonIsClickable() throws Exception;
+    public void verifyCloseIconNotDisplayDefault() throws Exception;
+    public void clickHistoryAndClose() throws Exception;
+    public void goToItemInConfiguration(String item) throws Exception;
     public void setLeaveThisPageButton() throws Exception;
+    public void selectWorkRoleOfBasicStaffingRule(String workRoleName) throws Exception;
+    public void selectEndTimeEvent(String endTimeEvent) throws Exception;
+    public void selectConditionMaxMinExactly(String condition) throws Exception;
+    public void selectUnitOptionsOfBasicStaffingRule(String unit) throws Exception;
+    public void inputStartOffsetMinutesOfBasicStaffingRule(String startOffset) throws Exception;
+    public void inputEndOffsetMinutesOfBasicStaffingRule(String endOffset) throws Exception;
+    public void createBasicStaffingRule(String startTimeEvent,String endTimeEvent,String startEventPoint,String endEventPoint,
+                                        String workRoleName,String unit,String condition,List<String> days,String number,
+                                        String startOffset,String endOffset) throws Exception;
+    public void selectStartEventPointForBasicStaffingRule(String startEventPoint) throws Exception;
+    public void selectEndEventPointForBasicStaffingRule(String endEventPoint) throws Exception;
+    public void selectDaysForBasicStaffingRule(List<String> days) throws Exception;
+    public void verifyBasicStaffingRuleIsCorrectInRuleList(String startTimeEvent,String endTimeEvent,String startEventPoint,String endEventPoint,
+                                                           String workRoleName,String unit,String condition,List<String> days,String number,
+                                                           String startOffset,String endOffset) throws Exception;
+    public void removeAllDemandDriverTemplates() throws Exception;
+    public void clickAddOrEditForDriver(String addOrEdit) throws Exception;
+    public List<String> getInputStreamInDrivers() throws Exception;
+    public void addSkillCoverageBasicStaffingRule() throws Exception;
+    public void verifySkillCoverageBasicStaffingRule(String workRole1, String workRole2) throws Exception;
+    public void verifySkillCoverageBasicStaffingRuleInList() throws Exception;
+    public void verifyMinorRulesTileIsLoaded() throws Exception;
+    public boolean checkIfMinorSectionsLoaded () throws Exception;
+    public void clickOnBackButton () throws Exception;
+    public void verifyTheContentOnSpecificCard(String cardName, List<String> content) throws Exception;
+    public void setStrictlyEnforceMinorViolations(String yesOrNo) throws Exception;
+    public boolean isStrictlyEnforceMinorViolationSettingEnabled() throws Exception;
+    public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception;
+    public void verifySpecificAssociationIsSaved(String name) throws Exception;
+    public boolean checkIfApproveShiftInHomeLocationSettingEnabled() throws Exception;
+    public void updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(String option) throws Exception;
+    public void verifyForDerivedDemandDriverUI(String derivedType, String remoteType) throws Exception;
+    public void clickOnCancelButton() throws Exception;
 }

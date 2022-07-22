@@ -31,7 +31,6 @@ public interface ScheduleCommonPage {
     public void currentWeekIsGettingOpenByDefault(String location) throws Exception;
     public void goToScheduleNewUI() throws Exception;
     public void dayWeekPickerSectionNavigatingCorrectly() throws Exception;
-    public int getMinutesFromTime(String time);
     public int getTheIndexOfCurrentDayInDayView() throws Exception;
     public String getActiveWeekText() throws Exception;
     public void clickCancelButtonOnPopupWindow() throws Exception;
@@ -49,4 +48,5 @@ public interface ScheduleCommonPage {
     public boolean isSpecifyDayEqualWithFirstDayOfActivateWeek(String date) throws Exception;
     public void clickOnFirstWeekInWeekPicker() throws Exception;
     public void VerifyStaffListInSchedule(String name) throws Exception;
+    public String getActiveWeekStartDayFromSchedule() throws Exception;
 }

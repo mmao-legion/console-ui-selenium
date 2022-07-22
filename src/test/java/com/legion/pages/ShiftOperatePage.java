@@ -19,6 +19,8 @@ public interface ShiftOperatePage {
     public void deleteAllShiftsOfGivenDayPartInDayView(String dayPart) throws Exception;
     public void  verifyDeleteShiftCancelButton() throws Exception;
     public WebElement clickOnProfileIcon() throws Exception;
+    public int getTheIndexWhenClickingOnProfileIcon() throws Exception;
+    public WebElement getShiftElementByIndex(int index) throws Exception;
     public boolean isProfileIconsEnable() throws Exception;
     public void verifyMealBreakTimeDisplayAndFunctionality(boolean isEditMealBreakEnabled) throws Exception;
     public void verifyDeleteMealBreakFunctionality() throws Exception;
@@ -36,6 +38,7 @@ public interface ShiftOperatePage {
     public boolean isViewOpenShiftEnable() throws Exception;
     public boolean isChangeRoleEnable() throws Exception;
     public boolean isAssignTMEnable() throws Exception;
+    public boolean isEditShiftNotesEnable() throws Exception;
     public void clickonAssignTM() throws Exception;
     public void clickOnConvertToOpenShift() throws Exception;
     public void verifyOfferTMOptionIsAvailable() throws Exception;
@@ -43,6 +46,7 @@ public interface ShiftOperatePage {
     public boolean isOfferTMOptionVisible() throws Exception;
     public boolean isOfferTMOptionEnabled() throws Exception;
     public WebElement clickOnProfileIconOfOpenShift() throws Exception;
+    public void offerTMByOpenShiftsCount(int indexOfOpenShift, String firstNameOfTM, String location) throws Exception;
     public String getTMDetailNameFromProfilePage(WebElement shift) throws Exception;
     public List<String> verifyEditBreaks() throws Exception;
     public void changeWorkRoleInPromptOfAShift(boolean isApplyChange, WebElement shift) throws Exception;
@@ -66,6 +70,7 @@ public interface ShiftOperatePage {
     public void closeViewProfileContainer() throws Exception;
     public void verifyChangeRoleFunctionality() throws Exception;
     public void deleteTMShiftInWeekView(String teamMemberName) throws Exception;
+    public int countShiftsByUserName(String teamMemberName) throws Exception;
     public boolean verifyConvertToOpenPopUpDisplay(String firstNameOfTM) throws Exception;
     void convertToOpenShiftDirectly();
     public void verifyMessageIsExpected(String messageExpected) throws Exception;
@@ -75,7 +80,7 @@ public interface ShiftOperatePage {
     public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception;
     public void switchSearchTMAndRecommendedTMsTab() throws Exception;
     public void verifyEditShiftTimePopUpDisplay() throws Exception;
-    public void verifyListOfOfferNotNull() throws Exception;
+    public boolean checkIfOfferListHasOffers() throws Exception;
     public String getTheMessageOfTMScheduledStatus() throws Exception;
     public void verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished() throws Exception;
     public void verifyTMNotSelected() throws Exception;
@@ -100,6 +105,22 @@ public interface ShiftOperatePage {
     public void addShiftNotesToTextarea(String notes) throws Exception;
     public String getShiftInfoInEditShiftDialog() throws Exception;
     public void clickOnEditShiftNotesOption() throws Exception;
-    public boolean checkIfTMExistsInRecommendedTab (String fullNameOfTM);
+    public boolean checkIfTMExistsInRecommendedTab (String fullNameOfTM) throws Exception;
     public void moveMealAndRestBreaksOnEditBreaksPage(String breakTime, int index, boolean isMealBreak) throws Exception;
+    public void moveSliderAtCertainPointOnEditShiftTimePage(String shiftTime, String startingPoint) throws Exception;
+    public String getOfferStatusFromOpenShiftStatusList (String tmName);
+    public boolean isEditShiftTimeNewUIDisplay () throws Exception;
+    public void setShiftTimesOnEditShiftTimePage (String startTime, String endTime, boolean checkTheNextDay) throws Exception;
+    public HashMap<String, String> getInfoFromCardOnEditShiftTimePage () throws Exception;
+    public void checkOrUnCheckNextDayOnEditShiftTimePage (boolean isCheck) throws Exception;
+    public String getEditShiftTimeCompliance() throws Exception;
+    public boolean checkIfUpdateButtonEnabled () throws Exception;
+    public int getTheDurationOfBreaks(boolean isMealBreak) throws Exception;
+    public void clickOnOKBtnOnMealBreakDialog() throws Exception;
+    public void deleteMealOrRestBreaks(boolean isMealBreak) throws Exception;
+    public void shortenMealOrRestBreak(boolean isMealBreak) throws Exception;
+    public void moveMealOrRestBreak(boolean isMeal, int offset) throws Exception;
+    public void clickOnProfileIconByIndex(int indexOfProfIcon) throws Exception;
+    public void checkBadgeOnProfilePopup(String tmA, String tmB) throws Exception;
+    public void convertAllShiftsToOpenInDayView() throws Exception;
 }

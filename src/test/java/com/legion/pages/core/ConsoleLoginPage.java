@@ -4,6 +4,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.LoginPage;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -28,9 +29,15 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     
     @FindBy(css="[ng-model='password']")
     private WebElement passwordField;
+
+    @FindBy(css = "[type=password]")
+	private WebElement newPasswordInput;
     
     @FindBy(className="login-button-icon")
     private WebElement loginButton;
+
+    @FindBy(css = "[type=submit]")
+	private WebElement newSignInBtn;
     
     @FindBy(className="fa-sign-out")
     private WebElement logoutButton;
@@ -58,7 +65,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		click(loginButton);
     }
     
-    public void loginToLegionWithCredential(String userName, String Password) throws InterruptedException
+    public void loginToLegionWithCredential(String userName, String Password) throws Exception
     {
 		int retryTime = 0;
 		boolean isLoaded = isUserNameInputLoaded();
@@ -71,12 +78,23 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 				break;
 			}
 		}
-    	getActiveConsoleName(loginButton);
-    	userNameField.clear();
-    	passwordField.clear();
-    	userNameField.sendKeys(userName);
-		passwordField.sendKeys(Password);
-		clickTheElement(loginButton);
+		if (isElementLoaded(loginButton, 5)) {
+			getActiveConsoleName(loginButton);
+			userNameField.clear();
+			passwordField.clear();
+			userNameField.sendKeys(userName);
+			passwordField.sendKeys(Password);
+			clickTheElement(loginButton);
+		} else if (isElementLoaded(newSignInBtn, 5)) {
+			userNameField.clear();
+			userNameField.sendKeys(userName);
+			userNameField.sendKeys(Keys.ENTER);
+			if (isElementLoaded(newPasswordInput, 3)) {
+				newPasswordInput.clear();
+				newPasswordInput.sendKeys(Password);
+			}
+			clickTheElement(newSignInBtn);
+		}
 		waitForSeconds(4);
     }
 
@@ -176,8 +194,8 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 
 	@Override
 	public void verifyNewTermsOfServicePopUp() throws Exception {
-		if (isElementLoaded(newTermsOfServicePopUpWindow,3)
-				&& isElementLoaded(continueBtnInNewTermsOfServicePopUpWindow,3)) {
+		if (isElementLoaded(newTermsOfServicePopUpWindow,5)
+				&& isElementLoaded(continueBtnInNewTermsOfServicePopUpWindow,5)) {
 			click(continueBtnInNewTermsOfServicePopUpWindow);
 		}else
 			SimpleUtils.report("There is no new terms of service");

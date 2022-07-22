@@ -27,8 +27,6 @@ public interface ControlsNewUIPage {
 
 	public void clickOnControlsWorkingHoursCard() throws Exception;
 
-	public void updateControlsRegularHours(String isStoreClosed, String openingHours, String closingHours, String day) throws Exception;
-
 	public void clickOnSaveRegularHoursBtn() throws Exception;
 
 	public void clickOnControlsSchedulingPolicies() throws Exception;
@@ -184,7 +182,11 @@ public interface ControlsNewUIPage {
 
 	public boolean isControlsConsoleMenuAvailable() throws Exception;
 
-	public HashMap<String, ArrayList<String>> getSchedulingPoliciesSchedulesSectionEditableOrNonEditableFields() throws Exception;
+	public void clickOnLocationProfileEditLocationBtn() throws Exception;
+
+    public void checkTimeZoneDropdownOptions(int targetNumbersOfUTCFormat, String timeZone) throws Exception;
+
+    public HashMap<String, ArrayList<String>> getSchedulingPoliciesSchedulesSectionEditableOrNonEditableFields() throws Exception;
 
 	public HashMap<String, ArrayList<String>> getSchedulingPoliciesShiftsSectionEditableOrNonEditableFields() throws Exception;
 
@@ -201,6 +203,8 @@ public interface ControlsNewUIPage {
 	public HashMap<String, ArrayList<String>> getScheduleCollaborationEditableOrNonEditableFields() throws Exception;
 
 	public void clickOnScheduleCollaborationOpenShiftAdvanceBtn() throws Exception;
+	public void allowEmployeesClaimOvertimeShiftOffer() throws Exception;
+	public void notAllowEmployeesClaimOvertimeShiftOffer() throws Exception;
 
 	public HashMap<String, ArrayList<String>> getComplianceEditableOrNonEditableFields() throws Exception;
 
@@ -342,4 +346,31 @@ public interface ControlsNewUIPage {
 	public void verifyCloseSplitShiftPremiumDialogButton () throws Exception;
 	public void turnOnOrTurnOffMealBreakToggle(boolean action) throws Exception;
 	public void editMealBreak(String mealBreakDuration, String paidType, String scheduleHoursLimit, boolean saveOrNot) throws Exception;
+	public void verifyLockEmployeeAvailabilityEditsIsLoaded () throws Exception;
+	public void updateLockEmployeeAvailabilityEdits(String lockOption) throws Exception;
+	public void verifyTheSectionsOnWorkingHoursPage() throws Exception;
+	public boolean checkIfWorkHoursTypeCollapsed(String title) throws Exception;
+	public void turnOnOrOffSpecificHolidayHours(String holidayName, String action) throws Exception;
+	public void turnOnOrOffSpecificRegularWorkingHours(String regularDay, String action) throws Exception;
+	public void updateControlsRegularHours(String openingHours, String closingHours, String day, List<String> applyToOtherDays) throws Exception;
+	public void clickOnCancelBtn() throws Exception;
+	public LinkedHashMap<String, List<String>> getHolidayWorkingHours() throws Exception;
+	public void updateControlsHolidayHours(String openingHours, String closingHours, String day, List<String> applyToOtherDays) throws Exception;
+	public void clickOnSaveBtn() throws Exception;
+	public void clickOnManageBtn() throws Exception;
+	public List<String> getAllSelectedCompanyHolidays ();
+	public void searchSpecificCompanyHolidays (String companyHolidays) throws Exception;
+	public void checkOrUncheckSpecificCompanyHolidays (Boolean isCheck, String companyHoliday) throws Exception;
+	public void setFixedHoursForSpecificCompanyHolidays (String companyHoliday, String fixedHours) throws Exception;
+	public LinkedHashMap<String, List<String>> getCompanyHolidaysInSearchResult() throws Exception;
+	public void turnOnOrTurnOffDailyOTToggle(boolean action) throws Exception;
+	public void editDailyOT(String numOfHrs, String singleDayOr24Hrs, boolean saveOrNot) throws Exception;
+	public boolean checkDailyOTEnabledOrNot() throws Exception;
+	public boolean checkIfTheLocationUsingControlsConfiguration() throws Exception;
+	public boolean checkIfEmployeeCanClaimOTOpenShift() throws Exception;
+	public void selectClopeningHoursOP(String clopeningHour) throws Exception;
+	public String getBudgetGroupSettingContentNonOP() throws Exception;
+	public void selectBudgetGroupNonOP(String optionValue) throws Exception;
+	public void turnOnOrOffSpecificPermissionForSpecificRoles(String section, String role, String permission, String action) throws Exception;
+
 }
