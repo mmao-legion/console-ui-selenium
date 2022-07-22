@@ -26,6 +26,9 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     
     @FindBy(css="input[ng-model=\"username\"]")
     private WebElement userNameField;
+
+    @FindBy(css = "[placeholder='Email or Username']")
+	private WebElement newUserNameField;
     
     @FindBy(css="[ng-model='password']")
     private WebElement passwordField;
@@ -86,9 +89,9 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 			passwordField.sendKeys(Password);
 			clickTheElement(loginButton);
 		} else if (isElementLoaded(newSignInBtn, 5)) {
-			userNameField.clear();
-			userNameField.sendKeys(userName);
-			userNameField.sendKeys(Keys.ENTER);
+			newUserNameField.clear();
+			newUserNameField.sendKeys(userName);
+			newUserNameField.sendKeys(Keys.ENTER);
 			if (isElementLoaded(newPasswordInput, 3)) {
 				newPasswordInput.clear();
 				newPasswordInput.sendKeys(Password);
@@ -111,7 +114,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	private boolean isUserNameInputLoaded() {
 		boolean isLoaded = false;
 		try {
-			if (isElementLoaded(userNameField, 90)) {
+			if (isElementLoaded(userNameField, 90) || isElementLoaded(newUserNameField, 90)) {
 				isLoaded = true;
 			}
 		} catch (Exception e) {
