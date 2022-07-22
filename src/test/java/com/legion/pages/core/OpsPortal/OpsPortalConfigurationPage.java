@@ -6176,4 +6176,34 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			setLeaveThisPageButton();
 		}
 	}
+
+	@Override
+	public void clickHistoryButton() throws Exception{
+		if(isElementLoaded(historyButton,3)){
+			clickTheElement(historyButton);
+			if(isElementLoaded(closeIcon,2)){
+				SimpleUtils.pass("User can click history Button successfully");
+			}else {
+				SimpleUtils.fail("User can't click history Button",false);
+			}
+		}
+	}
+
+	@FindBy(css="div.lg-slider-pop__content li.allow")
+	private List<WebElement> historyRecordsList;
+
+	@Override
+	public void verifyRecordIsClickable() throws Exception{
+		if(areListElementVisible(historyRecordsList,3)){
+			WebElement templateName = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo"));
+			clickTheElement(templateName);
+			waitForSeconds(4);
+			if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
+					&&isElementEnabled(templateDetailsPageForm)&&!isElementEnabled(closeIcon)){
+				SimpleUtils.pass("User can navigate to template details page via history panel");
+			}else {
+				SimpleUtils.fail("User can't navigate to template details page via history panel",false);
+			}
+		}
+	}
 }
