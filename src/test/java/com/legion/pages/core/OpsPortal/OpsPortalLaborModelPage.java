@@ -648,7 +648,7 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 				List<String> infos = new ArrayList<>();
 				String name = attribute.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
 				String value = attribute.findElement(By.cssSelector("td:nth-child(2) div")).getAttribute("innerText").trim();
-				String des = attribute.findElement(By.cssSelector("td:nth-child(3)")).getText().trim();
+				String des = attribute.findElement(By.cssSelector("td:nth-child(3) div")).getAttribute("innerText").trim();
 				infos.add(0,value);
 				infos.add(1,des);
 				infoForEachAttribute.put(name,infos);

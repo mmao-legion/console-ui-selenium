@@ -325,4 +325,6 @@ public interface LocationsPage {
     public void selectBudgetGroup(String optionValue) throws Exception;
 
     public void sMGoToSubLocationsInLocationsPage() throws Exception;
-    }
+    public boolean isOverrideStatusAtLocationLevel(String templateName) throws Exception;
+    public boolean isRemoveDynamicEmployeeGroupPopUpShowing();
+}

@@ -2397,11 +2397,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				if(isElementEnabled(welcomeCloseButton, 5)){
 					clickTheElement(welcomeCloseButton);
 				}
-				if(isElementEnabled(taTemplateSpecialField, 5)){
-					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
-					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
-					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
-				}
+//				if(isElementEnabled(taTemplateSpecialField, 5)){
+//					clickTheElement(taTemplateSpecialField.findElement(By.cssSelector("input")));
+//					taTemplateSpecialField.findElement(By.cssSelector("input")).clear();
+//					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
+//				}
+				scrollToBottom();
 				if(isElementEnabled(saveAsDraftButton, 5)
 						&& isElementLoaded(templateDetailsAssociateTab, 10)
 						&& isElementLoaded(templateDetailsBTN, 10)
@@ -3242,13 +3243,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement dynamicGroupEditBTN;
 	@FindBy(css="modal[modal-title=\"Remove Dynamic Location Group\"] lg-button[label=\"Remove\"]")
 	private WebElement dynamicGroupRemoveBTNOnDialog;
-
+//	@FindBy(css="lg-search input[placeholder=\"You can search by name, label and description\"]")
+//	private WebElement searchDynamicEmployeeGroupsField;
 	@Override
 	public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception{
 		if(isElementEnabled(templateAssociationBTN,10)){
 			scrollToElement(templateAssociationBTN);
 			clickTheElement(templateAssociationBTN);
-			if(isElementEnabled(searchAssociateFiled,2)){
+			if(isElementEnabled(searchDynamicEmployeeGroupsField,2)){
 				SimpleUtils.pass("Click Association Tab successfully!");
 			}else {
 				SimpleUtils.fail("Failed to Click Association Tab!",false);
@@ -3264,9 +3266,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		boolean dataExist=false;
 		clickOnAssociationTabOnTemplateDetailsPage();
 		waitForSeconds(2);
-		if (isElementLoaded(searchAssociateFiled, 10)) {
-			searchAssociateFiled.clear();
-			searchAssociateFiled.sendKeys(dynamicGroupName);
+		if (isElementLoaded(searchDynamicEmployeeGroupsField, 10)) {
+			searchDynamicEmployeeGroupsField.clear();
+			searchDynamicEmployeeGroupsField.sendKeys(dynamicGroupName);
 		}
 		waitForSeconds(5);
 		if(areListElementVisible(getDriver().findElements(By.cssSelector("[ng-repeat*=\"filterdynamicGroups\"]")), 5)
@@ -3989,7 +3991,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				int i = 0;
 				while (deleteIconsDynamicEmployeeGroupList.size()>0 && i< 50) {
 					click(deleteIconsDynamicEmployeeGroupList.get(0));
-					if (opsPortalLocationsPage.isRemoveDynamicGroupPopUpShowing()) {
+					if (opsPortalLocationsPage.isRemoveDynamicEmployeeGroupPopUpShowing()) {
 						click(removeBtnInRemoveDGPopup);
 						displaySuccessMessage();
 					} else
@@ -6173,6 +6175,36 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		if (isElementLoaded(cancelButton)){
 			clickTheElement(cancelButton);
 			setLeaveThisPageButton();
+		}
+	}
+
+	@Override
+	public void clickHistoryButton() throws Exception{
+		if(isElementLoaded(historyButton,3)){
+			clickTheElement(historyButton);
+			if(isElementLoaded(closeIcon,2)){
+				SimpleUtils.pass("User can click history Button successfully");
+			}else {
+				SimpleUtils.fail("User can't click history Button",false);
+			}
+		}
+	}
+
+	@FindBy(css="div.lg-slider-pop__content li.allow")
+	private List<WebElement> historyRecordsList;
+
+	@Override
+	public void verifyRecordIsClickable() throws Exception{
+		if(areListElementVisible(historyRecordsList,3)){
+			WebElement templateName = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo"));
+			clickTheElement(templateName);
+			waitForSeconds(4);
+			if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
+					&&isElementEnabled(templateDetailsPageForm)&&!isElementEnabled(closeIcon)){
+				SimpleUtils.pass("User can navigate to template details page via history panel");
+			}else {
+				SimpleUtils.fail("User can't navigate to template details page via history panel",false);
+			}
 		}
 	}
 }

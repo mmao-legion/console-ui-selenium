@@ -504,13 +504,17 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
 
     @FindBy(xpath = "//table[@class=\"ng-scope\"]")
     private WebElement scheduleSmartCard;
+
+    @FindBy(css = "lg-button[ng-click=\"controlPanel.fns.editAction($event)\"]")
+    private WebElement editScheduleButton;
     @Override
     public HashMap<String, Float> getScheduleBudgetedHoursInScheduleSmartCard() throws Exception {
             /*
             wait schedule smart card data load
             */
         waitForSeconds(10);
-        if (isElementLoaded(scheduleSmartCard,20) ){
+        if (isElementLoaded(scheduleSmartCard,20)
+                && isElementLoaded(editScheduleButton, 10) ){
             SmartCardPage smartCardPage = new ConsoleSmartCardPage();
             HashMap<String, Float> hoursWagesText = smartCardPage.getScheduleLabelHoursAndWages();
             return hoursWagesText;

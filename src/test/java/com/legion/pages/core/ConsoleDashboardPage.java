@@ -978,7 +978,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		if (isElementLoaded(refreshButton, 20)) {
 			clickTheElement(refreshButton);
 			waitForSeconds(2);
-			if(isElementLoaded(lastUpdatedIcon, 120)
+			if(isElementLoaded(lastUpdatedIcon, 240)
 					&& lastUpdatedIcon.getText().equalsIgnoreCase("JUST UPDATED")){
 				SimpleUtils.pass("Click on Refresh button Successfully!");
 			} else
@@ -2915,9 +2915,9 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			dataOnLocationSummaryWidget.add(projectedWithinBudgetLocation);
 			String projectedOverBudgetLocation = projectedOverBudgetLocations.getText();
 			dataOnLocationSummaryWidget.add(projectedOverBudgetLocation);
-			String theHrsOverOrUnderBudget = "0 Hrs";
+			String theHrsOverOrUnderBudget = "0";
 			if (isElementLoaded(budgetHoursMessageOnLocationSummaryWidget, 5)){
-				theHrsOverOrUnderBudget = budgetHoursMessageOnLocationSummaryWidget.getText();
+				theHrsOverOrUnderBudget = budgetHoursMessageOnLocationSummaryWidget.getText().replace(" Hrs", "").replaceAll(",","");
 			}
 			dataOnLocationSummaryWidget.add(theHrsOverOrUnderBudget);
 			SimpleUtils.report("Get the data on location summary widget successfully! ");
@@ -3011,7 +3011,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@Override
 	public void clickOnViewSchedulesOnOrgSummaryWidget() throws Exception {
-		WebElement viewSchedulesLink = locationSummaryWidget.findElement(By.cssSelector(".sc-eJCack.fjssZO"));
+		WebElement viewSchedulesLink = locationSummaryWidget.findElement(By.xpath("//div[contains(text(),\"View Schedules\")]"));
 		WebElement allOrg = MyThreadLocal.getDriver().findElement(By.xpath("//div[3]//lg-picker-input/div/input-field//div"));
 		String org = allOrg.getText().contains(" ")? allOrg.getText().split(" ")[1]:allOrg.getText().replace("All ", "");
 		if (isElementLoaded(viewSchedulesLink, 5)) {
