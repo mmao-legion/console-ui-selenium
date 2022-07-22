@@ -47,7 +47,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     private WebElement editScheduleButton;
     @FindBy(css = "div.sch-view-dropdown-summary-content-item-heading.ng-binding")
     private WebElement analyzePopupLatestVersionLabel;
-    @FindBy(css = "[ng-click=\"goToSchedule()\"]")
+    @FindBy(css = "button[ng-click=\"goToSchedule()\"]:not([disabled])")
     private WebElement checkOutTheScheduleButton;
     @FindBy(css = "button.btn-success")
     private WebElement upgradeAndGenerateScheduleBtn;

@@ -417,7 +417,7 @@ public class DragAndDropTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "KendraScott2_Enterprise")
-    @TestName(description = "Validate the box interaction color and message for TM status: overtime")
+    @TestName(description = "Validate the box interaction color and message when TM status is overtime")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySwapWarningModelForOvertimeAsInternalAdmin(String browser, String username, String password, String location) {
         try {
@@ -737,6 +737,7 @@ public class DragAndDropTest extends TestBase {
             teamPage.rejectAllTheTimeOffRequests();
             Thread.sleep(5000);
             teamPage.goToTeam();
+            Thread.sleep(5000);
             teamPage.searchAndSelectTeamMemberByName(firstNameOfTM2);
             profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
             teamPage.rejectAllTheTimeOffRequests();
@@ -898,7 +899,6 @@ public class DragAndDropTest extends TestBase {
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
             String anotherLocation = "New York Central Park";
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.changeLocation(anotherLocation);

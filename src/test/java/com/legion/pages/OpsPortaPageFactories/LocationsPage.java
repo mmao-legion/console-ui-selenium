@@ -326,4 +326,5 @@ public interface LocationsPage {
 
     public void sMGoToSubLocationsInLocationsPage() throws Exception;
     public boolean isOverrideStatusAtLocationLevel(String templateName) throws Exception;
+    public boolean isRemoveDynamicEmployeeGroupPopUpShowing();
 }
