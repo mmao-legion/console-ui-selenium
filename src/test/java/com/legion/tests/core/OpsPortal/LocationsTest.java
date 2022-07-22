@@ -1735,8 +1735,8 @@ public class LocationsTest extends TestBase {
                 } else {
                     SimpleUtils.fail("Template level external attributes description of " + key + " is updated after updating location level attributes", false);
                 }
+                break;
             }
-            break;
         }
 
         //Back to global level checking the description should not be updated
