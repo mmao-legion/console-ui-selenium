@@ -87,6 +87,9 @@ public class AbsentManagePage extends BasePage {
     private WebElement archiveButton;
     @FindBy(css = "lg-button[label='Delete']>button")
     private WebElement deleteButton;
+    @FindBy(css = "lg-search[placeholder='You can search by time off reason name']>input-field input")
+    private WebElement timeOffSearchBox;
+
     //delete modal
     @FindBy(css = "modal div.model-content")
     private WebElement deleteConfirmMessage;
@@ -175,7 +178,34 @@ public class AbsentManagePage extends BasePage {
     private WebElement theFirstAssociateGroup;
     @FindBy(css = "lg-button[label='Save']")
     private WebElement saveAssociate;
-
+    @FindBy(css = "lg-search[placeholder='You can search by name, label and description']>input-field input")
+    private WebElement associateSearch;
+    @FindBy(css = "lg-templates-table h3")
+    private WebElement templateListLabel;//Review and configure the list of time off management templates. Add and take an action.
+    @FindBy(css = "lg-tab[tab-title='Association'] div.lg-tab-toolbar__content div.lg-pagination__arrow--left")
+    private WebElement previousPage;
+    @FindBy(css = "lg-tab[tab-title='Association'] div.lg-tab-toolbar__content div.lg-pagination__arrow--right")
+    private WebElement nextPage;
+    @FindBy(css = "lg-tab[tab-title='Association'] div.lg-tab-toolbar__content div.lg-pagination__pages select>option[selected='selected']")
+    private WebElement currentPage;
+    @FindBy(css = "table.lg-table.templateAssociation_table tr:nth-child(2)>td:nth-child(2)")
+    private WebElement dynamicEmployeeGroupName;
+    @FindBy(css = "table.lg-table.templateAssociation_table tr:nth-child(2)>td:nth-child(3)")
+    private WebElement dynamicEmployeeGroupDesc;
+    @FindBy(css = "table.lg-table.templateAssociation_table tr>td:nth-child(4)")
+    private List<WebElement> dynamicEmployeeGroupLabel;
+    @FindBy(css = "table.lg-table.templateAssociation_table tr:nth-child(2)>td:nth-child(5) lg-button[label='View'] button")
+    private WebElement viewBtnInAssociate;
+    @FindBy(css = "modal[modal-title='Manage Dynamic Employee Group'] h1")
+    private WebElement viewModalTitle;
+    @FindBy(css = "lg-tab[tab-title='Association'] lg-button[label='Cancel']>button")
+    private WebElement cancelBtnInAssociate;
+    @FindBy(css = "modal[modal-title='Cancel Editing?'] lg-button[label='Yes']>button")
+    private WebElement yesToCancel;
+    @FindBy(css = "lg-tab[tab-title='Association'] lg-button[label='Save']>button")
+    private WebElement saveBtnInAssociate;
+    @FindBy(css = "lg-button[label='Leave this page']>button")
+    private WebElement leavePageBtn;
 
     //setting page
     @FindBy(css = "div.basic-setting-info>question-input")
@@ -207,10 +237,6 @@ public class AbsentManagePage extends BasePage {
     private WebElement removeButton;
     @FindBy(css = "modal form p.lg-modal__content.lg-modal__text")
     private WebElement removeConfirmMes;
-
-    //associate
-    @FindBy(css = "lg-search[placeholder='You can search by name, label and description']>input-field input")
-    private WebElement associateSearch;
 
     //Promotion part
     @FindBy(css = "div.promotion-setting h1")
@@ -279,8 +305,16 @@ public class AbsentManagePage extends BasePage {
     private WebElement removeModalContent;
 
     //home page methods
+    public boolean isBackButtonDisplayed(){
+        scrollToTop();
+        return isElementDisplayed(backButton);
+    }
     public void back() {
         backButton.click();
+        if(isElementDisplayed(leavePageBtn)){
+            toLeavePage();
+        }
+        waitForSeconds(3);
     }
 
     public boolean isTemplateTabDisplayed() {
@@ -339,6 +373,7 @@ public class AbsentManagePage extends BasePage {
         if (isElementLoaded(closeWakeme, 10)) {
             click(closeWakeme);
         }
+        waitForSeconds(3);
     }
 
     public void closeWelcomeModal() {
@@ -358,6 +393,12 @@ public class AbsentManagePage extends BasePage {
         templateSearchBox.sendKeys(searchText);
         //searchIcon.click();
         waitForSeconds(3);
+    }
+
+    public void searchTimeOff(String timeOff){
+        timeOffSearchBox.clear();
+        timeOffSearchBox.sendKeys(timeOff);
+        waitForSeconds(2);
     }
 
     public String noMatch() {
@@ -478,7 +519,6 @@ public class AbsentManagePage extends BasePage {
 
     public void archivePublishedTemplate() {
         archiveButton.click();
-
     }
 
     public boolean isDeleteButtonDisplayed() {
@@ -494,16 +534,20 @@ public class AbsentManagePage extends BasePage {
     }
 
     public void switchToAssociation() {
+        waitForSeconds(5);
         associationTab.click();
     }
 
     public void associateTemplate(String groupName) {
         switchToAssociation();
+        searchDynamicGroup(groupName);
+        theFirstAssociateGroup.click();
+    }
+
+    public void searchDynamicGroup(String groupName){
         associateSearch.clear();
         associateSearch.sendKeys(groupName);
-        theFirstAssociateGroup.click();
-        scrollToBottom();
-        saveAssociate.click();
+        waitForSeconds(2);
     }
 
     public String getCanEmployeeRequestLabel() {
@@ -587,14 +631,14 @@ public class AbsentManagePage extends BasePage {
     }
 
     public void viewTimeOffConfigure(String timeOff) throws Exception {
-        search(timeOff);
+        searchTimeOff(timeOff);
         isButtonClickable(view);
         System.out.println("View button is shown and clickable!");
         view.click();
     }
 
     public void configureTimeOffRules(String timeOff) throws Exception {
-        search(timeOff);
+        searchTimeOff(timeOff);
         waitForSeconds(5);
         if (isButtonClickable(configure)) {
             System.out.println("Configure button is shown and clickable!");
@@ -620,7 +664,7 @@ public class AbsentManagePage extends BasePage {
     }
 
     public void removeTimeOffRules(String timeOff) throws Exception {
-        search(timeOff);
+        searchTimeOff(timeOff);
         if (isButtonClickable(remove)) {
             System.out.println("Remove button is shown and clickable!");
             remove.click();
@@ -865,6 +909,74 @@ public class AbsentManagePage extends BasePage {
             hasPromotionRule=false;
         }
      return hasPromotionRule;
+    }
+
+    public String getTemplateListLabel() {
+        return templateListLabel.getText();
+    }
+
+    public void goToPreviousPage() {
+        previousPage.click();
+    }
+
+    public void goToNextPage() {
+        nextPage.click();
+    }
+
+    public String getCurrentPage() {
+        waitForSeconds(3);
+        return currentPage.getText();
+    }
+
+    public String getDynamicEmployeeGroupName() {
+        return dynamicEmployeeGroupName.getText();
+    }
+
+    public String getDynamicEmployeeGroupDesc() {
+        return dynamicEmployeeGroupDesc.getText();
+    }
+
+    public ArrayList getDynamicEmployeeGroupLabs() {
+        return getWebElementsText(dynamicEmployeeGroupLabel);
+    }
+
+    public void viewEmployeeGroup() {
+        viewBtnInAssociate.click();
+    }
+
+    public String getViewModalTitle() {
+        return viewModalTitle.getText();
+    }
+
+    public void cancelAssociation() {
+        cancelBtnInAssociate.click();
+        waitForSeconds(2);
+        yesToCancel.click();
+        if (isElementDisplayed(leavePageBtn)) {
+            toLeavePage();
+        }
+        waitForSeconds(2);
+    }
+
+    public void saveAssociation() {
+        saveAssociate.click();
+        waitForSeconds(2);
+    }
+
+    public void toLeavePage() {
+        leavePageBtn.click();
+    }
+
+    public void deleteOrArchiveTemplate(String temp) {
+        search(temp);
+        clickInDetails();
+        waitForSeconds(3);
+        if (isDeleteButtonDisplayed()) {
+            deleteButton.click();
+        } else {
+            archivePublishedTemplate();
+        }
+        okToActionInModal(true);
     }
 
     @FindBy(css = "div.text-danger.text-invalid-range.ng-binding")
