@@ -69,7 +69,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     private WebElement generateModalTitle;
     @FindBy(css = "[class=\"modal-instance-button confirm ng-binding\"]")
     private WebElement nextButtonOnCreateSchedule;
-    @FindBy(css = "[label='Generate Schedule']")
+    @FindBy(css = "button[ng-click=\"okAction()\"]")
     private WebElement generateSheduleForEnterBudgetBtn;
     @FindBy(xpath = "//button[contains(text(),'UPDATE')]")
     private WebElement updateAndGenerateScheduleButton;
@@ -355,6 +355,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     }
 
 
+    @FindBy(className = "generate-modal-header")
+    private WebElement copyScheduleWeekModalTitle;
     @Override
     public void createScheduleForNonDGFlowNewUI() throws Exception {
         String subTitle = "Confirm Operating Hours";
@@ -386,7 +388,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 //                switchToManagerViewToCheckForSecondGenerate();
             } else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
-                if (isElementEnabled(checkOutTheScheduleButton, 30)) {
+                if (isElementEnabled(checkOutTheScheduleButton, 10)) {
                     checkoutSchedule();
 //                    switchToManagerViewToCheckForSecondGenerate();
                 } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
@@ -395,6 +397,9 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 } else {
                     SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
                 }
+            } else if (isElementLoaded(copyScheduleWeekModalTitle, 5)){
+                selectWhichWeekToCopyFrom("SUGGESTED");
+                clickOnFinishButtonOnCreateSchedulePage();
             } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                 updateAndGenerateSchedule();
 //                switchToManagerViewToCheckForSecondGenerate();
@@ -402,6 +407,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
                 SimpleUtils.pass("Schedule Generated Successfully!");
 //                switchToManagerViewToCheckForSecondGenerate();
+            }else if (isWeekGenerated()) {
+                SimpleUtils.pass("Schedule Generated Successfully!");
             } else {
                 SimpleUtils.fail("Not able to generate schedule Successfully!", false);
             }
@@ -888,7 +895,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 //                switchToManagerViewToCheckForSecondGenerate();
             } else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
-                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                if (isElementEnabled(checkOutTheScheduleButton, 10)) {
                     checkoutSchedule();
 //                    switchToManagerViewToCheckForSecondGenerate();
                 } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
@@ -897,6 +904,9 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 } else {
                     SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
                 }
+            } else if (isElementLoaded(copyScheduleWeekModalTitle, 5)){
+                selectWhichWeekToCopyFrom("SUGGESTED");
+                clickOnFinishButtonOnCreateSchedulePage();
             } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                 updateAndGenerateSchedule();
 //                switchToManagerViewToCheckForSecondGenerate();
@@ -904,6 +914,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
                 SimpleUtils.pass("Schedule Generated Successfully!");
 //                switchToManagerViewToCheckForSecondGenerate();
+            } else if (isWeekGenerated()) {
+                SimpleUtils.pass("Schedule Generated Successfully!");
             } else {
                 SimpleUtils.fail("Not able to generate schedule Successfully!", false);
             }
