@@ -211,4 +211,5 @@ public interface ConfigurationPage {
     public void clickOnCancelButton() throws Exception;
     public void clickHistoryButton() throws Exception;
     public void verifyRecordIsClickable() throws Exception;
+    public boolean verifyWarningForDemandDriver(String warningMsg) throws Exception;
 }
