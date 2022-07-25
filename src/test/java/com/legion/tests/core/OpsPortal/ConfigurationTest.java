@@ -3392,7 +3392,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
 
-            configurationPage.goToItemInConfiguration("Minors Rules");
+            configurationPage.goToItemInConfiguration("Pay Rules");
             configurationPage.searchTemplate("AuditLog");
             configurationPage.clickOnTemplateName("AuditLog");
             configurationPage.verifyHistoryButtonDisplay();
@@ -3411,7 +3411,6 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickHistoryAndClose();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-
 
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickOnLocationsTab();
