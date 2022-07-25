@@ -4955,7 +4955,6 @@ private List<WebElement> locationColumn;
 	@Override
 	public void clickTheTMByName(String tmName) throws Exception {
 		if (areListElementVisible(filteredTMs, 10)) {
-			System.out.println("-----------------> " + areListElementVisible(filteredTMs, 10));
 			for (WebElement elm : filteredTMs) {
 				if (elm.getText().trim().equalsIgnoreCase(tmName.trim())) {
 					click(elm);
