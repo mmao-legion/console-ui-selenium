@@ -212,4 +212,7 @@ public interface ConfigurationPage {
     public void clickHistoryButton() throws Exception;
     public void verifyRecordIsClickable() throws Exception;
     public boolean verifyWarningForDemandDriver(String warningMsg) throws Exception;
+    public void verifyTemplateHistoryUI() throws Exception;
+    public void verifyTemplateHistoryContent() throws Exception;
+    public void verifyOrderOfTheTemplateHistory() throws Exception;
 }
