@@ -2897,7 +2897,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = "[ng-click=\"editUserProfile()\"]")
 	private WebElement editBtnOfProfile;
 
-	@FindBy(xpath = "//div[contains(text(),\"NAME\")]/../span")
+	@FindBy(xpath = "//div[contains(text(),\"Name\")]/../span")
 	private WebElement nameOfProfile;
 
 	@Override
