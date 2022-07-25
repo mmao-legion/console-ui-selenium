@@ -6330,4 +6330,65 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}
 	}
+
+	@FindBy(css = "h1.lg-slider-pop__title")
+	private WebElement historyPanelHeader;
+	@FindBy(css = "div.lg-slider-pop")
+	private WebElement historyPanel;
+
+	@Override
+	public void verifyTemplateHistoryUI() throws Exception {
+		if (isElementEnabled(historyPanelHeader, 2) && areListElementVisible(historyRecordsList, 2)
+				&& isElementEnabled(historyPanel, 2)) {
+			SimpleUtils.pass("Template history panel can show well");
+		} else {
+			SimpleUtils.fail("Template history panel can't show well", false);
+		}
+	}
+
+	@Override
+	public void verifyTemplateHistoryContent() throws Exception {
+		if (areListElementVisible(historyRecordsList, 2)) {
+			String content1 = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
+			String content2 = historyRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
+			if ((content1.contains("Edited") || content1.contains("Deleted") || content1.contains("Published") || content1.contains("Created")
+					|| content1.contains("set to publish on")) && content1.contains("Version") && content1.contains("/2022") && content2.contains("Fiona")
+					&& content2.contains("at") && content2.contains("/2022")) {
+				SimpleUtils.pass("History Content can show well");
+			} else {
+				SimpleUtils.fail("History Content can show well", false);
+			}
+		}
+	}
+
+	@Override
+	public void verifyOrderOfTheTemplateHistory() throws Exception {
+		if (areListElementVisible(historyRecordsList, 2)) {
+			for (WebElement historyRecord : historyRecordsList) {
+				String str = historyRecord.findElement(By.cssSelector("p")).getText().trim();
+				String strBefore = str.substring(0, str.indexOf("at"));
+				//date is 19:00:37 PM,07/22/2022
+				String[] dateTime = str.substring(strBefore.length() + 3, str.length()).split(",");
+
+				//compare date and time
+				List<Date> dates = new ArrayList<Date>();
+				List<Date> dates1 = new ArrayList<Date>();
+				//Verify the effective date should be order by Ascending
+				//format the date and add to list
+				SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy",Locale.ENGLISH);
+//    for(String effectiveDate:dateTime[1]){
+//     Date date = sdf.parse(effectiveDate);
+//     dates.add(date);
+//     dates1.add(date);
+//    }
+				Collections.sort(dates1);
+
+				if(ListUtils.isEqualList(dates,dates1)){
+					SimpleUtils.pass("The date is ordered by ascending");
+				}else{
+					SimpleUtils.fail("The date is not ordered by ascending",false);
+				}
+			}
+		}
+	}
 }
