@@ -1143,4 +1143,80 @@ public class UserManagementTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify user can view template if user only have template localization permission +View template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUserPermissionpAsSMA(String browser, String username, String password, String location) throws Exception {
+        try {
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.sMGoToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+
+            String[] action = {"View"};
+            locationsPage.verifyActionsForTemplate("Assignment Rules", action);
+            locationsPage.verifyActionsForTemplate("Scheduling Rules", action);
+            locationsPage.verifyActionsForTemplate("Labor Model", action);
+            locationsPage.verifyActionsForTemplate("Operating Hours", action);
+            locationsPage.verifyActionsForTemplate("Compliance", action);
+            locationsPage.verifyActionsForTemplate("Scheduling Policies", action);
+            locationsPage.verifyActionsForTemplate("Schedule Collaboration", action);
+            locationsPage.verifyActionsForTemplate("Time and Attendance", action);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify user can create/edit template if user only have template localization permission+ create/edit template permission")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUserPermissionAsSMB(String browser, String username, String password, String location) throws Exception {
+        try {
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Operating Hours");
+            configurationPage.verifyNewTemplateIsClickable();
+
+            //get template level info of Scheduling rules
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Scheduling Rules");
+            configurationPage.verifyNewTemplateIsClickable();
+
+            //get template level info of Scheduling collaboration
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
+            configurationPage.verifyNewTemplateIsClickable();
+
+            //get template level info of TA
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Time and Attendance");
+            configurationPage.verifyNewTemplateIsClickable();
+
+            //get template level info of Schedule policy
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Scheduling Policies");
+            configurationPage.verifyNewTemplateIsClickable();
+
+            //get template level info of Compliance
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Compliance");
+            configurationPage.verifyNewTemplateIsClickable();
+
+            //go to labor model tab to get specific template value
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            configurationPage.verifyNewTemplateIsClickable();
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

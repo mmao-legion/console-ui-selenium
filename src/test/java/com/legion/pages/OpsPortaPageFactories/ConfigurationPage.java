@@ -215,4 +215,5 @@ public interface ConfigurationPage {
     public void verifyTemplateHistoryUI() throws Exception;
     public void verifyTemplateHistoryContent() throws Exception;
     public void verifyOrderOfTheTemplateHistory() throws Exception;
+    public void verifyNewTemplateIsClickable() throws Exception;
 }
