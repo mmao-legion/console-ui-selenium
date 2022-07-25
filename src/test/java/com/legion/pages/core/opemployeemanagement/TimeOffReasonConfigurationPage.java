@@ -391,6 +391,24 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         return element.getText();
     }
 
+    //Set time off rules
+    public void setTimeOffRules(Boolean canRequest, Boolean partialDay, Boolean submitInTimesheet, String weeklyLimits, String daysInAdvance, String allDayDefault, String daysCanRequestOneTime, Boolean autoReject, Boolean overTime, Boolean trackAccrual, String maxHorsInAdvance, Boolean enforceYearlyLimits, String probationPeriod, String probationUnit, String annualUseLimit) {
+        setTimeOffRequestRuleAs("Employee can request ?", canRequest);
+        setTimeOffRequestRuleAs("Employee can request partial day ?", partialDay);
+        setTimeOffRequestRuleAs("Manager can submit in timesheet ?", submitInTimesheet);
+        setValueForTimeOffRequestRules("Weekly limits(hours)", weeklyLimits);
+        setValueForTimeOffRequestRules("Days request must be made in advance", daysInAdvance);
+        setValueForTimeOffRequestRules("Configure all day time off default", allDayDefault);
+        setValueForTimeOffRequestRules("Days an employee can request at one time", daysCanRequestOneTime);
+        setTimeOffRequestRuleAs("Auto reject time off which exceed accrued hours ?", autoReject);
+        setTimeOffRequestRuleAs("Allow Paid Time Off to compute to overtime ?", overTime);
+        setTimeOffRequestRuleAs("Does this time off reason track Accruals ?", trackAccrual);
+        setValueForTimeOffRequestRules("Max hours in advance of what you earn", maxHorsInAdvance);
+        setTimeOffRequestRuleAs("Enforce Yearly Limits", enforceYearlyLimits);
+        setValueForTimeOffRequestRules("Probation Period", probationPeriod);
+        setProbationUnitAs(probationUnit);
+        setValueForTimeOffRequestRules("Annual Use Limit", annualUseLimit);
+    }
 
     public ArrayList<String> getProbationPeriodUnitOptions() {
         ArrayList<String> opt = new ArrayList<String>();

@@ -997,6 +997,21 @@ public class BasePage {
         return flag;
     }
 
+    public static boolean isEleExist(String xpathLocator)
+    {
+        boolean flag;
+        try {
+            if(getDriver().findElements(By.xpath(xpathLocator)).size()>0){
+                flag = true;
+            }else {
+                flag = false;
+            }
+        } catch (NoSuchElementException e) {
+            flag = false;
+        }
+        return flag;
+    }
+
 //
 //
 //     public void assertIsDisplay(Map<String,String> map){

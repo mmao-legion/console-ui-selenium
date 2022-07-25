@@ -4967,7 +4967,7 @@ private List<WebElement> locationColumn;
 		}
 	}
 
-	@FindBy (css = "form-section[on-action=\"editProfile()\"] lg-button[label=\"Edit\"]")
+	@FindBy (css = "[ng-click=\"editUserProfile()\"] [type=\"button\"]")
 	private WebElement editProfileBtn;
 
 	@Override

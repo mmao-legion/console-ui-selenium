@@ -3392,7 +3392,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
 
-            configurationPage.goToItemInConfiguration("Minors Rules");
+            configurationPage.goToItemInConfiguration("Pay Rules");
             configurationPage.searchTemplate("AuditLog");
             configurationPage.clickOnTemplateName("AuditLog");
             configurationPage.verifyHistoryButtonDisplay();
@@ -3411,7 +3411,6 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickHistoryAndClose();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-
 
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickOnLocationsTab();
@@ -3503,6 +3502,27 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnSpecifyTemplateName(templateName,mode);
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.verifySkillCoverageBasicStaffingRule(workRole1,workRole2);
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Audit Log UI Checking")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void auditLogUIVerificationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType = "Operating Hours";
+            String mode = "view";
+            String templateName = "AuditLogAutoUsing";
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickHistoryButton();
+            configurationPage.verifyRecordIsClickable();
         }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
