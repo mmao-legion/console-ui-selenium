@@ -3506,7 +3506,7 @@ public class ConfigurationTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Audit Log")
+    @TestName(description = "Audit Log History Button")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void auditLogVerificationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
@@ -3714,7 +3714,50 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnConfigurationCrad(templateType);
             configurationPage.clickOnSpecifyTemplateName(templateName,mode);
             configurationPage.clickHistoryButton();
+            configurationPage.verifyTemplateHistoryUI();
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Audit Log Button")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void auditLogHistoryButtonVerificationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType = "Operating Hours";
+            String mode = "view";
+            String templateName = "AuditLogAutoUsing";
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickHistoryButton();
             configurationPage.verifyRecordIsClickable();
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Template History Content Check")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void auditLogContentVerificationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType = "Operating Hours";
+            String mode = "view";
+            String templateName = "AuditLogAutoUsing";
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickHistoryButton();
+            configurationPage.verifyTemplateHistoryContent();
+
         }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
