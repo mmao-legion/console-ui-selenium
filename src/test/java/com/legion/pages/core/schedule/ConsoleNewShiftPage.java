@@ -186,6 +186,18 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             click(btnSave);
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
         }else if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
+            try {
+                if (isElementLoaded(shiftStartInputOnNewCreateShiftPage, 3) && isElementLoaded(shiftEndInputOnNewCreateShiftPage, 3)) {
+                    if (!shiftEndInputOnNewCreateShiftPage.getAttribute("value").contains("AM") && !shiftEndInputOnNewCreateShiftPage.getAttribute("value").contains("PM")) {
+                        moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+                    }
+                    if (!shiftStartInputOnNewCreateShiftPage.getAttribute("value").contains("AM") && !shiftStartInputOnNewCreateShiftPage.getAttribute("value").contains("PM")) {
+                        moveSliderAtCertainPoint("7am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+                    }
+                }
+            } catch (Exception e) {
+                // Do Nothing
+            }
             click(btnSaveOnNewCreateShiftPage);
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
         }else {
