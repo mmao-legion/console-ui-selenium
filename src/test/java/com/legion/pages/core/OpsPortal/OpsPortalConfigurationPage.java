@@ -3956,7 +3956,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css = "lg-button[label=\"Remove\"]")
 	private WebElement removeBtnInRemoveDGPopup;
 
-	@FindBy(css = "lg-search input")
+	@FindBy(css = "lg-global-dynamic-group-table lg-search input")
 	private WebElement searchDynamicEmployeeGroupsField;
 	@Override
 	public void deleteAllDynamicEmployeeGroupsInList() throws Exception {
@@ -6046,7 +6046,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		int templateCount = templateNameList.size();
 		if (isTemplateListPageShow()) {
 			SimpleUtils.pass("Demand Driver template list is showing now");
-			System.out.println("template list size is: " + templateNameList.size());
 			for (int i = 0; i < templateCount; i++) {
 				archiveOrDeleteTemplate(templateNameList.get(0).getText());
 			}
