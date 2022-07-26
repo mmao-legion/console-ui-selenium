@@ -47,7 +47,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     private WebElement editScheduleButton;
     @FindBy(css = "div.sch-view-dropdown-summary-content-item-heading.ng-binding")
     private WebElement analyzePopupLatestVersionLabel;
-    @FindBy(css = "[ng-click=\"goToSchedule()\"]")
+    @FindBy(css = "button[ng-click=\"goToSchedule()\"]:not([disabled])")
     private WebElement checkOutTheScheduleButton;
     @FindBy(css = "button.btn-success")
     private WebElement upgradeAndGenerateScheduleBtn;
@@ -364,8 +364,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 //            waitForSeconds(3);
             clickTheElement(generateSheduleButton);
 //            openBudgetPopUp();
-            if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
-                    && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
+            if (isElementLoaded(generateModalTitle, 20) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
+                    && isElementLoaded(nextButtonOnCreateSchedule, 20)) {
                 editTheOperatingHours(new ArrayList<>());
 //                waitForSeconds(3);
                 if (isClickable(nextButtonOnCreateSchedule, 10)) {
@@ -379,11 +379,19 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                         clickTheElement(nextButtonOnCreateSchedule);
                     }
                 }
-                if (isElementEnabled(checkOutTheScheduleButton, 5)) {
-                    checkoutSchedule();
-                } else {
+                if (isElementEnabled(suggestScheduleModalWeek, 50)) {
                     selectWhichWeekToCopyFrom("SUGGESTED");
                     clickOnFinishButtonOnCreateSchedulePage();
+                } else {
+                    WebElement element = (new WebDriverWait(getDriver(), 120))
+                            .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
+                    waitForSeconds(3);
+                    if (isElementLoaded(element, 15) && isClickable(element, 15)) {
+                        checkoutSchedule();
+                        SimpleUtils.pass("Schedule Page: Schedule is generated within 2 minutes successfully");
+                    } else {
+                        SimpleUtils.fail("Schedule Page: Schedule isn't generated within 2 minutes", false);
+                    }
                 }
 //                switchToManagerViewToCheckForSecondGenerate();
             } else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {

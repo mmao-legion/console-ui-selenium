@@ -186,6 +186,18 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             click(btnSave);
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
         }else if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
+            try {
+                if (isElementLoaded(shiftStartInputOnNewCreateShiftPage, 3) && isElementLoaded(shiftEndInputOnNewCreateShiftPage, 3)) {
+                    if (!shiftEndInputOnNewCreateShiftPage.getAttribute("value").contains("AM") && !shiftEndInputOnNewCreateShiftPage.getAttribute("value").contains("PM")) {
+                        moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+                    }
+                    if (!shiftStartInputOnNewCreateShiftPage.getAttribute("value").contains("AM") && !shiftStartInputOnNewCreateShiftPage.getAttribute("value").contains("PM")) {
+                        moveSliderAtCertainPoint("7am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+                    }
+                }
+            } catch (Exception e) {
+                // Do Nothing
+            }
             click(btnSaveOnNewCreateShiftPage);
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
         }else {
@@ -2161,8 +2173,14 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     }
                 } else {
                     if (nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
+                        if (!isElementLoaded(nextDayTooltip, 5)) {
+                            moveToElementAndClick(nextDayIcon);
+                        }
                         clickTheElement(nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root input")));
                         waitForSeconds(2);
+                        if (!isElementLoaded(nextDayTooltip, 5)) {
+                            moveToElementAndClick(nextDayIcon);
+                        }
                         if (!nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
                             SimpleUtils.pass("Uncheck Next day checkbox successfully! ");
                         } else
@@ -2770,7 +2788,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private List<WebElement> buttonsOnConfirmPopup;
     @FindBy(css = "[data-testid=\"confirm-console-wrapper\"] div p")
     private WebElement titleOnConfirmPopup;
-    @FindBy(xpath = "//div[contains(@data-testid,'confirm-console-wrapper')]/p")
+    @FindBy(xpath = "//div[contains(@data-testid,'confirm-console-wrapper')]/div/span")
     private WebElement messageOnConfirmPopup;
     public boolean checkConfirmPopupIsLoaded() throws Exception {
         boolean isLoaded = false;

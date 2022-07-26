@@ -4956,14 +4956,14 @@ private List<WebElement> locationColumn;
 	public void clickTheTMByName(String tmName) throws Exception {
 		if (areListElementVisible(filteredTMs, 10)) {
 			for (WebElement elm : filteredTMs) {
-				if (elm.getText().equalsIgnoreCase(tmName)) {
-					clickTheElement(elm);
+				if (elm.getText().trim().equalsIgnoreCase(tmName.trim())) {
+					click(elm);
 					waitForSeconds(3);
 					SimpleUtils.pass("TM has been clicked!");
 				}
 			}
 		} else {
-			SimpleUtils.fail("No vailed TM filtered! TM name is: " + tmName, false);
+			SimpleUtils.fail("No vailed TM filtered! TM name is: " + tmName, true);
 		}
 	}
 
@@ -5034,6 +5034,9 @@ private List<WebElement> locationColumn;
 		}
 	}
 
+	@FindBy (css = "[ng-repeat=\"oneBadge in badges\"]")
+	private List<WebElement> badgeRowsInfo;
+
 	@FindBy (css = ".badge-title")
 	private List<WebElement> badgeTitleListOnPopup;
 
@@ -5047,29 +5050,24 @@ private List<WebElement> locationColumn;
 		} else {
 			SimpleUtils.fail("Badge edit button is not loaded!", false);
 		}
-		if (areListElementVisible(badgeCheckBoxes, 15) && areListElementVisible(badgeTitleListOnPopup, 10)) {
-			SimpleUtils.assertOnFail("The number of bage checkbox didn't match the badge titles", badgeCheckBoxes.size() == badgeTitleListOnPopup.size(), false);
-			int badgeIndex = -1;
-			for (WebElement elm : badgeTitleListOnPopup) {
-				if (elm.getText().equalsIgnoreCase(badgeName)) {
-					badgeIndex ++;
-					break;
+		if (areListElementVisible(badgeRowsInfo, 15) && areListElementVisible(badgeTitleListOnPopup, 10)) {
+			for (WebElement elm : badgeRowsInfo) {
+				WebElement targetBadgeNameElm = elm.findElement(By.cssSelector(".badge-title"));
+				WebElement targetCheckBox = elm.findElement(By.className("lgnCheckBox"));
+				if (targetBadgeNameElm.getText().equalsIgnoreCase(badgeName)) {
+					scrollToElement(targetCheckBox);
+					clickTheElement(targetCheckBox);
+					waitForSeconds(2);
+					if (targetCheckBox.getAttribute("class").contains("checked")) {
+						SimpleUtils.pass("Check the Badge successfully!");
+					} else {
+						SimpleUtils.fail("Failed for selecting the checkbox for " + badgeName, true);
+					}
 				}
 			}
-
-			if (badgeIndex < 0) {
-				SimpleUtils.fail("No badge found!", false);
-			}
-
-			scrollToElement(badgeCheckBoxes.get(badgeIndex));
-			clickTheElement(badgeCheckBoxes.get(badgeIndex));
-
-			if (badgeCheckBoxes.get(badgeIndex).getAttribute("class").contains("checked")) {
-				SimpleUtils.pass("Check the Badge successfully!");
-			} else {
-				SimpleUtils.fail("Failed to find the parent element!", true);
-			}
 			clickBadgeSaveBtn();
+		} else {
+			SimpleUtils.fail("Badge list in the popup is not loaded!", false);
 		}
 	}
 

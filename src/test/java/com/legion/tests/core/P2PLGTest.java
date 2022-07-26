@@ -1207,18 +1207,8 @@ public class P2PLGTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-//            dashboardPage.clickOnRefreshButtonOnSMDashboard();
-            //Get Budegeted Hrs/Scheduled Hrs/Projected Hrs/Budget Variance in District summary widget
-            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
-            String regionName = selectedUpperFields.get(Region);
-            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
-            List<String> dataOnDistrictSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
-            float budgetedHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(0));
-            float scheduledHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(1));
-            float projectedHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(2));
-            float budgetVarianceHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(5));
 
             //Get Budegeted Hrs/Scheduled Hrs/Projected Hrs/Budget Variance in location summary widget from every district
             List<String> districtNames = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList(District);
@@ -1228,12 +1218,25 @@ public class P2PLGTest extends TestBase {
             float sumBudgetVarianceHrs = 0;
             for (String districtName : districtNames) {
                 locationSelectorPage.changeUpperFieldDirect(District, districtName);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                dashboardPage.clickOnDashboardConsoleMenu();
                 List<String> dataOnLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
                 sumBudgetedHrs += Float.parseFloat(dataOnLocationSummaryWidget.get(0));
                 sumScheduledHrs += Float.parseFloat(dataOnLocationSummaryWidget.get(1));
                 sumProjectedHrs += Float.parseFloat(dataOnLocationSummaryWidget.get(2));
                 sumBudgetVarianceHrs += Float.parseFloat(dataOnLocationSummaryWidget.get(5));
             }
+
+            //            dashboardPage.clickOnRefreshButtonOnSMDashboard();
+            //Get Budegeted Hrs/Scheduled Hrs/Projected Hrs/Budget Variance in District summary widget
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            List<String> dataOnDistrictSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            float budgetedHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(0));
+            float scheduledHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(1));
+            float projectedHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(2));
+            float budgetVarianceHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(5));
 
             //Compare the value of Projected Hrs in region view with the sum of Projected Hrs in DM view
             SimpleUtils.assertOnFail("The budgeted hrs on Region View is: "+budgetedHrs

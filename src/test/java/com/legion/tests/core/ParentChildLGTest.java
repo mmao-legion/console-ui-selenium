@@ -796,7 +796,7 @@ public class ParentChildLGTest extends TestBase {
             scheduleMainPage.selectChildLocationFilterByText("Mountain View");
             if (scheduleShiftTablePage.getShiftsCount()>0){
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                shiftOperatePage.deleteTMShiftInWeekView("Open");
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
                 scheduleMainPage.saveSchedule();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -895,7 +895,7 @@ public class ParentChildLGTest extends TestBase {
             scheduleMainPage.clickOnFilterBtn();
             if (scheduleShiftTablePage.getShiftsCount()>0){
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                shiftOperatePage.deleteTMShiftInWeekView("Open");
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
                 scheduleMainPage.saveSchedule();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -993,7 +993,7 @@ public class ParentChildLGTest extends TestBase {
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         shiftOperatePage.deleteAllShiftsInDayView();
-        //shiftOperatePage.deleteTMShiftInWeekView("Open");
+        //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
         scheduleMainPage.saveSchedule();
 
 
@@ -1091,7 +1091,7 @@ public class ParentChildLGTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteAllShiftsInDayView();
-            //shiftOperatePage.deleteTMShiftInWeekView("Open");
+            //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
 
 
@@ -1195,12 +1195,12 @@ public class ParentChildLGTest extends TestBase {
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectChildLocationFilterByText("Carmel Club DG Oregon");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("Abigayle");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Abigayle");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectChildLocationFilterByText("Mountain View");
-            shiftOperatePage.deleteTMShiftInWeekView("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("Marlon");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Marlon");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = shiftOperatePage.getRandomWorkRole();
@@ -1230,7 +1230,7 @@ public class ParentChildLGTest extends TestBase {
 
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("Marlon");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Marlon");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
@@ -1360,12 +1360,12 @@ public class ParentChildLGTest extends TestBase {
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectChildLocationFilterByText("Child2");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("Abigayle");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Abigayle");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectChildLocationFilterByText("Child1");
-            shiftOperatePage.deleteTMShiftInWeekView("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("Abigayle");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Abigayle");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = shiftOperatePage.getRandomWorkRole();
@@ -1395,7 +1395,7 @@ public class ParentChildLGTest extends TestBase {
 
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("Abigayle");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Abigayle");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
@@ -1681,7 +1681,7 @@ public class ParentChildLGTest extends TestBase {
         String workRoleOfTM1 = shiftInfo.get(4);
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM1);
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
         scheduleMainPage.clickOnCloseSearchBoxButton();
         scheduleMainPage.saveSchedule();
 
@@ -1781,8 +1781,8 @@ public class ParentChildLGTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnOpenSearchBoxButton();
         scheduleMainPage.searchShiftOnSchedulePage(teamMemberName);
-        shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-        shiftOperatePage.deleteTMShiftInWeekView(teamMemberName);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMemberName);
         scheduleMainPage.saveSchedule();
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1901,8 +1901,8 @@ public class ParentChildLGTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnOpenSearchBoxButton();
         scheduleMainPage.searchShiftOnSchedulePage(teamMemberName);
-        shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-        shiftOperatePage.deleteTMShiftInWeekView(teamMemberName);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMemberName);
         scheduleMainPage.saveSchedule();
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -2495,6 +2495,7 @@ public class ParentChildLGTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -2514,13 +2515,13 @@ public class ParentChildLGTest extends TestBase {
             scheduleMainPage.selectGroupByFilter("Group by All");
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage(swapCoverNames.get(0));
-            shiftOperatePage.deleteTMShiftInWeekView(swapCoverNames.get(0));
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(swapCoverNames.get(0));
             scheduleMainPage.searchShiftOnSchedulePage(swapCoverNames.get(1));
-            shiftOperatePage.deleteTMShiftInWeekView(swapCoverNames.get(1));
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(swapCoverNames.get(1));
             scheduleMainPage.clickOnCloseSearchBoxButton();
             if(smartCardPage.isRequiredActionSmartCardLoaded()){
                 smartCardPage.clickOnViewShiftsBtnOnRequiredActionSmartCard();
-                shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
                 scheduleMainPage.clickOnFilterBtn();
                 scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
                 scheduleMainPage.clickOnFilterBtn();
@@ -2682,7 +2683,7 @@ public class ParentChildLGTest extends TestBase {
             weekDaysToClose.add("Sunday");
             createSchedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose, null);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
             //Create auto open shift.
 
@@ -3493,8 +3494,8 @@ public class ParentChildLGTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("open");
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
             scheduleMainPage.clickOnFilterBtn();
@@ -3622,7 +3623,7 @@ public class ParentChildLGTest extends TestBase {
             }
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());

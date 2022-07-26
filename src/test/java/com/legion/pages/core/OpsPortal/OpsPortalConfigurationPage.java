@@ -6081,7 +6081,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		return isStrictlyEnforceMinorViolationSettingEnabled;
 	}
 
-	@FindBy(css = "question-input[question-title=\"Can a manager add another locations' employee in schedule before the employee''s home location has published the schedule?\"] input-field")
+	@FindBy(css = "question-input[question-title=\"Can a manager add another locations' employee in schedule before the employee's home location has published the schedule?\"] input-field")
 	private WebElement canManagerAddAnotherLocationsEmployeeInSchedule;
 	@Override
 	public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception {
