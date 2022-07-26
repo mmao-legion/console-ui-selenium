@@ -6390,4 +6390,15 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}
 	}
+
+	@Override
+	public void verifyNewTemplateIsClickable() throws Exception {
+		if (isElementLoaded(newTemplateBTN, 10)) {
+			if (isClickable(newTemplateBTN, 10)) {
+				SimpleUtils.pass("can create a new template");
+			}else{
+				SimpleUtils.fail("can not create a new template",false);
+			}
+		}
+	}
 }
