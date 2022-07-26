@@ -761,7 +761,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 click(deleteMealBreakButtons.get(0));
             }
             click(continueBtnInMealBreakButton);
-            if (isElementEnabled(confirmWindow, 5) && confirmWindow.getText().contains("An employee should be scheduled for 30 minutes break for their shift")) {
+            if (isElementEnabled(confirmWindow, 5)) {
                 click(okBtnOnConfirm);
             }
 
@@ -799,7 +799,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 click(slider.findElements(By.tagName("i")).get(0));
             }
             click(continueBtnInMealBreakButton);
-            if (isElementEnabled(confirmWindow, 5) && confirmWindow.getText().contains("An employee should be scheduled for 30 minutes break for their shift")) {
+            if (isElementEnabled(confirmWindow, 5)) {
                 click(okBtnOnConfirm);
             }
         }
