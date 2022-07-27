@@ -88,5 +88,6 @@ public interface ScheduleMainPage {
     public List<String> getStaffWorkRoles ();
     public List<String> getSpecificFilterNames (String filterText) throws Exception;
     public boolean isScheduleMainPageLoaded () throws Exception;
+    public boolean isManagerViewSelected () throws Exception;
 }
 

@@ -166,4 +166,5 @@ public interface ScheduleShiftTablePage {
     public void clickOnSpecificButtonsGroupByActionPopup(String buttonName) throws Exception;
     public List<String> getButtonNamesFromGroupByActionPopup() throws Exception;
     public String getTotalBudgetFromSTAFFSmartCard() throws Exception;
+    public boolean isScheduleTableDisplay () throws Exception;
 }

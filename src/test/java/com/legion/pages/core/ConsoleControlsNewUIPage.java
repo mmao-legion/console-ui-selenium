@@ -6304,7 +6304,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 	//added by Estelle to verify centralized schedule release
-	@FindBy(css = "yes-no[value=\"sp.enterprisePreference.centralizedScheduleRelease\"]")
+	@FindBy(css = "[question-title=\"Centralized Schedule Release\"] yes-no")
 	private WebElement centralizedScheduleRelease;
 
 

@@ -77,5 +77,15 @@
             </class>
         </classes>
     </test>
-
+<!--
+    <test name="Delete Schedule Test">
+        <classes>
+            <class name="com.legion.tests.core.DeleteScheduleTest">
+                <methods>
+                    <include name="verifySMDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />
+                    <include name="verifyAdminDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test> https://legiontech.atlassian.net/browse/SCH-7212 -->
 </suite> <!-- Suite -->

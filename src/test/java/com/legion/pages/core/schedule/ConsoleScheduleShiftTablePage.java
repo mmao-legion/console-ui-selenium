@@ -1543,7 +1543,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(css = ".my-schedule-no-schedule")
     private WebElement myScheduleNoSchedule;
 
-    @FindBy(className = "sch-grid-container")
+    @FindBy(className = "sch-navigation-container")
     private WebElement scheduleTable;
 
     @FindBy(css = "div.lg-picker-input")
@@ -4306,5 +4306,17 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             SimpleUtils.fail("The STAFF Card is not loaded correctly!", false);
         }
         return totalBudgetFromSTAFFSmartCard;
+    }
+
+    @Override
+    public boolean isScheduleTableDisplay () throws Exception {
+        boolean isScheduleTableDisplay = false;
+        if (isElementLoaded(scheduleTable,10)) {
+            isScheduleTableDisplay = true;
+            SimpleUtils.report("The schedule table is display correctly! ");
+        } else {
+            SimpleUtils.report("The schedule table is not display! ");
+        }
+        return isScheduleTableDisplay;
     }
 }
