@@ -1067,7 +1067,9 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         if (isElementEnabled(generateSheduleButton, 10)) {
             click(generateSheduleButton);
             openBudgetPopUp();
-
+            if (checkIfCheckOutButtonLoaded()){
+                checkoutSchedule();
+            }
         } else {
             SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
         }

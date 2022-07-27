@@ -373,7 +373,6 @@ public class DeleteScheduleTest extends TestBase {
     }
 
 
-
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Vailqacn_Enterprise")
@@ -521,8 +520,6 @@ public class DeleteScheduleTest extends TestBase {
             scheduleMainPage.verifyTheContentOnDeleteScheduleDialog(unPublishedMessage, deleteForWeekText);
             // Verify the Delete button is disabled by default
             scheduleMainPage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
-            // Verify the Delete button is enabled when clicking the check box
-//            scheduleMainPage.verifyDeleteButtonEnabledWhenClickingCheckbox();
             // Verify the functionality of Delete button
             createSchedulePage.confirmDeleteSchedule();
 
@@ -570,4 +567,212 @@ public class DeleteScheduleTest extends TestBase {
         }
     }
 
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify Internal Admin delete schedule should keep the system schedule when Centralized Schedule Release is Yes")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyAdminDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            JobsPage jobsPage = pageFactory.createOpsPortalJobsPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            int index = 0;
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+
+            //Check the week that you have released, Observe the status of this week
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+
+            //Select one week which status is Guidance, Click on this week
+            scheduleOverviewPage.clickOnGuidanceBtnOnOverview(index);
+            //Create the suggested schedule for this week
+            createSchedulePage.clickCreateScheduleBtn();
+
+            //Go to Overview page, check the status of this week
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            String scheduleStatusOnOverViewTable = scheduleOverviewPage.getScheduleWeeksStatus().get(index);
+            //The status should be Not Started
+            String expectedStatus = "Not Started";
+            SimpleUtils.assertOnFail("The expected status is "+expectedStatus+ ", the actual status is: "+scheduleStatusOnOverViewTable
+                    , scheduleStatusOnOverViewTable.equalsIgnoreCase(expectedStatus), false);
+            //Click on the week that the status is Not Started
+            scheduleOverviewPage.clickOnGuidanceBtnOnOverview(index);
+            // Should go to schedule create page, stay on the Manager tab, Create Schedule button is loaded
+            SimpleUtils.assertOnFail("The manager schedule view is not display！",
+                    scheduleMainPage.isManagerViewSelected(), false);
+            boolean isScheduleCreated = createSchedulePage.isWeekGenerated();
+            SimpleUtils.assertOnFail("The Create schedule button fail to load！",
+                    !isScheduleCreated, false);
+
+            //Click on the Suggested tab, observe the shifts
+            scheduleMainPage.clickOnSuggestedButton();
+            //Suggested schedule is created
+            SimpleUtils.assertOnFail("The schedule table is display correctly! ",
+                    scheduleShiftTablePage.isScheduleTableDisplay(), false);
+            // Click on Manager tab again, follow the Steps to created the schedule
+            scheduleMainPage.clickOnManagerButton();
+            Thread.sleep(5000);
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            //Go to Overview tab, check the status of the schedule
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            //The status should be Draft
+            scheduleStatusOnOverViewTable = scheduleOverviewPage.getScheduleWeeksStatus().get(index);
+            expectedStatus = "Draft";
+            SimpleUtils.assertOnFail("The expected status is "+expectedStatus+ ", the actual status is: "+scheduleStatusOnOverViewTable
+                    , scheduleStatusOnOverViewTable.equalsIgnoreCase(expectedStatus), false);
+            //Click on Delete button
+            scheduleOverviewPage.clickOnGuidanceBtnOnOverview(index);
+            // Observe the content on this pop up window
+            // Following content should be loaded:
+            //- Delete Schedule
+            //- This action can’t be undone.
+            //- Delete Schedule For <Feb 28 - Mar 06, 2021>
+            //- Check box
+            //- Cancel button
+            //- Delete button
+            String deleteForWeekText = scheduleMainPage.getDeleteScheduleForWhichWeekText();
+            String unPublishedMessage = "This action can’t be undone.";
+            // Verify the visibility of Delete button
+            SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", scheduleMainPage.isDeleteScheduleButtonLoaded(), false);
+            // Verify the functionality of Delete button
+            scheduleMainPage.verifyClickOnDeleteScheduleButton();
+            // Verify the content on Delete Schedule confirm window
+            scheduleMainPage.verifyTheContentOnDeleteScheduleDialog(unPublishedMessage, deleteForWeekText);
+            // Verify the functionality of Delete button
+            createSchedulePage.confirmDeleteSchedule();
+
+            //Observe the schedule, Schedule should be deleted successfully
+            isScheduleCreated = createSchedulePage.isWeekGenerated();
+            SimpleUtils.assertOnFail("The Create schedule button fail to load！",
+                    !isScheduleCreated, false);
+            //Stay on the Manager tab, Create Schedule button is shown
+            SimpleUtils.assertOnFail("The manager schedule view is not display！",
+                    scheduleMainPage.isManagerViewSelected(), false);
+            // Click on Suggested tab, observe the suggested schedule, Suggested schedule should be kept
+            scheduleMainPage.clickOnSuggestedButton();
+            SimpleUtils.assertOnFail("The schedule table is display correctly! ",
+                    scheduleShiftTablePage.isScheduleTableDisplay(), false);
+            //Go to Overview tab, check the status of the schedule
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            //The status should be Not Started
+            scheduleStatusOnOverViewTable = scheduleOverviewPage.getScheduleWeeksStatus().get(index);
+            expectedStatus = "Not Started";
+            SimpleUtils.assertOnFail("The expected status is "+expectedStatus+ ", the actual status is: "+scheduleStatusOnOverViewTable
+                    , scheduleStatusOnOverViewTable.equalsIgnoreCase(expectedStatus), false);
+            //Click on this week again, verify that this week can be accessed
+            scheduleOverviewPage.clickOnGuidanceBtnOnOverview(index);
+            //Create the schedule again, publish the schedule
+            Thread.sleep(5000);
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+                scheduleMainPage.saveSchedule();
+            }
+            createSchedulePage.publishActiveSchedule();
+            Thread.sleep(5000);
+            //Go to Overview page again, check the status of the schedule
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            //The status should be Published or Finalized
+            scheduleStatusOnOverViewTable = scheduleOverviewPage.getScheduleWeeksStatus().get(index);
+            expectedStatus = "Published";
+            SimpleUtils.assertOnFail("The expected status is "+expectedStatus+ ", the actual status is: "+scheduleStatusOnOverViewTable
+                    , scheduleStatusOnOverViewTable.equalsIgnoreCase(expectedStatus)
+                            ||scheduleStatusOnOverViewTable.equalsIgnoreCase("Finalized"), false);
+
+            //Click on Delete button
+            scheduleOverviewPage.clickOnGuidanceBtnOnOverview(index);
+            // Observe the content on this pop up window
+            // Following content should be loaded:
+            //- Delete Schedule
+            //- This action can’t be undone.
+            //- Delete Schedule For <Feb 28 - Mar 06, 2021>
+            //- Check box
+            //- Cancel button
+            //- Delete button
+            deleteForWeekText = scheduleMainPage.getDeleteScheduleForWhichWeekText();
+            unPublishedMessage = "This action can’t be undone. The schedule has been published, it will be withdrawn from team members";
+            // Verify the visibility of Delete button
+            SimpleUtils.assertOnFail("Schedule page: Delete button is not visible!", scheduleMainPage.isDeleteScheduleButtonLoaded(), false);
+            // Verify the functionality of Delete button
+            scheduleMainPage.verifyClickOnDeleteScheduleButton();
+            // Verify the content on Delete Schedule confirm window
+            scheduleMainPage.verifyTheContentOnDeleteScheduleDialog(unPublishedMessage, deleteForWeekText);
+            // Verify the Delete button is disabled by default
+            scheduleMainPage.verifyDeleteBtnDisabledOnDeleteScheduleDialog();
+            // Verify the Delete button is enabled when clicking the check box
+//            scheduleMainPage.verifyDeleteButtonEnabledWhenClickingCheckbox();
+            // Verify the functionality of Delete button
+            createSchedulePage.confirmDeleteSchedule();
+
+            //Observe the schedule, Schedule should be deleted successfully
+            isScheduleCreated = createSchedulePage.isWeekGenerated();
+            SimpleUtils.assertOnFail("The Create schedule button fail to load！",
+                    !isScheduleCreated, false);
+            //Stay on the Manager tab, Create Schedule button is shown
+            SimpleUtils.assertOnFail("The manager schedule view is not display！",
+                    scheduleMainPage.isManagerViewSelected(), false);
+            // Click on Suggested tab, observe the suggested schedule, Suggested schedule should be kept
+            scheduleMainPage.clickOnSuggestedButton();
+            SimpleUtils.assertOnFail("The schedule table is display correctly! ",
+                    scheduleShiftTablePage.isScheduleTableDisplay(), false);
+            //Go to Overview tab, check the status of the schedule
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            //The status should be Not Started
+            scheduleStatusOnOverViewTable = scheduleOverviewPage.getScheduleWeeksStatus().get(index);
+            expectedStatus = "Not Started";
+            SimpleUtils.assertOnFail("The expected status is "+expectedStatus+ ", the actual status is: "+scheduleStatusOnOverViewTable
+                    , scheduleStatusOnOverViewTable.equalsIgnoreCase(expectedStatus), false);
+
+            // Disable Centralized Schedule Release
+            controlsPage.gotoControlsPage();
+            if (isLocationUsingControlsConfiguration) {
+                controlsNewUIPage.clickOnControlsConsoleMenu();
+                controlsNewUIPage.clickOnControlsSchedulingPolicies();
+                controlsNewUIPage.clickOnGlobalLocationButton();
+                Thread.sleep(10000);
+                controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+                List<WebElement> CentralizedScheduleReleaseSelector = controlsNewUIPage.getAvailableSelector();
+                WebElement yesItem = CentralizedScheduleReleaseSelector.get(0);
+                WebElement noItem = CentralizedScheduleReleaseSelector.get(1);
+                controlsNewUIPage.updateCentralizedScheduleRelease(noItem);
+                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            } else {
+                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                locationsPage.clickOnLocationsTab();
+                locationsPage.goToGlobalConfigurationInLocations();
+                scheduleMainPage.clickOnEditButton();
+                Thread.sleep(10000);
+                List<WebElement> CentralizedScheduleReleaseSelector = controlsNewUIPage.getAvailableSelector();
+                WebElement yesItem = CentralizedScheduleReleaseSelector.get(0);
+                WebElement noItem = CentralizedScheduleReleaseSelector.get(1);
+                controlsNewUIPage.updateCentralizedScheduleRelease(noItem);
+                controlsNewUIPage.clickOnSaveBtn();
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
