@@ -404,6 +404,11 @@ public class DeleteScheduleTest extends TestBase {
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
             // Enable Centralized Schedule Release
             controlsPage.gotoControlsPage();
             if (isLocationUsingControlsConfiguration) {
@@ -594,12 +599,7 @@ public class DeleteScheduleTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
-            int index = 0;
-            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (isWeekGenerated){
-                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-            }
-
+            int index = 1;
             //Check the week that you have released, Observe the status of this week
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
