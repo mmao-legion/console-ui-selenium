@@ -1061,4 +1061,34 @@ public class BasePage {
             return false;
         }
     }
+
+    public static boolean isSorted(List<String> dateStrings, boolean isAsc, String format) throws ParseException {
+        boolean isSort = false;
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        if (dateStrings != null && dateStrings.size() > 0) {
+            for (int i = 0; i < dateStrings.size() - 1; i++) {
+                try {
+                    Date date1 = sdf.parse(dateStrings.get(i));
+                    Date date2 = sdf.parse(dateStrings.get(i+1));
+                    if (isAsc) {
+                        //sorted by ascend
+                        if (date2.before(date1)) {
+                            isSort = true;
+                        }
+                    } else {
+                        //sorted by descend
+                        if (date2.after(date1)) {
+                            isSort = false;
+                        }
+                    }
+                } catch (ParseException pe) {
+                    isSort = false;
+                    break;
+                }
+            }
+        } else {
+            isSort = false;
+        }
+        return isSort;
+    }
 }

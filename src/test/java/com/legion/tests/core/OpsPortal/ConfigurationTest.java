@@ -3757,7 +3757,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnSpecifyTemplateName(templateName,mode);
             configurationPage.clickHistoryButton();
             configurationPage.verifyTemplateHistoryContent();
-
+            configurationPage.verifyOrderOfTheTemplateHistory();
         }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

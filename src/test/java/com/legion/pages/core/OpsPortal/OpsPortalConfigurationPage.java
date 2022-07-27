@@ -14,6 +14,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import static com.legion.utils.MyThreadLocal.driver;
@@ -6362,31 +6363,33 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void verifyOrderOfTheTemplateHistory() throws Exception {
+		String format = "hh:mm:ss a','MM/dd/yyyy";
+		boolean isAsc = true;
+		List<String> dateStrings = new ArrayList<>();
 		if (areListElementVisible(historyRecordsList, 2)) {
 			for (WebElement historyRecord : historyRecordsList) {
 				String str = historyRecord.findElement(By.cssSelector("p")).getText().trim();
 				String strBefore = str.substring(0, str.indexOf("at"));
 				//date is 19:00:37 PM,07/22/2022
-				String[] dateTime = str.substring(strBefore.length() + 3, str.length()).split(",");
+				String dateTime = str.substring(strBefore.length() + 3, str.length());
+				dateStrings.add(dateTime);
+			}
+		}
 
-				//compare date and time
-				List<Date> dates = new ArrayList<Date>();
-				List<Date> dates1 = new ArrayList<Date>();
-				//Verify the effective date should be order by Ascending
-				//format the date and add to list
-				SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy",Locale.ENGLISH);
-//    for(String effectiveDate:dateTime[1]){
-//     Date date = sdf.parse(effectiveDate);
-//     dates.add(date);
-//     dates1.add(date);
-//    }
-				Collections.sort(dates1);
+		if(isSorted(dateStrings, isAsc, format)){
+			SimpleUtils.pass("The template history are in ascend order");
+		}else {
+			SimpleUtils.fail("The template history are in descend order",false);
+		}
+	}
 
-				if(ListUtils.isEqualList(dates,dates1)){
-					SimpleUtils.pass("The date is ordered by ascending");
-				}else{
-					SimpleUtils.fail("The date is not ordered by ascending",false);
-				}
+	@Override
+	public void verifyNewTemplateIsClickable() throws Exception {
+		if (isElementLoaded(newTemplateBTN, 10)) {
+			if (isClickable(newTemplateBTN, 10)) {
+				SimpleUtils.pass("can create a new template");
+			}else{
+				SimpleUtils.fail("can not create a new template",false);
 			}
 		}
 	}
