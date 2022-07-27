@@ -360,7 +360,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 									title += titleElement.getText();
 								}
 								String nameJobTitleStatus = name.getText() + title + status.getText();
-								if (nameJobTitleStatus.contains(username)) {
+								if (nameJobTitleStatus.toLowerCase().contains(username.toLowerCase())) {
 									selectedName = name.getText();
 									clickTheElement(name);
 									isTeamMemberFound = true;
