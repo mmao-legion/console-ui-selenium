@@ -84,4 +84,6 @@ public interface LaborModelPage {
     public boolean verifyWorkRoleStatusInLocationLevel(String workRole);
 
     public void selectWorkRoles(String workRole) throws Exception;
+
+    public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtTemplateLevelInLocations() throws Exception;
 }
