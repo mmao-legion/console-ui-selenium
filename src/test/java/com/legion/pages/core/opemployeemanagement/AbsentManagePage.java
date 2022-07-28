@@ -198,6 +198,10 @@ public class AbsentManagePage extends BasePage {
     private WebElement viewBtnInAssociate;
     @FindBy(css = "modal[modal-title='Manage Dynamic Employee Group'] h1")
     private WebElement viewModalTitle;
+    @FindBy(css = "div.mappingLocation>lg-button[label='Test']>button")
+    private WebElement viewModalTestButton;
+    @FindBy(css = "div.mappingLocation>span")
+    private WebElement viewModalTestResult;
     @FindBy(css = "lg-tab[tab-title='Association'] lg-button[label='Cancel']>button")
     private WebElement cancelBtnInAssociate;
     @FindBy(css = "modal[modal-title='Cancel Editing?'] lg-button[label='Yes']>button")
@@ -942,6 +946,7 @@ public class AbsentManagePage extends BasePage {
 
     public void viewEmployeeGroup() {
         viewBtnInAssociate.click();
+        waitForSeconds(3);
     }
 
     public String getViewModalTitle() {
@@ -977,6 +982,12 @@ public class AbsentManagePage extends BasePage {
             archivePublishedTemplate();
         }
         okToActionInModal(true);
+    }
+
+    public String getAssociations() {
+        waitForSeconds(5);
+        viewModalTestButton.click();
+        return viewModalTestResult.getText();
     }
 
     @FindBy(css = "div.text-danger.text-invalid-range.ng-binding")

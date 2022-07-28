@@ -665,6 +665,14 @@ public class AbsentManagementTemplateTest extends TestBase {
         EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
         panelPage.goToTimeOffManagementPage();
         AbsentManagePage absentManagePage = new AbsentManagePage();
+        //delete the failed template
+        //search template and archive
+        absentManagePage.search("AutoTest_Accrual");
+        int num = absentManagePage.templateNumber();
+        for (int i = 0; i < num; i++) {
+            absentManagePage.deleteOrArchiveTemplate("AutoTest_Accrual");
+        }
+        SimpleUtils.pass("Succeeded in editing or archiving template!");
         //Create a new template
         Random random = new Random();
         String tempName = "AutoTest_Accrual" + random.nextInt(10000);
@@ -691,12 +699,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.searchDynamicGroup(groupName);
         Assert.assertTrue(absentManagePage.getDynamicEmployeeGroupName().contains(groupName), "Failed to search by group name!");
         SimpleUtils.pass("Succeeded in validating search by group name！");
-        //4.View button
-        absentManagePage.viewEmployeeGroup();
-        Assert.assertEquals(absentManagePage.getViewModalTitle(), "Manage Dynamic Employee Group", "Failed to view dynamic employee group details!");
-        SimpleUtils.pass("Succeeded in validating view button displayed and it is clickable！");
-        OpsCommonComponents components = new OpsCommonComponents();
-        components.okToActionInModal(false);
+
         //3.2 search by description
         String groupDesc = "Don't touch(AutoUsed )";
         absentManagePage.searchDynamicGroup(groupDesc);
@@ -732,6 +735,15 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.configureTemplate(tempName);
         absentManagePage.associateTemplate("AutoAssociateTest");
         absentManagePage.saveAssociation();
+        //4.View button
+        absentManagePage.viewEmployeeGroup();
+        Assert.assertEquals(absentManagePage.getViewModalTitle(), "Manage Dynamic Employee Group", "Failed to view dynamic employee group details!");
+        SimpleUtils.pass("Succeeded in validating view button displayed and it is clickable！");
+        //2 users associated to the template
+        Assert.assertEquals(absentManagePage.getAssociations(), "2 Users match", "Failed to get the associated user number!");
+        SimpleUtils.pass("Succeeded in validating users were associated to the target template！");
+        OpsCommonComponents components = new OpsCommonComponents();
+        components.okToActionInModal(false);
         //switch to details page
         absentManagePage.switchToDetails();
         //configure
@@ -740,15 +752,10 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.configureTimeOffRules("Sick");
         TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
         configurationPage.setTimeOffRules(true, true, true, "10", "2", "6", "2", true, true, true, "8", false, "1095", "Days", "9999");
-        configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
+        //configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
         configurationPage.saveTimeOffConfiguration(true);
-
         absentManagePage.saveTemplateAs("Publish now");
         SimpleUtils.pass("Succeeded in publishing template: " + tempName + " !");
-
-        //search template and archive
-        absentManagePage.deleteOrArchiveTemplate(tempName);
-        SimpleUtils.pass("Succeeded in editing or archiving template: " + tempName + " !");
     }
 
 }
