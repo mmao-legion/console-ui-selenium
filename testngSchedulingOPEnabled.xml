@@ -514,7 +514,7 @@ SCH-5862-->
                     <include name="verifyShiftWhenEnableContinuousOperationOptionAsInternalAdmin" />
         <!--            <include name="verifyTheShiftThatOverlappingWithPreviousWeekShiftCannotBeCreatedAsInternalAdmin" /> SCH-6732-->
                     <!-- unselect Continuous Operation -->
-                    <include name="verifyShiftWhenDisableContinuousOperationOptionAsInternalAdmin" />
+          <!--          <include name="verifyShiftWhenDisableContinuousOperationOptionAsInternalAdmin" /> Need more time to check-->
                     <include name="verifyTMWithOutBadgeCannotClaimTheShiftWithWorkRoleThatRequiredBadgeAsTeamMember" />
 
                 </methods>
@@ -557,7 +557,7 @@ SCH-5862-->
             <class name="com.legion.tests.core.P2PLGTest">
                 <methods>
                     <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
-                    <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+<!--                    <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" /> Need more time-->
                     <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnP2PLGAsInternalAdmin" />
                     <!--                      <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnP2PLGScheduleAsInternalAdmin" />
                                         <include name="verifyBulkDragAndDropShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> -->

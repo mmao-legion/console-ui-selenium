@@ -1232,6 +1232,9 @@ public class P2PLGTest extends TestBase {
             Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
             String regionName = selectedUpperFields.get(Region);
             locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            Thread.sleep(5000);
+            dashboardPage.clickOnDashboardConsoleMenu();
             List<String> dataOnDistrictSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
             float budgetedHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(0));
             float scheduledHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(1));
