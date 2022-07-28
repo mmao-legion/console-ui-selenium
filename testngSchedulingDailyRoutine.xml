@@ -88,4 +88,14 @@
             </class>
         </classes>
     </test> https://legiontech.atlassian.net/browse/SCH-7212 -->
+
+    <test name="Schedule New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTestKendraScott2">
+                <methods>
+                    <include name="verifyTheNoBudgetPermissionForSMAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->
