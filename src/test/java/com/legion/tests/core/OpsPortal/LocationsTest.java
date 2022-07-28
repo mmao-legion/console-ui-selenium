@@ -1726,7 +1726,7 @@ public class LocationsTest extends TestBase {
         locationsPage.backToConfigurationTabInLocationLevel();
         locationsPage.canGoToLaborModelViaTemNameInLocationLevel();
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-        attributesInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+        attributesInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevelInLocations();
         for (String key : attributesInfoInTemplate.keySet()) {
             if (key.equals(attributeName)) {
                 List<String> templateValuesInLocation = attributesInfoInTemplate.get(key);

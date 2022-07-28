@@ -1553,6 +1553,7 @@ public class ConfigurationTest extends TestBase {
             String noDriverWarningMsg = "At least one demand driver is required when publishing a template";
             String noAssociationWarningMsg = "At least one association when publish template";
             String addOrEdit = "Add";
+            String locationToAssociate = "Auto_ForDemandDriver";
             HashMap<String, String> driverSpecificInfo = new HashMap<String, String>(){
                 {
                     put("Name", "Items:EDW:Enrollments");
@@ -1588,7 +1589,7 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.assertOnFail("There should be a warning message for no association", configurationPage.verifyWarningInfoForDemandDriver(noAssociationWarningMsg), false);
 
             //Add association and save
-            configurationPage.createDynamicGroup(templateName, "Location Name", null);
+            configurationPage.createDynamicGroup(templateName, "Location Name", locationToAssociate);
             configurationPage.selectOneDynamicGroup(templateName);
             //Could publish normally
             configurationPage.clickOnTemplateDetailTab();
@@ -1663,9 +1664,11 @@ public class ConfigurationTest extends TestBase {
             String templateName = "testDemand-NotDelete";
             String templateType = "Demand Drivers";
             SimpleDateFormat dfs = new SimpleDateFormat("dd, yyyy");
+            Calendar calendar = Calendar.getInstance();
+            dfs.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
             Month month = LocalDate.now().getMonth();
             String shortMonth = month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-            String currentDate = shortMonth + " " + dfs.format(new Date()).trim();
+            String currentDate = shortMonth + " " + dfs.format(calendar.getTime());
 
            //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -1755,7 +1758,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate Creation for Input Stream in Settings page.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 0)
     public void verifyCreationForInputStreamInSettingsPageCAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
         String templateType = "Demand Drivers";
@@ -1828,7 +1831,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Edit input stream in settings.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 1)
     public void verifyEditForInputStreamInSettingsPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
@@ -1970,7 +1973,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify remove input stream in settings.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, dependsOnMethods = {"verifyEditForInputStreamInSettingsPageAsInternalAdmin"})
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 2)
     public void verifyRemoveInputStreamAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
         String templateType = "Demand Drivers";
@@ -2144,7 +2147,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify default input streams when enter a new enterprise.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 3)
     public void verifyTheDefaultInputStreamsWhenEnterANewEnterpriseAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
@@ -2189,7 +2192,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify default demand driver template when enter a new enterprise.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 6)
     public void verifyTheDefaultDemandDriverTemplateWhenEnterANewEnterpriseAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
@@ -2995,6 +2998,195 @@ public class ConfigurationTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate Creation&Modification for Remote Demand Driver.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreationAndEditForRemoteDemandDriverAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            SimpleDateFormat dfs = new SimpleDateFormat("MMddHHmm ");
+            String currentTime =  dfs.format(new Date()).trim();
+            String templateName = "testCreation_Remote" + currentTime;
+            String warningMsg = "can not be set as remote location because it is associated with the same demand driver template";
+            HashMap<String, String> parentLocationDriver = new HashMap<String, String>(){
+                {
+                    put("Name", "ParentLocationDriver");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Enrollments");
+                    put("Show in App", "Yes");
+                    put("Order", "1");
+                    put("Forecast Source", "Remote");
+                    put("Specify Location", "Parent Location");
+                    put("Parent Level", "2");
+                }
+            };
+            HashMap<String, String> remoteLocationDriver_inAssociation = new HashMap<String, String>(){
+                {
+                    put("Name", "RemoteLocationDriver");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Verifications");
+                    put("Show in App", "Yes");
+                    put("Order", "1");
+                    put("Forecast Source", "Remote");
+                    put("Specify Location", "Remote Location");
+                    put("Choose Remote Location", "Austin");
+                }
+            };
+            HashMap<String, String> remoteLocationDriver = new HashMap<String, String>(){
+                {
+                    put("Name", "RemoteLocationDriver");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Verifications");
+                    put("Show in App", "Yes");
+                    put("Order", "1");
+                    put("Forecast Source", "Remote");
+                    put("Specify Location", "Remote Location");
+                    put("Choose Remote Location", "Boston");
+                }
+            };
+
+            //Turn on EnableTahoeStorage toggle
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            refreshPage();
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Template tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            //Add a Remote:ParentLocation demand driver
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(parentLocationDriver);
+            //Add a Remote:RemoteLocation demand driver
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(remoteLocationDriver_inAssociation);
+            //Add association
+            configurationPage.selectOneDynamicGroup("testDerived_NotDelete");
+            //Should not be able to publish
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.chooseSaveOrPublishBtnAndClickOnTheBtn("publish now");
+            SimpleUtils.assertOnFail("Please check if there's a warning message and the content!", configurationPage.verifyWarningForDemandDriver(warningMsg), false);
+            SimpleUtils.assertOnFail("Can't find the driver you search!", configurationPage.searchDriverInTemplateDetailsPage(remoteLocationDriver_inAssociation.get("Name")), false);
+            //Edit the remote location driver and publish once again
+            configurationPage.clickAddOrEditForDriver("Edit");
+            configurationPage.addOrEditDemandDriverInTemplate(remoteLocationDriver);
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.publishNowTemplate();
+            configurationPage.archiveOrDeleteTemplate(templateName);
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate Creation&Modification for Distributed Demand Driver.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreationAndEditForDistributedDemandDriverAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+//        try {
+            String templateType = "Demand Drivers";
+            SimpleDateFormat dfs = new SimpleDateFormat("MMddHHmm");
+            String currentTime =  dfs.format(new Date()).trim();
+            String templateName = "testCreation_Distributed" + currentTime;
+            String warningMsg = "can not be set as remote location because it is associated with the same demand driver template";
+            HashMap<String, String> distributedDriver_withNoBasicDriver = new HashMap<String, String>(){
+                {
+                    put("Name", "DistributedDriver");
+                    put("Type", "Items");
+                    put("Channel", "Channel01");
+                    put("Category", "Enrollments");
+                    put("Show in App", "No");
+                    put("Order", "1");
+                    put("Forecast Source", "Distributed");
+                    put("Source Demand Driver", "LegionMLDriver");
+                    put("Distribution of Demand Driver", "ImportedDriver");
+                }
+            };
+            HashMap<String, String> legionMLDriver = new HashMap<String, String>(){
+                {
+                    put("Name", "LegionMLDriver");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Enrollments");
+                    put("Show in App", "No");
+                    put("Order", "1");
+                    put("Forecast Source", "Legion ML");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
+            HashMap<String, String> importedDriver = new HashMap<String, String>(){
+                {
+                    put("Name", "ImportedDriver");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Verifications");
+                    put("Show in App", "Yes");
+                    put("Order", "2");
+                    put("Forecast Source", "Imported");
+                    put("Input Stream", "Items:EDW:Verifications");
+                }
+            };
+            HashMap<String, String> distributedDriver = new HashMap<String, String>(){
+                {
+                    put("Name", "DistributedDriver");
+                    put("Type", "Items");
+                    put("Channel", "Channel01");
+                    put("Category", "Enrollments");
+                    put("Show in App", "No");
+                    put("Order", "3");
+                    put("Forecast Source", "Distributed");
+                    put("Source Demand Driver", "LegionMLDriver");
+                    put("Distribution of Demand Driver", "ImportedDriver");
+                }
+            };
+            //Turn on EnableTahoeStorage toggle
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            refreshPage();
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Template tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            //Add a distributed demand driver, can't save, cancel
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(distributedDriver_withNoBasicDriver);
+            //Add two basic drivers first
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(legionMLDriver);
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(importedDriver);
+            //Add distributed location driver and publish once again
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(distributedDriver);
+            SimpleUtils.assertOnFail("Can't find the driver you search!", configurationPage.searchDriverInTemplateDetailsPage(distributedDriver.get("Name")), false);
+            configurationPage.searchDriverInTemplateDetailsPage("");
+            //Add association
+            configurationPage.selectOneDynamicGroup("testDerived_NotDelete");
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.publishNowTemplate();
+            configurationPage.archiveOrDeleteTemplate(templateName);
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+//        } catch (Exception e) {
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
+    }
+
+    @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Location Level override")
@@ -3314,7 +3506,7 @@ public class ConfigurationTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Audit Log")
+    @TestName(description = "Audit Log History Button")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void auditLogVerificationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
@@ -3522,7 +3714,50 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnConfigurationCrad(templateType);
             configurationPage.clickOnSpecifyTemplateName(templateName,mode);
             configurationPage.clickHistoryButton();
+            configurationPage.verifyTemplateHistoryUI();
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Audit Log Button")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void auditLogHistoryButtonVerificationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType = "Operating Hours";
+            String mode = "view";
+            String templateName = "AuditLogAutoUsing";
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickHistoryButton();
             configurationPage.verifyRecordIsClickable();
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Template History Content Check")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void auditLogContentVerificationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType = "Operating Hours";
+            String mode = "view";
+            String templateName = "AuditLogAutoUsing";
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickHistoryButton();
+            configurationPage.verifyTemplateHistoryContent();
+            configurationPage.verifyOrderOfTheTemplateHistory();
         }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -14,6 +14,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import static com.legion.utils.MyThreadLocal.driver;
@@ -3956,7 +3957,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css = "lg-button[label=\"Remove\"]")
 	private WebElement removeBtnInRemoveDGPopup;
 
-	@FindBy(css = "lg-search input")
+	@FindBy(css = "lg-global-dynamic-group-table lg-search input")
 	private WebElement searchDynamicEmployeeGroupsField;
 	@Override
 	public void deleteAllDynamicEmployeeGroupsInList() throws Exception {
@@ -4944,6 +4945,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css = "lg-button[label=\"Add\"] button")
 	private WebElement addBtnForDriver;
+	@FindBy(css = "form-section[ng-repeat=\"item in $ctrl.propertyMeta\"]")
+	private List<WebElement> configurationSection;
 	@FindBy(css = "div[ng-repeat=\"field in item.propertyMetas\"]")
 	private List<WebElement> fieldInputList;
 	@FindBy(css = "lg-button[label=\"Save\"] button")
@@ -4954,49 +4957,158 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement okBtn;
 	@FindBy(css = "tr[ng-repeat=\"rule in $ctrl.sortedRows\"] lg-button[label=\"Edit\"]")
 	private WebElement editBtnForDriver;
+	@FindBy(css = "input-field[options=\"$ctrl.remoteOptions\"]")
+	private WebElement remoteOption;
 	@Override
 	public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception {
+		Select forecastSourceSelect = null;
+		String forecastSource = driverSpecificInfo.get("Forecast Source");
+		Select remoteOptionSelect = null;
+		System.out.println("forecastSource is:-----" + driverSpecificInfo.get("Forecast Source"));
+
+		if (forecastSource != null){
+			forecastSourceSelect = new Select(forecastConfigurations.get(0).findElement(By.cssSelector("select")));
+			forecastSourceSelect.selectByVisibleText(forecastSource);
+			if (forecastSource.equals("Remote")){
+				remoteOptionSelect = new Select(remoteOption.findElement(By.cssSelector("select")));
+				remoteOptionSelect.selectByVisibleText(driverSpecificInfo.get("Specify Location"));
+			}
+		}
+		if (areListElementVisible(fieldInputList)){
+			setDriverConfiguration(fieldInputList, driverSpecificInfo);
+		}else {
+			SimpleUtils.fail("No fields found in demand driver creation/Edit page!", false);
+		}
+	}
+
+	public void setDriverConfiguration(List<WebElement> forecastFieldInputList, HashMap<String, String> driverSpecificInfo) throws Exception {
 		String childTag = "";
 		String fieldType = "";
-		Select select = null;
+		List<String> derivedSources = new ArrayList<>(Arrays.asList("Distributed", "Remote", "Aggregated"));
+		Select forecastSelect = null;
+		List<WebElement> questionInputs = null;
 		List<WebElement> yesOrNoOptions = null;
-
-		if (areListElementVisible(fieldInputList)){
-			for (int i = 0; i < fieldInputList.size() - 1; i++){
-				for (Map.Entry<String, String> entry : driverSpecificInfo.entrySet()){
-					if (fieldInputList.get(i).findElement(By.cssSelector("question-input")).getAttribute("question-title").contains(entry.getKey())){
-						childTag = fieldInputList.get(i).findElement(By.cssSelector("ng-transclude.lg-question-input__input :first-child")).getTagName();
-						if(childTag.equals("input-field")){
-							fieldType = fieldInputList.get(i).findElement(By.cssSelector("input-field")).getAttribute("type");
-							if ((fieldType.equals("text") || fieldType.equals("number")) &&
-									!fieldInputList.get(i).findElement(By.cssSelector("input-field input")).getText().equals(entry.getValue())){
-								fieldInputList.get(i).findElement(By.cssSelector("input-field input")).clear();
-								fieldInputList.get(i).findElement(By.cssSelector("input-field input")).sendKeys(entry.getValue());
-								break;
-							}else if(fieldType.equals("select")){
-								select = new Select(fieldInputList.get(i).findElement(By.cssSelector("select")));
-								if ((fieldInputList.get(i).findElement(By.cssSelector("select")).getAttribute("class").contains("ng-empty")) ||
-										!select.getFirstSelectedOption().getText().equals(entry.getValue()))
-									select.selectByVisibleText(entry.getValue());
-								break;
-							}else{
-								SimpleUtils.fail("Field Type is not as expected!", false);
-							}
-						}else if (childTag.equals("yes-no")){
-							yesOrNoOptions = fieldInputList.get(i).findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
-							for (WebElement choose : yesOrNoOptions){
-								if (choose.findElement(By.cssSelector("span")).getText().equals(entry.getValue()) &&
-										!choose.getAttribute("class").contains("lg-button-group-selected")){
-									clickTheElement(choose);
-									break;
+		System.out.println("forecastFieldInputList size: " + forecastFieldInputList.size());
+		for (int i = 0; i < forecastFieldInputList.size() - 1; i++) {
+			if (derivedSources.contains(driverSpecificInfo.get("Forecast Source")) && i == forecastFieldInputList.size() - 3){
+				break;
+			}
+			if (isElementLoaded(forecastFieldInputList.get(i).findElement(By.cssSelector("question-input")))) {
+				System.out.println("i is: " + i);
+				questionInputs = forecastFieldInputList.get(i).findElements(By.cssSelector("question-input"));
+				System.out.println("questionInputs size: " + questionInputs.size());
+				for (WebElement questionInput : questionInputs) {
+					for (Map.Entry<String, String> entry : driverSpecificInfo.entrySet()) {
+						System.out.println("questionInput title: " + questionInput.getAttribute("question-title"));
+						if (questionInput.getAttribute("question-title").contains(entry.getKey())) {
+							childTag = questionInput.findElement(By.cssSelector("ng-transclude.lg-question-input__input :first-child")).getTagName();
+							System.out.println("childTag: " + childTag);
+							if (childTag.equals("input-field")) {
+								if (childTag.equals("input-field")) {
+									fieldType = questionInput.findElement(By.cssSelector("input-field")).getAttribute("type");
+									System.out.println("fieldType: " + fieldType);
+									if (fieldType.equals("number") || fieldType.equals("text")) {
+										if (!questionInput.findElement(By.cssSelector("input-field input")).getText().equals(entry.getValue())) {
+											questionInput.findElement(By.cssSelector("input-field input")).clear();
+											questionInput.findElement(By.cssSelector("input-field input")).sendKeys(entry.getValue());
+										}
+										System.out.println("111: " + questionInput.findElement(By.cssSelector("input-field input")).getText());
+										break;
+									} else if (fieldType.equals("select")) {
+										forecastSelect = new Select(questionInput.findElement(By.cssSelector("select")));
+										if (questionInput.findElement(By.cssSelector("select")).getAttribute("class").contains("ng-empty") ||
+												!forecastSelect.getFirstSelectedOption().getText().equals(entry.getValue())) {
+											forecastSelect.selectByVisibleText(entry.getValue());
+										}
+										System.out.println("222: " + forecastSelect.getFirstSelectedOption().getText());
+										break;
+									} else if (fieldType.equals("choose")) {
+										clickTheElement(questionInput.findElement(By.cssSelector("span")));
+										selectALocation(entry.getValue());
+										System.out.println("333: ");
+										break;
+									}
+								}
+							}else if (childTag.equals("yes-no")){
+								yesOrNoOptions = questionInput.findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
+								for (WebElement choose : yesOrNoOptions){
+									if (choose.findElement(By.cssSelector("span")).getText().equals(entry.getValue()) &&
+											!choose.getAttribute("class").contains("lg-button-group-selected")){
+										clickTheElement(choose);
+										break;
+									}
+								}
+							}else if (childTag.equals("lg-select")) {
+								System.out.println("this is lg-select ----!");
+								if(isElementExist("div[ng-repeat*=\"option in $ctrl.displayOptions\"]")){
+									System.out.println("in the 1st if----!");
+									if (questionInput.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty") ||
+											!questionInput.findElement(By.cssSelector("div.input-faked")).getAttribute("innerText").equals(entry.getValue())){
+										System.out.println("in the 2th if----!");
+										List<WebElement> options = questionInput.findElements(By.cssSelector("div[ng-repeat*=\"option in $ctrl.displayOptions\"]"));
+										for (WebElement option : options){
+											if (!option.getAttribute("class").contains("disabled") &&
+													option.findElement(By.cssSelector("div")).getAttribute("innerText").replaceAll("\n","").trim().equals(entry.getValue())){
+												clickTheElement(questionInput.findElement(By.cssSelector("input")));
+												clickTheElement(option.findElement(By.cssSelector("div")));
+												System.out.println("in the 3nd if----!");
+											}
+										}
+										if (questionInput.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty")){
+											if (saveButton.getAttribute("disabled").equals("disabled")){
+												clickTheElement(cancelButton);
+												setLeaveThisPageButton();
+												SimpleUtils.report("No available options!");
+												System.out.println("in the 4th if----!");
+												return;
+											}else {
+												SimpleUtils.fail("Save button should be disabled!", false);
+											}
+										}
+									}
+								}else{
+									System.out.println("in the else ----!" + saveButton.getAttribute("disabled"));
+									if (saveButton.getAttribute("disabled").equals("true")) {
+										clickTheElement(cancelButton);
+										setLeaveThisPageButton();
+										SimpleUtils.report("No options can be selected, add some basic drivers first!");
+										return;
+									}else {
+										SimpleUtils.fail("Save button should be disabled!", false);
+									}
 								}
 							}
-						}else {
-							SimpleUtils.fail("Tag Type is not as expected!", false);
 						}
 					}
 				}
 			}
+		}
+		clickOnSaveForDriver();
+	}
+	@FindBy(css = ".lg-modal__title-icon")
+	private WebElement selectALocationTitle;
+	@FindBy(css = "div.lg-tab-toolbar__search >lg-search >input-field>ng-form>input")
+	private WebElement searchInputInSelectALocation;
+	@FindBy(css = "tr[ng-repeat=\"item in $ctrl.currentPageItems track by $index\"]")
+	private List<WebElement> locationRowsInSelectLocation;
+	private void selectALocation(String searchText){
+		if (isElementEnabled(selectALocationTitle, 5)) {
+			searchInputInSelectALocation.sendKeys(searchText);
+			searchInputInSelectALocation.sendKeys(Keys.ENTER);
+			waitForSeconds(10);
+			if (areListElementVisible(locationRowsInSelectLocation, 30) && locationRowsInSelectLocation.size() > 0) {
+				WebElement firstRow = locationRowsInSelectLocation.get(0).findElement(By.cssSelector("input[type=\"radio\"]"));
+				clickTheElement(firstRow);
+				clickTheElement(okButton);
+			} else
+				SimpleUtils.report("Search location result is 0");
+
+		} else
+			SimpleUtils.fail("Select a location window load failed", true);
+	}
+
+	public void clickOnSaveForDriver() throws Exception{
+		if (isElementLoaded(saveBtn)){
 			clickTheElement(saveBtn);
 			if (isElementLoaded(warningToast, 5)) {
 				if (warningToast.getText().contains("name duplicates with existing demand drivers")) {
@@ -5010,8 +5122,20 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				waitForSeconds(3);
 			}
 		}else {
-			SimpleUtils.fail("No fields found in demand driver creation/Edit page!", false);
+			SimpleUtils.fail("Save button load failed!", false);
 		}
+	}
+
+	@Override
+	public boolean verifyWarningForDemandDriver(String warningMsg) throws Exception {
+		boolean warningMsgExist = false;
+		if (isElementLoaded(warningToast, 3)){
+			if(warningToast.getText().toLowerCase().contains(warningMsg.toLowerCase())){
+				warningMsgExist = true;
+			}
+			clickTheElement(okBtn);
+		}
+		return warningMsgExist;
 	}
 
 	@Override
@@ -5923,7 +6047,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		int templateCount = templateNameList.size();
 		if (isTemplateListPageShow()) {
 			SimpleUtils.pass("Demand Driver template list is showing now");
-			System.out.println("template list size is: " + templateNameList.size());
 			for (int i = 0; i < templateCount; i++) {
 				archiveOrDeleteTemplate(templateNameList.get(0).getText());
 			}
@@ -6204,6 +6327,69 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				SimpleUtils.pass("User can navigate to template details page via history panel");
 			}else {
 				SimpleUtils.fail("User can't navigate to template details page via history panel",false);
+			}
+		}
+	}
+
+	@FindBy(css = "h1.lg-slider-pop__title")
+	private WebElement historyPanelHeader;
+	@FindBy(css = "div.lg-slider-pop")
+	private WebElement historyPanel;
+
+	@Override
+	public void verifyTemplateHistoryUI() throws Exception {
+		if (isElementEnabled(historyPanelHeader, 2) && areListElementVisible(historyRecordsList, 2)
+				&& isElementEnabled(historyPanel, 2)) {
+			SimpleUtils.pass("Template history panel can show well");
+		} else {
+			SimpleUtils.fail("Template history panel can't show well", false);
+		}
+	}
+
+	@Override
+	public void verifyTemplateHistoryContent() throws Exception {
+		if (areListElementVisible(historyRecordsList, 2)) {
+			String content1 = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
+			String content2 = historyRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
+			if ((content1.contains("Edited") || content1.contains("Deleted") || content1.contains("Published") || content1.contains("Created")
+					|| content1.contains("set to publish on")) && content1.contains("Version") && content1.contains("/2022") && content2.contains("Fiona")
+					&& content2.contains("at") && content2.contains("/2022")) {
+				SimpleUtils.pass("History Content can show well");
+			} else {
+				SimpleUtils.fail("History Content can show well", false);
+			}
+		}
+	}
+
+	@Override
+	public void verifyOrderOfTheTemplateHistory() throws Exception {
+		String format = "hh:mm:ss a','MM/dd/yyyy";
+		boolean isAsc = true;
+		List<String> dateStrings = new ArrayList<>();
+		if (areListElementVisible(historyRecordsList, 2)) {
+			for (WebElement historyRecord : historyRecordsList) {
+				String str = historyRecord.findElement(By.cssSelector("p")).getText().trim();
+				String strBefore = str.substring(0, str.indexOf("at"));
+				//date is 19:00:37 PM,07/22/2022
+				String dateTime = str.substring(strBefore.length() + 3, str.length());
+				dateStrings.add(dateTime);
+			}
+		}
+
+		if(isSorted(dateStrings, isAsc, format)){
+			SimpleUtils.pass("The template history are in ascend order");
+		}else {
+			SimpleUtils.fail("The template history are in descend order",false);
+		}
+	}
+
+	@Override
+	public void verifyNewTemplateIsClickable() throws Exception {
+		if (isElementLoaded(newTemplateBTN, 10)) {
+			if (isClickable(newTemplateBTN, 10)) {
+				SimpleUtils.pass("can create a new template");
+			}else{
+				SimpleUtils.fail("can not create a new template",false);
 			}
 		}
 	}
