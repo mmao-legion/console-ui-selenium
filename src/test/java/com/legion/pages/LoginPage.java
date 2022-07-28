@@ -21,5 +21,7 @@ public interface LoginPage {
     public void verifyLastNameAndInvitationCode(String lastName, String invitationCode) throws Exception;
     public boolean isErrorToastLoaded() throws Exception;
     public boolean isCreateAccountPageLoaded() throws Exception;
-    public boolean isLoginSuccess() throws Exception;;
+    public boolean isLoginSuccess() throws Exception;
+    public void refreshLoginPage() throws Exception;
+    public boolean isInvalidLoginErrorShowing() throws Exception;
 }

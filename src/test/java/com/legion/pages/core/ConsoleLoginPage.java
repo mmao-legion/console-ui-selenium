@@ -333,5 +333,35 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	}
 
 
+	@FindBy(css="div.invalid-login")
+	private WebElement invalidLoginError;
+	@Override
+	public boolean isInvalidLoginErrorShowing() throws Exception{
+		boolean flag = false;
+		if(isElementLoaded(invalidLoginError,2)){
+			flag = true;
+		}else {
+			flag = false;
+		}
+		return flag;
+	}
+	@Override
+	public void refreshLoginPage() throws Exception{
+		if(isElementLoaded(invalidLoginError,5)){
+			getDriver().get(getDriver().getCurrentUrl());
+			if(isElementLoaded(loginPanel,15)
+				&& isElementLoaded(userNameField,5)
+				&& isElementLoaded(passwordField, 5)
+				&& isElementLoaded(loginButton, 5)){
+				SimpleUtils.pass("Refresh page successfully!");
+			}else {
+				SimpleUtils.fail("Can't Refresh page successfully!",false);
+			}
+		}else {
+			SimpleUtils.report("There is no error showing on login page");
+		}
+	}
+
+
 
 }
