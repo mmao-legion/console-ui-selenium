@@ -999,4 +999,89 @@ public class AbsentManagePage extends BasePage {
         }else
             SimpleUtils.fail("Error message doesn't display",false);
     }
+
+    @FindBy(css = "img[src = 'img/legion/add.png']")
+    private WebElement addIcon;
+    @FindBy(css = "select[aria-label = 'Accrual Units']")
+    private WebElement unitSelect;
+//    @FindBy(css = "input[aria-label = 'Reason name']")
+//    private WebElement reasonNameInput;
+
+    public void addTimeOffReasonWithDayUnit() {
+        click(addIcon);
+        reasonName.sendKeys("Aaaa");
+        unitSelect.sendKeys("Days");
+        scrollToElement(okCreating);
+        click(okCreating);
+    }
+
+    public void editTimeOffReason() {
+        scrollToElement(editTemplate);
+        click(editTemplate);
+        System.out.println(unitSelect.getAttribute("disabled"));
+        if(unitSelect.getAttribute("disabled").equals("true")){
+            SimpleUtils.pass("Unit can't be edited");
+        }else
+            SimpleUtils.fail("Unit can be edited",false);
+        scrollToElement(okCreating);
+        click(okCreating);
+        //scrollToElement(remove);
+        click(remove);
+        click(okCreating);
+    }
+
+    @FindBy(css = "td lg-button[label='Edit']")
+    private WebElement editTimeOffReason;
+    @FindBy(css = "div.lg-templates-table-improved__grid-column > lg-button > button")
+    private WebElement firstTemplate;
+
+    public void otherDistributionMethodisDiabled() {
+        click(firstTemplate);
+        click(editTemplate);
+        click(okCreating);
+        scrollToElement(editTimeOffReason);
+        click(editTimeOffReason);
+
+        verifyWorkRoleOnlyDisplayForScheduleHour("Worked Hours");
+        verifyWorkRoleOnlyDisplayForScheduleHour("Scheduled Hours");
+        verifyWorkRoleOnlyDisplayForScheduleHour("None");
+
+        if(getDriver().findElement(By.cssSelector("option[label='Monthly']")).getAttribute("disabled").equals("true")
+                && getDriver().findElement(By.cssSelector("option[label='Weekly']")).getAttribute("disabled").equals("true")
+                && getDriver().findElement(By.cssSelector("option[label='Worked Hours']")).getAttribute("disabled") == null
+                && getDriver().findElement(By.cssSelector("option[label='Scheduled Hours']")).getAttribute("disabled") == null
+                && getDriver().findElement(By.cssSelector("option[label='Lump Sum']")).getAttribute("disabled").equals("true")
+                && getDriver().findElement(By.cssSelector("option:nth-child(6)")).getAttribute("disabled").equals("true")
+                && getDriver().findElement(By.cssSelector("option[label='None']")).getAttribute("disabled") == null){
+            SimpleUtils.pass("Scheduled Hours/Worked Hours/None are enabled, others are disabled");
+        }else
+            SimpleUtils.fail("Scheduled Hours/Worked Hours/None are diabled or others are enabled",false);
+    }
+
+    @FindBy(css = "input-field[placeholder = 'All Work Roles']>ng-form>input")
+    private WebElement workRoleInput;
+    @FindBy(css = "question-input[question-title = 'Distribution Method'] > div > div > ng-transclude > input-field > ng-form > div > select" )
+    private WebElement distributioonMethodSelect;
+
+    private void verifyWorkRoleOnlyDisplayForScheduleHour(String type){
+        distributioonMethodSelect.sendKeys(type);
+        //System.out.println(distributioonMethodSelect.getText());
+        if(!getDriver().findElement(By.cssSelector("option[label='Scheduled Hours']")).isSelected()){
+            if(!isElementEnabled(workRoleInput)){
+                SimpleUtils.pass("Work role doesn't display for other distribution type");
+            }else
+                SimpleUtils.fail("Work role display for other distribution type",false);
+        }else{
+            if(isElementEnabled(workRoleInput)){
+                SimpleUtils.pass("Work role display for Scheduled Hours");
+            }else
+                SimpleUtils.fail("Work role doesn't display for Scheduled Hours",false);
+        }
+    }
+
+    public void verifyHourWorkRole(){
+        click(backButton);
+        click(leavePageBtn);
+        search("Floating Holiday");
+    }
 }
