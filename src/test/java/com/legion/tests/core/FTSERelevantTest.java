@@ -2275,7 +2275,7 @@ public class FTSERelevantTest extends TestBase {
             scheduleMainPage.saveSchedule();
 
             //Create a new shift and assign to the TM
-            String greenIcon = "#37cf3f";
+            String greenIcon = "green";
             String greyIcon = "grey";
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
@@ -2289,7 +2289,7 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchText(tmPartialName);
             newShiftPage.clickClearAssignmentsLink();
-            Boolean colourMatch1 = greyIcon.equals(newShiftPage.getTMAvailableColourForAssignedShift());
+            Boolean colourMatch1 = greyIcon.equalsIgnoreCase(newShiftPage.getTMAvailableColourForAssignedShift());
             SimpleUtils.assertOnFail("The available icon's colour is incorrect!", colourMatch1,false);
             Thread.sleep(3000);
 
@@ -2315,7 +2315,7 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchText(tmPartialName);
             newShiftPage.clickClearAssignmentsLink();
-            Boolean colourMatch3 = greenIcon.equals(newShiftPage.getTMAvailableColourForAssignedShift());
+            Boolean colourMatch3 = greenIcon.equalsIgnoreCase(newShiftPage.getTMAvailableColourForAssignedShift());
             SimpleUtils.assertOnFail("The available icon's colour is incorrect!", colourMatch3, false);
 
         } catch (Exception e) {

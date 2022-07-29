@@ -137,8 +137,8 @@
                     <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
                     <include name="verifyTheBudgetHoursWhenByLocationAsInternalAdmin" />
-                    <include name="verifyTMOverTimeStatusAsInternalAdmin" />
-                    <include name="verifyTMClopeningStatusAsInternalAdmin" />
+                    <!-- <include name="verifyTMOverTimeStatusAsInternalAdmin" /> -->
+                    <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
                                    </methods>
                                </class>
                            </classes>
