@@ -2893,21 +2893,21 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.report("The shift name input is not loaded on New Create Shift page! ");
     }
 
-    @FindBy(css = "[class=\"sc-karCPZ chPZcS\"]")
+    @FindBy(css = "[color=\"grey\"]")
     private WebElement greyAvailableIcon;
-    @FindBy(css = "[class=\"sc-karCPZ hhDhwY\"]")
+    @FindBy(css = "[color=\"#37cf3f\"]")
     private WebElement greenAvailableIcon;
     @FindBy(css = "[class=\"sc-karCPZ pJskc\"]")
     private WebElement redAvailableIcon;
     @Override
     public String getTMAvailableColourForAssignedShift () throws Exception {
         String availableIconColour = null;
-        if (isElementLoaded(greenAvailableIcon, 5) && greenAvailableIcon.getAttribute("color").contains("#37cf3f")) {
-            return availableIconColour = "#37cf3f";
-        }else if(isElementLoaded(greyAvailableIcon, 5) && greyAvailableIcon.getAttribute("color").contains("grey")){
+        if (isElementLoaded(greenAvailableIcon, 5)) {
+            return availableIconColour = "green";
+        }else if(isElementLoaded(greyAvailableIcon, 5)){
             return availableIconColour = "grey";
-        }else if(isElementLoaded(redAvailableIcon, 5) && redAvailableIcon.getAttribute("color").contains("#ff2600")) {
-            return availableIconColour = "#ff2600";
+        }else if(isElementLoaded(redAvailableIcon, 5)) {
+            return availableIconColour = "red";
         }else
             SimpleUtils.fail("The available icon is not displayed!", false);
         return null;

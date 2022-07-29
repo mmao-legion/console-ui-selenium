@@ -88,8 +88,8 @@
                     <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" />
                     <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
-                    <include name="verifyTMOverTimeStatusAsInternalAdmin" />
-                    <include name="verifyTMClopeningStatusAsInternalAdmin" />
+                    <!-- <include name="verifyTMOverTimeStatusAsInternalAdmin" /> -->
+                    <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
                 </methods>
             </class>
         </classes>
