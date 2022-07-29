@@ -48,7 +48,6 @@ public class BadgeTest extends TestBase {
             // Prepare badge for TM A
             teamPage.goToTeam();
             String tmA = teamPage.searchAndSelectTeamMemberByName(teamMemberA);
-            teamPage.clickTheTMByName(tmA);
             teamPage.clickEditProfileBtn();
             teamPage.deleteBadges();
             teamPage.saveEditProfileBtn();
@@ -60,7 +59,6 @@ public class BadgeTest extends TestBase {
             // Prepare badge for TM B
             teamPage.goToTeam();
             String tmB = teamPage.searchAndSelectTeamMemberByName(teamMemberB);
-            teamPage.clickTheTMByName(tmB);
             teamPage.clickEditProfileBtn();
             teamPage.deleteBadges();
             teamPage.saveEditProfileBtn();
