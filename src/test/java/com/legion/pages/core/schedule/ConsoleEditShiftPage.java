@@ -21,7 +21,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     private WebElement editShiftWindow;
     @FindBy (css = ".modal-instance-header-title")
     private WebElement windowTitle;
-    @FindBy (css = ".sc-lgvKYA")
+    @FindBy (css = ".sc-fYdnlA.HdRBM")
     private WebElement subTitle;
     @FindBy (css = ".generate-modal-location")
     private WebElement locationInfo;
@@ -31,7 +31,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     private WebElement cancelButton;
     @FindBy (css = ".confirm")
     private WebElement updateButton;
-    @FindBy (css = ".sc-cYvgmZ.hKLEOW")
+    @FindBy (css = ".sc-cTGpgC.bhwvsW")
     private WebElement optionsSection;
     @FindBy (css = "[data-testid=ReplayIcon]")
     private WebElement clearEditedFieldsBtn;
@@ -60,12 +60,22 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public void verifySelectedWorkDays(int selectedShitCount, List<String> selectedDays) throws Exception {
-        String expectedSubTitle = "SHIFTS SELECTED: " + selectedShitCount + "\n" + "Days: " +
-                selectedDays.toString().substring(selectedDays.toString().indexOf("[") + 1, selectedDays.toString().indexOf("]"));
+        String selectedDaysString = "";
+        if (selectedDays.size() == 2) {
+            if (selectedDays.get(0) == selectedDays.get(1)) {
+                selectedDaysString = selectedDays.get(0);
+            } else {
+               selectedDaysString = selectedDays.toString().substring(selectedDays.toString().indexOf("[") + 1, selectedDays.toString().indexOf("]"));
+            }
+        } else if (selectedDays.size() == 1) {
+            selectedDaysString = selectedDays.get(0);
+        }
+        String expectedSubTitle = "SHIFTS SELECTED: " + selectedShitCount + "\n" + "Days: " + selectedDaysString;
         if (isElementLoaded(subTitle, 3) && subTitle.getText().equalsIgnoreCase(expectedSubTitle)) {
             SimpleUtils.pass("The sub title of the Edit Shift window is correct: " + expectedSubTitle);
         } else {
-            SimpleUtils.fail("The sub title of the Edit Shift window is incorrect!", false);
+            SimpleUtils.fail("The sub title of the Edit Shift window is incorrect!, Actual: '" + subTitle.getText()
+                    + "', Expected: '" + expectedSubTitle + "'", false);
         }
     }
 

@@ -3434,6 +3434,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             action.keyDown(Keys.CONTROL).build().perform();
             for (int i : set) {
                 action.click(names.get(i));
+                waitForSeconds(1);
             }
             action.keyUp(Keys.CONTROL).build().perform();
             if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
