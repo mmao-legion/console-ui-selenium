@@ -89,7 +89,7 @@
         </classes>
     </test> https://legiontech.atlassian.net/browse/SCH-7212 -->
 
-    <test name="Schedule New UI Test">
+<!--    <test name="Schedule New UI Test"> blocked by SCH-7258
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
@@ -97,5 +97,5 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 </suite> <!-- Suite -->

@@ -136,7 +136,7 @@
                     <!--                    <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" /> need disable Continuous Operation-->
                     <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
-                    <include name="verifyTheBudgetHoursWhenByLocationAsInternalAdmin" />
+<!--                    <include name="verifyTheBudgetHoursWhenByLocationAsInternalAdmin" Blocked by SCH-7081 />-->
                     <!-- <include name="verifyTMOverTimeStatusAsInternalAdmin" /> -->
                     <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
                                    </methods>
