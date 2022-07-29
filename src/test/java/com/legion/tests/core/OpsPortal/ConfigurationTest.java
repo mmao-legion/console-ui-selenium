@@ -3584,7 +3584,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
 
-            configurationPage.goToItemInConfiguration("Pay Rules");
+            configurationPage.goToItemInConfiguration("Minors Rules");
             configurationPage.searchTemplate("AuditLog");
             configurationPage.clickOnTemplateName("AuditLog");
             configurationPage.verifyHistoryButtonDisplay();
@@ -3594,15 +3594,15 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
 
-            configurationPage.goToItemInConfiguration("Additional Pay Rules");
-            configurationPage.searchTemplate("AuditLog");
-            configurationPage.clickOnTemplateName("AuditLog");
-            configurationPage.verifyHistoryButtonDisplay();
-            configurationPage.verifyHistoryButtonIsClickable();
-            configurationPage.verifyCloseIconNotDisplayDefault();
-            configurationPage.clickHistoryAndClose();
-            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+//            configurationPage.goToItemInConfiguration("Additional Pay Rules");
+//            configurationPage.searchTemplate("AuditLog");
+//            configurationPage.clickOnTemplateName("AuditLog");
+//            configurationPage.verifyHistoryButtonDisplay();
+//            configurationPage.verifyHistoryButtonIsClickable();
+//            configurationPage.verifyCloseIconNotDisplayDefault();
+//            configurationPage.clickHistoryAndClose();
+//            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+//            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
 
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickOnLocationsTab();
