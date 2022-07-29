@@ -216,4 +216,5 @@ public interface ConfigurationPage {
     public void verifyTemplateHistoryContent() throws Exception;
     public void verifyOrderOfTheTemplateHistory() throws Exception;
     public void verifyNewTemplateIsClickable() throws Exception;
+    public boolean verifyDriverInViewMode(HashMap<String, String> driverToCheck) throws Exception;
 }
