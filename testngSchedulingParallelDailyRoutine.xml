@@ -126,18 +126,19 @@
                     <include name="verifyTheItemsAfterClickTheShiftInDayViewAsInternalAdmin" />
                     <include name="verifyShiftsCanBeDraggedInDayViewAsInternalAdmin" />
            <!--         <include name="verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin" /> vailqacn enterprise is not enable 24hrs-->
-                    <include name="verifySettingsExcessOf8HrsInA24HrsPeriodAsInternalAdmin" />
-                    <include name="verifyExcessOf8HrsInA24HrsPeriodAsInternalAdmin" />
-                    <include name="verifyExcessOf10HrsInA24HrsPeriodAsInternalAdmin" />
-                    <include name="verifyExcessOf12HrsInA24HrsPeriodAsInternalAdmin" />
+<!--                    <include name="verifySettingsExcessOf8HrsInA24HrsPeriodAsInternalAdmin" Blocked by SCH-7211 />-->
+<!--                    <include name="verifyExcessOf8HrsInA24HrsPeriodAsInternalAdmin" Blocked by SCH-7211 />-->
+<!--                    <include name="verifyExcessOf10HrsInA24HrsPeriodAsInternalAdmin" Blocked by SCH-7211 />-->
+<!--                    <include name="verifyExcessOf12HrsInA24HrsPeriodAsInternalAdmin" Blocked by SCH-7211 />-->
                     <!--                    <include name="verifyExcessOf8HrsInASingleWorkDayAsInternalAdmin" />  SCH-2411  -->
                     <include name="verifyTheShiftTimesConsistentOnInputAndShiftCardAsInternalAdmin" />
                     <include name="verifyTheShiftTimeCanBeSetMoreThan24HrsThatSetByShiftTimeInputAsInternalAdmin" />
                     <!--                    <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" /> need disable Continuous Operation-->
                     <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
-                    <include name="verifyTheBudgetHoursWhenByLocationAsInternalAdmin" />
-                    <include name="verifyTheNoBudgetPermissionForSMAsInternalAdmin" />
+<!--                    <include name="verifyTheBudgetHoursWhenByLocationAsInternalAdmin" Blocked by SCH-7081 />-->
+                    <!-- <include name="verifyTMOverTimeStatusAsInternalAdmin" /> -->
+                    <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
                                    </methods>
                                </class>
                            </classes>

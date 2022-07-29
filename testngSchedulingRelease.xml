@@ -18,8 +18,8 @@
                     <include name="verifyTheContentOfActivityPageAsStoreManager" />
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
-                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />
-                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />
+<!--                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" />-->
+<!--                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" />-->
                 </methods>
             </class>
         </classes>

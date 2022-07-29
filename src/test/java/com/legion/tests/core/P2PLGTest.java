@@ -21,6 +21,11 @@ import java.util.*;
 
 public class P2PLGTest extends TestBase {
 
+    private static String Location = "Location";
+    private static String District = "District";
+    private static String Region = "Region";
+    private static String BusinessUnit = "Business Unit";
+
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) {
@@ -1181,6 +1186,513 @@ public class P2PLGTest extends TestBase {
                     .get("publishedStatus");
             SimpleUtils.assertOnFail("The schedule status should be Published, but actual is:"+publishStatus,
                     publishStatus.equalsIgnoreCase("Published"), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify data match in District Summary widget on Dashboard in Region View when it includes LG")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyDataMatchInDistrictSummaryWidgetOnDashboardInRegionViewWhenItIncludesLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            //Get Budegeted Hrs/Scheduled Hrs/Projected Hrs/Budget Variance in location summary widget from every district
+            List<String> districtNames = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList(District);
+            float sumBudgetedHrs = 0;
+            float sumScheduledHrs = 0;
+            float sumProjectedHrs = 0;
+            float sumBudgetVarianceHrs = 0;
+            for (String districtName : districtNames) {
+                locationSelectorPage.changeUpperFieldDirect(District, districtName);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                dashboardPage.clickOnDashboardConsoleMenu();
+                List<String> dataOnLocationSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+                sumBudgetedHrs += Float.parseFloat(dataOnLocationSummaryWidget.get(0));
+                sumScheduledHrs += Float.parseFloat(dataOnLocationSummaryWidget.get(1));
+                sumProjectedHrs += Float.parseFloat(dataOnLocationSummaryWidget.get(2));
+                sumBudgetVarianceHrs += Float.parseFloat(dataOnLocationSummaryWidget.get(5));
+            }
+
+            //            dashboardPage.clickOnRefreshButtonOnSMDashboard();
+            //Get Budegeted Hrs/Scheduled Hrs/Projected Hrs/Budget Variance in District summary widget
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String regionName = selectedUpperFields.get(Region);
+            locationSelectorPage.changeUpperFieldDirect(Region, regionName);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            Thread.sleep(5000);
+            dashboardPage.clickOnDashboardConsoleMenu();
+            List<String> dataOnDistrictSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            float budgetedHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(0));
+            float scheduledHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(1));
+            float projectedHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(2));
+            float budgetVarianceHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(5));
+
+            //Compare the value of Projected Hrs in region view with the sum of Projected Hrs in DM view
+            SimpleUtils.assertOnFail("The budgeted hrs on Region View is: "+budgetedHrs
+                            +" The sum of budget hrs on District View is: "+sumBudgetedHrs,
+                    budgetedHrs == sumBudgetedHrs, false);
+
+            SimpleUtils.assertOnFail("The scheduled Hrs on Region View is: "+scheduledHrs
+                            +" The sum of scheduled Hrs on District View is: "+sumScheduledHrs,
+                    (scheduledHrs - sumScheduledHrs)< 0.1, false);
+
+            SimpleUtils.assertOnFail("The projected Hrs on Region View is: "+projectedHrs
+                            +" The sum of projected Hrs on District View is: "+sumProjectedHrs,
+                    projectedHrs == sumProjectedHrs, false);
+
+            SimpleUtils.assertOnFail("The budget Variance Hrs on Region View is: "+budgetVarianceHrs
+                            +" The sum of budget Variance Hrs on District View is: "+sumBudgetVarianceHrs,
+                    budgetVarianceHrs == sumBudgetVarianceHrs, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify data match in Location Summary widget on Dashboard in DM View when it includes LG")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyDataMatchInLocationSummaryWidgetOnDashboardInDMViewWhenItIncludesLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            scheduleMainPage.clickOnFilterBtn();
+            List<String> subLocationNames = scheduleMainPage.getSpecificFilterNames("location");
+
+            dashboardPage.clickOnDashboardConsoleMenu();
+            dashboardPage.clickOnRefreshButtonOnSMDashboard();
+            //Get Budegeted Hrs/Scheduled Hrs/Projected Hrs/Budget Variance location count in District summary widget
+            Map<String, String> selectedUpperFields = locationSelectorPage.getSelectedUpperFields();
+            String districtName = selectedUpperFields.get(District);
+            locationSelectorPage.changeUpperFieldDirect(District, districtName);
+            List<String> dataOnDistrictSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
+            float budgetedHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(0));
+            float scheduledHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(1));
+            float projectedHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(2));
+            int locationsCount = Integer.parseInt(dataOnDistrictSummaryWidget.get(3).split(" ")[0])+Integer.parseInt(dataOnDistrictSummaryWidget.get(4).split(" ")[0]);
+            float budgetVarianceHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(5));
+
+            //Click on All Locations to get the location number (excluding peer child location) to compare with the number in Location Summary widget
+            List<String> locationNames = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList(Location);
+            SimpleUtils.assertOnFail("The location count on District Summary widget is: "+locationsCount
+                            + " The actual location count on upperfield dropdown list is: "
+                            +(locationNames.size()-subLocationNames.size()),
+                    locationsCount == (locationNames.size()-subLocationNames.size()), false);
+
+            //Click on View Schedules link in Location Summary widget
+            dashboardPage.clickOnViewSchedulesOnOrgSummaryWidget();
+
+            //Get Budegeted Hrs/Scheduled Hrs/Projected Hrs/Budget Variance location count in District summary smart card
+            scheduleDMViewPage.clickOnRefreshButton();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
+            Thread.sleep(5000);
+            List<String> textOnTheChartInRegionSummarySmartCard= scheduleDMViewPage.getTextFromTheChartInLocationSummarySmartCard();
+            float budgetedHrsOnLocationSummarySmartCard = Float.parseFloat(textOnTheChartInRegionSummarySmartCard.get(0));
+            float scheduledHrsOnLocationSummarySmartCard = Float.parseFloat(textOnTheChartInRegionSummarySmartCard.get(2));
+            float projectedHrsOnLocationSummarySmartCard = Float.parseFloat(textOnTheChartInRegionSummarySmartCard.get(4));
+            float budgetVarianceHrsOnLocationSummarySmartCard = Float.parseFloat(textOnTheChartInRegionSummarySmartCard.get(6));
+
+            //Compare the value of Projected Hrs in region view with the sum of Projected Hrs in DM view
+            SimpleUtils.assertOnFail("The budgeted hrs on DM dashboard View is: "+budgetedHrs
+                            +" The sum of budget hrs on DM schedule View is: "+budgetedHrsOnLocationSummarySmartCard,
+                    budgetedHrs == budgetedHrsOnLocationSummarySmartCard, false);
+
+            SimpleUtils.assertOnFail("The scheduled Hrs on DM dashboard View is: "+scheduledHrs
+                            +" The sum of scheduled Hrs on DM schedule View is: "+scheduledHrsOnLocationSummarySmartCard,
+                    scheduledHrs == scheduledHrsOnLocationSummarySmartCard, false);
+
+            SimpleUtils.assertOnFail("The projected Hrs on DM dashboard View is: "+projectedHrs
+                            +" The sum of projected Hrs on DM schedule View is: "+projectedHrsOnLocationSummarySmartCard,
+                    projectedHrs == projectedHrsOnLocationSummarySmartCard, false);
+
+            SimpleUtils.assertOnFail("The budget Variance Hrs on DM dashboard View is: "+budgetVarianceHrs
+                            +" The sum of budget Variance Hrs on DM schedule View is: "+budgetVarianceHrsOnLocationSummarySmartCard,
+                    budgetVarianceHrs == budgetVarianceHrsOnLocationSummarySmartCard, false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate analytics table on Schedule in DM View when it includes LG")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyAnalyticsTableOnScheduleInDMViewWhenItIncludesLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+//            scheduleMainPage.publishOrRepublishSchedule();
+            scheduleMainPage.clickOnFilterBtn();
+            List<String> subLocationNames = scheduleMainPage.getSpecificFilterNames("location");
+
+            locationSelectorPage.selectCurrentUpperFieldAgain(District);
+            scheduleDMViewPage.clickOnRefreshButton();
+            locationSelectorPage.refreshTheBrowser();
+            //P2P children location should not appear along with parent. so only LG’s parents would appear on the DM view.
+            SimpleUtils.assertOnFail("The parent location: "+location+" should display in the analytics table on schedule DM view! ",
+                    scheduleDMViewPage.checkIfLocationExistOnDMViewAnalyticsTable(location), false);
+
+            for (String subLocation:subLocationNames) {
+                SimpleUtils.assertOnFail("The sub location: "+subLocation+" should not display in the analytics table on schedule DM view! ",
+                        !scheduleDMViewPage.checkIfLocationExistOnDMViewAnalyticsTable(subLocation), false);
+            }
+
+            //Get parent location data on Schedule DM view
+            Map<String, String> locationInfoOnDMView =
+                    scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(location);
+            float budgetHourOnDMView = Float.parseFloat(locationInfoOnDMView.get("budgetedHours"));
+            float publishedOnDMView = Float.parseFloat(locationInfoOnDMView.get("publishedHours"));
+
+            //Analytics table should match the current week's data
+            scheduleDMViewPage.clickSpecificLocationInDMViewAnalyticTable(location);
+//            Thread.sleep(5000);
+            HashMap<String, Float> scheduleHoursForFirstSchedule = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard();
+            float budgetHourOnSchedulePage = scheduleHoursForFirstSchedule.get("budgetedHours");
+            float publishedOnSchedulePage = scheduleHoursForFirstSchedule.get("scheduledHours");
+            SimpleUtils.assertOnFail("The budget hours on DM view is: "+budgetHourOnDMView
+                            + " The budget hours on DM view is: "+budgetHourOnSchedulePage,
+                    budgetHourOnDMView == budgetHourOnSchedulePage,false);
+            SimpleUtils.assertOnFail("The published hours on DM view is: "+publishedOnDMView
+                            + " The published hours on DM view is: "+publishedOnSchedulePage,
+                    publishedOnDMView == publishedOnSchedulePage,false);
+            //Go to past week
+            scheduleCommonPage.navigateToPreviousWeek();
+            isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+//            scheduleMainPage.publishOrRepublishSchedule();
+            locationSelectorPage.selectCurrentUpperFieldAgain(District);
+
+            //P2P children location should not appear along with parent. so only LG’s parents would appear on the DM view.
+            SimpleUtils.assertOnFail("The parent location: "+location+" should display in the analytics table on schedule DM view! ",
+                    scheduleDMViewPage.checkIfLocationExistOnDMViewAnalyticsTable(location), false);
+
+            for (String subLocation:subLocationNames) {
+                SimpleUtils.assertOnFail("The sub location: "+subLocation+" should not display in the analytics table on schedule DM view! ",
+                        !scheduleDMViewPage.checkIfLocationExistOnDMViewAnalyticsTable(subLocation), false);
+            }
+
+            //Get parent location data on Schedule DM view
+            locationInfoOnDMView =
+                    scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(location);
+            budgetHourOnDMView = Float.parseFloat(locationInfoOnDMView.get("budgetedHours"));
+            publishedOnDMView = Float.parseFloat(locationInfoOnDMView.get("publishedHours"));
+
+            //Analytics table should match the current week's data
+            scheduleDMViewPage.clickSpecificLocationInDMViewAnalyticTable(location);
+            scheduleHoursForFirstSchedule = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard();
+            budgetHourOnSchedulePage = scheduleHoursForFirstSchedule.get("budgetedHours");
+            publishedOnSchedulePage = scheduleHoursForFirstSchedule.get("scheduledHours");
+            SimpleUtils.assertOnFail("The budget hours on DM view is: "+budgetHourOnDMView
+                            + " The budget hours on DM view is: "+budgetHourOnSchedulePage,
+                    budgetHourOnDMView == budgetHourOnSchedulePage,false);
+            SimpleUtils.assertOnFail("The published hours on DM view is: "+publishedOnDMView
+                            + " The published hours on DM view is: "+publishedOnSchedulePage,
+                    publishedOnDMView == publishedOnSchedulePage,false);
+
+            //Go to future week
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+
+            isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+//            scheduleMainPage.publishOrRepublishSchedule();
+            locationSelectorPage.selectCurrentUpperFieldAgain(District);
+            //P2P children location should not appear along with parent. so only LG’s parents would appear on the DM view.
+            SimpleUtils.assertOnFail("The parent location: "+location+" should display in the analytics table on schedule DM view! ",
+                    scheduleDMViewPage.checkIfLocationExistOnDMViewAnalyticsTable(location), false);
+
+            for (String subLocation:subLocationNames) {
+                SimpleUtils.assertOnFail("The sub location: "+subLocation+" should not display in the analytics table on schedule DM view! ",
+                        !scheduleDMViewPage.checkIfLocationExistOnDMViewAnalyticsTable(subLocation), false);
+            }
+
+            //Get parent location data on Schedule DM view
+            locationInfoOnDMView =
+                    scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(location);
+            budgetHourOnDMView = Float.parseFloat(locationInfoOnDMView.get("budgetedHours"));
+            publishedOnDMView = Float.parseFloat(locationInfoOnDMView.get("publishedHours"));
+
+            //Analytics table should match the current week's data
+            scheduleDMViewPage.clickSpecificLocationInDMViewAnalyticTable(location);
+            scheduleHoursForFirstSchedule = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard();
+            budgetHourOnSchedulePage = scheduleHoursForFirstSchedule.get("budgetedHours");
+            publishedOnSchedulePage = scheduleHoursForFirstSchedule.get("scheduledHours");
+            SimpleUtils.assertOnFail("The budget hours on DM view is: "+budgetHourOnDMView
+                            + " The budget hours on DM view is: "+budgetHourOnSchedulePage,
+                    budgetHourOnDMView == budgetHourOnSchedulePage,false);
+            SimpleUtils.assertOnFail("The published hours on DM view is: "+publishedOnDMView
+                            + " The published hours on DM view is: "+publishedOnSchedulePage,
+                    publishedOnDMView == publishedOnSchedulePage,false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate analytics table on Compliance in DM View when it includes LG")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyAnalyticsTableOnComplianceInDMViewWhenItIncludesLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            scheduleMainPage.clickOnFilterBtn();
+            List<String> subLocationNames = scheduleMainPage.getSpecificFilterNames("location");
+            String districtName = locationSelectorPage.getSelectedUpperFields().get(District);
+            locationSelectorPage.selectCurrentUpperFieldAgain(District);
+            timeSheetPage.clickOnComplianceConsoleMenu();
+            //P2P children location should not appear along with parent. so only LG’s parents would appear on the DM view.
+            SimpleUtils.assertOnFail("The parent location: "+location+" should display in the analytics table on schedule DM view! ",
+                    scheduleDMViewPage.checkIfLocationExistOnDMViewAnalyticsTable(location), false);
+
+            for (String subLocation:subLocationNames) {
+                SimpleUtils.assertOnFail("The sub location: "+subLocation+" should not display in the analytics table on schedule DM view! ",
+                        !scheduleDMViewPage.checkIfLocationExistOnDMViewAnalyticsTable(subLocation), false);
+            }
+
+            // Validate the data of analytics table for past week.
+            compliancePage.navigateToPreviousWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for past week successfully",compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInDMForPast = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
+            String totalExtraHoursInDMView = dataInDMForPast.get(0);
+
+            dashboardPage.navigateToDashboard();
+            locationSelectorPage.changeLocation(location);
+            List<String> dataOnComplianceViolationWidgetInSMDashboard = liquidDashboardPage.getDataOnComplianceViolationWidget();
+            String totalHrsInSMForPast = dataOnComplianceViolationWidgetInSMDashboard.get(0);
+            SimpleUtils.report("Total Extra Hours In DM View for past week is "+totalExtraHoursInDMView);
+            SimpleUtils.report("Total Extra Hours In SM View for past week is "+totalHrsInSMForPast);
+            if(totalHrsInSMForPast.equals(String.valueOf(Math.round(Float.parseFloat(totalExtraHoursInDMView)))))
+                SimpleUtils.pass("Compliance Page: Analytics table matches the past week's data");
+            else
+                SimpleUtils.fail("Compliance Page: Analytics table doesn't match the past week's data",false);
+
+            // Validate the data of analytics table for current week.
+            String totalHrsInSMForCurrent = dataOnComplianceViolationWidgetInSMDashboard.get(3);
+            locationSelectorPage.reSelectDistrict(districtName);
+            compliancePage.clickOnComplianceConsoleMenu();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for current week successfully",compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInDMForCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
+            String totalExtraHoursInDMViewForCurrent = dataInDMForCurrent.get(0);
+            SimpleUtils.report("Total Extra Hours In DM View for current week is " + totalExtraHoursInDMViewForCurrent);
+            SimpleUtils.report("Total Extra Hours In SM View for current week is " + totalHrsInSMForCurrent);
+            if(totalHrsInSMForCurrent.equals(String.valueOf(Math.round(Float.parseFloat((totalExtraHoursInDMViewForCurrent))))))
+                SimpleUtils.pass("Compliance Page: Analytics table matches the current week's data");
+            else
+                SimpleUtils.fail("Compliance Page: Analytics table doesn't match the current week's data",false);
+
+            // Validate the data of analytics table for future week
+            compliancePage.navigateToNextWeek();
+            SimpleUtils.assertOnFail("Compliance page analytics table not loaded for future week successfully",compliancePage.isComplianceUpperFieldView(), false);
+            List<String> dataInDMForFuture = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
+            String totalExtraHoursInDMViewForFuture = dataInDMForFuture.get(0);
+            SimpleUtils.report("Total Extra Hours In DM View for future week is " + totalExtraHoursInDMViewForFuture);
+            if(totalExtraHoursInDMViewForFuture.equals("0"))
+                SimpleUtils.pass("Compliance Page: Analytics table matches the future week's data");
+            else
+                SimpleUtils.fail("Compliance Page: Analytics table doesn't match the future week's data",false);
+            compliancePage.navigateToPreviousWeek();
+
+            // Validate Late Schedule is Yes
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page not loaded successfully", dashboardPage.isScheduleConsoleMenuDisplay(), false);
+            scheduleDMViewPage.clickOnLocationNameInDMView(location);
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated)
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (smartCardPage.isRequiredActionSmartCardLoaded()){
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+                scheduleMainPage.saveSchedule();
+            }
+            createSchedulePage.publishActiveSchedule();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            compliancePage.clickOnComplianceConsoleMenu();
+            compliancePage.clickOnRefreshButton();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
+            List<String>  dataCurrent = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
+            String lateScheduleYes = dataCurrent.get(dataCurrent.size()-1);
+            if (lateScheduleYes.equals("Yes"))
+                SimpleUtils.pass("Compliance Page: Late Schedule is Yes as expected");
+            else
+                SimpleUtils.fail("Compliance Page: Late Schedule is not Yes",false);
+
+            // Validate Late Schedule is No
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleDMViewPage.clickOnLocationNameInDMView(location);
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated)
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (smartCardPage.isRequiredActionSmartCardLoaded()){
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+                scheduleMainPage.saveSchedule();
+            }
+            createSchedulePage.publishActiveSchedule();
+            locationSelectorPage.reSelectDistrict(districtName);
+
+            compliancePage.clickOnComplianceConsoleMenu();
+            compliancePage.navigateToNextWeek();
+            compliancePage.navigateToNextWeek();
+            List<String>  dataNext = compliancePage.getDataFromComplianceTableForGivenLocationInDMView(location);
+            String lateScheduleNo = dataNext.get(dataNext.size()-1);
+            if (lateScheduleNo.equals("No"))
+                SimpleUtils.pass("Compliance Page: Late Schedule is No as expected");
+            else
+                SimpleUtils.fail("Compliance Page: Late Schedule is not No",false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate analytics table on Timesheet in DM View when it includes LG")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyAnalyticsTableOnTimesheetInDMViewWhenItIncludesLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleDMViewPage scheduleDMViewPage = pageFactory.createScheduleDMViewPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+            LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            scheduleMainPage.clickOnFilterBtn();
+            List<String> subLocationNames = scheduleMainPage.getSpecificFilterNames("location");
+            String districtName = locationSelectorPage.getSelectedUpperFields().get(District);
+            locationSelectorPage.selectCurrentUpperFieldAgain(District);
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            //P2P children location should not appear along with parent. so only LG’s parents would appear on the DM view.
+            SimpleUtils.assertOnFail("The parent location: "+location+" should display in the analytics table on schedule DM view! ",
+                    scheduleDMViewPage.checkIfLocationExistOnDMViewAnalyticsTable(location), false);
+
+            for (String subLocation:subLocationNames) {
+                SimpleUtils.assertOnFail("The sub location: "+subLocation+" should not display in the analytics table on schedule DM view! ",
+                        !scheduleDMViewPage.checkIfLocationExistOnDMViewAnalyticsTable(subLocation), false);
+            }
+
+            //Validate the data of analytics table for past week.
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleDMViewPage.clickSpecificLocationInDMViewAnalyticTable(location);
+            SimpleUtils.assertOnFail("This is not the Timesheet SM view page for past week!",timeSheetPage.isTimeSheetPageLoaded(), false);
+            dashboardPage.clickOnDashboardConsoleMenu();
+            locationSelectorPage.reSelectDistrict(districtName);
+            timeSheetPage.clickOnTimeSheetConsoleMenu();
+            //Validate the data of analytics table for current week.
+            scheduleDMViewPage.clickSpecificLocationInDMViewAnalyticTable(location);
+            SimpleUtils.assertOnFail("This is not the Timesheet SM view page for current!",timeSheetPage.isTimeSheetPageLoaded(), false);
+
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -2166,4 +2166,19 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             SimpleUtils.report("Schedule main page is not loaded! ");
         return isLoaded;
     }
+
+    public boolean isManagerViewSelected () throws Exception {
+        boolean isManagerViewSelected = false;
+        if(isElementEnabled(activScheduleType,5)){
+            if(activScheduleType.getText().equalsIgnoreCase("Suggested")){
+                SimpleUtils.report("The Suggested tab is selected! ");
+            }else{
+                isManagerViewSelected = true;
+                SimpleUtils.report("The Manager tab is selected! ");
+            }
+        }else{
+            SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
+        }
+        return isManagerViewSelected;
+    }
 }

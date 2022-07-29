@@ -47,7 +47,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     private WebElement editScheduleButton;
     @FindBy(css = "div.sch-view-dropdown-summary-content-item-heading.ng-binding")
     private WebElement analyzePopupLatestVersionLabel;
-    @FindBy(css = "[ng-click=\"goToSchedule()\"]")
+    @FindBy(css = "button[ng-click=\"goToSchedule()\"]:not([disabled])")
     private WebElement checkOutTheScheduleButton;
     @FindBy(css = "button.btn-success")
     private WebElement upgradeAndGenerateScheduleBtn;
@@ -69,7 +69,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     private WebElement generateModalTitle;
     @FindBy(css = "[class=\"modal-instance-button confirm ng-binding\"]")
     private WebElement nextButtonOnCreateSchedule;
-    @FindBy(css = "[label='Generate Schedule']")
+    @FindBy(css = "button[ng-click=\"okAction()\"]")
     private WebElement generateSheduleForEnterBudgetBtn;
     @FindBy(xpath = "//button[contains(text(),'UPDATE')]")
     private WebElement updateAndGenerateScheduleButton;
@@ -355,6 +355,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     }
 
 
+    @FindBy(className = "generate-modal-header")
+    private WebElement copyScheduleWeekModalTitle;
     @Override
     public void createScheduleForNonDGFlowNewUI() throws Exception {
         String subTitle = "Confirm Operating Hours";
@@ -362,8 +364,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 //            waitForSeconds(3);
             clickTheElement(generateSheduleButton);
 //            openBudgetPopUp();
-            if (isElementLoaded(generateModalTitle, 15) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
-                    && isElementLoaded(nextButtonOnCreateSchedule, 15)) {
+            if (isElementLoaded(generateModalTitle, 20) && subTitle.equalsIgnoreCase(generateModalTitle.getText().trim())
+                    && isElementLoaded(nextButtonOnCreateSchedule, 20)) {
                 editTheOperatingHours(new ArrayList<>());
 //                waitForSeconds(3);
                 if (isClickable(nextButtonOnCreateSchedule, 10)) {
@@ -377,16 +379,24 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                         clickTheElement(nextButtonOnCreateSchedule);
                     }
                 }
-                if (isElementEnabled(checkOutTheScheduleButton, 5)) {
-                    checkoutSchedule();
-                } else {
+                if (isElementEnabled(suggestScheduleModalWeek, 50)) {
                     selectWhichWeekToCopyFrom("SUGGESTED");
                     clickOnFinishButtonOnCreateSchedulePage();
+                } else {
+                    WebElement element = (new WebDriverWait(getDriver(), 120))
+                            .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
+                    waitForSeconds(3);
+                    if (isElementLoaded(element, 15) && isClickable(element, 15)) {
+                        checkoutSchedule();
+                        SimpleUtils.pass("Schedule Page: Schedule is generated within 2 minutes successfully");
+                    } else {
+                        SimpleUtils.fail("Schedule Page: Schedule isn't generated within 2 minutes", false);
+                    }
                 }
 //                switchToManagerViewToCheckForSecondGenerate();
             } else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
-                if (isElementEnabled(checkOutTheScheduleButton, 30)) {
+                if (isElementEnabled(checkOutTheScheduleButton, 10)) {
                     checkoutSchedule();
 //                    switchToManagerViewToCheckForSecondGenerate();
                 } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
@@ -395,6 +405,9 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 } else {
                     SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
                 }
+            } else if (isElementLoaded(copyScheduleWeekModalTitle, 5)){
+                selectWhichWeekToCopyFrom("SUGGESTED");
+                clickOnFinishButtonOnCreateSchedulePage();
             } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                 updateAndGenerateSchedule();
 //                switchToManagerViewToCheckForSecondGenerate();
@@ -402,6 +415,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
                 SimpleUtils.pass("Schedule Generated Successfully!");
 //                switchToManagerViewToCheckForSecondGenerate();
+            }else if (isWeekGenerated()) {
+                SimpleUtils.pass("Schedule Generated Successfully!");
             } else {
                 SimpleUtils.fail("Not able to generate schedule Successfully!", false);
             }
@@ -888,7 +903,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 //                switchToManagerViewToCheckForSecondGenerate();
             } else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
-                if (isElementEnabled(checkOutTheScheduleButton, 20)) {
+                if (isElementEnabled(checkOutTheScheduleButton, 10)) {
                     checkoutSchedule();
 //                    switchToManagerViewToCheckForSecondGenerate();
                 } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
@@ -897,6 +912,9 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 } else {
                     SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
                 }
+            } else if (isElementLoaded(copyScheduleWeekModalTitle, 5)){
+                selectWhichWeekToCopyFrom("SUGGESTED");
+                clickOnFinishButtonOnCreateSchedulePage();
             } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
                 updateAndGenerateSchedule();
 //                switchToManagerViewToCheckForSecondGenerate();
@@ -904,6 +922,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 checkOutGenerateScheduleBtn(checkOutTheScheduleButton);
                 SimpleUtils.pass("Schedule Generated Successfully!");
 //                switchToManagerViewToCheckForSecondGenerate();
+            } else if (isWeekGenerated()) {
+                SimpleUtils.pass("Schedule Generated Successfully!");
             } else {
                 SimpleUtils.fail("Not able to generate schedule Successfully!", false);
             }
@@ -1047,7 +1067,9 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         if (isElementEnabled(generateSheduleButton, 10)) {
             click(generateSheduleButton);
             openBudgetPopUp();
-
+            if (checkIfCheckOutButtonLoaded()){
+                checkoutSchedule();
+            }
         } else {
             SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
         }

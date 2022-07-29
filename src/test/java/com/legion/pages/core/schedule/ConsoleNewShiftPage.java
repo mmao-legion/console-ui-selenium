@@ -186,6 +186,18 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             click(btnSave);
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
         }else if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
+            try {
+                if (isElementLoaded(shiftStartInputOnNewCreateShiftPage, 3) && isElementLoaded(shiftEndInputOnNewCreateShiftPage, 3)) {
+                    if (!shiftEndInputOnNewCreateShiftPage.getAttribute("value").contains("AM") && !shiftEndInputOnNewCreateShiftPage.getAttribute("value").contains("PM")) {
+                        moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+                    }
+                    if (!shiftStartInputOnNewCreateShiftPage.getAttribute("value").contains("AM") && !shiftStartInputOnNewCreateShiftPage.getAttribute("value").contains("PM")) {
+                        moveSliderAtCertainPoint("7am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+                    }
+                }
+            } catch (Exception e) {
+                // Do Nothing
+            }
             click(btnSaveOnNewCreateShiftPage);
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
         }else {
@@ -2161,8 +2173,14 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     }
                 } else {
                     if (nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
+                        if (!isElementLoaded(nextDayTooltip, 5)) {
+                            moveToElementAndClick(nextDayIcon);
+                        }
                         clickTheElement(nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root input")));
                         waitForSeconds(2);
+                        if (!isElementLoaded(nextDayTooltip, 5)) {
+                            moveToElementAndClick(nextDayIcon);
+                        }
                         if (!nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
                             SimpleUtils.pass("Uncheck Next day checkbox successfully! ");
                         } else
@@ -2770,7 +2788,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private List<WebElement> buttonsOnConfirmPopup;
     @FindBy(css = "[data-testid=\"confirm-console-wrapper\"] div p")
     private WebElement titleOnConfirmPopup;
-    @FindBy(xpath = "//div[contains(@data-testid,'confirm-console-wrapper')]/p")
+    @FindBy(xpath = "//div[contains(@data-testid,'confirm-console-wrapper')]/div/span")
     private WebElement messageOnConfirmPopup;
     public boolean checkConfirmPopupIsLoaded() throws Exception {
         boolean isLoaded = false;
@@ -2875,21 +2893,21 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.report("The shift name input is not loaded on New Create Shift page! ");
     }
 
-    @FindBy(css = "[class=\"sc-karCPZ chPZcS\"]")
+    @FindBy(css = "[color=\"grey\"]")
     private WebElement greyAvailableIcon;
-    @FindBy(css = "[class=\"sc-karCPZ hhDhwY\"]")
+    @FindBy(css = "[color=\"#37cf3f\"]")
     private WebElement greenAvailableIcon;
     @FindBy(css = "[class=\"sc-karCPZ pJskc\"]")
     private WebElement redAvailableIcon;
     @Override
     public String getTMAvailableColourForAssignedShift () throws Exception {
         String availableIconColour = null;
-        if (isElementLoaded(greenAvailableIcon, 5) && greenAvailableIcon.getAttribute("color").contains("#37cf3f")) {
-            return availableIconColour = "#37cf3f";
-        }else if(isElementLoaded(greyAvailableIcon, 5) && greyAvailableIcon.getAttribute("color").contains("grey")){
+        if (isElementLoaded(greenAvailableIcon, 5)) {
+            return availableIconColour = "green";
+        }else if(isElementLoaded(greyAvailableIcon, 5)){
             return availableIconColour = "grey";
-        }else if(isElementLoaded(redAvailableIcon, 5) && redAvailableIcon.getAttribute("color").contains("#ff2600")) {
-            return availableIconColour = "#ff2600";
+        }else if(isElementLoaded(redAvailableIcon, 5)) {
+            return availableIconColour = "red";
         }else
             SimpleUtils.fail("The available icon is not displayed!", false);
         return null;

@@ -3241,13 +3241,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement dynamicGroupEditBTN;
 	@FindBy(css="modal[modal-title=\"Remove Dynamic Location Group\"] lg-button[label=\"Remove\"]")
 	private WebElement dynamicGroupRemoveBTNOnDialog;
-
+//	@FindBy(css="lg-search input[placeholder=\"You can search by name, label and description\"]")
+//	private WebElement searchDynamicEmployeeGroupsField;
 	@Override
 	public void clickOnAssociationTabOnTemplateDetailsPage() throws Exception{
 		if(isElementEnabled(templateAssociationBTN,10)){
 			scrollToElement(templateAssociationBTN);
 			clickTheElement(templateAssociationBTN);
-			if(isElementEnabled(searchAssociateFiled,2)){
+			if(isElementEnabled(searchDynamicEmployeeGroupsField,2)){
 				SimpleUtils.pass("Click Association Tab successfully!");
 			}else {
 				SimpleUtils.fail("Failed to Click Association Tab!",false);
@@ -3263,9 +3264,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		boolean dataExist=false;
 		clickOnAssociationTabOnTemplateDetailsPage();
 		waitForSeconds(2);
-		if (isElementLoaded(searchAssociateFiled, 10)) {
-			searchAssociateFiled.clear();
-			searchAssociateFiled.sendKeys(dynamicGroupName);
+		if (isElementLoaded(searchDynamicEmployeeGroupsField, 10)) {
+			searchDynamicEmployeeGroupsField.clear();
+			searchDynamicEmployeeGroupsField.sendKeys(dynamicGroupName);
 		}
 		waitForSeconds(5);
 		if(areListElementVisible(getDriver().findElements(By.cssSelector("[ng-repeat*=\"filterdynamicGroups\"]")), 5)
@@ -6080,7 +6081,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		return isStrictlyEnforceMinorViolationSettingEnabled;
 	}
 
-	@FindBy(css = "question-input[question-title=\"Can a manager add another locations' employee in schedule before the employee''s home location has published the schedule?\"] input-field")
+	@FindBy(css = "question-input[question-title=\"Can a manager add another locations' employee in schedule before the employee's home location has published the schedule?\"] input-field")
 	private WebElement canManagerAddAnotherLocationsEmployeeInSchedule;
 	@Override
 	public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception {

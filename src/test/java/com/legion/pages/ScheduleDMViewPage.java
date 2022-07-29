@@ -52,4 +52,5 @@ public interface ScheduleDMViewPage {
     public void compareHoursFromScheduleSmartCardAndDashboardSmartCard(List<Float> totalHoursFromSchTbl) throws Exception;
     public void compareProjectedWithinBudget(float totalCountProjectedOverBudget) throws Exception;
     public void verifyP2PSchedulesTableHeaderNames(boolean isApplyBudget) throws Exception;
+    public boolean checkIfLocationExistOnDMViewAnalyticsTable(String locationName);
 }
