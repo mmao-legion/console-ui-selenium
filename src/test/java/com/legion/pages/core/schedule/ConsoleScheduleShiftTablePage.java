@@ -971,6 +971,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 String[] workRoleWords = workRole.split(" ");
                 for (int i=0; i <searchResults.size(); i++) {
                     scrollToElement(searchResults.get(i));
+                    waitForSeconds(3);
                     Map<String, String> shiftInfo= getShiftInfoFromInfoPopUp(searchResults.get(i));
                     String shiftWorkRole = shiftInfo.get("WorkRole");
                     String shiftJobTitle = shiftInfo.get("JobTitle");
