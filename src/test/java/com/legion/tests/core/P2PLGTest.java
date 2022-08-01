@@ -1222,7 +1222,10 @@ public class P2PLGTest extends TestBase {
                 sumBudgetedHrs += Float.parseFloat(dataOnLocationSummaryWidget.get(0));
                 sumScheduledHrs += Float.parseFloat(dataOnLocationSummaryWidget.get(1));
                 sumProjectedHrs += Float.parseFloat(dataOnLocationSummaryWidget.get(2));
-                sumBudgetVarianceHrs += Float.parseFloat(dataOnLocationSummaryWidget.get(5));
+                if (dataOnLocationSummaryWidget.get(6).equalsIgnoreCase("under")){
+                    sumBudgetVarianceHrs = sumBudgetVarianceHrs - Float.parseFloat(dataOnLocationSummaryWidget.get(5));
+                }else
+                    sumBudgetVarianceHrs = sumBudgetVarianceHrs + Float.parseFloat(dataOnLocationSummaryWidget.get(5));
             }
 
             //            dashboardPage.clickOnRefreshButtonOnSMDashboard();
@@ -1233,6 +1236,7 @@ public class P2PLGTest extends TestBase {
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             Thread.sleep(5000);
             dashboardPage.clickOnDashboardConsoleMenu();
+            dashboardPage.clickOnRefreshButton();
             List<String> dataOnDistrictSummaryWidget = dashboardPage.getTheDataOnLocationSummaryWidget();
             float budgetedHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(0));
             float scheduledHrs = Float.parseFloat(dataOnDistrictSummaryWidget.get(1));
@@ -1253,8 +1257,8 @@ public class P2PLGTest extends TestBase {
                     projectedHrs == sumProjectedHrs, false);
 
             SimpleUtils.assertOnFail("The budget Variance Hrs on Region View is: "+budgetVarianceHrs
-                            +" The sum of budget Variance Hrs on District View is: "+sumBudgetVarianceHrs,
-                    budgetVarianceHrs == sumBudgetVarianceHrs, false);
+                            +" The sum of budget Variance Hrs on District View is: "+Math.abs(sumBudgetVarianceHrs),
+                    budgetVarianceHrs == Math.abs(sumBudgetVarianceHrs), false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

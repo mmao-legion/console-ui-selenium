@@ -2896,6 +2896,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 		*  3: projected Within Budget Locations
 		*  4: projected Over Budget Locations
 		*  5: the Hrs Over Or Under Budget
+		*  6: Over or under budget
 		* */
 		clickOnRefreshButton();
 		List<String> dataOnLocationSummaryWidget = new ArrayList<>();
@@ -2903,7 +2904,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				&& isElementLoaded(scheduledHours, 5)
 				&& isElementLoaded(projectedHours, 5)
 				&& isElementLoaded(projectedWithInBudgetLocations, 5)
-				&& isElementLoaded(projectedOverBudgetLocations)){
+				&& isElementLoaded(projectedOverBudgetLocations)
+				&& isElementLoaded(budgetHoursMessageSpan, 5)){
 
 			String budgetedHrs = guidanceHours.getText().replaceAll(",","");
 			dataOnLocationSummaryWidget.add(budgetedHrs);
@@ -2920,6 +2922,13 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 				theHrsOverOrUnderBudget = budgetHoursMessageOnLocationSummaryWidget.getText().replace(" Hrs", "").replaceAll(",","");
 			}
 			dataOnLocationSummaryWidget.add(theHrsOverOrUnderBudget);
+			String overOrUnderBudget = "";
+			if (budgetHoursMessageSpan.getText().contains("Over Budget")) {
+				overOrUnderBudget = "Over";
+			}else if (budgetHoursMessageSpan.getText().contains("Under Budget")) {
+				overOrUnderBudget = "Under";
+			}
+			dataOnLocationSummaryWidget.add(overOrUnderBudget);
 			SimpleUtils.report("Get the data on location summary widget successfully! ");
 		} else
 			SimpleUtils.fail("The data on Location Summary Widget loaded fail! ", false);

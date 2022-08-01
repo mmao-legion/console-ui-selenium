@@ -255,6 +255,7 @@ public class OvernightTest extends TestBase {
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -279,12 +280,13 @@ public class OvernightTest extends TestBase {
             //waiting for the cache
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             int j =0;
-            while (j< 10) {
+            while (j< 5) {
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 Thread.sleep(60000);
                 j++;
             }
-
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",

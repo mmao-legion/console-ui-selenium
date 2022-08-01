@@ -1344,19 +1344,23 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         waitForSeconds(5);
         if (areListElementVisible(searchAndRecommendedTMTabs, 5)) {
             if (areListElementVisible(searchResultsOnNewCreateShiftPage, 5)) {
-                newSelectedTM = searchResultsOnNewCreateShiftPage.get(0).findElements(By.cssSelector("p.MuiTypography-body1")).get(0).getText();
-                List<WebElement> assignAndOfferButtons = searchResultsOnNewCreateShiftPage.get(0).findElements(By.tagName("button"));
-                if (MyThreadLocal.getAssignTMStatus()) {
-                    clickTheElement(assignAndOfferButtons.get(0));
-                    SimpleUtils.report("Click Assign button successfully! ");
-                } else {
-                    if (assignAndOfferButtons.size()==1) {
+                if (isRecommendedTabSelected()){
+                    newSelectedTM = searchResultsOnNewCreateShiftPage.get(0).findElements(By.cssSelector("p.MuiTypography-body1")).get(0).getText();
+                    List<WebElement> assignAndOfferButtons = searchResultsOnNewCreateShiftPage.get(0).findElements(By.tagName("button"));
+                    if (MyThreadLocal.getAssignTMStatus()) {
                         clickTheElement(assignAndOfferButtons.get(0));
-                        SimpleUtils.report("Only one offer button and click Offer button successfully! ");
+                        SimpleUtils.report("Click Assign button successfully! ");
                     } else {
-                        clickTheElement(assignAndOfferButtons.get(1));
-                        SimpleUtils.report("There are both assign and offer button, click offer button successfully! ");
+                        if (assignAndOfferButtons.size()==1) {
+                            clickTheElement(assignAndOfferButtons.get(0));
+                            SimpleUtils.report("Only one offer button and click Offer button successfully! ");
+                        } else {
+                            clickTheElement(assignAndOfferButtons.get(1));
+                            SimpleUtils.report("There are both assign and offer button, click offer button successfully! ");
+                        }
                     }
+                } else {
+                    newSelectedTM = selectAndGetTheSelectedTM();
                 }
             } else {
                 clickTheElement(searchAndRecommendedTMTabs.get(0));
@@ -2911,5 +2915,18 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         }else
             SimpleUtils.fail("The available icon is not displayed!", false);
         return null;
+    }
+
+    private boolean isRecommendedTabSelected(){
+        boolean isRecommendedTabSelected = false;
+        if (areListElementVisible(searchAndRecommendedTMTabs, 5)){
+            if (searchAndRecommendedTMTabs.get(0).getAttribute("aria-selected").equalsIgnoreCase("false")){
+                isRecommendedTabSelected = true;
+                SimpleUtils.report("The search TM tab is selected! ");
+            } else
+                SimpleUtils.report("The recommended tab is selected! ");
+        } else
+            SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);
+        return isRecommendedTabSelected;
     }
 }
