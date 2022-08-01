@@ -5123,7 +5123,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 											}
 										}
 										if (questionInput.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty")){
-											if (saveButton.getAttribute("disabled").equals("disabled")){
+											if (saveButton.getAttribute("disabled").equals("true")){
 												clickTheElement(cancelButton);
 												setLeaveThisPageButton();
 												SimpleUtils.report("No available options!");
