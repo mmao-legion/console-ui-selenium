@@ -522,12 +522,13 @@ SCH-5862-->
         </classes>
     </test>
 
-    <test name="Bulk Delete Test">
+    <test name="Bulk Delete and Edit Test">
         <classes>
-            <class name="com.legion.tests.core.BulkDeleteTest">
+            <class name="com.legion.tests.core.BulkDeleteNEditTest">
                 <methods>
                     <include name="verifyDeleteMultipleShiftsInWeekViewAsInternalAdmin" />
                     <include name="verifyDeleteMultipleShiftsInDayViewAsInternalAdmin" />
+                    <include name="verifyTheContentOnMultipleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -571,19 +572,21 @@ SCH-5862-->
                     <!--         <include name="verifyAnalyticsTableOnScheduleInDMViewWhenItIncludesLGAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7121-->
                     <include name="verifyAnalyticsTableOnComplianceInDMViewWhenItIncludesLGAsInternalAdmin" />
                     <include name="verifyAnalyticsTableOnTimesheetInDMViewWhenItIncludesLGAsInternalAdmin" />
-                                    </methods>
-                                </class>
-                            </classes>
-                        </test>
-                        <test name="Parent Child LG Test">
-                            <classes>
-                                <class name="com.legion.tests.core.ParentChildLGTest">
-                                    <methods>
-                                        <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                    <include name="verifyTheContentOnMultipleEditShiftsWindowForP2PAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Parent Child LG Test">
+        <classes>
+            <class name="com.legion.tests.core.ParentChildLGTest">
+                <methods>
+                    <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
                       <!--                  <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" /> Need more time-->
-                                        <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                    <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
                      <!--                   <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnParentChildLGScheduleAsInternalAdmin" />
                                         <include name="verifyBulkDragAndDropShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" /> -->
+                    <include name="verifyTheContentOnMultipleEditShiftsWindowForPCAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

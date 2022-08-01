@@ -204,13 +204,13 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     public void clickOnEditButtonNoMaterScheduleFinalizedOrNot() throws Exception {
         CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
-        waitForSeconds(5);
+        waitForSeconds(3);
         if(checkEditButton())
         {
             // Validate what happens next to the Edit!
             // When Status is finalized, look for extra popup.
             clickTheElement(editScheduleButton);
-            waitForSeconds(5);
+            waitForSeconds(2);
             if(isElementLoaded(popupAlertPremiumPay,10) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
                 // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
@@ -221,8 +221,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                 } else {
                     SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
                 }
+                waitForSeconds(5);
             }
-            waitForSeconds(5);
             if(checkSaveButton() && checkCancelButton()) {
                 SimpleUtils.pass("Save and Cancel buttons are enabled ");
             } else{
