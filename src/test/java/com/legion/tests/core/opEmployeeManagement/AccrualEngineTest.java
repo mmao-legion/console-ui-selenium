@@ -1147,6 +1147,7 @@ public class AccrualEngineTest extends TestBase {
 
         TimeOffPage timeOffPage = new TimeOffPage();
         timeOffPage.switchToTimeOffTab();
+
         HashMap<String, String> actualTOB = timeOffPage.getTimeOffBalance();
         Assert.assertEquals(actualTOB, expectedTOBalance, "Failed to assert clear the accrual balance!");
 
@@ -1172,19 +1173,18 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Bereavement2", "4.8");//HireDate~Specified/worked hours/rate/ 0.2
         expectedTOBalance.put("Bereavement3", "7.2");//Specified~HireDate/worked hours/rate/ 0.3
         expectedTOBalance.put("Bereavement4", "9.6");//Specified~Specified/worked hours/rate/ 0.4
-        expectedTOBalance.put("Floating Holiday", "30");//HireDate~HireDate/Monthly /hire month/ begin
-        expectedTOBalance.put("Grandparents Day Off1", "21");//Specified~Specified/Weekly
         expectedTOBalance.put("Covid1", "0");//HireDate~HireDate/worked hours/fix days
         expectedTOBalance.put("Covid2", "0");//HireDate~Specified/worked hours/fix days
         expectedTOBalance.put("Covid3", "0");//Specified~HireDate/worked hours/fix days
         expectedTOBalance.put("Covid4", "0");//Specified~Specified/worked hours/fix days
+        expectedTOBalance.put("Floating Holiday", "30");//HireDate~HireDate/Monthly /hire month/ begin
+        expectedTOBalance.put("Grandparents Day Off1", "21");//Specified~Specified/Weekly
+
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance0531 = timeOffPage.getTimeOffBalance();
-        //HashMap<String, String> accrualHistory0509 = timeOffPage.getAccrualHistory();
-        String verification1 = validateTheAccrualResults(accrualBalance0531, expectedTOBalance);
-        Assert.assertTrue(verification1.contains("Succeeded in validating"), verification1);
+        Assert.assertEquals(expectedTOBalance,accrualBalance0531);
 
         userManagementPage.clickRefreshBalances();
 
@@ -1206,9 +1206,8 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Covid4", "0");//Specified~Specified/worked hours/fix days
 
         accrualBalance0531 = timeOffPage.getTimeOffBalance();
-        //HashMap<String, String> accrualHistory0509 = timeOffPage.getAccrualHistory();
-        verification1 = validateTheAccrualResults(accrualBalance0531, expectedTOBalance);
-        Assert.assertTrue(verification1.contains("Succeeded in validating"), verification1);
+
+        Assert.assertEquals(expectedTOBalance,accrualBalance0531);
 
         //logout
         OpsPortalNavigationPage opsPortalNavigationPage = new OpsPortalNavigationPage();
@@ -1950,6 +1949,8 @@ public class AccrualEngineTest extends TestBase {
         absentManagePage.search("UnitType");
 
         absentManagePage.otherDistributionMethodisDiabled();
+
+        absentManagePage.verifyWorkRoleStatus();
 
     }
 

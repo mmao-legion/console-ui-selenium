@@ -1381,7 +1381,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 		verifyDynamicGroupName();
 		verifyNoDistrictInTitle();
 
-		verifyRecentJobLocation("AutoCreateJob20220726141725");
+		verifyRecentJobLocation("LocationNum");
 
 		click(dynamicGroup);
 
@@ -1592,7 +1592,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 		click(firstJobTitle);
 		scrollToElement(addBtn);
 		click(addBtn);
-		if(locationNum.getText().equals("678 Locations Added")){
+		if(locationNum.getText().equals("3 Locations Added")){
 			SimpleUtils.pass("Location number is correct");
 		}else
 			SimpleUtils.fail("Location number is wrong",false);
