@@ -741,10 +741,12 @@ public class AbsentManagePage extends BasePage {
     }
 
     public void okCreatingTimeOff() {
+        scrollToElement(okCreating);
         okCreating.click();
     }
 
     public void cancelCreatingTimeOff() {
+        scrollToElement(cancelCreating);
         cancelCreating.click();
     }
 
@@ -788,8 +790,10 @@ public class AbsentManagePage extends BasePage {
 
     public void okToActionInModal(boolean okToAction) {
         if (okToAction) {
+            scrollToElement(okToEditing);
             okToEditing.click();
         } else {
+            scrollToElement(cancelCreating);
             cancelEditing.click();
         }
         waitForSeconds(3);
@@ -1004,8 +1008,6 @@ public class AbsentManagePage extends BasePage {
     private WebElement addIcon;
     @FindBy(css = "select[aria-label = 'Accrual Units']")
     private WebElement unitSelect;
-//    @FindBy(css = "input[aria-label = 'Reason name']")
-//    private WebElement reasonNameInput;
 
     public void addTimeOffReasonWithDayUnit() {
         click(addIcon);
@@ -1025,7 +1027,6 @@ public class AbsentManagePage extends BasePage {
             SimpleUtils.fail("Unit can be edited",false);
         scrollToElement(okCreating);
         click(okCreating);
-        //scrollToElement(remove);
         click(remove);
         click(okCreating);
     }
@@ -1065,7 +1066,6 @@ public class AbsentManagePage extends BasePage {
 
     private void verifyWorkRoleOnlyDisplayForScheduleHour(String type){
         distributioonMethodSelect.sendKeys(type);
-        //System.out.println(distributioonMethodSelect.getText());
         if(!getDriver().findElement(By.cssSelector("option[label='Scheduled Hours']")).isSelected()){
             if(!isElementEnabled(workRoleInput)){
                 SimpleUtils.pass("Work role doesn't display for other distribution type");
@@ -1079,9 +1079,18 @@ public class AbsentManagePage extends BasePage {
         }
     }
 
-    public void verifyHourWorkRole(){
+    public void verifyWorkRoleStatus(){
         click(backButton);
         click(leavePageBtn);
         search("Floating Holiday");
+        //scrollToElement(editTemplate);
+        click(getDriver().findElement(By.cssSelector(" tr > td:nth-child(2) > lg-button:nth-child(1) > button")));
+
+        verifyWorkRoleOnlyDisplayForScheduleHour("Monthly");
+        verifyWorkRoleOnlyDisplayForScheduleHour("Weekly");
+        verifyWorkRoleOnlyDisplayForScheduleHour("Worked Hours");
+        verifyWorkRoleOnlyDisplayForScheduleHour("Scheduled Hours");
+        verifyWorkRoleOnlyDisplayForScheduleHour("Lump Sum");
+        verifyWorkRoleOnlyDisplayForScheduleHour("None");
     }
 }
