@@ -7254,7 +7254,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Cosimo")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify assign TM warning: Assignment rule violation - Yes")
+	@TestName(description = "Verify assign TM warning: Assignment rule violation - No")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyOverrideAssignmentRulesToNoAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
