@@ -1924,6 +1924,35 @@ public class AccrualEngineTest extends TestBase {
         SimpleUtils.pass("Succeeded in validating imported time off request deducted from accrual balance correctly!");
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "OPS-4799 Add ability to define accrual units")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDefineAccrualUnitsAbilityAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        //verify that employee management is enabled.
+        navigationPage.navigateToEmployeeManagement();
+        SimpleUtils.pass("EmployeeManagement Module is enabled!");
+        //go to the time off management page
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToTimeOffManagementPage();
+        //verify that the target template is here.
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+
+        absentManagePage.switchToSettings();
+
+        absentManagePage.addTimeOffReasonWithDayUnit();
+        absentManagePage.editTimeOffReason();
+
+        absentManagePage.switchToTemplates();
+
+        absentManagePage.search("UnitType");
+
+        absentManagePage.otherDistributionMethodisDiabled();
+
+    }
+
     public void importTimeOffRequest(String sessionId) {
         String filePath = "src/test/resources/uploadFile/PTO4059_Auto.csv";
         String url = "https://rc-enterprise.dev.legion.work/legion/integration/testUploadPTOData?isTest=false&fileName=" + filePath + "&encrypted=false";
