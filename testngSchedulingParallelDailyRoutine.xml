@@ -139,6 +139,8 @@
 <!--                    <include name="verifyTheBudgetHoursWhenByLocationAsInternalAdmin" Blocked by SCH-7081 />-->
                     <!-- <include name="verifyTMOverTimeStatusAsInternalAdmin" /> -->
                     <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
+                    <include name="verifyOverrideAssignmentRulesToYesAsInternalAdmin" />
+                    <include name="verifyOverrideAssignmentRulesToNoAsInternalAdmin" />
                                    </methods>
                                </class>
                            </classes>

@@ -2593,6 +2593,20 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         return messageOfTMScheduledStatus;
     }
 
+    @FindBy(css = "[class = \"worker-edit-availability-status\"]")
+    private List<WebElement> tmStatusOnAssignedShift;
+    @Override
+    public String getTheMessageOfAssignedShiftToTM() throws Exception {
+        String messageOfTMScheduledStatus = "";
+        if (areListElementVisible(tmStatusOnAssignedShift,5)){
+            for (WebElement message : tmStatusOnAssignedShift) {
+                messageOfTMScheduledStatus = messageOfTMScheduledStatus + message.getText() + "\n";
+            }
+        }else {
+            SimpleUtils.fail("The message of TM status is not loaded!", false);
+        }
+        return messageOfTMScheduledStatus;
+    }
 
     @Override
     public void verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished() throws Exception {
