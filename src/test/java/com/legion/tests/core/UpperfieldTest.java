@@ -1307,6 +1307,7 @@ public class UpperfieldTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -1393,7 +1394,7 @@ public class UpperfieldTest extends TestBase {
                             createSchedulePage.createScheduleForNonDGFlowNewUI();
                         }
                         shiftOperatePage.deleteAllOOOHShiftInWeekView();
-                        shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+                        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
                         if (createSchedulePage.isPublishButtonLoaded() || createSchedulePage.isRepublishButtonLoadedOnSchedulePage()) {
                             createSchedulePage.publishActiveSchedule();
                         }
@@ -1426,6 +1427,7 @@ public class UpperfieldTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -1502,7 +1504,7 @@ public class UpperfieldTest extends TestBase {
                         createSchedulePage.createScheduleForNonDGFlowNewUI();
                     }
                     shiftOperatePage.deleteAllOOOHShiftInWeekView();
-                    shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+                    scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
                     if (createSchedulePage.isPublishButtonLoaded() || createSchedulePage.isRepublishButtonLoadedOnSchedulePage()) {
                         createSchedulePage.publishActiveSchedule();
                     }

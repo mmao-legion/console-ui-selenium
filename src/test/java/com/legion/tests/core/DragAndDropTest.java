@@ -81,7 +81,7 @@ public class DragAndDropTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Delete all the shifts that are assigned to the team member on Step #1
-            shiftOperatePage.deleteTMShiftInWeekView(firstName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
             String workRole = shiftOperatePage.getRandomWorkRole();
 
             // Create new shift for this TM on Monday and Tuesday
@@ -120,7 +120,7 @@ public class DragAndDropTest extends TestBase {
             mySchedulePage.verifyShiftsAreSwapped(swapData);
 
             // Delete the shifts for this TM
-            shiftOperatePage.deleteTMShiftInWeekView(firstName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
 
             // Prepare the shift for this TM again
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -268,7 +268,7 @@ public class DragAndDropTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Delete all the shifts that are assigned to the team member on Step #1
-            shiftOperatePage.deleteTMShiftInWeekView(firstName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
             String workRole = shiftOperatePage.getRandomWorkRole();
 
             // Create new shift for this TM on Monday and Tuesday
@@ -281,7 +281,7 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(firstName);
             newShiftPage.clickOnOfferOrAssignBtn();
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
 
             // Save the Schedule
             scheduleMainPage.saveSchedule();
@@ -362,7 +362,7 @@ public class DragAndDropTest extends TestBase {
 
             // Edit schedule to create the new shift for new TM
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
             String workRole = shiftOperatePage.getRandomWorkRole();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
@@ -461,8 +461,8 @@ public class DragAndDropTest extends TestBase {
             //String TM1 = "John";
             //String TM2 = "Pat";
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(TM1);
-            shiftOperatePage.deleteTMShiftInWeekView(TM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(TM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(TM2);
             String workRole = shiftOperatePage.getRandomWorkRole();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             //newShiftPage.selectWorkRole("EVENT MANAGER");
@@ -513,8 +513,8 @@ public class DragAndDropTest extends TestBase {
             if (scheduleShiftTablePage.verifyDayHasShiftByName(0,TM1)==2 && scheduleShiftTablePage.verifyDayHasShiftByName(1,TM1)==1){
                 SimpleUtils.pass("assign successfully!");
             }
-            shiftOperatePage.deleteTMShiftInWeekView(TM1);
-            shiftOperatePage.deleteTMShiftInWeekView(TM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(TM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(TM2);
             scheduleMainPage.saveSchedule();
 
             //verify change shift
@@ -605,8 +605,8 @@ public class DragAndDropTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Delete all the shifts that are assigned to the team member on Step #1
-            shiftOperatePage.deleteTMShiftInWeekView(firstName);
-            shiftOperatePage.deleteTMShiftInWeekView("Open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             String workRole = shiftOperatePage.getRandomWorkRole();
 
             // Create 2 new shifts for this TM on Monday and Tuesday
@@ -753,8 +753,8 @@ public class DragAndDropTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Delete all the shifts that are assigned to the team member
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             // Create new shift for TM1 on Monday and Wednesday
@@ -930,7 +930,7 @@ public class DragAndDropTest extends TestBase {
             String firstNameOfTM1 = shiftInfo.get(0);
             String workRoleOfTM1 = shiftInfo.get(4);
             // Delete all the shifts that are assigned to the team member
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
 
             // Create new shift for TM on first day
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -969,7 +969,7 @@ public class DragAndDropTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             // Edit the Schedule
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
 
             // Create new shift for TM on first day
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -1045,9 +1045,9 @@ public class DragAndDropTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             //edit schedule
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            //shiftOperatePage.deleteTMShiftInWeekView("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             int i = 0;
@@ -1066,8 +1066,8 @@ public class DragAndDropTest extends TestBase {
             }
             String firstNameOfTM2 = shiftInfo2.get(0);
             String workRoleOfTM2 = shiftInfo2.get(4);
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
             scheduleMainPage.saveSchedule();
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1103,8 +1103,8 @@ public class DragAndDropTest extends TestBase {
             mySchedulePage.verifyShiftsAreSwapped(swapData);
 
             //assign option
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -1186,10 +1186,10 @@ public class DragAndDropTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.saveSchedule();
@@ -1206,7 +1206,7 @@ public class DragAndDropTest extends TestBase {
             }
             String firstNameOfTM2 = shiftInfo2.get(0);
             String workRoleOfTM2 = shiftInfo2.get(4);
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -1281,7 +1281,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.saveSchedule();
@@ -1334,7 +1334,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(3);
@@ -1392,7 +1392,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.saveSchedule();
@@ -1446,7 +1446,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(3);
@@ -1504,7 +1504,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.saveSchedule();
@@ -1553,7 +1553,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(0);
@@ -1606,7 +1606,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.saveSchedule();
@@ -1655,7 +1655,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(0);
@@ -1708,7 +1708,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.saveSchedule();
@@ -1757,7 +1757,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(6);
@@ -1810,7 +1810,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.saveSchedule();
@@ -1859,7 +1859,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(6);
@@ -1919,7 +1919,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(1);
@@ -1991,10 +1991,10 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("open");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.saveSchedule();

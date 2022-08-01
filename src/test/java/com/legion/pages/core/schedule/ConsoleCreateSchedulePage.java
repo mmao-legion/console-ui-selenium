@@ -1052,7 +1052,9 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                     checkoutSchedule();
                 }
 
-            } else {
+            } else if (isWeekGenerated()) {
+                SimpleUtils.pass("Schedule Generated Successfully!");
+            }else {
                 SimpleUtils.fail("Not able to generate schedule Successfully!", false);
             }
         } else {

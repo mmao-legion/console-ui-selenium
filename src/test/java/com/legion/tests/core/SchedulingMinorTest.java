@@ -77,8 +77,8 @@ public class SchedulingMinorTest extends TestBase {
             String firstNameOfTM1 = "Minor14";
             String firstNameOfTM2 = "Minor16";
             String lastNameOfTM = "RC";
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
 
             //Create new shift for TM1
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -240,8 +240,8 @@ public class SchedulingMinorTest extends TestBase {
             String firstNameOfTM1 = "Minor14";
             String firstNameOfTM2 = "Minor16";
             String lastNameOfTM = "RC";
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
             //Create new shift for TM1
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
@@ -387,8 +387,8 @@ public class SchedulingMinorTest extends TestBase {
             String firstNameOfTM1 = "Minor14";
             String firstNameOfTM2 = "Minor16";
             String lastNameOfTM = "RC";
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
             String workRole = shiftOperatePage.getRandomWorkRole();
             //Create new shift for TM1
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -542,8 +542,8 @@ public class SchedulingMinorTest extends TestBase {
 
         String workRole = shiftOperatePage.getRandomWorkRole();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfMinor14);
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfMinor16);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfMinor14);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfMinor16);
         scheduleMainPage.saveSchedule();
         //create shifts for minors.
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -644,8 +644,8 @@ public class SchedulingMinorTest extends TestBase {
 
         String workRole = shiftOperatePage.getRandomWorkRole();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfMinor14);
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfMinor14);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfMinor14);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfMinor14);
         scheduleMainPage.saveSchedule();
         //create shifts for minors.
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -751,8 +751,8 @@ public class SchedulingMinorTest extends TestBase {
             String firstNameOfTM1 = "Minor14";
             String firstNameOfTM2 = "Minor16";
             String lastNameOfTM = "RC";
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
 
             //Create new shift for TM1
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -884,8 +884,8 @@ public class SchedulingMinorTest extends TestBase {
             String firstNameOfTM1 = "Minor14";
             String firstNameOfTM2 = "Minor16";
             String lastNameOfTM = "RC";
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
 
             //Create 5 shifts for TM1 and the shifts have 15 hours totally
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -1053,8 +1053,8 @@ public class SchedulingMinorTest extends TestBase {
             String firstNameOfTM1 = "Minor16";
             String firstNameOfTM2 = "Minor14";
             String lastNameOfTM = "RC";
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
 
             //Create 6 shifts in 6 days for TM1
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -1221,7 +1221,7 @@ public class SchedulingMinorTest extends TestBase {
             workRole = shiftOperatePage.getRandomWorkRole();
             String firstNameOfTM1 = "Minor13";
             String lastNameOfTM = "RC";
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
 
 
             //Create the shift for TM1

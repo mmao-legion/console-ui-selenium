@@ -62,7 +62,7 @@ public class ScheduleTemplateTest extends TestBase {
             String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
             smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.saveSchedule();
             //Verify the auto offer workflow with one shift for one days
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -131,7 +131,7 @@ public class ScheduleTemplateTest extends TestBase {
                     shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(selectedTM1.split(" ")[0]);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(selectedTM1.split(" ")[0]);
             scheduleMainPage.saveSchedule();
 
 

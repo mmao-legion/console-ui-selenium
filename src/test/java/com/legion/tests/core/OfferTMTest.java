@@ -73,12 +73,12 @@ public class OfferTMTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        //shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+        //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
         //Delete all shifts are action required.
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Open");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.saveSchedule();
@@ -135,7 +135,7 @@ public class OfferTMTest extends TestBase {
 
         //create manual open shifts.
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView("open");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
         scheduleCommonPage.clickOnDayView();
         newShiftPage.clickOnDayViewAddNewShiftButton();
         newShiftPage.customizeNewShiftPage();
@@ -211,12 +211,12 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-            //shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             //Delete all shifts are action required.
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.clickOnFilterBtn();
@@ -224,7 +224,7 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
             String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnCloseSearchBoxButton();
 
             //create auto open shifts.
@@ -304,18 +304,18 @@ public class OfferTMTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        //shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+        //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
         //Delete all shifts are action required.
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Open");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectWorkRoleFilterByText(workRoleOfTM, false);
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
 
@@ -393,12 +393,12 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-            //shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             //Delete all shifts are action required.
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.clickOnFilterBtn();
@@ -406,7 +406,7 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
             String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnCloseSearchBoxButton();
 
 
@@ -490,12 +490,12 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-            //shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             //Delete all shifts are action required.
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
@@ -585,15 +585,15 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-            //shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             //Delete all shifts are action required.
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
             String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
 
@@ -670,15 +670,15 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-            //shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             //Delete all shifts are action required.
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
             String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
 
@@ -758,12 +758,12 @@ public class OfferTMTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        //shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+        //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
         //Delete all shifts are action required.
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Open");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.clickOnFilterBtn();
@@ -771,7 +771,7 @@ public class OfferTMTest extends TestBase {
         scheduleMainPage.clickOnOpenSearchBoxButton();
         scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
         String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnCloseSearchBoxButton();
 
         //create manual open shifts.
@@ -888,12 +888,12 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-            //shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             //Delete all shifts are action required.
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.clickOnFilterBtn();
@@ -901,7 +901,7 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
             String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnCloseSearchBoxButton();
 
             //create auto open shifts.
@@ -981,6 +981,7 @@ public class OfferTMTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -1026,16 +1027,16 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-            //shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             //Delete all shifts are action required.
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
             String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
 
             //create manual open shifts.
@@ -1155,21 +1156,21 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-            //shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             //Delete all shifts are action required.
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.clickOnFilterBtn();
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
             //click search button, to pick a work role won't get role violation.
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM1);
             String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnCloseSearchBoxButton();;
 
             //create manual open shifts.
@@ -1279,12 +1280,12 @@ public class OfferTMTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-        //shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+        //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
         //Delete all shifts are action required.
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectShiftTypeFilterByText("Open");
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.clickOnFilterBtn();
@@ -1292,7 +1293,7 @@ public class OfferTMTest extends TestBase {
         scheduleMainPage.clickOnOpenSearchBoxButton();
         scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM1);
         String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
-        shiftOperatePage.deleteTMShiftInWeekView("");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnCloseSearchBoxButton();
 
         //create manual open shifts.
@@ -1406,12 +1407,12 @@ public class OfferTMTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");
-            //shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             //Delete all shifts are action required.
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Open");
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.saveSchedule();

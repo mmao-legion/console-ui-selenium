@@ -170,6 +170,7 @@ public class BulkCreateTest extends TestBase {
             if (isWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(2000);
             List<String> weekDaysToClose = new ArrayList<>(Arrays.asList("Sunday"));
             createSchedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose, null);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -562,7 +563,7 @@ public class BulkCreateTest extends TestBase {
             }
             String workRole = shiftInfo.get(4);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -821,7 +822,7 @@ public class BulkCreateTest extends TestBase {
             }
             workRole = shiftInfo.get(4);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
@@ -1544,7 +1545,7 @@ public class BulkCreateTest extends TestBase {
                     shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(selectedTM1.split(" ")[0]);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(selectedTM1.split(" ")[0]);
             scheduleMainPage.saveSchedule();
 
             //Verify the assign TMs workflow with multiple shifts for multiple days
