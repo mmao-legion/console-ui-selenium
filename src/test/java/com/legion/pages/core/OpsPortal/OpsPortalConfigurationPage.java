@@ -6797,4 +6797,13 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Configuration landing page load failed",false);
 		}
 	}
+
+	@Override
+	public void verifyLocationLevelTemplateNoHistoryButton() throws Exception{
+		if(!isElementEnabled(historyButton,2)){
+			SimpleUtils.pass("There is no history button at location level template");
+		}else {
+			SimpleUtils.fail("There is history button at location level template",false);
+		}
+	}
 }
