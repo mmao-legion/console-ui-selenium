@@ -27,6 +27,8 @@ public class BulkDeleteNEditTest extends TestBase {
     private ScheduleShiftTablePage scheduleShiftTablePage;
     private ScheduleCommonPage scheduleCommonPage;
     private EditShiftPage editShiftPage;
+    private NewShiftPage newShiftPage;
+    private ShiftOperatePage shiftOperatePage;
 
     @Override
     @BeforeMethod()
@@ -41,6 +43,8 @@ public class BulkDeleteNEditTest extends TestBase {
             scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             scheduleCommonPage = pageFactory.createScheduleCommonPage();
             editShiftPage = pageFactory.createEditShiftPage();
+            newShiftPage = pageFactory.createNewShiftPage();
+            shiftOperatePage = pageFactory.createShiftOperatePage();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -180,6 +184,9 @@ public class BulkDeleteNEditTest extends TestBase {
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
+
+            String workRole = shiftOperatePage.getRandomWorkRole();
+
             BasePage basePage = new BasePage();
             String activeWeek = basePage.getActiveWeekText();
             String startOfWeek = activeWeek.split(" ")[3] + " " + activeWeek.split(" ")[4];
@@ -227,6 +234,13 @@ public class BulkDeleteNEditTest extends TestBase {
             String fullWeekDay = SimpleUtils.getFullWeekDayName(weekDay.split(" ")[0].trim());
             selectedDays = new ArrayList<>();
             selectedDays.add(fullWeekDay);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            scheduleMainPage.saveSchedule();
+
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             set = scheduleShiftTablePage.verifyCanSelectMultipleShifts(selectedShiftCount);
             scheduleShiftTablePage.rightClickOnSelectedShifts(set);
