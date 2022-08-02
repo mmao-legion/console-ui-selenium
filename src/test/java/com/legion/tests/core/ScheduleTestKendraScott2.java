@@ -7302,7 +7302,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Go to the schedule view table
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-			Thread.sleep(60000);
+			Thread.sleep(120000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -7328,7 +7328,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			while ((firstNameOfTM1.equalsIgnoreCase("open")
 					|| firstNameOfTM1.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
 				shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-				firstNameOfTM1  = shiftInfo1.get(0);
+				firstNameOfTM1 = shiftInfo1.get(0);
 				shiftCount1++;
 			}
 			String workRole1 = shiftInfo1.get(4);
@@ -7341,7 +7341,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					|| firstNameOfTM2.equalsIgnoreCase("unassigned")
 					|| firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1) || workRole1.equalsIgnoreCase(workRole2)) && shiftCount2 < 100) {
 				shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-				firstNameOfTM2  = shiftInfo2.get(0);
+				firstNameOfTM2 = shiftInfo2.get(0);
 				workRole2 = shiftInfo2.get(4);
 				shiftCount2++;
 			}
@@ -7380,7 +7380,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("The Role Violation message on the Assign page is not expected!", realRoleVioMessage.contains(roleVioMessage), false);
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
 			String alertMessage1 = "This assignment will trigger a role violation";
-			System.out.println(workRole1);
 			String alertMessage2 = firstNameOfTM2 + " can not take a " + workRole1 + " shift";
 			String realAlertMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
 			boolean isCorrect = realAlertMessage.contains(alertMessage1) && realAlertMessage.contains(alertMessage2);
@@ -7388,9 +7387,48 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
 			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", isCorrect, false);
+			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
+			shiftOperatePage.clickOnCloseBtnOfAssignDialog();
 
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
+		} finally {
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			if (isLocationUsingControlsConfiguration) {
+				//Go to Controls page
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsSchedulingPolicies();
+				SimpleUtils.assertOnFail("Scheduling Policies Page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+				Thread.sleep(240000);
+			} else {
+				//Go to OP page
+				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+				SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+				locationsPage.clickOnLocationsTab();
+				locationsPage.goToSubLocationsInLocationsPage();
+				locationsPage.searchLocation(location);
+				SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+				locationsPage.clickOnLocationInLocationResult(location);
+				locationsPage.clickOnConfigurationTabOfLocation();
+				HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+				ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+				configurationPage.goToConfigurationPage();
+				configurationPage.clickOnConfigurationCrad("Scheduling Policies");
+				configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+				configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+				Thread.sleep(3000);
+				controlsNewUIPage.enableOverRideAssignmentRuleAsYesForOP();
+				configurationPage.publishNowTheTemplate();
+				Thread.sleep(240000);
+				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
+					//Back to the console page
+					switchToConsoleWindow();
+				}
+			}
 		}
 	}
 }

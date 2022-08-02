@@ -128,4 +128,5 @@ public interface ShiftOperatePage {
     public void verifyMultipleAlertMessageIsExpected(String messageExpected1, String messageExpected2, String messageExpected3) throws Exception;
     public void clickOnAssignButton() throws Exception;
     public String getTheMessageOfAssignedShiftToTM() throws Exception;
+    public void clickOnCloseBtnOfAssignDialog() throws Exception;
 }
