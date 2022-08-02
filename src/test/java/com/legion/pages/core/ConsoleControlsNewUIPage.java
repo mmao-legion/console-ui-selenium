@@ -7639,12 +7639,12 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement btnOverrideAssignmentRuleNoForOP;
 
 	public void enableOverRideAssignmentRuleAsYesForOP() throws Exception {
-		if (isElementEnabled(btnOverrideAssignmentRule, 20)) {
+		if (isElementEnabled(btnOverrideAssignmentRuleForOP, 20)) {
 			if (isElementEnabled(btnOverrideAssignmentRuleYesForOP, 3)) {
 				if (btnOverrideAssignmentRuleYesForOP.getAttribute("class").contains("selected")) {
 					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button already enabled");
 				} else {
-					clickTheElement(btnOverrideAssignmentRuleYes);
+					clickTheElement(btnOverrideAssignmentRuleYesForOP);
 					if (isElementLoaded(overridePopup, 10) && isElementLoaded(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")),10)){
 						clickTheElement(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")));
 					}
@@ -7661,7 +7661,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void enableOverRideAssignmentRuleAsNoForOP() throws Exception {
-		if (isElementEnabled(btnOverrideAssignmentRule, 20)) {
+		if (isElementEnabled(btnOverrideAssignmentRuleForOP, 20)) {
 			if (isElementEnabled(btnOverrideAssignmentRuleNoForOP, 10)) {
 				waitForSeconds(5);
 				if (btnOverrideAssignmentRuleNoForOP.getAttribute("class").contains("selected")) {
@@ -7680,6 +7680,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			} else {
 				SimpleUtils.fail("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button not loaded!!", false);
 			}
+		}else{
+			SimpleUtils.fail("The override toggle is not loaded correctly!", false);
 		}
 	}
 
