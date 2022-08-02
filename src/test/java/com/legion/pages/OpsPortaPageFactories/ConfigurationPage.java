@@ -229,4 +229,5 @@ public interface ConfigurationPage {
     public void verifyArchiveTemplateHistoryContent(String option,String userName) throws Exception;
     public void verifyDeleteTemplateHistoryContent(String option,String userName) throws Exception;
     public void clickOnDeleteButtonOnTemplateDetailsPage() throws Exception;
+    public void verifyAllTemplateTypeHasAuditLog() throws Exception;
 }
