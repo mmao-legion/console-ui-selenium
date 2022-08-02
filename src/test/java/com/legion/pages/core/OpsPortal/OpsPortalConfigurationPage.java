@@ -6758,4 +6758,42 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("There is no delete button displayed",false);
 		}
 	}
+
+	@Override
+	public void verifyAllTemplateTypeHasAuditLog() throws Exception{
+		List<WebElement> allTemplateTypes = getDriver().findElements(By.cssSelector("h1.lg-dashboard-card__title"));
+		if (areListElementVisible(allTemplateTypes, 5)) {
+			for (int i = 0; i < allTemplateTypes.size(); i++) {
+				//go to each template type
+				clickTheElement(allTemplateTypes.get(i));
+				waitForSeconds(3);
+				//click the first template to check audit log
+				if(areListElementVisible(templatesList,2)) {
+					String classValue = templatesList.get(0).getAttribute("class");
+					if (classValue != null && classValue.contains("hasChildren")) {
+						clickTheElement(templatesList.get(0).findElement(By.cssSelector(".toggle i")));
+						waitForSeconds(2);
+						clickTheElement(getDriver().findElement(By.cssSelector("[ng-repeat=\"child in item.childTemplate\"] button")));
+					} else {
+						clickTheElement(templatesList.get(0).findElement(By.cssSelector("button")));
+					}
+					waitForSeconds(15);
+					if (isElementEnabled(templateTitleOnDetailsPage) && isElementEnabled(closeBTN) && isElementEnabled(templateDetailsAssociateTab)
+							&& isElementEnabled(templateDetailsPageForm)) {
+						SimpleUtils.pass("User can open template successfully");
+					} else {
+						SimpleUtils.fail("User open template failed", false);
+					}
+				}else {
+					SimpleUtils.report("There is no templates in list");
+				}
+				clickHistoryButton();
+				verifyTemplateHistoryUI();
+				goToConfigurationPage();
+				allTemplateTypes = getDriver().findElements(By.cssSelector("h1.lg-dashboard-card__title"));
+			}
+		}else {
+			SimpleUtils.fail("Configuration landing page load failed",false);
+		}
+	}
 }
