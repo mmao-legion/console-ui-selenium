@@ -6786,6 +6786,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					}
 				}else {
 					SimpleUtils.report("There is no templates in list");
+					continue;
 				}
 				clickHistoryButton();
 				verifyTemplateHistoryUI();
