@@ -4202,4 +4202,136 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Audit Log E2E")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void auditLogE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime =dfs.format(new Date()).trim();
+            SimpleDateFormat dfs1 = new SimpleDateFormat("hh:mm:ss a','MM/dd/yyyy");
+            String templateName = "AuditLog" + currentTime;
+            String dynamicGpName = "AuditLog" + currentTime;
+            String criteriaType ="Custom";
+
+
+            String criteriaValue="AutoCreatedDynamic---Format Script" + currentTime;
+            String viewMode = "view";
+            String editMode ="edit";
+            String templateType ="Scheduling Policies";
+            String createOption = "Created";
+            String publishOption = "Published";
+            String publishFutureOption ="set to publish on";
+            String archiveOption ="Archived";
+            String deleteOption="Deleted";
+            String button = "publish at different time";
+            int date = 14;
+            Random random1=new Random();
+            int number1=random1.nextInt(90)+10;
+            String count1=String.valueOf(number1);
+            Random random2=new Random();
+            int number2=random2.nextInt(90)+10;
+            String count2=String.valueOf(number2);
+
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            String userFullName = profileNewUIPage.getUserProfileName().get("fullName");
+
+            //check create new template and save as draft template history
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.createNewTemplate(templateName);
+            String time1 =dfs1.format(new Date()).trim();
+            configurationPage.clickOnSpecifyTemplateName(templateName,viewMode);
+            configurationPage.clickHistoryButton();
+            configurationPage.verifyNewCreatedTemplateHistoryContent(createOption,userFullName,time1);
+            configurationPage.verifyRecordIsClickable();
+            configurationPage.verifyUpdatedSchedulePolicyTemplateFirstFieldCorrectOrNot("35");
+
+            //check publish template history can show correct and verify data in template via template history
+            configurationPage.closeTemplateHistoryPanel();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickOnSpecifyTemplateName(templateName,editMode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.updateSchedulePolicyTemplateFirstField(count1);
+            configurationPage.createDynamicGroup(dynamicGpName,criteriaType,criteriaValue);
+            configurationPage.selectOneDynamicGroup(dynamicGpName);
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.publishNowTemplate();
+            configurationPage.clickOnSpecifyTemplateName(templateName,viewMode);
+            configurationPage.clickHistoryButton();
+            configurationPage.verifyPublishTemplateHistoryContent(publishOption,userFullName);
+            configurationPage.verifyRecordIsClickable();
+            configurationPage.verifyUpdatedSchedulePolicyTemplateFirstFieldCorrectOrNot(count1);
+
+            //Check publish future template history and data showing in each version
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickOnSpecifyTemplateName(templateName,editMode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.updateSchedulePolicyTemplateFirstField(count2);
+            configurationPage.publishAtDifferentTimeForTemplate(button,date);
+            configurationPage.openCurrentPublishInMultipleTemplate(templateName);
+            configurationPage.clickHistoryButton();
+            configurationPage.verifyPublishFutureTemplateHistoryContent(publishFutureOption,userFullName);
+            configurationPage.verifyRecordIsClickable();
+            configurationPage.verifyUpdatedSchedulePolicyTemplateFirstFieldCorrectOrNot(count2);
+
+            //check archive template history
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.openCurrentPublishInMultipleTemplate(templateName);
+            configurationPage.clickOnArchiveButton();
+            configurationPage.clickOnSpecifyTemplateName(templateName,editMode);
+            configurationPage.clickHistoryButton();
+            configurationPage.verifyArchiveTemplateHistoryContent(archiveOption,userFullName);
+
+            //Check delete template history
+            configurationPage.closeTemplateHistoryPanel();
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickOnSpecifyTemplateName(templateName,editMode);
+            configurationPage.clickOnDeleteButtonOnTemplateDetailsPage();
+            configurationPage.clickOnSpecifyTemplateName(templateName,editMode);
+            configurationPage.clickHistoryButton();
+            configurationPage.verifyDeleteTemplateHistoryContent(deleteOption,userFullName);
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Each Template type have audit log")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAuditLogForEachTemplateTypeAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            //check create new template and save as draft template history
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.verifyAllTemplateTypeHasAuditLog();
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Location Level Audit Log Checking")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void auditLogAtLocationLevelTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            //check create new template and save as draft template history
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.verifyAllTemplateTypeHasAuditLog();
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
