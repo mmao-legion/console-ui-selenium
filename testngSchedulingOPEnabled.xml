@@ -25,7 +25,6 @@
                 <methods>
                     <!--                           <include name="verifyTurnOnAndSetMinorRuleAsInternalAdmin" />Due to new template -->
                     <include name="verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin" />
-                    <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" />
                     <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
 <!--                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
                     <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
@@ -55,11 +54,27 @@
                     <include name="verifyTheMainCalendarInfoOnThePageAsInternalAdmin" />
                     <include name="verifyAutoScheduleRespectTheMinorsRulesAsInternalAdmin" />
                     <include name="verifyRecommendationRespectTheMinorsRulesAsInternalAdmin" />
+                    <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
     </test>
 
+        <test name="Hard Stop For Minor Violation Test">
+            <classes>
+                <class name="com.legion.tests.core.HardStopForMinorViolation">
+                    <methods>
+                        <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
+                        <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" />
+                        <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
+                        <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
+                        <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
+                        <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" />
+                        <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
+                    </methods>
+                </class>
+            </classes>
+        </test>
     <test name="Schedule Test KendraScott2">
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
@@ -462,21 +477,6 @@ SCH-5862-->
         </classes>
     </test>
 
-    <test name="Hard Stop For Minor Violation Test">
-        <classes>
-            <class name="com.legion.tests.core.HardStopForMinorViolation">
-                <methods>
-                    <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" />
-                    <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
-                    <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
     <test name="Seventh Consecutive Day Test">
         <classes>
             <class name="com.legion.tests.core.SeventhConsecutiveDayTest">
@@ -569,7 +569,7 @@ SCH-5862-->
                     <include name="verifyTheActionForEachPeerLocationsInDifferentStatusAsInternalAdmin" />
 <!--                    <include name="verifyCopyOrMoveShiftsToSubLocationsInSameDayUsingLocationGroupAsInternalAdmin" Blocked by SCH-7077 />-->
                     <!--                   <include name="verifyTheStatusOfP2PInDMViewsAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7076-->
-                    <include name="verifyDataMatchInDistrictSummaryWidgetOnDashboardInRegionViewWhenItIncludesLGAsInternalAdmin" />
+<!--                    <include name="verifyDataMatchInDistrictSummaryWidgetOnDashboardInRegionViewWhenItIncludesLGAsInternalAdmin" /> Need more time to check-->
                     <include name="verifyDataMatchInLocationSummaryWidgetOnDashboardInDMViewWhenItIncludesLGAsInternalAdmin" />
                     <!--         <include name="verifyAnalyticsTableOnScheduleInDMViewWhenItIncludesLGAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7121-->
                     <include name="verifyAnalyticsTableOnComplianceInDMViewWhenItIncludesLGAsInternalAdmin" />
