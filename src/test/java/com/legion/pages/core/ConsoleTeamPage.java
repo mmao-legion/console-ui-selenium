@@ -3859,7 +3859,7 @@ private List<WebElement> locationColumn;
 			if (isElementLoaded(popMessage,120) && popMessage.getText().contains("Success"))
 				SimpleUtils.pass("School Calendars Page: School Calendar is saved successfully");
 			else
-				SimpleUtils.fail("School Calendars Page: School Calendar failed to save",true);
+				SimpleUtils.fail("School Calendars Page: School Calendar failed to save",false);
 		} else
 			SimpleUtils.fail("School Calendars Page: School Session End input field failed to load",false);
 	}
@@ -4226,6 +4226,7 @@ private List<WebElement> locationColumn;
 					if (areListElementVisible(calendarCells,  10) && isElementLoaded(deleteCalendarBtn, 10)) {
 						waitForSeconds(3);
 						clickTheElement(deleteCalendarBtn);
+						waitForSeconds(2);
 						if (isElementLoaded(confirmButton, 10) && confirmButton.getText().trim().equalsIgnoreCase("DELETE ANYWAY")) {
 							clickTheElement(confirmButton);
 							waitForSeconds(3);
