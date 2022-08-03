@@ -3415,7 +3415,7 @@ public class ParentChildLGTest extends TestBase {
                     shiftCount == scheduleShiftTablePage.getShiftsCount() -1, false);
             List<WebElement> shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
             SimpleUtils.assertOnFail("The "+selectedTM1+ "shift is not exist on the first day! ",
-                    shiftsOfOneDay.size()==1, false);
+                    shiftsOfOneDay.size()>=1, false);
             scheduleMainPage.saveSchedule();
             Thread.sleep(5000);
             locations = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
@@ -3425,7 +3425,7 @@ public class ParentChildLGTest extends TestBase {
                     shiftCount == scheduleShiftTablePage.getShiftsCount() -1, false);
             shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
             SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
-                    shiftsOfOneDay.size()==1, false);
+                    shiftsOfOneDay.size()>=1, false);
             createSchedulePage.publishActiveSchedule();
             locations = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
             SimpleUtils.assertOnFail("It should has one location display, but actual is has :"+locations.size(),
@@ -3434,7 +3434,7 @@ public class ParentChildLGTest extends TestBase {
                     shiftCount == scheduleShiftTablePage.getShiftsCount() -1, false);
             shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
             SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
-                    shiftsOfOneDay.size()==1, false);
+                    shiftsOfOneDay.size()>=1, false);
 
             String shiftId = shiftsOfOneDay.get(0).getAttribute("id").toString();
             int index = scheduleShiftTablePage.getShiftIndexById(shiftId);

@@ -312,8 +312,21 @@ public class OPConfigTest extends TestBase {
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-
             String textOnScheduleSmartCard = smartCardPage.getsmartCardTextByLabel("Schedule V");
+            i=0;
+            while (i<15 && textOnScheduleSmartCard.toLowerCase().contains("wages")) {
+                Thread.sleep(60000);
+                loginPage.logOut();
+                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+                Thread.sleep(5000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+                textOnScheduleSmartCard = smartCardPage.getsmartCardTextByLabel("Schedule V");
+                i++;
+            }
+            textOnScheduleSmartCard = smartCardPage.getsmartCardTextByLabel("Schedule V");
             SimpleUtils.assertOnFail("The Wages row should not display on Schedule smart card! the actual text is "+textOnScheduleSmartCard,
                     !textOnScheduleSmartCard.toLowerCase().contains("wages"), false);
 
