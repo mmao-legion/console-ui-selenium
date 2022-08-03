@@ -1345,6 +1345,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
         if (isElementLoaded(deleteScheduleButton, 60)) {
             clickTheElement(deleteScheduleButton);
+            waitForSeconds(3);
 //            waitForSeconds(10);
             if (isElementLoaded(deleteSchedulePopup, 25)
                     && isElementLoaded(deleteScheduleCheckBox, 25)

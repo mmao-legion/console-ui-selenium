@@ -410,19 +410,26 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		List<WebElement> weekHoursElement = overViewWeek.findElements(By.cssSelector("span.text-hours"));
 		if(weekHoursElement.size() == 4)
 		{
-			float guidanceHours = Float.valueOf(weekHoursElement.get(0).getText().split(" ")[0].replace(",",""));
-			float scheduledHours = Float.valueOf(weekHoursElement.get(1).getText().split(" ")[0].replace(",",""));
-			float otherHours = Float.valueOf(weekHoursElement.get(2).getText().split(" ")[0].replace(",",""));
-			float projectedHours = Float.valueOf(weekHoursElement.get(3).getText().split(" ")[0].replace(",",""));
+			float guidanceHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(0).getText().split(" ")[0].replace(",","")));
+			float scheduledHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(1).getText().split(" ")[0].replace(",","")));
+			float otherHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(2).getText().split(" ")[0].replace(",","")));
+			float projectedHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(3).getText().split(" ")[0].replace(",","")));
 			weekHours.put("guidanceHours", guidanceHours);
 			weekHours.put("scheduledHours", scheduledHours);
 			weekHours.put("otherHours", otherHours);
 			weekHours.put("projectedHours", projectedHours);
 
 		} else if (weekHoursElement.size() == 3) {
-			float guidanceHours = Float.valueOf(weekHoursElement.get(0).getText().split(" ")[0].replace(",",""));
-			float scheduledHours = Float.valueOf(weekHoursElement.get(1).getText().split(" ")[0].replace(",",""));
-			float otherHours = Float.valueOf(weekHoursElement.get(2).getText().split(" ")[0].replace(",",""));
+			float guidanceHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(0).getText().split(" ")[0].replace(",","")));
+			float scheduledHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(1).getText().split(" ")[0].replace(",","")));
+			float otherHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(2).getText().split(" ")[0].replace(",","")));
 			weekHours.put("guidanceHours", guidanceHours);
 			weekHours.put("scheduledHours", scheduledHours);
 			weekHours.put("otherHours", otherHours);
@@ -431,6 +438,13 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		return weekHours;
 	}
 
+	private String convertToZeroIfIsNotNumeric(String value) {
+		if (!SimpleUtils.isNumeric(value)) {
+			return "0";
+		} else {
+			return value;
+		}
+	}
 	//added by Gunjan
 
 	@Override
