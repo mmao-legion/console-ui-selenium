@@ -1093,4 +1093,28 @@ public class AbsentManagePage extends BasePage {
         verifyWorkRoleOnlyDisplayForScheduleHour("Lump Sum");
         verifyWorkRoleOnlyDisplayForScheduleHour("None");
     }
+
+    @FindBy(css = "input[type = 'checkbox']")
+    private WebElement firstWorkRole;
+
+    public void searchAndSelectWorkRole(){
+        verifyWorkRoleOnlyDisplayForScheduleHour("Scheduled Hours");
+        scrollToElement(workRoleInput);
+        clickTheElement(workRoleInput);
+
+        templateSearchBox.clear();
+        templateSearchBox.sendKeys("AMBASSADOR");
+        click(firstWorkRole);
+
+        templateSearchBox.clear();
+        templateSearchBox.sendKeys("Key Carrier");
+        click(firstWorkRole);
+
+        System.out.println(workRoleInput.getText());
+
+        if(workRoleInput.getAttribute("innerText").equals("2 Work Roles Selected")){
+            SimpleUtils.pass("2 work roles selected successfully");
+        }else
+            SimpleUtils.fail("2 work roles selected faied",false);
+    }
 }

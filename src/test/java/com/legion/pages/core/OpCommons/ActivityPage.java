@@ -192,6 +192,7 @@ public class ActivityPage extends BasePage{
         if(isElementLoaded(approveRejectText.get(2),5)) {
             if (approveRejectText.get(2).getAttribute("innerText").contains("Rejected")) {
                 SimpleUtils.pass("Rejected successfully");
+                click(Activity);
             }else{
                 SimpleUtils.fail("Rejected failed",false);
             }
