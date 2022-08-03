@@ -4326,10 +4326,41 @@ public class ConfigurationTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void auditLogAtLocationLevelTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
-            //check create new template and save as draft template history
+            String locationName = "AuditLogAutoLocation";
+
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            configurationPage.goToConfigurationPage();
-            configurationPage.verifyAllTemplateTypeHasAuditLog();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Assignment Rules","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Scheduling Policies","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Compliance","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Schedule Collaboration","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Time and Attendance","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Demand Drivers","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Scheduling Rules","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Labor Model","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Operating Hours","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
         }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
