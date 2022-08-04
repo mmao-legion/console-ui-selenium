@@ -230,4 +230,8 @@ public interface ConfigurationPage {
     public void verifyDeleteTemplateHistoryContent(String option,String userName) throws Exception;
     public void clickOnDeleteButtonOnTemplateDetailsPage() throws Exception;
     public void verifyAllTemplateTypeHasAuditLog() throws Exception;
+    public void verifyLocationLevelTemplateNoHistoryButton() throws Exception;
+    public void verifyTheLayoutOfTemplateDetailsPage() throws Exception;
+    public void verifyTheLayoutOfTemplateAssociationPage() throws Exception;
+    public void verifyCriteriaTypeOfDynamicGroup() throws Exception;
 }

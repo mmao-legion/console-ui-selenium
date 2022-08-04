@@ -1667,8 +1667,8 @@ public class ConfigurationTest extends TestBase {
             Calendar calendar = Calendar.getInstance();
             dfs.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
             Month month = LocalDate.now().getMonth();
-            String shortMonth = month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-            String currentDate = shortMonth + " " + dfs.format(calendar.getTime());
+            String shortMonth = month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " ";
+            String currentDate = (shortMonth + dfs.format(calendar.getTime())).replace(" 0", " ");
 
            //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -4326,11 +4326,76 @@ public class ConfigurationTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void auditLogAtLocationLevelTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
-            //check create new template and save as draft template history
+            String locationName = "AuditLogAutoLocation";
+
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            configurationPage.goToConfigurationPage();
-            configurationPage.verifyAllTemplateTypeHasAuditLog();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Assignment Rules","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Scheduling Policies","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Compliance","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Schedule Collaboration","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Time and Attendance","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Demand Drivers","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Scheduling Rules","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Labor Model","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Operating Hours","View");
+            configurationPage.verifyLocationLevelTemplateNoHistoryButton();
+            locationsPage.backToConfigurationTabInLocationLevel();
         }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate the layout of the new template page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void ValidateLayoutOfNewTemplatePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            List<String> templateTypes = new ArrayList<String>() {{
+                add("Operating Hours");
+                add("Scheduling Policies");
+                add("Scheduling Rules");
+            }};
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime = dfs.format(new Date()).trim();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            for (String templateType : templateTypes) {
+                String templateName = templateType + currentTime;
+                configurationPage.goToConfigurationPage();
+                configurationPage.clickOnConfigurationCrad(templateType);
+                configurationPage.createNewTemplate(templateName);
+                configurationPage.searchTemplate(templateName);
+                configurationPage.clickOnTemplateName(templateName);
+                configurationPage.verifyTheLayoutOfTemplateDetailsPage();
+                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                configurationPage.verifyTheLayoutOfTemplateAssociationPage();
+                configurationPage.verifyCriteriaTypeOfDynamicGroup();
+                configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+                configurationPage.searchTemplate(templateName);
+                configurationPage.archivePublishedOrDeleteDraftTemplate(templateName, "Delete");
+            }
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }

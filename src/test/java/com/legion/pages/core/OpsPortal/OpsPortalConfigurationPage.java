@@ -6797,4 +6797,63 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Configuration landing page load failed",false);
 		}
 	}
+
+	@Override
+	public void verifyLocationLevelTemplateNoHistoryButton() throws Exception{
+		if(!isElementEnabled(historyButton,2)){
+			SimpleUtils.pass("There is no history button at location level template");
+		}else {
+			SimpleUtils.fail("There is history button at location level template",false);
+		}
+	}
+
+	@Override
+	public void verifyTheLayoutOfTemplateDetailsPage() throws Exception {
+		if (isElementLoaded(templateDetailsTab, 2)) {
+			SimpleUtils.pass("Details Tab is showing");
+		} else {
+			SimpleUtils.fail("Details Tab is not showing", false);
+		}
+		if (isElementLoaded(backButton, 2) &&isElementLoaded(closeButton, 2)  ) {
+			SimpleUtils.pass("Details and Association Tab is showing");
+		} else {
+			SimpleUtils.fail("Details and Association Tab is not showing", false);
+		}
+	}
+
+	@Override
+	public void verifyTheLayoutOfTemplateAssociationPage() throws Exception {
+		if (isElementLoaded(templateAssociationBTN, 2)) {
+			SimpleUtils.pass("Association Tab is showing");
+			clickTheElement(templateAssociationBTN);
+		} else {
+			SimpleUtils.fail("Association Tab is not showing", false);
+		}
+		if (isElementLoaded(addDynamicGroupButton, 2)) {
+			SimpleUtils.pass("addDynamicGroupButton is showing");
+		} else {
+			SimpleUtils.fail("addDynamicGroupButton is not showing", false);
+		}
+	}
+
+	@Override
+	public void verifyCriteriaTypeOfDynamicGroup() throws Exception {
+		clickTheElement(addDynamicGroupButton);
+		List<String> criteriaTypes = new ArrayList<String>() {{
+			add("Country");
+			add("Sate");
+			add("City");
+		}};
+		for (String criteriaType : criteriaTypes) {
+			for (WebElement criteriaOption : dynamicGroupCriteriaOptions) {
+				if (criteriaOption.getText().trim().equalsIgnoreCase(criteriaType)) {
+					SimpleUtils.pass("criteriaType is showing");
+					break;
+				} else {
+					continue;
+				}
+			}
+		}
+		cancelButtonOnManageDynamicGroupPopup.click();
+	}
 }
