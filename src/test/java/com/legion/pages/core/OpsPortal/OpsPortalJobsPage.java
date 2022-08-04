@@ -1327,7 +1327,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 	@FindBy(css = "select.ng-pristine")
 	private WebElement jobTypeSelect;
-	@FindBy(css ="div.calendar-body > div:nth-child(7)")
+	@FindBy(css ="div.calendar-body > div:nth-child(6)")
 	private WebElement lastWeek;
 	@FindBy(css = "nav.lg-tabs__nav > div:nth-child(4)")
 	private WebElement dynamicGroup;
@@ -1381,7 +1381,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 		verifyDynamicGroupName();
 		verifyNoDistrictInTitle();
 
-		verifyRecentJobLocation("AutoCreateJob20220726141725");
+		verifyRecentJobLocation("LocationNum");
 
 		click(dynamicGroup);
 
@@ -1592,7 +1592,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 		click(firstJobTitle);
 		scrollToElement(addBtn);
 		click(addBtn);
-		if(locationNum.getText().equals("678 Locations Added")){
+		if(locationNum.getText().equals("3 Locations Added")){
 			SimpleUtils.pass("Location number is correct");
 		}else
 			SimpleUtils.fail("Location number is wrong",false);

@@ -217,4 +217,21 @@ public interface ConfigurationPage {
     public void verifyOrderOfTheTemplateHistory() throws Exception;
     public void verifyNewTemplateIsClickable() throws Exception;
     public boolean verifyDriverInViewMode(HashMap<String, String> driverToCheck) throws Exception;
+    public void verifyNewCreatedTemplateHistoryContent(String option,String userName,String time) throws Exception;
+    public void closeTemplateHistoryPanel();
+    public void updateSchedulePolicyTemplateFirstField(String count);
+    public void verifyPublishTemplateHistoryContent(String option,String userName) throws Exception;
+    public void verifyUpdatedSchedulePolicyTemplateFirstFieldCorrectOrNot(String count);
+    public void publishAtDifferentTimeForTemplate(String button,int date) throws Exception;
+    public void openCurrentPublishInMultipleTemplate(String templateName) throws Exception;
+    public void verifyPublishFutureTemplateHistoryContent(String option,String userName) throws Exception;
+    public void clickOnArchiveButton() throws Exception;
+    public void verifyArchiveTemplateHistoryContent(String option,String userName) throws Exception;
+    public void verifyDeleteTemplateHistoryContent(String option,String userName) throws Exception;
+    public void clickOnDeleteButtonOnTemplateDetailsPage() throws Exception;
+    public void verifyAllTemplateTypeHasAuditLog() throws Exception;
+    public void verifyLocationLevelTemplateNoHistoryButton() throws Exception;
+    public void verifyTheLayoutOfTemplateDetailsPage() throws Exception;
+    public void verifyTheLayoutOfTemplateAssociationPage() throws Exception;
+    public void verifyCriteriaTypeOfDynamicGroup() throws Exception;
 }

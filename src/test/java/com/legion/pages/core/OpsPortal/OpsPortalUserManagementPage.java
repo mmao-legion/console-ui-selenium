@@ -1382,6 +1382,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		if(isElementLoaded(refreshBalances,5)){
 			click(refreshBalances);
 			SimpleUtils.pass("Click Refresh Balances successfully");
+			waitForSeconds(5);
 		}else
 			SimpleUtils.fail("Refresh Balances display failed",false);
 	}

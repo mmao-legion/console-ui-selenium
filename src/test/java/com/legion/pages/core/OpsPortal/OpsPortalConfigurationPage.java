@@ -6446,6 +6446,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void clickHistoryButton() throws Exception{
 		if(isElementLoaded(historyButton,3)){
 			clickTheElement(historyButton);
+			waitForSeconds(5);
 			if(isElementLoaded(closeIcon,2)){
 				SimpleUtils.pass("User can click history Button successfully");
 			}else {
@@ -6493,7 +6494,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			String content1 = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
 			String content2 = historyRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
 			if ((content1.contains("Edited") || content1.contains("Deleted") || content1.contains("Published") || content1.contains("Created")
-					|| content1.contains("set to publish on")) && content1.contains("Version") && content1.contains("/2022") && content2.contains("Fiona")
+					|| content1.contains("set to publish on")) && content1.contains("Version") && content2.contains("Fiona")
 					&& content2.contains("at") && content2.contains("/2022")) {
 				SimpleUtils.pass("History Content can show well");
 			} else {
@@ -6533,5 +6534,326 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				SimpleUtils.fail("can not create a new template",false);
 			}
 		}
+	}
+
+	@Override
+	public void verifyNewCreatedTemplateHistoryContent(String option,String userName,String time) throws Exception {
+		//Create new template's history checking
+		if (areListElementVisible(historyRecordsList, 2) && option.contains("Created")) {
+			String format = "hh:mm:ss a','MM/dd/yyyy";
+			//content1  Template Edited ( Vrsion 1 )e
+			String content1 = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
+			//content2   auto6 AD6 at 01:27:30 AM,07/28/2022
+			String content2 = historyRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
+			String strBefore = content2.substring(0, content2.indexOf("at"));
+			//date is 19:00:37 PM,07/22/2022
+			String dateTime = content2.substring(strBefore.length() + 3, content2.length());
+			SimpleDateFormat sdf = new SimpleDateFormat(format);
+			Date date = sdf.parse(dateTime);
+			Date date1 = sdf.parse(time);
+
+			if ((content1.contains("Edited") && content1.contains("Version 1") && content2.contains(userName) && content2.contains("at"))){
+				SimpleUtils.pass("Create new template history Content can show well");
+			} else {
+				SimpleUtils.fail("Create new template history Content can't show well", false);
+			}
+			//content3  Template Created ( Version 1 )
+			String content3 = historyRecordsList.get(1).findElement(By.cssSelector("div.templateInfo")).getText().trim();
+			if(historyRecordsList.size()==2 && content3.contains("Version 1") && content3.contains("Created")){
+				SimpleUtils.pass("Created new template will create " + historyRecordsList.size() + " history records");
+			}else {
+				SimpleUtils.fail("Created new template's history record is not correct",false);
+			}
+		}else {
+			SimpleUtils.report("There is no record for now.");
+		}
+	}
+
+	@Override
+	public void closeTemplateHistoryPanel(){
+		if(isElementEnabled(closeIcon,2)){
+			clickTheElement(closeIcon);
+		}
+		waitForSeconds(2);
+	}
+
+	@FindBy(css="question-input[question-title*=\"Schedule Planning Window\"] input")
+	WebElement firstFieldInSchedulePolicyTemplate;
+
+	@Override
+	public void updateSchedulePolicyTemplateFirstField(String count){
+		if(isElementEnabled(firstFieldInSchedulePolicyTemplate,2)){
+			clickTheElement(firstFieldInSchedulePolicyTemplate);
+			firstFieldInSchedulePolicyTemplate.clear();
+			firstFieldInSchedulePolicyTemplate.sendKeys(count);
+		}
+	}
+
+	//Published template history checking
+	public void verifyPublishTemplateHistoryContent(String option,String userName) throws Exception{
+		if(areListElementVisible(historyRecordsList, 2) && option.contains("Published")){
+			//content1  Template Published ( Version 1 )
+			String content1 = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
+			//content2   auto6 AD6 at 01:27:30 AM,07/28/2022
+			String content2 = historyRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
+			if((content1.contains(option) && content1.contains("Version 1") && content2.contains(userName))){
+				SimpleUtils.pass("Publish template history can show well");
+			}else {
+				SimpleUtils.fail("Publish template history can't show well",false);
+			}
+			if(historyRecordsList.size()==3){
+				SimpleUtils.pass("Publish template history record can show well");
+			}else {
+				SimpleUtils.fail("Publish template history record can't show well",false);
+			}
+		}else {
+			SimpleUtils.report("There is no record for now.");
+		}
+	}
+
+	@FindBy(css="question-input[question-title*=\"Schedule Planning Window\"] ng-form div")
+	private WebElement firstFieldValueInSchedulePolicyTemplate;
+	@Override
+	public void verifyUpdatedSchedulePolicyTemplateFirstFieldCorrectOrNot(String count){
+		if(isElementEnabled(firstFieldValueInSchedulePolicyTemplate,2)){
+			String value = firstFieldValueInSchedulePolicyTemplate.getAttribute("innerText").trim();
+			if(value.equals(count)){
+				SimpleUtils.pass("User can go to correct template via template history list and template value is correct");
+			}else {
+				SimpleUtils.fail("User can go to correct template via template history list",false);
+			}
+		}
+	}
+
+	@Override
+	public void publishAtDifferentTimeForTemplate(String button,int date) throws Exception{
+		waitForSeconds(2);
+		scrollToBottom();
+		chooseSaveOrPublishBtnAndClickOnTheBtn(button);
+		if(isElementLoaded(dateOfPublishPopup,2)){
+			clickTheElement(effectiveDate);
+			setEffectiveDate(date);
+			clickTheElement(okButtonOnFuturePublishConfirmDialog);
+		}else {
+			SimpleUtils.fail("The future publish template confirm dialog is not displayed.",false);
+		}
+	}
+
+	@Override
+	public void openCurrentPublishInMultipleTemplate(String templateName) throws Exception{
+		expandMultipleVersionTemplate(templateName);
+		if(areListElementVisible(multipleTemplateList,2)){
+			//Create draft version for current published template
+			clickTheElement(currentPublishedTemplate.findElement(By.cssSelector(" button")));
+			waitForSeconds(10);
+			if(isElementEnabled(templateTitleOnDetailsPage)&&isElementEnabled(closeBTN)&&isElementEnabled(templateDetailsAssociateTab)
+					&&isElementEnabled(templateDetailsPageForm)){
+				SimpleUtils.pass("User can open " + templateName + " template succseefully");
+			}else{
+				SimpleUtils.fail("User open " + templateName + " template failed",false);
+			}
+		}
+	}
+
+	@Override
+	//Published at different time - template history checking
+	public void verifyPublishFutureTemplateHistoryContent(String option,String userName) throws Exception{
+		if(areListElementVisible(historyRecordsList, 2) && option.contains("set to publish on")){
+			//publish future history content
+			//content1  Template set to publish on 08/09/2022 ( Version 2 )
+			String content1 = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
+			//content2   FionaUsing Feng at 14:57:36 PM,08/01/2022
+			String content2 = historyRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
+			if((content1.contains(option) && content1.contains("Version 2") && content2.contains(userName))){
+				SimpleUtils.pass("Publish at different time template history can show well");
+			}else {
+				SimpleUtils.fail("Publish at different time template history can't show well",false);
+			}
+			//click edit button from published template of version 1
+			//content3  Template Edited ( Version 2 )
+			String content3 = historyRecordsList.get(1).findElement(By.cssSelector("div.templateInfo")).getText().trim();
+			//content4   FionaUsing Feng at 15:21:08 PM,08/01/2022
+			String content4 = historyRecordsList.get(1).findElement(By.cssSelector("p")).getText().trim();
+			if((content3.contains("Edit") && content3.contains("Version 2") && content4.contains(userName))){
+				SimpleUtils.pass("Histroy of clicking edit button from published template can show well");
+			}else {
+				SimpleUtils.fail("Histroy of clicking edit button from published template can't show well",false);
+			}
+			if(historyRecordsList.size()==5){
+				SimpleUtils.pass("Publish at different time for a template - action history record can show well");
+			}else {
+				SimpleUtils.fail("Publish at different time for a template - action history record can't show well",false);
+			}
+		}else {
+			SimpleUtils.report("There is no record for now.");
+		}
+	}
+
+	@Override
+	public void clickOnArchiveButton() throws Exception{
+		verifyArchivePopUpShowWellOrNot();
+		clickTheElement(okButton);
+		waitForSeconds(3);
+	}
+
+	@Override
+	//Archive - template history checking
+	public void verifyArchiveTemplateHistoryContent(String option,String userName) throws Exception{
+		if(areListElementVisible(historyRecordsList, 2) && option.contains("Archived")){
+			//archive template history content
+			//content1  Template Archived ( Version 1 )
+			String content1 = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
+			//content2   FionaUsing Feng at 16:38:27 PM,08/01/2022
+			String content2 = historyRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
+			if((content1.contains(option) && content1.contains("Version 1") && content2.contains(userName))){
+				SimpleUtils.pass("Archive template history can show well");
+			}else {
+				SimpleUtils.fail("Archive template history can't show well",false);
+			}
+
+			if(historyRecordsList.size()==6){
+				SimpleUtils.pass("Archive template - action history record can show well");
+			}else {
+				SimpleUtils.fail("Archive template - action history record can't show well",false);
+			}
+		}else {
+			SimpleUtils.report("There is no record for now.");
+		}
+	}
+
+	@Override
+	//Delete - template history checking
+	public void verifyDeleteTemplateHistoryContent(String option,String userName) throws Exception{
+		if(areListElementVisible(historyRecordsList, 2) && option.contains("Deleted")){
+			//delete template history content
+			//content1  Template Deleted ( Version 3 )
+			String content1 = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
+			//content2   FionaUsing Feng at 16:38:27 PM,08/01/2022
+			String content2 = historyRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
+			if((content1.contains(option) && content1.contains("Version 3") && content2.contains(userName))){
+				SimpleUtils.pass("Delete template history can show well");
+			}else {
+				SimpleUtils.fail("Delete template history can't show well",false);
+			}
+
+			if(historyRecordsList.size()==8){
+				SimpleUtils.pass("Delete template - action history record can show well");
+			}else {
+				SimpleUtils.fail("Delete template - action history record can't show well",false);
+			}
+		}else {
+			SimpleUtils.report("There is no record for now.");
+		}
+	}
+
+	@Override
+	public void clickOnDeleteButtonOnTemplateDetailsPage() throws Exception{
+		if(isElementEnabled(deleteTemplateButton,3)){
+			clickTheElement(deleteTemplateButton);
+			if(isElementEnabled(deleteTemplateDialog,3)){
+				clickTheElement(okButtonOnDeleteTemplateDialog);
+				waitForSeconds(5);
+			}
+		}else {
+			SimpleUtils.fail("There is no delete button displayed",false);
+		}
+	}
+
+	@Override
+	public void verifyAllTemplateTypeHasAuditLog() throws Exception{
+		List<WebElement> allTemplateTypes = getDriver().findElements(By.cssSelector("h1.lg-dashboard-card__title"));
+		if (areListElementVisible(allTemplateTypes, 5)) {
+			for (int i = 0; i < allTemplateTypes.size(); i++) {
+				//go to each template type
+				clickTheElement(allTemplateTypes.get(i));
+				waitForSeconds(3);
+				//click the first template to check audit log
+				if(areListElementVisible(templatesList,2)) {
+					String classValue = templatesList.get(0).getAttribute("class");
+					if (classValue != null && classValue.contains("hasChildren")) {
+						clickTheElement(templatesList.get(0).findElement(By.cssSelector(".toggle i")));
+						waitForSeconds(2);
+						clickTheElement(getDriver().findElement(By.cssSelector("[ng-repeat=\"child in item.childTemplate\"] button")));
+					} else {
+						clickTheElement(templatesList.get(0).findElement(By.cssSelector("button")));
+					}
+					waitForSeconds(15);
+					if (isElementEnabled(templateTitleOnDetailsPage) && isElementEnabled(closeBTN) && isElementEnabled(templateDetailsAssociateTab)
+							&& isElementEnabled(templateDetailsPageForm)) {
+						SimpleUtils.pass("User can open template successfully");
+					} else {
+						SimpleUtils.fail("User open template failed", false);
+					}
+				}else {
+					SimpleUtils.report("There is no templates in list");
+					continue;
+				}
+				clickHistoryButton();
+				verifyTemplateHistoryUI();
+				goToConfigurationPage();
+				allTemplateTypes = getDriver().findElements(By.cssSelector("h1.lg-dashboard-card__title"));
+			}
+		}else {
+			SimpleUtils.fail("Configuration landing page load failed",false);
+		}
+	}
+
+	@Override
+	public void verifyLocationLevelTemplateNoHistoryButton() throws Exception{
+		if(!isElementEnabled(historyButton,2)){
+			SimpleUtils.pass("There is no history button at location level template");
+		}else {
+			SimpleUtils.fail("There is history button at location level template",false);
+		}
+	}
+
+	@Override
+	public void verifyTheLayoutOfTemplateDetailsPage() throws Exception {
+		if (isElementLoaded(templateDetailsTab, 2)) {
+			SimpleUtils.pass("Details Tab is showing");
+		} else {
+			SimpleUtils.fail("Details Tab is not showing", false);
+		}
+		if (isElementLoaded(backButton, 2) &&isElementLoaded(closeButton, 2)  ) {
+			SimpleUtils.pass("Details and Association Tab is showing");
+		} else {
+			SimpleUtils.fail("Details and Association Tab is not showing", false);
+		}
+	}
+
+	@Override
+	public void verifyTheLayoutOfTemplateAssociationPage() throws Exception {
+		if (isElementLoaded(templateAssociationBTN, 2)) {
+			SimpleUtils.pass("Association Tab is showing");
+			clickTheElement(templateAssociationBTN);
+		} else {
+			SimpleUtils.fail("Association Tab is not showing", false);
+		}
+		if (isElementLoaded(addDynamicGroupButton, 2)) {
+			SimpleUtils.pass("addDynamicGroupButton is showing");
+		} else {
+			SimpleUtils.fail("addDynamicGroupButton is not showing", false);
+		}
+	}
+
+	@Override
+	public void verifyCriteriaTypeOfDynamicGroup() throws Exception {
+		clickTheElement(addDynamicGroupButton);
+		List<String> criteriaTypes = new ArrayList<String>() {{
+			add("Country");
+			add("Sate");
+			add("City");
+		}};
+		for (String criteriaType : criteriaTypes) {
+			for (WebElement criteriaOption : dynamicGroupCriteriaOptions) {
+				if (criteriaOption.getText().trim().equalsIgnoreCase(criteriaType)) {
+					SimpleUtils.pass("criteriaType is showing");
+					break;
+				} else {
+					continue;
+				}
+			}
+		}
+		cancelButtonOnManageDynamicGroupPopup.click();
 	}
 }
