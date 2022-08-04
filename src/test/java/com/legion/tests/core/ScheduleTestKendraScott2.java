@@ -936,9 +936,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			String nickName = profileNewUIPage.getNickNameFromProfile();
+
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 
 			//T1838610 Validate the click ability of forward and backward button.
 			scheduleCommonPage.validateForwardAndBackwardButtonClickable();

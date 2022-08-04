@@ -213,6 +213,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             waitForSeconds(2);
             if(isElementLoaded(popupAlertPremiumPay,10) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
+                waitForSeconds(2);
                 // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
                 if(isElementEnabled(btnEditAnyway,10) && isElementEnabled(btnCancelOnAlertPopup,10)){
                     SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
