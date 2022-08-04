@@ -59,7 +59,7 @@
             </class>
         </classes>
     </test>
-
+<!--
         <test name="Hard Stop For Minor Violation Test">
             <classes>
                 <class name="com.legion.tests.core.HardStopForMinorViolation">
@@ -74,7 +74,7 @@
                     </methods>
                 </class>
             </classes>
-        </test>
+        </test>Need more time to check-->
     <test name="Schedule Test KendraScott2">
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
@@ -569,8 +569,8 @@ SCH-5862-->
                     <include name="verifyTheActionForEachPeerLocationsInDifferentStatusAsInternalAdmin" />
 <!--                    <include name="verifyCopyOrMoveShiftsToSubLocationsInSameDayUsingLocationGroupAsInternalAdmin" Blocked by SCH-7077 />-->
                     <!--                   <include name="verifyTheStatusOfP2PInDMViewsAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7076-->
-<!--                    <include name="verifyDataMatchInDistrictSummaryWidgetOnDashboardInRegionViewWhenItIncludesLGAsInternalAdmin" /> Need more time to check-->
-                    <include name="verifyDataMatchInLocationSummaryWidgetOnDashboardInDMViewWhenItIncludesLGAsInternalAdmin" />
+<!--                    <include name="verifyDataMatchInDistrictSummaryWidgetOnDashboardInRegionViewWhenItIncludesLGAsInternalAdmin" />
+                    <include name="verifyDataMatchInLocationSummaryWidgetOnDashboardInDMViewWhenItIncludesLGAsInternalAdmin" />Need more time to check-->
                     <!--         <include name="verifyAnalyticsTableOnScheduleInDMViewWhenItIncludesLGAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7121-->
                     <include name="verifyAnalyticsTableOnComplianceInDMViewWhenItIncludesLGAsInternalAdmin" />
                     <include name="verifyAnalyticsTableOnTimesheetInDMViewWhenItIncludesLGAsInternalAdmin" />

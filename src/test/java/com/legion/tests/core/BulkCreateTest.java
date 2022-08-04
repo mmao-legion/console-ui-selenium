@@ -1437,7 +1437,7 @@ public class BulkCreateTest extends TestBase {
             for (int i=0;i< 5;i++) {
                 assignedShiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, assignedTMs.get(i).split(" ")[0]);
                 SimpleUtils.assertOnFail("The "+assignedTMs.get(i)+" shift is not exist on the first day! ",
-                        assignedShiftsOfOneDay.size()==1, false);
+                        assignedShiftsOfOneDay.size()>=1, false);
             }
 
         } catch (Exception e) {
@@ -1586,7 +1586,7 @@ public class BulkCreateTest extends TestBase {
                 for (int j=0;j<selectedTMs.size();j++) {
                     shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(i, selectedTMs.get(j).split(" ")[0]);
                     SimpleUtils.assertOnFail("The "+selectedTMs.get(j)+" shift is not exist on the "+i+" day! ",
-                            shiftsOfOneDay.size()==1, false);
+                            shiftsOfOneDay.size()>=1, false);
 
                     shiftId = shiftsOfOneDay.get(0).getAttribute("id").toString();
                     index = scheduleShiftTablePage.getShiftIndexById(shiftId);
