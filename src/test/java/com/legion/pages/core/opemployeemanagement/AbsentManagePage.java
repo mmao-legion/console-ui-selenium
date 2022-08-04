@@ -259,7 +259,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement criteriaByEngagementStatus;
     @FindBy(css = "lg-multiple-select[label='Before'] lg-picker-input")
     private WebElement criteriaBefore;
-    @FindBy(css = "input[aria-label='Before']+label+div.input-faked")
+    @FindBy(css = "input-field[label='Before'] div.input-faked.ng-binding")
     private WebElement multiSelectPlaceHolder;
     @FindBy(css = "lg-multiple-select lg-search input")
     private WebElement criteriaBeforeSearchInput;
@@ -579,7 +579,7 @@ public class AbsentManagePage extends BasePage {
         return titleBreadCrumb.getText();
     }
 
-    public void configureTemplate(String templateName) throws Exception {
+    public void configureTemplate(String templateName){
         waitForSeconds(3);
         search(templateName);
         clickInDetails();
@@ -641,7 +641,7 @@ public class AbsentManagePage extends BasePage {
         view.click();
     }
 
-    public void configureTimeOffRules(String timeOff) throws Exception {
+    public void configureTimeOffRules(String timeOff){
         searchTimeOff(timeOff);
         waitForSeconds(5);
         if (isButtonClickable(configure)) {
@@ -872,10 +872,17 @@ public class AbsentManagePage extends BasePage {
     }
 
     public boolean verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion(String jobTitleSelectBefore) {
+        Boolean isDisabled = false;
         criteriaAfter.click();
         criteriaAfterSearchInput.clear();
         criteriaAfterSearchInput.sendKeys(jobTitleSelectBefore);
-        return jobTitleAfterPromotion.isEnabled();
+        try {
+            jobTitleAfterPromotion.click();
+        } catch (Exception ElementNotInteractableException) {
+            isDisabled = true;
+
+        }
+        return isDisabled;
     }
 
     public void setPromotionAction(String balanceB, String balanceA) {

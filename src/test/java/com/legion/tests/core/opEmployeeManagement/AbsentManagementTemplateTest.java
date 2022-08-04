@@ -340,6 +340,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
         configurationPage.setTimeOffRequestRuleAs("Employee can request ?", true);
         configurationPage.setTimeOffRequestRuleAs("Employee can request partial day ?", true);
+        configurationPage.setDistributionMethod("Monthly");
         configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
         configurationPage.saveTimeOffConfiguration(true);
         absentManagePage.saveTemplateAs("Publish now");
@@ -441,6 +442,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         //add service lever
         /*configurationPage.addServiceLever();
         configurationPage.addSecondServiceLever();*/
+        configurationPage.setDistributionMethod("Monthly");
         configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
         configurationPage.addSpecifiedServiceLever(2, "24", "6", "30");
 
@@ -535,6 +537,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         configurationPage.setProbationUnitAsMonths();
         configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "5");
 
+        configurationPage.setDistributionMethod("Monthly");
         configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
         configurationPage.saveTimeOffConfiguration(true);
         //verify results of above action
@@ -621,6 +624,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         distribution.add("Monthly");
         distribution.add("Weekly");
         distribution.add("Worked Hours");
+        distribution.add("Scheduled Hours");
         distribution.add("Lump Sum");
         distribution.add("Specified Date");
         distribution.add("None");
