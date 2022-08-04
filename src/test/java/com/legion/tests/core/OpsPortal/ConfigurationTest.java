@@ -1667,8 +1667,8 @@ public class ConfigurationTest extends TestBase {
             Calendar calendar = Calendar.getInstance();
             dfs.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
             Month month = LocalDate.now().getMonth();
-            String shortMonth = month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-            String currentDate = shortMonth + " " + dfs.format(calendar.getTime());
+            String shortMonth = month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " ";
+            String currentDate = (shortMonth + dfs.format(calendar.getTime())).replace(" 0", " ");
 
            //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();

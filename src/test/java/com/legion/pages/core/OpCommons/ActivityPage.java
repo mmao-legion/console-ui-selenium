@@ -68,7 +68,7 @@ public class ActivityPage extends BasePage{
 
     public void clickTimeOffDetail() throws Exception{
         Integer size = getActvityTimeOffSize();
-        for(int i=0; i<=size; i++){
+        for(int i=0; i<size; i++){
             clickTheElement(activityTimeOffDetail.get(i));
         }
     }

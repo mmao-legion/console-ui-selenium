@@ -1871,7 +1871,62 @@ public class AccrualEngineTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "OPS-4799 Add ability to define accrual units")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDefineAccrualUnitsAbilityAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+    public void verifyDefineAccrualUnitsAbilityAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
+        switchToNewWindow();
+
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("MOCKVERIFY");
+        consoleNavigationPage.navigateTo("Team");
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMemberByName("Nancy Unit");
+        teamPage.navigateToTimeOffPage();
+
+        TimeOffPage timeOffPage = new TimeOffPage();
+
+        HashMap<String, String> actualUnit = timeOffPage.getTimeOffUnit();
+        HashMap<String, String> expectedUnit = new HashMap<>();
+        expectedUnit.put("DayUnit", "days");
+        expectedUnit.put("Floating Holiday", "hrs");
+        expectedUnit.put("Grandparents Day Off1", "hrs");
+        expectedUnit.put("Grandparents Day Off2", "hrs");
+        expectedUnit.put("Grandparents Day Off3", "hrs");
+        expectedUnit.put("Grandparents Day Off4", "hrs");
+        expectedUnit.put("Pandemic1", "hrs");
+        expectedUnit.put("Pandemic2", "hrs");
+
+        Assert.assertEquals(expectedUnit,actualUnit,"Unit is correct");
+
+        HashMap<String, String> actualUnitInEdit =timeOffPage.getTimeOffUnitInEdit();
+        HashMap<String, String> expectedUnitInEdit = new HashMap<>();
+
+        expectedUnitInEdit.put("DayUnit", "- days");
+        expectedUnitInEdit.put("Floating Holiday", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off1", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off2", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off3", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off4", "- hrs");
+        expectedUnitInEdit.put("Pandemic1", "- hrs");
+        expectedUnitInEdit.put("Pandemic2", "- hrs");
+
+        Assert.assertEquals(expectedUnitInEdit,actualUnitInEdit,"Unit in edit is correct");
+
+        HashMap<String, String> actualUnitInCreateTimeOff =timeOffPage.getTimeOffUnitInCreateTimeOff();
+        HashMap<String, String> expectedUnitInCreateTimeOff = new HashMap<>();
+
+        expectedUnitInEdit.put("DayUnit", "- days");
+        expectedUnitInEdit.put("Floating Holiday", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off1", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off2", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off3", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off4", "- hrs");
+        expectedUnitInEdit.put("Pandemic1", "- hrs");
+        expectedUnitInEdit.put("Pandemic2", "- hrs");
+
+        Assert.assertEquals(expectedUnitInEdit,actualUnitInEdit,"Unit in edit is correct");
+
+        switchToNewWindow();
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
         navigationPage.navigateToEmployeeManagement();
@@ -1892,9 +1947,9 @@ public class AccrualEngineTest extends TestBase {
         absentManagePage.search("UnitType");
 
         absentManagePage.otherDistributionMethodisDiabled();
+        absentManagePage.searchAndSelectWorkRole();
 
         absentManagePage.verifyWorkRoleStatus();
-
     }
 
     public void importTimeOffRequest(String sessionId) {
