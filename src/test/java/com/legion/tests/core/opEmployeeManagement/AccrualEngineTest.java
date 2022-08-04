@@ -1995,7 +1995,7 @@ public class AccrualEngineTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "OPS-4059 Ability to deduct accrual balance from imported approved time off.")
+    @TestName(description = "Payable hour types included in calculation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyPayableHoursWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //verify that the target template is here.
@@ -2003,18 +2003,33 @@ public class AccrualEngineTest extends TestBase {
         String templateName = "AccrualAuto-PayableHours(Don't touch!!!)";
         absentManagePage.search(templateName);
         SimpleUtils.assertOnFail("Failed the find the target template!", absentManagePage.getResult().equals(templateName), false);
-
-        //configure payable hours
+        //configure: floating holiday
         absentManagePage.configureTemplate(templateName);
-        absentManagePage.configureTimeOffRules("Floating holiday");
-
+        absentManagePage.configureTimeOffRules("Floating holiday");//worked hours/total
+        TimeOffReasonConfigurationPage configurationPage=new TimeOffReasonConfigurationPage();
+        configurationPage.setAccrualPeriod("Hire Date","Hire Date",null,null,null,null);
+        configurationPage.setDistributionMethod("Worked Hours");
+        //1.verify there is payable hours displayed
+        configurationPage.getPayableTitle();
+        Assert.assertEquals(configurationPage.getPayableTitle(),"Payable hour types included in calculation", "Failed to find Payable Hour title!!!");
+        SimpleUtils.pass("Succeeded in confirming that Payable Hour title is displayed!");
+        //2.verify that configure button is displayed
+        Assert.assertTrue(configurationPage.isPayableConfigButtonDisplayed(), "Failed to assert the configure button was displayed!!!");
+        SimpleUtils.pass("Succeeded in confirming that the configure button was displayed!");
+        //3.open the modal, and verify the title
+        configurationPage.configurePayableHours();
+        Assert.assertEquals(configurationPage.getPayableModalTitle(),"Include Hour Types", "Failed to open Payable Hour Modal!!!");
+        SimpleUtils.pass("Succeeded in opening the Payable Hour Modal!");
+        //4.add more button is displayed.
+        Assert.assertTrue(configurationPage.isAddMoreButtonDisplayed(), "Failed to assert the add more button was displayed!!!");
+        SimpleUtils.pass("Succeeded in confirming that the add more button was displayed!");
 
         //Edit
         //configure time off ---Floating holiday
         //configure time off ---PTO
 
         //switch to console
-        RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        /*RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
         modelSwitchPage.switchToNewTab();
         //search and go to the target location
         ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
@@ -2027,7 +2042,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = logIn();
+        String sessionId = logIn();*/
     }
 
 
