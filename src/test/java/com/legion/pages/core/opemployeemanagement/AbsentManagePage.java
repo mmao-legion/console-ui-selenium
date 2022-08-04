@@ -212,8 +212,14 @@ public class AbsentManagePage extends BasePage {
     private WebElement leavePageBtn;
 
     //setting page
-    @FindBy(css = "div.basic-setting-info>question-input")
+    @FindBy(css = "div.basic-setting-info>question-input[question-title='Do time off reasons use accruals?']")
     private WebElement useAccrual;
+    @FindBy(css = "div.basic-setting-info>question-input:nth-child(1)>div lg-switch span")
+    private WebElement useAccrualToggle;
+    @FindBy(css = "div.basic-setting-info>question-input:nth-child(2)>div lg-switch span")
+    private WebElement timesheetRequiredToBeApprovedToggle;
+    @FindBy(css = "div.basic-setting-info>question-input:nth-child(3)>div input-field input")
+    private WebElement lookBackDays;
     @FindBy(css = "lg-switch>label.switch span")
     private WebElement toggleSlide;
     @FindBy(css = "div.col-sm-2.addTimeOffReason>lg-button>button")
@@ -1099,6 +1105,23 @@ public class AbsentManagePage extends BasePage {
         verifyWorkRoleOnlyDisplayForScheduleHour("Scheduled Hours");
         verifyWorkRoleOnlyDisplayForScheduleHour("Lump Sum");
         verifyWorkRoleOnlyDisplayForScheduleHour("None");
+    }
+
+    public void configureGlobalSettings() {
+        switchToSettings();
+        String toggleIsOn = "rgba(49, 61, 146, 1)";
+        String bgColor1 = useAccrualToggle.getCssValue("background-color");
+        if (!bgColor1.equals(toggleIsOn)) {
+            useAccrualToggle.click();
+        }
+        String bgColor2 = timesheetRequiredToBeApprovedToggle.getCssValue("background-color");
+        if (!bgColor2.equals(toggleIsOn)) {
+            timesheetRequiredToBeApprovedToggle.click();
+        }
+        lookBackDays.clear();
+        lookBackDays.sendKeys("5");
+        waitForSeconds(3);
+        switchToTemplates();
     }
 
     @FindBy(css = "input[type = 'checkbox']")
