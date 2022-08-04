@@ -1110,9 +1110,7 @@ public class AbsentManagePage extends BasePage {
         templateSearchBox.sendKeys("Key Carrier");
         click(firstWorkRole);
 
-        System.out.println(workRoleInput.getText());
-
-        if(workRoleInput.getAttribute("innerText").equals("2 Work Roles Selected")){
+        if(getDriver().findElement(By.cssSelector("input-field[placeholder = 'All Work Roles']>ng-form>div")).getAttribute("innerText").contains("2 Work Roles Selected")){
             SimpleUtils.pass("2 work roles selected successfully");
         }else
             SimpleUtils.fail("2 work roles selected faied",false);

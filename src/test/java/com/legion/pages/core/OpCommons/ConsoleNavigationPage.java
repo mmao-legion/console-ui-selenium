@@ -110,6 +110,10 @@ public class ConsoleNavigationPage extends BasePage {
     private WebElement consoleTab;
     @FindBy(css = "div.lg-scenario-table-improved.ng-scope")
     private WebElement planTab;
+    @FindBy(css = "lg-button[label = 'Create Plan'] > button")
+    private WebElement createPlanButton;
+    @FindBy(css = "input[placeholder = 'Search by labor budget name']")
+    private WebElement searchLaborBudget;
 
     public void verifyOtherTableIsNormal(){
         navigateTo("DashBoard");
@@ -138,7 +142,7 @@ public class ConsoleNavigationPage extends BasePage {
 
         if(isExist(plan)){
             navigateTo("plan");
-            if(planTab.isDisplayed()){
+            if(searchLaborBudget.isDisplayed()){
                 SimpleUtils.pass("Plan page is normal");
             }else
                 SimpleUtils.fail("Plan page is not normal",false);
