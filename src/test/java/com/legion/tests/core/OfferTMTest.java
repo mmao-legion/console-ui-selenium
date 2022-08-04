@@ -235,6 +235,7 @@ public class OfferTMTest extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
 
             //verify auto open shift in non-edit mode.
             shiftOperatePage.clickOnProfileIconOfOpenShift();
@@ -421,6 +422,7 @@ public class OfferTMTest extends TestBase {
             newShiftPage.verifySelectTeamMembersOption();
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
 
             //verify manual open shift in non-edit mode.
             shiftOperatePage.clickOnProfileIconOfOpenShift();
@@ -1825,14 +1827,14 @@ public class OfferTMTest extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
+            // Publish schedule
+            createSchedulePage.publishActiveSchedule();
 
             // Offer TM in non-edit mode to make sure the TM will be offered with multiple shifts
             String shiftType = "Open";
             int openShiftCount = shiftOperatePage.countShiftsByUserName(shiftType);
             shiftOperatePage.offerTMByOpenShiftsCount(openShiftCount, firstNameOfTM, location);
 
-            // Publish schedule
-            scheduleMainPage.publishOrRepublishSchedule();
             loginPage.logOut();
 
             //login with TM.

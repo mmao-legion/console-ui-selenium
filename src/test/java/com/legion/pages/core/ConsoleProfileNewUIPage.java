@@ -2362,10 +2362,14 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				if (isElementLoaded(userNickName, 5)) {
 					if (userNickName.getText().equalsIgnoreCase(getEnterprise())) {
 						clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));
-						if (isElementLoaded(getDriver().findElement(By.cssSelector(".userProfileText")))) {
+						if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 3)) {
 							nickName = getDriver().findElement(By.cssSelector(".userProfileText")).getText().trim().contains(" ") ?
 									getDriver().findElement(By.cssSelector(".userProfileText")).getText().trim().split(" ")[0] :
 									getDriver().findElement(By.cssSelector(".userProfileText")).getText().trim();
+						} else if (areListElementVisible(getDriver().findElements(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")),3)) {
+							nickName = getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")).getText().trim().contains(" ") ?
+									getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")).getText().trim().split(" ")[0] :
+									getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")).getText().trim();
 						}
 					} else {
 						nickName = userNickName.getText();
