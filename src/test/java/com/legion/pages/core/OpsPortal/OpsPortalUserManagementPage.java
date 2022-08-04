@@ -1630,5 +1630,8 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		click(badgeRequired);
 		click(badgeSearchInput);
 	}
+
+	@FindBy(css = "tr[ng-repeat]")
+	private List<WebElement> workRoleList;
 }
 
