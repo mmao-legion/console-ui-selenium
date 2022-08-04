@@ -4365,4 +4365,38 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate the layout of the new template page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void ValidateLayoutOfNewTemplatePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            List<String> templateTypes = new ArrayList<String>() {{
+                add("Operating Hours");
+                add("Scheduling Policies");
+                add("Scheduling Rules");
+            }};
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime = dfs.format(new Date()).trim();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            for (String templateType : templateTypes) {
+                String templateName = templateType + currentTime;
+                configurationPage.goToConfigurationPage();
+                configurationPage.clickOnConfigurationCrad(templateType);
+                configurationPage.createNewTemplate(templateName);
+                configurationPage.searchTemplate(templateName);
+                configurationPage.clickOnTemplateName(templateName);
+                configurationPage.verifyTheLayoutOfTemplateDetailsPage();
+                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                configurationPage.verifyTheLayoutOfTemplateAssociationPage();
+                configurationPage.verifyCriteriaTypeOfDynamicGroup();
+                configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+                configurationPage.searchTemplate(templateName);
+                configurationPage.archivePublishedOrDeleteDraftTemplate(templateName, "Delete");
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
