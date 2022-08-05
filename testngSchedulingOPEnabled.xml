@@ -59,7 +59,7 @@
             </class>
         </classes>
     </test>
-<!--
+
         <test name="Hard Stop For Minor Violation Test">
             <classes>
                 <class name="com.legion.tests.core.HardStopForMinorViolation">
@@ -74,7 +74,7 @@
                     </methods>
                 </class>
             </classes>
-        </test>Need more time to check-->
+        </test>
     <test name="Schedule Test KendraScott2">
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
