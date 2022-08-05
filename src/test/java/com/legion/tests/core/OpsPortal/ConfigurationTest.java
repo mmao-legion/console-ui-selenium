@@ -295,7 +295,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Lizzy")
     @Enterprise(name = "Op_Enterprise")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void ceateMultipleHistortForOHTempInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void ceateMultipleHistortForOHTempInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Operating Hours";
             String mode = "edit";
