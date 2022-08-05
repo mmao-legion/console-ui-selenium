@@ -85,6 +85,9 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 			getActiveConsoleName(loginButton);
 			userNameField.clear();
 			passwordField.clear();
+			if (userName.contains("@" + getEnterprise())) {
+				userName = userName.replace("@" + getEnterprise(), "");
+			}
 			userNameField.sendKeys(userName);
 			passwordField.sendKeys(Password);
 			clickTheElement(loginButton);
