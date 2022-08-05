@@ -3109,7 +3109,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Haya")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Verify turn off the Schedule Copy Restriction")
+	@TestName(description = "Verify turn on Schedule Copy Restriction and copy schedule")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTurnOnCopyRestrictionAndCheckCopyResultAsInternalAdmin(String browser, String username, String password, String location) {
 		try {

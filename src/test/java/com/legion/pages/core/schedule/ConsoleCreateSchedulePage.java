@@ -119,14 +119,14 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     private WebElement copyPartialScheduleSwitch;
     @FindBy(css = "[ng-repeat=\"assignment in assignments\"]")
     private List<WebElement> copyShiftAssignments;
-    @FindBy(xpath = "//p[contains(text(),\"Target Budget: \")]/span")
+    @FindBy(css = "div.target-budget span")
     private WebElement targetBudget;
     @FindBy(css = "[x=\"25\"]")
     private List<WebElement> budgetHrsOnGraph;
     @FindBy(css = ".generate-modal-week-container.selected text[x=\"85\"]")
     private WebElement scheduledHrsOnGraph;
     @FindBy(css = ".modal-instance-header-title")
-    private WebElement headerWhileCreateSchedule;
+    private WebElement headerTitleWhileCreateSchedule;
     @FindBy(css = ".generate-modal-location")
     private WebElement locationWhileCreateSchedule;
     @FindBy(css = "[label=\"Back\"]")
@@ -405,7 +405,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 } else {
                     SimpleUtils.fail("Not able to generate Schedule Successfully!", false);
                 }
-            } else if (isElementLoaded(copyScheduleWeekModalTitle, 5)){
+            } else if (isElementLoaded(copyScheduleWeekModalTitle, 10)){
                 selectWhichWeekToCopyFrom("SUGGESTED");
                 clickOnFinishButtonOnCreateSchedulePage();
             } else if (isElementLoaded(updateAndGenerateScheduleButton, 5)) {
@@ -1210,7 +1210,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
     @Override
     public void verifyTheContentOnEnterBudgetWindow(String weekInfo, String location) throws Exception {
-        if (isElementLoaded(headerWhileCreateSchedule, 5) && headerWhileCreateSchedule.getText().contains(weekInfo)) {
+        if (isElementLoaded(headerTitleWhileCreateSchedule, 5) && headerTitleWhileCreateSchedule.getText().contains(weekInfo)) {
             SimpleUtils.pass("Create Schedule - Enter Budget: \"" + weekInfo + "\" as header displays correctly");
         } else
             SimpleUtils.fail("Enter Budget: Week information as header not loaded or displays incorrectly", true);
@@ -1438,7 +1438,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     }
 
 
-    @FindBy(css = "div[ng-click=\"back()\"]")
+    @FindBy(css = "[ng-click=\"(!editing || step === initialStep) && back()\"]")
     private WebElement backBtnOnCreateScheduleWindow;
 
     @Override
@@ -1843,7 +1843,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         return isLoaded;
 
     }
-    
+
   @Override
     public void isGenerateButtonNotClickable() throws Exception {
         if (isElementLoaded(scheduleGenerateButton) && isClickable(scheduleGenerateButton,5)){
@@ -1872,5 +1872,251 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         }
     }
 
+    @FindBy(css = ".modal-instance-header")
+    private WebElement headerWhileCreateSchedule;
+    @Override
+    public void verifyTheContentOnConfirmOperatingHoursWindow(String weekInfo, String locationName) throws Exception {
+        /*
+            * Following should be loaded:
+                -Title: Create New Schedule, Week of MMM DD-MMM DD, location
+                -Seven Week days
+                -Edit button
+                -Exist and Next button
+            *
+            * */
+        if (isElementLoaded(headerWhileCreateSchedule, 5)
+                && isElementLoaded(headerTitleWhileCreateSchedule, 5)
+                && isElementLoaded(locationWhileCreateSchedule, 5)){
+
+            String headerTitle = "Create New Schedule: Week of "+weekInfo;
+            SimpleUtils.assertOnFail("The head title message display incorrectly, the expect message is:"+headerTitle
+                            +" the actual is: "+headerTitleWhileCreateSchedule.getText(),
+                    headerTitleWhileCreateSchedule.getText().equalsIgnoreCase(headerTitle),false);
+            SimpleUtils.assertOnFail("The head location display incorrectly, the expect location is:"+locationName
+                            +" the actual is: "+locationWhileCreateSchedule.getText(),
+                    locationWhileCreateSchedule.getText().equalsIgnoreCase(locationName),false);
+            SimpleUtils.assertOnFail("The operating hours days should be 7, the actual is:"+operatingHoursDayLists.size(),
+                    operatingHoursDayLists.size() ==7, false);
+
+            SimpleUtils.assertOnFail("The Edit button on Confirm Operating Hours window should be loaded! ",
+                    isElementLoaded(operatingHoursEditBtn, 5), false);
+            SimpleUtils.assertOnFail("The Next button on Confirm Operating Hours window should be loaded! ",
+                    isElementLoaded(nextButtonOnCreateSchedule, 5), false);
+            SimpleUtils.assertOnFail("The Edit button on Confirm Operating Hours window should be loaded! ",
+                    isElementLoaded(backBtnOnCreateScheduleWindow, 5), false);
+        } else {
+            SimpleUtils.fail("The Create Schedule window header is not loaded!", false);
+        }
+    }
+
+
+    @Override
+    public boolean checkIfCreateScheduleWindowLoad() throws Exception {
+        boolean isLoad = false;
+        if (isElementLoaded(copySchedulePopUp, 5)) {
+            isLoad = true;
+            SimpleUtils.report("The create schedule window is loaded! ");
+        } else
+            SimpleUtils.report("The create schedule window is not loaded! ");
+        return isLoad;
+    }
+
+    @FindBy(css = "div.graph-description-item-value")
+    private List<WebElement> copyScheduleGraphDescriptions;
+    @FindBy(css = ".generate-modal-week-container.selected text[y=\"21\"]")
+    private WebElement estimatedLabelInSuggestedModalWeek;
+    @FindBy(css = ".generate-modal-week-schedules-header-toggle")
+    private WebElement selectAnotherWeekLink;
+    @FindBy(css = "div.lgncalendar")
+    private WebElement previousWeeksCalendar;
+    @FindBy(css = "div.calendar-week.select-week:not(.unselectable-week)")
+    private List<WebElement> selectableWeekInCalendar;
+    @FindBy(css = "i.fa-chevron-left")
+    private WebElement previousWeeksArrowButton;
+    @FindBy(css = "i.fa-chevron-right")
+    private WebElement nextWeeksArrowButton;
+    @FindBy(css = "[class=\"calendar-week select-week selected-week\"]")
+    private List<WebElement> selectedWeekInCalendar;
+    @FindBy(css = "div.generate-modal-assignments-header-title")
+    private WebElement copyShiftAssignmentsTitle;
+    @FindBy(css = "div.generate-modal-assignments-header-subtitle")
+    private WebElement copyShiftAssignmentsSubTitle;
+    @FindBy(css = "div.schedule-success h1")
+    private WebElement scheduleSuccessMessage;
+    @FindBy(css = "div.generate-modal-week-container.selected")
+    private List<WebElement> selectedCopyFromWeekModal;
+
+    @Override
+    public void verifyTheContentOnCopyScheduleWindow(String weekInfo, String locationName, float targetBudgetHrs, int selectableWeekCountInConfig) throws Exception {
+        /*
+            * Following should be loaded:
+                - Create New Schedule: Week of Nov 25 - Dec 1
+                - Location
+                - Target Budget: xxx Hrs
+                - Budget, Scheduled
+                - Suggested Schedule
+                - Copy from previous Weeks
+                - Select another week
+                - Cancel, Next buttons
+            *
+            * */
+        if (isElementLoaded(headerWhileCreateSchedule, 5)
+                && isElementLoaded(headerTitleWhileCreateSchedule, 5)
+                && isElementLoaded(locationWhileCreateSchedule, 5)
+                && isElementLoaded(targetBudget, 5)
+                && areListElementVisible(copyScheduleGraphDescriptions, 5)
+                && copyScheduleGraphDescriptions.size() == 2){
+
+            String headerTitle = "Create New Schedule: Week of "+weekInfo;
+            SimpleUtils.assertOnFail("The head title message display incorrectly, the expect message is:"+headerTitle
+                            +" the actual is: "+headerTitleWhileCreateSchedule.getText(),
+                    headerTitleWhileCreateSchedule.getText().equalsIgnoreCase(headerTitle),false);
+            SimpleUtils.assertOnFail("The head location display incorrectly, the expect location is:"+locationName
+                            +" the actual is: "+locationWhileCreateSchedule.getText(),
+                    locationWhileCreateSchedule.getText().equalsIgnoreCase(locationName),false);
+            SimpleUtils.assertOnFail("The suggested schedule modal week should be loaded! ",
+                    isElementLoaded(suggestScheduleModalWeek, 5), false);
+            clickTheElement(suggestScheduleModalWeek);
+            SimpleUtils.assertOnFail("The previous weeks modal should be loaded!",
+                    areListElementVisible(previousWeeks, 5), false);
+            SimpleUtils.assertOnFail("The Next button on Confirm Operating Hours window should be loaded! ",
+                    isElementLoaded(nextButtonOnCreateSchedule, 5), false);
+            SimpleUtils.assertOnFail("The Edit button on Confirm Operating Hours window should be loaded! ",
+                    isElementLoaded(backBtnOnCreateScheduleWindow, 5), false);
+
+            SimpleUtils.assertOnFail("The target budget hrs display incorrectly, the expected is:"+targetBudgetHrs
+                            +" the actual is: "+targetBudget.getText(),
+                    Float.parseFloat(targetBudget.getText().split(" ")[0]) == targetBudgetHrs, false);
+
+            String graphDescription1 = "Budget";
+            String graphDescription2 = "Scheduled";
+            SimpleUtils.assertOnFail("The graph descriptions display incorrectly, the expected is:"+graphDescription1 + " "+ graphDescription2
+                            +" the actual is: "+copyScheduleGraphDescriptions.toString(),
+                    copyScheduleGraphDescriptions.get(0).getText().equals(graphDescription1)
+                            && copyScheduleGraphDescriptions.get(1).getText().equals(graphDescription2) , false);
+
+        } else {
+            SimpleUtils.fail("The Create Schedule window header is not loaded!", false);
+        }
+
+        //(estimated) will show above the pink bar for Suggested Schedule
+        SimpleUtils.assertOnFail("The estimated label should shown in suggested schedule modal! ",
+               isElementLoaded(estimatedLabelInSuggestedModalWeek)
+                       && estimatedLabelInSuggestedModalWeek.getText().equals("(estimated)"), false);
+
+        clickTheElement(previousWeeks.get(0));
+
+        //Verify "Different operating hours" will show if operating hours are different
+        String differentOHMessage = "*Different operating hours";
+        String actualDifferentOHMessage = previousWeeks.get(0).findElement(By.cssSelector(".generate-modal-week-violations-different-hours")).getText();
+        SimpleUtils.assertOnFail("The expected message is: "+differentOHMessage
+                        + " the actual message is: "+actualDifferentOHMessage,
+                actualDifferentOHMessage.equals(differentOHMessage),false);
+        //Verify the functionality of "Select another week"
+//        clickTheElement(selectAnotherWeekLink);
+        if (isElementLoaded(selectAnotherWeekLink, 5)){
+            SimpleUtils.pass("The select another week link loaded successfully! ");
+            clickTheElement(selectAnotherWeekLink);
+            SimpleUtils.assertOnFail("The previous week calendar should display! ",
+                    isElementLoaded(previousWeeksCalendar, 5), false);
+            //Verify User can access to past weeks according to the config
+            int selectableWeekCount = 0;
+            clickTheElement(previousWeeksArrowButton);
+            selectableWeekCount += selectableWeekInCalendar.size();
+            if (selectableWeekInCalendar.size()==1) {
+                clickTheElement(selectableWeekInCalendar.get(0));
+            } else if (selectableWeekInCalendar.size()==2){
+                clickTheElement(selectableWeekInCalendar.get(0));
+                clickTheElement(selectableWeekInCalendar.get(1));
+            }
+            clickTheElement(nextWeeksArrowButton);
+            selectableWeekCount += selectableWeekInCalendar.size();
+            if (selectableWeekInCalendar.size()==1) {
+                clickTheElement(selectableWeekInCalendar.get(0));
+            } else if (selectableWeekInCalendar.size()==2){
+                clickTheElement(selectableWeekInCalendar.get(0));
+                clickTheElement(selectableWeekInCalendar.get(1));
+            }
+            clickTheElement(nextWeeksArrowButton);
+            selectableWeekCount += selectableWeekInCalendar.size();
+            if (selectableWeekInCalendar.size()==1) {
+                clickTheElement(selectableWeekInCalendar.get(0));
+            } else if (selectableWeekInCalendar.size()==2){
+                clickTheElement(selectableWeekInCalendar.get(0));
+                clickTheElement(selectableWeekInCalendar.get(1));
+            }
+//            SimpleUtils.assertOnFail("The selectable weeks display incorrectly, the expected is:"+selectableWeekCountInConfig  //https://legiontech.atlassian.net/browse/SCH-7305
+//                            + " the actual is:"+selectableWeekCount,
+//                    selectableWeekCount == selectableWeekCountInConfig, false);
+
+            //"back" button is clickable, and it will back to the copy weeks layout
+            clickTheElement(selectAnotherWeekLink);
+            SimpleUtils.assertOnFail("The previous weeks modal should be loaded!",
+                    areListElementVisible(previousWeeks, 5), false);
+            SimpleUtils.assertOnFail("The previous week calendar should not display! ",
+                    !isElementLoaded(previousWeeksCalendar, 5), false);
+            //The weeks are single selected, we cannot select all the weeks at once
+            SimpleUtils.assertOnFail("The previous weeks modal should be loaded!",
+                    areListElementVisible(selectedCopyFromWeekModal, 5)
+                            && selectedCopyFromWeekModal.size() == 1, false);
+
+        } else
+            SimpleUtils.fail("The select another week link fail to load! ",false);
+        //"Employees on leave, PTO, or terminated show as unassigned" will show at the top of the weeks that can be copied
+        copyAllPartialSchedule();
+        String expectedCopyShiftAssignmentsTitle = "Copy Shift Assignments";
+        String expectedCopyShiftAssignmentsSubTitle = "Employees on leave, PTO, or terminated show as unassigned.";
+        if (isElementLoaded(copyShiftAssignmentsTitle, 5)
+                && isElementLoaded(copyShiftAssignmentsSubTitle, 5)){
+            SimpleUtils.assertOnFail("The copy shift assignment title display incorrectly, the expected is:"
+                            +expectedCopyShiftAssignmentsTitle+ " the actual is:"+copyShiftAssignmentsTitle.getText(),
+                    copyShiftAssignmentsTitle.getText().equals(expectedCopyShiftAssignmentsTitle), false);
+            SimpleUtils.assertOnFail("The copy shift assignment sub title display incorrectly, the expected is:"
+                            +expectedCopyShiftAssignmentsTitle+ " the actual is:"+copyShiftAssignmentsSubTitle.getText(),
+                    copyShiftAssignmentsSubTitle.getText().equals(expectedCopyShiftAssignmentsSubTitle), false);
+        } else
+            SimpleUtils.fail("The copy shift assignment title fail to load! ", false);
+        // Click on Next button successfully, schedule will be created
+        clickTheElement(nextButtonOnCreateSchedule);
+        //- CHECK OUT THE SCHEDULE! button
+        verifyTheScheduleSuccessMessage(weekInfo);
+    }
+
+
+    @Override
+    public void verifyTheScheduleSuccessMessage(String weekInfo) throws Exception {
+
+        if (checkIfCheckOutButtonLoaded()){
+            //The content will be following:
+            //- March 7 - 13 Schedule Version 0.0 was created!
+            String weekStartDay = weekInfo.split("-")[0].trim();
+            String weekEndDay = weekInfo.split("-")[1].trim();
+            MySchedulePage mySchedulePage = new ConsoleMySchedulePage();
+            String startDayMonthFullName = mySchedulePage.getFullMonthName(weekStartDay.split(" ")[0]);
+            String endDayMonthFullName = mySchedulePage.getFullMonthName(weekEndDay.split(" ")[0]);
+            if (startDayMonthFullName.equalsIgnoreCase(endDayMonthFullName)){
+                endDayMonthFullName = "";
+            }
+            weekStartDay = weekStartDay.replace(weekStartDay.split(" ")[0], startDayMonthFullName).trim();
+            weekEndDay = weekEndDay.replace(weekEndDay.split(" ")[0], endDayMonthFullName).trim();
+            String expectedCreateSuccessfulMessage = weekStartDay+ " - "+ weekEndDay+" Schedule has been created!";
+            if (isElementLoaded(scheduleSuccessMessage, 5)){
+                SimpleUtils.assertOnFail("The schedule success message display incorrectly! the expected is:"+expectedCreateSuccessfulMessage
+                                + " the actual is:"+scheduleSuccessMessage.getText(),
+                        scheduleSuccessMessage.getText().equals(expectedCreateSuccessfulMessage), false);
+            }else
+                SimpleUtils.fail("The schedule success message fail to load! ", false);
+        }
+    }
+
+
+    @Override
+    public void clickNextButtonOnCreateScheduleWindow() throws Exception {
+        if (isElementLoaded(nextButtonOnCreateSchedule, 15)) {
+            clickTheElement(nextButtonOnCreateSchedule);
+        } else {
+            SimpleUtils.fail("There is not next button!", false);
+        }
+    }
 }
 

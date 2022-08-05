@@ -2143,7 +2143,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     public List<String> getSpecificFilterNames (String filterText) throws Exception {
         List<String> names = new ArrayList<>();
-        ArrayList<WebElement> availableFilters = getAvailableFilters().get(filterText);
+        ArrayList<WebElement> availableFilters = getAvailableFilters().get(filterText.toLowerCase().replace(" ", ""));
         if (availableFilters != null && availableFilters.size()>0){
             for (int i = 0; i < availableFilters.size(); i++) {
                 String name = availableFilters.get(i).getText().split("\\(")[0].trim();

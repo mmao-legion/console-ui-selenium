@@ -376,7 +376,7 @@ public class DeleteScheduleTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify SM delete schedule should keep the system schedule when Centralized Schedule Release is Yes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySMDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -576,7 +576,7 @@ public class DeleteScheduleTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify Internal Admin delete schedule should keep the system schedule when Centralized Schedule Release is Yes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyAdminDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {

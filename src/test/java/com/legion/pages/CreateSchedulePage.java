@@ -67,5 +67,10 @@ public interface CreateSchedulePage {
     public boolean checkIfCheckOutButtonLoaded() throws Exception;
     public void isGenerateButtonNotClickable() throws Exception;
     public void verifyTooltipForUnclickableCreateScheduleBtn() throws Exception;
+    public void verifyTheContentOnConfirmOperatingHoursWindow(String weekInfo, String locationName) throws Exception;
+    public boolean checkIfCreateScheduleWindowLoad() throws Exception;
+    public void verifyTheContentOnCopyScheduleWindow(String weekInfo, String locationName, float targetBudgetHrs, int selectableWeekCountInConfig) throws Exception;
+    public void verifyTheScheduleSuccessMessage(String weekInfo) throws Exception;
+    public void clickNextButtonOnCreateScheduleWindow() throws Exception;
 
 }

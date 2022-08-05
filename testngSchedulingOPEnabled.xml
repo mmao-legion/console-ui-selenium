@@ -376,20 +376,21 @@
                     <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                     <!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG cannot be generated -->
+ <!--                   <include name="validateTheOptionsOfScheduleFilterShouldBeInAlphabeticalAndNumbericalOrderAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7223-->
                 </methods>
             </class>
         </classes>
     </test>
 
-<!-- template cache       <test name="Schedule Test KendraScott2">
-            <classes>
-                <class name="com.legion.tests.core.SmartCopyConfigsInOP">
-                    <methods>
-                        <include name="verifySmartCopyConfigsInOPAsInternalAdmin"/>
-                    </methods>
-                </class>
-            </classes>
-        </test>-->
+    <!-- template cache       <test name="Smart Copy Configs In OP">
+                <classes>
+                    <class name="com.legion.tests.core.SmartCopyConfigsInOP">
+                        <methods>
+                 <include name="verifySmartCopyConfigsInOPAsInternalAdmin"/>
+         </methods>
+     </class>
+ </classes>
+</test>-->
 
     <test name="Roster Actions Test">
         <classes>
@@ -637,6 +638,17 @@ SCH-5862-->
                 <methods>
                     <include name="verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin" />
                     <include name="verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Schedule Copy Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleCopyTest">
+                <methods>
+                    <include name="verifyTheContentOnCreateSchedulePageInWeekViewAsInternalAdmin" />
+                    <include name="verifyTheEnhancedCopyModalForNonDgFlowAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfCopyingASuggestedScheduleAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
