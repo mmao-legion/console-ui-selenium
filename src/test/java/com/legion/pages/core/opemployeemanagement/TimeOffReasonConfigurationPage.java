@@ -170,11 +170,6 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     //Distribution type
     @FindBy(css = "question-input[question-title='Distribution type'] select")
     private WebElement distributionType;
-    //payable hour
-    @FindBy(css = "question-input[question-title='Payable hour types included in calculation'] lg-button[label='Configure']>button")
-    private WebElement payableConfig;
-    @FindBy(css = "modal[modal-title='Include Hour Types'] select")
-    private WebElement hoursTypeSelect;
 
     //service lever
     @FindBy(css = "table.lg-table.service-level tr:nth-child(2) input-field input")
@@ -231,6 +226,18 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     private WebElement fixedHours;
     @FindBy(css = "div.dt-container>div.table-wrapper.ng-scope tr:nth-child(2)>td:nth-child(2) input")
     private WebElement accruedHours;
+
+    //payable hours
+    @FindBy(css = "question-input[question-title='Payable hour types included in calculation'] h3")
+    private WebElement payableHoursTitle;
+    @FindBy(css = "question-input[question-title='Payable hour types included in calculation'] lg-button[label='Configure']>button")
+    private WebElement payableConfigBtn;
+    @FindBy(css = "modal[modal-title='Include Hour Types']>div>h1")
+    private WebElement IncludeHourTypesModalTitle;
+    @FindBy(css = "lg-button[label='Add More']>button")
+    private WebElement addMoreBtn;
+    @FindBy(css = "div.payable-hour-types lg-select")
+    private WebElement HoursTypeSelect;
 
     //submit
     @FindBy(css = "lg-button[label='Cancel']>button")
@@ -636,4 +643,41 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         return fixedDaysLabel.getText();
     }
 
+    public String getPayableTitle() {
+        return payableHoursTitle.getText();
+    }
+
+    public boolean isPayableConfigButtonDisplayed() {
+        return payableConfigBtn.isDisplayed();
+    }
+
+    public void configurePayableHours() {
+        if (payableConfigBtn.isDisplayed()) {
+            payableConfigBtn.click();
+        } else {
+            System.out.println("Payable hours configure button wasn't displayed!");
+        }
+    }
+
+    public String getPayableModalTitle() {
+        return IncludeHourTypesModalTitle.getText();
+    }
+
+    public ArrayList<WebElement> getHoursTypeOptions() {
+        Select select = new Select(HoursTypeSelect);
+        return (ArrayList<WebElement>) select.getOptions();
+    }
+
+    public void addHourTypes(String hourType) {
+        Select select = new Select(HoursTypeSelect);
+        select.selectByVisibleText(hourType);
+    }
+
+    public boolean isAddMoreButtonDisplayed() {
+        return addMoreBtn.isDisplayed();
+    }
+
+    public void addMore() {
+        addMoreBtn.click();
+    }
 }

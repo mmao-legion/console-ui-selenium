@@ -212,8 +212,14 @@ public class AbsentManagePage extends BasePage {
     private WebElement leavePageBtn;
 
     //setting page
-    @FindBy(css = "div.basic-setting-info>question-input")
+    @FindBy(css = "div.basic-setting-info>question-input[question-title='Do time off reasons use accruals?']")
     private WebElement useAccrual;
+    @FindBy(css = "div.basic-setting-info>question-input:nth-child(1)>div lg-switch span")
+    private WebElement useAccrualToggle;
+    @FindBy(css = "div.basic-setting-info>question-input:nth-child(2)>div lg-switch span")
+    private WebElement timesheetRequiredToBeApprovedToggle;
+    @FindBy(css = "div.basic-setting-info>question-input:nth-child(3)>div input-field input")
+    private WebElement lookBackDays;
     @FindBy(css = "lg-switch>label.switch span")
     private WebElement toggleSlide;
     @FindBy(css = "div.col-sm-2.addTimeOffReason>lg-button>button")
@@ -259,7 +265,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement criteriaByEngagementStatus;
     @FindBy(css = "lg-multiple-select[label='Before'] lg-picker-input")
     private WebElement criteriaBefore;
-    @FindBy(css = "input[aria-label='Before']+label+div.input-faked")
+    @FindBy(css = "input-field[label='Before'] div.input-faked.ng-binding")
     private WebElement multiSelectPlaceHolder;
     @FindBy(css = "lg-multiple-select lg-search input")
     private WebElement criteriaBeforeSearchInput;
@@ -579,7 +585,7 @@ public class AbsentManagePage extends BasePage {
         return titleBreadCrumb.getText();
     }
 
-    public void configureTemplate(String templateName) throws Exception {
+    public void configureTemplate(String templateName){
         waitForSeconds(3);
         search(templateName);
         clickInDetails();
@@ -641,7 +647,7 @@ public class AbsentManagePage extends BasePage {
         view.click();
     }
 
-    public void configureTimeOffRules(String timeOff) throws Exception {
+    public void configureTimeOffRules(String timeOff){
         searchTimeOff(timeOff);
         waitForSeconds(5);
         if (isButtonClickable(configure)) {
@@ -872,10 +878,17 @@ public class AbsentManagePage extends BasePage {
     }
 
     public boolean verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion(String jobTitleSelectBefore) {
+        Boolean isDisabled = false;
         criteriaAfter.click();
         criteriaAfterSearchInput.clear();
         criteriaAfterSearchInput.sendKeys(jobTitleSelectBefore);
-        return jobTitleAfterPromotion.isEnabled();
+        try {
+            jobTitleAfterPromotion.click();
+        } catch (Exception ElementNotInteractableException) {
+            isDisabled = true;
+
+        }
+        return isDisabled;
     }
 
     public void setPromotionAction(String balanceB, String balanceA) {
@@ -1094,6 +1107,23 @@ public class AbsentManagePage extends BasePage {
         verifyWorkRoleOnlyDisplayForScheduleHour("None");
     }
 
+    public void configureGlobalSettings() {
+        switchToSettings();
+        String toggleIsOn = "rgba(49, 61, 146, 1)";
+        String bgColor1 = useAccrualToggle.getCssValue("background-color");
+        if (!bgColor1.equals(toggleIsOn)) {
+            useAccrualToggle.click();
+        }
+        String bgColor2 = timesheetRequiredToBeApprovedToggle.getCssValue("background-color");
+        if (!bgColor2.equals(toggleIsOn)) {
+            timesheetRequiredToBeApprovedToggle.click();
+        }
+        lookBackDays.clear();
+        lookBackDays.sendKeys("5");
+        waitForSeconds(3);
+        switchToTemplates();
+    }
+
     @FindBy(css = "input[type = 'checkbox']")
     private WebElement firstWorkRole;
 
@@ -1110,9 +1140,7 @@ public class AbsentManagePage extends BasePage {
         templateSearchBox.sendKeys("Key Carrier");
         click(firstWorkRole);
 
-        System.out.println(workRoleInput.getText());
-
-        if(workRoleInput.getAttribute("innerText").equals("2 Work Roles Selected")){
+        if(getDriver().findElement(By.cssSelector("input-field[placeholder = 'All Work Roles']>ng-form>div")).getAttribute("innerText").contains("2 Work Roles Selected")){
             SimpleUtils.pass("2 work roles selected successfully");
         }else
             SimpleUtils.fail("2 work roles selected faied",false);

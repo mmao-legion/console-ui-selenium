@@ -41,6 +41,18 @@ public class AccrualEngineTest extends TestBase {
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
         modelSwitchPage.switchToOpsPortal();
         SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        //verify that employee management is enabled.
+        navigationPage.navigateToEmployeeManagement();
+        SimpleUtils.pass("EmployeeManagement Module is enabled!");
+        //go to the time off management page
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToTimeOffManagementPage();
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        //confirm the global settings
+        absentManagePage.configureGlobalSettings();
+        SimpleUtils.pass("Succeeded in rolling back global settings!");
     }
 
     @Automated(automated = "Automated")
@@ -49,13 +61,6 @@ public class AccrualEngineTest extends TestBase {
     @TestName(description = "Accrual Engine Distribution Types")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//blocked by:https://legiontech.atlassian.net/browse/OPS-5083
     public void verifyAccrualEngineWorksAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
-        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
-        //verify that employee management is enabled.
-        navigationPage.navigateToEmployeeManagement();
-        SimpleUtils.pass("EmployeeManagement Module is enabled!");
-        //go to the time off management page
-        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToTimeOffManagementPage();
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String templateName = "AccrualAutoTest(Don't touch!!!)";
@@ -461,14 +466,6 @@ public class AccrualEngineTest extends TestBase {
     @TestName(description = "Accrual Engine Distribution Types")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false) //blocked by: https://legiontech.atlassian.net/browse/OPS-5083
     public void verifyAccrualEngineWorksWellAfterEditingAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
-
-        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
-        //verify that employee management is enabled.
-        navigationPage.navigateToEmployeeManagement();
-        SimpleUtils.pass("EmployeeManagement Module is enabled!");
-        //go to the time off management page
-        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToTimeOffManagementPage();
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String templateName = "AccrualAutoTest(Don't touch!!!)";
@@ -598,12 +595,6 @@ public class AccrualEngineTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualEngineLookBackAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //worked hours look back function
-        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
-        navigationPage.navigateToEmployeeManagement();
-        SimpleUtils.pass("EmployeeManagement Module is enabled!");
-        //go to the time off management page
-        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToTimeOffManagementPage();
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String targetTemplate = "AccrualAuto-WH-Don't Touch!";
@@ -733,12 +724,6 @@ public class AccrualEngineTest extends TestBase {
     @TestName(description = "Accrual Engine Distribution Types")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//known issue: https://legiontech.atlassian.net/browse/OPS-5083
     public void verifyAccrualHistoryAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
-        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
-        navigationPage.navigateToEmployeeManagement();
-        SimpleUtils.pass("EmployeeManagement Module is enabled!");
-        //go to the time off management page
-        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToTimeOffManagementPage();
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String templateName = "AccrualAutoTest(Don't touch!!!)";
@@ -863,13 +848,6 @@ public class AccrualEngineTest extends TestBase {
     @TestName(description = "Import employee time off balance")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualEngineWorksWellAfterImportingAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
-        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
-        //verify that employee management is enabled.
-        navigationPage.navigateToEmployeeManagement();
-        SimpleUtils.pass("EmployeeManagement Module is enabled!");
-        //go to the time off management page
-        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToTimeOffManagementPage();
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String templateName = "AccrualAutoTest(Don't touch!!!)";
@@ -1010,13 +988,6 @@ public class AccrualEngineTest extends TestBase {
     @TestName(description = "Accrual Engine Distribution Types")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualPromotionWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
-        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
-        //verify that employee management is enabled.
-        navigationPage.navigateToEmployeeManagement();
-        SimpleUtils.pass("EmployeeManagement Module is enabled!");
-        //go to the time off management page
-        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToTimeOffManagementPage();
         //go to setting page
         AbsentManagePage absentManagePage = new AbsentManagePage();
         absentManagePage.switchToSettings();
@@ -1038,7 +1009,7 @@ public class AccrualEngineTest extends TestBase {
         //Assert.assertEquals("2 Job Title Selected", absentManagePage.getJobTitleSelectedBeforePromotion(), "Failed to select 2 job titles!");
         SimpleUtils.pass("Succeeded in Validating job title before promotion is muti-select!");
         //4.2 job title selected before promotion should be disabled in after promotion.
-        //Assert.assertFalse(absentManagePage.verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion("Senior Ambassador") && absentManagePage.verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion("WA Ambassador"), "Failed to assert job title selected before promotion are disabled in after promotion!");
+        //Assert.assertTrue(absentManagePage.verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion("Senior Ambassador") && absentManagePage.verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion("WA Ambassador"), "Failed to assert job title selected before promotion are disabled in after promotion!");
         SimpleUtils.pass("Succeeded in Validating job title selected before promotion are disabled in after promotion!");
         //5: Add promotion actions
         absentManagePage.setPromotionAction("Annual Leave", "Floating Holiday");
@@ -1232,13 +1203,6 @@ public class AccrualEngineTest extends TestBase {
     @TestName(description = "OPS-4071 GM Holiday.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualGMHolidayUIAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception {
-        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
-        //verify that employee management is enabled.
-        navigationPage.navigateToEmployeeManagement();
-        SimpleUtils.pass("EmployeeManagement Module is enabled!");
-        //go to the time off management page
-        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToTimeOffManagementPage();
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String targetTemplate = "Accrual Auto GM Holiday";
@@ -1298,13 +1262,6 @@ public class AccrualEngineTest extends TestBase {
     @TestName(description = "OPS-4071 GM Holiday.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//known issue: https://legiontech.atlassian.net/browse/OPS-5085
     public void verifyAccrualGMHolidayWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
-        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
-        //verify that employee management is enabled.
-        navigationPage.navigateToEmployeeManagement();
-        SimpleUtils.pass("EmployeeManagement Module is enabled!");
-        //go to the time off management page
-        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToTimeOffManagementPage();
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String targetTemplate = "Accrual Auto GM Holiday";
@@ -1485,13 +1442,6 @@ public class AccrualEngineTest extends TestBase {
     @TestName(description = "OPS-3078 Puerto Rico")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualFixedDaysUIAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception {
-        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
-        //verify that employee management is enabled.
-        navigationPage.navigateToEmployeeManagement();
-        SimpleUtils.pass("EmployeeManagement Module is enabled!");
-        //go to the time off management page
-        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToTimeOffManagementPage();
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String targetTemplate = "AccrualAuto-FixedDays(Don't touch!!!)";
@@ -1818,13 +1768,6 @@ public class AccrualEngineTest extends TestBase {
     @TestName(description = "OPS-4059 Ability to deduct accrual balance from imported approved time off.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTimeOffRequestImportAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
-        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
-        //verify that employee management is enabled.
-        navigationPage.navigateToEmployeeManagement();
-        SimpleUtils.pass("EmployeeManagement Module is enabled!");
-        //go to the time off management page
-        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
-        panelPage.goToTimeOffManagementPage();
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String templateName = "AccrualAutoTest(Don't touch!!!)";
@@ -1928,7 +1871,62 @@ public class AccrualEngineTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "OPS-4799 Add ability to define accrual units")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyDefineAccrualUnitsAbilityAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+    public void verifyDefineAccrualUnitsAbilityAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
+        switchToNewWindow();
+
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("MOCKVERIFY");
+        consoleNavigationPage.navigateTo("Team");
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMemberByName("Nancy Unit");
+        teamPage.navigateToTimeOffPage();
+
+        TimeOffPage timeOffPage = new TimeOffPage();
+
+        HashMap<String, String> actualUnit = timeOffPage.getTimeOffUnit();
+        HashMap<String, String> expectedUnit = new HashMap<>();
+        expectedUnit.put("DayUnit", "days");
+        expectedUnit.put("Floating Holiday", "hrs");
+        expectedUnit.put("Grandparents Day Off1", "hrs");
+        expectedUnit.put("Grandparents Day Off2", "hrs");
+        expectedUnit.put("Grandparents Day Off3", "hrs");
+        expectedUnit.put("Grandparents Day Off4", "hrs");
+        expectedUnit.put("Pandemic1", "hrs");
+        expectedUnit.put("Pandemic2", "hrs");
+
+        Assert.assertEquals(expectedUnit,actualUnit,"Unit is correct");
+
+        HashMap<String, String> actualUnitInEdit =timeOffPage.getTimeOffUnitInEdit();
+        HashMap<String, String> expectedUnitInEdit = new HashMap<>();
+
+        expectedUnitInEdit.put("DayUnit", "- days");
+        expectedUnitInEdit.put("Floating Holiday", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off1", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off2", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off3", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off4", "- hrs");
+        expectedUnitInEdit.put("Pandemic1", "- hrs");
+        expectedUnitInEdit.put("Pandemic2", "- hrs");
+
+        Assert.assertEquals(expectedUnitInEdit,actualUnitInEdit,"Unit in edit is correct");
+
+        HashMap<String, String> actualUnitInCreateTimeOff =timeOffPage.getTimeOffUnitInCreateTimeOff();
+        HashMap<String, String> expectedUnitInCreateTimeOff = new HashMap<>();
+
+        expectedUnitInEdit.put("DayUnit", "- days");
+        expectedUnitInEdit.put("Floating Holiday", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off1", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off2", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off3", "- hrs");
+        expectedUnitInEdit.put("Grandparents Day Off4", "- hrs");
+        expectedUnitInEdit.put("Pandemic1", "- hrs");
+        expectedUnitInEdit.put("Pandemic2", "- hrs");
+
+        Assert.assertEquals(expectedUnitInEdit,actualUnitInEdit,"Unit in edit is correct");
+
+        switchToNewWindow();
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         //verify that employee management is enabled.
         navigationPage.navigateToEmployeeManagement();
@@ -1949,9 +1947,9 @@ public class AccrualEngineTest extends TestBase {
         absentManagePage.search("UnitType");
 
         absentManagePage.otherDistributionMethodisDiabled();
+        absentManagePage.searchAndSelectWorkRole();
 
         absentManagePage.verifyWorkRoleStatus();
-
     }
 
     public void importTimeOffRequest(String sessionId) {
@@ -1993,5 +1991,60 @@ public class AccrualEngineTest extends TestBase {
         String queryResult4 = DBConnection.queryDB("legionrc.TAWorkerPTO", "id", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
         Assert.assertEquals(queryResult4, "No item returned!", "Failed to clear the data just generated in DB!");
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Payable hour types included in calculation")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPayableHoursWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+        //verify that the target template is here.
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        String templateName = "AccrualAuto-PayableHours(Don't touch!!!)";
+        absentManagePage.search(templateName);
+        SimpleUtils.assertOnFail("Failed the find the target template!", absentManagePage.getResult().equals(templateName), false);
+        //configure: floating holiday
+        absentManagePage.configureTemplate(templateName);
+        absentManagePage.configureTimeOffRules("Floating holiday");//worked hours/total
+        TimeOffReasonConfigurationPage configurationPage=new TimeOffReasonConfigurationPage();
+        configurationPage.setAccrualPeriod("Hire Date","Hire Date",null,null,null,null);
+        configurationPage.setDistributionMethod("Worked Hours");
+        //1.verify there is payable hours displayed
+        configurationPage.getPayableTitle();
+        Assert.assertEquals(configurationPage.getPayableTitle(),"Payable hour types included in calculation", "Failed to find Payable Hour title!!!");
+        SimpleUtils.pass("Succeeded in confirming that Payable Hour title is displayed!");
+        //2.verify that configure button is displayed
+        Assert.assertTrue(configurationPage.isPayableConfigButtonDisplayed(), "Failed to assert the configure button was displayed!!!");
+        SimpleUtils.pass("Succeeded in confirming that the configure button was displayed!");
+        //3.open the modal, and verify the title
+        configurationPage.configurePayableHours();
+        Assert.assertEquals(configurationPage.getPayableModalTitle(),"Include Hour Types", "Failed to open Payable Hour Modal!!!");
+        SimpleUtils.pass("Succeeded in opening the Payable Hour Modal!");
+        //4.add more button is displayed.
+        Assert.assertTrue(configurationPage.isAddMoreButtonDisplayed(), "Failed to assert the add more button was displayed!!!");
+        SimpleUtils.pass("Succeeded in confirming that the add more button was displayed!");
+
+        //Edit
+        //configure time off ---Floating holiday
+        //configure time off ---PTO
+
+        //switch to console
+        /*RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        modelSwitchPage.switchToNewTab();
+        //search and go to the target location
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("OMLocation16 -NO touch!!!");
+        //go to team member details and switch to the time off tab.
+        consoleNavigationPage.navigateTo("Team");
+        TimeOffPage timeOffPage = new TimeOffPage();
+        String teamMemName = "Elody Bauch";
+        timeOffPage.goToTeamMemberDetail(teamMemName);
+        timeOffPage.switchToTimeOffTab();
+
+        //get session id via login
+        String sessionId = logIn();*/
+    }
+
+
 
 }

@@ -245,7 +245,10 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                 //click the ok
                 clickTheElement(planCreateOKBTN);
                 if (isElementLoaded(errorToast, 5)) {
-                    if (errorToast.getText().contains("Error! plan name already exists:")) {
+                    if (errorToast.getText().contains("plan name already exists:")) {
+                        //click the cancel
+                        clickTheElement(PlanCreateCancelBTN);
+                        waitForSeconds(3);
                         SimpleUtils.report("Create a plan with a duplicated name is not allowed!");
                     }
                     //click the cancel

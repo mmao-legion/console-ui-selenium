@@ -402,6 +402,51 @@ public class TimeOffPage extends BasePage {
         }
     }
 
+    @FindBy(css = "span.ml-5")
+    private List<WebElement> units;
 
+    public HashMap<String, String> getTimeOffUnit() {
+        ArrayList<String> keys = getWebElementsText(timeOffKeys);
+        ArrayList<String> values = getWebElementsText(units);
+        HashMap timeOffUnit = new HashMap();
+        int mapSize = keys.size();
+        for (int i = 0; i < mapSize; i++) {
+            timeOffUnit.put(keys.get(i), values.get(i));
+        }
+        return timeOffUnit;
+    }
+
+    @FindBy(css = "tr[ng-repeat = 'timeoffType in accruedHours track by $index'] > td:nth-child(1)")
+    private List<WebElement> timeOffKeysInEdit;
+    @FindBy(css = "tr[ng-repeat = 'timeoffType in accruedHours track by $index'] > td:nth-child(1) > span")
+    private List<WebElement> timeOffUnitInUnit;
+
+    public HashMap<String, String> getTimeOffUnitInEdit() {
+        click(editButton);
+        ArrayList<String> keys = getWebElementsText(timeOffKeysInEdit);
+        ArrayList<String> values = getWebElementsText(timeOffUnitInUnit);
+        HashMap timeOffUnitInEdit = new HashMap();
+        int mapSize = keys.size();
+        for (int i = 0; i < mapSize; i++) {
+            timeOffUnitInEdit.put(keys.get(i).split("-")[0].trim(), values.get(i));
+        }
+        scrollToElement(cancelButton);
+        click(cancelButton);
+        return timeOffUnitInEdit;
+    }
+
+    public HashMap<String, String> getTimeOffUnitInCreateTimeOff() {
+        click(createTimeOff);
+        click(timeOffReasonSelect);
+        ArrayList<String> keys = getWebElementsText(timeOffReasonOptions);
+        HashMap timeOffUnitInCreateTimeOff = new HashMap();
+        int mapSize = keys.size();
+        for (int i = 0; i < mapSize; i++) {
+            timeOffUnitInCreateTimeOff.put(keys.get(i).split("-")[0].trim(), keys.get(i).split("-")[1].trim());
+        }
+        scrollToElement(cancelButton);
+        click(cancelButton);
+        return timeOffUnitInCreateTimeOff;
+    }
 }
 
