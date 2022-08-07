@@ -103,9 +103,10 @@ public class ScheduleCopyTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isWeekGenerated) {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00PM");
             if (smartCardPage.isRequiredActionSmartCardLoaded()){
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
@@ -191,11 +192,89 @@ public class ScheduleCopyTest extends TestBase {
             createSchedulePage.clickNextButtonOnCreateScheduleWindow();
             //Verify the content on Enter Budget window
             createSchedulePage.clickNextButtonOnCreateScheduleWindow();
-            createSchedulePage.selectWhichWeekToCopyFrom("");
             createSchedulePage.selectWhichWeekToCopyFrom("SUGGESTED");
             // Click on Next button successfully, schedule will be created
-            createSchedulePage.clickOnFinishButtonOnCreateSchedulePage();
+            createSchedulePage.clickNextButtonOnCreateScheduleWindow();
             createSchedulePage.verifyTheScheduleSuccessMessage(weekInfo);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(),false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the count of compliance shifts should be consistent with compliance smart card")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheCountOfComplianceShiftsShouldBeConsistentWithComplianceSmartCardAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            int complianceCount = smartCardPage.getComplianceShiftCountFromSmartCard("COMPLIANCE");
+            if (complianceCount== 0) {
+                String workRole = shiftOperatePage.getRandomWorkRole();
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+                newShiftPage.clickOnDayViewAddNewShiftButton();
+                newShiftPage.customizeNewShiftPage();
+                newShiftPage.clearAllSelectedDays();
+                newShiftPage.selectSpecificWorkDay(7);
+                newShiftPage.selectWorkRole(workRole);
+                newShiftPage.moveSliderAtCertainPoint("8pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+                newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+                newShiftPage.clickOnCreateOrNextBtn();
+                newShiftPage.selectTeamMembers();
+                newShiftPage.clickOnOfferOrAssignBtn();
+                scheduleMainPage.saveSchedule();
+            }
+
+            complianceCount = smartCardPage.getComplianceShiftCountFromSmartCard("COMPLIANCE");
+            if (complianceCount == 0){
+                SimpleUtils.fail("The compliance count in Compliance smart card should not be 0! ", false);
+            }
+            createSchedulePage.publishActiveSchedule();
+            String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
+            if (firstWeekInfo.length() > 11) {
+                firstWeekInfo = firstWeekInfo.trim().substring(10);
+            }
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            String weekInfo = scheduleCommonPage.getActiveWeekText().substring(10);
+            createSchedulePage.clickCreateScheduleBtn();
+            createSchedulePage.clickNextButtonOnCreateScheduleWindow();
+            //Verify the content on Enter Budget window
+            createSchedulePage.clickNextButtonOnCreateScheduleWindow();
+            createSchedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
+            // Click on Next button successfully, schedule will be created
+            createSchedulePage.clickNextButtonOnCreateScheduleWindow();
+            String needComplianceReviewMessage = complianceCount+"Shift Need compliance review";
+            SimpleUtils.assertOnFail("The shift need compliance review message display incorrectly, the expected is:"
+                            +needComplianceReviewMessage+" the actual is:"+createSchedulePage.getComplianceShiftsMessageOnScheduleSuccessModal(),
+                    needComplianceReviewMessage.equals(createSchedulePage.getComplianceShiftsMessageOnScheduleSuccessModal().replace("\n", " ")), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }

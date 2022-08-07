@@ -72,5 +72,7 @@ public interface CreateSchedulePage {
     public void verifyTheContentOnCopyScheduleWindow(String weekInfo, String locationName, float targetBudgetHrs, int selectableWeekCountInConfig) throws Exception;
     public void verifyTheScheduleSuccessMessage(String weekInfo) throws Exception;
     public void clickNextButtonOnCreateScheduleWindow() throws Exception;
+    public String getComplianceShiftsMessageOnScheduleSuccessModal() throws Exception;
+    public void createSuggestedSchedule() throws Exception;
 
 }

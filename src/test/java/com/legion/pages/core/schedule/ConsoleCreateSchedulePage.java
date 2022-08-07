@@ -1069,9 +1069,6 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         if (isElementEnabled(generateSheduleButton, 10)) {
             click(generateSheduleButton);
             openBudgetPopUp();
-            if (checkIfCheckOutButtonLoaded()){
-                checkoutSchedule();
-            }
         } else {
             SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
         }
@@ -2117,6 +2114,36 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         } else {
             SimpleUtils.fail("There is not next button!", false);
         }
+    }
+
+    @FindBy(css = "div.required-action-card")
+    private WebElement needComplianceReviewSection;
+
+    @Override
+    public String getComplianceShiftsMessageOnScheduleSuccessModal() throws Exception {
+        String message = "";
+        if (checkIfCheckOutButtonLoaded() && isElementLoaded(needComplianceReviewSection, 5)){
+            message = needComplianceReviewSection.getText();
+            SimpleUtils.pass("Get need compliance review message successfully! :"+message);
+        }else
+            SimpleUtils.fail("The need compliance review message fail to load! ", false);
+        return message;
+    }
+
+    @Override
+    public void createSuggestedSchedule() throws Exception {
+        if (!isElementLoaded(activScheduleType, 5)){
+            clickCreateScheduleBtn();
+            if (isElementEnabled(suggestScheduleModalWeek, 50)) {
+                selectWhichWeekToCopyFrom("SUGGESTED");
+                clickOnFinishButtonOnCreateSchedulePage();
+            }
+            if (checkIfCheckOutButtonLoaded()){
+                checkoutSchedule();
+            }
+        } else
+            SimpleUtils.report("Suggested schedule already created! ");
+
     }
 }
 

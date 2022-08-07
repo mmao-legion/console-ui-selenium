@@ -607,8 +607,7 @@ public class DeleteScheduleTest extends TestBase {
             //Select one week which status is Guidance, Click on this week
             scheduleOverviewPage.clickOnGuidanceBtnOnOverview(index);
             //Create the suggested schedule for this week
-            createSchedulePage.clickCreateScheduleBtn();
-
+            createSchedulePage.createSuggestedSchedule();
             //Go to Overview page, check the status of this week
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             String scheduleStatusOnOverViewTable = scheduleOverviewPage.getScheduleWeeksStatus().get(index);

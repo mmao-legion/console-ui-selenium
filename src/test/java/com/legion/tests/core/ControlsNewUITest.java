@@ -2062,19 +2062,22 @@ public class ControlsNewUITest extends TestBase{
             }
             createSchedulePage.clickBackBtnAndExitCreateScheduleWindow();
 
-
             //Go to OP page
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-            //go to Configuration
-            cinemarkMinorPage.clickConfigurationTabInOP();
-            controlsNewUIPage.clickOnControlsSchedulingPolicies();
-
-            cinemarkMinorPage.findDefaultTemplate(SmartCopyConfigsInOP.templateInUse.SchedulePolicy_TEMPLATE_NAME.getValue());
-            cinemarkMinorPage.clickOnBtn(SmartCopyConfigsInOP.buttonGroup.EditTemplate.getValue());
-            cinemarkMinorPage.clickOnBtn(SmartCopyConfigsInOP.buttonGroup.OKWhenEdit.getValue());
-
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Scheduling Policies");
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             controlsNewUIPage.setCopyConfig(true, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Full.getValue());
             controlsNewUIPage.setCopyConfig(false, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Partial.getValue());
 
@@ -2084,7 +2087,6 @@ public class ControlsNewUITest extends TestBase{
 
             //Back to Console
             switchToConsoleWindow();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -2118,10 +2120,8 @@ public class ControlsNewUITest extends TestBase{
             //go to Configuration
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
-
-            cinemarkMinorPage.findDefaultTemplate(SmartCopyConfigsInOP.templateInUse.SchedulePolicy_TEMPLATE_NAME.getValue());
-            cinemarkMinorPage.clickOnBtn(SmartCopyConfigsInOP.buttonGroup.EditTemplate.getValue());
-            cinemarkMinorPage.clickOnBtn(SmartCopyConfigsInOP.buttonGroup.OKWhenEdit.getValue());
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 
             controlsNewUIPage.setCopyConfig(true, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Partial.getValue());
 
@@ -2131,8 +2131,6 @@ public class ControlsNewUITest extends TestBase{
 
             //Back to Console
             switchToConsoleWindow();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -2166,10 +2164,8 @@ public class ControlsNewUITest extends TestBase{
             //go to Configuration
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
-
-            cinemarkMinorPage.findDefaultTemplate(SmartCopyConfigsInOP.templateInUse.SchedulePolicy_TEMPLATE_NAME.getValue());
-            cinemarkMinorPage.clickOnBtn(SmartCopyConfigsInOP.buttonGroup.EditTemplate.getValue());
-            cinemarkMinorPage.clickOnBtn(SmartCopyConfigsInOP.buttonGroup.OKWhenEdit.getValue());
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 
             controlsNewUIPage.setCopyConfig(false, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Full.getValue());
             controlsNewUIPage.setCopyConfig(false, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Partial.getValue());
@@ -2180,8 +2176,6 @@ public class ControlsNewUITest extends TestBase{
 
             //Back to Console
             switchToConsoleWindow();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -2215,10 +2209,8 @@ public class ControlsNewUITest extends TestBase{
             //go to Configuration
             cinemarkMinorPage.clickConfigurationTabInOP();
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
-
-            cinemarkMinorPage.findDefaultTemplate(SmartCopyConfigsInOP.templateInUse.SchedulePolicy_TEMPLATE_NAME.getValue());
-            cinemarkMinorPage.clickOnBtn(SmartCopyConfigsInOP.buttonGroup.EditTemplate.getValue());
-            cinemarkMinorPage.clickOnBtn(SmartCopyConfigsInOP.buttonGroup.OKWhenEdit.getValue());
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 
             controlsNewUIPage.setCopyConfig(false, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Full.getValue());
             controlsNewUIPage.setCopyConfig(true, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Partial.getValue());
@@ -2229,8 +2221,6 @@ public class ControlsNewUITest extends TestBase{
 
             //Back to Console
             switchToConsoleWindow();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -2261,6 +2251,5 @@ public class ControlsNewUITest extends TestBase{
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
-
     }
 }

@@ -649,6 +649,7 @@ SCH-5862-->
                     <include name="verifyTheContentOnCreateSchedulePageInWeekViewAsInternalAdmin" />
                     <include name="verifyTheEnhancedCopyModalForNonDgFlowAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfCopyingASuggestedScheduleAsInternalAdmin" />
+                    <include name="verifyTheCountOfComplianceShiftsShouldBeConsistentWithComplianceSmartCardAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
