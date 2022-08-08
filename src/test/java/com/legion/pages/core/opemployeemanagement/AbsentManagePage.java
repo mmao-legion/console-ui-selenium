@@ -1047,10 +1047,24 @@ public class AbsentManagePage extends BasePage {
     @FindBy(css = "td lg-button[label='Edit']")
     private WebElement editTimeOffReason;
     @FindBy(css = "div.lg-templates-table-improved__grid-column > lg-button > button")
+    private WebElement firstPublishTemplate;
+    @FindBy(css = "div.lg-templates-table-improved__grid-row.ng-scope")
     private WebElement firstTemplate;
+    @FindBy(css = "div.toggle")
+    private WebElement toggle;
+    @FindBy(css = "div.lg-templates-table-improved__grid-column.lg-templates-table-improved__grid-column--left.ml-25 > lg-button > button")
+    private WebElement firstDraftTemplate;
+
+    public void goToTemplate(){
+        if(firstTemplate.getAttribute("class").contains("hasChildren")){
+            click(toggle);
+            click(firstDraftTemplate);
+        }else
+            click(firstPublishTemplate);
+    }
 
     public void otherDistributionMethodisDiabled() {
-        click(firstTemplate);
+        goToTemplate();
         click(editTemplate);
         click(okCreating);
         scrollToElement(editTimeOffReason);
@@ -1105,6 +1119,13 @@ public class AbsentManagePage extends BasePage {
         verifyWorkRoleOnlyDisplayForScheduleHour("Scheduled Hours");
         verifyWorkRoleOnlyDisplayForScheduleHour("Lump Sum");
         verifyWorkRoleOnlyDisplayForScheduleHour("None");
+
+        click(backButton);
+        click(leavePageBtn);
+        click(saveAsDrop);
+        scrollToElement(publishNow);
+        click(publishNow);
+        click(saveTemplate);
     }
 
     public void configureGlobalSettings() {
@@ -1145,4 +1166,5 @@ public class AbsentManagePage extends BasePage {
         }else
             SimpleUtils.fail("2 work roles selected faied",false);
     }
+
 }
