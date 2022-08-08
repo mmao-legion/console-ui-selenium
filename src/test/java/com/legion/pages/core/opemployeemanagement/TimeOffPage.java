@@ -448,5 +448,32 @@ public class TimeOffPage extends BasePage {
         click(cancelButton);
         return timeOffUnitInCreateTimeOff;
     }
+
+    @FindBy(css = "img.lg-slider-pop__title-dismiss")
+    private WebElement closeIcon;
+    @FindBy(css = "div.balance-action lg-button[label='History']>button")
+    private WebElement history;
+    @FindBy(css = "div#logContainer.lg-slider-pop__content.mt-20")
+    private WebElement historyDetail;
+    @FindBy(css = "lg-button[label= 'OK']")
+    private WebElement okButton;
+    public void verifyHistoryUnitType() throws Exception {
+        scrollToElement(okButton);
+        click(okButton);
+        if(isElementEnabled(history,5)){
+            highlightElement(history);
+            click(history);
+            if(isElementEnabled(historyDetail,5)){
+                highlightElement(historyDetail);
+                if (historyDetail.getText().contains("Balance days Edited by") && historyDetail.getText().contains("DayUnit Edited from 0 days to 0.2 days + 0.2 days")){
+                    SimpleUtils.pass("Unit type is correct in history");
+                    click(closeIcon);
+                }else
+                    SimpleUtils.fail("Unit type display wrong in history",false);
+            }else
+                SimpleUtils.fail("user history detail loaded failed",false);
+        }else
+            SimpleUtils.fail("user history loaded failed",false);
+    }
 }
 

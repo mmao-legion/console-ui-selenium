@@ -1872,6 +1872,16 @@ public class AccrualEngineTest extends TestBase {
     @TestName(description = "OPS-4799 Add ability to define accrual units")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDefineAccrualUnitsAbilityAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
+        //get session id via login
+        String sessionId = logIn();
+        String workerId = "4e75ebc1-1cff-4424-a04e-594e7255fde4";
+        //Delete a worker's accrual
+        String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
+        Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
+
+        String[] accrualResponse1 = runAccrualJobToSimulateDate(workerId, "2022-08-01", sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse1), 200, "Failed to run accrual job!");
+
         switchToNewWindow();
 
         ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
@@ -1884,6 +1894,10 @@ public class AccrualEngineTest extends TestBase {
         teamPage.navigateToTimeOffPage();
 
         TimeOffPage timeOffPage = new TimeOffPage();
+
+        timeOffPage.editTimeOffBalance("DayUnit","0.2");
+
+        timeOffPage.verifyHistoryUnitType();
 
         HashMap<String, String> actualUnit = timeOffPage.getTimeOffUnit();
         HashMap<String, String> expectedUnit = new HashMap<>();
@@ -1915,16 +1929,16 @@ public class AccrualEngineTest extends TestBase {
         HashMap<String, String> actualUnitInCreateTimeOff =timeOffPage.getTimeOffUnitInCreateTimeOff();
         HashMap<String, String> expectedUnitInCreateTimeOff = new HashMap<>();
 
-        expectedUnitInEdit.put("DayUnit", "- days");
-        expectedUnitInEdit.put("Floating Holiday", "- hrs");
-        expectedUnitInEdit.put("Grandparents Day Off1", "- hrs");
-        expectedUnitInEdit.put("Grandparents Day Off2", "- hrs");
-        expectedUnitInEdit.put("Grandparents Day Off3", "- hrs");
-        expectedUnitInEdit.put("Grandparents Day Off4", "- hrs");
-        expectedUnitInEdit.put("Pandemic1", "- hrs");
-        expectedUnitInEdit.put("Pandemic2", "- hrs");
+        expectedUnitInCreateTimeOff.put("DayUnit", "Bal 0.2 days");
+        expectedUnitInCreateTimeOff.put("Floating Holiday", "Bal 0 hrs");
+        expectedUnitInCreateTimeOff.put("Grandparents Day Off1", "Bal 0 hrs");
+        expectedUnitInCreateTimeOff.put("Grandparents Day Off2", "Bal 7 hrs");
+        expectedUnitInCreateTimeOff.put("Grandparents Day Off3", "Bal 30 hrs");
+        expectedUnitInCreateTimeOff.put("Grandparents Day Off4", "Bal 0 hrs");
+        expectedUnitInCreateTimeOff.put("Pandemic1", "Bal 10 hrs");
+        expectedUnitInCreateTimeOff.put("Pandemic2", "Bal 5 hrs");
 
-        Assert.assertEquals(expectedUnitInEdit,actualUnitInEdit,"Unit in edit is correct");
+        Assert.assertEquals(expectedUnitInCreateTimeOff,actualUnitInCreateTimeOff,"Unit in create time off is correct");
 
         switchToNewWindow();
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();

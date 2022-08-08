@@ -1056,11 +1056,11 @@ public class ConfigurationTest extends TestBase {
             configurationPage.switchToControlWindow();
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("Newark-Don't Touch!!!");
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("NancyTest");
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
-            teamPage.searchAndSelectTeamMemberByName("Della Murphy");
+            teamPage.searchAndSelectTeamMemberByName("Nancy TimeOff01");
 
             TimeOffPage timeOffPage = new TimeOffPage();
             timeOffPage.switchToTimeOffTab();
@@ -1071,7 +1071,7 @@ public class ConfigurationTest extends TestBase {
             timeOffPage.cancelTimeOffRequest();
 
             teamPage.goToTeam();
-            teamPage.searchAndSelectTeamMemberByName("Allene Mante");
+            teamPage.searchAndSelectTeamMemberByName("Nancy TimeOff02");
             timeOffPage.switchToTimeOffTab();
 
             timeOffPage.createTimeOff("Annual Leave", false, 10, 10);
@@ -4024,15 +4024,15 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
 
-            configurationPage.goToItemInConfiguration("Minors Rules");
-            configurationPage.searchTemplate("AuditLog");
-            configurationPage.clickOnTemplateName("AuditLog");
-            configurationPage.verifyHistoryButtonDisplay();
-            configurationPage.verifyHistoryButtonIsClickable();
-            configurationPage.verifyCloseIconNotDisplayDefault();
-            configurationPage.clickHistoryAndClose();
-            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+//            configurationPage.goToItemInConfiguration("Minors Rules");
+//            configurationPage.searchTemplate("AuditLog");
+//            configurationPage.clickOnTemplateName("AuditLog");
+//            configurationPage.verifyHistoryButtonDisplay();
+//            configurationPage.verifyHistoryButtonIsClickable();
+//            configurationPage.verifyCloseIconNotDisplayDefault();
+//            configurationPage.clickHistoryAndClose();
+//            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+//            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
 
 //            configurationPage.goToItemInConfiguration("Additional Pay Rules");
 //            configurationPage.searchTemplate("AuditLog");
