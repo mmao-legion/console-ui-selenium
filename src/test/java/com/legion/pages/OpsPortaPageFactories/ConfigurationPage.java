@@ -234,4 +234,12 @@ public interface ConfigurationPage {
     public void verifyTheLayoutOfTemplateDetailsPage() throws Exception;
     public void verifyTheLayoutOfTemplateAssociationPage() throws Exception;
     public void verifyCriteriaTypeOfDynamicGroup() throws Exception;
+    public void goToBusinessHoursEditPage(String workkday) throws Exception;
+    public void checkOpenAndCloseTime() throws Exception;
+    public void clickOpenCloseTimeLink() throws Exception;
+    public void setOpenCloseTime(String settingTab, String openTime, String closeTime, String crossNextDay) throws Exception;
+
+    public boolean verifyStartEndTimeForDays(String startTime, String endTime, String day) throws Exception;
+    public void selectDaysForOpenCloseTime(List<String> dayOfWeek) throws Exception;
+    public void editBasicStaffingRules() throws Exception;
 }
