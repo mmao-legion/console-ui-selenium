@@ -295,7 +295,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Lizzy")
     @Enterprise(name = "Op_Enterprise")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void ceateMultipleHistortForOHTempInternalAdminForConfiguration(String browser, String username, String password, String location) throws Exception {
+    public void ceateMultipleHistortForOHTempInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Operating Hours";
             String mode = "edit";
@@ -4365,6 +4365,107 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Basic Staffing Rule E2E")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void basicStaffingRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String locationName = "BasicStaffingRuleE2E";
+            String shiftsNumber = "2";
+            String scheduleDayViewGridTimeDurationStart ="8 AM";
+            String scheduleDayViewGridTimeDurationEnd="5 PM";
+            String workRoleName ="Auto Using";
+            String shiftStartTime ="8:30 am";
+            String shiftEndTime ="5:00 pm";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            //Back to console to select one location
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+
+            //go to schedule function
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            // Navigate to a week
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule if not created and set as day view
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdateOH();
+            scheduleCommonPage.clickOnDayView();
+
+            //verify schedule table time duration and verify how many TMs in each slot
+            if(scheduleCommonPage.isScheduleDayViewActive()){
+                List<String> scheduleDayViewGridTimeDuration= scheduleShiftTablePage.getScheduleDayViewGridTimeDuration();
+                if(scheduleDayViewGridTimeDuration.get(0).equalsIgnoreCase(scheduleDayViewGridTimeDurationStart)
+                        && scheduleDayViewGridTimeDuration.get(scheduleDayViewGridTimeDuration.size()-1).equalsIgnoreCase(scheduleDayViewGridTimeDurationEnd)){
+                    SimpleUtils.pass("Schedule Day View Grid Time Duration is correct");
+                }else {
+                    SimpleUtils.fail("Schedule Day View Grid Time Duration is NOT correct",false);
+                }
+
+                List<String> scheduleDayViewBudgetedTeamMembersCount = scheduleShiftTablePage.getScheduleDayViewBudgetedTeamMembersCount();
+                for (int i =1;i<scheduleDayViewBudgetedTeamMembersCount.size()-1;i++) {
+                    if(scheduleDayViewBudgetedTeamMembersCount.get(i).equalsIgnoreCase(shiftsNumber)){
+                        SimpleUtils.pass("Number of shifts set in Basic staffing rule can work well");
+                    }else {
+                        SimpleUtils.fail("Number of shifts set in Basic staffing rule can work well",false);
+                    }
+                }
+
+                List<WebElement> allShifts = scheduleShiftTablePage.getAvailableShiftsInDayView();
+                List<String> shiftInfo = new ArrayList<>();
+                int index = 0;
+                List<String> shiftStartTimeList = new ArrayList<>();
+                List<String> shiftEndTimeList = new ArrayList<>();
+                List<String> workRoleNameList = new ArrayList<>();
+                for(int i=0;i<allShifts.size();i++){
+                    shiftInfo = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(i);
+                    workRoleNameList.add(shiftInfo.get(4));
+                    String[] shiftDuration = shiftInfo.get(2).split("-");
+                    shiftStartTimeList.add(shiftDuration[0]);
+                    shiftEndTimeList.add(shiftDuration[1]);
+                }
+
+                //verify the work role is correct or not
+                for(String workRole:workRoleNameList){
+                    if(workRole.equalsIgnoreCase(workRoleName)){
+                        SimpleUtils.pass("Work role set in basic staffing rule can work well");
+                    }else {
+                        SimpleUtils.fail("Work role set in basic staffing rule can work well",false);
+                    }
+                }
+
+                //verify shift start time is correct or not
+                if(shiftStartTimeList.get(0).equalsIgnoreCase(shiftStartTime)){
+                    SimpleUtils.pass("Shift start time set in basic staffing rule can work well");
+                }else {
+                    SimpleUtils.fail("Shift start time set in basic staffing rule can't work well",false);
+                }
+
+                //verify shift end time is correct or not
+                if(shiftEndTimeList.get(shiftEndTimeList.size()-1).equalsIgnoreCase(shiftEndTime)){
+                    SimpleUtils.pass("Shift end time set in basic staffing rule can work well");
+                }else {
+                    SimpleUtils.fail("Shift end time set in basic staffing rule can't work well",false);
+                }
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    
     @Automated(automated = "Automated")
     @Owner(owner = "Yang")
     @Enterprise(name = "Op_Enterprise")
