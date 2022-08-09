@@ -207,4 +207,8 @@ public interface ConfigurationPage {
     public void verifySpecificAssociationIsSaved(String name) throws Exception;
     public boolean checkIfApproveShiftInHomeLocationSettingEnabled() throws Exception;
     public void updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(String option) throws Exception;
+    public void updateMaximumNumberOfShiftsPerDay(int maximumNumber) throws Exception;
+    public int getMaximumNumberOfShiftsPerDay() throws Exception;
+    public void updateMinimumTimeBetweenShifts(int minimumTime) throws Exception;
+    public int getMinimumTimeBetweenShifts() throws Exception;
 }

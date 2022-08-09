@@ -1131,12 +1131,12 @@ public class SplitAndSpreadTest extends TestBase {
 
             //check the violation on the info popup
             WebElement shiftOnMon = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
-
-            SimpleUtils.assertOnFail("Spread of hours compliance message display failed",
-                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftOnMon).contains("Spread of hours"), false);
+            List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftOnMon);
+            SimpleUtils.assertOnFail("Spread of hours compliance message display failed, the actual is:"+complianceMessage,
+                    complianceMessage.contains("Spread of hours"), false);
             createSchedulePage.publishActiveSchedule();
-            SimpleUtils.assertOnFail("Spread of hours compliance message display failed",
-                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftOnMon).contains("Spread of hours"), false);
+            SimpleUtils.assertOnFail("Spread of hours compliance message display failed, the actual is:"+complianceMessage,
+                    complianceMessage.contains("Spread of hours"), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
