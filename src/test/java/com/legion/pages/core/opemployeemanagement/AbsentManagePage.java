@@ -237,7 +237,7 @@ public class AbsentManagePage extends BasePage {
     @FindBy(css = "lg-button[label='OK']>button")
     private WebElement okCreating;
 
-    @FindBy(css = "lg-accrual-setting table tr>td:nth-child(1)")
+    @FindBy(css = "lg-accrual-setting table tr>td:nth-child(1)")//lg-accrual-setting>div.time-off-reason-setting>table tr>td:nth-child(1)
     private List<WebElement> timeOffReasonNames;
     @FindBy(css = "div.time-off-reason-setting table tr:last-child>td:first-child")
     private WebElement timeOffReasonAdded;
@@ -592,6 +592,7 @@ public class AbsentManagePage extends BasePage {
         waitForSeconds(5);
         editTemplate.click();
         okToActionInModal(true);
+        waitForSeconds(3);
     }
 
     public void markAsDefaultTemplate() {

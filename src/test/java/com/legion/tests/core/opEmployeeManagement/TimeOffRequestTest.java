@@ -106,7 +106,7 @@ public class TimeOffRequestTest extends TestBase {
         consoleNavigationPage.searchLocation("Newark");
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        timeOffPage.goToTeamMemberDetail("Allene Mante");
+        timeOffPage.goToTeamMemberDetail("Adele Kutch");//Allene Mante
 
         //clear the history time off record.
         String WorkerId = timeOffPage.getWorkerId();
@@ -267,7 +267,7 @@ public class TimeOffRequestTest extends TestBase {
         consoleNavigationPage.searchLocation("Newark");
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        timeOffPage.goToTeamMemberDetail("Allene Mante");
+        timeOffPage.goToTeamMemberDetail("Adele Kutch");
 
         //clear the history time off record.
         String WorkerId = timeOffPage.getWorkerId();
