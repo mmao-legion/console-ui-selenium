@@ -251,9 +251,6 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                         waitForSeconds(3);
                         SimpleUtils.report("Create a plan with a duplicated name is not allowed!");
                     }
-                    //click the cancel
-                    clickTheElement(PlanCreateCancelBTN);
-                    waitForSeconds(3);
                 } else if (isElementLoaded(createPlanBtn) && searchAPlan(planName))
                     SimpleUtils.pass("Create a parent plan successfully!");
             } else

@@ -848,10 +848,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void changeOHtemp() throws Exception{
 		if (radios.size()>0)
 			clickTheElement(radios.get(0));
-		    //tap ok
-		    if(isElementLoaded(editTemplatePopupPage,3)){
-				clickTheElement(okButton);
+		//tap ok
+		if(isElementLoaded(editTemplatePopupPage, 5)){
+			clickTheElement(okButton);
+			waitForSeconds(10);
+			if (isElementLoaded(editTemplatePopupPage)){
+				SimpleUtils.fail("Edit pop up not disappear after click OK button", false);
 			}
+		}
 		//click save as draft
 		scrollToBottom();
 		if(isElementEnabled(saveAsDraftButton)) {
@@ -871,15 +875,16 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		searchTemplate(templateName);
 		if (templateNameList.size() > 0) {
 			clickTheElement(templateNameList.get(0));
-			wait(3);
+//			wait(3);
+			waitForSeconds(3);
 			//click the history button ond detail
 			clickTheElement(historyButton);
-			wait(2);
+			waitForSeconds(2);
 			if (areListElementVisible(historyRecords, 5)) {
 				current=historyRecords.size();
 			}
 		}else
-				SimpleUtils.fail("No searched results for the remplate", false);
+				SimpleUtils.fail("No searched results for the template", false);
 		return 	current;
 
 	}

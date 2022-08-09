@@ -305,11 +305,14 @@ public class ConfigurationTest extends TestBase {
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(templateType);
             int now=configurationPage.historyRecordLimitCheck(templateName);
+            configurationPage.closeTemplateHistoryPanel();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             if (now<101) {
                 SimpleUtils.pass("History records displayed successfully!");
                 //create another 100 records
                 for (int i = 0; i < 103-now; i++) {
-                    configurationPage.clickOnSpecifyTemplateName(templateName, mode);
+                    configurationPage.searchTemplate(templateName);
+                    configurationPage.clickOnTemplateName(templateName);
                     configurationPage.clickOnEditButtonOnTemplateDetailsPage();
                     configurationPage.changeOHtemp();
                 }
