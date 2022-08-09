@@ -376,7 +376,7 @@ public class DeleteScheduleTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify SM delete schedule should keep the system schedule when Centralized Schedule Release is Yes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySMDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -576,7 +576,7 @@ public class DeleteScheduleTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "KendraScott2_Enterprise")
     @TestName(description = "Verify Internal Admin delete schedule should keep the system schedule when Centralized Schedule Release is Yes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyAdminDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -607,8 +607,7 @@ public class DeleteScheduleTest extends TestBase {
             //Select one week which status is Guidance, Click on this week
             scheduleOverviewPage.clickOnGuidanceBtnOnOverview(index);
             //Create the suggested schedule for this week
-            createSchedulePage.clickCreateScheduleBtn();
-
+            createSchedulePage.createSuggestedSchedule();
             //Go to Overview page, check the status of this week
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             String scheduleStatusOnOverViewTable = scheduleOverviewPage.getScheduleWeeksStatus().get(index);

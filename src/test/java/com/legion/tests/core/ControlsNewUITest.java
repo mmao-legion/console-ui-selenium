@@ -4,10 +4,13 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
@@ -2007,6 +2010,243 @@ public class ControlsNewUITest extends TestBase{
                 }
             } else
                 SimpleUtils.fail("There is no company holidays in search result list! ", false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify Smart Copy Configs in non-OP not working")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifySmartCopyConfigsInNonOPNotWorkingAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+
+            boolean isFullCopyEnabled = false;
+            boolean isPartialCopyEnabled = false;
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            createSchedulePage.publishActiveSchedule();
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.clickCreateScheduleBtn();
+            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
+            if (createSchedulePage.isCopyScheduleWindow()) {
+                isFullCopyEnabled = true;
+            }
+            if (isFullCopyEnabled) {
+                if (createSchedulePage.isPartialCopyOptionLoaded()){
+                    isPartialCopyEnabled = true;
+                }
+            }
+            createSchedulePage.clickBackBtnAndExitCreateScheduleWindow();
+
+            //Go to OP page
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Scheduling Policies");
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            controlsNewUIPage.setCopyConfig(true, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Full.getValue());
+            controlsNewUIPage.setCopyConfig(false, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Partial.getValue());
+
+            cinemarkMinorPage.saveOrPublishTemplate(SmartCopyConfigsInOP.templateAction.Publish_Now.getValue());
+            cinemarkMinorPage.clickOnBtn(SmartCopyConfigsInOP.buttonGroup.OKWhenPublish.getValue());
+            Thread.sleep(3000);
+
+            //Back to Console
+            switchToConsoleWindow();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.clickCreateScheduleBtn();
+            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
+            if (isFullCopyEnabled) {
+                SimpleUtils.assertOnFail("Full copy page should load!", createSchedulePage.isCopyScheduleWindow(), false);
+                if (isPartialCopyEnabled){
+                    SimpleUtils.assertOnFail("Partial copy option should load!", createSchedulePage.isPartialCopyOptionLoaded(), false);
+                } else
+                    SimpleUtils.assertOnFail("Partial copy option should not load!", !createSchedulePage.isPartialCopyOptionLoaded(), false);
+            }else {
+                SimpleUtils.assertOnFail("Full copy page should not load!", createSchedulePage.isCopyScheduleWindow(), false);
+                SimpleUtils.assertOnFail("Partial copy option should not load!", !createSchedulePage.isPartialCopyOptionLoaded(), false);
+            }
+            createSchedulePage.clickBackBtnAndExitCreateScheduleWindow();
+
+            //Go to OP to turn on partial copy.
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            //go to Configuration
+            cinemarkMinorPage.clickConfigurationTabInOP();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+            controlsNewUIPage.setCopyConfig(true, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Partial.getValue());
+
+            cinemarkMinorPage.saveOrPublishTemplate(SmartCopyConfigsInOP.templateAction.Publish_Now.getValue());
+            cinemarkMinorPage.clickOnBtn(SmartCopyConfigsInOP.buttonGroup.OKWhenPublish.getValue());
+            Thread.sleep(3000);
+
+            //Back to Console
+            switchToConsoleWindow();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.clickCreateScheduleBtn();
+            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
+            if (isFullCopyEnabled) {
+                SimpleUtils.assertOnFail("Full copy page should load!", createSchedulePage.isCopyScheduleWindow(), false);
+                if (isPartialCopyEnabled){
+                    SimpleUtils.assertOnFail("Partial copy option should load!", createSchedulePage.isPartialCopyOptionLoaded(), false);
+                } else
+                    SimpleUtils.assertOnFail("Partial copy option should not load!", !createSchedulePage.isPartialCopyOptionLoaded(), false);
+            }else {
+                SimpleUtils.assertOnFail("Full copy page should not load!", createSchedulePage.isCopyScheduleWindow(), false);
+                SimpleUtils.assertOnFail("Partial copy option should not load!", !createSchedulePage.isPartialCopyOptionLoaded(), false);
+            }
+            createSchedulePage.clickBackBtnAndExitCreateScheduleWindow();
+
+            //Go to OP to turn off Full copy and Partial copy.
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            //go to Configuration
+            cinemarkMinorPage.clickConfigurationTabInOP();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+            controlsNewUIPage.setCopyConfig(false, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Full.getValue());
+            controlsNewUIPage.setCopyConfig(false, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Partial.getValue());
+
+            cinemarkMinorPage.saveOrPublishTemplate(SmartCopyConfigsInOP.templateAction.Publish_Now.getValue());
+            cinemarkMinorPage.clickOnBtn(SmartCopyConfigsInOP.buttonGroup.OKWhenPublish.getValue());
+            Thread.sleep(3000);
+
+            //Back to Console
+            switchToConsoleWindow();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.clickCreateScheduleBtn();
+            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
+            if (isFullCopyEnabled) {
+                SimpleUtils.assertOnFail("Full copy page should load!", createSchedulePage.isCopyScheduleWindow(), false);
+                if (isPartialCopyEnabled){
+                    SimpleUtils.assertOnFail("Partial copy option should load!", createSchedulePage.isPartialCopyOptionLoaded(), false);
+                } else
+                    SimpleUtils.assertOnFail("Partial copy option should not load!", !createSchedulePage.isPartialCopyOptionLoaded(), false);
+            }else {
+                SimpleUtils.assertOnFail("Full copy page should not load!", createSchedulePage.isCopyScheduleWindow(), false);
+                SimpleUtils.assertOnFail("Partial copy option should not load!", !createSchedulePage.isPartialCopyOptionLoaded(), false);
+            }
+            createSchedulePage.clickBackBtnAndExitCreateScheduleWindow();
+
+            //Go to OP to turn on Full copy and turn off Partial copy.
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            //go to Configuration
+            cinemarkMinorPage.clickConfigurationTabInOP();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+            controlsNewUIPage.setCopyConfig(false, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Full.getValue());
+            controlsNewUIPage.setCopyConfig(true, SmartCopyConfigsInOP.ScheduleCopyConfigItems.Partial.getValue());
+
+            cinemarkMinorPage.saveOrPublishTemplate(SmartCopyConfigsInOP.templateAction.Publish_Now.getValue());
+            cinemarkMinorPage.clickOnBtn(SmartCopyConfigsInOP.buttonGroup.OKWhenPublish.getValue());
+            Thread.sleep(3000);
+
+            //Back to Console
+            switchToConsoleWindow();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.clickCreateScheduleBtn();
+            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
+            if (isFullCopyEnabled) {
+                SimpleUtils.assertOnFail("Full copy page should load!", createSchedulePage.isCopyScheduleWindow(), false);
+                if (isPartialCopyEnabled){
+                    SimpleUtils.assertOnFail("Partial copy option should load!", createSchedulePage.isPartialCopyOptionLoaded(), false);
+                } else
+                    SimpleUtils.assertOnFail("Partial copy option should not load!", !createSchedulePage.isPartialCopyOptionLoaded(), false);
+            }else {
+                SimpleUtils.assertOnFail("Full copy page should not load!", createSchedulePage.isCopyScheduleWindow(), false);
+                SimpleUtils.assertOnFail("Partial copy option should not load!", !createSchedulePage.isPartialCopyOptionLoaded(), false);
+            }
+            createSchedulePage.clickBackBtnAndExitCreateScheduleWindow();
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

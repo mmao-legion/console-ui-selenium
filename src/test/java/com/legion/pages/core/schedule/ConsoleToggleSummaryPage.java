@@ -302,4 +302,102 @@ public class ConsoleToggleSummaryPage extends BasePage implements ToggleSummaryP
         }
         return result;
     }
+
+    @FindBy(css = "[ng-class=\"hideItem('projected.sales')\"]")
+    private WebElement operatingHoursSection;
+    @FindBy(css = "[ng-class=\"hideItem('staffing.guidance')\"]")
+    private WebElement staffSection;
+    @FindBy(css = "[ng-class=\"hideItem('roster')\"]")
+    private WebElement rosterUpdatesSection;
+    @FindBy(css = "lg-button.edit-operating-hours-link")
+    private WebElement editOperatingHoursBtn;
+
+    public void verifyTheContentInRosterUpdatesSection() throws Exception {
+        String title = "ROSTER UPDATES";
+        String noChanges = "No changes";
+        WebElement titleElement =
+                rosterUpdatesSection.findElement(By.tagName("h3"));
+        WebElement noChangesElements =
+                rosterUpdatesSection.findElement(By.cssSelector("div.text-muted"));
+        if (isElementLoaded(rosterUpdatesSection, 5)){
+            /*
+            The content should be:
+            - Roster Updates
+            - No changes or the tm who is leaving
+             */
+            SimpleUtils.assertOnFail("The expected is:"+title
+                            +" the actual is: "+titleElement.getText(),
+                    titleElement.getText().equalsIgnoreCase(title), false);
+            SimpleUtils.assertOnFail("The expected is:"+noChanges
+                            +" the actual is: "+noChangesElements.getText(),
+                    noChangesElements.getText().equalsIgnoreCase(noChanges), false);
+        } else
+            SimpleUtils.fail("The operating hours section fail to load！ ", false);
+
+    }
+
+
+    public void verifyTheContentInStaffSection() throws Exception {
+        String title = "STAFF";
+        String hoursHeader = "Forecast Hours Budget Hours";
+        WebElement titleElement =
+                staffSection.findElement(By.tagName("h3"));
+        List<WebElement> hoursHeaderElements =
+                staffSection.findElements(By.className("schedule-summary-th-grey"));
+        if (isElementLoaded(staffSection, 5)){
+            /*
+            The content should be:
+            - STAFF
+            - Forecast Hours
+            - Budget Hours
+             */
+            SimpleUtils.assertOnFail("The expected is:"+title
+                    +" the actual is: "+titleElement.getText(),
+                    titleElement.getText().equalsIgnoreCase(title), false);
+            String actualHoursHeader = (hoursHeaderElements.get(0).getText()
+                    +" "+ hoursHeaderElements.get(1).getText()).replace("\n"," ");
+            SimpleUtils.assertOnFail("The expected is:"+hoursHeader
+                    +" the actual is: "+actualHoursHeader,
+                    actualHoursHeader.equalsIgnoreCase(hoursHeader), false);
+        } else
+            SimpleUtils.fail("The operating hours section fail to load！ ", false);
+
+    }
+
+
+    public void verifyTheContentInOperatingHoursSection() throws Exception {
+        String title = "OPERATING HOURS";
+        String workingHoursHeader = "Open - Close";
+        WebElement titleElement=
+                operatingHoursSection.findElement(By.tagName("h3"));
+        WebElement workingHoursHeaderElement =
+                operatingHoursSection.findElement(By.cssSelector("tr:not([ng-repeat]) th.text-right"));
+        if (isElementLoaded(operatingHoursSection, 5)){
+            /*
+            The content should be:
+            - OPERATING HOURS
+            - Open - Close
+            - Seven work days
+            - Starting and End time
+            - Edit buttons
+             */
+            SimpleUtils.assertOnFail("The expected is:"+title
+                            +" the actual is: "+titleElement.getText(),
+                    titleElement.getText().equalsIgnoreCase(title), false);
+            SimpleUtils.assertOnFail("The expected is:"+workingHoursHeader
+                            +" the actual is: "+workingHoursHeaderElement.getText(),
+                    workingHoursHeaderElement.getText().equalsIgnoreCase(workingHoursHeader), false);
+            SimpleUtils.assertOnFail("The expected is: 7 days"
+                            +" the actual is: "+ operatingHoursScheduleDay.size()+" days",
+                    operatingHoursScheduleDay.size() == 7, false);
+            SimpleUtils.assertOnFail("The expected is: 7 operating hours"
+                            +" the actual is: "+ scheduleOperatingHrsTimeDuration.size()+" operating hours",
+                    scheduleOperatingHrsTimeDuration.size() == 7, false);
+            SimpleUtils.assertOnFail("The edit operating hours button should load! ",
+                    isElementLoaded(editOperatingHoursBtn, 5), false);
+
+        } else
+            SimpleUtils.fail("The operating hours section fail to load！ ", false);
+
+    }
 }

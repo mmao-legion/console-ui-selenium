@@ -141,6 +141,7 @@
                     <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
                     <include name="verifyOverrideAssignmentRulesToYesAsInternalAdmin" />
                     <include name="verifyOverrideAssignmentRulesToNoAsInternalAdmin" />
+                    <!--                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7351-->
                                    </methods>
                                </class>
                            </classes>
@@ -538,6 +539,7 @@ SCH-5863, SCH-6536-->
                     <include name="verifyTheRegularSectionsOnWorkingHoursPageAsInternalAdmin" />
 <!--                    <include name="verifyTheHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />  SCH-5882 -->
                     <include name="verifyTheCompanyHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />
+                    <include name="verifySmartCopyConfigsInNonOPNotWorkingAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -691,5 +693,27 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
             </class>
         </classes>
     </test>
+    <!--
+    <test name="Consolidating Filters Test">
+        <classes>
+            <class name="com.legion.tests.core.ConsolidatingFiltersTest">
+                <methods>
+                  <include name="validateTheOptionsOfScheduleFilterShouldBeInAlphabeticalAndNumbericalOrderAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>https://legiontech.atlassian.net/browse/SCH-7223-->
 
+    <test name="Schedule Copy Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleCopyTest">
+                <methods>
+                    <include name="verifyTheContentOnCreateSchedulePageInWeekViewAsInternalAdmin" />
+                    <include name="verifyTheEnhancedCopyModalForNonDgFlowAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfCopyingASuggestedScheduleAsInternalAdmin" />
+                    <include name="verifyTheCountOfComplianceShiftsShouldBeConsistentWithComplianceSmartCardAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

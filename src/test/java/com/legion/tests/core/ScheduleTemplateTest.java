@@ -36,7 +36,7 @@ public class ScheduleTemplateTest extends TestBase {
     @Owner(owner = "Mary")
 //    @Enterprise(name = "Vailqacn_Enterprise")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Validate the assign shifts workflow")
+    @TestName(description = "Validate the new create shift feature in edit schedule template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheAssignShiftsWorkFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
