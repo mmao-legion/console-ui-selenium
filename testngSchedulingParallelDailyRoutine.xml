@@ -711,18 +711,6 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                     <include name="verifyTheContentOnCreateSchedulePageInWeekViewAsInternalAdmin" />
                     <include name="verifyTheEnhancedCopyModalForNonDgFlowAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfCopyingASuggestedScheduleAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Schedule Copy Test">
-        <classes>
-            <class name="com.legion.tests.core.ScheduleCopyTest">
-                <methods>
-                    <include name="verifyTheContentOnCreateSchedulePageInWeekViewAsInternalAdmin" />
-                    <include name="verifyTheEnhancedCopyModalForNonDgFlowAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfCopyingASuggestedScheduleAsInternalAdmin" />
                     <include name="verifyTheCountOfComplianceShiftsShouldBeConsistentWithComplianceSmartCardAsInternalAdmin" />
                 </methods>
             </class>
