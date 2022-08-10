@@ -616,13 +616,11 @@ public class SplitAndSpreadTest extends TestBase {
             controlsNewUIPage.editSpreadOfHoursPremium("2", "12", false);
             controlsNewUIPage.verifyCloseSplitShiftPremiumDialogButton();
 
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
                 Thread.sleep(120000);
             }
-
-
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

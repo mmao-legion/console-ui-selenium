@@ -680,7 +680,8 @@ public class BulkCreateTest extends TestBase {
 
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             //Verify the TMs on Recommended tab still display when back from search TM tab
-            SimpleUtils.assertOnFail("The TMs on Recommended tab should display consistently with before after back from search TM tab! ",
+            SimpleUtils.assertOnFail("The TMs on Recommended tab should display consistently with before after back from search TM tab! The expect is: "
+                            +resultCount + " the actual is: "+newShiftPage.getSearchAndRecommendedResult().size(),
                     newShiftPage.getSearchAndRecommendedResult().size() == resultCount, false);
 
             //Verify the 'X' button for each selected employee’s avatars
@@ -1948,16 +1949,16 @@ public class BulkCreateTest extends TestBase {
         List<WebElement> shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0,
                 selectedTM1.split(" ")[0]+" "+selectedTM1.split(" ")[1].substring(0,1));
         SimpleUtils.assertOnFail("The "+selectedTM1+ "shift is not exist on the first day! ",
-                shiftsOfOneDay.size()==1, false);
+                shiftsOfOneDay.size()>=1, false);
         scheduleMainPage.saveSchedule();
         Thread.sleep(5000);
         shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
         SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
-                shiftsOfOneDay.size()==1, false);
+                shiftsOfOneDay.size()>=1, false);
         createSchedulePage.publishActiveSchedule();
         shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
         SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
-                shiftsOfOneDay.size()==1, false);
+                shiftsOfOneDay.size()>=1, false);
 
         String shiftId = shiftsOfOneDay.get(0).getAttribute("id").toString();
         int index = scheduleShiftTablePage.getShiftIndexById(shiftId);

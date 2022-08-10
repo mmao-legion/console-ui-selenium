@@ -635,7 +635,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
             }
         }
         if (count == 0) {
-            SimpleUtils.fail("Compliance Card: Failed to get the count of the shift(s)!", false);
+            SimpleUtils.report("Compliance Card: Failed to get the count of the shift(s)!");
         }
         return count;
     }
