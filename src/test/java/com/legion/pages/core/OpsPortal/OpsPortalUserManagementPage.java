@@ -1646,6 +1646,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		}
 	}
 
+	@Override
 	public void verifyJobTitleGroupPageUI() throws Exception{
 		if(isElementEnabled(addJobTitleGroupButton,2) && isElementEnabled(searchJobTitleGroupInputBox)){
 			SimpleUtils.pass("Job Title Group Page can show well");

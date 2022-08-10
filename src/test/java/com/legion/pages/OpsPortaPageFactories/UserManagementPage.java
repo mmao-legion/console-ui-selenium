@@ -165,4 +165,6 @@ public interface UserManagementPage {
     public void deleteJobTitleGroup(String jobTitleGroupName) throws Exception;
 
     public void clickOnJobTitleGroupTab();
+
+    public void verifyJobTitleGroupPageUI() throws Exception;
     }
