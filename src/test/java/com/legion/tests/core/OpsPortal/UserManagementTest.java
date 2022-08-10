@@ -1264,4 +1264,24 @@ public class UserManagementTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Job Title Group UI checking")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUIOfJobTitleGroupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            //go to User Management Job Title Groups
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleGroup();
+            userManagementPage.verifyJobTitleGroupTabDisplay();
+            userManagementPage.clickOnJobTitleGroupTab();
+            userManagementPage.verifyJobTitleGroupPageUI();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
