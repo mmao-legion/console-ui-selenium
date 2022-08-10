@@ -4,13 +4,12 @@ import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 
+import java.net.URL;
 import java.util.*;
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -1545,16 +1544,6 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			SimpleUtils.fail("Job title group is not exist",false);
 	}
 
-	@FindBy(css = "lg-button[label= 'Add Job Title Group']")
-	private WebElement addJobTitleGroupButton;
-	@FindBy(css = "input.ng-pristine.ng-scope.ng-empty.ng-invalid.ng-invalid-required.ng-valid-pattern.ng-valid-maxlength.ng-touched")
-	private WebElement inputJobTitleGroup;
-	@FindBy(css = "div.lg-select")
-	private WebElement HRJobTitleSelect;
-	@FindBy(css = "input[placeholder = 'Search']")
-	private WebElement inputSearch;
-	@FindBy(css = "div.lg-search-options__option.ng-binding.lg-search-options__subLabel")
-	private WebElement jobTitleList;
 	@FindBy(css = "table.lg-table.ng-scope")
 	private WebElement jobTitleGroupTab;
 

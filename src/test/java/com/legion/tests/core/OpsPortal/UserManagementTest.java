@@ -937,7 +937,7 @@ public class UserManagementTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Job title group")
+    @TestName(description = "Job title group tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyJobTitleGroupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
