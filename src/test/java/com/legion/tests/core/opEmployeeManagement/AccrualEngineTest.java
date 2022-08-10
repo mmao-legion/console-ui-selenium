@@ -846,7 +846,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Import employee time off balance")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//blocked by defect: https://legiontech.atlassian.net/browse/OPS-5394
     public void verifyAccrualEngineWorksWellAfterImportingAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -2243,7 +2243,5 @@ public class AccrualEngineTest extends TestBase {
         hoursType.add("Compliance");
         return hoursType;
     }
-
-
-
+    
 }
