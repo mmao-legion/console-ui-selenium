@@ -7018,22 +7018,26 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@FindBy(css="div.lg-slider-pop__content li.not-allow")
+	private List<WebElement> deleteHistoryRecordsList;
+
 	@Override
 	//Delete - template history checking
 	public void verifyDeleteTemplateHistoryContent(String option,String userName) throws Exception{
-		if(areListElementVisible(historyRecordsList, 2) && option.contains("Deleted")){
+		if(areListElementVisible(deleteHistoryRecordsList, 2) && option.contains("Deleted")){
 			//delete template history content
 			//content1  Template Deleted ( Version 3 )
-			String content1 = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
+			String content1 = deleteHistoryRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
 			//content2   FionaUsing Feng at 16:38:27 PM,08/01/2022
-			String content2 = historyRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
+			String content2 = deleteHistoryRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
+			waitForSeconds(3);
 			if((content1.contains(option) && content1.contains("Version 3") && content2.contains(userName))){
 				SimpleUtils.pass("Delete template history can show well");
 			}else {
 				SimpleUtils.fail("Delete template history can't show well",false);
 			}
 
-			if(historyRecordsList.size()==8){
+			if((historyRecordsList.size() + deleteHistoryRecordsList.size())==8){
 				SimpleUtils.pass("Delete template - action history record can show well");
 			}else {
 				SimpleUtils.fail("Delete template - action history record can't show well",false);
