@@ -1900,5 +1900,46 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		searchOutJobTitleGroup(jobTitleGroupName);
 		deleteJobTitleGroup();
 	}
+
+	@Override
+	public List<String> getAllJobTitleGroups() {
+		List<String> jobTitleGroups = new ArrayList<>();
+		if (areListElementVisible(jobTitleGroupList, 3)) {
+			for (WebElement jobTitleGroup : jobTitleGroupList) {
+				String jobTitleGroupName = jobTitleGroup.findElement(By.cssSelector("td:nth-child(1)")).getAttribute("innerText").trim();
+				jobTitleGroups.add(jobTitleGroupName);
+			}
+		}
+		return jobTitleGroups;
+	}
+
+	@Override
+	public void clickOnAddWorkRoleButton(){
+		if(isElementEnabled(addWorkRoleBtn,2)){
+			clickTheElement(addWorkRoleBtn);
+			if(isElementEnabled(workNameInputBox,2)){
+				SimpleUtils.pass("User can click add work role button successfully");
+			}else {
+				SimpleUtils.fail("User failed to click add work role button",false);
+			}
+		}else {
+			SimpleUtils.fail("There is no add work role button",false);
+		}
+	}
+
+
+	@Override
+	public List<String> getOptionListOfJobTitleInAssignmentRule() {
+		List<String> Titles = new ArrayList<>();
+		addAssignmentRuleIcon.click();
+		teamMemberTitleButton.click();
+		if (teamMemberTitleList.size() > 0) {
+			for (WebElement tMTitle : teamMemberTitleList) {
+				String title = tMTitle.getText().trim();
+				Titles.add(title);
+			}
+		}
+		return Titles;
+	}
 }
 

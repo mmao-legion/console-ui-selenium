@@ -167,4 +167,10 @@ public interface UserManagementPage {
     public void clickOnJobTitleGroupTab();
 
     public void verifyJobTitleGroupPageUI() throws Exception;
-    }
+
+    public List<String> getAllJobTitleGroups();
+
+    public void clickOnAddWorkRoleButton();
+
+    public List<String> getOptionListOfJobTitleInAssignmentRule();
+}

@@ -1284,4 +1284,39 @@ public class UserManagementTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Job Title Group E2E checking")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyE2EOfJobTitleGroupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            List<String> jobTitleGroups = new ArrayList<>();
+            List<String> jobTitlesInAssignmentRule = new ArrayList<>();
+
+            //go to User Management Job Title Groups
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleGroup();
+            userManagementPage.verifyJobTitleGroupTabDisplay();
+            userManagementPage.clickOnJobTitleGroupTab();
+            jobTitleGroups = userManagementPage.getAllJobTitleGroups();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+            userManagementPage.verifyEditBtnIsClickable();
+            userManagementPage.clickOnAddWorkRoleButton();
+            jobTitlesInAssignmentRule = userManagementPage.getOptionListOfJobTitleInAssignmentRule();
+            for(String jobTitle:jobTitleGroups){
+                if(jobTitlesInAssignmentRule.contains(jobTitle)){
+                    SimpleUtils.pass(jobTitle + " can show well in assignment rule");
+                }else {
+                    SimpleUtils.fail(jobTitle + " can't show in assignment rule",false);
+                }
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
