@@ -5,10 +5,12 @@ import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.tests.TestBase;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -724,14 +726,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private void OHTempSetOpenAndCloseTime(String settingTab, String openTime, String closeTime) throws Exception {
 			if (isElementLoaded(OHOperateOpenCloseTimeEditDialog)){
 				if (settingTab.contains("Open")){
-					openCloseTimeInputs.get(0).click();
+					openCloseTimeInputs.get(0).clear();
 					openCloseTimeInputs.get(0).sendKeys(openTime);
-					openCloseTimeInputs.get(1).click();
+					openCloseTimeInputs.get(1).clear();
 					openCloseTimeInputs.get(1).sendKeys(closeTime);
 				}else if (settingTab.contains("Dayparts")){
-					openCloseTimeInputs.get(2).click();
+					openCloseTimeInputs.get(2).clear();
 					openCloseTimeInputs.get(2).sendKeys(openTime);
-					openCloseTimeInputs.get(3).click();
+					openCloseTimeInputs.get(3).clear();
 					openCloseTimeInputs.get(3).sendKeys(closeTime);
 				}else {
 					SimpleUtils.fail("Can not find the setting item!", false);
@@ -846,10 +848,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void changeOHtemp() throws Exception{
 		if (radios.size()>0)
 			clickTheElement(radios.get(0));
-		    //tap ok
-		    if(isElementLoaded(editTemplatePopupPage,3)){
-				clickTheElement(okButton);
+		//tap ok
+		if(isElementLoaded(editTemplatePopupPage, 5)){
+			clickTheElement(okButton);
+			waitForSeconds(10);
+			if (isElementLoaded(editTemplatePopupPage)){
+				SimpleUtils.fail("Edit pop up not disappear after click OK button", false);
 			}
+		}
 		//click save as draft
 		scrollToBottom();
 		if(isElementEnabled(saveAsDraftButton)) {
@@ -869,15 +875,16 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		searchTemplate(templateName);
 		if (templateNameList.size() > 0) {
 			clickTheElement(templateNameList.get(0));
-			wait(3);
+//			wait(3);
+			waitForSeconds(3);
 			//click the history button ond detail
 			clickTheElement(historyButton);
-			wait(2);
+			waitForSeconds(2);
 			if (areListElementVisible(historyRecords, 5)) {
 				current=historyRecords.size();
 			}
 		}else
-				SimpleUtils.fail("No searched results for the remplate", false);
+				SimpleUtils.fail("No searched results for the template", false);
 		return 	current;
 
 	}
@@ -3029,6 +3036,296 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		} else
 			SimpleUtils.fail("Operation Hours: Business Hours rows failed to load ",false);
 		return dataFromBusinessHours;
+	}
+
+	@Override
+	public void goToBusinessHoursEditPage(String workkday) throws Exception {
+		boolean isEnabled = false;
+		String day = "";
+		WebElement editButton = null;
+
+		if (areListElementVisible(OHBusinessHoursEntries,5) && OHBusinessHoursEntries.size() == 7) {
+			for (WebElement OHBusinessHour : OHBusinessHoursEntries){
+				isEnabled = OHBusinessHour.findElement(By.cssSelector("input[type=\"checkbox\"]")).getAttribute("class").contains("ng-not-empty");
+				day = OHBusinessHour.findElement(By.cssSelector("div.col-sm-4")).getAttribute("innerText").replace("\n", "").trim();
+				editButton = OHBusinessHour.findElement(By.cssSelector("lg-button[label=\"Edit\"]"));
+				if (day.toLowerCase().equals(workkday) && isEnabled){
+					clickTheElement(editButton);
+					if (areListElementVisible(tabsWhenEditBusinessHours)){
+						SimpleUtils.pass("Business hours edit page load successfully!");
+						break;
+					}else{
+						SimpleUtils.fail("Business hours edit page not load as expected!", false);
+					}
+				}
+			}
+		}else {
+			SimpleUtils.fail("Business hours section failed to load!", false);
+		}
+	}
+
+	@FindBy(css = "span[class*=\"next-day-icon-trigger\"]")
+	private List<WebElement> nextDayIcon;
+	@FindBy(css = "div.next-day-menu input-field[label=\"Next Day\"]")
+	private WebElement nextDayRadio;
+	@Override
+	public void checkOpenAndCloseTime() throws Exception {
+		String timeBeforeEdit = "";
+		String timeAfterEdit = "";
+		int numberOfTimeInput = openCloseTimeInputs.size();
+
+		if (areListElementVisible(openCloseTimeInputs, 2)){
+			for (int i = 0; i < openCloseTimeInputs.size(); i++){
+				//Check if text input
+				if (openCloseTimeInputs.get(i).getAttribute("type").equals("text")){
+					//Check if up and down keys work fine
+					if (i > 1){
+						//switch to day part tab
+						clickTheElement(OHOperateDayPartTab);
+						waitForSeconds(2);
+					}
+					int clickCount = 1;
+					Actions action = new Actions(getDriver());
+					//Locate the hour: click for once
+					//Locate the minute: click for twice
+					//Locate the AM/PM: click for three times
+					while(clickCount <= 3){
+						for (int j = 0; j < clickCount; j++){
+							openCloseTimeInputs.get(i).click();
+						}
+						clickCount++;
+
+						for (int j = 0; j < 3; j++){
+							timeBeforeEdit = openCloseTimeInputs.get(i).findElement(By.xpath("./following-sibling::div")).getAttribute("innerText").trim();
+							openCloseTimeInputs.get(i).sendKeys(Keys.ARROW_UP);
+							timeAfterEdit = openCloseTimeInputs.get(i).findElement(By.xpath("./following-sibling::div")).getAttribute("innerText").trim();
+							if (timeBeforeEdit.equals(timeAfterEdit)){
+								SimpleUtils.fail("Time not change by pressing UP key!", false);
+							}
+						}
+						for (int j = 0; j < 5; j++){
+							timeBeforeEdit = openCloseTimeInputs.get(i).findElement(By.xpath("./following-sibling::div")).getAttribute("innerText").trim();
+							openCloseTimeInputs.get(i).sendKeys(Keys.ARROW_DOWN);
+							timeAfterEdit = openCloseTimeInputs.get(i).findElement(By.xpath("./following-sibling::div")).getAttribute("innerText").trim();
+							if (timeBeforeEdit.equals(timeAfterEdit)){
+								SimpleUtils.fail("Time not change by pressing UP key!", false);
+							}
+						}
+					}
+					//Check if next day exist.
+					if ((i + 1) % 2 == 0 && isElementEnabled(nextDayIcon.get((i - 1)/2))){
+						clickTheElement(nextDayIcon.get((i - 1)/2));
+						if (isElementLoaded(nextDayRadio)){
+							SimpleUtils.pass("Next Day is correctly displayed!");
+						}else {
+							SimpleUtils.fail("Next day failed to load!", false);
+						}
+					}
+				}else {
+					SimpleUtils.fail("Time input should be text box!", false);
+				}
+			}
+		}
+
+	}
+
+	@Override
+	public void clickOpenCloseTimeLink() throws Exception {
+		if (isElementLoaded(OHOperateOpenCloseTimeEditLink)){
+			clickTheElement(OHOperateOpenCloseTimeEditLink);
+			if (isElementLoaded(OHOperateOpenCloseTimeEditDialog)) {
+				SimpleUtils.pass("Edit open/close time dialog pops up successfully");
+			}else{
+				SimpleUtils.fail("Edit open/close time dialog not pops up as expected!", false);
+			}
+		}
+	}
+
+	public boolean checkNextDayForCloseTime(WebElement nextDayIconToClick, String crossNextDay) throws Exception {
+		boolean isNextDaySelected = false;
+
+		if ((crossNextDay.equalsIgnoreCase("yes") && nextDayIconToClick.findElement(By.cssSelector("img")).getAttribute("src").contains("next-day-small"))
+				|| (crossNextDay.equalsIgnoreCase("no") && nextDayIconToClick.findElement(By.cssSelector("img")).getAttribute("src").contains("plus-1-b"))){
+			clickTheElement(nextDayIconToClick);
+			if (isElementLoaded(nextDayRadio)){
+				clickTheElement(nextDayRadio.findElement(By.cssSelector("input")));
+				isNextDaySelected = nextDayRadio.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-not-empty");
+				if (isNextDaySelected && crossNextDay.equalsIgnoreCase("yes")){
+					SimpleUtils.pass("Next day is selected!");
+				}else if (!isNextDaySelected && crossNextDay.equalsIgnoreCase("no")){
+					SimpleUtils.pass("Next day cancel to select!");
+				}else {
+					SimpleUtils.fail("The selection for Next day is different from provided parameter", false);
+				}
+			}else {
+				SimpleUtils.fail("Next day failed to load!", false);
+			}
+		}
+		return isNextDaySelected;
+	}
+
+	public int calculateOpenCloseTime(String type, String openOrCloseTime, boolean isNextDaySelected){
+		int abstHour = 0;
+		int absMinute = 0;
+		int distance = 0;
+		int absTime = 0;
+
+		String[] opentimeArray = openOrCloseTime.replace("PM", "").replace("AM", "").split(":");
+		abstHour = Integer.parseInt(opentimeArray[0]);
+		absMinute = Integer.parseInt(opentimeArray[1]);
+
+		if (openOrCloseTime.contains("PM") & !openOrCloseTime.equals("12:00PM")){
+			abstHour += 12;
+		}
+
+		if (type.toLowerCase().contains("start")){
+			if (openOrCloseTime.equals("12:00AM")){
+				abstHour = 0;
+				absMinute = 0;
+			}
+			absTime = abstHour * 60 + absMinute;
+		}else if (type.toLowerCase().contains("end")){
+			if (openOrCloseTime.equals("12:00AM")){
+				abstHour = 24;
+				absMinute = 0;
+			}
+			if(isNextDaySelected){
+				distance += 24;
+			}
+			absTime = (abstHour + distance) * 60 + absMinute;
+		}
+		return absTime;
+	}
+
+	public boolean verifyOpenAndCloseTime(String settingTab, int absOpenTime, int absCloseTime, boolean isNextDaySelected) throws Exception{
+		boolean isvalidTime = false;
+		if ((absCloseTime - absOpenTime) > 1440){
+			if (settingTab.toLowerCase().contains("open") && isElementLoaded(warningMsg)){
+				if (warningMsg.getAttribute("innerText").replace("\n", "").trim().contains("cannot exceed 24 hours") &&
+						saveButton.getAttribute("disabled").equals("true")){
+					SimpleUtils.pass("Warning Message is correct!");
+				}else{
+					SimpleUtils.fail("There should be an exceeding 24 hours warning!", false);
+				}
+			}else if (settingTab.toLowerCase().contains("daypart") && isElementLoaded(dayPartsWarnigIcon)){
+				Actions builder = new Actions(MyThreadLocal.getDriver());
+				builder.moveToElement(dayPartsWarnigIcon).build().perform();
+				if (popUpWarningMsg.getAttribute("innerText").replace("\n", "").trim().contains("cannot exceed 24 hours") &&
+						saveButton.getAttribute("disabled").equals("true")){
+					SimpleUtils.pass("Warning Message is correct!");
+				}else{
+					SimpleUtils.fail("There should be an exceeding 24 hours warning!", false);
+				}
+			}
+		}else if (!isNextDaySelected && absOpenTime > absCloseTime){
+			if (settingTab.toLowerCase().contains("open") && isElementLoaded(warningMsg)){
+				if (warningMsg.getAttribute("innerText").replace("\n", "").trim().contains("Open time should be before close time") &&
+						saveButton.getAttribute("disabled").equals("true")){
+					SimpleUtils.pass("Warning Message is correct!");
+				}else{
+					SimpleUtils.fail("There should be an open time should before close time warning!", false);
+				}
+			}else if (settingTab.toLowerCase().contains("daypart") && isElementLoaded(dayPartsWarnigIcon)){
+				Actions builder = new Actions(MyThreadLocal.getDriver());
+				builder.moveToElement(dayPartsWarnigIcon).build().perform();
+				if (popUpWarningMsg.getAttribute("innerText").replace("\n", "").trim().contains("Open time should be before close time") &&
+						saveButton.getAttribute("disabled").equals("true")){
+					SimpleUtils.pass("Warning Message is correct!");
+				}else{
+					SimpleUtils.fail("There should be open time should before close time warning!", false);
+				}
+			}
+		}else {
+			isvalidTime = true;
+		}
+		return isvalidTime;
+	}
+
+	@FindBy(css = "div[class*=\"validationMessage\"]")
+	private WebElement warningMsg;
+	@FindBy(css="i.fa-exclamation-circle")
+	private WebElement dayPartsWarnigIcon;
+	@FindBy(css="div.group-type-pop")
+	private WebElement popUpWarningMsg;
+	@Override
+	public void setOpenCloseTime(String settingTab, String openTime, String closeTime, String crossNextDay) throws Exception {
+		int absOpenTime = 0;
+		int absCloseTime = 0;
+		boolean isNextDaySelected = false;
+		WebElement nextDaySign = null;
+		WebElement nextDayIconToClick = null;
+
+		if (settingTab.toLowerCase().contains("open")){
+			nextDayIconToClick = nextDayIcon.get(0);
+		}else if (settingTab.toLowerCase().contains("daypart")){
+			nextDayIconToClick = nextDayIcon.get(1);
+			clickTheElement(OHOperateDayPartTab);
+		}
+		//Set Open and Close time
+		OHTempSetOpenAndCloseTime(settingTab, openTime, closeTime);
+		//Check if next day
+		isNextDaySelected = checkNextDayForCloseTime(nextDayIconToClick, crossNextDay);
+		//Calculate absolute time for Open and Close time
+		absOpenTime = calculateOpenCloseTime("start", openTime, false);
+		absCloseTime = calculateOpenCloseTime("end", closeTime, isNextDaySelected);
+		//Verify if Open and Close time are valid
+		verifyOpenAndCloseTime(settingTab, absOpenTime, absOpenTime, isNextDaySelected);
+	}
+
+	@Override
+	public boolean verifyStartEndTimeForDays(String startTime, String endTime, String day) throws Exception {
+		boolean isEnabled = false;
+		boolean flag = false;
+
+		//get the start time and end time for a certain day
+		if (areListElementVisible(OHBusinessHoursEntries,5) && OHBusinessHoursEntries.size() == 7) {
+			for (int i= 0; i < OHBusinessHoursEntries.size(); i++) {
+				isEnabled = OHBusinessHoursEntries.get(i).findElement(By.cssSelector("input[type=\"checkbox\"]")).getAttribute("class").contains("ng-not-empty");
+				String dayInEntry = OHBusinessHoursEntries.get(i).findElement(By.cssSelector("div.col-sm-4")).getAttribute("innerText").replace("\n", "").trim();
+				editButton = OHBusinessHoursEntries.get(i).findElement(By.cssSelector("lg-button[label=\"Edit\"]"));
+				if (dayInEntry.equalsIgnoreCase(day) && isEnabled) {
+					String StartOrigin = OHBusinessHoursEntries.get(i).findElement(By.cssSelector("span.work-time")).getText().trim();
+					String EndOrigin = OHBusinessHoursEntries.get(i).findElement(By.cssSelector("span.work-time.mr-2")).getText().trim();
+					if (StartOrigin.equals(startTime) && EndOrigin.equals(endTime)) {
+						flag = true;
+						SimpleUtils.pass("The start time and end time show as expected!");
+					}
+					break;
+				}
+			}
+		}
+		return flag;
+	}
+
+	@FindBy(css = "div.each-day-selector")
+	private List<WebElement> eachDaySelector;
+	@Override
+	public void selectDaysForOpenCloseTime(List<String> dayOfWeek) throws Exception {
+		if (areListElementVisible(eachDaySelector)){
+			for (String day : dayOfWeek){
+				for (WebElement dayToSelect : eachDaySelector) {
+					if (day.equalsIgnoreCase(dayToSelect.findElement(By.cssSelector("input-field")).getAttribute("label")) &&
+							dayToSelect.findElement(By.cssSelector("input-field input")).getAttribute("class").contains("ng-empty")){
+						clickTheElement(dayToSelect.findElement(By.cssSelector("input-field input")));
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	public void editBasicStaffingRules() throws Exception {
+		if(isElementLoaded(editButtonOfStaffingRule,2)){
+			clickTheElement(editButtonOfStaffingRule);
+			if(isElementLoaded(staffingRuleFields, 2)){
+				SimpleUtils.pass("User can click pencil edit button successfully for basic staffing rule!");
+			}else {
+				SimpleUtils.fail("User can NOT click edit pencil button successfully for basic staffing rule!",false);
+			}
+		} else {
+			SimpleUtils.fail("pencil button is not showing",false);
+		}
 	}
 
 	@FindBy(css=".console-navigation-item-label.User.Management")
@@ -6721,22 +7018,26 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@FindBy(css="div.lg-slider-pop__content li.not-allow")
+	private List<WebElement> deleteHistoryRecordsList;
+
 	@Override
 	//Delete - template history checking
 	public void verifyDeleteTemplateHistoryContent(String option,String userName) throws Exception{
-		if(areListElementVisible(historyRecordsList, 2) && option.contains("Deleted")){
+		if(areListElementVisible(deleteHistoryRecordsList, 2) && option.contains("Deleted")){
 			//delete template history content
 			//content1  Template Deleted ( Version 3 )
-			String content1 = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
+			String content1 = deleteHistoryRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
 			//content2   FionaUsing Feng at 16:38:27 PM,08/01/2022
-			String content2 = historyRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
+			String content2 = deleteHistoryRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
+			waitForSeconds(3);
 			if((content1.contains(option) && content1.contains("Version 3") && content2.contains(userName))){
 				SimpleUtils.pass("Delete template history can show well");
 			}else {
 				SimpleUtils.fail("Delete template history can't show well",false);
 			}
 
-			if(historyRecordsList.size()==8){
+			if((historyRecordsList.size() + deleteHistoryRecordsList.size())==8){
 				SimpleUtils.pass("Delete template - action history record can show well");
 			}else {
 				SimpleUtils.fail("Delete template - action history record can't show well",false);

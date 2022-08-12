@@ -4,13 +4,12 @@ import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 
+import java.net.URL;
 import java.util.*;
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -1545,16 +1544,6 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			SimpleUtils.fail("Job title group is not exist",false);
 	}
 
-	@FindBy(css = "lg-button[label= 'Add Job Title Group']")
-	private WebElement addJobTitleGroupButton;
-	@FindBy(css = "input.ng-pristine.ng-scope.ng-empty.ng-invalid.ng-invalid-required.ng-valid-pattern.ng-valid-maxlength.ng-touched")
-	private WebElement inputJobTitleGroup;
-	@FindBy(css = "div.lg-select")
-	private WebElement HRJobTitleSelect;
-	@FindBy(css = "input[placeholder = 'Search']")
-	private WebElement inputSearch;
-	@FindBy(css = "div.lg-search-options__option.ng-binding.lg-search-options__subLabel")
-	private WebElement jobTitleList;
 	@FindBy(css = "table.lg-table.ng-scope")
 	private WebElement jobTitleGroupTab;
 
@@ -1633,5 +1622,324 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 
 	@FindBy(css = "tr[ng-repeat]")
 	private List<WebElement> workRoleList;
+
+	@FindBy(css = "lg-button[label= 'Add Job Title Group']")
+	private WebElement addJobTitleGroupButton;
+	@FindBy(css = "input.ng-pristine.ng-scope.ng-empty.ng-invalid.ng-invalid-required.ng-valid-pattern.ng-valid-maxlength.ng-touched")
+	private WebElement inputJobTitleGroup;
+	@FindBy(css="tr.new-group")
+	private WebElement newJobTitleGroupForm;
+	@FindBy(css="input-field[placeholder*=\"search by job title or group name.\"] input")
+	private WebElement searchJobTitleGroupInputBox;
+
+	@Override
+	public void clickOnJobTitleGroupTab(){
+		if(isElementEnabled(jobTitleGroupTab,2)){
+			clickTheElement(jobTitleGroupTab);
+			if(isElementEnabled(addJobTitleGroupButton,2)){
+				SimpleUtils.pass("User can click job title group tab successfully!");
+			}else {
+				SimpleUtils.fail("User can't click job title group tab successfully!",false);
+			}
+		}else {
+			SimpleUtils.fail("There is no job title group tab showing",false);
+		}
+	}
+
+	@Override
+	public void verifyJobTitleGroupPageUI() throws Exception{
+		if(isElementEnabled(addJobTitleGroupButton,2) && isElementEnabled(searchJobTitleGroupInputBox)){
+			SimpleUtils.pass("Job Title Group Page can show well");
+		}else {
+			SimpleUtils.fail("Job Title Group Page can't show well",false);
+		}
+	}
+
+	public void clickOnAddJobTitleGroupButton() throws Exception{
+		if(isElementEnabled(addJobTitleGroupButton,2)){
+			clickTheElement(addJobTitleGroupButton);
+			if(isElementEnabled(newJobTitleGroupForm,2)){
+				SimpleUtils.pass("User can click add job title group button successfully!");
+			}else {
+				SimpleUtils.fail("User can't click add job title group button successfully!",false);
+			}
+		}
+	}
+
+	@FindBy(css = "input[placeholder = 'Search']")
+	private WebElement hrJobTitleSearchBox;
+	@FindBy(css="tr.new-group input-field[pattern*=\"groupNamePattern\"] input[ng-attr-id*=\"inputName}}\"]")
+	private WebElement jobTitleGroupNameInput;
+	@FindBy(css="div.lg-multiple-select input-field")
+	private WebElement hrJobTitleGroupInput;
+	@FindBy(css="div.lg-picker-input__wrapper.lg-ng-animate div.select-list")
+	private WebElement hrJobTitleGroupSearchResult;
+	@FindBy(css="div.lg-picker-input__wrapper.lg-ng-animate div.select-list ng-form input")
+	private WebElement hrJobTitleGroupCheckBox;
+
+	public void selectHrJobTitleGroup(List<String> hrJobTitles) throws Exception{
+		if(isElementEnabled(hrJobTitleGroupInput,2)){
+			clickTheElement(hrJobTitleGroupInput);
+			for(String hrJobTitle:hrJobTitles){
+				clickTheElement(hrJobTitleSearchBox);
+				hrJobTitleSearchBox.clear();
+				hrJobTitleSearchBox.sendKeys(hrJobTitle);
+				hrJobTitleSearchBox.sendKeys(Keys.ENTER);
+				waitForSeconds(3);
+				if(isElementEnabled(hrJobTitleGroupSearchResult,2)) {
+					String hrTitleName = hrJobTitleGroupSearchResult.findElement(By.cssSelector(" label")).getAttribute("innerText").trim();
+					if (hrTitleName.equalsIgnoreCase(hrJobTitle)) {
+						SimpleUtils.pass("User can search out hr job title: " + hrTitleName + " Successfully");
+						waitForSeconds(2);
+						clickTheElement(hrJobTitleGroupCheckBox);
+						waitForSeconds(2);
+						String check = getDriver().findElement(By.cssSelector("div.lg-picker-input__wrapper.lg-ng-animate div.select-list ng-form input+label+div")).getAttribute("innerText").trim();
+						if (check.equalsIgnoreCase("true")) {
+							SimpleUtils.pass("User can select hr job title: " + hrTitleName + " Successfully");
+						} else {
+							SimpleUtils.fail("User can NOT select hr job title: " + hrTitleName + " Successfully", false);
+						}
+					}
+					continue;
+				}else {
+
+				}
+			}
+		}else {
+			SimpleUtils.fail("hr Job Title Group Input field can't show well",false);
+		}
+	}
+
+	@FindBy(css="input-field[type=\"dollar\"] input")
+	private WebElement averageHourlyRateInput;
+	@FindBy(css="input-field[type=\"dollar\"] div.input-faked")
+	private WebElement averageHourlyRateValue;
+
+	public void setAverageHourlyRate(String averageHourlyRate){
+		if(isElementEnabled(averageHourlyRateInput,2)){
+			clickTheElement(averageHourlyRateInput);
+			averageHourlyRateInput.clear();
+			averageHourlyRateInput.sendKeys(averageHourlyRate);
+			waitForSeconds(2);
+			String value = averageHourlyRateValue.getAttribute("innerText").trim();
+			if(value.equalsIgnoreCase(averageHourlyRate)){
+				SimpleUtils.pass("User can input average Hourly Rate successfully");
+			}else {
+				SimpleUtils.fail("User can NOT input average Hourly Rate successfully",false);
+			}
+		}
+	}
+
+	@FindBy(css="input-field[type=\"number\"] input")
+	private WebElement allocationOrderInput;
+	@FindBy(css="input-field[type=\"number\"] div.input-faked")
+	private WebElement allocationOrderValue;
+
+	public void setAllocationOrder(String allocationOrder){
+		if(isElementEnabled(allocationOrderInput,2)){
+			clickTheElement(allocationOrderInput);
+			allocationOrderInput.clear();
+			waitForSeconds(2);
+			allocationOrderInput.sendKeys(allocationOrder);
+			waitForSeconds(2);
+			String value =allocationOrderValue.getAttribute("innerText").trim();
+			if(value.equalsIgnoreCase(allocationOrder)){
+				SimpleUtils.pass("User can input allocation Order successfully");
+			}else {
+				SimpleUtils.fail("User can't input allocation Order successfully",false);
+			}
+		}
+	}
+
+	@FindBy(css="yes-no lg-button-group div[ng-attr-small]")
+	private WebElement nonManagementSection;
+	@FindBy(css="yes-no lg-button-group div[ng-attr-small] div:nth-child(1)")
+	private WebElement yesButton;
+	@FindBy(css="yes-no lg-button-group div[ng-attr-small] div:nth-child(2)")
+	private WebElement noButton;
+
+	public void setNonManagementGroup(boolean isNonManagementGroup){
+		if(isElementEnabled(nonManagementSection,2)){
+			if(isNonManagementGroup){
+				clickTheElement(yesButton);
+				if(yesButton.getAttribute("class").trim().contains("selected")){
+					SimpleUtils.pass("User can select yes button successfully");
+				}else {
+					SimpleUtils.fail("User can't select yes button successfully",false);
+				}
+			}
+			else{
+				clickTheElement(noButton);
+				waitForSeconds(2);
+				if(noButton.getAttribute("class").trim().contains("selected")){
+					SimpleUtils.pass("User can select no button successfully");
+				}else {
+					SimpleUtils.fail("User can't select no button successfully",false);
+				}
+			}
+		}
+	}
+
+	@FindBy(css="lg-button[label=\"Save\"] button")
+	private WebElement saveButtonOfJobTitleGroup;
+	@FindBy(css="div.lg-toast span")
+	private WebElement successToast;
+
+	public void clickOnSaveButtonOfJobTitleGroup(){
+		if(isElementEnabled(saveButtonOfJobTitleGroup,5)){
+			clickTheElement(saveButtonOfJobTitleGroup);
+			if(isElementEnabled(successToast,1)&&successToast.getAttribute("innerText").trim().contains("Success")){
+				SimpleUtils.pass("User can save job title group successfully");
+			}else {
+				SimpleUtils.fail("User can NOT save job title group successfully",false);
+			}
+		}
+	}
+
+	@Override
+	public void addNewJobTitleGroup(String jobTitleGroupName,List<String> hrJobTitles,String averageHourlyRate,String allocationOrder,boolean isNonManagementGroup) throws Exception{
+		clickOnAddJobTitleGroupButton();
+		clickTheElement(jobTitleGroupNameInput);
+		jobTitleGroupNameInput.clear();
+		jobTitleGroupNameInput.sendKeys(jobTitleGroupName);
+		selectHrJobTitleGroup(hrJobTitles);
+		setAverageHourlyRate(averageHourlyRate);
+		setAllocationOrder(allocationOrder);
+		setNonManagementGroup(isNonManagementGroup);
+		clickOnSaveButtonOfJobTitleGroup();
+	}
+
+	@FindBy(css="lg-button[label=\"Edit\"] button")
+	private WebElement editButtonOfJobTitleGroup;
+	@FindBy(css="ng-form[name*=\"newJobTitleGroupForm\"] table tbody tr[ng-repeat*=\"group in\"]")
+	private List<WebElement> jobTitleGroupList;
+
+	public void clickOnEditButtonOfJobTitleGroup(){
+		waitForSeconds(3);
+		WebElement editButton = jobTitleGroupList.get(0).findElement(By.cssSelector("td:nth-last-child(2) lg-button[label=\"Edit\"] button"));
+		if(isElementEnabled(editButton,5)){
+			clickTheElement(editButton);
+			if(isElementEnabled(saveButtonOfJobTitleGroup,1)){
+				SimpleUtils.pass("User can click edit button of job title group successfully");
+			}else {
+				SimpleUtils.fail("User can NOT click edit button of job title group successfully",false);
+			}
+		}
+	}
+
+	public void searchOutJobTitleGroup(String jobTitleGroupName){
+		if(isElementEnabled(searchJobTitleGroupInputBox,2)){
+			clickTheElement(searchJobTitleGroupInputBox);
+			searchJobTitleGroupInputBox.clear();
+			searchJobTitleGroupInputBox.sendKeys(jobTitleGroupName);
+			searchJobTitleGroupInputBox.sendKeys(Keys.ENTER);
+			if(jobTitleGroupList.get(0).findElement(By.cssSelector(" td")).getAttribute("innerText").trim().equalsIgnoreCase(jobTitleGroupName)){
+				SimpleUtils.pass("User can search out job title group successfully");
+			}else {
+				SimpleUtils.fail("User can NOT search out job title group successfully",false);
+			}
+		}
+	}
+
+	@Override
+	public void updateJobTitleGroup(String jobTitleGroupName,List<String> hrJobTitles,String averageHourlyRate,String allocationOrder,boolean isNonManagementGroup) throws Exception{
+		waitForSeconds(5);
+		searchOutJobTitleGroup(jobTitleGroupName);
+		clickOnEditButtonOfJobTitleGroup();
+		selectHrJobTitleGroup(hrJobTitles);
+		setAverageHourlyRate(averageHourlyRate);
+		setAllocationOrder(allocationOrder);
+		setNonManagementGroup(isNonManagementGroup);
+		clickOnSaveButtonOfJobTitleGroup();
+	}
+
+	@FindBy(css="lg-button[label=\"Remove\"] button")
+	private WebElement removeButtonOfJobTitleGroup;
+	@FindBy(css="lg-button[label=\"Delete\"] button")
+	private WebElement deleteButtonOfJobTitleGroup;
+	@FindBy(css="h1.lg-modal__title")
+	private WebElement deleteJobTitleGroupPopup;
+	@FindBy(css="nav.lg-tabs__nav div:nth-child(3)")
+	private WebElement jobTitleAccessTab;
+
+	public void deleteJobTitleGroup(){
+		int beforeJobTitleCount = jobTitleGroupList.size();
+		if(isElementEnabled(removeButtonOfJobTitleGroup,3)){
+			clickTheElement(removeButtonOfJobTitleGroup);
+			waitForSeconds(3);
+			if(isElementEnabled(deleteJobTitleGroupPopup,2)){
+				SimpleUtils.pass("User can click remove button of job title group successfully!");
+				WebElement deleteButton = getDriver().findElement(By.cssSelector("div.lg-modal lg-button[label=\"Delete\"] button"));
+				waitForSeconds(2);
+				if(isElementEnabled(deleteButton)){
+					clickTheElement(deleteButton);
+				}
+				waitForSeconds(5);
+				getDriver().navigate().refresh();
+				waitForSeconds(5);
+				WebElement jobTitleGroup = getDriver().findElement(By.cssSelector("nav.lg-tabs__nav div:nth-child(4)"));
+				if(isElementEnabled(jobTitleGroup)){
+					waitForSeconds(2);
+					clickTheElement(jobTitleGroup);
+				}
+				waitForSeconds(2);
+				int afterJobTitleCount = jobTitleGroupList.size();
+				if(beforeJobTitleCount-afterJobTitleCount==1){
+					SimpleUtils.pass("User can delete job title group successfully!");
+				}else {
+					SimpleUtils.fail("User failed to delete job title group",false);
+				}
+			}else {
+				SimpleUtils.fail("User failed to click remove button of job title group",false);
+			}
+		}
+	}
+
+	@Override
+	public void deleteJobTitleGroup(String jobTitleGroupName) throws Exception{
+		searchOutJobTitleGroup(jobTitleGroupName);
+		deleteJobTitleGroup();
+	}
+
+	@Override
+	public List<String> getAllJobTitleGroups() {
+		List<String> jobTitleGroups = new ArrayList<>();
+		if (areListElementVisible(jobTitleGroupList, 3)) {
+			for (WebElement jobTitleGroup : jobTitleGroupList) {
+				String jobTitleGroupName = jobTitleGroup.findElement(By.cssSelector("td:nth-child(1)")).getAttribute("innerText").trim();
+				jobTitleGroups.add(jobTitleGroupName);
+			}
+		}
+		return jobTitleGroups;
+	}
+
+	@Override
+	public void clickOnAddWorkRoleButton(){
+		if(isElementEnabled(addWorkRoleBtn,2)){
+			clickTheElement(addWorkRoleBtn);
+			if(isElementEnabled(workNameInputBox,2)){
+				SimpleUtils.pass("User can click add work role button successfully");
+			}else {
+				SimpleUtils.fail("User failed to click add work role button",false);
+			}
+		}else {
+			SimpleUtils.fail("There is no add work role button",false);
+		}
+	}
+
+
+	@Override
+	public List<String> getOptionListOfJobTitleInAssignmentRule() {
+		List<String> Titles = new ArrayList<>();
+		addAssignmentRuleIcon.click();
+		teamMemberTitleButton.click();
+		if (teamMemberTitleList.size() > 0) {
+			for (WebElement tMTitle : teamMemberTitleList) {
+				String title = tMTitle.getText().trim();
+				Titles.add(title);
+			}
+		}
+		return Titles;
+	}
 }
 

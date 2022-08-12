@@ -937,7 +937,7 @@ public class UserManagementTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Job title group")
+    @TestName(description = "Job title group tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyJobTitleGroupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
@@ -1215,6 +1215,106 @@ public class UserManagementTest extends TestBase {
             laborModelPage.goToLaborModelTile();
             configurationPage.verifyNewTemplateIsClickable();
 
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    //Blocked by https://legiontech.atlassian.net/browse/LRB-73
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Add Update Delete Job title groups")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifyAddUpdateDeleteJobTitleGroupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime = sdf.format(new Date()).trim();
+            String jobTitleGroupName ="JobTitleGroup" + currentTime;
+            List<String> addHrJobTitles = new ArrayList<>(Arrays.asList("Customer Job Title B","Customer Job Title A"));
+            List<String> updateHrJobTitles = new ArrayList<>(Arrays.asList("District Manager","DM Planer"));
+//            List<String> addHrJobTitles = new ArrayList<>(Arrays.asList("SM Planner"));
+//            List<String> updateHrJobTitles = new ArrayList<>(Arrays.asList("Senior Manager"));
+            Random random1 = new Random();
+            int number1 = random1.nextInt(90)+10;
+            String averageHourlyRate= String.valueOf(number1);
+            Random random2 = new Random();
+            int number2 = random2.nextInt(90) + 10;
+            String updateAverageHourlyRate=String.valueOf(number2);
+            Random random3 = new Random();
+            int number3 = random3.nextInt(10) + 1;
+            String allocationOrder=String.valueOf(number3);
+            Random random4 = new Random();
+            int number4 = random4.nextInt(10) + 1;
+            String updateAllocationOrder=String.valueOf(number4);
+            boolean isNonManagementGroup=false;
+            boolean updateIsNonManagementGroup=true;
+
+            //go to User Management Access Role table
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleGroup();
+            userManagementPage.verifyJobTitleGroupTabDisplay();
+            userManagementPage.clickOnJobTitleGroupTab();
+            userManagementPage.addNewJobTitleGroup(jobTitleGroupName,addHrJobTitles,averageHourlyRate,allocationOrder,isNonManagementGroup);
+            userManagementPage.updateJobTitleGroup(jobTitleGroupName,updateHrJobTitles,updateAverageHourlyRate,updateAllocationOrder,updateIsNonManagementGroup);
+            userManagementPage.deleteJobTitleGroup(jobTitleGroupName);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Job Title Group UI checking")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUIOfJobTitleGroupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            //go to User Management Job Title Groups
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleGroup();
+            userManagementPage.verifyJobTitleGroupTabDisplay();
+            userManagementPage.clickOnJobTitleGroupTab();
+            userManagementPage.verifyJobTitleGroupPageUI();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Job Title Group E2E checking")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyE2EOfJobTitleGroupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            List<String> jobTitleGroups = new ArrayList<>();
+            List<String> jobTitlesInAssignmentRule = new ArrayList<>();
+
+            //go to User Management Job Title Groups
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleGroup();
+            userManagementPage.verifyJobTitleGroupTabDisplay();
+            userManagementPage.clickOnJobTitleGroupTab();
+            jobTitleGroups = userManagementPage.getAllJobTitleGroups();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+            userManagementPage.verifyEditBtnIsClickable();
+            userManagementPage.clickOnAddWorkRoleButton();
+            jobTitlesInAssignmentRule = userManagementPage.getOptionListOfJobTitleInAssignmentRule();
+            for(String jobTitle:jobTitleGroups){
+                if(jobTitlesInAssignmentRule.contains(jobTitle)){
+                    SimpleUtils.pass(jobTitle + " can show well in assignment rule");
+                }else {
+                    SimpleUtils.fail(jobTitle + " can't show in assignment rule",false);
+                }
+            }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

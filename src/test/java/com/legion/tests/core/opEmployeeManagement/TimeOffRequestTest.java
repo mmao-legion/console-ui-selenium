@@ -37,7 +37,7 @@ public class TimeOffRequestTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Time Off Request")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyEmployeeCanRequestAsInternalAdminOfTimeOffRequestTest(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
@@ -106,7 +106,7 @@ public class TimeOffRequestTest extends TestBase {
         consoleNavigationPage.searchLocation("Newark");
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        timeOffPage.goToTeamMemberDetail("Allene Mante");
+        timeOffPage.goToTeamMemberDetail("Adele Kutch");//Allene Mante
 
         //clear the history time off record.
         String WorkerId = timeOffPage.getWorkerId();
@@ -199,7 +199,7 @@ public class TimeOffRequestTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Time Off Request")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyTimeOffRulesAsInternalAdminOfTimeOffRequestTest(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
@@ -267,7 +267,7 @@ public class TimeOffRequestTest extends TestBase {
         consoleNavigationPage.searchLocation("Newark");
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        timeOffPage.goToTeamMemberDetail("Allene Mante");
+        timeOffPage.goToTeamMemberDetail("Adele Kutch");
 
         //clear the history time off record.
         String WorkerId = timeOffPage.getWorkerId();
