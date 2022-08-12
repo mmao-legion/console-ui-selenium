@@ -1600,13 +1600,13 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public boolean isMyAvailabilityLockedNewUI() throws Exception
 	{
-		if(isElementLoaded(myAvailability,10)) {
+		if(isElementLoaded(myAvailability,15)) {
 			waitForSeconds(5);
 			if (isElementLoaded(lockIcon, 5)){
 				return true;
 			}
 		}else{
-			SimpleUtils.fail("My Availability section not loaded under 'My Work Preference' Tab.", true);
+			SimpleUtils.fail("My Availability section not loaded under 'My Work Preference' Tab.", false);
 		}
 		return false;
 	}

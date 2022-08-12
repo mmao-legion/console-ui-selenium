@@ -4392,4 +4392,41 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
         return isScheduleTableDisplay;
     }
+
+    @Override
+    public void verifyConfirmBtnIsDisabledOnDragAndDropConfirmPage() throws Exception {
+        waitForSeconds(3);
+        if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage,15)
+                && confirmBtnOnDragAndDropConfirmPage.getText().equalsIgnoreCase("Confirm")
+                && confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")){
+            SimpleUtils.pass("Confirm button label display correctly and disabled!");
+        } else {
+            SimpleUtils.fail("Confirm button display incorrectly!",false);
+        }
+    }
+
+    @Override
+    public void verifySwapBtnIsEnabledOnDragAndDropConfirmPage() throws Exception {
+        waitForSeconds(3);
+        if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage,15)
+                && confirmBtnOnDragAndDropConfirmPage.getText().equalsIgnoreCase("Swap")
+                && !confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")){
+            SimpleUtils.pass("Swap button label display correctly and disabled!");
+        } else {
+            SimpleUtils.fail("Swap button display incorrectly!",false);
+        }
+    }
+
+
+    @Override
+    public void verifyAssignBtnIsEnabledOnDragAndDropConfirmPage() throws Exception {
+        waitForSeconds(3);
+        if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage,15)
+                && confirmBtnOnDragAndDropConfirmPage.getText().equalsIgnoreCase("Assign")
+                && !confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")){
+            SimpleUtils.pass("Assign button label display correctly and disabled!");
+        } else {
+            SimpleUtils.fail("Assign button display incorrectly!",false);
+        }
+    }
 }

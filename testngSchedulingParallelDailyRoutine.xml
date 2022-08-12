@@ -142,6 +142,8 @@
                     <include name="verifyOverrideAssignmentRulesToYesAsInternalAdmin" />
                     <include name="verifyOverrideAssignmentRulesToNoAsInternalAdmin" />
                     <!--                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7351-->
+
+                    <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
                                    </methods>
                                </class>
                            </classes>
@@ -358,6 +360,7 @@
                                      <include name="verifyBulkCopyShiftsThatWillIncur7thDayViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-6816 -->
                     <include name="verifyShiftsCanBeDragAndDropSeveralTimesWithOutSaveAsInternalAdmin" />
                     <include name="verifyBulkDragAndDropByDifferentAccessRolesAsInternalAdmin" />
+                    <include name="verifySwapAndAssignButtonOnDragAndDropConfirmChangeModalAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

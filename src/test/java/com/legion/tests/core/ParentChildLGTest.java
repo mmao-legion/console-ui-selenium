@@ -3966,4 +3966,98 @@ public class ParentChildLGTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify TM cannot have a shift in more than one location without buffer time for Parent Child LG")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForParentChildLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(!isActiveWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            scheduleMainPage.clickOnFilterBtn();
+            List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
+            List<String> shiftInfo = new ArrayList<>();
+            String firstNameOfTM = "";
+            while (firstNameOfTM.equals("") || firstNameOfTM.equalsIgnoreCase("Open")
+                    || firstNameOfTM.equalsIgnoreCase("Unassigned")) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                //Search shift by TM names: first name and last name
+                firstNameOfTM = shiftInfo.get(0);
+            }
+            String workRole = shiftInfo.get(4);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+            scheduleMainPage.saveSchedule();
+            //Go to day view, check for TM: A at child location 1, has one shift, ex: 6am - 8am
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectSpecificWorkDay(1);
+            newShiftPage.selectChildLocInCreateShiftWindow(childLocationNames.get(0));
+            newShiftPage.moveSliderAtCertainPoint("8:00am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("6:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnCreateOrNextBtn();
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectSpecificWorkDay(1);
+            newShiftPage.selectChildLocInCreateShiftWindow(childLocationNames.get(1));
+            newShiftPage.moveSliderAtCertainPoint("10:15am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8:15am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchWithOutSelectTM(firstNameOfTM);
+            String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+            SimpleUtils.assertOnFail("30 mins travel time needed violation message fail to load!",
+                    !shiftWarningMessage.toLowerCase().contains("30 mins travel time needed"), false);
+            shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
+            if(newShiftPage.ifWarningModeDisplay()){
+//                String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
+//                if (warningMessage.contains("0 mins travel time needed violation")){
+//                    SimpleUtils.pass("30 mins travel time needed violation message displays");
+//                } else {
+//                    SimpleUtils.fail("There is no '30 mins travel time needed violation' warning message displaying", false);
+//                }
+                shiftOperatePage.clickOnAssignAnywayButton();
+            }
+//            else {
+//                SimpleUtils.fail("There is no '30 mins travel time needed violation' warning modal displaying!",false);
+//            }
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
+            List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
+            SimpleUtils.assertOnFail("'30 mins travel time needed violation' compliance message display failed",
+                    !scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(1)).contains("Max shift per day violation") , false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

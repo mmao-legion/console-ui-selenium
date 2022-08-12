@@ -18,4 +18,5 @@ public interface ToggleSummaryPage {
     public void verifyTheContentInRosterUpdatesSection() throws Exception;
     public void verifyTheContentInStaffSection() throws Exception;
     public void verifyTheContentInOperatingHoursSection() throws Exception;
+    public String autoFillOpenShifts() throws Exception;
 }

@@ -1210,31 +1210,31 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         if (isElementLoaded(headerTitleWhileCreateSchedule, 5) && headerTitleWhileCreateSchedule.getText().contains(weekInfo)) {
             SimpleUtils.pass("Create Schedule - Enter Budget: \"" + weekInfo + "\" as header displays correctly");
         } else
-            SimpleUtils.fail("Enter Budget: Week information as header not loaded or displays incorrectly", true);
+            SimpleUtils.fail("Enter Budget: Week information as header not loaded or displays incorrectly", false);
         if (isElementLoaded(locationWhileCreateSchedule, 5) && locationWhileCreateSchedule.getText().contains(location)) {
             SimpleUtils.pass("Create Schedule - Enter Budget: \"" + location + "\" as location displays correctly");
         } else
-            SimpleUtils.fail("Enter Budget: Location not loaded or displays correctly", true);
+            SimpleUtils.fail("Enter Budget: Location not loaded or displays correctly", false);
         if (isElementLoaded(generateModalTitle, 5) && generateModalTitle.getText().contains("Enter Budget")) {
             SimpleUtils.pass("Create Schedule - Enter Budget: Enter Budget as subhead displays correctly");
         } else
-            SimpleUtils.fail("Enter Budget: Enter Budget as subhead not loaded or displays incorrectly", true);
+            SimpleUtils.fail("Enter Budget: Enter Budget as subhead not loaded or displays incorrectly", false);
         if (isElementLoaded(editBudgetBtn, 5) && editBudgetBtn.getText().contains("Edit")) {
             SimpleUtils.pass("Create Schedule - Enter Budget: Edit button displays correctly");
         } else
-            SimpleUtils.fail("Enter Budget: Edit button not loaded or displays incorrectly", true);
+            SimpleUtils.fail("Enter Budget: Edit button not loaded or displays incorrectly", false);
         if (isElementLoaded(editBudgetBtn, 5) && editBudgetBtn.getText().contains("Edit")) {
             SimpleUtils.pass("Create Schedule - Enter Budget: Edit button displays correctly");
         } else
-            SimpleUtils.fail("Enter Budget: Edit button not loaded or displays incorrectly", true);
-        if (isElementLoaded(backButton, 5) && backButton.getText().contains("Back")) {
+            SimpleUtils.fail("Enter Budget: Edit button not loaded or displays incorrectly", false);
+        if (isElementLoaded(backBtnOnCreateScheduleWindow, 5) && backBtnOnCreateScheduleWindow.getText().contains("BACK")) {
             SimpleUtils.pass("Create Schedule - Enter Budget: Back button displays correctly");
         } else
-            SimpleUtils.fail("Create Schedule - Enter Budget:  Back button not loaded or displays incorrectly", true);
-        if (isElementLoaded(nextButtonOnCreateSchedule, 5) && nextButtonOnCreateSchedule.getText().contains("Next")) {
+            SimpleUtils.fail("Create Schedule - Enter Budget:  Back button not loaded or displays incorrectly", false);
+        if (isElementLoaded(nextButtonOnCreateSchedule, 5) && nextButtonOnCreateSchedule.getText().contains("NEXT")) {
             SimpleUtils.pass("Create Schedule - Enter Budget: Next button displays correctly");
         } else
-            SimpleUtils.fail("Create Schedule - Enter Budget: Next button not loaded or displays incorrectly", true);
+            SimpleUtils.fail("Create Schedule - Enter Budget: Next button not loaded or displays incorrectly", false);
     }
 
     @Override
@@ -2144,6 +2144,16 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         } else
             SimpleUtils.report("Suggested schedule already created! ");
 
+    }
+
+
+    @Override
+    public void clickCreateScheduleButton() throws Exception {
+        if (isElementEnabled(generateSheduleButton, 10)) {
+            click(generateSheduleButton);
+        } else {
+            SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
+        }
     }
 }
 

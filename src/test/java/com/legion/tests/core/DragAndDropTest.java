@@ -4281,4 +4281,74 @@ public class DragAndDropTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the swap and assign button display correctly on drag and drop confirm change modal")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifySwapAndAssignButtonOnDragAndDropConfirmChangeModalAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated){
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+            String firstNameOfTM1 = shiftInfo.get(0);
+            while (firstNameOfTM1.equalsIgnoreCase("open")
+                    || firstNameOfTM1.equalsIgnoreCase("unassigned")) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM1  = shiftInfo.get(0);
+            }
+            int dayIndex1 = Integer.parseInt(shiftInfo.get(1));
+            while (shiftInfo.get(0).equalsIgnoreCase(firstNameOfTM1)
+                    || shiftInfo.get(0).equalsIgnoreCase("open")
+                    || firstNameOfTM1.equalsIgnoreCase("unassigned")) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+            }
+            String firstNameOfTM2 = shiftInfo.get(0);
+            int dayIndex2 = Integer.parseInt(shiftInfo.get(1));
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            int i=0;
+            while (!scheduleShiftTablePage.isDragAndDropConfirmPageLoaded() && i<5){
+                scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(dayIndex1,firstNameOfTM1,dayIndex2,firstNameOfTM2);
+                i++;
+                Thread.sleep(2000);
+            }
+
+            //The Confirm button is display and disabled
+            scheduleShiftTablePage.verifyConfirmBtnIsDisabledOnDragAndDropConfirmPage();
+            //The Confirm button will change to Swap button and clickable
+            scheduleShiftTablePage.selectSwapOrAssignOption("swap");
+            scheduleShiftTablePage.verifySwapBtnIsEnabledOnDragAndDropConfirmPage();
+            //The button will change to Assign button and clickable
+            scheduleShiftTablePage.selectSwapOrAssignOption("assign");
+            scheduleShiftTablePage.verifyAssignBtnIsEnabledOnDragAndDropConfirmPage();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

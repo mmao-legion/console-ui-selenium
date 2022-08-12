@@ -170,4 +170,7 @@ public interface ScheduleShiftTablePage {
     public String getTotalBudgetFromSTAFFSmartCard() throws Exception;
     public boolean isScheduleTableDisplay () throws Exception;
     public HashSet<Integer> getAddedShiftsIndexesByPlusIcon() throws Exception;
+    public void verifyConfirmBtnIsDisabledOnDragAndDropConfirmPage() throws Exception;
+    public void verifySwapBtnIsEnabledOnDragAndDropConfirmPage() throws Exception;
+    public void verifyAssignBtnIsEnabledOnDragAndDropConfirmPage() throws Exception;
 }

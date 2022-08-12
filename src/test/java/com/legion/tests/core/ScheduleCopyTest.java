@@ -121,7 +121,7 @@ public class ScheduleCopyTest extends TestBase {
 
             //Click on "Create Schedule"
             String weekInfo = scheduleCommonPage.getActiveWeekText().substring(10);
-            createSchedulePage.clickCreateScheduleBtn();
+            createSchedulePage.clickCreateScheduleButton();
             //Verify the content on Confirm Operating Hours window
             createSchedulePage.verifyTheContentOnConfirmOperatingHoursWindow(weekInfo, location);
             //Verify the functioning of Edit button on Confirm Operating Hours window
@@ -133,8 +133,8 @@ public class ScheduleCopyTest extends TestBase {
             SimpleUtils.assertOnFail("The create schedule window should not loaded! ",
                     !createSchedulePage.checkIfCreateScheduleWindowLoad(), false);
             //Verify the functionality of Next button on Confirm Operating Hours window
-            createSchedulePage.clickCreateScheduleBtn();
-            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.clickCreateScheduleButton();
+            createSchedulePage.clickNextButtonOnCreateScheduleWindow();
             //Verify the content on Enter Budget window
             createSchedulePage.verifyTheContentOnEnterBudgetWindow(weekInfo, location);
             //Verify the functioning of Edit button on Enter Budget window
