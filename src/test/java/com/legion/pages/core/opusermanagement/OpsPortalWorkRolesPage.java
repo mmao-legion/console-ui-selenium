@@ -88,6 +88,7 @@ public class OpsPortalWorkRolesPage extends BasePage {
     private WebElement rightArrowBtn;
 
     public void goBack() {
+        scrollToElement(backButton);
         backButton.click();
     }
 

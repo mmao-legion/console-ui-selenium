@@ -273,6 +273,7 @@ public class TimeOffPage extends BasePage {
     }
 
     public HashMap<String, String> getTimeOffBalance() {
+        waitForSeconds(3);
         ArrayList<String> keys = getWebElementsText(timeOffKeys);
         ArrayList<String> values = getWebElementsText(balances);
         HashMap timeOffBalance = new HashMap();
