@@ -1,6 +1,8 @@
 package com.legion.tests.core.OpsPortal;
 
 import com.alibaba.fastjson.JSONObject;
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
@@ -20,6 +22,7 @@ import com.legion.utils.*;
 import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.opencv.ml.NormalBayesClassifier;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
@@ -2472,6 +2475,80 @@ public class LocationsTest extends TestBase {
             locationsPage.searchUpperFields("000forBU");
             locationsPage.checkFirstDayOfWeekDisplay();
             locationsPage.updateFirstDayOfWeek("Thursday");
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    //new feature is not released to rc
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Labor Budget Plan Section UI")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifyLaborBudgetPlanSectionUIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            locationsPage.verifyUIOfLaborBudgetPlanSection();
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    //new feature is not released to rc
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "update Labor Budget Plan settings")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifyUpdateLaborBudgetPlanSettingsAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            boolean subPlans = true;
+            boolean compressed = true;
+            String computeBudgetCost ="Work Role";
+            String subPlansLevel = "Region";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            locationsPage.clickOnEditButtonOnGlobalConfigurationPage();
+            locationsPage.updateLaborBudgetPlanSettings(subPlans,subPlansLevel,compressed,computeBudgetCost);
+            locationsPage.saveTheGlobalConfiguration();
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    //new feature is not released to rc
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Labor Budget Section is controlled by toggle")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifyLaborBudgetSectionIsControlledByToggleAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            //Turn on EnableTahoeStorage toggle
+            ToggleAPI.disableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "stoneman@legion.co", "admin11.a");
+            refreshPage();
+            if(!locationsPage.isBudgetPlanSectionShowing()){
+                SimpleUtils.pass("Budget plan section is Not showing when EnableLongTermBudgetPlan is off");
+            }else {
+                SimpleUtils.fail("Budget plan section is showing when EnableLongTermBudgetPlan is off",false);
+            }
+            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "stoneman@legion.co", "admin11.a");
+            refreshPage();
+            if(locationsPage.isBudgetPlanSectionShowing()){
+                SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is on");
+            }else {
+                SimpleUtils.fail("Budget plan section is NOT showing when EnableLongTermBudgetPlan is on",false);
+            }
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

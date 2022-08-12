@@ -4995,5 +4995,115 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 		return flag;
 	}
+
+	@FindBy(css="general-form.enterprise-container form-section:nth-child(6)")
+	WebElement laborBudgetPlanSection;
+
+	@Override
+	public void verifyUIOfLaborBudgetPlanSection(){
+		List<String> settingsString = new ArrayList<>();
+		List<String> strs = new ArrayList<>(Arrays.asList("Long range labor budget can include subplans by upperfield?","Does the Labor Budget result file use compressed format?",
+				"How to compute budget cost?"));
+		//verify labor budget plan is a separate section or not?
+		if(laborBudgetPlanSection.findElement(By.cssSelector(" h2")).getText().trim().equalsIgnoreCase("Labor Budget Plan")){
+			SimpleUtils.pass("Labor Budget Plan setting is a separate section in global configuration");
+			List<WebElement> settings = laborBudgetPlanSection.findElements(By.cssSelector(" h3"));
+			for(WebElement setting:settings){
+				String settingString = setting.getText().trim();
+				settingsString.add(settingString);
+			}
+		}else {
+			SimpleUtils.fail("Labor Budget Plan setting is NOT a separate section in global configuration",false);
+		}
+		//Verify all settings of labor budget plan is showing or not?
+		for(String str:strs){
+			if(settingsString.contains(str)){
+				SimpleUtils.pass(str + " setting is showing in global configuration - labor budget plan section");
+			}else {
+				SimpleUtils.fail(str + " setting is NOT showing in global configuration - labor budget plan section", false);
+			}
+		}
+		SimpleUtils.pass("Labor Budget plan section can display correctly on global configuration page");
+	}
+
+	@Override
+	public void clickOnEditButtonOnGlobalConfigurationPage() throws Exception{
+		if (isElementLoaded(editOnGlobalConfigPage, 10)){
+			clickTheElement(editOnGlobalConfigPage);
+			SimpleUtils.assertOnFail("Global config page is editable!", isElementLoaded(saveButtonOnGlobalConfiguration,3), false);
+
+		}else{
+			SimpleUtils.fail("Edit button on global config page load failed!", false);
+		}
+	}
+
+	@Override
+	public void updateLaborBudgetPlanSettings(boolean subPlans,String subPlansLevel,boolean compressed,String computeBudgetCost){
+		List<WebElement> subPlansYesNo = laborBudgetPlanSection.findElements(By.cssSelector(" question-input[question-title*=\"upperfield?\"] yes-no div.ng-scope"));
+		List<WebElement> compressedYesNo = laborBudgetPlanSection.findElements(By.cssSelector(" question-input[question-title*=\"format?\"] yes-no div.ng-scope"));
+		//update setting of subPlans
+		if(subPlans){
+			clickTheElement(subPlansYesNo.get(0));
+			waitForSeconds(3);
+			if(subPlansYesNo.get(0).getAttribute("class").contains("selected")){
+				SimpleUtils.pass("User can select Yes option successfully for labor budget plan - sub plans setting");
+			}else {
+				SimpleUtils.fail("User failed to select Yes option successfully for labor budget plan - sub plans setting",false);
+			}
+			WebElement levelSelect = laborBudgetPlanSection.findElement(By.cssSelector("question-input[question-title*=\"subplan\"] select"));
+			Select select = new Select(levelSelect);
+			select.selectByVisibleText(subPlansLevel);
+		}else {
+			clickTheElement(subPlansYesNo.get(1));
+			waitForSeconds(3);
+			if(subPlansYesNo.get(1).getAttribute("class").contains("selected")){
+				SimpleUtils.pass("User can select No option successfully for labor budget plan - sub plans setting");
+			}else {
+				SimpleUtils.fail("User failed to select No option successfully for labor budget plan - sub plans setting",false);
+			}
+		}
+
+		//update setting of compressed
+		if(compressed){
+			clickTheElement(compressedYesNo.get(0));
+			waitForSeconds(3);
+			if(compressedYesNo.get(0).getAttribute("class").contains("selected")){
+				SimpleUtils.pass("User can select Yes option successfully for labor budget plan - compressed setting");
+			}else {
+				SimpleUtils.fail("User failed to select Yes option successfully for labor budget plan - compressed setting",false);
+			}
+		}else {
+			clickTheElement(compressedYesNo.get(1));
+			waitForSeconds(3);
+			if(compressedYesNo.get(1).getAttribute("class").contains("selected")){
+				SimpleUtils.pass("User can select No option successfully for labor budget plan - compressed setting");
+			}else {
+				SimpleUtils.fail("User failed to select No option successfully for labor budget plan - compressed setting",false);
+			}
+		}
+
+		//update setting of computeBudgetCost
+		WebElement computeBudget = laborBudgetPlanSection.findElement(By.cssSelector("question-input[question-title*=\"cost?\"] select"));
+		Select select = new Select(computeBudget);
+		if(computeBudgetCost.contains("Work Role")){
+			select.selectByVisibleText("By Work Role Hourly Rate");
+		}else {
+			select.selectByVisibleText("By Job Title Group Hourly Rate");
+		}
+	}
+
+	@Override
+	public boolean isBudgetPlanSectionShowing(){
+		String locator = "general-form.enterprise-container form-section:nth-child(6)  question-input[question-title*=\"upperfield?\"] yes-no div.ng-scope";
+		boolean flag;
+		if(isElementExist(locator)){
+			flag = true;
+			SimpleUtils.pass("Labor Budget plan is showing");
+		}else {
+			flag = false;
+			SimpleUtils.pass("Labor Budget plan is NOT showing");
+		}
+		return flag;
+	}
 }
 

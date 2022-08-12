@@ -327,4 +327,8 @@ public interface LocationsPage {
     public void sMGoToSubLocationsInLocationsPage() throws Exception;
     public boolean isOverrideStatusAtLocationLevel(String templateName) throws Exception;
     public boolean isRemoveDynamicEmployeeGroupPopUpShowing();
+    public void verifyUIOfLaborBudgetPlanSection();
+    public void clickOnEditButtonOnGlobalConfigurationPage() throws Exception;
+    public void updateLaborBudgetPlanSettings(boolean subPlans,String subPlansLevel,boolean compressed,String computeBudgetCost);
+    public boolean isBudgetPlanSectionShowing();
 }
