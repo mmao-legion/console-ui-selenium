@@ -1,6 +1,7 @@
 package com.legion.api.cache;
 
 import com.jayway.restassured.response.Response;
+import com.legion.tests.TestBase;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
@@ -18,6 +19,7 @@ public class RemoveTemplateSnapShotForLocationsAPI {
             int dayOfYearCurrentDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
             int dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
             int lastSundayOfYear = dayOfYearCurrentDay - (dayOfWeek-1)-7;
+            String currentYear = TestBase.getCurrentTime().substring(0, 4);
             Response response = given().params("enterpriseName",System.getProperty("enterprise"),"sourceSystem","legion","passwordPlainText",password,"userName",username)
                     .when().get("https://rc-enterprise.dev.legion.work/legion/authentication/login").then().statusCode(200).extract().response();
             String sessionId = response.header("sessionid");
@@ -27,7 +29,7 @@ public class RemoveTemplateSnapShotForLocationsAPI {
                 for (int i=0; i<4; i++) {
                     Response cacheResponse = given().log().all()
                             .header("sessionId", sessionId)
-                            .param("year", "2022")
+                            .param("year", currentYear)
                             .param("weekStartDayOfTheYear",lastSundayOfYear+ i*7)
                             .param("businessId",businessId)
                             .when().get("https://rc-enterprise.dev.legion.work/legion/configTemplate/removeTemplateSnapShotForLocations")
