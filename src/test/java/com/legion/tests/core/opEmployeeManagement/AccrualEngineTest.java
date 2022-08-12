@@ -1966,6 +1966,150 @@ public class AccrualEngineTest extends TestBase {
         absentManagePage.verifyWorkRoleStatus();
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "OPS-4801 Filter accrual rules by work role")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyWorkRoleAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
+        //get session id via login
+        String sessionId = logIn();
+        String workerId = "02fc40f3-2b13-4a89-85cd-17c508b6588d";
+        //Delete a worker's accrual
+        String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
+        Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
+
+        String targetTemplate = "workRole";
+        String tempName = getUserTemplate(workerId, sessionId);
+        Assert.assertEquals(tempName, targetTemplate, "The user wasn't associated to this Template!!! ");
+
+        switchToNewWindow();
+
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("NancyWorkRole");
+        consoleNavigationPage.navigateTo("Team");
+
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMemberByName("Nancy WorkRole");
+        teamPage.navigateToTimeOffPage();
+
+        TimeOffPage timeOffPage = new TimeOffPage();
+
+        HashMap<String, String> expectedTOBalance = new HashMap<>();
+        expectedTOBalance.put("Annual Leave1", "0");
+        expectedTOBalance.put("Annual Leave2", "0");
+        expectedTOBalance.put("Annual Leave3", "0");
+        expectedTOBalance.put("Annual Leave4", "0");
+        expectedTOBalance.put("Bereavement1", "0");
+        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement3", "0");
+        expectedTOBalance.put("Bereavement4", "0");
+        expectedTOBalance.put("Covid1", "0");
+        expectedTOBalance.put("Covid2", "0");
+        expectedTOBalance.put("Covid3", "0");
+        expectedTOBalance.put("Covid4", "0");
+        expectedTOBalance.put("DayUnit", "0");
+        expectedTOBalance.put("DayUnit1", "0");
+        expectedTOBalance.put("DayUnit2", "0");
+        expectedTOBalance.put("DayUnit3", "0");
+        expectedTOBalance.put("Grandparents Day Off1", "0");
+        expectedTOBalance.put("Grandparents Day Off2", "0");
+        expectedTOBalance.put("Grandparents Day Off3", "0");
+        expectedTOBalance.put("Grandparents Day Off4", "0");
+        expectedTOBalance.put("Pandemic1", "0");
+        expectedTOBalance.put("Pandemic2", "0");
+        expectedTOBalance.put("Pandemic3", "0");
+        expectedTOBalance.put("Pandemic4", "0");
+        expectedTOBalance.put("Personal Emergency", "0");
+        expectedTOBalance.put("PTO", "0");
+        expectedTOBalance.put("Service Award Day", "0");
+        expectedTOBalance.put("Sick", "0");
+
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> actualTOB = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(actualTOB, expectedTOBalance, "Failed to assert clear the accrual balance!");
+
+        String[] accrualResponse = runAccrualJobToSimulateDate(workerId, "2021-10-01", sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse), 200, "Failed to run accrual job!");
+
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+
+        HashMap<String, String> expectedTOBalance01 = new HashMap<>();
+        expectedTOBalance01.put("Annual Leave1", "1");
+        expectedTOBalance01.put("Annual Leave2", "0");
+        expectedTOBalance01.put("Annual Leave3", "0");
+        expectedTOBalance01.put("Annual Leave4", "0");
+        expectedTOBalance01.put("Bereavement1", "0");
+        expectedTOBalance01.put("Bereavement2", "0");
+        expectedTOBalance01.put("Bereavement3", "0");
+        expectedTOBalance01.put("Bereavement4", "0");
+        expectedTOBalance01.put("Covid1", "0");
+        expectedTOBalance01.put("Covid2", "0");
+        expectedTOBalance01.put("Covid3", "0");
+        expectedTOBalance01.put("Covid4", "0");
+        expectedTOBalance01.put("DayUnit", "1");
+        expectedTOBalance01.put("DayUnit1", "0");
+        expectedTOBalance01.put("DayUnit2", "0");
+        expectedTOBalance01.put("DayUnit3", "0");
+        expectedTOBalance01.put("Grandparents Day Off1", "0");
+        expectedTOBalance01.put("Grandparents Day Off2", "0");
+        expectedTOBalance01.put("Grandparents Day Off3", "39");
+        expectedTOBalance01.put("Grandparents Day Off4", "39");
+        expectedTOBalance01.put("Pandemic1", "10");
+        expectedTOBalance01.put("Pandemic2", "50");
+        expectedTOBalance01.put("Pandemic3", "20");
+        expectedTOBalance01.put("Pandemic4", "30");
+        expectedTOBalance01.put("Personal Emergency", "0");
+        expectedTOBalance01.put("PTO", "0");
+        expectedTOBalance01.put("Service Award Day", "0");
+        expectedTOBalance01.put("Sick", "10");
+
+        HashMap<String, String> actualTOB01 = timeOffPage.getTimeOffBalance();
+        System.out.println(actualTOB01.get("PTO"));
+        Assert.assertEquals(actualTOB01, expectedTOBalance01, "Failed to assert clear the accrual balance!");
+
+        accrualResponse = runAccrualJobToSimulateDate(workerId, "2022-09-30", sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse), 200, "Failed to run accrual job!");
+
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+
+        HashMap<String, String> expectedTOBalance02 = new HashMap<>();
+        expectedTOBalance02.put("Annual Leave1", "1");
+        expectedTOBalance02.put("Annual Leave2", "0");
+        expectedTOBalance02.put("Annual Leave3", "0");
+        expectedTOBalance02.put("Annual Leave4", "2");
+        expectedTOBalance02.put("Bereavement1", "0");
+        expectedTOBalance02.put("Bereavement2", "0");
+        expectedTOBalance02.put("Bereavement3", "0");
+        expectedTOBalance02.put("Bereavement4", "0");
+        expectedTOBalance02.put("Covid1", "12");
+        expectedTOBalance02.put("Covid2", "11");
+        expectedTOBalance02.put("Covid3", "0");
+        expectedTOBalance02.put("Covid4", "0");
+        expectedTOBalance02.put("DayUnit", "1");
+        expectedTOBalance02.put("DayUnit1", "0");
+        expectedTOBalance02.put("DayUnit2", "2");
+        expectedTOBalance02.put("DayUnit3", "0");
+        expectedTOBalance02.put("Grandparents Day Off1", "52");
+        expectedTOBalance02.put("Grandparents Day Off2", "52");
+        expectedTOBalance02.put("Grandparents Day Off3", "52");
+        expectedTOBalance02.put("Grandparents Day Off4", "52");
+        expectedTOBalance02.put("Pandemic1", "10");
+        expectedTOBalance02.put("Pandemic2", "100");
+        expectedTOBalance02.put("Pandemic3", "20");
+        expectedTOBalance02.put("Pandemic4", "30");
+        expectedTOBalance02.put("Personal Emergency", "8");
+        expectedTOBalance02.put("PTO", "10");
+        expectedTOBalance02.put("Service Award Day", "8");
+        expectedTOBalance02.put("Sick", "20");
+
+        HashMap<String, String> actualTOB02 = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(actualTOB02, expectedTOBalance02, "Failed to assert clear the accrual balance!");
+    }
+
     public void importTimeOffRequest(String sessionId) {
         String filePath = "src/test/resources/uploadFile/PTO4059_Auto.csv";
         String url = "https://rc-enterprise.dev.legion.work/legion/integration/testUploadPTOData?isTest=false&fileName=" + filePath + "&encrypted=false";
