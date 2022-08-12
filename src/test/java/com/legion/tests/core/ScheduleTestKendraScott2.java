@@ -7683,4 +7683,78 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.fail(e.getMessage(),false);
 		}
 	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Verify the published schedule should not change to Draft after Auto-fill open shifts")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		try {
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+			ForecastPage forecastPage = pageFactory.createForecastPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
+			ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab("Schedule");
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if(!isActiveWeekGenerated){
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			if (smartCardPage.isRequiredActionSmartCardLoaded()){
+				scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+				scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+				scheduleMainPage.saveSchedule();
+			}
+			scheduleMainPage.publishOrRepublishSchedule();
+			SimpleUtils.assertOnFail("The Publish and Republish buttons should not loaded! ",
+					!createSchedulePage.isPublishButtonLoaded()
+							&& !createSchedulePage.isRepublishButtonLoadedOnSchedulePage(), false);
+			String successMessage = toggleSummaryPage.autoFillOpenShifts();
+			int fillShiftCount = Integer.parseInt(successMessage.split(" ")[0]);
+			if (fillShiftCount == 0){
+				SimpleUtils.assertOnFail("The Publish and Republish buttons should not loaded! ",
+						!createSchedulePage.isPublishButtonLoaded()
+								&& !createSchedulePage.isRepublishButtonLoadedOnSchedulePage(), false);
+				SimpleUtils.assertOnFail("The UNPUBLISHED CHANGES should not load! ",
+						!smartCardPage.isSpecificSmartCardLoaded("UNPUBLISHED CHANGES"), false);
+
+			} else {
+				SimpleUtils.assertOnFail("The Publish should not loaded but the Republish buttons should load! ",
+						!createSchedulePage.isPublishButtonLoaded()
+								&& createSchedulePage.isRepublishButtonLoadedOnSchedulePage(), false);
+				SimpleUtils.assertOnFail("The UNPUBLISHED CHANGES should load! ",
+						smartCardPage.isSpecificSmartCardLoaded("UNPUBLISHED CHANGES"), false);
+			}
+
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			String firstWeekScheduleStatus = scheduleOverviewPage.getScheduleWeeksStatus().get(0);
+			SimpleUtils.assertOnFail("The expected schedule status is: Published or Finalized, the actual status is:"+firstWeekScheduleStatus,
+					firstWeekScheduleStatus.equalsIgnoreCase("Published")
+					||firstWeekScheduleStatus.equalsIgnoreCase("Finalized"), false);
+			String firstWeekScheduleStatusWarningMessage = scheduleOverviewPage.getScheduleWeeksStatusWarningMessage().get(0);
+			if (fillShiftCount == 0){
+				SimpleUtils.assertOnFail("The expected schedule status is: Finalized on, the actual status is:"+firstWeekScheduleStatusWarningMessage,
+						firstWeekScheduleStatusWarningMessage.contains("Finalized on"), false);
+
+			} else {
+				SimpleUtils.assertOnFail("The expected schedule status is: Unpublished Edits, the actual status is:"+firstWeekScheduleStatusWarningMessage,
+						firstWeekScheduleStatusWarningMessage.equalsIgnoreCase("Unpublished Edits"), false);
+			}
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(),false);
+		}
+	}
 }

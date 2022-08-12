@@ -721,4 +721,22 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		}
 		return null;
 	}
+
+	@FindBy(css="[ng-class=\"warningTextClass(row)\"]")
+	List<WebElement> scheduleOverviewWeeksStatusWarningMessage;
+	@Override
+	public List<String> getScheduleWeeksStatusWarningMessage() throws Exception{
+		List<String> weeksStatusWarningMessage = new ArrayList<String>();
+		if (loadScheduleTableInOverview()) {
+			if (scheduleOverviewWeeksStatusWarningMessage.size() != 0) {
+				for (WebElement warningMessage : scheduleOverviewWeeksStatusWarningMessage) {
+					weeksStatusWarningMessage.add(warningMessage.getText());
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("The schedule view table failed to load",false);
+
+		return weeksStatusWarningMessage;
+	}
 }
