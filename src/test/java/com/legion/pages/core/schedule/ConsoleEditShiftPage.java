@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -15,6 +16,37 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     public ConsoleEditShiftPage() {
         PageFactory.initElements(getDriver(), this);
+    }
+
+    public enum sectionType {
+        WorkRole("Work Role"),
+        ShiftName("Shift Name"),
+        Location("Location"),
+        StartTime("Start Time"),
+        EndTime("End Time"),
+        Date("Date"),
+        Assignment("Assignment"),
+        ShiftNotes("Shift Notes");
+        private final String type;
+        sectionType(final String newType){
+            type = newType;
+        }
+        public String getType(){
+            return type;
+        }
+    }
+
+    public enum twoOptions {
+        AllowConflicts("allowConflicts"),
+        AllowComplianceErrors("allowComplianceErrors");
+
+        private final String option;
+        twoOptions(final String specificOption) {
+            option = specificOption;
+        }
+        public String getOption() {
+            return option;
+        }
     }
 
     @FindBy (css = ".modal-content")
@@ -37,6 +69,16 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     private WebElement clearEditedFieldsBtn;
     @FindBy (css = ".MuiGrid-container")
     private List<WebElement> gridContainers;
+    @FindBy (className = "react-select__option")
+    private List<WebElement> dropDownListOnReact;
+    @FindBy (css = ".MuiInputAdornment-positionEnd")
+    private WebElement nextDayIcon;
+    @FindBy (css="[role=tooltip] input")
+    private WebElement nextDayPopup;
+    @FindBy (name = "allowComplianceErrors")
+    private WebElement allowComplianceOption;
+    @FindBy (name = "allowConflicts")
+    private WebElement allowConflictsOption;
 
     @Override
     public boolean isEditShiftWindowLoaded() throws Exception {
@@ -184,5 +226,382 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         } else {
             SimpleUtils.fail("Cancel button failed to load!", false);
         }
+    }
+
+    @Override
+    public void verifyTheTextInCurrentColumn(String type, String value) throws Exception {
+        WebElement gridRow = null;
+        if (areListElementVisible(gridContainers, 3)) {
+            if (gridContainers.size() == 8) {
+                if (type.equals(sectionType.WorkRole.getType())) {
+                    gridRow = gridContainers.get(1);
+                } else if (type.equals(sectionType.ShiftName.getType())) {
+                    gridRow = gridContainers.get(2);
+                } else if (type.equals(sectionType.StartTime.getType())) {
+                    gridRow = gridContainers.get(3);
+                } else if (type.equals(sectionType.EndTime.getType())) {
+                    gridRow = gridContainers.get(4);
+                } else if (type.equals(sectionType.Date.getType())) {
+                    gridRow = gridContainers.get(5);
+                } else if (type.equals(sectionType.Assignment.getType())) {
+                    gridRow = gridContainers.get(6);
+                } else if (type.equals(sectionType.ShiftNotes.getType())) {
+                    gridRow = gridContainers.get(7);
+                }
+            } else if (gridContainers.size() == 9) {
+                if (type.equals(sectionType.WorkRole.getType())) {
+                    gridRow = gridContainers.get(1);
+                } else if (type.equals(sectionType.Location.getType())) {
+                    gridRow = gridContainers.get(2);
+                } else if (type.equals(sectionType.ShiftName.getType())) {
+                    gridRow = gridContainers.get(3);
+                } else if (type.equals(sectionType.StartTime.getType())) {
+                    gridRow = gridContainers.get(4);
+                } else if (type.equals(sectionType.EndTime.getType())) {
+                    gridRow = gridContainers.get(5);
+                } else if (type.equals(sectionType.Date.getType())) {
+                    gridRow = gridContainers.get(6);
+                } else if (type.equals(sectionType.Assignment.getType())) {
+                    gridRow = gridContainers.get(7);
+                } else if (type.equals(sectionType.ShiftNotes.getType())) {
+                    gridRow = gridContainers.get(8);
+                }
+            }
+            if (gridRow.findElement(By.cssSelector(".MuiGrid-item:nth-child(2)")).getText().trim().equalsIgnoreCase(value)) {
+                SimpleUtils.pass("Verified for " + type + ", the value is correct!");
+            } else {
+                SimpleUtils.fail("Verified for " + type + ", the value is incorrect! Expected: " + value +
+                        ", But actual is: " + gridRow.findElement(By.cssSelector(".MuiGrid-item:nth-child(2)")).getText().trim(), false);
+            }
+        } else {
+            SimpleUtils.fail("Shift Details section failed to load!", false);
+        }
+    }
+
+    @Override
+    public List<String> getOptionsFromSpecificSelect() throws Exception {
+        List<String> options = new ArrayList<>();
+        if (areListElementVisible(dropDownListOnReact, 5)) {
+            for (WebElement option : dropDownListOnReact) {
+                options.add(option.getText());
+            }
+        } else {
+            SimpleUtils.fail("Options failed to load!", false);
+        }
+        return options;
+    }
+
+    @Override
+    public void clickOnDateSelect() throws Exception {
+        scrollToBottom();
+        waitForSeconds(1);
+        WebElement dateSection = getSpecificElementByTypeAndColumn(sectionType.Date.getType(), "Edited");
+        if (isElementLoaded(dateSection, 5)) {
+            clickTheElement(dateSection.findElement(By.cssSelector(".react-select__dropdown-indicator")));
+        } else {
+            SimpleUtils.fail("Date section on Edited column failed to load!", false);
+        }
+    }
+
+    @Override
+    public void clickOnWorkRoleSelect() throws Exception {
+        WebElement workRoleSection = getSpecificElementByTypeAndColumn(sectionType.WorkRole.getType(), "Edited");
+        if (isElementLoaded(workRoleSection, 5)) {
+            moveToElementAndClick(workRoleSection.findElement(By.cssSelector(".react-select__indicators")));
+        } else {
+            SimpleUtils.fail("Work Role section on Edited column failed to load!", false);
+        }
+    }
+
+    @Override
+    public void clickOnAssignmentSelect() throws Exception {
+        WebElement assignmentSection = getSpecificElementByTypeAndColumn(sectionType.Assignment.getType(), "Edited");
+        if (isElementLoaded(assignmentSection, 5)) {
+            moveToElementAndClick(assignmentSection.findElement(By.cssSelector(".react-select__indicators")));
+        } else {
+            SimpleUtils.fail("Assignment section on Edited column failed to load!", false);
+        }
+    }
+
+    @Override
+    public void selectSpecificOptionByText(String text) throws Exception {
+        selectOptionByLabel(text);
+    }
+
+    @Override
+    public String getSelectedWorkRole() throws Exception {
+        String selectedWorkRole = "";
+        WebElement editedWorkRoleSection = getSpecificElementByTypeAndColumn(sectionType.WorkRole.getType(), "Edited");
+        if (editedWorkRoleSection != null) {
+            selectedWorkRole = editedWorkRoleSection.getText();
+        }
+        return selectedWorkRole;
+    }
+
+    @Override
+    public String getSelectedDate() throws Exception {
+        String selectedDate = "";
+        WebElement editedDateSection = getSpecificElementByTypeAndColumn(sectionType.WorkRole.getType(), "Edited");
+        if (editedDateSection != null) {
+            selectedDate = editedDateSection.getText();
+        }
+        return selectedDate;
+    }
+
+    @Override
+    public String getSelectedAssignment() throws Exception {
+        String assignment = "";
+        WebElement assignmentSection = getSpecificElementByTypeAndColumn(sectionType.Assignment.getType(), "Edited");
+        if (assignmentSection != null) {
+            assignment = assignmentSection.getText();
+        }
+        return assignment;
+    }
+
+    @Override
+    public void clickOnClearEditedFieldsButton() throws Exception {
+        clickTheElement(clearEditedFieldsBtn.findElement(By.xpath("./..")));
+    }
+
+    @Override
+    public void clickOnUpdateButton() throws Exception {
+        clickTheElement(updateButton);
+    }
+
+    @Override
+    public void inputShiftName(String shiftName) throws Exception {
+        WebElement shiftNameInputSection = getSpecificElementByTypeAndColumn(sectionType.ShiftName.getType(), "Edited");
+        WebElement input = shiftNameInputSection.findElement(By.cssSelector("[placeholder=\"Shift Name (Optional)\"]"));
+        input.clear();
+        input.sendKeys(shiftName);
+        if (input.getAttribute("value").equals(shiftName)) {
+            SimpleUtils.pass("Input the string in Shift Name successfully!");
+        } else {
+            SimpleUtils.fail("Input the string in Shift Name failed!", false);
+        }
+    }
+
+    @Override
+    public void inputShiftNotes(String shiftNote) throws Exception {
+        WebElement shiftNotesSection = getSpecificElementByTypeAndColumn(sectionType.ShiftNotes.getType(), "Edited");
+        WebElement input = shiftNotesSection.findElement(By.name("notes"));
+        input.clear();
+        input.sendKeys(shiftNote);
+        if (input.getAttribute("value").equals(shiftNote)) {
+            SimpleUtils.pass("Input the string in Shift Notes successfully!");
+        } else {
+            SimpleUtils.fail("Input the string in Shift Notes failed!", false);
+        }
+    }
+
+    @Override
+    public void inputStartOrEndTime(String time, boolean isStartTime) throws Exception {
+        WebElement timeSection = null;
+        if (isStartTime) {
+            timeSection = getSpecificElementByTypeAndColumn(sectionType.StartTime.getType(), "Edited");
+        } else {
+            timeSection = getSpecificElementByTypeAndColumn(sectionType.EndTime.getType(), "Edited");
+        }
+        WebElement input = timeSection.findElement(By.cssSelector("[placeholder*=\"Time\"]"));
+        input.clear();
+        input.sendKeys(time);
+        if (input.getAttribute("value").equals(time)) {
+            SimpleUtils.pass("Input the string in Time successfully!");
+        } else {
+            SimpleUtils.fail("Input the string in Time failed!", false);
+        }
+    }
+
+    @Override
+    public void checkUseOffset(boolean isStartTimeSection, boolean check) throws Exception {
+        WebElement timeSection = null;
+        if (isStartTimeSection) {
+            timeSection = getSpecificElementByTypeAndColumn(sectionType.StartTime.getType(), "Edited");
+        } else {
+            timeSection = getSpecificElementByTypeAndColumn(sectionType.EndTime.getType(), "Edited");
+        }
+        WebElement checkbox = timeSection.findElement(By.cssSelector("[type=checkbox]"));
+        WebElement parent = checkbox.findElement(By.xpath("./../.."));
+        if (check) {
+            if (!parent.getAttribute("class").contains("Mui-checked")) {
+                clickTheElement(checkbox);
+                if (areListElementVisible(timeSection.findElements(By.cssSelector(".MuiFormControl-root")), 3) &&
+                        isElementLoaded(timeSection.findElement(By.cssSelector(".react-select__control")), 3)) {
+                    SimpleUtils.pass("Check on Use Offset button successfully!");
+                } else {
+                    SimpleUtils.fail("Failed to check on Use Offset button!", false);
+                }
+            }
+        } else {
+            if (parent.getAttribute("class").contains("Mui-checked")) {
+                clickTheElement(checkbox);
+                if (isElementLoaded(timeSection.findElement(By.cssSelector("[placeholder*=\"Time\"]")), 3)) {
+                    SimpleUtils.pass("Uncheck on Use Offset button successfully!");
+                } else {
+                    SimpleUtils.fail("Failed to uncheck on Use Offset button!", false);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void verifyTheFunctionalityOfOffsetTime(String hours, String mins, String earlyOrLate, boolean isStartTimeSection) throws Exception {
+        WebElement timeSection = null;
+        if (isStartTimeSection) {
+            timeSection = getSpecificElementByTypeAndColumn(sectionType.StartTime.getType(), "Edited");
+        } else {
+            timeSection = getSpecificElementByTypeAndColumn(sectionType.EndTime.getType(), "Edited");
+        }
+        WebElement hoursInput = timeSection.findElements(By.cssSelector("[type=number]")).get(0);
+        WebElement minsInput = timeSection.findElements(By.cssSelector("[type=number]")).get(1);
+        WebElement select = timeSection.findElement(By.cssSelector(".react-select__dropdown-indicator"));
+
+        hoursInput.click();
+        hoursInput.clear();
+        minsInput.clear();
+        minsInput.sendKeys("");
+        if (hours != null && !hours.isEmpty()) {
+            hoursInput.sendKeys(hours);
+            if (Integer.parseInt(hours) >= 12) {
+                WebElement warning = timeSection.findElement(By.cssSelector(".MuiFormHelperText-root"));
+                SimpleUtils.assertOnFail("Warning message 'Max 12 Hrs' failed to show!'", warning.getText()
+                        .trim().equalsIgnoreCase("Max 12 Hrs"), false);
+            }
+        }
+        if (mins != null && !mins.isEmpty()) {
+            minsInput.sendKeys(mins);
+            if (Integer.parseInt(mins) != 0 && Integer.parseInt(mins) != 15 && Integer.parseInt(mins) != 45 && Integer.parseInt(mins) != 60) {
+                hoursInput.clear();
+                WebElement warning = timeSection.findElement(By.cssSelector(".MuiFormHelperText-root"));
+                SimpleUtils.assertOnFail("Warning message 'Must match slots' failed to show!'", warning.getText()
+                        .trim().equalsIgnoreCase("Must match slots"), false);
+            }
+        }
+        if (earlyOrLate != null && !earlyOrLate.isEmpty()) {
+            clickTheElement(select);
+            selectOptionByLabel(earlyOrLate);
+        }
+    }
+
+    @Override
+    public void checkOrUnCheckNextDayOnBulkEditPage(boolean isCheck) throws Exception {
+        if (isCheck) {
+            if (isElementLoaded(nextDayIcon, 10)) {
+                if (nextDayIcon.findElement(By.tagName("svg")).getAttribute("height").equals("16")) {
+                    moveElement(nextDayIcon, 0);
+                    moveToElementAndClick(nextDayPopup);
+                    if (nextDayIcon.findElement(By.tagName("svg")).getAttribute("height").equals("8")) {
+                        SimpleUtils.pass("The next day checkbox been checked successfully! ");
+                    } else
+                        SimpleUtils.fail("The next day checkbox been checked fail! ", false);
+                } else
+                    SimpleUtils.pass("The next day checkbox already checked! ");
+            } else
+                SimpleUtils.fail("The next day img fail to load! ", false);
+
+        } else {
+            if (isElementLoaded(nextDayIcon, 10)) {
+                if (nextDayIcon.findElement(By.tagName("svg")).getAttribute("height").equals("8")) {
+                    moveElement(nextDayIcon, 0);
+                    clickTheElement(nextDayPopup);
+                    if (nextDayIcon.findElement(By.tagName("svg")).getAttribute("height").equals("16")) {
+                        SimpleUtils.pass("The next day checkbox been unchecked successfully! ");
+                    } else
+                        SimpleUtils.fail("The next day checkbox been unchecked fail! ", false);
+                } else
+                    SimpleUtils.pass("The next day checkbox already unchecked! ");
+            } else
+                SimpleUtils.report("The next day img is not loaded! ");
+        }
+    }
+
+    @Override
+    public void checkOrUncheckOptionsByName(String optionName, boolean isCheck) throws Exception {
+        WebElement option = null;
+        if (optionName.equals(twoOptions.AllowConflicts.getOption())) {
+            option = allowConflictsOption;
+        } else {
+            option = allowComplianceOption;
+        }
+        WebElement parent = option.findElement(By.xpath("./../.."));
+        if (isCheck) {
+            if (parent != null) {
+                if (!parent.getAttribute("class").contains("Mui-checked")) {
+                    clickTheElement(option);
+                    if (parent.getAttribute("class").contains("Mui-checked")) {
+                        SimpleUtils.pass("Check the option successfully!");
+                    } else {
+                        SimpleUtils.fail("Failed to check the option!", false);
+                    }
+                } else {
+                    SimpleUtils.report("The option is already checked!");
+                }
+            }
+        } else {
+            if (parent != null) {
+                if (parent.getAttribute("class").contains("Mui-checked")) {
+                    clickTheElement(option);
+                    if (!parent.getAttribute("class").contains("Mui-checked")) {
+                        SimpleUtils.pass("UnCheck the option successfully!");
+                    } else {
+                        SimpleUtils.fail("Failed to uncheck the option!", false);
+                    }
+                } else {
+                    SimpleUtils.report("The option is already unchecked!");
+                }
+            }
+        }
+    }
+
+    private WebElement getSpecificElementByTypeAndColumn(String type, String column) throws Exception {
+        WebElement element = null;
+        String selector = "";
+        if (column.equals("Value")) {
+            selector = ".MuiGrid-item:nth-child(1)";
+        } else if (column.equals("Current")) {
+            selector = ".MuiGrid-item:nth-child(2)";
+        } else if (column.equals("Edited")) {
+            selector = ".MuiGrid-item:nth-child(3)";
+        }
+        if (areListElementVisible(gridContainers, 3)) {
+            if (gridContainers.size() == 8) {
+                if (type.equals(sectionType.WorkRole.getType())) {
+                    element = gridContainers.get(1).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.ShiftName.getType())) {
+                    element = gridContainers.get(2).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.StartTime.getType())) {
+                    element = gridContainers.get(3).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.EndTime.getType())) {
+                    element = gridContainers.get(4).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.Date.getType())) {
+                    element = gridContainers.get(5).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.Assignment.getType())) {
+                    element = gridContainers.get(6).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.ShiftNotes.getType())) {
+                    element = gridContainers.get(7).findElement(By.cssSelector(selector));
+                }
+            } else if (gridContainers.size() == 9) {
+                if (type.equals(sectionType.WorkRole.getType())) {
+                    element = gridContainers.get(1).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.ShiftName.getType())) {
+                    element = gridContainers.get(2).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.Location.getType())) {
+                    element = gridContainers.get(3).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.StartTime.getType())) {
+                    element = gridContainers.get(4).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.EndTime.getType())) {
+                    element = gridContainers.get(5).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.Date.getType())) {
+                    element = gridContainers.get(6).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.Assignment.getType())) {
+                    element = gridContainers.get(7).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.ShiftNotes.getType())) {
+                    element = gridContainers.get(8).findElement(By.cssSelector(selector));
+                }
+            }
+        } else {
+            SimpleUtils.fail("Shift Details section failed to load!", false);
+        }
+        return element;
     }
 }
