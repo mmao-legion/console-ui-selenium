@@ -108,16 +108,17 @@
                     <include name="verifyOverrideAssignmentRulesToYesAsInternalAdmin" />
                     <include name="verifyOverrideAssignmentRulesToNoAsInternalAdmin" />
                     <!--                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7351-->
-                </methods>
-            </class>
-        </classes>
-    </test>
+                    <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
+                   </methods>
+               </class>
+           </classes>
+       </test>
 
-    <test name="Scheduling OP Enabled Test">
-        <classes>
-            <class name="com.legion.tests.core.SchedulingOPEnabledTest">
-                <methods>
-<!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />   Blocked by SCH-5036 -->
+       <test name="Scheduling OP Enabled Test">
+           <classes>
+               <class name="com.legion.tests.core.SchedulingOPEnabledTest">
+                   <methods>
+   <!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />   Blocked by SCH-5036 -->
 <!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />-->
 <!--                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin" Blocked by Bug/>-->
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
@@ -628,6 +629,7 @@ SCH-5862-->
                                      <include name="verifyBulkCopyShiftsThatWillIncur7thDayViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-6816
                     <include name="verifyShiftsCanBeDragAndDropSeveralTimesWithOutSaveAsInternalAdmin" />
                     <include name="verifyBulkDragAndDropByDifferentAccessRolesAsInternalAdmin" />
+                    <include name="verifySwapAndAssignButtonOnDragAndDropConfirmChangeModalAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

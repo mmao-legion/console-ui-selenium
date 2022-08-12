@@ -400,4 +400,39 @@ public class ConsoleToggleSummaryPage extends BasePage implements ToggleSummaryP
             SimpleUtils.fail("The operating hours section fail to load！ ", false);
 
     }
+    @FindBy(css = "div.lgn-alert-modal")
+    private WebElement warningMode;
+
+    @FindBy(css = "span.lgn-alert-message")
+    private WebElement warningMessagesInWarningMode;
+
+    @FindBy(className = "lgn-action-button-success")
+    private WebElement okBtnInWarningMode;
+    @Override
+    public String autoFillOpenShifts() throws Exception {
+        String autoFillOpenShiftsOptionText = "Auto-fill open shifts";
+        String autoFillOpenShiftsMessage = "";
+        if (isElementLoaded(scheduleAdminDropDownBtn, 10)) {
+            click(scheduleAdminDropDownBtn);
+            if (scheduleAdminDropDownOptions.size() > 0) {
+                for (WebElement scheduleAdminDropDownOption : scheduleAdminDropDownOptions) {
+                    if (scheduleAdminDropDownOption.getText().toLowerCase().contains(autoFillOpenShiftsOptionText.toLowerCase())) {
+                        click(scheduleAdminDropDownOption);
+                        if (isElementLoaded(warningMode, 10)
+                                && isElementLoaded(warningMessagesInWarningMode)
+                                && isElementLoaded(okBtnInWarningMode)) {
+                            autoFillOpenShiftsMessage = warningMessagesInWarningMode.getText();
+                        } else
+                            SimpleUtils.fail("The auto fill open shift success modal fail to load! ", false);
+                        clickTheElement(okBtnInWarningMode);
+                    }
+                }
+            } else
+                SimpleUtils.fail("Schedule Page: Admin dropdown Options not loaded to Auto-fill open shifts for the Week : '"
+                        + getActiveWeekText() + "'.", false);
+        } else
+            SimpleUtils.fail("Schedule Page: Admin dropdown not loaded to Auto-fill open shifts for the Week : '"
+                    + getActiveWeekText() + "'.", false);
+        return autoFillOpenShiftsMessage;
+    }
 }
