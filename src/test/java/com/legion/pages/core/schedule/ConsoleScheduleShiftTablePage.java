@@ -6,6 +6,7 @@ import com.legion.tests.core.GroupByDayPartsTest;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.sl.In;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -1313,6 +1314,28 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                         indexes.add(i);
                         SimpleUtils.pass("Get the index: " + i + " successfully!");
                     }
+                }
+            }
+        }
+        if (indexes.size() == 0) {
+            SimpleUtils.fail("Failed to get the index of the newly added shifts!", false);
+        }
+        return indexes;
+    }
+
+    @Override
+    public HashSet<Integer> getAddedShiftsIndexesByPlusIcon() throws Exception {
+        HashSet<Integer> indexes = new HashSet<>();
+        if (areListElementVisible(shiftsInWeekView, 5)) {
+            for (int i = 0; i < shiftsInWeekView.size(); i++) {
+                try {
+                    WebElement plusIcon = shiftsInWeekView.get(i).findElement(By.cssSelector("img[src*=\"added-shift\"]"));
+                    if (plusIcon != null) {
+                        indexes.add(i);
+                        SimpleUtils.pass("Get the index: " + i + " successfully!");
+                    }
+                } catch (Exception e) {
+                    continue;
                 }
             }
         }
@@ -3448,6 +3471,35 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
         }
         return set;
+    }
+
+    @Override
+    public void selectSpecificShifts(HashSet<Integer> shiftIndexes) throws Exception {
+        List<WebElement> names = null;
+        if (areListElementVisible(namesWeekView, 10)) {
+            names = namesWeekView;
+        } else if (areListElementVisible(namesDayView, 10)) {
+            names = namesDayView;
+        }
+        scrollToBottom();
+        waitForSeconds(2);
+        if (names.size() >= shiftIndexes.size()) {
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (int i : shiftIndexes) {
+                action.click(names.get(i));
+                waitForSeconds(1);
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftIndexes.size()) {
+                SimpleUtils.pass("Selected " + shiftIndexes.size() + " shifts successfully");
+            } else {
+                SimpleUtils.fail("Expected to select " + shiftIndexes.size() + " shifts, but actually selected " +
+                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+            }
+        } else {
+            SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+        }
     }
 
     @Override

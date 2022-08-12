@@ -533,6 +533,8 @@ SCH-5862-->
                     <include name="verifyDeleteMultipleShiftsInWeekViewAsInternalAdmin" />
                     <include name="verifyDeleteMultipleShiftsInDayViewAsInternalAdmin" />
                     <include name="verifyTheContentOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyTheCurrentColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyTheEditedColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

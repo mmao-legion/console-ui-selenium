@@ -3,9 +3,7 @@ package com.legion.tests;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.Status;
 import com.jayway.restassured.response.Response;
-import com.legion.pages.LocationSelectorPage;
-import com.legion.pages.LoginPage;
-import com.legion.pages.ScheduleCommonPage;
+import com.legion.pages.*;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
 import com.legion.pages.pagefactories.PageFactory;
 import com.legion.pages.pagefactories.mobile.MobilePageFactory;
@@ -508,6 +506,55 @@ public abstract class TestBase {
         scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                 scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+    }
+
+    protected List<String> createShiftsWithSpecificValues(String workRole, String shiftName, String location, String startTime,
+        String endTime, int shiftPerDay, int workDay, String assignment, String shiftNotes) throws Exception {
+        List<String> selectedTMs = new ArrayList<>();
+        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+        ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        SimpleUtils.assertOnFail("New create shift page is not display! ",
+                newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
+        // Select work role
+        newShiftPage.selectWorkRole(workRole);
+        // Set shift name
+        if (shiftName != null && !shiftName.isEmpty()) {
+            newShiftPage.setShiftNameOnNewCreateShiftPage(shiftName);
+        }
+        // Select location
+        if (location != null && !location.isEmpty()) {
+            newShiftPage.selectChildLocInCreateShiftWindow(location);
+        }
+        // Set end time
+        if (endTime != null && !endTime.isEmpty()) {
+            newShiftPage.moveSliderAtCertainPoint(endTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        }
+        // Set start time
+        if (startTime != null && !startTime.isEmpty()) {
+            newShiftPage.moveSliderAtCertainPoint(startTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        }
+        // Set shift per day
+        newShiftPage.setShiftPerDayOnNewCreateShiftPage(shiftPerDay);
+        // Select work day
+        newShiftPage.clearAllSelectedDays();
+        newShiftPage.selectMultipleOrSpecificWorkDay(workDay, true);
+        // Select the assignment
+        newShiftPage.clickRadioBtnStaffingOption(assignment);
+        // Set shift notes
+        if (shiftNotes != null && !shiftNotes.isEmpty()) {
+            newShiftPage.setShiftNotesOnNewCreateShiftPage(shiftNotes);
+        }
+        newShiftPage.clickOnCreateOrNextBtn();
+        if (assignment.equals(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue())) {
+            shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
+            for (int i = 0; i < shiftPerDay; i++) {
+                selectedTMs.add(newShiftPage.selectTeamMembers());
+            }
+            newShiftPage.clickOnCreateOrNextBtn();
+        }
+        return selectedTMs;
     }
 
     public String getCrendentialInfo(String roleName) throws Exception {
