@@ -4,6 +4,8 @@ import com.legion.api.common.EnterpriseId;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.OpsPortaPageFactories.*;
+import com.legion.pages.ReportPage;
+import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
 import com.legion.pages.core.OpCommons.RightHeaderBarPage;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
 import com.legion.pages.core.OpsPortal.OpsPortalSettingsAndAssociationPage;
@@ -22,7 +24,9 @@ import org.testng.annotations.BeforeMethod;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DynamicGroupV2Test extends TestBase {
 
@@ -1643,4 +1647,147 @@ public class DynamicGroupV2Test extends TestBase {
             SimpleUtils.fail("test match result number is NOT correct!", false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @TestName(description = "Validate ability to download Health Check report")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void VerifyAbilityToDownloadHealthCheckReportAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        ReportPage reportPage = pageFactory.createConsoleReportPage();
+        RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        modelSwitchPage.switchToConsole();
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("test");
+        reportPage.clickOnConsoleReportMenu();
+
+        //find OP Health Check report and export
+        SimpleUtils.assertOnFail("export failed!", reportPage.exportReportForAllLocations("health check"), false);
+
+        //verify the exported file
+        String FileExtensionExpected = "xlsx";
+        SimpleUtils.assertOnFail("The reported file is not expected!", reportPage.verifyFileExtension(FileExtensionExpected), false); ;
+
+        //open the file, and check the sheet
+        List<String> expectedSheets = new ArrayList<>();
+        expectedSheets.add("Location-Template Binding");
+        expectedSheets.add("Employee-Template Binding");
+        List<String> actualSheets = reportPage.verifyExcelSheet();
+        SimpleUtils.assertOnFail("Actual sheet name are not expected!", expectedSheets.containsAll(actualSheets), false);
+
+        //check column name for sheet "Location-Template Binding"
+        List<String> expectedColumnNames = new ArrayList<>();
+        expectedColumnNames.add("Location ID");
+        expectedColumnNames.add("Location Name");
+        expectedColumnNames.add("Template Type");
+        expectedColumnNames.add("Template");
+        expectedColumnNames.add("Version");
+        expectedColumnNames.add("Last Modified Date");
+        expectedColumnNames.add("Last Modified By");
+        System.out.println("");
+        SimpleUtils.assertOnFail("Column names are not expected for sheet: Location-Template Binding!", reportPage.verifyColumnNameOnSheet(expectedSheets.get(0) ,expectedColumnNames), false);
+
+        //check column name for sheet "Employee-Template Binding"
+        List<String> expectedColumnNames1 = new ArrayList<>();
+        expectedColumnNames1.add("Employee ID");
+        expectedColumnNames1.add("First Name");
+        expectedColumnNames1.add("Last Name");
+        expectedColumnNames1.add("Template Type");
+        expectedColumnNames1.add("Template");
+        expectedColumnNames1.add("Version");
+        expectedColumnNames1.add("Last Modified Date");
+        expectedColumnNames1.add("Last Modified By");
+        SimpleUtils.assertOnFail("Column names are not expected for sheet: Employee-Template Binding!", reportPage.verifyColumnNameOnSheet(expectedSheets.get(1) ,expectedColumnNames1), false);
+
+        //check Info for OP Health Check downloaded file.
+        List<String> templateTypesForLocation = new ArrayList<>();
+        List<String> templateTypesForEmployee = new ArrayList<>();
+        templateTypesForLocation.add("SchedulingPolicy");
+        templateTypesForLocation.add("ScheduleCompliance");
+        templateTypesForLocation.add("ScheduleCollaboration");
+        templateTypesForLocation.add("TimeAndAttendance");
+        templateTypesForLocation.add("DemandDriver");
+        templateTypesForLocation.add("StaffingRule");
+        templateTypesForLocation.add("LaborModel");
+        templateTypesForLocation.add("OperatingHours");
+        templateTypesForLocation.add("CommunicationsPolicy");
+        templateTypesForLocation.add("DifferentialPay");
+        templateTypesForLocation.add("RealTimeAttendance");
+
+        templateTypesForEmployee.add("Accruals");
+        templateTypesForEmployee.add("Minor");
+        templateTypesForEmployee.add("MealRestBreak");
+
+        Map<String, List<String>> dynamicGroupMap = new HashMap<>();
+        dynamicGroupMap.put(expectedSheets.get(0), templateTypesForLocation);
+        dynamicGroupMap.put(expectedSheets.get(1), templateTypesForEmployee);
+        SimpleUtils.assertOnFail("The content", reportPage.verifyInfoForOPHealthCheckExportedFile(dynamicGroupMap), false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @TestName(description = "Validate smart card for unassigned locations")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void VerifySmartCardForUnassignedLocationsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        String templateName = "AutoTemp" + System.currentTimeMillis();
+        String templateName1 = "AutoTemp1" + System.currentTimeMillis();
+        List<String> requiredFields = new ArrayList<>();
+
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.TimeAttendance.getValue());
+        //-------------go to settings page, check Country and State, uncheck other options-----------
+        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.ConfigType.getValue());
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue());
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.State.getValue());
+        settingsAndAssociationPage.setupRequiredFields(requiredFields);
+        settingsAndAssociationPage.goToTemplateListOrSettings("template list");
+        //-------------create two templates. one is matched with all locations-------------
+        //create template with 'in any' criteria, and get the total match number.
+        configurationPage.archiveOrDeleteAllTemplates();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage("AutoGroup"+ System.currentTimeMillis());
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.ConfigType.getValue(), "IN", "Any");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue(), "IN", "Any");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.State.getValue(), "IN", "Any");
+
+        String resultString = settingsAndAssociationPage.clickOnTestBtnAndGetResultString();
+        String matchNumber = resultString.split(" ")[0];
+        System.out.println("After click test button, the match number for all location is: " + matchNumber);
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.saveADraftTemplate();
+
+        //create template with certain criteria, and get the total match number.
+        configurationPage.createNewTemplate(templateName1);
+        configurationPage.clickOnTemplateName(templateName1);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage("AutoGroup"+ System.currentTimeMillis());
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.ConfigType.getValue(), "IN", "Any");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue(), "IN", "United States");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.State.getValue(), "IN", "Any");
+
+        String resultString1 = settingsAndAssociationPage.clickOnTestBtnAndGetResultString();
+        String matchNumber1 = resultString1.split(" ")[0];
+        System.out.println("After click test button, the match number is: " + matchNumber1);
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+        int differenceNumber = Integer.parseInt(matchNumber) - Integer.parseInt(matchNumber1);
+        SimpleUtils.assertOnFail("the unassigned number is not expected!", configurationPage.getUnassignedNumber() == differenceNumber, false);
+
+        String exportFileName = "UnassignedLocations_" + "TimeAndAttendance";
+        Map<String, String> criteriaAndValue = new HashMap<String, String>();
+        criteriaAndValue.put(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.ConfigType.getValue(), "Any");
+        criteriaAndValue.put(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue(), "United States");
+        SimpleUtils.assertOnFail("the data meets current criteria, should not show up in the file!", configurationPage.verifyUnassignedSmartCardDownloadFile(exportFileName, criteriaAndValue), false);
+    }
+
 }

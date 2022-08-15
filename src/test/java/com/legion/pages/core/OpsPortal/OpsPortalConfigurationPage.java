@@ -5,6 +5,8 @@ import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.LocationSelectorPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.tests.TestBase;
+import com.legion.tests.testframework.PropertyMap;
+import com.legion.utils.CsvUtils;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
@@ -16,6 +18,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -46,7 +49,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css = ".lg-dashboard-card")
 	private List<WebElement> configurationCards;
 
-	@FindBy(css="div.card-carousel-card-title")
+	@FindBy(css="div.card-carousel-card")
 	private List<WebElement> smartCardsList;
 
 	@FindBy(css="span[class=\"lg-paged-search__showing top-right-action-button ng-scope\"] button")
@@ -7183,5 +7186,86 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Can not find the template!", false);
 		}
 		return isWarningExist;
+	}
+
+	public WebElement getSmartCard(String smartCardName) throws Exception {
+		WebElement smartCardToFind = null;
+		int count = 0;
+		boolean isFound = false;
+
+		if (areListElementVisible(smartCardsList, 5)){
+			for (WebElement smartCard : smartCardsList){
+				count++;
+				if(smartCardName.equalsIgnoreCase(smartCard.findElement(By.cssSelector("div.card-carousel-card-title")).getText())){
+					smartCardToFind = smartCard;
+					SimpleUtils.pass(smartCardName + " Smart Card is loaded!");
+					isFound = true;
+					break;
+				}else if(count == smartCardsList.size() && !isFound){
+					SimpleUtils.fail(smartCardName + " Smart Card is not loaded!", false);
+				}
+			}
+		} else {
+			SimpleUtils.fail("Smart Card is not showing up!", false);
+		}
+		return smartCardToFind;
+	}
+
+	@Override
+	public int getUnassignedNumber() throws Exception {
+		WebElement smartCardElement = getSmartCard("Action Required");
+		String unassignedString = "";
+		int unassignedNumber = 0;
+
+		if(smartCardElement != null){
+			unassignedString = smartCardElement.findElement(By.cssSelector("h1.ng-binding.ng-scope")).getText();
+			unassignedNumber = Integer.parseInt(unassignedString.split(" ")[0]);
+		}else{
+			SimpleUtils.fail("Unassigned Smart Card is not loaded!", false);
+		}
+		return unassignedNumber;
+	}
+
+	@FindBy(css = "div.card-carousel-full span[ng-if=\"noOfUnassigned\"]")
+	private WebElement exportUnassignedFile;
+	@Override
+	public boolean verifyUnassignedSmartCardDownloadFile(String fileName, Map<String, String> criteriaAndValue) throws Exception {
+		boolean flag = true;
+		String downloadDirPath = PropertyMap.get("Download_File_Default_Dir");
+		int number = criteriaAndValue.size();
+
+		if (isElementLoaded(exportUnassignedFile)) {
+			click(exportUnassignedFile);
+			waitForSeconds(5);
+
+			File latestFile = SimpleUtils.getLatestFileFromDirectory(downloadDirPath);
+			String fileFullPathAndName = latestFile.toString();
+			System.out.println("fileFullPathAndName: " + fileFullPathAndName);
+			System.out.println("latestFile filename: " + latestFile.getName());
+			System.out.println("fileName parameter: " + fileName);
+
+			if (!latestFile.getName().toLowerCase().contains(fileName.toLowerCase())) {
+				SimpleUtils.fail("the expected file name is not correct!", false);
+			}
+			ArrayList<HashMap<String, String>> unassignedDataList = CsvUtils.getDataFromCSVFileWithHeader(fileFullPathAndName);
+
+			for (HashMap<String, String> unassignedData : unassignedDataList) {
+				for (Map.Entry<String, String> unassignedEntry : unassignedData.entrySet()) {
+					for (Map.Entry<String, String> criteriaEntry : criteriaAndValue.entrySet()) {
+
+						if (criteriaEntry.getKey().equalsIgnoreCase(unassignedEntry.getKey()) && !"Any".equalsIgnoreCase(criteriaEntry.getValue())) {
+							if (criteriaEntry.getValue().equalsIgnoreCase(unassignedEntry.getValue())) {
+								flag = false;
+								System.out.println("this data meets criteria, should not show up in the file: x " + unassignedEntry.getKey() + ": " + unassignedEntry.getValue());
+								break;
+							} else {
+								System.out.println("this data does not meet criteria, show up in the file as expected: √ " + unassignedEntry.getKey() + ": " + unassignedEntry.getValue());
+							}
+						}
+					}
+				}
+			}
+		}
+		return flag;
 	}
 }
