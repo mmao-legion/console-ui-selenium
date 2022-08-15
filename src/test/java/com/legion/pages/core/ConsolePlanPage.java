@@ -1242,11 +1242,84 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
         }
     }
 
+    @FindBy(css="lg-button[label=\"Set in effect\"] button")
+    private WebElement setInEffectButton;
+    @FindBy(css="div.modal-dialog ")
+    private WebElement setInEffectPopup;
+    @FindBy(css="div.modal-dialog h1 div")
+    private WebElement setInEffectPopupTitle;
+    @FindBy(css="div.modal-dialog general-form p")
+    private WebElement setInEffectPopupText;
+    @FindBy(css="div.modal-dialog lg-button[label=\"Cancel\"] button")
+    private WebElement cancelButtonOnSetInEffectPopup;
+    @FindBy(css="div.modal-dialog lg-button[label=\"Set in effect\"] button")
+    private WebElement setInEffectButtonOnSetInEffectPopup;
+    @FindBy(css="div.modal-dialog h1 lg-close")
+    private WebElement closeButtonOnSetInEffectPopup;
 
+    @Override
+    public void verifySetInEffectPopup(String planName,String scplanName) throws Exception {
+        if(isElementEnabled(createPlanBtn,5)&&isElementEnabled(planSearchInputField)){
+            goToScenarioPlanDetail(planName, scplanName);
+            //Check whether show popup after click set in effect button
+            if(isElementEnabled(setInEffectButton,2)){
+                clickTheElement(setInEffectButton);
+                waitForSeconds(2);
+                if(isElementEnabled(setInEffectPopup,2)){
+                    SimpleUtils.pass("Will show a popup after click set in effect button");
+                }else {
+                    SimpleUtils.fail("Will NOT show a popup after click set in effect button",false);
+                }
+                //Verify title and body text is correct or not?
+                String title = setInEffectPopupTitle.getText().trim();
+                String body = setInEffectPopupText.getText().trim();
+                String expectedTitle ="Set Budget Plan in Effect";
+                String expectedBody="This will copy the budget plan to the weekly schedules. " +
+                        "You can further edit individual week's budget or set another budget plan in effect as needed.";
+                if(title.equalsIgnoreCase(expectedTitle) && body.equalsIgnoreCase(expectedBody)){
+                    SimpleUtils.pass("Set in effect popup title and body text is correct");
+                }else {
+                    SimpleUtils.fail("Set in effect popup title and body text is correct",false);
+                }
 
-
-
-
+                //Verify user can click cancel button , x button and set in effect button in popup
+                if(isElementEnabled(cancelButtonOnSetInEffectPopup) && isElementEnabled(setInEffectButtonOnSetInEffectPopup)
+                && isElementEnabled(closeButtonOnSetInEffectPopup)){
+                    SimpleUtils.pass("There is cancel button, X button and set in effect button on popup");
+                    if(isClickable(setInEffectButtonOnSetInEffectPopup,2) && isClickable(cancelButtonOnSetInEffectPopup,2)
+                    && isClickable(closeButtonOnSetInEffectPopup,2)){
+                        SimpleUtils.pass("set in effect button, cancel button and close button are clickable");
+                    }else{
+                        SimpleUtils.fail("set in effect button, cancel button and close button aren't clickable",false);
+                    }
+                }else {
+                    SimpleUtils.fail("There is no cancel button, X button and set in effect button on popup",false);
+                }
+                clickTheElement(closeButtonOnSetInEffectPopup);
+                waitForSeconds(2);
+                if(!isElementExist("div.modal-dialog")){
+                    SimpleUtils.pass("User can click x button successfully");
+                }else {
+                    SimpleUtils.fail("User can't click x button",false);
+                }
+                clickTheElement(setInEffectButton);
+                waitForSeconds(2);
+                if(isElementEnabled(cancelButtonOnSetInEffectPopup,2)){
+                    clickTheElement(cancelButtonOnSetInEffectPopup);
+                    waitForSeconds(2);
+                    if(!isElementExist("div.modal-dialog")){
+                        SimpleUtils.pass("User can click cancel button successfully");
+                    }else {
+                        SimpleUtils.fail("User can't click cancel button",false);
+                    }
+                }
+            }else {
+                SimpleUtils.fail("There is no set in effect button showing",false);
+            }
+        }else {
+            SimpleUtils.fail("Plan landing page doesn't display.",false);
+        }
+    }
 }
 
 
