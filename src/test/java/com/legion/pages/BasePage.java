@@ -591,14 +591,14 @@ public class BasePage {
         }
     }
 
-    @FindBy(className = "react-select__option")
+    @FindBy(css = ".react-select__option")
     private List<WebElement> dropDownListOnReact;
 
     public void selectOptionByLabel(String option) throws Exception {
         if (dropDownListOnReact.size() > 0) {
             for (WebElement optionOnReact : dropDownListOnReact) {
                 if (optionOnReact.getText().toLowerCase().trim().contains(option.toLowerCase().trim())) {
-                    clickTheElement(optionOnReact);
+                    optionOnReact.click();
                     break;
                 }
             }

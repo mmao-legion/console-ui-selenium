@@ -69,7 +69,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     private WebElement clearEditedFieldsBtn;
     @FindBy (css = ".MuiGrid-container")
     private List<WebElement> gridContainers;
-    @FindBy (className = "react-select__option")
+    @FindBy (css = ".react-select__option")
     private List<WebElement> dropDownListOnReact;
     @FindBy (css = ".MuiInputAdornment-positionEnd")
     private WebElement nextDayIcon;
@@ -82,7 +82,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public boolean isEditShiftWindowLoaded() throws Exception {
-        waitForSeconds(3);
+        waitForSeconds(5);
         if (isElementLoaded(editShiftWindow, 5) && areListElementVisible(gridContainers, 10)) {
             return true;
         }
@@ -293,11 +293,16 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public void clickOnDateSelect() throws Exception {
-        scrollToBottom();
-        waitForSeconds(1);
         WebElement dateSection = getSpecificElementByTypeAndColumn(sectionType.Date.getType(), "Edited");
+        scrollToElement(dateSection);
+        waitForSeconds(1);
         if (isElementLoaded(dateSection, 5)) {
-            clickTheElement(dateSection.findElement(By.cssSelector(".react-select__dropdown-indicator")));
+            moveToElementAndClick(dateSection.findElement(By.cssSelector(".react-select__dropdown-indicator")));
+            if (dropDownListOnReact.size() > 0) {
+                SimpleUtils.pass("Click on Date select successfully!");
+            } else {
+                SimpleUtils.fail("Failed to click on date select!", false);
+            }
         } else {
             SimpleUtils.fail("Date section on Edited column failed to load!", false);
         }

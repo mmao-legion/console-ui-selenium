@@ -3487,6 +3487,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             Actions action = new Actions(getDriver());
             action.keyDown(Keys.CONTROL).build().perform();
             for (int i : shiftIndexes) {
+                scrollToElement(names.get(i));
                 action.click(names.get(i));
                 waitForSeconds(1);
             }
