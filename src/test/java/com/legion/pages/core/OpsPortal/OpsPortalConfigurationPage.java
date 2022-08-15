@@ -7157,4 +7157,31 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 		cancelButtonOnManageDynamicGroupPopup.click();
 	}
+
+	@FindBy(css="[tooltip-class=\"template-waning-tooltip\"]")
+	private WebElement warningIcon;
+	@FindBy(css="div[class*=\"tooltip ng-isolate-scope\"] div.tooltip-inner ul>li")
+	private List<WebElement> warningTooltipMsgList = new ArrayList<>();
+	@Override
+	public boolean verifyWarningIconsDisplay(String templateName, String warningMsg) throws Exception {
+		boolean isWarningExist = false;
+		if (searchTemplate(templateName)){
+			if(isElementLoaded(warningIcon, 5)){
+				mouseToElement(warningIcon);
+				for(WebElement warningTooltip : warningTooltipMsgList){
+					if (isElementLoaded(warningTooltip) && warningTooltip.getText().contains(warningMsg)){
+						isWarningExist = true;
+						SimpleUtils.pass("warning tooltip exist and the message is correct!");
+					}else {
+						SimpleUtils.fail("Warning tooltip not exist or message is not correct!", false);
+					}
+				}
+			}else {
+				SimpleUtils.fail("there should be warning icons in the template list!", false);
+			}
+		} else {
+			SimpleUtils.fail("Can not find the template!", false);
+		}
+		return isWarningExist;
+	}
 }

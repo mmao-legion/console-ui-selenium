@@ -39,4 +39,7 @@ public interface SettingsAndAssociationPage {
     public int getTotalNumberForChannelOrCategory(String streamType) throws Exception;
 
     public List<String> getAllChannelsOrCategories(String settingType) throws Exception;
+    public void changeCriteriaInSettingsTab() throws Exception;
+    public void selectFirstOptionForCriteria() throws Exception;
+    public boolean ifOperatorsCanBeSelected(List<String> valuesToCheck) throws Exception;
 }

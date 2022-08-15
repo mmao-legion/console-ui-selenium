@@ -331,4 +331,8 @@ public interface LocationsPage {
     public void clickOnEditButtonOnGlobalConfigurationPage() throws Exception;
     public void updateLaborBudgetPlanSettings(boolean subPlans,String subPlansLevel,boolean compressed,String computeBudgetCost);
     public boolean isBudgetPlanSectionShowing();
+    public void inputGroupNameForDynamicGroupOnWorkforceSharingPage(String groupName) throws Exception;
+    public void selectAnOptionForCriteria(String country, String not_in, String afghanistan) throws Exception;
+    public void clickAddMoreBtnOnWFSharing() throws Exception;
+    public String clickOnTestBtnAndGetResultString() throws Exception;
 }

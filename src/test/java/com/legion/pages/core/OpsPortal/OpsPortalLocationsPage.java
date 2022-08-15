@@ -5105,5 +5105,99 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 		return flag;
 	}
+
+	@Override
+	public void inputGroupNameForDynamicGroupOnWorkforceSharingPage(String groupName) throws Exception{
+		if (isElementLoaded(groupNameInput, 5)){
+			groupNameInput.clear();
+			groupNameInput.sendKeys(groupName);
+			SimpleUtils.pass("group name input successfully!");
+		} else {
+			SimpleUtils.fail("group name input is not loaded!", false);
+		}
+	}
+
+	@FindBy(css = ".condition_line")
+	private List<WebElement> criteriaOnTheWorkforceSharingPage;
+	@Override
+	public void selectAnOptionForCriteria(String criteria, String operator, String option) throws Exception {
+		boolean flag1 = false;
+		boolean flag2 = false;
+
+		//Select one Criteria
+		if (areListElementVisible(criteriaOnTheWorkforceSharingPage, 10)){
+			for (WebElement criteriaLine: criteriaOnTheWorkforceSharingPage){
+				if (criteriaLine.findElement(By.cssSelector("div[ng-disabled=\"$ctrl.disabled\"]")).getAttribute("innerText").replace("\n", "").trim().equalsIgnoreCase("Select one")){
+					click(criteriaLine.findElement(By.cssSelector("lg-select[ng-if=\"!$ctrl.multiple\"]")));
+					List<WebElement> criteriaOptions = criteriaLine.findElements(By.cssSelector("div.lg-search-options div.lg-search-options__scroller div.lg-search-options__option-wrapper.ng-scope"));
+					System.out.println("jane-: " + criteriaOptions.size());
+					for (WebElement criteriaOption : criteriaOptions){
+						if(criteriaOption.getText().replace("\n", "").trim().equalsIgnoreCase(criteria)){
+							System.out.println("jane1: " + criteriaOption.getText());
+							click(criteriaOption);
+						}
+					}
+					//Select one operator
+					click(criteriaLine.findElement(By.cssSelector("lg-cascade-select[required=\"true\"] lg-select[ng-if*=\"operatorSelect\"] div.lg-select")));
+					List<WebElement> operators = criteriaLine.findElements(By.cssSelector("lg-cascade-select[required=\"true\"] lg-select[ng-if*=\"operatorSelect\"] div.lg-search-options__option"));
+					for (WebElement optionValue: operators){
+						if (operator.equalsIgnoreCase(optionValue.getAttribute("innerText").replace("\n", "").trim())){
+							scrollToElement(optionValue);
+							click(optionValue);
+							flag1 = true;
+							break;
+						}
+					}
+
+					//Select one option for the selected criteria
+					WebElement criteriaOptionsField = criteriaLine.findElement(By.cssSelector("lg-cascade-select[required=\"true\"] lg-cascade-select lg-multiple-select"));
+					click(criteriaOptionsField);
+
+					if ("Country".equalsIgnoreCase(criteria) || "State".equalsIgnoreCase(criteria)){
+						criteriaOptionsField.findElement(By.cssSelector("lg-search[value=\"$ctrl.searchText\"] input")).sendKeys(option);
+					}
+
+					List<WebElement> options = criteriaLine.findElements(By.cssSelector("lg-cascade-select[required=\"true\"] div.select-list-item"));
+					for (WebElement optionValue: options){
+						waitForSeconds(2);
+						if (option.equalsIgnoreCase(optionValue.getAttribute("innerText").replace("\n", "").trim())){
+							scrollToElement(optionValue.findElement(By.cssSelector("input-field")));
+							click(optionValue.findElement(By.cssSelector("input-field")));
+							flag2 = true;
+							break;
+						}
+					}
+				}
+			}
+			if (!flag1 && !flag2){
+				SimpleUtils.fail("Didn't find the criteria and option you want!", false);
+			}
+		} else {
+			SimpleUtils.fail("There is no criteria on the page!", false);
+		}
+	}
+
+	@Override
+	public void clickAddMoreBtnOnWFSharing() throws Exception{
+		if (isElementLoaded(addMoreBtn, 10)){
+			clickTheElement(addMoreBtn);
+		} else {
+			SimpleUtils.fail("Add More button fail to load!", false);
+		}
+	}
+
+	@Override
+	public String clickOnTestBtnAndGetResultString() throws Exception{
+		if (isElementLoaded(testBtn, 10)){
+			clickTheElement(testBtn);
+			SimpleUtils.pass("Clicked on test button!");
+			if (isElementLoaded(testBtnInfo, 10)){
+				return testBtnInfo.getText();
+			}
+		} else {
+			SimpleUtils.fail("Test button is not on the page!", false);
+		}
+		return null;
+	}
 }
 
