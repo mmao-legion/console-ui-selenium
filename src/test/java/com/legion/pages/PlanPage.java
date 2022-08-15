@@ -23,6 +23,7 @@ public interface PlanPage {
     public boolean verifyPlanConsoleTabShowing() throws Exception;
     public boolean verifyCreatePlanButtonShowing() throws Exception;
     public void verifyPlanStatus(String planName) throws Exception;
+    public void verifySetInEffectPopup(String planName,String scplanName) throws Exception;
 
 
 
