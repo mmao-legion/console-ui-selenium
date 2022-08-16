@@ -614,7 +614,7 @@ public class LaborModelTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify user can view and update location level labor model template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyOverriddenLaborModelInLocationLevelAsInternalAdminForUpperFieldTile(String browser, String username, String password, String location) throws Exception {
+    public void verifyOverriddenLaborModelInLocationLevelAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try {
 
