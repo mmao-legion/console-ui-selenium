@@ -416,10 +416,9 @@ public class BulkDeleteNEditTest extends TestBase {
                 }
             }
             // Verify can select the date
-            editShiftPage.clickOnDateSelect();
             editShiftPage.selectSpecificOptionByText(dates.get(0));
-            SimpleUtils.assertOnFail("Failed to select the date: " + dates.get(0), dates.get(0).equalsIgnoreCase(
-                    editShiftPage.getSelectedDate().trim()), false);
+            SimpleUtils.assertOnFail("Failed to select the date: " + dates.get(0), editShiftPage.getSelectedDate()
+                    .trim().contains(dates.get(0)), false);
             // Verify the content in Assignment Select
             editShiftPage.clickOnAssignmentSelect();
             List<String> assignments = editShiftPage.getOptionsFromSpecificSelect();
@@ -435,8 +434,8 @@ public class BulkDeleteNEditTest extends TestBase {
             // Verify can select the Assignment
             editShiftPage.selectSpecificOptionByText(assignments.get(0));
             editShiftPage.getSelectedAssignment();
-            SimpleUtils.assertOnFail("Failed to select the assignment: " + assignments.get(0), assignments.get(0).equalsIgnoreCase(
-                    editShiftPage.getSelectedAssignment().trim()), false);
+            SimpleUtils.assertOnFail("Failed to select the assignment: " + assignments.get(0), editShiftPage
+                    .getSelectedAssignment().trim().contains(assignments.get(0)), false);
             // Verify can input the shift notes
             editShiftPage.inputShiftNotes("notes");
             // Verify can select the two options

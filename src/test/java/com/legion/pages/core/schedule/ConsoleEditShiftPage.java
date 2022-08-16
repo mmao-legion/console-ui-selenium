@@ -297,7 +297,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         scrollToElement(dateSection);
         waitForSeconds(1);
         if (isElementLoaded(dateSection, 5)) {
-            moveToElementAndClick(dateSection.findElement(By.cssSelector(".react-select__dropdown-indicator")));
+            moveToElementAndClick(dateSection.findElement(By.cssSelector(".react-select__value-container")));
             if (dropDownListOnReact.size() > 0) {
                 SimpleUtils.pass("Click on Date select successfully!");
             } else {
@@ -346,7 +346,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     @Override
     public String getSelectedDate() throws Exception {
         String selectedDate = "";
-        WebElement editedDateSection = getSpecificElementByTypeAndColumn(sectionType.WorkRole.getType(), "Edited");
+        WebElement editedDateSection = getSpecificElementByTypeAndColumn(sectionType.Date.getType(), "Edited");
         if (editedDateSection != null) {
             selectedDate = editedDateSection.getText();
         }

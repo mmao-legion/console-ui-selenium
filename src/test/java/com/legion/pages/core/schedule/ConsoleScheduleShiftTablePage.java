@@ -3481,15 +3481,13 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else if (areListElementVisible(namesDayView, 10)) {
             names = namesDayView;
         }
-        scrollToBottom();
-        waitForSeconds(2);
         if (names.size() >= shiftIndexes.size()) {
             Actions action = new Actions(getDriver());
             action.keyDown(Keys.CONTROL).build().perform();
             for (int i : shiftIndexes) {
                 scrollToElement(names.get(i));
-                action.click(names.get(i));
                 waitForSeconds(1);
+                action.click(names.get(i));
             }
             action.keyUp(Keys.CONTROL).build().perform();
             if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftIndexes.size()) {
