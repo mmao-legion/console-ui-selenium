@@ -3260,6 +3260,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             if (moveForeward) {
                 mouseHoverDragandDrop(dayViewShiftGroups.get(index).findElement(By.cssSelector(".left-shift-box")),
                         dayViewShiftGroups.get(index).findElements(By.cssSelector(".sch-day-view-grid-cell")).get(0));
+                int xOffSet = -150;
+                moveDayViewCards(dayViewShiftGroups.get(index).findElement(By.cssSelector(".left-shift-box")), xOffSet);
             } else
                 mouseHoverDragandDrop(dayViewShiftGroups.get(index).findElement(By.cssSelector(".left-shift-box")),
                     dayViewShiftGroups.get(index).findElements(By.cssSelector(".sch-day-view-grid-cell")).get(dayViewShiftGroups.get(index).findElements(By.cssSelector(".sch-day-view-grid-cell")).size()-1));
