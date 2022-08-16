@@ -10,7 +10,8 @@ public enum Toggles {
     MixedModeDemandDriverSwitch("MixedModeDemandDriverSwitch"),
     MealAndRestTemplate("MealAndRestTemplate"),
     ScheduleEditShiftTimeNew( "ScheduleEditShiftTimeNew"),
-    EnableTahoeStorage("EnableTahoeStorage");
+    EnableTahoeStorage("EnableTahoeStorage"),
+    EnableLongTermBudgetPlan("EnableLongTermBudgetPlan");
 
     private final String value;
 

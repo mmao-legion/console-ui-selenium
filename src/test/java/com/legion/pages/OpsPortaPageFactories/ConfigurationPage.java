@@ -242,4 +242,7 @@ public interface ConfigurationPage {
     public boolean verifyStartEndTimeForDays(String startTime, String endTime, String day) throws Exception;
     public void selectDaysForOpenCloseTime(List<String> dayOfWeek) throws Exception;
     public void editBasicStaffingRules() throws Exception;
+    public boolean verifyWarningIconsDisplay(String templateName2, String expectedWarningMsg) throws Exception;
+    public int getUnassignedNumber() throws Exception;
+    public boolean verifyUnassignedSmartCardDownloadFile(String fileName, Map<String, String> criteriaAndValue) throws Exception;
 }

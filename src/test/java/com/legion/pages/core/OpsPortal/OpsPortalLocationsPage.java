@@ -4995,5 +4995,209 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 		return flag;
 	}
+
+	@FindBy(css="general-form.enterprise-container form-section:nth-child(6)")
+	WebElement laborBudgetPlanSection;
+
+	@Override
+	public void verifyUIOfLaborBudgetPlanSection(){
+		List<String> settingsString = new ArrayList<>();
+		List<String> strs = new ArrayList<>(Arrays.asList("Long range labor budget can include subplans by upperfield?","Does the Labor Budget result file use compressed format?",
+				"How to compute budget cost?"));
+		//verify labor budget plan is a separate section or not?
+		if(laborBudgetPlanSection.findElement(By.cssSelector(" h2")).getText().trim().equalsIgnoreCase("Labor Budget Plan")){
+			SimpleUtils.pass("Labor Budget Plan setting is a separate section in global configuration");
+			List<WebElement> settings = laborBudgetPlanSection.findElements(By.cssSelector(" h3"));
+			for(WebElement setting:settings){
+				String settingString = setting.getText().trim();
+				settingsString.add(settingString);
+			}
+		}else {
+			SimpleUtils.fail("Labor Budget Plan setting is NOT a separate section in global configuration",false);
+		}
+		//Verify all settings of labor budget plan is showing or not?
+		for(String str:strs){
+			if(settingsString.contains(str)){
+				SimpleUtils.pass(str + " setting is showing in global configuration - labor budget plan section");
+			}else {
+				SimpleUtils.fail(str + " setting is NOT showing in global configuration - labor budget plan section", false);
+			}
+		}
+		SimpleUtils.pass("Labor Budget plan section can display correctly on global configuration page");
+	}
+
+	@Override
+	public void clickOnEditButtonOnGlobalConfigurationPage() throws Exception{
+		if (isElementLoaded(editOnGlobalConfigPage, 10)){
+			clickTheElement(editOnGlobalConfigPage);
+			SimpleUtils.assertOnFail("Global config page is editable!", isElementLoaded(saveButtonOnGlobalConfiguration,3), false);
+
+		}else{
+			SimpleUtils.fail("Edit button on global config page load failed!", false);
+		}
+	}
+
+	@Override
+	public void updateLaborBudgetPlanSettings(boolean subPlans,String subPlansLevel,boolean compressed,String computeBudgetCost){
+		List<WebElement> subPlansYesNo = laborBudgetPlanSection.findElements(By.cssSelector(" question-input[question-title*=\"upperfield?\"] yes-no div.ng-scope"));
+		List<WebElement> compressedYesNo = laborBudgetPlanSection.findElements(By.cssSelector(" question-input[question-title*=\"format?\"] yes-no div.ng-scope"));
+		//update setting of subPlans
+		if(subPlans){
+			clickTheElement(subPlansYesNo.get(0));
+			waitForSeconds(3);
+			if(subPlansYesNo.get(0).getAttribute("class").contains("selected")){
+				SimpleUtils.pass("User can select Yes option successfully for labor budget plan - sub plans setting");
+			}else {
+				SimpleUtils.fail("User failed to select Yes option successfully for labor budget plan - sub plans setting",false);
+			}
+			WebElement levelSelect = laborBudgetPlanSection.findElement(By.cssSelector("question-input[question-title*=\"subplan\"] select"));
+			Select select = new Select(levelSelect);
+			select.selectByVisibleText(subPlansLevel);
+		}else {
+			clickTheElement(subPlansYesNo.get(1));
+			waitForSeconds(3);
+			if(subPlansYesNo.get(1).getAttribute("class").contains("selected")){
+				SimpleUtils.pass("User can select No option successfully for labor budget plan - sub plans setting");
+			}else {
+				SimpleUtils.fail("User failed to select No option successfully for labor budget plan - sub plans setting",false);
+			}
+		}
+
+		//update setting of compressed
+		if(compressed){
+			clickTheElement(compressedYesNo.get(0));
+			waitForSeconds(3);
+			if(compressedYesNo.get(0).getAttribute("class").contains("selected")){
+				SimpleUtils.pass("User can select Yes option successfully for labor budget plan - compressed setting");
+			}else {
+				SimpleUtils.fail("User failed to select Yes option successfully for labor budget plan - compressed setting",false);
+			}
+		}else {
+			clickTheElement(compressedYesNo.get(1));
+			waitForSeconds(3);
+			if(compressedYesNo.get(1).getAttribute("class").contains("selected")){
+				SimpleUtils.pass("User can select No option successfully for labor budget plan - compressed setting");
+			}else {
+				SimpleUtils.fail("User failed to select No option successfully for labor budget plan - compressed setting",false);
+			}
+		}
+
+		//update setting of computeBudgetCost
+		WebElement computeBudget = laborBudgetPlanSection.findElement(By.cssSelector("question-input[question-title*=\"cost?\"] select"));
+		Select select = new Select(computeBudget);
+		if(computeBudgetCost.contains("Work Role")){
+			select.selectByVisibleText("By Work Role Hourly Rate");
+		}else {
+			select.selectByVisibleText("By Job Title Group Hourly Rate");
+		}
+	}
+
+	@Override
+	public boolean isBudgetPlanSectionShowing(){
+		String locator = "general-form.enterprise-container form-section:nth-child(6)  question-input[question-title*=\"upperfield?\"] yes-no div.ng-scope";
+		boolean flag;
+		if(isElementExist(locator)){
+			flag = true;
+			SimpleUtils.pass("Labor Budget plan is showing");
+		}else {
+			flag = false;
+			SimpleUtils.pass("Labor Budget plan is NOT showing");
+		}
+		return flag;
+	}
+
+	@Override
+	public void inputGroupNameForDynamicGroupOnWorkforceSharingPage(String groupName) throws Exception{
+		if (isElementLoaded(groupNameInput, 5)){
+			groupNameInput.clear();
+			groupNameInput.sendKeys(groupName);
+			SimpleUtils.pass("group name input successfully!");
+		} else {
+			SimpleUtils.fail("group name input is not loaded!", false);
+		}
+	}
+
+	@FindBy(css = ".condition_line")
+	private List<WebElement> criteriaOnTheWorkforceSharingPage;
+	@Override
+	public void selectAnOptionForCriteria(String criteria, String operator, String option) throws Exception {
+		boolean flag1 = false;
+		boolean flag2 = false;
+
+		//Select one Criteria
+		if (areListElementVisible(criteriaOnTheWorkforceSharingPage, 10)){
+			for (WebElement criteriaLine: criteriaOnTheWorkforceSharingPage){
+				if (criteriaLine.findElement(By.cssSelector("div[ng-disabled=\"$ctrl.disabled\"]")).getAttribute("innerText").replace("\n", "").trim().equalsIgnoreCase("Select one")){
+					click(criteriaLine.findElement(By.cssSelector("lg-select[ng-if=\"!$ctrl.multiple\"]")));
+					List<WebElement> criteriaOptions = criteriaLine.findElements(By.cssSelector("div.lg-search-options div.lg-search-options__scroller div.lg-search-options__option-wrapper.ng-scope"));
+					System.out.println("jane-: " + criteriaOptions.size());
+					for (WebElement criteriaOption : criteriaOptions){
+						if(criteriaOption.getText().replace("\n", "").trim().equalsIgnoreCase(criteria)){
+							System.out.println("jane1: " + criteriaOption.getText());
+							click(criteriaOption);
+						}
+					}
+					//Select one operator
+					click(criteriaLine.findElement(By.cssSelector("lg-cascade-select[required=\"true\"] lg-select[ng-if*=\"operatorSelect\"] div.lg-select")));
+					List<WebElement> operators = criteriaLine.findElements(By.cssSelector("lg-cascade-select[required=\"true\"] lg-select[ng-if*=\"operatorSelect\"] div.lg-search-options__option"));
+					for (WebElement optionValue: operators){
+						if (operator.equalsIgnoreCase(optionValue.getAttribute("innerText").replace("\n", "").trim())){
+							scrollToElement(optionValue);
+							click(optionValue);
+							flag1 = true;
+							break;
+						}
+					}
+
+					//Select one option for the selected criteria
+					WebElement criteriaOptionsField = criteriaLine.findElement(By.cssSelector("lg-cascade-select[required=\"true\"] lg-cascade-select lg-multiple-select"));
+					click(criteriaOptionsField);
+
+					if ("Country".equalsIgnoreCase(criteria) || "State".equalsIgnoreCase(criteria)){
+						criteriaOptionsField.findElement(By.cssSelector("lg-search[value=\"$ctrl.searchText\"] input")).sendKeys(option);
+					}
+
+					List<WebElement> options = criteriaLine.findElements(By.cssSelector("lg-cascade-select[required=\"true\"] div.select-list-item"));
+					for (WebElement optionValue: options){
+						waitForSeconds(2);
+						if (option.equalsIgnoreCase(optionValue.getAttribute("innerText").replace("\n", "").trim())){
+							scrollToElement(optionValue.findElement(By.cssSelector("input-field")));
+							click(optionValue.findElement(By.cssSelector("input-field")));
+							flag2 = true;
+							break;
+						}
+					}
+				}
+			}
+			if (!flag1 && !flag2){
+				SimpleUtils.fail("Didn't find the criteria and option you want!", false);
+			}
+		} else {
+			SimpleUtils.fail("There is no criteria on the page!", false);
+		}
+	}
+
+	@Override
+	public void clickAddMoreBtnOnWFSharing() throws Exception{
+		if (isElementLoaded(addMoreBtn, 10)){
+			clickTheElement(addMoreBtn);
+		} else {
+			SimpleUtils.fail("Add More button fail to load!", false);
+		}
+	}
+
+	@Override
+	public String clickOnTestBtnAndGetResultString() throws Exception{
+		if (isElementLoaded(testBtn, 10)){
+			clickTheElement(testBtn);
+			SimpleUtils.pass("Clicked on test button!");
+			if (isElementLoaded(testBtnInfo, 10)){
+				return testBtnInfo.getText();
+			}
+		} else {
+			SimpleUtils.fail("Test button is not on the page!", false);
+		}
+		return null;
+	}
 }
 

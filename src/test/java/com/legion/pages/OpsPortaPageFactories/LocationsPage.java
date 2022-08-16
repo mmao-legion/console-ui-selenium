@@ -327,4 +327,12 @@ public interface LocationsPage {
     public void sMGoToSubLocationsInLocationsPage() throws Exception;
     public boolean isOverrideStatusAtLocationLevel(String templateName) throws Exception;
     public boolean isRemoveDynamicEmployeeGroupPopUpShowing();
+    public void verifyUIOfLaborBudgetPlanSection();
+    public void clickOnEditButtonOnGlobalConfigurationPage() throws Exception;
+    public void updateLaborBudgetPlanSettings(boolean subPlans,String subPlansLevel,boolean compressed,String computeBudgetCost);
+    public boolean isBudgetPlanSectionShowing();
+    public void inputGroupNameForDynamicGroupOnWorkforceSharingPage(String groupName) throws Exception;
+    public void selectAnOptionForCriteria(String country, String not_in, String afghanistan) throws Exception;
+    public void clickAddMoreBtnOnWFSharing() throws Exception;
+    public String clickOnTestBtnAndGetResultString() throws Exception;
 }

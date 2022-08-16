@@ -557,4 +557,24 @@ public class PlanTest extends TestBase {
         }
     }
 
+    //new feature, not release to rc, so disable it firstly
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Set In Effect Popup")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifySetInEffectPopupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+        locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("RegionForPlan_Auto");
+        locationSelectorPage.changeDistrict("DistrcitForPlan2");
+
+        PlanPage planPage = pageFactory.createConsolePlanPage();
+        planPage.clickOnPlanConsoleMenuItem();
+        String planName ="AutoUsing-CheckSetInEffectPopup";
+        String scName ="AutoUsing-CheckSetInEffectPopup scenario 1";
+        planPage.verifySetInEffectPopup(planName,scName);
     }
+}

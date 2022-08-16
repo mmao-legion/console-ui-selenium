@@ -8,6 +8,7 @@ import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
@@ -800,4 +801,72 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         }
     }
 
+    @Override
+    public void changeCriteriaInSettingsTab() throws Exception{
+        if (areListElementVisible(fieldListFromSettingsTab, 10)){
+            for (WebElement fieldRow: fieldListFromSettingsTab){
+                if (isElementLoaded(fieldRow.findElement(By.tagName("input")), 10)
+                        && fieldRow.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")){
+                    waitForSeconds(2);
+                    clickTheElement(fieldRow.findElement(By.tagName("input")));
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Fail to find fields!", false);
+        }
+    }
+
+    @Override
+    public void selectFirstOptionForCriteria() {
+        int FirstOptionCheckedCount = 0;
+        if (areListElementVisible(criteriaOnTheAssociationPage, 10)){
+            for (WebElement criteriaLine : criteriaOnTheAssociationPage){
+                click(criteriaLine.findElement(By.cssSelector("lg-cascade-select[required=\"true\"] lg-cascade-select lg-multiple-select")));
+                List<WebElement> selectList = criteriaLine.findElements(By.cssSelector("lg-cascade-select[required=\"true\"] div.select-list-item"));
+                click(selectList.get(1).findElement(By.cssSelector("input-field")));
+                Actions actions = new Actions(getDriver());
+                actions.moveByOffset(0, 0).click().build().perform();
+                FirstOptionCheckedCount++;
+                System.out.println(selectList.get(1).findElement(By.cssSelector("input-field")).getText() + " is checked!");
+            }
+        }
+
+        if(FirstOptionCheckedCount == criteriaOnTheAssociationPage.size()){
+            SimpleUtils.pass("First Option for the criteria are all checked!");
+        }else {
+            SimpleUtils.fail("Failed to check the first option!", false);
+        }
+    }
+
+    @FindBy(css = "lg-select[ng-if=\"$ctrl.selectedOption.operatorSelect\"]")
+    private List<WebElement> OperatorsInAssociation;
+    @Override
+    public boolean ifOperatorsCanBeSelected(List<String> valuesToCheck) {
+        boolean flag = false;
+        if (areListElementVisible(OperatorsInAssociation)){
+            for (WebElement operator : OperatorsInAssociation){
+                click(operator);
+                List<WebElement> operatorValues = operator.findElements(By.cssSelector("div[class=\"lg-search-options__option ng-binding lg-search-options__subLabel\"]"));
+                List<String> actualOperatorValues = new ArrayList<>();
+                for (WebElement operatorValue : operatorValues){
+                    actualOperatorValues.add(operatorValue.getText());
+                    if (!isElementEnabled(operatorValue)){
+                        break;
+                    }
+                }
+                Actions actions = new Actions(getDriver());
+                actions.moveByOffset(0, 0).click().build().perform();
+                if (valuesToCheck.containsAll(actualOperatorValues)){
+                    flag = true;
+                }else{
+                    SimpleUtils.fail("Actual Operators value are not expeted!", false);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Can not find the operator element!", false);
+        }
+
+        return flag;
+    }
 }
