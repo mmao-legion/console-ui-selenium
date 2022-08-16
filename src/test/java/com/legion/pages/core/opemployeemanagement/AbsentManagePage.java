@@ -8,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -1148,11 +1149,15 @@ public class AbsentManagePage extends BasePage {
 
     @FindBy(css = "input[type = 'checkbox']")
     private WebElement firstWorkRole;
+    @FindBy(css = "div.select-list-item>input-field>label")
+    private List<WebElement> workRoleList;
 
-    public void searchAndSelectWorkRole(){
+    public ArrayList<String> searchAndSelectWorkRole(){
         verifyWorkRoleOnlyDisplayForScheduleHour("Scheduled Hours");
         scrollToElement(workRoleInput);
         clickTheElement(workRoleInput);
+
+        ArrayList<String> workRoles = getWebElementsText(workRoleList);
 
         templateSearchBox.clear();
         templateSearchBox.sendKeys("AMBASSADOR");
@@ -1166,6 +1171,6 @@ public class AbsentManagePage extends BasePage {
             SimpleUtils.pass("2 work roles selected successfully");
         }else
             SimpleUtils.fail("2 work roles selected faied",false);
+        return workRoles;
     }
-
 }

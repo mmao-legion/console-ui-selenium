@@ -1941,5 +1941,13 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		}
 		return Titles;
 	}
+
+	@FindBy(css = "td>lg-button>button>span>span")
+	private List<WebElement> workRoleItems;
+
+	public ArrayList<String> workRole(){
+		ArrayList<String> workRoles = getWebElementsText(workRoleItems);
+		return workRoles;
+	}
 }
 
