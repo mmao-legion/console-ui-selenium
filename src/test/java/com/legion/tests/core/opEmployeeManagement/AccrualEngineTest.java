@@ -1942,6 +1942,11 @@ public class AccrualEngineTest extends TestBase {
 
         switchToNewWindow();
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        navigationPage.navigateToUserManagement();
+        UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+        userManagementPage.clickOnUserManagementTab();
+        userManagementPage.goToWorkRolesTile();
+        ArrayList<String> workRoleInUserManagerment = userManagementPage.workRole();
         //verify that employee management is enabled.
         navigationPage.navigateToEmployeeManagement();
         SimpleUtils.pass("EmployeeManagement Module is enabled!");
@@ -1961,7 +1966,13 @@ public class AccrualEngineTest extends TestBase {
         absentManagePage.search("UnitType");
 
         absentManagePage.otherDistributionMethodisDiabled();
-        absentManagePage.searchAndSelectWorkRole();
+        ArrayList<String> workRoleInEmployManagerment = absentManagePage.searchAndSelectWorkRole();
+
+        if(workRoleInUserManagerment.size() == workRoleInEmployManagerment.size()){
+            SimpleUtils.pass("Work role in employ management is the same as user management");
+        }else{
+            SimpleUtils.fail("Work role in employ management is different from user management",false);
+        }
 
         absentManagePage.verifyWorkRoleStatus();
     }
