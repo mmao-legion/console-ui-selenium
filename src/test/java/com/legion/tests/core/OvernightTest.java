@@ -227,7 +227,7 @@ public class OvernightTest extends TestBase {
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
             String shiftId = scheduleShiftTablePage.getAllShiftsOfOneTM(firstNameOfTM1).get(0).getAttribute("id");
-            scheduleCommonPage.clickOnDayView();
+//            scheduleCommonPage.clickOnDayView();
             scheduleCommonPage.navigateDayViewWithIndex(2);
             //Verify overnight shift can be created
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -237,6 +237,7 @@ public class OvernightTest extends TestBase {
             scheduleMainPage.saveSchedule();
             //Verify the overnight shift can display on next day
             scheduleCommonPage.navigateDayViewWithIndex(3);
+            Thread.sleep(3000);
             SimpleUtils.assertOnFail("The overnight shift also display on the next day! ",
                     scheduleShiftTablePage.getShiftById(shiftId)!=null, false);
 
