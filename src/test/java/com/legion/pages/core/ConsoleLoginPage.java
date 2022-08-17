@@ -117,7 +117,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	private boolean isUserNameInputLoaded() {
 		boolean isLoaded = false;
 		try {
-			if (isElementLoaded(userNameField, 90) || isElementLoaded(newUserNameField, 90)) {
+			if (isElementLoaded(newUserNameField, 90) || isElementLoaded(userNameField, 90)) {
 				isLoaded = true;
 			}
 		} catch (Exception e) {

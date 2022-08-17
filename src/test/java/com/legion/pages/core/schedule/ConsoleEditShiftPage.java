@@ -4,6 +4,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.EditShiftPage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -370,7 +371,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public void clickOnUpdateButton() throws Exception {
-        waitForSeconds(1);
+        waitForSeconds(2);
         if (isElementLoaded(updateButton, 5)) {
             clickTheElement(updateButton);
         }
@@ -411,9 +412,12 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
             timeSection = getSpecificElementByTypeAndColumn(sectionType.EndTime.getType(), "Edited");
         }
         WebElement input = timeSection.findElement(By.cssSelector("[placeholder*=\"Time\"]"));
-        input.clear();
+        input.click();
+        input.sendKeys(Keys.CONTROL, "a");
+        input.sendKeys(Keys.DELETE);
         input.sendKeys(time);
-        if (input.getAttribute("value").toLowerCase().equals(time.toLowerCase())) {
+        waitForSeconds(15);
+        if (input.getAttribute("value").toLowerCase().contains(time.toLowerCase())) {
             SimpleUtils.pass("Input the string in Time successfully!");
         } else {
             SimpleUtils.fail("Input the string in Time failed!", false);

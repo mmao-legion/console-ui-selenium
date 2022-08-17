@@ -302,9 +302,9 @@ public class BulkDeleteNEditTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             // Create 2 shifts with all different
             createShiftsWithSpecificValues(workRole1, shiftName1, "", "9:00am", "12:00pm",
-                    1, 1, ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), shiftNotes1);
+                    1, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), shiftNotes1, "");
             createShiftsWithSpecificValues(workRole2, shiftName2, "", "1:00pm", "3:00pm",
-                    1, 2, ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNotes2);
+                    1, Arrays.asList(2), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNotes2, "");
 
             HashSet<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
 
@@ -334,7 +334,7 @@ public class BulkDeleteNEditTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             createShiftsWithSpecificValues(workRole1, shiftName1, null, "9:00am", "12:00pm",
-                    2, 1, ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), shiftNotes1);
+                    2, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), shiftNotes1, "");
             String selectedDate = dates.get(1);
 
             shiftIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
@@ -528,7 +528,7 @@ public class BulkDeleteNEditTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             // Create 2 shifts with all different
             List<String> names = createShiftsWithSpecificValues(workRole1, "", "", "9:00am", "12:00pm",
-                    2, 1, ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "");
+                    2, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
@@ -705,9 +705,14 @@ public class BulkDeleteNEditTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "05:00pm",
-                    2, 1, ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "");
+                    2, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
 
             HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            Iterator<Integer> iterator = indexes.iterator();
+            List<Integer> indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
             scheduleMainPage.saveSchedule();
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -721,19 +726,22 @@ public class BulkDeleteNEditTest extends TestBase {
             String inputStartTime = "10:00 AM";
             editShiftPage.inputStartOrEndTime(inputStartTime, true);
             editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
 
             // Verify the start time of the shifts is updated
-            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             String startTime1 = shiftInfo1.get(6).split("-")[0].trim();
+            System.out.println(startTime1);
             String startTime2 = shiftInfo2.get(6).split("-")[0].trim();
+            System.out.println(startTime2);
             SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1) &&
                     inputStartTime.equalsIgnoreCase(startTime2), false);
 
             // Verify the start time is saved
             scheduleMainPage.saveSchedule();
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[0].trim();
             startTime2 = shiftInfo2.get(6).split("-")[0].trim();
             SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1) &&
@@ -764,8 +772,8 @@ public class BulkDeleteNEditTest extends TestBase {
             mySchedulePage.verifyThePopupMessageOnTop("Success");
 
             // Verify the start time of the shifts is updated
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[0].trim();
             startTime2 = shiftInfo2.get(6).split("-")[0].trim();
             SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1) &&
@@ -773,8 +781,8 @@ public class BulkDeleteNEditTest extends TestBase {
 
             // Verify the start time is saved
             scheduleMainPage.saveSchedule();
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[0].trim();
             startTime2 = shiftInfo2.get(6).split("-")[0].trim();
             SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1) &&
@@ -791,8 +799,8 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.verifyTheFunctionalityOfOffsetTime("1", null, "Early", true);
             editShiftPage.clickOnUpdateButton();
             inputStartTime = "03:00 am";
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[0].trim();
             startTime2 = shiftInfo2.get(6).split("-")[0].trim();
             SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1) &&
@@ -807,8 +815,8 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.verifyTheFunctionalityOfOffsetTime("6", null, "Late", true);
             editShiftPage.clickOnUpdateButton();
             inputStartTime = "09:00 am";
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[0].trim();
             startTime2 = shiftInfo2.get(6).split("-")[0].trim();
             SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1) &&
@@ -816,8 +824,8 @@ public class BulkDeleteNEditTest extends TestBase {
 
             // Verify the start time can be saved successfully
             scheduleMainPage.saveSchedule();
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[0].trim();
             startTime2 = shiftInfo2.get(6).split("-")[0].trim();
             SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1) &&
@@ -849,9 +857,14 @@ public class BulkDeleteNEditTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "05:00pm",
-                    2, 1, ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "");
+                    2, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
 
             HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            Iterator<Integer> iterator = indexes.iterator();
+            List<Integer> indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
             scheduleMainPage.saveSchedule();
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -867,8 +880,8 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.clickOnUpdateButton();
 
             // Verify the start time of the shifts is updated
-            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             String startTime1 = shiftInfo1.get(6).split("-")[1].trim();
             String startTime2 = shiftInfo2.get(6).split("-")[1].trim();
             SimpleUtils.assertOnFail("End time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
@@ -876,8 +889,8 @@ public class BulkDeleteNEditTest extends TestBase {
 
             // Verify the end time is saved
             scheduleMainPage.saveSchedule();
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[1].trim();
             startTime2 = shiftInfo2.get(6).split("-")[1].trim();
             SimpleUtils.assertOnFail("End time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
@@ -908,8 +921,8 @@ public class BulkDeleteNEditTest extends TestBase {
             mySchedulePage.verifyThePopupMessageOnTop("Success");
 
             // Verify the end time of the shifts is updated
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[1].trim();
             startTime2 = shiftInfo2.get(6).split("-")[1].trim();
             SimpleUtils.assertOnFail("Start time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
@@ -917,8 +930,8 @@ public class BulkDeleteNEditTest extends TestBase {
 
             // Verify the end time is saved
             scheduleMainPage.saveSchedule();
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[1].trim();
             startTime2 = shiftInfo2.get(6).split("-")[1].trim();
             SimpleUtils.assertOnFail("Start time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
@@ -935,8 +948,8 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.verifyTheFunctionalityOfOffsetTime("3", null, "Early", false);
             editShiftPage.clickOnUpdateButton();
             inputEndTime = "04:00 pm";
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[1].trim();
             startTime2 = shiftInfo2.get(6).split("-")[1].trim();
             SimpleUtils.assertOnFail("End time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
@@ -951,8 +964,8 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.verifyTheFunctionalityOfOffsetTime("1", null, "Late", true);
             editShiftPage.clickOnUpdateButton();
             inputEndTime = "05:00 pm";
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[1].trim();
             startTime2 = shiftInfo2.get(6).split("-")[1].trim();
             SimpleUtils.assertOnFail("End time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
@@ -960,59 +973,12 @@ public class BulkDeleteNEditTest extends TestBase {
 
             // Verify the start time can be saved successfully
             scheduleMainPage.saveSchedule();
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(indexes.toArray()[1].toString()));
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[1].trim();
             startTime2 = shiftInfo2.get(6).split("-")[1].trim();
             SimpleUtils.assertOnFail("Start time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
                     inputEndTime.equalsIgnoreCase(startTime2), false);
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-    }
-
-    @Automated(automated ="Automated")
-    @Owner(owner = "Nora")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify the functionality of changing Date")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        try {
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-            // Go to Schedule page, Schedule tab
-            goToSchedulePageScheduleTab();
-
-            // Create schedule if it is not created
-            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (isWeekGenerated) {
-                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-            }
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
-            String workRole = shiftOperatePage.getRandomWorkRole();
-
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "05:00pm",
-                    2, 0, ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), "");
-
-            HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
-            scheduleMainPage.saveSchedule();
-
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.selectSpecificShifts(indexes);
-            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
-            String action = "Edit";
-            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
-            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
-
-            editShiftPage.clickOnDateSelect();
-            List<String> dates = editShiftPage.getOptionsFromSpecificSelect();
-
-            // Verify can change the date without selecting the two options
-            editShiftPage.selectSpecificOptionByText(dates.get(1));
-            editShiftPage.clickOnUpdateButton();
-
-            
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

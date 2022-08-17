@@ -509,7 +509,7 @@ public abstract class TestBase {
     }
 
     protected List<String> createShiftsWithSpecificValues(String workRole, String shiftName, String location, String startTime,
-        String endTime, int shiftPerDay, int workDay, String assignment, String shiftNotes) throws Exception {
+        String endTime, int shiftPerDay, List<Integer> workDays, String assignment, String shiftNotes, String tmName) throws Exception {
         List<String> selectedTMs = new ArrayList<>();
         NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
@@ -539,7 +539,13 @@ public abstract class TestBase {
         newShiftPage.setShiftPerDayOnNewCreateShiftPage(shiftPerDay);
         // Select work day
         newShiftPage.clearAllSelectedDays();
-        newShiftPage.selectMultipleOrSpecificWorkDay(workDay, true);
+        if (workDays.size() == 1) {
+            newShiftPage.selectMultipleOrSpecificWorkDay(workDays.get(0), true);
+        } else if (workDays.size() > 1) {
+            for (int i : workDays) {
+                newShiftPage.selectMultipleOrSpecificWorkDay(workDays.get(i), true);
+            }
+        }
         // Select the assignment
         newShiftPage.clickRadioBtnStaffingOption(assignment);
         // Set shift notes
@@ -549,8 +555,12 @@ public abstract class TestBase {
         newShiftPage.clickOnCreateOrNextBtn();
         if (assignment.equals(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue())) {
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
-            for (int i = 0; i < shiftPerDay; i++) {
-                selectedTMs.add(newShiftPage.selectTeamMembers());
+            if (tmName != null && !tmName.isEmpty()) {
+                newShiftPage.searchTeamMemberByName(tmName);
+            } else {
+                for (int i = 0; i < shiftPerDay; i++) {
+                    selectedTMs.add(newShiftPage.selectTeamMembers());
+                }
             }
             newShiftPage.clickOnCreateOrNextBtn();
         }
