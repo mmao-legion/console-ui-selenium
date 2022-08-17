@@ -3383,6 +3383,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public HashMap<String, Integer> getTotalShiftHrsAndShiftCountThisWeek() throws Exception {
         HashMap<String, Integer> totalShiftHrsAndShiftCount= new HashMap<String, Integer>();
         if (areListElementVisible(totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage, 5)) {
+            waitForSeconds(2);
             try {
                 WebElement totalShiftHrs = totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage.get(0)
                         .findElement(By.xpath("./div/div[2]"));
