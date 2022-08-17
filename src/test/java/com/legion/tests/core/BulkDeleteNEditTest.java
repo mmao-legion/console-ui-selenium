@@ -405,47 +405,8 @@ public class BulkDeleteNEditTest extends TestBase {
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
 
-            // Verify the content in Date select
-            editShiftPage.clickOnDateSelect();
-            List<String> dates = editShiftPage.getOptionsFromSpecificSelect();
-            for (String date : dates) {
-                if (!date.contains("Sunday") && !date.contains("Monday") && !date.contains("Tuesday") && !date.contains("Wednesday")
-                        && !date.contains("Thursday") && !date.contains("Friday") && !date.contains("Saturday")) {
-                    SimpleUtils.fail("The content of dates are incorrect!", false);
-                    break;
-                }
-            }
-            // Verify can select the date
-            editShiftPage.selectSpecificOptionByText(dates.get(0));
-            SimpleUtils.assertOnFail("Failed to select the date: " + dates.get(0), editShiftPage.getSelectedDate()
-                    .trim().contains(dates.get(0)), false);
-            // Verify the content in Assignment Select
-            editShiftPage.clickOnAssignmentSelect();
-            List<String> assignments = editShiftPage.getOptionsFromSpecificSelect();
-            List<String> expectedAssignments = new ArrayList<>();
-            expectedAssignments.add("Do not change assignments");
-            expectedAssignments.add("Open Shift: Auto offer to TMs");
-            expectedAssignments.add("Assign or Offer to specific TM's");
-            if (assignments.containsAll(expectedAssignments) && expectedAssignments.containsAll(assignments)) {
-                SimpleUtils.pass("The content in Assignment list is correct!");
-            } else {
-                SimpleUtils.fail("The content in Assignment list is incorrect!", false);
-            }
-            // Verify can select the Assignment
-            editShiftPage.selectSpecificOptionByText(assignments.get(0));
-            editShiftPage.getSelectedAssignment();
-            SimpleUtils.assertOnFail("Failed to select the assignment: " + assignments.get(0), editShiftPage
-                    .getSelectedAssignment().trim().contains(assignments.get(0)), false);
-            // Verify can input the shift notes
-            editShiftPage.inputShiftNotes("notes");
-            // Verify can select the two options
-            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowConflicts.getOption(), true);
-            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowComplianceErrors.getOption(), false);
-            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowConflicts.getOption(), true);
-            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowComplianceErrors.getOption(), false);
-
             // Verify the functionality of Start Time input
-            editShiftPage.inputStartOrEndTime("12:00 AM", true);
+            editShiftPage.inputStartOrEndTime("09:00 AM", true);
             // Verify selecting Use Offset checkbox on Start Time section
             editShiftPage.checkUseOffset(true, true);
             // Verify the functionality of Mins input in Start Time section
@@ -476,6 +437,47 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.checkUseOffset(false, false);
             // Verify the functionality of Next day check box
             editShiftPage.checkOrUnCheckNextDayOnBulkEditPage(true);
+
+            // Verify the content in Date select
+            editShiftPage.clickOnDateSelect();
+            List<String> dates = editShiftPage.getOptionsFromSpecificSelect();
+            for (String date : dates) {
+                if (!date.contains("Sunday") && !date.contains("Monday") && !date.contains("Tuesday") && !date.contains("Wednesday")
+                        && !date.contains("Thursday") && !date.contains("Friday") && !date.contains("Saturday")) {
+                    SimpleUtils.fail("The content of dates are incorrect!", false);
+                    break;
+                }
+            }
+            // Verify can select the date
+            editShiftPage.selectSpecificOptionByText(dates.get(0));
+            SimpleUtils.assertOnFail("Failed to select the date: " + dates.get(0), editShiftPage.getSelectedDate()
+                    .trim().contains(dates.get(0)), false);
+            // Verify the content in Assignment Select
+            editShiftPage.clickOnAssignmentSelect();
+            List<String> assignments = editShiftPage.getOptionsFromSpecificSelect();
+            List<String> expectedAssignments = new ArrayList<>();
+            expectedAssignments.add("Do not change assignments");
+            expectedAssignments.add("Open Shift: Auto Offer to TMs");
+            expectedAssignments.add("Assign or Offer to Specific TM's");
+            String info = "Only the shifts with same start time, end time, location and worker role can be bulk-assigned";
+            if (assignments.get(0).equalsIgnoreCase(expectedAssignments.get(0)) && assignments.get(1).equalsIgnoreCase(
+                    expectedAssignments.get(1)) && assignments.get(2).contains(expectedAssignments.get(2))) {
+                SimpleUtils.pass("The content in Assignment list is correct!");
+            } else {
+                SimpleUtils.fail("The content in Assignment list is incorrect!", false);
+            }
+            // Verify can select the Assignment
+            editShiftPage.selectSpecificOptionByText(assignments.get(0));
+            editShiftPage.getSelectedAssignment();
+            SimpleUtils.assertOnFail("Failed to select the assignment: " + assignments.get(0), editShiftPage
+                    .getSelectedAssignment().trim().contains(assignments.get(0)), false);
+            // Verify can input the shift notes
+            editShiftPage.inputShiftNotes("notes");
+            // Verify can select the two options
+            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowConflicts.getOption(), true);
+            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowComplianceErrors.getOption(), false);
+            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowConflicts.getOption(), true);
+            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowComplianceErrors.getOption(), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

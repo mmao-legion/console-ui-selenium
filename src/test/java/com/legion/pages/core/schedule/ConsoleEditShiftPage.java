@@ -464,7 +464,6 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         hoursInput.click();
         hoursInput.clear();
         minsInput.clear();
-        minsInput.sendKeys("");
         if (hours != null && !hours.isEmpty()) {
             hoursInput.sendKeys(hours);
             if (Integer.parseInt(hours) >= 12) {
