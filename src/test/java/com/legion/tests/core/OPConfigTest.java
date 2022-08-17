@@ -394,11 +394,23 @@ public class OPConfigTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
             String textOnScheduleSmartCard = smartCardPage.getsmartCardTextByLabel("Schedule V");
+            i=0;
+            while (i<15 && !textOnScheduleSmartCard.toLowerCase().contains(option.toLowerCase())) {
+                Thread.sleep(60000);
+                loginPage.logOut();
+                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+                Thread.sleep(5000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+                forecastPage.clickOnLabor();
+                textOnScheduleSmartCard = smartCardPage.getsmartCardTextByLabel("Schedule V");
+                i++;
+            }
             SimpleUtils.assertOnFail("The Wages row should display on Schedule smart card! The actual text is "+ textOnScheduleSmartCard,
                     textOnScheduleSmartCard.toLowerCase().contains(option.toLowerCase()), false);
 
-//            //Change setting for previous case to save the waiting session time
-//            setLaborPreferencesForForecastSummarySmartcardSetting("None");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }

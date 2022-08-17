@@ -428,6 +428,7 @@ public abstract class TestBase {
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         SimpleUtils.report(getDriver().getCurrentUrl());
         loginPage.loginToLegionWithCredential(username, Password);
+        loginPage.verifyLegionTermsOfService();
         loginPage.verifyNewTermsOfServicePopUp();
         SimpleUtils.assertOnFail("Failed to login to the application!", loginPage.isLoginSuccess(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();

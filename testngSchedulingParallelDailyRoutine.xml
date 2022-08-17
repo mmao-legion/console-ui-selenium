@@ -139,10 +139,7 @@
 <!--                    <include name="verifyTheBudgetHoursWhenByLocationAsInternalAdmin" Blocked by SCH-7081 />-->
                     <!-- <include name="verifyTMOverTimeStatusAsInternalAdmin" /> -->
                     <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
-                    <include name="verifyOverrideAssignmentRulesToYesAsInternalAdmin" />
-                    <include name="verifyOverrideAssignmentRulesToNoAsInternalAdmin" />
                     <!--                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7351-->
-
                     <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
                     <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
                                    </methods>
