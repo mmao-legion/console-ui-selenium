@@ -1,5 +1,6 @@
 package com.legion.tests.core;
 
+import com.legion.api.cache.RemoveTemplateSnapShotForLocationsAPI;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
@@ -266,6 +267,7 @@ public class OPConfigTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI("stoneman@legion.co", "admin11.a");
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ForecastPage forecastPage = pageFactory.createForecastPage();
@@ -344,6 +346,7 @@ public class OPConfigTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI("stoneman@legion.co", "admin11.a");
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ForecastPage forecastPage = pageFactory.createForecastPage();

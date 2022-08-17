@@ -109,6 +109,7 @@
                     <include name="verifyOverrideAssignmentRulesToNoAsInternalAdmin" />
                     <!--                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7351-->
                     <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
+                    <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
                    </methods>
                </class>
            </classes>
@@ -518,6 +519,7 @@ SCH-5862-->
                     <include name="verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin" />
                     <include name="verifyShiftWhenEnableContinuousOperationOptionAsInternalAdmin" />
         <!--            <include name="verifyTheShiftThatOverlappingWithPreviousWeekShiftCannotBeCreatedAsInternalAdmin" /> SCH-6732-->
+                    <include name="verifyShiftCanBeDragToPreviousDayAsInternalAdmin" />
                     <!-- unselect Continuous Operation -->
                     <include name="verifyShiftWhenDisableContinuousOperationOptionAsInternalAdmin" />
                     <include name="verifyTMWithOutBadgeCannotClaimTheShiftWithWorkRoleThatRequiredBadgeAsTeamMember" />

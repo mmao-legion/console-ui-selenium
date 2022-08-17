@@ -365,7 +365,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 	@Override
 	public List<WebElement> getOverviewScheduleWeeks() {
-		waitForSeconds(3);
+		waitForSeconds(5);
 		List<WebElement> overviewWeekList = new ArrayList<>();
 		if(areListElementVisible(overviewTableRows,15) && areListElementVisible(overviewScheduleWeekList)){
 			overviewWeekList = overviewScheduleWeekList;
