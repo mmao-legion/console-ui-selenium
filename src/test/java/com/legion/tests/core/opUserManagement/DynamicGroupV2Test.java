@@ -59,6 +59,8 @@ public class DynamicGroupV2Test extends TestBase {
     @TestName(description = "Validate the name for dynamic user group")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNameForDynamicEmployeeGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        String templateName = "AutoTest"+System.currentTimeMillis();
+
         ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
         SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
         configurationPage.goToConfigurationPage();
@@ -66,7 +68,20 @@ public class DynamicGroupV2Test extends TestBase {
         settingsAndAssociationPage.goToTemplateListOrSettings("setting");
         settingsAndAssociationPage.verifyTitleOnTheSettingsPage("Employee");
         settingsAndAssociationPage.goToTemplateListOrSettings("template list");
-        configurationPage.clickOnTemplateName("");
+        //Create minor rules template
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
+        settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Minor.getValue(), "IN", "15");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+        //Edit the template, check the title
+        configurationPage.clickOnTemplateName(templateName);
         settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
         settingsAndAssociationPage.verifyTitleOnTheSAssociationPage("Employee");
         configurationPage.clickOnTemplateDetailTab();
@@ -518,7 +533,7 @@ public class DynamicGroupV2Test extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate criteria selection and usage for dynamic location group criteria")
+    @TestName(description = "Validate permission for settings tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCriteriaSelectionAndUsageForDynamicLocationGroupAsStoreManager(String browser, String username, String password, String location) throws Exception {
         ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
