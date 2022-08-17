@@ -370,7 +370,10 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public void clickOnUpdateButton() throws Exception {
-        clickTheElement(updateButton);
+        waitForSeconds(1);
+        if (isElementLoaded(updateButton, 5)) {
+            clickTheElement(updateButton);
+        }
     }
 
     @Override
@@ -410,7 +413,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         WebElement input = timeSection.findElement(By.cssSelector("[placeholder*=\"Time\"]"));
         input.clear();
         input.sendKeys(time);
-        if (input.getAttribute("value").equals(time)) {
+        if (input.getAttribute("value").toLowerCase().equals(time.toLowerCase())) {
             SimpleUtils.pass("Input the string in Time successfully!");
         } else {
             SimpleUtils.fail("Input the string in Time failed!", false);

@@ -536,6 +536,9 @@ SCH-5862-->
                     <include name="verifyTheContentOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyTheCurrentColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyTheEditedColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
+<!--                    <include name="verifyChangingShiftNameOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: https://legiontech.atlassian.net/browse/SCH-6997/>-->
+                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
