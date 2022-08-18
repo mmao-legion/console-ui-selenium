@@ -4705,9 +4705,11 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnConfigurationCrad(templateType);
             configurationPage.searchTemplate(templateName);
             configurationPage.clickOnTemplateName(templateName);
-
+            configurationPage.verifyDefaultValueOfOverrideViaIntegrationButton();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
 }

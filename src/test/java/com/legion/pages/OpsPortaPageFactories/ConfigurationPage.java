@@ -245,4 +245,5 @@ public interface ConfigurationPage {
     public boolean verifyWarningIconsDisplay(String templateName2, String expectedWarningMsg) throws Exception;
     public int getUnassignedNumber() throws Exception;
     public boolean verifyUnassignedSmartCardDownloadFile(String fileName, Map<String, String> criteriaAndValue) throws Exception;
+    public void verifyDefaultValueOfOverrideViaIntegrationButton();
 }
