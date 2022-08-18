@@ -2059,6 +2059,19 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             return false;
     }
 
+    @Override
+    public List<String> getWorkRoleListFromChangeShiftRoleOption() throws Exception {
+        List<String> workRoles = new ArrayList<>();
+        if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() >0) {
+            for (WebElement shiftRole : shiftRoleList) {
+                workRoles.add(shiftRole.findElement(By.
+                        cssSelector("span.sch-worker-change-role-name")).getText());
+            }
+        } else {
+            SimpleUtils.fail("Work roles are doesn't show well ", true);
+        }
+        return workRoles;
+    }
 
     @FindBy(css="div.modal-content")
     private WebElement popupSelectTM;
