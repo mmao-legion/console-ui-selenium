@@ -416,7 +416,10 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         input.sendKeys(Keys.CONTROL, "a");
         input.sendKeys(Keys.DELETE);
         input.sendKeys(time);
-        waitForSeconds(15);
+//        waitForSeconds(15);
+        WebElement shiftNameInputSection = getSpecificElementByTypeAndColumn(sectionType.ShiftName.getType(), "Edited");
+        WebElement shiftNameInput = shiftNameInputSection.findElement(By.cssSelector("[placeholder=\"Shift Name (Optional)\"]"));
+        shiftNameInput.click();
         if (input.getAttribute("value").toLowerCase().contains(time.toLowerCase())) {
             SimpleUtils.pass("Input the string in Time successfully!");
         } else {
