@@ -748,17 +748,20 @@ public class BulkDeleteNEditTest extends TestBase {
                     inputStartTime.equalsIgnoreCase(startTime2), false);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            inputStartTime = "04:00 AM";
+            inputStartTime = "4:00 AM";
             scheduleShiftTablePage.selectSpecificShifts(indexes);
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
 
-            // Verify error will pop up when changing the start time will cause violation
+            // Verify success will pop up when changing the start time will cause violation
             editShiftPage.inputStartOrEndTime(inputStartTime, true);
             editShiftPage.clickOnUpdateButton();
-            mySchedulePage.verifyThePopupMessageOnTop("Error");
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
 
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             scheduleShiftTablePage.selectSpecificShifts(indexes);
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
@@ -770,6 +773,12 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowComplianceErrors.getOption(), true);
             editShiftPage.clickOnUpdateButton();
             mySchedulePage.verifyThePopupMessageOnTop("Success");
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            iterator = indexes.iterator();
+            indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
 
             // Verify the start time of the shifts is updated
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
@@ -798,13 +807,21 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.checkUseOffset(true, true);
             editShiftPage.verifyTheFunctionalityOfOffsetTime("1", null, "Early", true);
             editShiftPage.clickOnUpdateButton();
-            inputStartTime = "03:00 am";
+            inputStartTime = "3:00 am";
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            iterator = indexes.iterator();
+            indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
             shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[0].trim();
             startTime2 = shiftInfo2.get(6).split("-")[0].trim();
             SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1) &&
                     inputStartTime.equalsIgnoreCase(startTime2), false);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Verify the start time shows correctly using later offset
             scheduleShiftTablePage.selectSpecificShifts(indexes);
@@ -814,7 +831,13 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.checkUseOffset(true, true);
             editShiftPage.verifyTheFunctionalityOfOffsetTime("6", null, "Late", true);
             editShiftPage.clickOnUpdateButton();
-            inputStartTime = "09:00 am";
+            inputStartTime = "9:00 am";
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            iterator = indexes.iterator();
+            indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
             shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[0].trim();
@@ -875,7 +898,7 @@ public class BulkDeleteNEditTest extends TestBase {
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
 
             // Verify can change the end time without checking options
-            String inputEndTime = "04:00 pm";
+            String inputEndTime = "4:00 pm";
             editShiftPage.inputStartOrEndTime(inputEndTime, true);
             editShiftPage.clickOnUpdateButton();
 
@@ -897,7 +920,7 @@ public class BulkDeleteNEditTest extends TestBase {
                     inputEndTime.equalsIgnoreCase(startTime2), false);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            inputEndTime = "07:00 pm";
+            inputEndTime = "7:00 pm";
             scheduleShiftTablePage.selectSpecificShifts(indexes);
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
@@ -947,7 +970,7 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.checkUseOffset(false, true);
             editShiftPage.verifyTheFunctionalityOfOffsetTime("3", null, "Early", false);
             editShiftPage.clickOnUpdateButton();
-            inputEndTime = "04:00 pm";
+            inputEndTime = "4:00 pm";
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
             shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[1].trim();
@@ -963,7 +986,7 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.checkUseOffset(true, true);
             editShiftPage.verifyTheFunctionalityOfOffsetTime("1", null, "Late", true);
             editShiftPage.clickOnUpdateButton();
-            inputEndTime = "05:00 pm";
+            inputEndTime = "5:00 pm";
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
             shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[1].trim();
