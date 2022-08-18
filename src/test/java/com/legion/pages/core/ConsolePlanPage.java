@@ -4,6 +4,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.PlanPage;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.Scenario;
+import cucumber.api.java.an.E;
 import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -1319,6 +1320,24 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
         }else {
             SimpleUtils.fail("Plan landing page doesn't display.",false);
         }
+    }
+
+    @FindBy(css="div.om-job-details content-box:nth-child(2) ng-transclude>div.om-jobs-budget-details__separator+div")
+    private WebElement wageRateJobTitleSection;
+    @Override
+    public String verifyScenarioDetailPageUsingWorkRoleOrJobTitle(String planName, String scplan) throws Exception {
+        String workRoleOrJobTitle = null;
+        if (goToScenarioPlanDetail(planName, scplan)) {
+            SimpleUtils.pass("The test scenario plan existed");
+            if(isElementEnabled(wageRateJobTitleSection,2)){
+                // Wage Rate ||  Wage rate and headcount
+                workRoleOrJobTitle = wageRateJobTitleSection.findElement(By.cssSelector("h2")).getText().trim();
+
+            }
+        }else {
+            SimpleUtils.fail("There is no this scenario",false);
+        }
+        return workRoleOrJobTitle;
     }
 }
 

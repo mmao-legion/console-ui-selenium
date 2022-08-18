@@ -5199,5 +5199,27 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 		return null;
 	}
+
+	@Override
+	public String getLaborBudgetPlanComputeSettings(){
+		String computeSettings = null;
+		//get setting of computeBudgetCost
+		WebElement computeBudget = laborBudgetPlanSection.findElement(By.cssSelector("question-input[question-title*=\"cost?\"] select"));
+	    Select select = new Select(computeBudget);
+		computeSettings = select.getFirstSelectedOption().getText().trim();
+		return computeSettings;
+	}
+
+	@Override
+	public void UpdateOptionOfComputeBudgetCost(){
+		WebElement computeBudget = laborBudgetPlanSection.findElement(By.cssSelector("question-input[question-title*=\"cost?\"] select"));
+		Select select = new Select(computeBudget);
+		String computeSettings = select.getFirstSelectedOption().getText().trim();
+		if(computeSettings.contains("Work Role")){
+			select.selectByVisibleText("By Job Title Group Hourly Rate");
+		}else {
+			select.selectByVisibleText("By Work Role Hourly Rate");
+		}
+	}
 }
 
