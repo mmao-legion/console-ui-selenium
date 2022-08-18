@@ -4832,7 +4832,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			upperFieldLevelSelect.sendKeys(level);
 			upperfieldNameInput.sendKeys(districtName);
 			upperfieldIdInput.sendKeys(districtId);
-			selectByIndex(upperfieldManagerSelector, 1);
+			//selectByIndex(upperfieldManagerSelector, 1);
 			waitForSeconds(3);
 			selectFirstDayOfWeek.sendKeys("Saturday");
 			//click(ManagerBtnInDistrictCreationPage);
