@@ -4711,5 +4711,42 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Update Reset location level OH when the button is off")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOverriddenOperatingHoursInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+
+            String locationName = "updateOHViaIntegration";
+            int moveCount = 4;
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+//            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+//            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Operating Hours", "View");
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Operating Hours", "Edit");
+
+            locationsPage.editBtnIsClickableInBusinessHours();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            locationsPage.selectDayInWorkingHoursPopUpWin(6);
+            configurationPage.saveBtnIsClickable();
+            configurationPage.saveBtnIsClickable();
+            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "Yes");
+            //reset
+            locationsPage.clickActionsForTemplate("Operating Hours", "Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "No");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 
 }

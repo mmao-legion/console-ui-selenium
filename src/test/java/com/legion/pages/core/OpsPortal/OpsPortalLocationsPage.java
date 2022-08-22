@@ -4037,7 +4037,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "lg-button[label = 'Edit']>button")
 	private List<WebElement> editBtnsInOH;
-	@FindBy(css = "table.lg-table.ng-scope")
+//	@FindBy(css = "table.lg-table.ng-scope")
+	@FindBy(css="div.modal-dialog div.modal-content")
 	private WebElement workingHoursModalBody;
 	@FindBy(css = ".each-day-selector>input-field>ng-form>input[type=\"checkbox\"]")
 	private List<WebElement> checkBoxOfEachDay;
