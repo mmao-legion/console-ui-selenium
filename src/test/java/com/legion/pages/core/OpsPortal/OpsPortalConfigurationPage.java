@@ -7268,4 +7268,18 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 		return flag;
 	}
+
+	@FindBy(css="lg-switch[value*=\"overrideViaIntegration\"] label[class=\"switch\"]")
+	private WebElement overrideViaIntegrationBTN;
+
+	@Override
+	public void verifyDefaultValueOfOverrideViaIntegrationButton(){
+		if(isElementEnabled(overrideViaIntegrationBTN,2)){
+			if(!overrideViaIntegrationBTN.findElement(By.cssSelector("input")).getAttribute("class").trim().contains("not-empty")){
+				SimpleUtils.pass("The overrideViaIntegration button is disabled by default");
+			}else {
+				SimpleUtils.fail("The overrideViaIntegration button is enabled by default",false);
+			}
+		}
+	}
 }

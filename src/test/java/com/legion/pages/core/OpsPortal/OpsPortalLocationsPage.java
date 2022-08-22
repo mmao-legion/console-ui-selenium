@@ -4037,7 +4037,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "lg-button[label = 'Edit']>button")
 	private List<WebElement> editBtnsInOH;
-	@FindBy(css = "table.lg-table.ng-scope")
+//	@FindBy(css = "table.lg-table.ng-scope")
+	@FindBy(css="div.modal-dialog div.modal-content")
 	private WebElement workingHoursModalBody;
 	@FindBy(css = ".each-day-selector>input-field>ng-form>input[type=\"checkbox\"]")
 	private List<WebElement> checkBoxOfEachDay;
@@ -4832,7 +4833,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			upperFieldLevelSelect.sendKeys(level);
 			upperfieldNameInput.sendKeys(districtName);
 			upperfieldIdInput.sendKeys(districtId);
-			selectByIndex(upperfieldManagerSelector, 1);
+			//selectByIndex(upperfieldManagerSelector, 1);
 			waitForSeconds(3);
 			selectFirstDayOfWeek.sendKeys("Saturday");
 			//click(ManagerBtnInDistrictCreationPage);
@@ -5198,6 +5199,28 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Test button is not on the page!", false);
 		}
 		return null;
+	}
+
+	@Override
+	public String getLaborBudgetPlanComputeSettings(){
+		String computeSettings = null;
+		//get setting of computeBudgetCost
+		WebElement computeBudget = laborBudgetPlanSection.findElement(By.cssSelector("question-input[question-title*=\"cost?\"] select"));
+	    Select select = new Select(computeBudget);
+		computeSettings = select.getFirstSelectedOption().getText().trim();
+		return computeSettings;
+	}
+
+	@Override
+	public void UpdateOptionOfComputeBudgetCost(){
+		WebElement computeBudget = laborBudgetPlanSection.findElement(By.cssSelector("question-input[question-title*=\"cost?\"] select"));
+		Select select = new Select(computeBudget);
+		String computeSettings = select.getFirstSelectedOption().getText().trim();
+		if(computeSettings.contains("Work Role")){
+			select.selectByVisibleText("By Job Title Group Hourly Rate");
+		}else {
+			select.selectByVisibleText("By Work Role Hourly Rate");
+		}
 	}
 }
 

@@ -24,7 +24,7 @@ public interface PlanPage {
     public boolean verifyCreatePlanButtonShowing() throws Exception;
     public void verifyPlanStatus(String planName) throws Exception;
     public void verifySetInEffectPopup(String planName,String scplanName) throws Exception;
-
+    public String verifyScenarioDetailPageUsingWorkRoleOrJobTitle(String planName, String scplan) throws Exception;
 
 
 }

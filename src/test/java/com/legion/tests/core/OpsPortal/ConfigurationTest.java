@@ -1007,7 +1007,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify archive published template")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyArchivePublishedTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String action = "Archive";
@@ -4686,4 +4686,67 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify default value of override via integration button")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void ValidateDefaultValueOfOverrideViaIntegrationButtonAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+
+            String templateType = "Operating Hours";
+            String templateName ="FionaUsingUpdateLocationLevelOH";
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime = dfs.format(new Date()).trim();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.searchTemplate(templateName);
+            configurationPage.clickOnTemplateName(templateName);
+            configurationPage.verifyDefaultValueOfOverrideViaIntegrationButton();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Update Reset location level OH when the button is off")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOverriddenOperatingHoursInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+
+            String locationName = "updateOHViaIntegration";
+            int moveCount = 4;
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+//            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+//            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Operating Hours", "View");
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Operating Hours", "Edit");
+
+            locationsPage.editBtnIsClickableInBusinessHours();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            locationsPage.selectDayInWorkingHoursPopUpWin(6);
+            configurationPage.saveBtnIsClickable();
+            configurationPage.saveBtnIsClickable();
+            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "Yes");
+            //reset
+            locationsPage.clickActionsForTemplate("Operating Hours", "Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "No");
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }

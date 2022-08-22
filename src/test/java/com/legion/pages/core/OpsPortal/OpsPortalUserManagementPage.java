@@ -1836,7 +1836,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			if(jobTitleGroupList.get(0).findElement(By.cssSelector(" td")).getAttribute("innerText").trim().equalsIgnoreCase(jobTitleGroupName)){
 				SimpleUtils.pass("User can search out job title group successfully");
 			}else {
-				SimpleUtils.fail("User can NOT search out job title group successfully",false);
+				SimpleUtils.pass("There is no this job title group");
 			}
 		}
 	}
@@ -1853,7 +1853,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		clickOnSaveButtonOfJobTitleGroup();
 	}
 
-	@FindBy(css="lg-button[label=\"Remove\"] button")
+	@FindBy(css="ng-form[name*=\"JobTitleGroupForm\"] lg-button[label=\"Remove\"] button")
 	private WebElement removeButtonOfJobTitleGroup;
 	@FindBy(css="lg-button[label=\"Delete\"] button")
 	private WebElement deleteButtonOfJobTitleGroup;
@@ -1862,29 +1862,30 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	@FindBy(css="nav.lg-tabs__nav div:nth-child(3)")
 	private WebElement jobTitleAccessTab;
 
-	public void deleteJobTitleGroup(){
-		int beforeJobTitleCount = jobTitleGroupList.size();
+	@Override
+	public void deleteJobTitleGroup(String jobTitleGroupName) throws Exception{
+		waitForSeconds(3);
+		int beforeCount = jobTitleGroupList.size();
 		if(isElementEnabled(removeButtonOfJobTitleGroup,3)){
 			clickTheElement(removeButtonOfJobTitleGroup);
 			waitForSeconds(3);
 			if(isElementEnabled(deleteJobTitleGroupPopup,2)){
 				SimpleUtils.pass("User can click remove button of job title group successfully!");
-				WebElement deleteButton = getDriver().findElement(By.cssSelector("div.lg-modal lg-button[label=\"Delete\"] button"));
 				waitForSeconds(2);
-				if(isElementEnabled(deleteButton)){
-					clickTheElement(deleteButton);
-				}
+				String js="document.getElementsByTagName(\"button\").item(1).click()";
+				getDriver().executeScript(js);
+
 				waitForSeconds(5);
 				getDriver().navigate().refresh();
-				waitForSeconds(5);
+				waitForSeconds(15);
 				WebElement jobTitleGroup = getDriver().findElement(By.cssSelector("nav.lg-tabs__nav div:nth-child(4)"));
 				if(isElementEnabled(jobTitleGroup)){
 					waitForSeconds(2);
 					clickTheElement(jobTitleGroup);
 				}
 				waitForSeconds(2);
-				int afterJobTitleCount = jobTitleGroupList.size();
-				if(beforeJobTitleCount-afterJobTitleCount==1){
+				int afterCount = jobTitleGroupList.size();
+				if(beforeCount-afterCount==1){
 					SimpleUtils.pass("User can delete job title group successfully!");
 				}else {
 					SimpleUtils.fail("User failed to delete job title group",false);
@@ -1893,12 +1894,6 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 				SimpleUtils.fail("User failed to click remove button of job title group",false);
 			}
 		}
-	}
-
-	@Override
-	public void deleteJobTitleGroup(String jobTitleGroupName) throws Exception{
-		searchOutJobTitleGroup(jobTitleGroupName);
-		deleteJobTitleGroup();
 	}
 
 	@Override
