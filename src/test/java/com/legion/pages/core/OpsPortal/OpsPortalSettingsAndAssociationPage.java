@@ -869,4 +869,53 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
 
         return flag;
     }
+
+    @FindBy(css = "lg-paged-search[ng-if*=\"$ctrl.attributeFieldList\"]")
+    private WebElement externalAttributesSetting;
+    @FindBy(css = "input-field input[placeholder*=\"location attribute\"]")
+    private WebElement attributeSearchInput;
+    @FindBy(css = "[ng-repeat*=\"$ctrl.sortedRows\"]")
+    private List<WebElement> locationAttributesInSettings;
+    public boolean verifyExternalAttributeExistInSettingsPage() throws Exception {
+        boolean isExist = false;
+        if (isElementLoaded(externalAttributesSetting, 5)
+                && isElementLoaded(attributeSearchInput, 5)
+                && areListElementVisible(locationAttributesInSettings, 5)){
+            isExist = true;
+        }
+        return isExist;
+    }
+
+    @Override
+    public List<String> getExternalAttributesInSettingsPage() throws Exception {
+        List<String> resultList = new ArrayList<>();
+        if (verifyExternalAttributeExistInSettingsPage()){
+            for (WebElement fieldRow: locationAttributesInSettings){
+                if (isElementLoaded(fieldRow.findElement(By.cssSelector("td.ng-binding")), 10)){
+                    resultList.add(fieldRow.findElement(By.cssSelector("td.ng-binding")).getText());
+                }
+            }
+        }else{
+                SimpleUtils.fail("Fail to find attribute fields!", false);
+        }
+        return resultList;
+    }
+    @FindBy(css = "[ng-repeat*=\"$ctrl.sortedRows\"]")
+    private List<WebElement> attributeSearchResults;
+    @Override
+    public boolean searchLocationAttributeInSettingsPage(String attributeName) throws Exception {
+        boolean isFound = false;
+        if (verifyExternalAttributeExistInSettingsPage()){
+            scrollToElement(attributeSearchInput);
+            attributeSearchInput.sendKeys(attributeName);
+            waitForSeconds(3);
+            if (getDriver().findElements(By.cssSelector("[ng-repeat*=\"$ctrl.sortedRows\"]")).size() > 0 &&
+                    getDriver().findElements(By.cssSelector("[ng-repeat*=\"$ctrl.sortedRows\"]")).get(0).findElement(By.cssSelector("td.ng-binding")).getText().equalsIgnoreCase(attributeName)){
+                isFound = true;
+            }
+        }else{
+            SimpleUtils.fail("Fail to find attribute fields!", false);
+        }
+        return isFound;
+    }
 }
