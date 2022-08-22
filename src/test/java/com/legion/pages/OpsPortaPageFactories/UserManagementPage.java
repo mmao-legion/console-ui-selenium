@@ -173,4 +173,6 @@ public interface UserManagementPage {
     public void clickOnAddWorkRoleButton();
 
     public List<String> getOptionListOfJobTitleInAssignmentRule();
+
+    public ArrayList<String> workRole();
 }

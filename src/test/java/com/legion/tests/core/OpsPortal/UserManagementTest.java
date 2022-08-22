@@ -1231,10 +1231,8 @@ public class UserManagementTest extends TestBase {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime = sdf.format(new Date()).trim();
             String jobTitleGroupName ="JobTitleGroup" + currentTime;
-            List<String> addHrJobTitles = new ArrayList<>(Arrays.asList("Customer Job Title B","Customer Job Title A"));
-            List<String> updateHrJobTitles = new ArrayList<>(Arrays.asList("District Manager","DM Planer"));
-//            List<String> addHrJobTitles = new ArrayList<>(Arrays.asList("SM Planner"));
-//            List<String> updateHrJobTitles = new ArrayList<>(Arrays.asList("Senior Manager"));
+            List<String> addHrJobTitles = new ArrayList<>(Arrays.asList("FionaAutoUsing1","FionaAutoUsing2"));
+            List<String> updateHrJobTitles = new ArrayList<>(Arrays.asList("FionaAutoUsing3","FionaAutoUsing4"));
             Random random1 = new Random();
             int number1 = random1.nextInt(90)+10;
             String averageHourlyRate= String.valueOf(number1);

@@ -335,4 +335,6 @@ public interface LocationsPage {
     public void selectAnOptionForCriteria(String country, String not_in, String afghanistan) throws Exception;
     public void clickAddMoreBtnOnWFSharing() throws Exception;
     public String clickOnTestBtnAndGetResultString() throws Exception;
+    public String getLaborBudgetPlanComputeSettings();
+    public void UpdateOptionOfComputeBudgetCost();
 }
