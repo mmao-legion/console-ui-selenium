@@ -42,4 +42,6 @@ public interface SettingsAndAssociationPage {
     public void changeCriteriaInSettingsTab() throws Exception;
     public void selectFirstOptionForCriteria() throws Exception;
     public boolean ifOperatorsCanBeSelected(List<String> valuesToCheck) throws Exception;
+    public List<String>  getExternalAttributesInSettingsPage() throws Exception;
+    public boolean  searchLocationAttributeInSettingsPage(String attributeName) throws Exception;
 }
