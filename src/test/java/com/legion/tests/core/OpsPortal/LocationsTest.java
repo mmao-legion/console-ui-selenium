@@ -1790,7 +1790,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Lizzy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "NSOLocation_Enhancements")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyNSOLocationEnhancementsCheckAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
         SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
         String currentTime = dfs.format(new Date());
