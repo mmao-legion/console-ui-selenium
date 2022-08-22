@@ -2358,7 +2358,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Yang")
     @Enterprise(name = "opauto")
     @TestName(description = "Split override/reset of Work Role and Location Attribute")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void VerifySplitOverrideResetOfWorkRoleAndLocationAttributeAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             String locationName = "locationAutoCreateForYang";
