@@ -59,9 +59,9 @@ public class ConfigurationTest extends TestBase {
 
 
         this.createDriver((String)params[0],"83","Window");
-        ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
-        ToggleAPI.enableToggle(Toggles.EnableDemandDriverTemplate.getValue(), "stoneman@legion.co", "admin11.a");
-        ToggleAPI.enableToggle(Toggles.MixedModeDemandDriverSwitch.getValue(), "stoneman@legion.co", "admin11.a");
+        ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "admin11.a");
+        ToggleAPI.enableToggle(Toggles.EnableDemandDriverTemplate.getValue(), "jane.meng+006@legion.co", "admin11.a");
+        ToggleAPI.enableToggle(Toggles.MixedModeDemandDriverSwitch.getValue(), "jane.meng+006@legion.co", "admin11.a");
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -2705,7 +2705,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on DynamicGroupV2 toggle
-            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "admin11.a");
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -2785,7 +2785,7 @@ public class ConfigurationTest extends TestBase {
             //Remove the associated locations and templates
             configurationPage.archiveOrDeleteAllTemplates();
             //Turn off DynamicGroupV2 toggle
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "admin11.a");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2828,7 +2828,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on DynamicGroupV2 toggle
-            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "admin11.a");
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -2883,7 +2883,7 @@ public class ConfigurationTest extends TestBase {
                     salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo.get("Category")), false);
 
             //Turn off DynamicGroupV2 toggle
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "admin11.a");
             switchToNewWindow();
             //Remove the associated locations and templates
             configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
@@ -2911,7 +2911,7 @@ public class ConfigurationTest extends TestBase {
             String derivedType = "Distributed";
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -2925,7 +2925,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.clickAddOrEditForDriver("Add");
             configurationPage.verifyForDerivedDemandDriverUI(derivedType, null);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2945,7 +2945,7 @@ public class ConfigurationTest extends TestBase {
             String parentType = "Parent Location";
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -2962,7 +2962,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnCancelButton();
             configurationPage.clickAddOrEditForDriver("Add");
             configurationPage.verifyForDerivedDemandDriverUI(derivedType, parentType);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2980,7 +2980,7 @@ public class ConfigurationTest extends TestBase {
             String derivedType = "Aggregated";
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -2994,7 +2994,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.clickAddOrEditForDriver("Add");
             configurationPage.verifyForDerivedDemandDriverUI(derivedType, null);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3053,7 +3053,7 @@ public class ConfigurationTest extends TestBase {
             };
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3084,7 +3084,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnTemplateDetailTab();
             configurationPage.publishNowTemplate();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3096,7 +3096,7 @@ public class ConfigurationTest extends TestBase {
     @TestName(description = "Validate Creation&Modification for Distributed Demand Driver.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreationAndEditForDistributedDemandDriverAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        try {
+//        try {
             String templateType = "Demand Drivers";
             SimpleDateFormat dfs = new SimpleDateFormat("MMddHHmm");
             String currentTime =  dfs.format(new Date()).trim();
@@ -3152,7 +3152,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3197,10 +3197,10 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnTemplateDetailTab();
             configurationPage.publishNowTemplate();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+//        } catch (Exception e) {
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
     }
 
     @Automated(automated = "Automated")
@@ -3265,7 +3265,7 @@ public class ConfigurationTest extends TestBase {
             };
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3310,7 +3310,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnTemplateDetailTab();
             configurationPage.publishNowTemplate();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3364,7 +3364,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3395,7 +3395,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3450,7 +3450,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3481,7 +3481,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3525,7 +3525,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3556,7 +3556,7 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.assertOnFail("Verify remote:remote driver page failed in read only mode!", configurationPage.verifyDriverInViewMode(remoteLocationDriver), false);
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
             configurationPage.archiveOrDeleteTemplate(templateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
