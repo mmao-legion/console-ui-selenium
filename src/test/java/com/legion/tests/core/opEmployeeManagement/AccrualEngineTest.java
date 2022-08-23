@@ -2399,4 +2399,148 @@ public class AccrualEngineTest extends TestBase {
         return hoursType;
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "OPS-3961 Ability to receive employee current accrual amount towards worked hour (total hour) distribution, annual use limit, annual earn limit")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyAbilityToReceiveEmployeeCurrentAccrualAmountAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+        //verify that the target template is here.
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        String templateName = "Activity";
+        absentManagePage.search(templateName);
+        SimpleUtils.assertOnFail("Failed the find the target template!", absentManagePage.getResult().equals(templateName), false);
+
+        //switch to console
+        RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        modelSwitchPage.switchToNewTab();
+        //search and go to the target location
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("verifyMock");
+        //go to team member details and switch to the time off tab.
+        consoleNavigationPage.navigateTo("Team");
+        TimeOffPage timeOffPage = new TimeOffPage();
+        String teamMemName = "Nancy importBalance";
+        timeOffPage.goToTeamMemberDetail(teamMemName);
+        timeOffPage.switchToTimeOffTab();
+
+        //get session id via login
+        String sessionId = logIn();
+        //set UseAbsenceMgmtConfiguration Toggle On
+//        if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
+//            String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
+//            Assert.assertEquals(getHttpStatusCode(toggleResponse), 200, "Failed to get the user's template!");
+//        }
+        //confirm template
+        String workerId = "b4bf7ed1-ac9c-4e84-adaa-0d8e1420160b";
+        String targetTemplate = "Activity";
+        String tempName = getUserTemplate(workerId, sessionId);
+        Assert.assertEquals(tempName, targetTemplate, "The user wasn't associated to this Template!!! ");
+        SimpleUtils.pass("Succeeded in confirming that employee was associated to the target template!");
+
+        //create a time off balance map to store the expected time off balances.
+        HashMap<String, String> expectedTOBalance = new HashMap<>();
+        expectedTOBalance.put("Annual Leave", "0");
+        expectedTOBalance.put("Annual Leave1", "0");
+        expectedTOBalance.put("Annual Leave2", "0");
+        expectedTOBalance.put("Annual Leave3", "0");
+        expectedTOBalance.put("Annual Leave4", "0");
+        expectedTOBalance.put("Bereavement1", "0");
+        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement3", "0");
+        expectedTOBalance.put("Bereavement4", "0");
+        expectedTOBalance.put("Covid1", "0");
+        expectedTOBalance.put("Covid2", "0");
+        expectedTOBalance.put("Covid3", "0");
+        expectedTOBalance.put("Covid4", "0");
+        expectedTOBalance.put("Floating Holiday", "0");
+        expectedTOBalance.put("Grandparents Day Off1", "0");
+
+        //Delete the worker's accrual balance
+        String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
+        Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> actualTOB = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(actualTOB, expectedTOBalance, "Failed to assert clear the accrual balance!");
+        SimpleUtils.pass("Succeeded in clearing employee's accrual balance!");
+
+        //import accrual balance via CSV file.
+        importAccrualBalance(sessionId);
+
+        expectedTOBalance.put("Annual Leave2", "13");// HireDate~HireDate/Monthly /calendar month/begin
+        expectedTOBalance.put("Annual Leave3", "7");// HireDate~Specified/Monthly /hire month/end
+        expectedTOBalance.put("Bereavement3", "23");// HireDate~Specified/weekly
+        expectedTOBalance.put("Covid2", "6");// HireDate~HireDate/worked hours/Rate
+        expectedTOBalance.put("Covid3", "9");// HireDate~Specified/worked hours/total hour
+        expectedTOBalance.put("Grandparents Day Off2", "12.65");//HireDate~HireDate/lump-sum
+        expectedTOBalance.put("Grandparents Day Off3", "6");//HireDate~Specified/lump-sum
+        expectedTOBalance.put("Spring Festival", "20");//None distribution
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> importedBalance = timeOffPage.getTimeOffBalance();
+        String verification1 = validateTheAccrualResults(importedBalance, expectedTOBalance);
+        Assert.assertTrue(verification1.contains("Succeeded in validating"), verification1);
+        SimpleUtils.pass("Succeeded in validating importing accrual balance successfully!");
+
+        //run engine to a specified date   HireDate:2021-05-08   AsOfDate:2022-02-01
+        String date1 = "2022-05-01";
+        String[] accrualResponse1 = runAccrualJobToSimulateDate(workerId, date1, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse1), 200, "Failed to run accrual job!");
+        //expected accrual
+        expectedTOBalance.put("Annual Leave2", "12");//13: +4hrs //Annual earn limit:12   HireDate~HireDate/Monthly /calendar month/begin
+        expectedTOBalance.put("Annual Leave3", "10");//7:+3hrs    HireDate~Specified/Monthly /hire month/end
+        expectedTOBalance.put("Bereavement3", "32");//23:+9hrs    HireDate~Specified/weekly
+
+        /*4/26 2022   9.67hrs approved
+          4/27 2022   7.5 hrs pending
+          4/28 2022   5   hrs approved
+          4/30 2022   14.5hrs approved
+          5/01 2022   14.7hrs approved
+          All in look back period   43.87 in total
+          */
+        expectedTOBalance.put("Covid2", "9.06");// 6+3.06hrs HireDate~HireDate/worked hours/Rate
+        expectedTOBalance.put("Covid3", "10");// 9+1hrs ~3.87 HireDate~Specified/worked hours/total hour   40 hrs/1hrs
+        expectedTOBalance.put("Grandparents Day Off2", "10");//HireDate~HireDate/lump-sum  --->max available: 10
+        expectedTOBalance.put("Grandparents Day Off3", "10");//HireDate~Specified/lump-sum  import 6, accrual +8--->max available: 10
+
+        expectedTOBalance.put("Pandemic1", "5");//+5hrs; Specified~Specified/Monthly /calendar month/begin /allowance in days 126(out of)  +4
+        expectedTOBalance.put("Pandemic2", "17");//Specified~Specified/weekly /allowance in days 127(in)  +13
+        expectedTOBalance.put("Pandemic3", "3.06");//Specified~Specified/worked hours/Rate /allowance in days 126(out of)
+        expectedTOBalance.put("Pandemic4", "8");//Specified~Specified/lump-sum /allowance in days 127(in)
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance050122 = timeOffPage.getTimeOffBalance();
+        String verification2 = validateTheAccrualResults(accrualBalance050122, expectedTOBalance);
+        //Assert.assertTrue(verification2.contains("Succeeded in validating"), verification2);
+        SimpleUtils.pass("Succeeded in validating Annual earn limit works well after importing balance!");
+        SimpleUtils.pass("Succeeded in validating distribution methods: Monthly/Weekly/Worked hours/Lump-sum accrued well after importing balance!");
+        SimpleUtils.pass("Succeeded in validating Max available hours works well after importing balance!");
+
+
+        // Run accrual engine to 2022-05-08;
+        String date2 = "2022-05-08";
+        String[] accrualResponse2 = runAccrualJobToSimulateDate(workerId, date2, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse2), 200, "Failed to run accrual job!");
+        //expected results
+        expectedTOBalance.put("Annual Leave2", "2");//no accrual but need to do Max carryover:2 //HireDate~HireDate/Monthly /calendar month/begin
+        expectedTOBalance.put("Annual Leave3", "11");//+1hrs  //HireDate~Specified/Monthly /hire month/end
+        expectedTOBalance.put("Bereavement3", "33");//+1hrs HireDate~Specified/weekly
+        expectedTOBalance.put("Covid2", "2");//no accrual but need to do Max carryover:2 // HireDate~HireDate/worked hours/Rate
+        expectedTOBalance.put("Grandparents Day Off2", "2");//no accrual but need to do Max carryover:2 //HireDate~HireDate/lump-sum
+        expectedTOBalance.put("Pandemic2", "18");//+1hrs  Specified~Specified/weekly /allowance in days 127(in)
+
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance050822 = timeOffPage.getTimeOffBalance();
+        String verification3 = validateTheAccrualResults(accrualBalance050822, expectedTOBalance);
+        //Assert.assertTrue(verification3.contains("Succeeded in validating"), verification3);
+        SimpleUtils.pass("Succeeded in validating distribution methods: Monthly/Weekly/Worked hours/Lump-sum accrued well after importing balance!");
+        SimpleUtils.pass("Succeeded in validating max carryover works well after importing balance!");
+    }
+
+
 }
