@@ -187,7 +187,6 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	@FindBy(css="lg-button[label=\"Create\"]")
 	private WebElement createBtn;
 
-
 	@Override
 	public void iCanSelectLocationsByAddLocation(String searchText, int index) {
 		if (isElementEnabled(selectALocationTitle,5)) {
@@ -333,7 +332,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			SimpleUtils.fail("Create location button load failed",false);
 	}
 
-	@FindBy(css="tr[ng-repeat=\"job in searchFilteredJobs\"]")
+	@FindBy(css="tr[ng-repeat=\"job in searchFilteredJobs\"]:nth-of-type(even)")
 	private List<WebElement> jobRows;
 
 	@Override
@@ -1586,15 +1585,61 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	@FindBy(css = "legend.ng-binding")
 	private WebElement locationNum;
 
-	public void verifyRecentJobLocation(String jobTitle) throws Exception{
+	public void verifyRecentJobLocation(String jobTitle) throws Exception {
 		click(recentJob);
 		searchRecentJob.sendKeys(jobTitle);
 		click(firstJobTitle);
 		scrollToElement(addBtn);
 		click(addBtn);
-		if(locationNum.getText().equals("1 Locations Added")){
+		if (locationNum.getText().equals("1 Locations Added")) {
 			SimpleUtils.pass("Location number is correct");
-		}else
-			SimpleUtils.fail("Location number is wrong",false);
+		} else
+			SimpleUtils.fail("Location number is wrong", false);
+	}
+
+	@Override
+	public void archiveSpecificJob(String jobTitle) throws Exception {
+		if (isElementEnabled(searchInputBox, 10)) {
+			searchInputBox.clear();
+			searchInputBox.sendKeys(jobTitle);
+			searchInputBox.sendKeys(Keys.ENTER);
+			waitForSeconds(5);
+			if (jobRows.size() <= 0) {
+				SimpleUtils.report("There is no "+jobTitle+" job in Jobs! ");
+			}else {
+				for (WebElement row: jobRows) {
+					WebElement archiveBtn = row.findElement(By.cssSelector("span[ng-click=\"applyAction(6,job)\"]"));
+					clickTheElement(archiveBtn);
+					SimpleUtils.pass("Click Archive job button successfully! ");
+					if (verifyJobActionsWarningPageShowWell()) {
+						clickTheElement(confirmBtnInStopJobPopUpWins);
+						SimpleUtils.pass("Click confirm button in stop job popup windows successfully! ");
+					}
+				}
+			}
+		} else
+			SimpleUtils.fail("The search input fail to load on Jobs page! ", false);
+	}
+
+	@FindBy(css = "[class=\"calendar-week select-week\"]")
+	private List<WebElement> selectableWeekSelectors;
+	@FindBy(css = "i.fa-chevron-right")
+	private WebElement navigateToNextMonthButton;
+
+	@Override
+	public void selectWeeksForJobToTakePlaceByIndex(int index) {
+		if (areListElementVisible(selectableWeekSelectors, 5)) {
+			if (selectableWeekSelectors.size() >= index) {
+				clickTheElement(selectableWeekSelectors.get(index));
+				SimpleUtils.pass("Click the " + index + " week in Select week for job to take place calendar successfully! ");
+			} else {
+				index = index - selectableWeekSelectors.size();
+				click(navigateToNextMonthButton);
+				SimpleUtils.pass("Click Next month button successfully! ");
+				clickTheElement(selectableWeekSelectors.get(index));
+				SimpleUtils.pass("Click the " + index + " week in Select week for job to take place calendar successfully! ");
+			}
+		} else
+			SimpleUtils.fail("There is no selectable week selectors load! ", false);
 	}
 }

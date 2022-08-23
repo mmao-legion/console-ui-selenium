@@ -699,9 +699,9 @@ public class ScheduleTest extends TestBase{
 //			createSchedulePage.createScheduleForNonDGFlowNewUI();
 //			// Deleting the existing shifts for swap team members
 //			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-//			shiftOperatePage.deleteTMShiftInWeekView(swapCoverNames.get(0));
-//			shiftOperatePage.deleteTMShiftInWeekView(swapCoverNames.get(1));
-//			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+//			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(swapCoverNames.get(0));
+//			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(swapCoverNames.get(1));
+//			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
 //			scheduleMainPage.saveSchedule();
 //			// Add the new shifts for swap team members
 //			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -873,7 +873,7 @@ public class ScheduleTest extends TestBase{
 //			}
 //			createSchedulePage.createScheduleForNonDGFlowNewUI();
 //			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-//			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+//			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
 //			newShiftPage.clickOnDayViewAddNewShiftButton();
 //			newShiftPage.customizeNewShiftPage();
 //			newShiftPage.selectWorkRole("Event Manager");
@@ -1125,6 +1125,7 @@ public class ScheduleTest extends TestBase{
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1144,7 +1145,7 @@ public class ScheduleTest extends TestBase{
 			String workRole = shiftOperatePage.getRandomWorkRole();
 			// Deleting the existing shifts for swap team members
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
 			newShiftPage.addOpenShiftWithLastDay(workRole);
 			scheduleMainPage.saveSchedule();
 			createSchedulePage.publishActiveSchedule();
@@ -1231,8 +1232,8 @@ public class ScheduleTest extends TestBase{
 //			}
 //			createSchedulePage.createScheduleForNonDGFlowNewUI();
 //			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-//			shiftOperatePage.deleteTMShiftInWeekView(tmName);
-//			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+//			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmName);
+//			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
 //			String workRole = shiftOperatePage.getRandomWorkRole();
 //			scheduleMainPage.saveSchedule();
 //			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

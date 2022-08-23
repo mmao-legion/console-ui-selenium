@@ -30,6 +30,7 @@ public class BulkCreateTest extends TestBase {
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) {
         try {
+            ABSwitchAPI.enableABSwitch(AbSwitches.NewCreateShift.getValue(), (String) params[1], (String) params[2]);
             this.createDriver((String) params[0], "69", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
@@ -46,7 +47,6 @@ public class BulkCreateTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
-            ABSwitchAPI.enableABSwitch(AbSwitches.NewCreateShift.getValue(), "stoneman@legion.co", "admin11.a");
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -149,7 +149,6 @@ public class BulkCreateTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateAllItemsOnTheSelectTMPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
-            ABSwitchAPI.enableABSwitch(AbSwitches.NewCreateShift.getValue(), "stoneman@legion.co", "admin11.a");
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -170,6 +169,7 @@ public class BulkCreateTest extends TestBase {
             if (isWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(2000);
             List<String> weekDaysToClose = new ArrayList<>(Arrays.asList("Sunday"));
             createSchedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose, null);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -247,7 +247,6 @@ public class BulkCreateTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheWarningMessageOfTheItemsOnFirstPageOfCreateShiftModalAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
-            ABSwitchAPI.enableABSwitch(AbSwitches.NewCreateShift.getValue(), "stoneman@legion.co", "admin11.a");
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -384,7 +383,6 @@ public class BulkCreateTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateAssignOrOfferTMsInSearchAndRecommendedTabsAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
-            ABSwitchAPI.enableABSwitch(AbSwitches.NewCreateShift.getValue(), "stoneman@legion.co", "admin11.a");
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -562,7 +560,7 @@ public class BulkCreateTest extends TestBase {
             }
             String workRole = shiftInfo.get(4);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -679,7 +677,8 @@ public class BulkCreateTest extends TestBase {
 
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             //Verify the TMs on Recommended tab still display when back from search TM tab
-            SimpleUtils.assertOnFail("The TMs on Recommended tab should display consistently with before after back from search TM tab! ",
+            SimpleUtils.assertOnFail("The TMs on Recommended tab should display consistently with before after back from search TM tab! The expect is: "
+                            +resultCount + " the actual is: "+newShiftPage.getSearchAndRecommendedResult().size(),
                     newShiftPage.getSearchAndRecommendedResult().size() == resultCount, false);
 
             //Verify the 'X' button for each selected employee’s avatars
@@ -821,7 +820,7 @@ public class BulkCreateTest extends TestBase {
             }
             workRole = shiftInfo.get(4);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
@@ -1436,7 +1435,7 @@ public class BulkCreateTest extends TestBase {
             for (int i=0;i< 5;i++) {
                 assignedShiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, assignedTMs.get(i).split(" ")[0]);
                 SimpleUtils.assertOnFail("The "+assignedTMs.get(i)+" shift is not exist on the first day! ",
-                        assignedShiftsOfOneDay.size()==1, false);
+                        assignedShiftsOfOneDay.size()>=1, false);
             }
 
         } catch (Exception e) {
@@ -1544,7 +1543,7 @@ public class BulkCreateTest extends TestBase {
                     shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(selectedTM1.split(" ")[0]);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(selectedTM1.split(" ")[0]);
             scheduleMainPage.saveSchedule();
 
             //Verify the assign TMs workflow with multiple shifts for multiple days
@@ -1585,7 +1584,7 @@ public class BulkCreateTest extends TestBase {
                 for (int j=0;j<selectedTMs.size();j++) {
                     shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(i, selectedTMs.get(j).split(" ")[0]);
                     SimpleUtils.assertOnFail("The "+selectedTMs.get(j)+" shift is not exist on the "+i+" day! ",
-                            shiftsOfOneDay.size()==1, false);
+                            shiftsOfOneDay.size()>=1, false);
 
                     shiftId = shiftsOfOneDay.get(0).getAttribute("id").toString();
                     index = scheduleShiftTablePage.getShiftIndexById(shiftId);
@@ -1620,8 +1619,8 @@ public class BulkCreateTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the shifts can be created after update shift info")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheShiftsCanBeCreatedAfterUpdateShiftInfoAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -1675,7 +1674,7 @@ public class BulkCreateTest extends TestBase {
             shiftStartTime = "9:00am";
             shiftEndTime = "2:00pm";
             String totalHrs = "4.5 Hrs";
-            String totalWeekHrs = "31.5 Hrs this week";
+            double totalWeekHrs = 31.5;
             newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
@@ -1704,7 +1703,7 @@ public class BulkCreateTest extends TestBase {
                 for (int j=0;j<selectedTMs.size();j++) {
                     List<WebElement> shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(i, selectedTMs.get(j).split(" ")[0]);
                     SimpleUtils.assertOnFail("The "+selectedTMs.get(j)+" shift is not exist on the "+i+" day! ",
-                            shiftsOfOneDay.size()==1, false);
+                            shiftsOfOneDay.size()>=1, false);
 
                     String shiftId = shiftsOfOneDay.get(0).getAttribute("id").toString();
                     int index = scheduleShiftTablePage.getShiftIndexById(shiftId);
@@ -1732,7 +1731,7 @@ public class BulkCreateTest extends TestBase {
                             shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
                     SimpleUtils.assertOnFail("The TM's week hrs display incorrectly, the expected is:"+ totalWeekHrs
                                     + " the actual is: "+ weeklyHrs,
-                            totalWeekHrs.equalsIgnoreCase(weeklyHrs), false);
+                            Double.parseDouble(weeklyHrs.split(" ")[0]) >= totalWeekHrs, false);
                 }
             }
 
@@ -1947,16 +1946,16 @@ public class BulkCreateTest extends TestBase {
         List<WebElement> shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0,
                 selectedTM1.split(" ")[0]+" "+selectedTM1.split(" ")[1].substring(0,1));
         SimpleUtils.assertOnFail("The "+selectedTM1+ "shift is not exist on the first day! ",
-                shiftsOfOneDay.size()==1, false);
+                shiftsOfOneDay.size()>=1, false);
         scheduleMainPage.saveSchedule();
         Thread.sleep(5000);
         shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
         SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
-                shiftsOfOneDay.size()==1, false);
+                shiftsOfOneDay.size()>=1, false);
         createSchedulePage.publishActiveSchedule();
         shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
         SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
-                shiftsOfOneDay.size()==1, false);
+                shiftsOfOneDay.size()>=1, false);
 
         String shiftId = shiftsOfOneDay.get(0).getAttribute("id").toString();
         int index = scheduleShiftTablePage.getShiftIndexById(shiftId);

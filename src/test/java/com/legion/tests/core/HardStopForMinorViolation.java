@@ -127,8 +127,8 @@ public class HardStopForMinorViolation extends TestBase {
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String minorName = cinemarkMinors.get("Minor15-2");
-            shiftOperatePage.deleteTMShiftInWeekView("minor");
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("minor");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -239,8 +239,8 @@ public class HardStopForMinorViolation extends TestBase {
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String minorName = cinemarkMinors.get("Minor15-2");
-            shiftOperatePage.deleteTMShiftInWeekView("minor");
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("minor");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -311,9 +311,9 @@ public class HardStopForMinorViolation extends TestBase {
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String minorName = cinemarkMinors.get("Minor16-2");
-            shiftOperatePage.deleteTMShiftInWeekView("minor");
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("minor");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
@@ -404,8 +404,8 @@ public class HardStopForMinorViolation extends TestBase {
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String minorName = cinemarkMinors.get("Minor16-2");
-            shiftOperatePage.deleteTMShiftInWeekView("minor");
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("minor");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
@@ -447,9 +447,9 @@ public class HardStopForMinorViolation extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("minor");
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("minor");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
@@ -545,9 +545,9 @@ public class HardStopForMinorViolation extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String minorName = cinemarkMinors.get("Minor16-2");
-            shiftOperatePage.deleteTMShiftInWeekView("minor");
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("minor");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
@@ -595,9 +595,9 @@ public class HardStopForMinorViolation extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("minor");
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("minor");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
@@ -683,6 +683,7 @@ public class HardStopForMinorViolation extends TestBase {
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
 
             // Go to Control Center -> Configuration tab ,click on Compliance title
             setStrictlyEnforceMinorViolationSetting("Yes");
@@ -702,9 +703,9 @@ public class HardStopForMinorViolation extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("minor");
-            shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView("open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("minor");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
@@ -745,12 +746,13 @@ public class HardStopForMinorViolation extends TestBase {
             cinemarkMinorPage.setMinorRuleByDay(CinemarkMinorTest.minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), fromTimeAfterChanged, cinemarkSetting14N15.get(CinemarkMinorTest.minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(CinemarkMinorTest.minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
             configurationPage.publishNowTheTemplate();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-            int j = 0;
-            while (j<6) {
-                Thread.sleep(60000);
-                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-                j++;
-            }
+//            int j = 0;
+//            while (j<6) {
+//                Thread.sleep(60000);
+//                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//                j++;
+//            }
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
@@ -759,6 +761,8 @@ public class HardStopForMinorViolation extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             int i = 0;
             while (i<10 && !smartCardPage.isRequiredActionSmartCardLoaded()) {
+                loginPage.logOut();
+                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
@@ -770,7 +774,7 @@ public class HardStopForMinorViolation extends TestBase {
                 Thread.sleep(60000);
             }
             //There has minor violations in schedule
-            SimpleUtils.assertOnFail("The action required smart card should not display! ",
+            SimpleUtils.assertOnFail("The action required smart card should display! ",
                     smartCardPage.isRequiredActionSmartCardLoaded(), false);
 
             String minorMessage = smartCardPage.getMessageFromActionRequiredSmartCard().get("minorViolation").replace("\n", " ");
@@ -827,7 +831,10 @@ public class HardStopForMinorViolation extends TestBase {
                 i++;
             }
         }
-
+        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+        loginPage.logOut();
+        loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
     }
 
     public void getAndSetDefaultTemplate(String currentLocation) throws Exception{

@@ -49,4 +49,5 @@ public interface ScheduleCommonPage {
     public void clickOnFirstWeekInWeekPicker() throws Exception;
     public void VerifyStaffListInSchedule(String name) throws Exception;
     public String getActiveWeekStartDayFromSchedule() throws Exception;
+    public boolean checkIfDayAndWeekViewButtonEnabled () throws Exception;
 }

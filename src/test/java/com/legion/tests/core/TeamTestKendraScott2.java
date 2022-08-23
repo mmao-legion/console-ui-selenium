@@ -699,7 +699,7 @@ public class TeamTestKendraScott2 extends TestBase{
 		}
 		createSchedulePage.createScheduleForNonDGFlowNewUI();
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		shiftOperatePage.deleteTMShiftInWeekView("unassigned");
+		scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
 		scheduleMainPage.saveSchedule();
 		createSchedulePage.publishActiveSchedule();
 		LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -937,8 +937,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteTMShiftInWeekView(tmName);
-			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmName);
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
 
 			//Create shift for TM on first day
 			String workRole = shiftOperatePage.getRandomWorkRole();
@@ -979,8 +979,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			}
 			shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteTMShiftInWeekView(tmName);
-			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmName);
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
 
 			//Create shift for TM on second day
 			workRole = shiftOperatePage.getRandomWorkRole();
@@ -1500,7 +1500,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
 			scheduleMainPage.clickOnFilterBtn();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
 			scheduleMainPage.saveSchedule();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
@@ -1584,7 +1584,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.navigateToNextWeek();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
 			scheduleMainPage.saveSchedule();
 			createSchedulePage.publishActiveSchedule();
 
@@ -1777,7 +1777,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
 			scheduleMainPage.clickOnFilterBtn();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
 			scheduleMainPage.saveSchedule();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
@@ -1889,7 +1889,7 @@ public class TeamTestKendraScott2 extends TestBase{
 				scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
 				scheduleMainPage.clickOnFilterBtn();
 				scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-				shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+				scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
 				scheduleMainPage.saveSchedule();
 				scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 				NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
@@ -1966,6 +1966,7 @@ public class TeamTestKendraScott2 extends TestBase{
 	public void validateTheScheduledShiftAndHrsOnAvailabilityTablWhenThereIsNoShiftBeenScheduledAsTeamMember(String browser, String username, String password, String location) throws Exception {
 		try{
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			profileNewUIPage.clickOnUserProfileImage();
 			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
 			String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
@@ -1993,7 +1994,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
 			scheduleMainPage.saveSchedule();
 			createSchedulePage.publishActiveSchedule();
 			//Go to Roster, search and go to TM1's preference page

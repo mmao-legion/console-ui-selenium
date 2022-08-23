@@ -676,6 +676,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.clickOnFilterBtn();
+            Thread.sleep(5000);
             shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             Thread.sleep(10000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

@@ -246,4 +246,8 @@ public interface ConfigurationPage {
     public int getUnassignedNumber() throws Exception;
     public boolean verifyUnassignedSmartCardDownloadFile(String fileName, Map<String, String> criteriaAndValue) throws Exception;
     public void verifyDefaultValueOfOverrideViaIntegrationButton();
+    public void updateMaximumNumberOfShiftsPerDay(int maximumNumber) throws Exception;
+    public int getMaximumNumberOfShiftsPerDay() throws Exception;
+    public void updateMinimumTimeBetweenShifts(int minimumTime) throws Exception;
+    public int getMinimumTimeBetweenShifts() throws Exception;
 }

@@ -156,8 +156,8 @@ public class DashboardTestKendraScott2 extends TestBase {
 			}
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			String workRole = shiftOperatePage.getRandomWorkRole();
-			shiftOperatePage.deleteTMShiftInWeekView(nickName);
-			shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(nickName);
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
 			newShiftPage.selectWorkRole(workRole);

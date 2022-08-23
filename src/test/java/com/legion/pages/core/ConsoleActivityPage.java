@@ -354,7 +354,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 				if (actionButtons != null && actionButtons.size() == 2 && message.getText().contains(requestUserName)) {
 					for (WebElement button : actionButtons) {
 						if ("approve".equalsIgnoreCase(button.getText())) {
-							click(button);
+							clickTheElement(button);
+							waitForSeconds(1);
 							if (isElementLoaded(msgOnTop, 20)) {
 								String errorMessage = msgOnTop.getText();
 								if (errorMessage.contains(expectedMessage)) {

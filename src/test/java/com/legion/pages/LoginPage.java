@@ -24,4 +24,5 @@ public interface LoginPage {
     public boolean isLoginSuccess() throws Exception;
     public void refreshLoginPage() throws Exception;
     public boolean isInvalidLoginErrorShowing() throws Exception;
+    public void verifyLegionTermsOfService() throws Exception;
 }
