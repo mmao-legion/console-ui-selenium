@@ -379,8 +379,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		@Owner(owner = "Estelle")
 		@Enterprise(name = "KendraScott2_Enterprise")
 		@TestName(description = "Verify the Schedule functionality > Compliance smartcard")
-		@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-		public void verifyComplianceSmartCardFunctionality(String username, String password, String browser, String location)
+		@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+		public void verifyComplianceSmartCardFunctionalityAsInternalAdmin(String username, String password, String browser, String location)
 				throws Exception {
 			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
