@@ -1062,7 +1062,8 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                 //Check the status and budget value
                 String status = scenarioPlanContents.get(2).getText().replaceAll(" ","").split(":")[1].trim();
                 String budgetStr=scenarioPlanContents.get(1).getText().split("\\$")[1];
-                String budgetValue =budgetStr.contains(",")? budgetStr.replaceAll(",","").trim():budgetStr.trim();
+                String budgetValue = budgetStr.contains(".")? budgetStr.split("\\.")[0]:budgetStr.trim();
+                budgetValue = budgetValue.contains(",")?budgetValue.replaceAll(",","").trim():budgetValue.trim();
                 if (status != null && status.equals("Completed") || status.equals("Ready For Review") || status.equals("Reviewed-Rejected") || status.equals("Reviewed-Approved")) {
                     SimpleUtils.report("The current plan status is:"+status);
                     //get the budget value and assert the budget value is greater than 0
