@@ -2225,7 +2225,7 @@ public class LocationsTest extends TestBase {
             userManagementPage.verifySearchWorkRole(workRoleName);
             userManagementPage.verifyEditBtnIsClickable();
             userManagementPage.goToWorkRolesDetails(workRoleName);
-            userManagementPage.addAssignmentRule("DM Planer", "At all Hours", "At least", 2, 1, "20210713152098");
+            userManagementPage.addAssignmentRule("Manager", "At all Hours", "At least", 2, 1, "20210713152098");
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
@@ -2235,7 +2235,7 @@ public class LocationsTest extends TestBase {
             //Validate the new added assignment rules at global level should be enabled at location level by default.
             locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
             locationsPage.searchWorkRoleInAssignmentRuleTemplate("AMBASSADOR");
-            String assignmentRuleTitle = "DM Planer";
+            String assignmentRuleTitle = "Manager";
             locationsPage.verifyAssignmentRulesFromLocationLevel(assignmentRuleTitle);
             //Validate the location level assignment rule's badge info should not be changed after updating global assignment rules when
             //Validate the global assignment rules should not be changed after change one location level assignment rule.

@@ -54,7 +54,13 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	@FindBy(css = "lg-select[search-hint='Search Location'] div.input-faked")
 	private WebElement locationSelectorButton;
 
-    public ConsoleLoginPage() {
+	@FindBy(xpath="(//*[@id=\"legion-app\"]//main//p)[89]")
+	private WebElement bottomText;
+
+	@FindBy(xpath="//*[@id=\"legion-app\"]//main/div[4]/button[2]")
+	private WebElement agreeButton;
+
+	public ConsoleLoginPage() {
     	PageFactory.initElements(getDriver(), this);
     }
 
@@ -70,17 +76,17 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
     
     public void loginToLegionWithCredential(String userName, String Password) throws Exception
     {
-		int retryTime = 0;
-		boolean isLoaded = isUserNameInputLoaded();
-		while (!isLoaded) {
-			getDriver().navigate().refresh();
-			isLoaded = isUserNameInputLoaded();
-			retryTime = retryTime + 1;
-			if (retryTime == 6) {
-				SimpleUtils.fail("Login page failed to load after waiting for several minutes!", false);
-				break;
-			}
-		}
+//		int retryTime = 0;
+//		boolean isLoaded = isUserNameInputLoaded();
+//		while (!isLoaded) {
+//			getDriver().navigate().refresh();
+//			isLoaded = isUserNameInputLoaded();
+//			retryTime = retryTime + 1;
+//			if (retryTime == 6) {
+//				SimpleUtils.fail("Login page failed to load after waiting for several minutes!", false);
+//				break;
+//			}
+//		}
 		if (isElementLoaded(loginButton, 5)) {
 			getActiveConsoleName(loginButton);
 			userNameField.clear();
@@ -99,6 +105,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 			clickTheElement(newSignInBtn);
 		}
 		waitForSeconds(4);
+		legionTermsOfService();
     }
 
 
@@ -114,7 +121,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	private boolean isUserNameInputLoaded() {
 		boolean isLoaded = false;
 		try {
-			if (isElementLoaded(userNameField, 90) || isElementLoaded(newUserNameField, 90)) {
+			if (isElementLoaded(userNameField, 90) || isElementLoaded(newUserNameField, 90) ) {
 				isLoaded = true;
 			}
 		} catch (Exception e) {
@@ -362,6 +369,17 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		}
 	}
 
-
-
+	public void legionTermsOfService() throws Exception {
+		if (isElementLoaded(bottomText, 15)) {
+			scrollToElement(bottomText);
+			if (isClickable(agreeButton, 5)) {
+				agreeButton.click();
+				SimpleUtils.pass("Agree button click successfully!");
+			} else {
+				SimpleUtils.fail("Can't click agree button!", false);
+			}
+		} else {
+			SimpleUtils.report("There is no legion Terms Of Service page");
+		}
+	}
 }
