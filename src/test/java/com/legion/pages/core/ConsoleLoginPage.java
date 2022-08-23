@@ -56,6 +56,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 
 	@FindBy(xpath="(//*[@id=\"legion-app\"]//main//p)[89]")
 	private WebElement bottomText;
+
 	@FindBy(xpath="//*[@id=\"legion-app\"]//main/div[4]/button[2]")
 	private WebElement agreeButton;
 
@@ -120,7 +121,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	private boolean isUserNameInputLoaded() {
 		boolean isLoaded = false;
 		try {
-			if (isElementLoaded(userNameField, 90) || isElementLoaded(newUserNameField,90) ) {
+			if (isElementLoaded(userNameField, 90) || isElementLoaded(newUserNameField, 90) ) {
 				isLoaded = true;
 			}
 		} catch (Exception e) {
