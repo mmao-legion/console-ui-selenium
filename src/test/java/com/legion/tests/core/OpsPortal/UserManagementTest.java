@@ -937,7 +937,7 @@ public class UserManagementTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Job title group")
+    @TestName(description = "Job title group tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyJobTitleGroupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
@@ -1013,8 +1013,8 @@ public class UserManagementTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Yang")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Work Role E2E And Copy work role")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @TestName(description = "Work Role E2E")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyWorkRoleE2EAndCopyWorkRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
             String locationName = "locationAutoCreateForYang";
@@ -1112,6 +1112,207 @@ public class UserManagementTest extends TestBase {
             dynamicEmployeePage.searchGroupWithLabel("autoTesNew");
             dynamicEmployeePage.verifyGroupIsSearched(employeeGroupName);
             dynamicEmployeePage.removeSpecificGroup(employeeGroupName);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify user can see template value via click template name if user only have template localization permission")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAddLabelsToDynamicUserGroupAsSM(String browser, String username, String password, String location) throws Exception {
+        try {
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.sMGoToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            //Assignment Rules
+            String[] action = {"View"};
+            locationsPage.verifyActionsForTemplate("Assignment Rules", action);
+            //Scheduling Rules
+            locationsPage.verifyActionsForTemplate("Scheduling Rules", action);
+            //Labor Model
+            locationsPage.verifyActionsForTemplate("Labor Model", action);
+            //Operating Hours
+            locationsPage.verifyActionsForTemplate("Operating Hours", action);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify user can view template if user only have template localization permission +View template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUserPermissionpAsSMA(String browser, String username, String password, String location) throws Exception {
+        try {
+            String locationName = "locationAutoCreateForYang";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.sMGoToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+
+            String[] action = {"View"};
+            locationsPage.verifyActionsForTemplate("Assignment Rules", action);
+            locationsPage.verifyActionsForTemplate("Scheduling Rules", action);
+            locationsPage.verifyActionsForTemplate("Labor Model", action);
+            locationsPage.verifyActionsForTemplate("Operating Hours", action);
+            locationsPage.verifyActionsForTemplate("Compliance", action);
+            locationsPage.verifyActionsForTemplate("Scheduling Policies", action);
+            locationsPage.verifyActionsForTemplate("Schedule Collaboration", action);
+            locationsPage.verifyActionsForTemplate("Time and Attendance", action);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify user can create/edit template if user only have template localization permission+ create/edit template permission")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUserPermissionAsSMB(String browser, String username, String password, String location) throws Exception {
+        try {
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Operating Hours");
+            configurationPage.verifyNewTemplateIsClickable();
+
+            //get template level info of Scheduling rules
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Scheduling Rules");
+            configurationPage.verifyNewTemplateIsClickable();
+
+            //get template level info of Scheduling collaboration
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
+            configurationPage.verifyNewTemplateIsClickable();
+
+            //get template level info of TA
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Time and Attendance");
+            configurationPage.verifyNewTemplateIsClickable();
+
+            //get template level info of Schedule policy
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Scheduling Policies");
+            configurationPage.verifyNewTemplateIsClickable();
+
+            //get template level info of Compliance
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Compliance");
+            configurationPage.verifyNewTemplateIsClickable();
+
+            //go to labor model tab to get specific template value
+            LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            laborModelPage.clickOnLaborModelTab();
+            laborModelPage.goToLaborModelTile();
+            configurationPage.verifyNewTemplateIsClickable();
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    //Blocked by https://legiontech.atlassian.net/browse/LRB-73
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Add Update Delete Job title groups")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifyAddUpdateDeleteJobTitleGroupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime = sdf.format(new Date()).trim();
+            String jobTitleGroupName ="JobTitleGroup" + currentTime;
+            List<String> addHrJobTitles = new ArrayList<>(Arrays.asList("FionaAutoUsing1","FionaAutoUsing2"));
+            List<String> updateHrJobTitles = new ArrayList<>(Arrays.asList("FionaAutoUsing3","FionaAutoUsing4"));
+            Random random1 = new Random();
+            int number1 = random1.nextInt(90)+10;
+            String averageHourlyRate= String.valueOf(number1);
+            Random random2 = new Random();
+            int number2 = random2.nextInt(90) + 10;
+            String updateAverageHourlyRate=String.valueOf(number2);
+            Random random3 = new Random();
+            int number3 = random3.nextInt(10) + 1;
+            String allocationOrder=String.valueOf(number3);
+            Random random4 = new Random();
+            int number4 = random4.nextInt(10) + 1;
+            String updateAllocationOrder=String.valueOf(number4);
+            boolean isNonManagementGroup=false;
+            boolean updateIsNonManagementGroup=true;
+
+            //go to User Management Access Role table
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleGroup();
+            userManagementPage.verifyJobTitleGroupTabDisplay();
+            userManagementPage.clickOnJobTitleGroupTab();
+            userManagementPage.addNewJobTitleGroup(jobTitleGroupName,addHrJobTitles,averageHourlyRate,allocationOrder,isNonManagementGroup);
+            userManagementPage.updateJobTitleGroup(jobTitleGroupName,updateHrJobTitles,updateAverageHourlyRate,updateAllocationOrder,updateIsNonManagementGroup);
+            userManagementPage.deleteJobTitleGroup(jobTitleGroupName);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Job Title Group UI checking")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUIOfJobTitleGroupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            //go to User Management Job Title Groups
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleGroup();
+            userManagementPage.verifyJobTitleGroupTabDisplay();
+            userManagementPage.clickOnJobTitleGroupTab();
+            userManagementPage.verifyJobTitleGroupPageUI();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Job Title Group E2E checking")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyE2EOfJobTitleGroupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            List<String> jobTitleGroups = new ArrayList<>();
+            List<String> jobTitlesInAssignmentRule = new ArrayList<>();
+
+            //go to User Management Job Title Groups
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToJobTitleGroup();
+            userManagementPage.verifyJobTitleGroupTabDisplay();
+            userManagementPage.clickOnJobTitleGroupTab();
+            jobTitleGroups = userManagementPage.getAllJobTitleGroups();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+            userManagementPage.verifyEditBtnIsClickable();
+            userManagementPage.clickOnAddWorkRoleButton();
+            jobTitlesInAssignmentRule = userManagementPage.getOptionListOfJobTitleInAssignmentRule();
+            for(String jobTitle:jobTitleGroups){
+                if(jobTitlesInAssignmentRule.contains(jobTitle)){
+                    SimpleUtils.pass(jobTitle + " can show well in assignment rule");
+                }else {
+                    SimpleUtils.fail(jobTitle + " can't show in assignment rule",false);
+                }
+            }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

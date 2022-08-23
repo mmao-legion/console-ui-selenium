@@ -469,7 +469,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         ArrayList<String> gridTimeDurations = new ArrayList<String>();
         if (dayViewShiftsTimeDuration.size() != 0) {
             for (WebElement timeDuration : dayViewShiftsTimeDuration) {
-                gridTimeDurations.add(timeDuration.getText());
+                gridTimeDurations.add(timeDuration.getText().trim());
             }
         }
 
@@ -484,7 +484,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         ArrayList<String> BudgetedTMsCount = new ArrayList<String>();
         if (dayViewbudgetedTMCount.size() != 0) {
             for (WebElement BudgetedTMs : dayViewbudgetedTMCount) {
-                BudgetedTMsCount.add(BudgetedTMs.getText());
+                BudgetedTMsCount.add(BudgetedTMs.getText().trim());
             }
         }
 

@@ -8,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -87,6 +88,9 @@ public class AbsentManagePage extends BasePage {
     private WebElement archiveButton;
     @FindBy(css = "lg-button[label='Delete']>button")
     private WebElement deleteButton;
+    @FindBy(css = "lg-search[placeholder='You can search by time off reason name']>input-field input")
+    private WebElement timeOffSearchBox;
+
     //delete modal
     @FindBy(css = "modal div.model-content")
     private WebElement deleteConfirmMessage;
@@ -175,11 +179,48 @@ public class AbsentManagePage extends BasePage {
     private WebElement theFirstAssociateGroup;
     @FindBy(css = "lg-button[label='Save']")
     private WebElement saveAssociate;
-
+    @FindBy(css = "lg-search[placeholder='You can search by name, label and description']>input-field input")
+    private WebElement associateSearch;
+    @FindBy(css = "lg-templates-table h3")
+    private WebElement templateListLabel;//Review and configure the list of time off management templates. Add and take an action.
+    @FindBy(css = "lg-tab[tab-title='Association'] div.lg-tab-toolbar__content div.lg-pagination__arrow--left")
+    private WebElement previousPage;
+    @FindBy(css = "lg-tab[tab-title='Association'] div.lg-tab-toolbar__content div.lg-pagination__arrow--right")
+    private WebElement nextPage;
+    @FindBy(css = "lg-tab[tab-title='Association'] div.lg-tab-toolbar__content div.lg-pagination__pages select>option[selected='selected']")
+    private WebElement currentPage;
+    @FindBy(css = "table.lg-table.templateAssociation_table tr:nth-child(2)>td:nth-child(2)")
+    private WebElement dynamicEmployeeGroupName;
+    @FindBy(css = "table.lg-table.templateAssociation_table tr:nth-child(2)>td:nth-child(3)")
+    private WebElement dynamicEmployeeGroupDesc;
+    @FindBy(css = "table.lg-table.templateAssociation_table tr>td:nth-child(4)")
+    private List<WebElement> dynamicEmployeeGroupLabel;
+    @FindBy(css = "table.lg-table.templateAssociation_table tr:nth-child(2)>td:nth-child(5) lg-button[label='View'] button")
+    private WebElement viewBtnInAssociate;
+    @FindBy(css = "modal[modal-title='Manage Dynamic Employee Group'] h1")
+    private WebElement viewModalTitle;
+    @FindBy(css = "div.mappingLocation>lg-button[label='Test']>button")
+    private WebElement viewModalTestButton;
+    @FindBy(css = "div.mappingLocation>span")
+    private WebElement viewModalTestResult;
+    @FindBy(css = "lg-tab[tab-title='Association'] lg-button[label='Cancel']>button")
+    private WebElement cancelBtnInAssociate;
+    @FindBy(css = "modal[modal-title='Cancel Editing?'] lg-button[label='Yes']>button")
+    private WebElement yesToCancel;
+    @FindBy(css = "lg-tab[tab-title='Association'] lg-button[label='Save']>button")
+    private WebElement saveBtnInAssociate;
+    @FindBy(css = "lg-button[label='Leave this page']>button")
+    private WebElement leavePageBtn;
 
     //setting page
-    @FindBy(css = "div.basic-setting-info>question-input")
+    @FindBy(css = "div.basic-setting-info>question-input[question-title='Do time off reasons use accruals?']")
     private WebElement useAccrual;
+    @FindBy(css = "div.basic-setting-info>question-input:nth-child(1)>div lg-switch span")
+    private WebElement useAccrualToggle;
+    @FindBy(css = "div.basic-setting-info>question-input:nth-child(2)>div lg-switch span")
+    private WebElement timesheetRequiredToBeApprovedToggle;
+    @FindBy(css = "div.basic-setting-info>question-input:nth-child(3)>div input-field input")
+    private WebElement lookBackDays;
     @FindBy(css = "lg-switch>label.switch span")
     private WebElement toggleSlide;
     @FindBy(css = "div.col-sm-2.addTimeOffReason>lg-button>button")
@@ -197,7 +238,7 @@ public class AbsentManagePage extends BasePage {
     @FindBy(css = "lg-button[label='OK']>button")
     private WebElement okCreating;
 
-    @FindBy(css = "lg-accrual-setting table tr>td:nth-child(1)")
+    @FindBy(css = "lg-accrual-setting table tr>td:nth-child(1)")//lg-accrual-setting>div.time-off-reason-setting>table tr>td:nth-child(1)
     private List<WebElement> timeOffReasonNames;
     @FindBy(css = "div.time-off-reason-setting table tr:last-child>td:first-child")
     private WebElement timeOffReasonAdded;
@@ -207,10 +248,6 @@ public class AbsentManagePage extends BasePage {
     private WebElement removeButton;
     @FindBy(css = "modal form p.lg-modal__content.lg-modal__text")
     private WebElement removeConfirmMes;
-
-    //associate
-    @FindBy(css = "lg-search[placeholder='You can search by name, label and description']>input-field input")
-    private WebElement associateSearch;
 
     //Promotion part
     @FindBy(css = "div.promotion-setting h1")
@@ -229,7 +266,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement criteriaByEngagementStatus;
     @FindBy(css = "lg-multiple-select[label='Before'] lg-picker-input")
     private WebElement criteriaBefore;
-    @FindBy(css = "input[aria-label='Before']+label+div.input-faked")
+    @FindBy(css = "input-field[label='Before'] div.input-faked.ng-binding")
     private WebElement multiSelectPlaceHolder;
     @FindBy(css = "lg-multiple-select lg-search input")
     private WebElement criteriaBeforeSearchInput;
@@ -279,8 +316,16 @@ public class AbsentManagePage extends BasePage {
     private WebElement removeModalContent;
 
     //home page methods
+    public boolean isBackButtonDisplayed(){
+        scrollToTop();
+        return isElementDisplayed(backButton);
+    }
     public void back() {
         backButton.click();
+        if(isElementDisplayed(leavePageBtn)){
+            toLeavePage();
+        }
+        waitForSeconds(3);
     }
 
     public boolean isTemplateTabDisplayed() {
@@ -339,6 +384,7 @@ public class AbsentManagePage extends BasePage {
         if (isElementLoaded(closeWakeme, 10)) {
             click(closeWakeme);
         }
+        waitForSeconds(3);
     }
 
     public void closeWelcomeModal() {
@@ -358,6 +404,12 @@ public class AbsentManagePage extends BasePage {
         templateSearchBox.sendKeys(searchText);
         //searchIcon.click();
         waitForSeconds(3);
+    }
+
+    public void searchTimeOff(String timeOff){
+        timeOffSearchBox.clear();
+        timeOffSearchBox.sendKeys(timeOff);
+        waitForSeconds(2);
     }
 
     public String noMatch() {
@@ -478,7 +530,6 @@ public class AbsentManagePage extends BasePage {
 
     public void archivePublishedTemplate() {
         archiveButton.click();
-
     }
 
     public boolean isDeleteButtonDisplayed() {
@@ -494,16 +545,20 @@ public class AbsentManagePage extends BasePage {
     }
 
     public void switchToAssociation() {
+        waitForSeconds(5);
         associationTab.click();
     }
 
     public void associateTemplate(String groupName) {
         switchToAssociation();
+        searchDynamicGroup(groupName);
+        theFirstAssociateGroup.click();
+    }
+
+    public void searchDynamicGroup(String groupName){
         associateSearch.clear();
         associateSearch.sendKeys(groupName);
-        theFirstAssociateGroup.click();
-        scrollToBottom();
-        saveAssociate.click();
+        waitForSeconds(2);
     }
 
     public String getCanEmployeeRequestLabel() {
@@ -531,13 +586,14 @@ public class AbsentManagePage extends BasePage {
         return titleBreadCrumb.getText();
     }
 
-    public void configureTemplate(String templateName) throws Exception {
+    public void configureTemplate(String templateName){
         waitForSeconds(3);
         search(templateName);
         clickInDetails();
         waitForSeconds(5);
         editTemplate.click();
         okToActionInModal(true);
+        waitForSeconds(3);
     }
 
     public void markAsDefaultTemplate() {
@@ -587,14 +643,14 @@ public class AbsentManagePage extends BasePage {
     }
 
     public void viewTimeOffConfigure(String timeOff) throws Exception {
-        search(timeOff);
+        searchTimeOff(timeOff);
         isButtonClickable(view);
         System.out.println("View button is shown and clickable!");
         view.click();
     }
 
-    public void configureTimeOffRules(String timeOff) throws Exception {
-        search(timeOff);
+    public void configureTimeOffRules(String timeOff){
+        searchTimeOff(timeOff);
         waitForSeconds(5);
         if (isButtonClickable(configure)) {
             System.out.println("Configure button is shown and clickable!");
@@ -620,7 +676,7 @@ public class AbsentManagePage extends BasePage {
     }
 
     public void removeTimeOffRules(String timeOff) throws Exception {
-        search(timeOff);
+        searchTimeOff(timeOff);
         if (isButtonClickable(remove)) {
             System.out.println("Remove button is shown and clickable!");
             remove.click();
@@ -693,10 +749,12 @@ public class AbsentManagePage extends BasePage {
     }
 
     public void okCreatingTimeOff() {
+        scrollToElement(okCreating);
         okCreating.click();
     }
 
     public void cancelCreatingTimeOff() {
+        scrollToElement(cancelCreating);
         cancelCreating.click();
     }
 
@@ -740,8 +798,10 @@ public class AbsentManagePage extends BasePage {
 
     public void okToActionInModal(boolean okToAction) {
         if (okToAction) {
+            scrollToElement(okToEditing);
             okToEditing.click();
         } else {
+            scrollToElement(cancelCreating);
             cancelEditing.click();
         }
         waitForSeconds(3);
@@ -820,10 +880,17 @@ public class AbsentManagePage extends BasePage {
     }
 
     public boolean verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion(String jobTitleSelectBefore) {
+        Boolean isDisabled = false;
         criteriaAfter.click();
         criteriaAfterSearchInput.clear();
         criteriaAfterSearchInput.sendKeys(jobTitleSelectBefore);
-        return jobTitleAfterPromotion.isEnabled();
+        try {
+            jobTitleAfterPromotion.click();
+        } catch (Exception ElementNotInteractableException) {
+            isDisabled = true;
+
+        }
+        return isDisabled;
     }
 
     public void setPromotionAction(String balanceB, String balanceA) {
@@ -867,6 +934,81 @@ public class AbsentManagePage extends BasePage {
      return hasPromotionRule;
     }
 
+    public String getTemplateListLabel() {
+        return templateListLabel.getText();
+    }
+
+    public void goToPreviousPage() {
+        previousPage.click();
+    }
+
+    public void goToNextPage() {
+        nextPage.click();
+    }
+
+    public String getCurrentPage() {
+        waitForSeconds(3);
+        return currentPage.getText();
+    }
+
+    public String getDynamicEmployeeGroupName() {
+        return dynamicEmployeeGroupName.getText();
+    }
+
+    public String getDynamicEmployeeGroupDesc() {
+        return dynamicEmployeeGroupDesc.getText();
+    }
+
+    public ArrayList getDynamicEmployeeGroupLabs() {
+        return getWebElementsText(dynamicEmployeeGroupLabel);
+    }
+
+    public void viewEmployeeGroup() {
+        viewBtnInAssociate.click();
+        waitForSeconds(3);
+    }
+
+    public String getViewModalTitle() {
+        return viewModalTitle.getText();
+    }
+
+    public void cancelAssociation() {
+        cancelBtnInAssociate.click();
+        waitForSeconds(2);
+        yesToCancel.click();
+        if (isElementDisplayed(leavePageBtn)) {
+            toLeavePage();
+        }
+        waitForSeconds(2);
+    }
+
+    public void saveAssociation() {
+        saveAssociate.click();
+        waitForSeconds(2);
+    }
+
+    public void toLeavePage() {
+        leavePageBtn.click();
+    }
+
+    public void deleteOrArchiveTemplate(String temp) {
+        search(temp);
+        clickInDetails();
+        waitForSeconds(3);
+        if (isDeleteButtonDisplayed()) {
+            deleteButton.click();
+        } else {
+            archivePublishedTemplate();
+        }
+        okToActionInModal(true);
+    }
+
+    public String getAssociations() {
+        waitForSeconds(5);
+        viewModalTestButton.click();
+        return viewModalTestResult.getText();
+    }
+
     @FindBy(css = "div.text-danger.text-invalid-range.ng-binding")
     private WebElement noEnoughMessage;
 
@@ -875,5 +1017,160 @@ public class AbsentManagePage extends BasePage {
             SimpleUtils.pass("Error message display");
         }else
             SimpleUtils.fail("Error message doesn't display",false);
+    }
+
+    @FindBy(css = "img[src = 'img/legion/add.png']")
+    private WebElement addIcon;
+    @FindBy(css = "select[aria-label = 'Accrual Units']")
+    private WebElement unitSelect;
+
+    public void addTimeOffReasonWithDayUnit() {
+        click(addIcon);
+        reasonName.sendKeys("Aaaa");
+        unitSelect.sendKeys("Days");
+        scrollToElement(okCreating);
+        click(okCreating);
+    }
+
+    public void editTimeOffReason() {
+        scrollToElement(editTemplate);
+        click(editTemplate);
+        System.out.println(unitSelect.getAttribute("disabled"));
+        if(unitSelect.getAttribute("disabled").equals("true")){
+            SimpleUtils.pass("Unit can't be edited");
+        }else
+            SimpleUtils.fail("Unit can be edited",false);
+        scrollToElement(okCreating);
+        click(okCreating);
+        click(remove);
+        click(okCreating);
+    }
+
+    @FindBy(css = "td lg-button[label='Edit']")
+    private WebElement editTimeOffReason;
+    @FindBy(css = "div.lg-templates-table-improved__grid-column > lg-button > button")
+    private WebElement firstPublishTemplate;
+    @FindBy(css = "div.lg-templates-table-improved__grid-row.ng-scope")
+    private WebElement firstTemplate;
+    @FindBy(css = "div.toggle")
+    private WebElement toggle;
+    @FindBy(css = "div.lg-templates-table-improved__grid-column.lg-templates-table-improved__grid-column--left.ml-25 > lg-button > button")
+    private WebElement firstDraftTemplate;
+
+    public void goToTemplate(){
+        if(firstTemplate.getAttribute("class").contains("hasChildren")){
+            click(toggle);
+            click(firstDraftTemplate);
+        }else
+            click(firstPublishTemplate);
+    }
+
+    public void otherDistributionMethodisDiabled() {
+        goToTemplate();
+        click(editTemplate);
+        click(okCreating);
+        scrollToElement(editTimeOffReason);
+        click(editTimeOffReason);
+
+        verifyWorkRoleOnlyDisplayForScheduleHour("Worked Hours");
+        verifyWorkRoleOnlyDisplayForScheduleHour("Scheduled Hours");
+        verifyWorkRoleOnlyDisplayForScheduleHour("None");
+
+        if(getDriver().findElement(By.cssSelector("option[label='Monthly']")).getAttribute("disabled").equals("true")
+                && getDriver().findElement(By.cssSelector("option[label='Weekly']")).getAttribute("disabled").equals("true")
+                && getDriver().findElement(By.cssSelector("option[label='Worked Hours']")).getAttribute("disabled") == null
+                && getDriver().findElement(By.cssSelector("option[label='Scheduled Hours']")).getAttribute("disabled") == null
+                && getDriver().findElement(By.cssSelector("option[label='Lump Sum']")).getAttribute("disabled").equals("true")
+                && getDriver().findElement(By.cssSelector("option:nth-child(6)")).getAttribute("disabled").equals("true")
+                && getDriver().findElement(By.cssSelector("option[label='None']")).getAttribute("disabled") == null){
+            SimpleUtils.pass("Scheduled Hours/Worked Hours/None are enabled, others are disabled");
+        }else
+            SimpleUtils.fail("Scheduled Hours/Worked Hours/None are diabled or others are enabled",false);
+    }
+
+    @FindBy(css = "input-field[placeholder = 'All Work Roles']>ng-form>input")
+    private WebElement workRoleInput;
+    @FindBy(css = "question-input[question-title = 'Distribution Method'] > div > div > ng-transclude > input-field > ng-form > div > select" )
+    private WebElement distributioonMethodSelect;
+
+    private void verifyWorkRoleOnlyDisplayForScheduleHour(String type){
+        distributioonMethodSelect.sendKeys(type);
+        if(!getDriver().findElement(By.cssSelector("option[label='Scheduled Hours']")).isSelected()){
+            if(!isElementEnabled(workRoleInput)){
+                SimpleUtils.pass("Work role doesn't display for other distribution type");
+            }else
+                SimpleUtils.fail("Work role display for other distribution type",false);
+        }else{
+            if(isElementEnabled(workRoleInput)){
+                SimpleUtils.pass("Work role display for Scheduled Hours");
+            }else
+                SimpleUtils.fail("Work role doesn't display for Scheduled Hours",false);
+        }
+    }
+
+    public void verifyWorkRoleStatus(){
+        click(backButton);
+        click(leavePageBtn);
+        search("Floating Holiday");
+        //scrollToElement(editTemplate);
+        click(getDriver().findElement(By.cssSelector(" tr > td:nth-child(2) > lg-button:nth-child(1) > button")));
+
+        verifyWorkRoleOnlyDisplayForScheduleHour("Monthly");
+        verifyWorkRoleOnlyDisplayForScheduleHour("Weekly");
+        verifyWorkRoleOnlyDisplayForScheduleHour("Worked Hours");
+        verifyWorkRoleOnlyDisplayForScheduleHour("Scheduled Hours");
+        verifyWorkRoleOnlyDisplayForScheduleHour("Lump Sum");
+        verifyWorkRoleOnlyDisplayForScheduleHour("None");
+
+        click(backButton);
+        click(leavePageBtn);
+        click(saveAsDrop);
+        scrollToElement(publishNow);
+        click(publishNow);
+        click(saveTemplate);
+    }
+
+    public void configureGlobalSettings() {
+        switchToSettings();
+        String toggleIsOn = "rgba(49, 61, 146, 1)";
+        String bgColor1 = useAccrualToggle.getCssValue("background-color");
+        if (!bgColor1.equals(toggleIsOn)) {
+            useAccrualToggle.click();
+        }
+        String bgColor2 = timesheetRequiredToBeApprovedToggle.getCssValue("background-color");
+        if (!bgColor2.equals(toggleIsOn)) {
+            timesheetRequiredToBeApprovedToggle.click();
+        }
+        lookBackDays.clear();
+        lookBackDays.sendKeys("5");
+        waitForSeconds(3);
+        switchToTemplates();
+    }
+
+    @FindBy(css = "input[type = 'checkbox']")
+    private WebElement firstWorkRole;
+    @FindBy(css = "div.select-list-item>input-field>label")
+    private List<WebElement> workRoleList;
+
+    public ArrayList<String> searchAndSelectWorkRole(){
+        verifyWorkRoleOnlyDisplayForScheduleHour("Scheduled Hours");
+        scrollToElement(workRoleInput);
+        clickTheElement(workRoleInput);
+
+        ArrayList<String> workRoles = getWebElementsText(workRoleList);
+
+        templateSearchBox.clear();
+        templateSearchBox.sendKeys("AMBASSADOR");
+        click(firstWorkRole);
+
+        templateSearchBox.clear();
+        templateSearchBox.sendKeys("Key Carrier");
+        click(firstWorkRole);
+
+        if(getDriver().findElement(By.cssSelector("input-field[placeholder = 'All Work Roles']>ng-form>div")).getAttribute("innerText").contains("2 Work Roles Selected")){
+            SimpleUtils.pass("2 work roles selected successfully");
+        }else
+            SimpleUtils.fail("2 work roles selected faied",false);
+        return workRoles;
     }
 }

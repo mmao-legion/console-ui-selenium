@@ -16,11 +16,12 @@
             <class name="com.legion.tests.core.OpsPortal.NewNavigationFlowTest"/>
             <class name="com.legion.tests.core.OpsPortal.ConfigurationTest"/>
             <class name="com.legion.tests.core.OpsPortal.UserManagementTest"/>
-            <class name="com.legion.tests.core.OpsPortal.LaborModelTest"/>
-            <class name="com.legion.tests.core.PlanTest"/>
             <class name="com.legion.tests.core.opUserManagement.AccessRoleTest"/>
             <class name="com.legion.tests.core.opEmployeeManagement.AbsentManagementTemplateTest"/>
             <class name="com.legion.tests.core.opEmployeeManagement.AccrualEngineTest"/>
+            <class name="com.legion.tests.core.opEmployeeManagement.TimeOffRequestTest"/>
+            <class name="com.legion.tests.core.OpsPortal.LaborModelTest"/>
+            <class name="com.legion.tests.core.PlanTest"/>
         </classes>
     </test>
 </suite>

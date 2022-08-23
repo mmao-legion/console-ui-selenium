@@ -1,11 +1,12 @@
 package com.legion.tests.core.opEmployeeManagement;
 
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.core.OpCommons.OpsCommonComponents;
+import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
+import com.legion.pages.core.OpCommons.RightHeaderBarPage;
 import com.legion.pages.core.opemployeemanagement.AbsentManagePage;
 import com.legion.pages.core.opemployeemanagement.EmployeeManagementPanelPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffReasonConfigurationPage;
-import com.legion.pages.core.OpCommons.RightHeaderBarPage;
-import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -331,6 +332,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         //publish after associating
         absentManagePage.configureTemplate(tempName);
         absentManagePage.associateTemplate("OML16ForAuto");
+        absentManagePage.saveAssociation();
         SimpleUtils.pass("Succeeded in associating the template!");
         absentManagePage.switchToDetails();
         //configure a rule before publish
@@ -338,6 +340,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
         configurationPage.setTimeOffRequestRuleAs("Employee can request ?", true);
         configurationPage.setTimeOffRequestRuleAs("Employee can request partial day ?", true);
+        configurationPage.setDistributionMethod("Monthly");
         configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
         configurationPage.saveTimeOffConfiguration(true);
         absentManagePage.saveTemplateAs("Publish now");
@@ -439,6 +442,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         //add service lever
         /*configurationPage.addServiceLever();
         configurationPage.addSecondServiceLever();*/
+        configurationPage.setDistributionMethod("Monthly");
         configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
         configurationPage.addSpecifiedServiceLever(2, "24", "6", "30");
 
@@ -533,6 +537,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         configurationPage.setProbationUnitAsMonths();
         configurationPage.setValueForTimeOffRequestRules("Annual Use Limit", "5");
 
+        configurationPage.setDistributionMethod("Monthly");
         configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
         configurationPage.saveTimeOffConfiguration(true);
         //verify results of above action
@@ -619,6 +624,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         distribution.add("Monthly");
         distribution.add("Weekly");
         distribution.add("Worked Hours");
+        distribution.add("Scheduled Hours");
         distribution.add("Lump Sum");
         distribution.add("Specified Date");
         distribution.add("None");
@@ -650,6 +656,110 @@ public class AbsentManagementTemplateTest extends TestBase {
         proUnit.add("Months");
         proUnit.add("Hours Worked");
         return proUnit;
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Accruals Template Association")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//blocked by: https://legiontech.atlassian.net/browse/OPS-5396
+    public void verifyAccrualTemplateAssociationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        navigationPage.navigateToEmployeeManagement();
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToTimeOffManagementPage();
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        //delete the failed template
+        //search template and archive
+        absentManagePage.search("AutoTest_Accrual");
+        int num = absentManagePage.templateNumber();
+        for (int i = 0; i < num; i++) {
+            absentManagePage.deleteOrArchiveTemplate("AutoTest_Accrual");
+        }
+        SimpleUtils.pass("Succeeded in editing or archiving template!");
+        //Create a new template
+        Random random = new Random();
+        String tempName = "AutoTest_Accrual" + random.nextInt(10000);
+        absentManagePage.createANewTemplate(tempName, "accrual test");
+        absentManagePage.submit();
+
+        //1.associate page title:
+        absentManagePage.switchToAssociation();
+        String associationTitle = absentManagePage.getTemplateAssociationTitle();
+        Assert.assertEquals(associationTitle, "Dynamic Employee Groups", "Failed to switch to associate page!");
+        SimpleUtils.pass("Succeeded in switching to associate page and getting the association Title!");
+        //2.paging/page turning
+        Assert.assertEquals(absentManagePage.getCurrentPage(), "1", "Failed to assert now is in the first page！");
+        SimpleUtils.pass("Succeeded in validating now is in the first page！");
+        absentManagePage.goToNextPage();
+        Assert.assertEquals(absentManagePage.getCurrentPage(), "2", "Failed to assert it go to the next page！");
+        SimpleUtils.pass("Succeeded in going to the next page！");
+        absentManagePage.goToPreviousPage();
+        Assert.assertEquals(absentManagePage.getCurrentPage(), "1", "Failed to assert it go to the previous page！");
+        SimpleUtils.pass("Succeeded in going to the previous page！");
+        //3.search works well
+        //3.1 search by partial name
+        String groupName = "3980";
+        absentManagePage.searchDynamicGroup(groupName);
+        Assert.assertTrue(absentManagePage.getDynamicEmployeeGroupName().contains(groupName), "Failed to search by group name!");
+        SimpleUtils.pass("Succeeded in validating search by group name！");
+
+        //3.2 search by description
+        String groupDesc = "Don't touch(AutoUsed )";
+        absentManagePage.searchDynamicGroup(groupDesc);
+        Assert.assertTrue(absentManagePage.getDynamicEmployeeGroupDesc().equalsIgnoreCase(groupDesc), "Failed to search by group description!");
+        SimpleUtils.pass("Succeeded in validating search by group description！");
+        //4.label filter works well
+        String groupLabel = "accrual";
+        absentManagePage.searchDynamicGroup(groupLabel);
+        Boolean flag = true;
+        for (int i = 0; i < absentManagePage.getDynamicEmployeeGroupLabs().size(); i++) {
+            if (absentManagePage.getDynamicEmployeeGroupLabs().get(i).toString().contains(groupLabel)) {
+            } else {
+                flag = false;
+                break;
+            }
+        }
+        Assert.assertTrue(flag, "Failed to search by group label!");
+        SimpleUtils.pass("Succeeded in validating filter by group label！");
+        //5.back button
+        absentManagePage.isBackButtonDisplayed();
+        Assert.assertTrue(absentManagePage.isBackButtonDisplayed(), "Failed to assert the back button displayed!");
+        SimpleUtils.pass("Succeeded in validating the back button is displayed!");
+        absentManagePage.back();
+        Assert.assertEquals(absentManagePage.getTemplateListLabel(), "Review and configure the list of time off management templates. Add and take an action.", "Failed to back to template list page!");
+        SimpleUtils.pass("Succeeded in validating click back button can back to the template list page!");
+        //6.cancel button
+        absentManagePage.configureTemplate(tempName);
+        absentManagePage.associateTemplate("AutoAssociateTest");
+        absentManagePage.cancelAssociation();
+        Assert.assertEquals(absentManagePage.getTemplateListLabel(), "Review and configure the list of time off management templates. Add and take an action.", "Failed to back to template list page!");
+        SimpleUtils.pass("Succeeded in validating click cancel button can back to the template list page!");
+        //7.save
+        absentManagePage.configureTemplate(tempName);
+        absentManagePage.associateTemplate("AutoAssociateTest");
+        absentManagePage.saveAssociation();
+        //4.View button
+        absentManagePage.viewEmployeeGroup();
+        Assert.assertEquals(absentManagePage.getViewModalTitle(), "Manage Dynamic Employee Group", "Failed to view dynamic employee group details!");
+        SimpleUtils.pass("Succeeded in validating view button displayed and it is clickable！");
+        //2 users associated to the template
+        Assert.assertEquals(absentManagePage.getAssociations(), "2 Users match", "Failed to get the associated user number!");
+        SimpleUtils.pass("Succeeded in validating users were associated to the target template！");
+        OpsCommonComponents components = new OpsCommonComponents();
+        components.okToActionInModal(false);
+        //switch to details page
+        absentManagePage.switchToDetails();
+        //configure
+        absentManagePage.setTemplateLeverCanRequest(true);
+        absentManagePage.setTemplateLeverWeeklyLimits("40");
+        absentManagePage.configureTimeOffRules("Sick");
+        TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
+        configurationPage.setTimeOffRules(true, true, true, "10", "2", "6", "2", true, true, true, "8", false, "1095", "Days", "9999");
+        //configurationPage.addSpecifiedServiceLever(0, "12", "3", "15");
+        configurationPage.saveTimeOffConfiguration(true);
+        absentManagePage.saveTemplateAs("Publish now");
+        SimpleUtils.pass("Succeeded in publishing template: " + tempName + " !");
     }
 
 }
