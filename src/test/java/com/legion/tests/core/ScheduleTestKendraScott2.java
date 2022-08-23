@@ -7120,7 +7120,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				SimpleUtils.assertOnFail("Scheduling Policies Page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
 				controlsNewUIPage.clickOnGlobalLocationButton();
 				controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
-				Thread.sleep(240000);
+				Thread.sleep(10000);
 			} else {
 				//Go to OP page
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -7191,7 +7191,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			while ((firstNameOfTM2.equalsIgnoreCase("open")
 					|| firstNameOfTM2.equalsIgnoreCase("unassigned")
 					|| firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1) || workRole1.equalsIgnoreCase(workRole2))
-					&& shiftCount2 < 100) {
+					&& shiftCount2 < 150) {
 				shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 				firstNameOfTM2  = shiftInfo2.get(0);
 				workRole2 = shiftInfo2.get(4);
@@ -7276,7 +7276,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				SimpleUtils.assertOnFail("Scheduling Policies Page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
 				controlsNewUIPage.clickOnGlobalLocationButton();
 				controlsNewUIPage.enableOverRideAssignmentRuleAsNo();
-				Thread.sleep(240000);
+				Thread.sleep(10000);
 			} else {
 				//Go to OP page
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -7307,7 +7307,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Go to the schedule view table
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-			Thread.sleep(120000);
+			Thread.sleep(60000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -7344,7 +7344,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String workRole2 = shiftInfo2.get(4);
 			while ((firstNameOfTM2.equalsIgnoreCase("open")
 					|| firstNameOfTM2.equalsIgnoreCase("unassigned")
-					|| firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1) || workRole1.equalsIgnoreCase(workRole2)) && shiftCount2 < 100) {
+					|| firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1) || workRole1.equalsIgnoreCase(workRole2)) && shiftCount2 < 150) {
 				shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 				firstNameOfTM2 = shiftInfo2.get(0);
 				workRole2 = shiftInfo2.get(4);
@@ -7407,7 +7407,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				SimpleUtils.assertOnFail("Scheduling Policies Page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
 				controlsNewUIPage.clickOnGlobalLocationButton();
 				controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
-				Thread.sleep(240000);
+				Thread.sleep(10000);
 			} else {
 				//Go to OP page
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
