@@ -29,7 +29,6 @@ public class OPConfigTest extends TestBase {
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception {
         try {
-            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI((String) params[1], (String) params[2]);
             this.createDriver((String) params[0], "83", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
@@ -268,6 +267,8 @@ public class OPConfigTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI(getUserNameNPwdForCallingAPI().get(0),
+                    getUserNameNPwdForCallingAPI().get(1));
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ForecastPage forecastPage = pageFactory.createForecastPage();
@@ -346,6 +347,8 @@ public class OPConfigTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI(getUserNameNPwdForCallingAPI().get(0),
+                    getUserNameNPwdForCallingAPI().get(1));
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ForecastPage forecastPage = pageFactory.createForecastPage();
