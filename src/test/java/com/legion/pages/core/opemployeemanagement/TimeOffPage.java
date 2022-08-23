@@ -273,6 +273,7 @@ public class TimeOffPage extends BasePage {
     }
 
     public HashMap<String, String> getTimeOffBalance() {
+        waitForSeconds(3);
         ArrayList<String> keys = getWebElementsText(timeOffKeys);
         ArrayList<String> values = getWebElementsText(balances);
         HashMap timeOffBalance = new HashMap();
@@ -355,7 +356,7 @@ public class TimeOffPage extends BasePage {
 
     public void verifyTimeOffStatus() throws Exception {
         waitForSeconds(5);
-        if (timeOffStatus.get(2).getAttribute("innerText").toUpperCase().equals("CANCELLED") && timeOffStatus.get(3).getAttribute("innerText").toUpperCase().equals("REJECTED") && timeOffStatus.get(4).getAttribute("innerText").toUpperCase().equals("APPROVED")) {
+        if (timeOffStatus.get(1).getAttribute("innerText").toUpperCase().equals("CANCELLED") && timeOffStatus.get(3).getAttribute("innerText").toUpperCase().equals("REJECTED") && timeOffStatus.get(4).getAttribute("innerText").toUpperCase().equals("APPROVED")) {
             SimpleUtils.pass("Time off status is correct");
         } else
             SimpleUtils.fail("Time off status is wrong", false);
@@ -402,6 +403,78 @@ public class TimeOffPage extends BasePage {
         }
     }
 
+    @FindBy(css = "span.ml-5")
+    private List<WebElement> units;
 
+    public HashMap<String, String> getTimeOffUnit() {
+        ArrayList<String> keys = getWebElementsText(timeOffKeys);
+        ArrayList<String> values = getWebElementsText(units);
+        HashMap timeOffUnit = new HashMap();
+        int mapSize = keys.size();
+        for (int i = 0; i < mapSize; i++) {
+            timeOffUnit.put(keys.get(i), values.get(i));
+        }
+        return timeOffUnit;
+    }
+
+    @FindBy(css = "tr[ng-repeat = 'timeoffType in accruedHours track by $index'] > td:nth-child(1)")
+    private List<WebElement> timeOffKeysInEdit;
+    @FindBy(css = "tr[ng-repeat = 'timeoffType in accruedHours track by $index'] > td:nth-child(1) > span")
+    private List<WebElement> timeOffUnitInUnit;
+
+    public HashMap<String, String> getTimeOffUnitInEdit() {
+        click(editButton);
+        ArrayList<String> keys = getWebElementsText(timeOffKeysInEdit);
+        ArrayList<String> values = getWebElementsText(timeOffUnitInUnit);
+        HashMap timeOffUnitInEdit = new HashMap();
+        int mapSize = keys.size();
+        for (int i = 0; i < mapSize; i++) {
+            timeOffUnitInEdit.put(keys.get(i).split("-")[0].trim(), values.get(i));
+        }
+        scrollToElement(cancelButton);
+        click(cancelButton);
+        return timeOffUnitInEdit;
+    }
+
+    public HashMap<String, String> getTimeOffUnitInCreateTimeOff() {
+        click(createTimeOff);
+        click(timeOffReasonSelect);
+        ArrayList<String> keys = getWebElementsText(timeOffReasonOptions);
+        HashMap timeOffUnitInCreateTimeOff = new HashMap();
+        int mapSize = keys.size();
+        for (int i = 0; i < mapSize; i++) {
+            timeOffUnitInCreateTimeOff.put(keys.get(i).split("-")[0].trim(), keys.get(i).split("-")[1].trim());
+        }
+        scrollToElement(cancelButton);
+        click(cancelButton);
+        return timeOffUnitInCreateTimeOff;
+    }
+
+    @FindBy(css = "img.lg-slider-pop__title-dismiss")
+    private WebElement closeIcon;
+    @FindBy(css = "div.balance-action lg-button[label='History']>button")
+    private WebElement history;
+    @FindBy(css = "div#logContainer.lg-slider-pop__content.mt-20")
+    private WebElement historyDetail;
+    @FindBy(css = "lg-button[label= 'OK']")
+    private WebElement okButton;
+    public void verifyHistoryUnitType() throws Exception {
+        scrollToElement(okButton);
+        click(okButton);
+        if(isElementEnabled(history,5)){
+            highlightElement(history);
+            click(history);
+            if(isElementEnabled(historyDetail,5)){
+                highlightElement(historyDetail);
+                if (historyDetail.getText().contains("Balance days Edited by") && historyDetail.getText().contains("DayUnit Edited from 0 days to 0.2 days + 0.2 days")){
+                    SimpleUtils.pass("Unit type is correct in history");
+                    click(closeIcon);
+                }else
+                    SimpleUtils.fail("Unit type display wrong in history",false);
+            }else
+                SimpleUtils.fail("user history detail loaded failed",false);
+        }else
+            SimpleUtils.fail("user history loaded failed",false);
+    }
 }
 

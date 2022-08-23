@@ -51,7 +51,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	@FindBy(css = "lg-select[search-hint='Search Location'] div.input-faked")
 	private WebElement locationSelectorButton;
 
-    public ConsoleLoginPage() {
+	public ConsoleLoginPage() {
     	PageFactory.initElements(getDriver(), this);
     }
 
@@ -100,7 +100,6 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		}
 		waitForSeconds(4);
     }
-
 
 	@Override
 	public void switchToOriginalWindow(String handle)  throws Exception {
@@ -332,11 +331,40 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		return isCreateAccountPageLoaded;
 	}
 
-
+	@FindBy(css="div.invalid-login")
+	private WebElement invalidLoginError;
+	@Override
+	public boolean isInvalidLoginErrorShowing() throws Exception{
+		boolean flag = false;
+		if(isElementLoaded(invalidLoginError,2)){
+			flag = true;
+		}else {
+			flag = false;
+		}
+		return flag;
+	}
+	@Override
+	public void refreshLoginPage() throws Exception {
+		if (isElementLoaded(invalidLoginError, 5)) {
+			getDriver().get(getDriver().getCurrentUrl());
+			if (isElementLoaded(loginPanel, 15)
+					&& isElementLoaded(userNameField, 5)
+					&& isElementLoaded(passwordField, 5)
+					&& isElementLoaded(loginButton, 5)) {
+				SimpleUtils.pass("Refresh page successfully!");
+			} else {
+				SimpleUtils.fail("Can't Refresh page successfully!", false);
+			}
+		} else {
+			SimpleUtils.report("There is no error showing on login page");
+		}
+	}
 	@FindBy(xpath = "//div[@data-testid='tos-text']")
 	private WebElement legionTermsOfService;
+
 	@FindBy(css = "[data-testid=\"accept-btn\"]")
 	private WebElement legionTermsOfServiceAgreeButton;
+
 	@Override
 	public void verifyLegionTermsOfService() throws Exception {
 		if (isElementLoaded(legionTermsOfService,5)
@@ -347,5 +375,4 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		}else
 			SimpleUtils.report("There is no Legion Terms Of Service!");
 	}
-
 }

@@ -3218,7 +3218,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 
-	@FindBy(css = "lg-button[class=\"lg-form-section-action ng-scope ng-isolate-scope\"]")
+	@FindBy(css = "lg-button[class=\"ml-20 mr-20 ng-scope ng-isolate-scope\"]")
 	private WebElement userAndRolesEditUserBtn;
 
 	@FindBy(css = "form-section[on-action=\"editUser()\"]")
@@ -3361,7 +3361,6 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void verifyUpdateUserAndRolesOneUserLocationInfo(String userFirstName) throws Exception {
-
 		searchUserByFirstName(userFirstName);
 		waitForSeconds(2);
 		if (usersAndRolesAllUsersRows.size() > 0) {
@@ -3373,6 +3372,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					String defaultLocation = getUserLocationsList();
 					scrollToBottom();
 					if (isElementLoaded(managerLocationBtn)) {
+						scrollToElement(managerLocationBtn);
 						click(managerLocationBtn);
 						searchLocation("Level:Region");
 						click(selectAllCheckBoxInManaLocationWin);
@@ -3390,7 +3390,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 							SimpleUtils.fail("There is no location ",true);
 					}else
 						SimpleUtils.fail("Manager location button load failed ",true);
-
+					scrollToBottom();
 					String  locationAfterUpdated = getUserLocationsList();
 					if (!locationAfterUpdated.equals(defaultLocation)) {
 						SimpleUtils.pass("User's location was updated successfully");

@@ -1,12 +1,15 @@
 package com.legion.tests.core.OpsPortal;
 
 import com.alibaba.fastjson.JSONObject;
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
+import com.legion.pages.core.ConsolePlanPage;
 import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffPage;
 import com.legion.tests.TestBase;
@@ -20,6 +23,7 @@ import com.legion.utils.*;
 import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.opencv.ml.NormalBayesClassifier;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
@@ -1011,7 +1015,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify user can see template value via click template name in location level and compare")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUserCanSeeEachTypeOfTemViaClickingTemNameAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
@@ -1154,7 +1158,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "View template of Scheduling policy schedule collaboration TA and Compliance")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyViewFunctionOfSchedulingPolicyScheduleCollaborationTAComplianceInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
@@ -1726,7 +1730,7 @@ public class LocationsTest extends TestBase {
         locationsPage.backToConfigurationTabInLocationLevel();
         locationsPage.canGoToLaborModelViaTemNameInLocationLevel();
         laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
-        attributesInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevel();
+        attributesInfoInTemplate = laborModelPage.getValueAndDescriptionForEachAttributeAtTemplateLevelInLocations();
         for (String key : attributesInfoInTemplate.keySet()) {
             if (key.equals(attributeName)) {
                 List<String> templateValuesInLocation = attributesInfoInTemplate.get(key);
@@ -1735,8 +1739,8 @@ public class LocationsTest extends TestBase {
                 } else {
                     SimpleUtils.fail("Template level external attributes description of " + key + " is updated after updating location level attributes", false);
                 }
+                break;
             }
-            break;
         }
 
         //Back to global level checking the description should not be updated
@@ -1786,7 +1790,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Lizzy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "NSOLocation_Enhancements")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyNSOLocationEnhancementsCheckAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
         SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
         String currentTime = dfs.format(new Date());
@@ -2221,7 +2225,7 @@ public class LocationsTest extends TestBase {
             userManagementPage.verifySearchWorkRole(workRoleName);
             userManagementPage.verifyEditBtnIsClickable();
             userManagementPage.goToWorkRolesDetails(workRoleName);
-            userManagementPage.addAssignmentRule("DM Planer", "At all Hours", "At least", 2, 1, "20210713152098");
+            userManagementPage.addAssignmentRule("Manager", "At all Hours", "At least", 2, 1, "20210713152098");
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
@@ -2231,7 +2235,7 @@ public class LocationsTest extends TestBase {
             //Validate the new added assignment rules at global level should be enabled at location level by default.
             locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
             locationsPage.searchWorkRoleInAssignmentRuleTemplate("AMBASSADOR");
-            String assignmentRuleTitle = "DM Planer";
+            String assignmentRuleTitle = "Manager";
             locationsPage.verifyAssignmentRulesFromLocationLevel(assignmentRuleTitle);
             //Validate the location level assignment rule's badge info should not be changed after updating global assignment rules when
             //Validate the global assignment rules should not be changed after change one location level assignment rule.
@@ -2354,7 +2358,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Yang")
     @Enterprise(name = "opauto")
     @TestName(description = "Split override/reset of Work Role and Location Attribute")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void VerifySplitOverrideResetOfWorkRoleAndLocationAttributeAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             String locationName = "locationAutoCreateForYang";
@@ -2472,6 +2476,172 @@ public class LocationsTest extends TestBase {
             locationsPage.searchUpperFields("000forBU");
             locationsPage.checkFirstDayOfWeekDisplay();
             locationsPage.updateFirstDayOfWeek("Thursday");
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    //new feature is not released to rc
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Labor Budget Plan Section UI")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifyLaborBudgetPlanSectionUIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            locationsPage.verifyUIOfLaborBudgetPlanSection();
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    //new feature is not released to rc
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "update Labor Budget Plan settings")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifyUpdateLaborBudgetPlanSettingsAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            boolean subPlans = true;
+            boolean compressed = true;
+            String computeBudgetCost ="Work Role";
+            String subPlansLevel = "Region";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            locationsPage.clickOnEditButtonOnGlobalConfigurationPage();
+            locationsPage.updateLaborBudgetPlanSettings(subPlans,subPlansLevel,compressed,computeBudgetCost);
+            locationsPage.saveTheGlobalConfiguration();
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    //new feature is not released to rc
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Labor Budget Section is controlled by toggle")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifyLaborBudgetSectionIsControlledByToggleAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            //Turn off EnableLongTermBudgetPlan toggle
+            ToggleAPI.disableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "stoneman@legion.co", "admin11.a");
+            refreshPage();
+            if(!locationsPage.isBudgetPlanSectionShowing()){
+                SimpleUtils.pass("Budget plan section is Not showing when EnableLongTermBudgetPlan is off");
+            }else {
+                SimpleUtils.fail("Budget plan section is showing when EnableLongTermBudgetPlan is off",false);
+            }
+            //Turn on EnableLongTermBudgetPlan toggle
+            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "stoneman@legion.co", "admin11.a");
+            refreshPage();
+            if(locationsPage.isBudgetPlanSectionShowing()){
+                SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is on");
+            }else {
+                SimpleUtils.fail("Budget plan section is NOT showing when EnableLongTermBudgetPlan is on",false);
+            }
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    //new feature is not released to rc
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Compute LRB by work role or by job title groups")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifyComputeLRBByWorkRoleOrByJobTitleGroupsAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            String time= sdf.format(new Date());
+            String planName = "AutoUsing-ComputeMethod";
+            String scplan = "AutoUsing-ComputeMethod scenario 1";
+
+            //go to op side to get the getLaborBudgetPlanComputeSettings
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            if(locationsPage.isBudgetPlanSectionShowing()){
+                SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is off");
+            }else {
+                SimpleUtils.fail("Budget plan section is NOT showing when EnableLongTermBudgetPlan is off",false);
+            }
+            String computeMethod = locationsPage.getLaborBudgetPlanComputeSettings();
+
+            //go to console side to check the plan page UI
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("RegionForPlan_Auto");
+            locationSelectorPage.changeDistrict("DistrcitForPlan2");
+            PlanPage planPage = pageFactory.createConsolePlanPage();
+            planPage.clickOnPlanConsoleMenuItem();
+            String workRoleOrJobTitle = planPage.verifyScenarioDetailPageUsingWorkRoleOrJobTitle(planName, scplan);
+            if (computeMethod.contains("Job Title Group")){
+                if(workRoleOrJobTitle.contains("headcount")){
+                    SimpleUtils.pass("When set compute labor budget by job title group hourly rate, Scenario page can show well");
+                }else {
+                    SimpleUtils.fail("When set compute labor budget by job title group hourly rate, Scenario page can't show well",false);
+                }
+            }else {
+                if(!workRoleOrJobTitle.contains("headcount")){
+                    SimpleUtils.pass("When set compute labor budget by work role hourly rate, Scenario page can show well.");
+                }else {
+                    SimpleUtils.fail("When set compute labor budget by work role hourly rate, Scenario page can't show well",false);
+                }
+            }
+
+            //go to op side to update the setting
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            if(locationsPage.isBudgetPlanSectionShowing()){
+                SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is off");
+            }else {
+                SimpleUtils.fail("Budget plan section is NOT showing when EnableLongTermBudgetPlan is off",false);
+            }
+            locationsPage.clickOnEditButtonOnGlobalConfigurationPage();
+            locationsPage.UpdateOptionOfComputeBudgetCost();
+            locationsPage.saveTheGlobalConfiguration();
+            String computeMethod1 = locationsPage.getLaborBudgetPlanComputeSettings();
+
+            //go to console side to check the plan page UI
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("RegionForPlan_Auto");
+            locationSelectorPage.changeDistrict("DistrcitForPlan2");
+            planPage.clickOnPlanConsoleMenuItem();
+            String workRoleOrJobTitle1 = planPage.verifyScenarioDetailPageUsingWorkRoleOrJobTitle(planName, scplan);
+            if (computeMethod1.contains("Job Title Group")){
+                if(workRoleOrJobTitle1.contains("headcount")){
+                    SimpleUtils.pass("When set compute labor budget by job title group hourly rate, Scenario page can show well");
+                }else {
+                    SimpleUtils.fail("When set compute labor budget by job title group hourly rate, Scenario page can't show well",false);
+                }
+            }else {
+                if(!workRoleOrJobTitle1.contains("headcount")){
+                    SimpleUtils.pass("When set compute labor budget by work role hourly rate, Scenario page can show well.");
+                }else {
+                    SimpleUtils.fail("When set compute labor budget by work role hourly rate, Scenario page can't show well",false);
+                }
+            }
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
