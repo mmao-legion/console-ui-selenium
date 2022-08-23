@@ -31,6 +31,7 @@ public class PrepareSettingsTest extends TestBase {
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{
         try {
+            ToggleAPI.enableToggle(Toggles.MealAndRestTemplate.getValue(), (String) params[1], (String) params[2]);
             this.createDriver((String) params[0], "83", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
@@ -218,7 +219,7 @@ public class PrepareSettingsTest extends TestBase {
             //Publish the template
             configurationPage.publishNowTheTemplate();
 
-            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI("stoneman@legion.co", "admin11.a");
+            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI(username, password);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -253,7 +254,6 @@ public class PrepareSettingsTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyCanPrepareDynamicEmployeeGroupsNTemplatesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            ToggleAPI.enableToggle(Toggles.MealAndRestTemplate.getValue(), "stoneman@legion.co", "admin11.a");
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
