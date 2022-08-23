@@ -47,7 +47,7 @@ public class CinemarkMinorTest extends TestBase {
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception {
         try {
-            CacheAPI.refreshTemplateCache("stoneman@legion.co", "admin11.a");
+            CacheAPI.refreshTemplateCache((String) params[1], (String) params[2]);
             this.createDriver((String) params[0], "69", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);

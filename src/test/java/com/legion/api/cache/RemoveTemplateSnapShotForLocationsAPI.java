@@ -1,6 +1,7 @@
 package com.legion.api.cache;
 
 import com.jayway.restassured.response.Response;
+import com.legion.api.login.LoginAPI;
 import com.legion.tests.TestBase;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -28,9 +29,7 @@ public class RemoveTemplateSnapShotForLocationsAPI {
             cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - dayOfWeek -14);
             date = cal.getTime();
 
-            Response response = given().params("enterpriseName",System.getProperty("enterprise"),"sourceSystem","legion","passwordPlainText",password,"userName",username)
-                    .when().get("https://rc-enterprise.dev.legion.work/legion/authentication/login").then().statusCode(200).extract().response();
-            String sessionId = response.header("sessionid");
+            String sessionId = LoginAPI.getSessionIdFromLoginAPI(username, password);
             Set<String> keySet = locationBusinessID.keySet();
             for (String key: keySet) {
                 cal.setTime(date);
