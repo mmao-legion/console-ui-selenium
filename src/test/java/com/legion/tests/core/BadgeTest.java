@@ -48,19 +48,17 @@ public class BadgeTest extends TestBase {
             // Prepare badge for TM A
             teamPage.goToTeam();
             String tmA = teamPage.searchAndSelectTeamMemberByName(teamMemberA);
-            teamPage.clickTheTMByName(tmA);
             teamPage.clickEditProfileBtn();
             teamPage.deleteBadges();
             teamPage.saveEditProfileBtn();
             teamPage.clickEditProfileBtn();
-            teamPage.selectBadgeByName("Drop In Shift");
+            teamPage.selectBadgeByName("DROP IN SHIFT");
             teamPage.saveEditProfileBtn();
             SimpleUtils.assertOnFail("Failed for add badge to TM " + tmA, teamPage.isWithBadges(), false);
 
             // Prepare badge for TM B
             teamPage.goToTeam();
             String tmB = teamPage.searchAndSelectTeamMemberByName(teamMemberB);
-            teamPage.clickTheTMByName(tmB);
             teamPage.clickEditProfileBtn();
             teamPage.deleteBadges();
             teamPage.saveEditProfileBtn();

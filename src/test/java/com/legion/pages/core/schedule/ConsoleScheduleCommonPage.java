@@ -657,14 +657,14 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
                 clickTheElement(calendarNavigationNextWeekArrow);
                 if (areListElementVisible(currentWeeks, 5)) {
                     clickTheElement(currentWeeks.get(0));
-                    waitUntilElementIsInVisible(loadingIcon);
-                    waitForSeconds(10);
+//                    waitUntilElementIsInVisible(loadingIcon);
+//                    waitForSeconds(10);
                     SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(0).getText() + "' Successfully!");
                 }
             }else {
                 clickTheElement(currentWeeks.get(currentWeekIndex + 1));
-                waitUntilElementIsInVisible(loadingIcon);
-                waitForSeconds(10);
+//                waitUntilElementIsInVisible(loadingIcon);
+//                waitForSeconds(10);
                 SimpleUtils.pass("Navigate to next week: '" + currentWeeks.get(currentWeekIndex + 1).getText() + "' Successfully!");
             }
         }else {
@@ -917,5 +917,20 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
         }
 
         return dayStartOfTheWeek;
+    }
+
+    @FindBy(css = "div.lg-button-group")
+    private WebElement dayAndWeekViewButton;
+    public boolean checkIfDayAndWeekViewButtonEnabled () throws Exception {
+        boolean isEnabled = false;
+        if (isElementLoaded(dayAndWeekViewButton, 5)) {
+            if (dayAndWeekViewButton.getAttribute("class").contains("disabled")){
+                isEnabled = true;
+                SimpleUtils.report("The  day and week view button is disabled! ");
+            } else
+                SimpleUtils.report("The  day and week view button is enabled! ");
+        }else
+            SimpleUtils.fail("The day and week view button fail to load! ", false);
+        return isEnabled;
     }
 }

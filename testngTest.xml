@@ -9,15 +9,34 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-    <test name="P2P LG Test">
+    <test name="Schedule Copy Test">
         <classes>
-            <class name="com.legion.tests.core.P2PLGTest">
+            <class name="com.legion.tests.core.ScheduleCopyTest">
                 <methods>
-                    <include name="verifyDataMatchInDistrictSummaryWidgetOnDashboardInRegionViewWhenItIncludesLGAsInternalAdmin" />
-                    <include name="verifyDataMatchInLocationSummaryWidgetOnDashboardInDMViewWhenItIncludesLGAsInternalAdmin" />
-           <!--         <include name="verifyAnalyticsTableOnScheduleInDMViewWhenItIncludesLGAsInternalAdmin" /> -->
-                    <include name="verifyAnalyticsTableOnComplianceInDMViewWhenItIncludesLGAsInternalAdmin" />
-                    <include name="verifyAnalyticsTableOnTimesheetInDMViewWhenItIncludesLGAsInternalAdmin" />
+                    <include name="verifyTheContentOnCreateSchedulePageInWeekViewAsInternalAdmin" />
+                    <include name="verifyTheEnhancedCopyModalForNonDgFlowAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfCopyingASuggestedScheduleAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Delete Schedule Test">
+        <classes>
+            <class name="com.legion.tests.core.DeleteScheduleTest">
+                <methods>
+                    <include name="verifySMDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />
+                    <include name="verifyAdminDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Controls New UI Test">
+        <classes>
+            <class name="com.legion.tests.core.ControlsNewUITest">
+                <methods>
+                    <include name="verifySmartCopyConfigsInNonOPNotWorkingAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

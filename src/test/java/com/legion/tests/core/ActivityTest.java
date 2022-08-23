@@ -105,6 +105,7 @@ public class ActivityTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -124,8 +125,8 @@ public class ActivityTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             // Deleting the existing shifts for swap team members
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(swapCoverNames.get(0));
-            shiftOperatePage.deleteTMShiftInWeekView(swapCoverNames.get(1));
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(swapCoverNames.get(0));
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(swapCoverNames.get(1));
             scheduleMainPage.saveSchedule();
             shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             // Add the new shifts for swap team members
@@ -859,6 +860,7 @@ public class ActivityTest extends TestBase {
         ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
         NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -875,7 +877,7 @@ public class ActivityTest extends TestBase {
         }
         createSchedulePage.createScheduleForNonDGFlowNewUI();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -906,7 +908,7 @@ public class ActivityTest extends TestBase {
         //make update schedule activity to add one open shift
         //schedulePage.clickOnDayView();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
         String workRole = shiftOperatePage.getRandomWorkRole();
         // This method is used for the old UI
         //schedulePage.clickNewDayViewShiftButtonLoaded();
@@ -1665,8 +1667,8 @@ public class ActivityTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView(teamMemberName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMemberName);
             scheduleMainPage.saveSchedule();
             String workRole = shiftOperatePage.getRandomWorkRole();
 
@@ -1764,8 +1766,8 @@ public class ActivityTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView(teamMemberName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMemberName);
             scheduleMainPage.saveSchedule();
             String workRole = shiftOperatePage.getRandomWorkRole();
 
@@ -1908,10 +1910,10 @@ public class ActivityTest extends TestBase {
 
             //Delete the TM1 and TM2
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-            shiftOperatePage.deleteTMShiftInWeekView(teamMemberName1);
-            shiftOperatePage.deleteTMShiftInWeekView(teamMemberName2);
-            shiftOperatePage.deleteTMShiftInWeekView("Open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMemberName1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMemberName2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
 
             //Create one open shift and send offer to multiple TMs
@@ -2020,10 +2022,10 @@ public class ActivityTest extends TestBase {
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftOffer.getValue(), indexOfActivityType.ShiftOffer.name());
             activityPage.approveOrRejectMultipleShiftOfferRequestOnActivity(teamMemberName1, ActivityTest.approveRejectAction.Approve.getValue(), 1);
-            Thread.sleep(3000);
-//            String expectedTopMessage = "Error!Alert is already expired";
-//            activityPage.verifyApproveShiftOfferRequestAndGetErrorOnActivity(teamMemberName2, expectedTopMessage);
-            activityPage.approveOrRejectMultipleShiftOfferRequestOnActivity(teamMemberName2, ActivityTest.approveRejectAction.Approve.getValue(), 1);
+//            Thread.sleep(3000);
+            String expectedTopMessage = "Error!Alert is already expired";
+            activityPage.verifyApproveShiftOfferRequestAndGetErrorOnActivity(teamMemberName2, expectedTopMessage);
+//            activityPage.approveOrRejectMultipleShiftOfferRequestOnActivity(teamMemberName2, ActivityTest.approveRejectAction.Approve.getValue(), 1);
 
             //To close activity window
             getDriver().navigate().refresh();

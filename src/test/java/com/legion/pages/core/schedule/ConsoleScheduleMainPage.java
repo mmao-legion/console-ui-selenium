@@ -204,15 +204,16 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     public void clickOnEditButtonNoMaterScheduleFinalizedOrNot() throws Exception {
         CreateSchedulePage createSchedulePage = new ConsoleCreateSchedulePage();
-        waitForSeconds(5);
+        waitForSeconds(3);
         if(checkEditButton())
         {
             // Validate what happens next to the Edit!
             // When Status is finalized, look for extra popup.
             clickTheElement(editScheduleButton);
-            waitForSeconds(5);
+            waitForSeconds(2);
             if(isElementLoaded(popupAlertPremiumPay,10) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
+                waitForSeconds(2);
                 // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
                 if(isElementEnabled(btnEditAnyway,10) && isElementEnabled(btnCancelOnAlertPopup,10)){
                     SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
@@ -221,8 +222,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                 } else {
                     SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
                 }
+                waitForSeconds(5);
             }
-            waitForSeconds(5);
             if(checkSaveButton() && checkCancelButton()) {
                 SimpleUtils.pass("Save and Cancel buttons are enabled ");
             } else{
@@ -544,7 +545,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        if (isClickable(saveOnSaveConfirmationPopup, 15)) {
+        if (isClickable(saveOnSaveConfirmationPopup, 20)) {
             clickTheElement(saveOnSaveConfirmationPopup);
             waitForNotExists(saveOnSaveConfirmationPopup, 30);
             waitForSeconds(5);
@@ -1624,7 +1625,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     public void clickOnCloseSearchBoxButton() throws Exception {
         if (isElementEnabled(closeSearchBoxButton, 5)) {
-            click(closeSearchBoxButton);
+            clickTheElement(closeSearchBoxButton);
             if (!isElementEnabled(searchBox, 5)) {
                 SimpleUtils.pass("Search box is closed successfully");
             } else {
@@ -2142,7 +2143,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     public List<String> getSpecificFilterNames (String filterText) throws Exception {
         List<String> names = new ArrayList<>();
-        ArrayList<WebElement> availableFilters = getAvailableFilters().get(filterText);
+        ArrayList<WebElement> availableFilters = getAvailableFilters().get(filterText.toLowerCase().replace(" ", ""));
         if (availableFilters != null && availableFilters.size()>0){
             for (int i = 0; i < availableFilters.size(); i++) {
                 String name = availableFilters.get(i).getText().split("\\(")[0].trim();
@@ -2165,5 +2166,20 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         } else
             SimpleUtils.report("Schedule main page is not loaded! ");
         return isLoaded;
+    }
+
+    public boolean isManagerViewSelected () throws Exception {
+        boolean isManagerViewSelected = false;
+        if(isElementEnabled(activScheduleType,5)){
+            if(activScheduleType.getText().equalsIgnoreCase("Suggested")){
+                SimpleUtils.report("The Suggested tab is selected! ");
+            }else{
+                isManagerViewSelected = true;
+                SimpleUtils.report("The Manager tab is selected! ");
+            }
+        }else{
+            SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
+        }
+        return isManagerViewSelected;
     }
 }

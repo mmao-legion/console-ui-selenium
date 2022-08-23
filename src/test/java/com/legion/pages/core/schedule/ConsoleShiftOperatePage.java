@@ -761,7 +761,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 click(deleteMealBreakButtons.get(0));
             }
             click(continueBtnInMealBreakButton);
-            if (isElementEnabled(confirmWindow, 5) && confirmWindow.getText().contains("An employee should be scheduled for 30 minutes break for their shift")) {
+            if (isElementEnabled(confirmWindow, 5)) {
                 click(okBtnOnConfirm);
             }
 
@@ -799,7 +799,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 click(slider.findElements(By.tagName("i")).get(0));
             }
             click(continueBtnInMealBreakButton);
-            if (isElementEnabled(confirmWindow, 5) && confirmWindow.getText().contains("An employee should be scheduled for 30 minutes break for their shift")) {
+            if (isElementEnabled(confirmWindow, 5)) {
                 click(okBtnOnConfirm);
             }
         }
@@ -2059,6 +2059,19 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             return false;
     }
 
+    @Override
+    public List<String> getWorkRoleListFromChangeShiftRoleOption() throws Exception {
+        List<String> workRoles = new ArrayList<>();
+        if (areListElementVisible(shiftRoleList, 5) && shiftRoleList.size() >0) {
+            for (WebElement shiftRole : shiftRoleList) {
+                workRoles.add(shiftRole.findElement(By.
+                        cssSelector("span.sch-worker-change-role-name")).getText());
+            }
+        } else {
+            SimpleUtils.fail("Work roles are doesn't show well ", true);
+        }
+        return workRoles;
+    }
 
     @FindBy(css="div.modal-content")
     private WebElement popupSelectTM;
@@ -2427,6 +2440,16 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
     }
 
+    @Override
+    public void clickOnCloseBtnOfAssignDialog() throws Exception{
+        if(isElementLoaded(closeSelectTMWindowBtn)) {
+            clickTheElement(closeSelectTMWindowBtn);
+            SimpleUtils.pass("Clicked the close button successfully! ");
+        }
+        else
+            SimpleUtils.fail("The close button on assign dialog is not loaded! ", false);
+    }
+
     @FindBy (className = "worker-edit-availability-status")
     private WebElement messageInSelectTeamMemberWindow;
 
@@ -2593,6 +2616,20 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         return messageOfTMScheduledStatus;
     }
 
+    @FindBy(css = "[class = \"worker-edit-availability-status\"]")
+    private List<WebElement> tmStatusOnAssignedShift;
+    @Override
+    public String getTheMessageOfAssignedShiftToTM() throws Exception {
+        String messageOfTMScheduledStatus = "";
+        if (areListElementVisible(tmStatusOnAssignedShift,5)){
+            for (WebElement message : tmStatusOnAssignedShift) {
+                messageOfTMScheduledStatus = messageOfTMScheduledStatus + message.getText() + "\n";
+            }
+        }else {
+            SimpleUtils.fail("The message of TM status is not loaded!", false);
+        }
+        return messageOfTMScheduledStatus;
+    }
 
     @Override
     public void verifyWarningModelMessageAssignTMInAnotherLocWhenScheduleNotPublished() throws Exception {
@@ -3349,6 +3386,45 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }else{
             SimpleUtils.fail("No available shifts in the Day View", false);
         }
+    }
+
+    @FindBy(css = ".table-field.this-week-field ")
+    private List<WebElement> totalShiftHrsAndShiftCountThisWeek;
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[4]/div")
+    private List<WebElement> totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage;
+    @Override
+    public HashMap<String, Integer> getTotalShiftHrsAndShiftCountThisWeek() throws Exception {
+        HashMap<String, Integer> totalShiftHrsAndShiftCount= new HashMap<String, Integer>();
+        if (areListElementVisible(totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage, 5)) {
+            waitForSeconds(2);
+            try {
+                WebElement totalShiftHrs = totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage.get(0)
+                        .findElement(By.xpath("./div/div[2]"));
+                WebElement shiftCount = totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage.get(0)
+                        .findElement(By.xpath("./div/div[1]"));
+                if (totalShiftHrs.getText()!=null
+                        && !totalShiftHrs.getText().equals("")
+                        && shiftCount.getText()!=null
+                        && !shiftCount.getText().equals("")){
+                    totalShiftHrsAndShiftCount.put("shiftHrs", Integer.parseInt(totalShiftHrs.getText().split(" ")[0]));
+                    totalShiftHrsAndShiftCount.put("shiftCount", Integer.parseInt(shiftCount.getText().split(" ")[0]));
+                } else
+                    SimpleUtils.fail("Fail to get the value of total shift hrs or shift count on search TM page! ", false);
+
+            } catch (Exception e) {
+                SimpleUtils.fail("Fail to found the total shift hrs or shift count on search TM page! ", false);
+            }
+        }else if (areListElementVisible(totalShiftHrsAndShiftCountThisWeek, 5)) {
+            WebElement totalShiftHrs = totalShiftHrsAndShiftCountThisWeek.get(0)
+                    .findElements(By.cssSelector("worker-edit-this-week-hour")).get(0);
+            WebElement shiftCount = totalShiftHrsAndShiftCountThisWeek.get(0)
+                    .findElements(By.cssSelector("worker-edit-this-week-hour")).get(1);
+            totalShiftHrsAndShiftCount.put("shiftHrs", Integer.parseInt(totalShiftHrs.getText()));
+            totalShiftHrsAndShiftCount.put("shiftCount", Integer.parseInt(shiftCount.getText()));
+        } else {
+            SimpleUtils.fail("The total shift hrs and shift count this week section fail to load! ", false);
+        }
+        return totalShiftHrsAndShiftCount;
     }
 }
 

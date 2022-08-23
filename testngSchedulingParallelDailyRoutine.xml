@@ -126,20 +126,22 @@
                     <include name="verifyTheItemsAfterClickTheShiftInDayViewAsInternalAdmin" />
                     <include name="verifyShiftsCanBeDraggedInDayViewAsInternalAdmin" />
            <!--         <include name="verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin" /> vailqacn enterprise is not enable 24hrs-->
-                    <include name="verifySettingsExcessOf8HrsInA24HrsPeriodAsInternalAdmin" />
-                    <include name="verifyExcessOf8HrsInA24HrsPeriodAsInternalAdmin" />
-                    <include name="verifyExcessOf10HrsInA24HrsPeriodAsInternalAdmin" />
-                    <include name="verifyExcessOf12HrsInA24HrsPeriodAsInternalAdmin" />
+<!--                    <include name="verifySettingsExcessOf8HrsInA24HrsPeriodAsInternalAdmin" Blocked by SCH-7211 />-->
+<!--                    <include name="verifyExcessOf8HrsInA24HrsPeriodAsInternalAdmin" Blocked by SCH-7211 />-->
+<!--                    <include name="verifyExcessOf10HrsInA24HrsPeriodAsInternalAdmin" Blocked by SCH-7211 />-->
+<!--                    <include name="verifyExcessOf12HrsInA24HrsPeriodAsInternalAdmin" Blocked by SCH-7211 />-->
                     <!--                    <include name="verifyExcessOf8HrsInASingleWorkDayAsInternalAdmin" />  SCH-2411  -->
                     <include name="verifyTheShiftTimesConsistentOnInputAndShiftCardAsInternalAdmin" />
                     <include name="verifyTheShiftTimeCanBeSetMoreThan24HrsThatSetByShiftTimeInputAsInternalAdmin" />
                     <!--                    <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" /> need disable Continuous Operation-->
                     <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
-                    <include name="verifyTheBudgetHoursWhenByLocationAsInternalAdmin" />
-                    <include name="verifyTheNoBudgetPermissionForSMAsInternalAdmin" />
-                    <include name="verifyTMOverTimeStatusAsInternalAdmin" />
-                    <include name="verifyTMClopeningStatusAsInternalAdmin" />
+<!--                    <include name="verifyTheBudgetHoursWhenByLocationAsInternalAdmin" Blocked by SCH-7081 />-->
+                    <!-- <include name="verifyTMOverTimeStatusAsInternalAdmin" /> -->
+                    <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
+                    <!--                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7351-->
+                    <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
+                    <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
                                    </methods>
                                </class>
                            </classes>
@@ -356,6 +358,7 @@
                                      <include name="verifyBulkCopyShiftsThatWillIncur7thDayViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-6816 -->
                     <include name="verifyShiftsCanBeDragAndDropSeveralTimesWithOutSaveAsInternalAdmin" />
                     <include name="verifyBulkDragAndDropByDifferentAccessRolesAsInternalAdmin" />
+                    <include name="verifySwapAndAssignButtonOnDragAndDropConfirmChangeModalAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -393,8 +396,8 @@
                       <include name="verifyOfferTMDisabledInPastDaysForOpenShiftsAsInternalAdmin" />
 <!--                    <include name="verifyTheShiftOfferCountWhenNeedingApprovalAsTeamMember" Blocked by SCH-4832 />-->
 <!--                    <include name="verifyTheShiftOfferCountWhenNotNeedingApprovalAsTeamMember" Wait for code freeze/>-->
-                    <include name="verifySingleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />
-                    <include name="verifyMultipleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" />
+<!--                    <include name="verifySingleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" need fix/>-->
+<!--                    <include name="verifyMultipleShiftOfferReceivedByTMWithMultipleOpenShiftsOfferedAsTeamMember" need fix/>-->
                 </methods>
             </class>
         </classes>
@@ -537,6 +540,7 @@ SCH-5863, SCH-6536-->
                     <include name="verifyTheRegularSectionsOnWorkingHoursPageAsInternalAdmin" />
 <!--                    <include name="verifyTheHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />  SCH-5882 -->
                     <include name="verifyTheCompanyHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />
+                    <include name="verifySmartCopyConfigsInNonOPNotWorkingAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -628,12 +632,19 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
         </classes>
     </test>
 
-    <test name="Bulk Delete Test">
+    <test name="Bulk Delete and Edit Test">
         <classes>
-            <class name="com.legion.tests.core.BulkDeleteTest">
+            <class name="com.legion.tests.core.BulkDeleteNEditTest">
                 <methods>
                     <include name="verifyDeleteMultipleShiftsInWeekViewAsInternalAdmin" />
                     <include name="verifyDeleteMultipleShiftsInDayViewAsInternalAdmin" />
+                    <include name="verifyTheContentOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyTheCurrentColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyTheEditedColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyChangingWorkRoleOnMultipleEditShiftsWindowAsInternalAdmin" />
+<!--                    <include name="verifyChangingShiftNameOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-6997 />-->
+<!--                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
+<!--                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
                 </methods>
             </class>
         </classes>
@@ -689,5 +700,27 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
             </class>
         </classes>
     </test>
+    <!--
+    <test name="Consolidating Filters Test">
+        <classes>
+            <class name="com.legion.tests.core.ConsolidatingFiltersTest">
+                <methods>
+                  <include name="validateTheOptionsOfScheduleFilterShouldBeInAlphabeticalAndNumbericalOrderAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>https://legiontech.atlassian.net/browse/SCH-7223-->
 
+    <test name="Schedule Copy Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleCopyTest">
+                <methods>
+                    <include name="verifyTheContentOnCreateSchedulePageInWeekViewAsInternalAdmin" />
+                    <include name="verifyTheEnhancedCopyModalForNonDgFlowAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfCopyingASuggestedScheduleAsInternalAdmin" />
+                    <include name="verifyTheCountOfComplianceShiftsShouldBeConsistentWithComplianceSmartCardAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

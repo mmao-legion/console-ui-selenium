@@ -36,7 +36,7 @@ public class ScheduleTemplateTest extends TestBase {
     @Owner(owner = "Mary")
 //    @Enterprise(name = "Vailqacn_Enterprise")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Validate the assign shifts workflow")
+    @TestName(description = "Validate the new create shift feature in edit schedule template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheAssignShiftsWorkFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
@@ -62,7 +62,7 @@ public class ScheduleTemplateTest extends TestBase {
             String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
             smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.saveSchedule();
             //Verify the auto offer workflow with one shift for one days
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -131,7 +131,7 @@ public class ScheduleTemplateTest extends TestBase {
                     shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(selectedTM1.split(" ")[0]);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(selectedTM1.split(" ")[0]);
             scheduleMainPage.saveSchedule();
 
 

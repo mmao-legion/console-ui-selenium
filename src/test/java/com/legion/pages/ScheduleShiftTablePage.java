@@ -127,12 +127,14 @@ public interface ScheduleShiftTablePage {
     public List<String> getAllDifferenceHrsArrowImg ();
     public HashMap<String, String> getHrsOnTooltipOfScheduleSummaryHoursByIndex (int index) throws Exception;
     public HashSet<Integer> verifyCanSelectMultipleShifts(int shiftCount) throws Exception;
+    public void selectSpecificShifts(HashSet<Integer> shiftIndexes) throws Exception;
     public void rightClickOnSelectedShifts(HashSet<Integer> selectedIndex) throws Exception;
     public void verifyTheContentOnBulkActionMenu(int selectedShiftCount) throws Exception;
     public void clickOnBtnOnBulkActionMenuByText(String action) throws Exception;
     public void verifySelectedShiftsAreMarkedWithX(HashSet<Integer> selectedIndexes) throws Exception;
-    public void getWeekDayAndDate() throws Exception;
+    public LinkedHashMap<String, Integer> getWeekDayAndDate() throws Exception;
     public void bulkDeleteTMShiftsInWeekView(String teamMemberName) throws Exception;
+    public List<String> getSelectedWorkDays(HashSet<Integer> set) throws Exception;
     public List<WebElement> selectMultipleDifferentAssignmentShiftsOnOneDay(int shiftCount, int dayIndex) throws Exception;
     public List<WebElement> selectMultipleSameAssignmentShifts(int shiftCount, String tmName) throws Exception;
     public List<WebElement> selectMultipleDifferentAssignmentShifts(int shiftCount) throws Exception;
@@ -166,4 +168,9 @@ public interface ScheduleShiftTablePage {
     public void clickOnSpecificButtonsGroupByActionPopup(String buttonName) throws Exception;
     public List<String> getButtonNamesFromGroupByActionPopup() throws Exception;
     public String getTotalBudgetFromSTAFFSmartCard() throws Exception;
+    public boolean isScheduleTableDisplay () throws Exception;
+    public HashSet<Integer> getAddedShiftsIndexesByPlusIcon() throws Exception;
+    public void verifyConfirmBtnIsDisabledOnDragAndDropConfirmPage() throws Exception;
+    public void verifySwapBtnIsEnabledOnDragAndDropConfirmPage() throws Exception;
+    public void verifyAssignBtnIsEnabledOnDragAndDropConfirmPage() throws Exception;
 }

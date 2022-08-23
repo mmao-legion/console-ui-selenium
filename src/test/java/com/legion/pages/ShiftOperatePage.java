@@ -121,10 +121,14 @@ public interface ShiftOperatePage {
     public void shortenMealOrRestBreak(boolean isMealBreak) throws Exception;
     public void moveMealOrRestBreak(boolean isMeal, int offset) throws Exception;
     public void clickOnProfileIconByIndex(int indexOfProfIcon) throws Exception;
+    public List<String> getWorkRoleListFromChangeShiftRoleOption() throws Exception;
     public void checkBadgeOnProfilePopup(String tmA, String tmB) throws Exception;
     public void convertAllShiftsToOpenInDayView() throws Exception;
     public boolean isAssignTeamMemberShowWell() throws Exception;
     public void searchTMOnAssignPage(String NameOfTM) throws Exception;
     public void verifyMultipleAlertMessageIsExpected(String messageExpected1, String messageExpected2, String messageExpected3) throws Exception;
     public void clickOnAssignButton() throws Exception;
+    public String getTheMessageOfAssignedShiftToTM() throws Exception;
+    public void clickOnCloseBtnOfAssignDialog() throws Exception;
+    public HashMap<String, Integer> getTotalShiftHrsAndShiftCountThisWeek() throws Exception;
 }
