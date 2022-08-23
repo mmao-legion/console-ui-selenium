@@ -372,5 +372,6 @@ public interface ControlsNewUIPage {
 	public String getBudgetGroupSettingContentNonOP() throws Exception;
 	public void selectBudgetGroupNonOP(String optionValue) throws Exception;
 	public void turnOnOrOffSpecificPermissionForSpecificRoles(String section, String role, String permission, String action) throws Exception;
-
+	public void enableOverRideAssignmentRuleAsYesForOP() throws Exception;
+	public void enableOverRideAssignmentRuleAsNoForOP() throws Exception;
 }

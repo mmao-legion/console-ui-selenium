@@ -1,5 +1,6 @@
 package com.legion.tests.core;
 
+import com.legion.api.cache.RemoveTemplateSnapShotForLocationsAPI;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
@@ -266,6 +267,7 @@ public class OPConfigTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI("stoneman@legion.co", "admin11.a");
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ForecastPage forecastPage = pageFactory.createForecastPage();
@@ -312,8 +314,21 @@ public class OPConfigTest extends TestBase {
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-
             String textOnScheduleSmartCard = smartCardPage.getsmartCardTextByLabel("Schedule V");
+            i=0;
+            while (i<15 && textOnScheduleSmartCard.toLowerCase().contains("wages")) {
+                Thread.sleep(60000);
+                loginPage.logOut();
+                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+                Thread.sleep(5000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+                textOnScheduleSmartCard = smartCardPage.getsmartCardTextByLabel("Schedule V");
+                i++;
+            }
+            textOnScheduleSmartCard = smartCardPage.getsmartCardTextByLabel("Schedule V");
             SimpleUtils.assertOnFail("The Wages row should not display on Schedule smart card! the actual text is "+textOnScheduleSmartCard,
                     !textOnScheduleSmartCard.toLowerCase().contains("wages"), false);
 
@@ -331,6 +346,7 @@ public class OPConfigTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI("stoneman@legion.co", "admin11.a");
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ForecastPage forecastPage = pageFactory.createForecastPage();
@@ -378,11 +394,23 @@ public class OPConfigTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
             String textOnScheduleSmartCard = smartCardPage.getsmartCardTextByLabel("Schedule V");
+            i=0;
+            while (i<15 && !textOnScheduleSmartCard.toLowerCase().contains(option.toLowerCase())) {
+                Thread.sleep(60000);
+                loginPage.logOut();
+                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+                Thread.sleep(5000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                        scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
+                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+                forecastPage.clickOnLabor();
+                textOnScheduleSmartCard = smartCardPage.getsmartCardTextByLabel("Schedule V");
+                i++;
+            }
             SimpleUtils.assertOnFail("The Wages row should display on Schedule smart card! The actual text is "+ textOnScheduleSmartCard,
                     textOnScheduleSmartCard.toLowerCase().contains(option.toLowerCase()), false);
 
-//            //Change setting for previous case to save the waiting session time
-//            setLaborPreferencesForForecastSummarySmartcardSetting("None");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }

@@ -1853,7 +1853,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		clickOnSaveButtonOfJobTitleGroup();
 	}
 
-	@FindBy(css="lg-button[label=\"Remove\"] button")
+	@FindBy(css="ng-form[name*=\"JobTitleGroupForm\"] lg-button[label=\"Remove\"] button")
 	private WebElement removeButtonOfJobTitleGroup;
 	@FindBy(css="lg-button[label=\"Delete\"] button")
 	private WebElement deleteButtonOfJobTitleGroup;
@@ -1864,6 +1864,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 
 	@Override
 	public void deleteJobTitleGroup(String jobTitleGroupName) throws Exception{
+		waitForSeconds(3);
 		int beforeCount = jobTitleGroupList.size();
 		if(isElementEnabled(removeButtonOfJobTitleGroup,3)){
 			clickTheElement(removeButtonOfJobTitleGroup);
@@ -1876,7 +1877,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 
 				waitForSeconds(5);
 				getDriver().navigate().refresh();
-				waitForSeconds(5);
+				waitForSeconds(15);
 				WebElement jobTitleGroup = getDriver().findElement(By.cssSelector("nav.lg-tabs__nav div:nth-child(4)"));
 				if(isElementEnabled(jobTitleGroup)){
 					waitForSeconds(2);

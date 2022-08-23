@@ -365,7 +365,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 	@Override
 	public List<WebElement> getOverviewScheduleWeeks() {
-		waitForSeconds(3);
+		waitForSeconds(5);
 		List<WebElement> overviewWeekList = new ArrayList<>();
 		if(areListElementVisible(overviewTableRows,15) && areListElementVisible(overviewScheduleWeekList)){
 			overviewWeekList = overviewScheduleWeekList;
@@ -410,19 +410,26 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		List<WebElement> weekHoursElement = overViewWeek.findElements(By.cssSelector("span.text-hours"));
 		if(weekHoursElement.size() == 4)
 		{
-			float guidanceHours = Float.valueOf(weekHoursElement.get(0).getText().split(" ")[0].replace(",",""));
-			float scheduledHours = Float.valueOf(weekHoursElement.get(1).getText().split(" ")[0].replace(",",""));
-			float otherHours = Float.valueOf(weekHoursElement.get(2).getText().split(" ")[0].replace(",",""));
-			float projectedHours = Float.valueOf(weekHoursElement.get(3).getText().split(" ")[0].replace(",",""));
+			float guidanceHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(0).getText().split(" ")[0].replace(",","")));
+			float scheduledHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(1).getText().split(" ")[0].replace(",","")));
+			float otherHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(2).getText().split(" ")[0].replace(",","")));
+			float projectedHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(3).getText().split(" ")[0].replace(",","")));
 			weekHours.put("guidanceHours", guidanceHours);
 			weekHours.put("scheduledHours", scheduledHours);
 			weekHours.put("otherHours", otherHours);
 			weekHours.put("projectedHours", projectedHours);
 
 		} else if (weekHoursElement.size() == 3) {
-			float guidanceHours = Float.valueOf(weekHoursElement.get(0).getText().split(" ")[0].replace(",",""));
-			float scheduledHours = Float.valueOf(weekHoursElement.get(1).getText().split(" ")[0].replace(",",""));
-			float otherHours = Float.valueOf(weekHoursElement.get(2).getText().split(" ")[0].replace(",",""));
+			float guidanceHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(0).getText().split(" ")[0].replace(",","")));
+			float scheduledHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(1).getText().split(" ")[0].replace(",","")));
+			float otherHours = Float.valueOf(convertToZeroIfIsNotNumeric(
+					weekHoursElement.get(2).getText().split(" ")[0].replace(",","")));
 			weekHours.put("guidanceHours", guidanceHours);
 			weekHours.put("scheduledHours", scheduledHours);
 			weekHours.put("otherHours", otherHours);
@@ -431,6 +438,13 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		return weekHours;
 	}
 
+	private String convertToZeroIfIsNotNumeric(String value) {
+		if (!SimpleUtils.isNumeric(value)) {
+			return "0";
+		} else {
+			return value;
+		}
+	}
 	//added by Gunjan
 
 	@Override
@@ -706,5 +720,23 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 			SimpleUtils.fail("The current week is not listed on the first line",false);
 		}
 		return null;
+	}
+
+	@FindBy(css="[ng-class=\"warningTextClass(row)\"]")
+	List<WebElement> scheduleOverviewWeeksStatusWarningMessage;
+	@Override
+	public List<String> getScheduleWeeksStatusWarningMessage() throws Exception{
+		List<String> weeksStatusWarningMessage = new ArrayList<String>();
+		if (loadScheduleTableInOverview()) {
+			if (scheduleOverviewWeeksStatusWarningMessage.size() != 0) {
+				for (WebElement warningMessage : scheduleOverviewWeeksStatusWarningMessage) {
+					weeksStatusWarningMessage.add(warningMessage.getText());
+				}
+			}
+		}
+		else
+			SimpleUtils.fail("The schedule view table failed to load",false);
+
+		return weeksStatusWarningMessage;
 	}
 }

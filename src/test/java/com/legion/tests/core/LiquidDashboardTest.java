@@ -202,6 +202,7 @@ public class LiquidDashboardTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -220,9 +221,9 @@ public class LiquidDashboardTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             // Deleting the existing shifts for swap team members
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(swapCoverNames.get(0));
-            shiftOperatePage.deleteTMShiftInWeekView(swapCoverNames.get(1));
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(swapCoverNames.get(0));
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(swapCoverNames.get(1));
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
             // Add the new shifts for swap team members
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -495,7 +496,7 @@ public class LiquidDashboardTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
 
@@ -729,6 +730,7 @@ public class LiquidDashboardTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
 
@@ -855,7 +857,7 @@ public class LiquidDashboardTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteAllOOOHShiftInWeekView();
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
@@ -905,7 +907,7 @@ public class LiquidDashboardTest extends TestBase {
             if (!createSchedulePage.isWeekPublished()) {
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 shiftOperatePage.deleteAllOOOHShiftInWeekView();
-                shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
                 scheduleMainPage.saveSchedule();
                 createSchedulePage.publishActiveSchedule();
             }
@@ -1086,6 +1088,7 @@ public class LiquidDashboardTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
 
@@ -1132,7 +1135,7 @@ public class LiquidDashboardTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             newShiftPage.addOpenShiftWithLastDay("MOD");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
@@ -1157,7 +1160,7 @@ public class LiquidDashboardTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             shiftOperatePage.deleteLatestOpenShift();
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
@@ -1197,6 +1200,7 @@ public class LiquidDashboardTest extends TestBase {
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded() , false);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             String tmName = profileNewUIPage.getNickNameFromProfile();
@@ -1224,8 +1228,8 @@ public class LiquidDashboardTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(tmName);
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.addManualShiftWithLastDay("MOD", tmName);

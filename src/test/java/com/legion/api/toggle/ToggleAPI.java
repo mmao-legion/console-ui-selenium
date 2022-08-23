@@ -3,6 +3,7 @@ package com.legion.api.toggle;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.legion.api.common.EnterpriseId;
+import com.legion.api.login.LoginAPI;
 import com.legion.utils.SimpleUtils;
 
 import java.util.ArrayList;
@@ -16,9 +17,7 @@ public class ToggleAPI {
     public static void enableToggle(String toggleName, String username, String password) {
         try {
 
-            Response response = given().params("enterpriseName",System.getProperty("enterprise"),"sourceSystem","legion","passwordPlainText",password,"userName",username)
-                    .when().get("https://rc-enterprise.dev.legion.work/legion/authentication/login").then().statusCode(200).extract().response();
-            String sessionId = response.header("sessionid");
+            String sessionId = LoginAPI.getSessionIdFromLoginAPI(username, password);
             //get toggle to confirm the switch is on or off
             Response response2= given().log().all().header("sessionId",sessionId).param("toggle", toggleName).when().get("https://rc-enterprise.dev.legion.work/legion/toggles").then().log().all().extract().response();
             String enabled = response2.jsonPath().get("record.enabled").toString();
@@ -55,9 +54,7 @@ public class ToggleAPI {
     public static void disableToggle(String toggleName, String username, String password) {
         try {
 
-            Response response = given().params("enterpriseName", System.getProperty("enterprise"), "sourceSystem", "legion", "passwordPlainText", password, "userName", username)
-                    .when().get("https://rc-enterprise.dev.legion.work/legion/authentication/login").then().statusCode(200).extract().response();
-            String sessionId = response.header("sessionid");
+            String sessionId = LoginAPI.getSessionIdFromLoginAPI(username, password);
             //get toggle to confirm the switch is on or off
             Response response2 = given().log().all().header("sessionId", sessionId).param("toggle", toggleName).when().get("https://rc-enterprise.dev.legion.work/legion/toggles").then().log().all().extract().response();
             String enabled = response2.jsonPath().get("record.enabled").toString();

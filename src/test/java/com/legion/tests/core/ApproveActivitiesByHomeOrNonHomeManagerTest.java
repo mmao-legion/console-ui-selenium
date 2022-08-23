@@ -199,8 +199,8 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         }
         createSchedulePage.createScheduleForNonDGFlowNewUI();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-        shiftOperatePage.deleteTMShiftInWeekView(teamMemberName);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMemberName);
         scheduleMainPage.saveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -295,8 +295,8 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         if(!isActiveWeekGenerated){
             createSchedulePage.createScheduleForNonDGFlowNewUI();
         }
-        shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-        shiftOperatePage.deleteTMShiftInWeekView(teamMemberName);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMemberName);
         createSchedulePage.publishActiveSchedule();
 
         //Go to TM's non-home location, to generate and publish schedule if current week is not generated
@@ -313,8 +313,8 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
         }
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-        shiftOperatePage.deleteTMShiftInWeekView(teamMemberName);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMemberName);
         scheduleMainPage.saveSchedule();
         String workRole = shiftOperatePage.getRandomWorkRole();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -452,8 +452,8 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         }
         createSchedulePage.createScheduleForNonDGFlowNewUI();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-        shiftOperatePage.deleteTMShiftInWeekView(teamMemberName);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMemberName);
         scheduleMainPage.saveSchedule();
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -576,8 +576,8 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
         }
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-        shiftOperatePage.deleteTMShiftInWeekView(teamMemberName);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMemberName);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
 
@@ -594,8 +594,8 @@ public class ApproveActivitiesByHomeOrNonHomeManagerTest extends TestBase {
         }
         createSchedulePage.createScheduleForNonDGFlowNewUI();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
-        shiftOperatePage.deleteTMShiftInWeekView(teamMemberName);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMemberName);
         scheduleMainPage.saveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         newShiftPage.clickOnDayViewAddNewShiftButton();

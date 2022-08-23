@@ -107,4 +107,6 @@ public interface PageFactory {
 
     SettingsAndAssociationPage createSettingsAndAssociationPage();
     MealAndRestPage createMealAndRestPage();
+
+    EditShiftPage createEditShiftPage();
 }

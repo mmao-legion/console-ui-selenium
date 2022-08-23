@@ -6,9 +6,12 @@ import com.legion.api.toggle.Toggles;
 import com.legion.pages.OpsPortaPageFactories.*;
 import com.legion.pages.ReportPage;
 import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
+import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.pages.core.OpCommons.RightHeaderBarPage;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
 import com.legion.pages.core.OpsPortal.OpsPortalSettingsAndAssociationPage;
+import com.legion.pages.core.oplabormodel.LaborModelPanelPage;
+import com.legion.pages.core.oplabormodel.LaborModelRepositoryPage;
 import com.legion.tests.TestBase;
 import com.legion.utils.DBConnection;
 import com.legion.utils.SimpleUtils;
@@ -23,10 +26,8 @@ import org.testng.annotations.BeforeMethod;
 
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class DynamicGroupV2Test extends TestBase {
 
@@ -1805,4 +1806,54 @@ public class DynamicGroupV2Test extends TestBase {
         SimpleUtils.assertOnFail("the data meets current criteria, should not show up in the file!", configurationPage.verifyUnassignedSmartCardDownloadFile(exportFileName, criteriaAndValue), false);
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @TestName(description = "Validate location attributes on the Settings page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void VerifyLocationAttributesOnTheSettingsPagesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+        String label = "External Attributes";
+        String currentTime = dfs.format(new Date()).trim();
+        String attributeName = "AutoAttribute" + currentTime;
+        Random random = new Random();
+        String attributeValue = Integer.toString(random.nextInt(20));
+        String attributeDescription = attributeName;
+        List<String> expectedAttributeFields = new ArrayList<>();
+        HashMap<String, List<String>> externalAttributeInfo = new HashMap<>();
+
+        LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        //Go to labor model and create external attribute
+        laborModelPage.clickOnLaborModelTab();
+        laborModelPage.goToLaborStandardRepositoryTile();
+        laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+        laborModelPage.clickOnEditButton();
+        laborModelPage.clickOnAddAttributeButton();
+        laborModelPage.createNewAttribute(attributeName, attributeValue, attributeDescription);
+        laborModelPage.clickOnSaveButton();
+        laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+        externalAttributeInfo = laborModelPage.getValueAndDescriptionForEachAttributeAtGlobalLevel();
+        laborModelPage.clickOnLaborModelTab();
+
+        //Go to Configuration tab and time and attendance template
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.TimeAttendance.getValue());
+        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+        //Verify if the external attributes in settings page are same with in labor model
+        for(Map.Entry<String, List<String>> entry : externalAttributeInfo.entrySet()){
+            expectedAttributeFields.add(entry.getKey());
+        }
+        SimpleUtils.assertOnFail("Fields are not all expected!", expectedAttributeFields.containsAll(settingsAndAssociationPage.getExternalAttributesInSettingsPage()), false);
+        SimpleUtils.assertOnFail("Fail to find the location attribute you search!", settingsAndAssociationPage.searchLocationAttributeInSettingsPage(attributeName), false);
+
+        //Delete the location attribute
+        laborModelPage.clickOnLaborModelTab();
+        laborModelPage.goToLaborStandardRepositoryTile();
+        laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+        laborModelPage.clickOnEditButton();
+        laborModelPage.clickOnDeleteAttributeButton(attributeName);
+        laborModelPage.clickOkBtnOnDeleteAttributeDialog();
+        laborModelPage.clickOnSaveButton();
+    }
 }

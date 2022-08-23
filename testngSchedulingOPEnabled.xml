@@ -60,6 +60,21 @@
         </classes>
     </test>
 
+        <test name="Hard Stop For Minor Violation Test">
+            <classes>
+                <class name="com.legion.tests.core.HardStopForMinorViolation">
+                    <methods>
+                        <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
+                        <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" />
+                        <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
+                        <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
+                        <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
+                        <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" />
+                        <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
+                    </methods>
+                </class>
+            </classes>
+        </test>
     <test name="Schedule Test KendraScott2">
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
@@ -88,18 +103,21 @@
                     <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" />
                     <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
-                    <include name="verifyTMOverTimeStatusAsInternalAdmin" />
-                    <include name="verifyTMClopeningStatusAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+                    <!-- <include name="verifyTMOverTimeStatusAsInternalAdmin" /> -->
+                    <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
+                    <!--                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7351-->
+                    <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
+                    <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
+                   </methods>
+               </class>
+           </classes>
+       </test>
 
-    <test name="Scheduling OP Enabled Test">
-        <classes>
-            <class name="com.legion.tests.core.SchedulingOPEnabledTest">
-                <methods>
-<!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />   Blocked by SCH-5036 -->
+       <test name="Scheduling OP Enabled Test">
+           <classes>
+               <class name="com.legion.tests.core.SchedulingOPEnabledTest">
+                   <methods>
+   <!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />   Blocked by SCH-5036 -->
 <!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />-->
 <!--                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin" Blocked by Bug/>-->
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
@@ -359,20 +377,21 @@
                     <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                     <!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG cannot be generated -->
+ <!--                   <include name="validateTheOptionsOfScheduleFilterShouldBeInAlphabeticalAndNumbericalOrderAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7223-->
                 </methods>
             </class>
         </classes>
     </test>
 
-<!-- template cache       <test name="Schedule Test KendraScott2">
-            <classes>
-                <class name="com.legion.tests.core.SmartCopyConfigsInOP">
-                    <methods>
-                        <include name="verifySmartCopyConfigsInOPAsInternalAdmin"/>
-                    </methods>
-                </class>
-            </classes>
-        </test>-->
+    <!-- template cache       <test name="Smart Copy Configs In OP">
+                <classes>
+                    <class name="com.legion.tests.core.SmartCopyConfigsInOP">
+                        <methods>
+                 <include name="verifySmartCopyConfigsInOPAsInternalAdmin"/>
+         </methods>
+     </class>
+ </classes>
+</test>-->
 
     <test name="Roster Actions Test">
         <classes>
@@ -460,21 +479,6 @@ SCH-5862-->
         </classes>
     </test>
 
-    <test name="Hard Stop For Minor Violation Test">
-        <classes>
-            <class name="com.legion.tests.core.HardStopForMinorViolation">
-                <methods>
-                    <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" />
-                    <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
-                    <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
     <test name="Seventh Consecutive Day Test">
         <classes>
             <class name="com.legion.tests.core.SeventhConsecutiveDayTest">
@@ -513,6 +517,7 @@ SCH-5862-->
                     <include name="verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin" />
                     <include name="verifyShiftWhenEnableContinuousOperationOptionAsInternalAdmin" />
         <!--            <include name="verifyTheShiftThatOverlappingWithPreviousWeekShiftCannotBeCreatedAsInternalAdmin" /> SCH-6732-->
+                    <include name="verifyShiftCanBeDragToPreviousDayAsInternalAdmin" />
                     <!-- unselect Continuous Operation -->
                     <include name="verifyShiftWhenDisableContinuousOperationOptionAsInternalAdmin" />
                     <include name="verifyTMWithOutBadgeCannotClaimTheShiftWithWorkRoleThatRequiredBadgeAsTeamMember" />
@@ -522,12 +527,18 @@ SCH-5862-->
         </classes>
     </test>
 
-    <test name="Bulk Delete Test">
+    <test name="Bulk Delete and Edit Test">
         <classes>
-            <class name="com.legion.tests.core.BulkDeleteTest">
+            <class name="com.legion.tests.core.BulkDeleteNEditTest">
                 <methods>
                     <include name="verifyDeleteMultipleShiftsInWeekViewAsInternalAdmin" />
                     <include name="verifyDeleteMultipleShiftsInDayViewAsInternalAdmin" />
+                    <include name="verifyTheContentOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyTheCurrentColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyTheEditedColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
+<!--                    <include name="verifyChangingShiftNameOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: https://legiontech.atlassian.net/browse/SCH-6997/>-->
+<!--                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
+<!--                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
                 </methods>
             </class>
         </classes>
@@ -560,30 +571,42 @@ SCH-5862-->
                     <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
                     <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnP2PLGAsInternalAdmin" />
                     <!--                      <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnP2PLGScheduleAsInternalAdmin" />
-                                        <include name="verifyBulkDragAndDropShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> -->
+                                        <include name="verifyMoveShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> -->
                     <include name="verifyTheFunctionalityOfPeerLocationsInTheScheduleOverviewPageAsInternalAdmin" />
                     <include name="verifyCanCreateScheduleForAllPeerLocationsAsInternalAdmin" />
                     <include name="verifyTheActionForEachPeerLocationsInDifferentStatusAsInternalAdmin" />
-                    <include name="verifyCopyOrMoveShiftsToSubLocationsInSameDayUsingLocationGroupAsInternalAdmin" />
+<!--                    <include name="verifyCopyOrMoveShiftsToSubLocationsInSameDayUsingLocationGroupAsInternalAdmin" Blocked by SCH-7077 />-->
                     <!--                   <include name="verifyTheStatusOfP2PInDMViewsAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7076-->
-                    <include name="verifyDataMatchInDistrictSummaryWidgetOnDashboardInRegionViewWhenItIncludesLGAsInternalAdmin" />
-                    <include name="verifyDataMatchInLocationSummaryWidgetOnDashboardInDMViewWhenItIncludesLGAsInternalAdmin" />
+<!--                    <include name="verifyDataMatchInDistrictSummaryWidgetOnDashboardInRegionViewWhenItIncludesLGAsInternalAdmin" />
+                    <include name="verifyDataMatchInLocationSummaryWidgetOnDashboardInDMViewWhenItIncludesLGAsInternalAdmin" />Need more time to check-->
                     <!--         <include name="verifyAnalyticsTableOnScheduleInDMViewWhenItIncludesLGAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7121-->
                     <include name="verifyAnalyticsTableOnComplianceInDMViewWhenItIncludesLGAsInternalAdmin" />
                     <include name="verifyAnalyticsTableOnTimesheetInDMViewWhenItIncludesLGAsInternalAdmin" />
-                                    </methods>
-                                </class>
-                            </classes>
-                        </test>
-                        <test name="Parent Child LG Test">
-                            <classes>
-                                <class name="com.legion.tests.core.ParentChildLGTest">
-                                    <methods>
-                                        <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
-                                        <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
-                                        <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                    <include name="verifyTheContentOnMultipleEditShiftsWindowForP2PAsInternalAdmin" />
+                    <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForP2PAsInternalAdmin" />
+<!--
+                    <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6889-->
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Parent Child LG Test">
+        <classes>
+            <class name="com.legion.tests.core.ParentChildLGTest">
+                <methods>
+                    <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                    <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                    <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
                      <!--                   <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnParentChildLGScheduleAsInternalAdmin" />
-                                        <include name="verifyBulkDragAndDropShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" /> -->
+                                        <include name="verifyMoveShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" /> -->
+                    <include name="verifyTheContentOnMultipleEditShiftsWindowForPCAsInternalAdmin" />
+                    <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForParentChildLGAsInternalAdmin" />
+<!--
+                    <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6889-->
                 </methods>
             </class>
         </classes>
@@ -621,6 +644,7 @@ SCH-5862-->
                                      <include name="verifyBulkCopyShiftsThatWillIncur7thDayViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-6816
                     <include name="verifyShiftsCanBeDragAndDropSeveralTimesWithOutSaveAsInternalAdmin" />
                     <include name="verifyBulkDragAndDropByDifferentAccessRolesAsInternalAdmin" />
+                    <include name="verifySwapAndAssignButtonOnDragAndDropConfirmChangeModalAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -632,6 +656,18 @@ SCH-5862-->
                 <methods>
                     <include name="verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin" />
                     <include name="verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Schedule Copy Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleCopyTest">
+                <methods>
+                    <include name="verifyTheContentOnCreateSchedulePageInWeekViewAsInternalAdmin" />
+                    <include name="verifyTheEnhancedCopyModalForNonDgFlowAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfCopyingASuggestedScheduleAsInternalAdmin" />
+                    <include name="verifyTheCountOfComplianceShiftsShouldBeConsistentWithComplianceSmartCardAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
