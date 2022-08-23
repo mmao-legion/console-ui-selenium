@@ -243,8 +243,8 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             profileNewUIPage.verifyFieldsInLegionInformationSection();
 //            //Verify the contents in Actions Section are display correctly
 //            profileNewUIPage.verifyContentsInActionsSectionInTMView();
-            //Verify Edit button is display correctly
-            profileNewUIPage.verifyEditUserProfileButtonIsLoaded();
+            // Verify Edit button is display correctly -> due to requirement change, it will show on legion profile
+            // profileNewUIPage.verifyEditUserProfileButtonIsLoaded();
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

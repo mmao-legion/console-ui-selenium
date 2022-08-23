@@ -414,7 +414,7 @@ public class MealAndRestBreakTest extends TestBase {
             String workRole = shiftInfo.get(4);
             //Delete the shift of the TM
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
             shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
 

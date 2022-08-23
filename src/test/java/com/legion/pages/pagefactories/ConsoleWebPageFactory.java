@@ -204,4 +204,7 @@ public class ConsoleWebPageFactory implements PageFactory {
 	public MealAndRestPage createMealAndRestPage() {
 		return new com.legion.pages.core.opConfiguration.MealAndRestPage();
 	}
+
+	@Override
+	public EditShiftPage createEditShiftPage() {return new ConsoleEditShiftPage(); }
 }

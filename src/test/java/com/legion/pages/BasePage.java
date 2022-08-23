@@ -27,6 +27,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.*;
 
 import com.aventstack.extentreports.Status;
@@ -587,6 +588,20 @@ public class BasePage {
             }
         }else {
             SimpleUtils.fail("Select Element failed to load!", false);
+        }
+    }
+
+    @FindBy(css = ".react-select__option")
+    private List<WebElement> dropDownListOnReact;
+
+    public void selectOptionByLabel(String option) throws Exception {
+        if (dropDownListOnReact.size() > 0) {
+            for (WebElement optionOnReact : dropDownListOnReact) {
+                if (optionOnReact.getText().toLowerCase().trim().contains(option.toLowerCase().trim())) {
+                    optionOnReact.click();
+                    break;
+                }
+            }
         }
     }
 

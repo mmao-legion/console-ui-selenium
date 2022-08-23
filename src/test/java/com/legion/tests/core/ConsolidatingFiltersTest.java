@@ -16,6 +16,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -519,6 +521,65 @@ public class ConsolidatingFiltersTest extends TestBase {
                 SimpleUtils.assertOnFail("The compliance shift count display incorrectly in schedule filter dropdown list! ",
                         complianceReviewCount == complianceShiftsCount, false);
             }
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate the options of schedule Filter should be in alphabetical and numerical order")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void validateTheOptionsOfScheduleFilterShouldBeInAlphabeticalAndNumbericalOrderAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            // Create schedule if it is not created
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            scheduleMainPage.clickOnFilterBtn();
+            String filterText = "SHIFT TYPE";
+            List<String> filterNamesBeforeSort = scheduleMainPage.getSpecificFilterNames(filterText);
+            List<String> filterNamesAfterSort = scheduleMainPage.getSpecificFilterNames(filterText);
+            Collections.sort(filterNamesAfterSort);
+            SimpleUtils.assertOnFail("The filter name's order is incorrectly, the expected is:"+filterNamesAfterSort
+                            +" The actual is:"+filterNamesBeforeSort,
+                    filterNamesAfterSort.equals(filterNamesBeforeSort), false);
+            filterText = "JOB TITLE";
+            filterNamesBeforeSort = scheduleMainPage.getSpecificFilterNames(filterText);
+            filterNamesAfterSort = scheduleMainPage.getSpecificFilterNames(filterText);
+            Collections.sort(filterNamesAfterSort);
+            SimpleUtils.assertOnFail("The filter name's order is incorrectly, the expected is:"+filterNamesAfterSort
+                            +" The actual is:"+filterNamesBeforeSort,
+                    filterNamesAfterSort.equals(filterNamesBeforeSort), false);
+            filterText = "WORK ROLE";
+            filterNamesBeforeSort = scheduleMainPage.getSpecificFilterNames(filterText);
+            filterNamesAfterSort = scheduleMainPage.getSpecificFilterNames(filterText);
+            Collections.sort(filterNamesAfterSort);
+            SimpleUtils.assertOnFail("The filter name's order is incorrectly, the expected is:"+filterNamesAfterSort
+                            +" The actual is:"+filterNamesBeforeSort,
+                    filterNamesAfterSort.equals(filterNamesBeforeSort), false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

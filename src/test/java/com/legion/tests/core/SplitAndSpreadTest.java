@@ -126,7 +126,7 @@ public class SplitAndSpreadTest extends TestBase {
         String firstNameOfTM1 = shiftInfo.get(0);
         String workRoleOfTM1 = shiftInfo.get(4);
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
         scheduleMainPage.saveSchedule();
 
         //add new shift and assign TM.
@@ -201,7 +201,7 @@ public class SplitAndSpreadTest extends TestBase {
         String firstNameOfTM1 = shiftInfo.get(0);
         String workRoleOfTM1 = shiftInfo.get(4);
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
         scheduleMainPage.saveSchedule();
 
         //add 2 new shift and assign TM.
@@ -306,14 +306,14 @@ public class SplitAndSpreadTest extends TestBase {
         String firstNameOfTM1 = shiftInfo.get(0);
         String workRoleOfTM1 = shiftInfo.get(4);
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
         scheduleMainPage.saveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
         String firstNameOfTM2 = shiftInfo.get(0);
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
         scheduleMainPage.saveSchedule();
 
         //add 2 new shift which interval time is more than 1 hour.
@@ -415,7 +415,7 @@ public class SplitAndSpreadTest extends TestBase {
         String firstNameOfTM1 = shiftInfo.get(0);
         String workRoleOfTM1 = shiftInfo.get(4);
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
         scheduleMainPage.saveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.clickOnFilterBtn();
@@ -529,7 +529,7 @@ public class SplitAndSpreadTest extends TestBase {
             }
         }
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-        shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
         scheduleMainPage.saveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleMainPage.saveSchedule();
@@ -616,13 +616,11 @@ public class SplitAndSpreadTest extends TestBase {
             controlsNewUIPage.editSpreadOfHoursPremium("2", "12", false);
             controlsNewUIPage.verifyCloseSplitShiftPremiumDialogButton();
 
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
                 Thread.sleep(120000);
             }
-
-
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -669,8 +667,8 @@ public class SplitAndSpreadTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 //            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(tmFirstName);
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmFirstName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             scheduleMainPage.saveSchedule();
 
@@ -787,8 +785,8 @@ public class SplitAndSpreadTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteTMShiftInWeekView(tmFirstName);
-            shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmFirstName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -918,8 +916,8 @@ public class SplitAndSpreadTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Delete all the shifts that are assigned to the team member
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
 
             // Create new shift for TM1 on first day and second day
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -1059,7 +1057,7 @@ public class SplitAndSpreadTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Delete all the shifts that are assigned to the team member
-            shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
             scheduleMainPage.saveSchedule();
             // Edit the Schedule
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1131,12 +1129,12 @@ public class SplitAndSpreadTest extends TestBase {
 
             //check the violation on the info popup
             WebElement shiftOnMon = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
-
-            SimpleUtils.assertOnFail("Spread of hours compliance message display failed",
-                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftOnMon).contains("Spread of hours"), false);
+            List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftOnMon);
+            SimpleUtils.assertOnFail("Spread of hours compliance message display failed, the actual is:"+complianceMessage,
+                    complianceMessage.contains("Spread of hours"), false);
             createSchedulePage.publishActiveSchedule();
-            SimpleUtils.assertOnFail("Spread of hours compliance message display failed",
-                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftOnMon).contains("Spread of hours"), false);
+            SimpleUtils.assertOnFail("Spread of hours compliance message display failed, the actual is:"+complianceMessage,
+                    complianceMessage.contains("Spread of hours"), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

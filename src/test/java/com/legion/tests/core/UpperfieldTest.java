@@ -1079,7 +1079,7 @@ public class UpperfieldTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "Vailqacn_Enterprise")
-    @TestName(description = "Verify Region Summary widget on Dashboard in Region View")
+    @TestName(description = "Verify District Summary widget on Dashboard in Region View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDistrictSummaryWidgetOnDashboardInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -1307,6 +1307,7 @@ public class UpperfieldTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -1393,7 +1394,7 @@ public class UpperfieldTest extends TestBase {
                             createSchedulePage.createScheduleForNonDGFlowNewUI();
                         }
                         shiftOperatePage.deleteAllOOOHShiftInWeekView();
-                        shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+                        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
                         if (createSchedulePage.isPublishButtonLoaded() || createSchedulePage.isRepublishButtonLoadedOnSchedulePage()) {
                             createSchedulePage.publishActiveSchedule();
                         }
@@ -1426,6 +1427,7 @@ public class UpperfieldTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -1502,7 +1504,7 @@ public class UpperfieldTest extends TestBase {
                         createSchedulePage.createScheduleForNonDGFlowNewUI();
                     }
                     shiftOperatePage.deleteAllOOOHShiftInWeekView();
-                    shiftOperatePage.deleteTMShiftInWeekView("Unassigned");
+                    scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
                     if (createSchedulePage.isPublishButtonLoaded() || createSchedulePage.isRepublishButtonLoadedOnSchedulePage()) {
                         createSchedulePage.publishActiveSchedule();
                     }

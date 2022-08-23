@@ -6,6 +6,7 @@ import com.legion.tests.core.GroupByDayPartsTest;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.sl.In;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -303,14 +304,33 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     }
 
     @Override
-    public void getWeekDayAndDate() throws Exception {
-        HashMap<String, Integer> weekDayNDates = new HashMap<>();
+    public LinkedHashMap<String, Integer> getWeekDayAndDate() throws Exception {
+        LinkedHashMap<String, Integer> weekDayNDates = new LinkedHashMap<>();
         if (areListElementVisible(schCalendarDateLabel, 10) && areListElementVisible(schWeekDayLabels, 10)) {
             for (int i = 0; i < schCalendarDateLabel.size(); i++) {
                 weekDayNDates.put(schWeekDayLabels.get(i).getText().trim(), Integer.parseInt(schCalendarDateLabel.get(i).getText().trim()));
             }
             setWeekDaysNDates(weekDayNDates);
         }
+        return weekDayNDates;
+    }
+
+    @Override
+    public List<String> getSelectedWorkDays(HashSet<Integer> set) throws Exception {
+        LinkedHashMap<String, Integer> weekDaysAndDates = getWeekDayAndDate();
+        List<String> days = new ArrayList<>();
+        List<String> fullWeekDays = new ArrayList<>();
+        Iterator<String> iterator = weekDaysAndDates.keySet().iterator();
+        while (iterator.hasNext()) {
+            days.add(iterator.next());
+        }
+        if (areListElementVisible(weekShifts, 3)) {
+            for (int i : set) {
+                int index = Integer.parseInt(weekShifts.get(i).getAttribute("data-day-index").trim());
+                fullWeekDays.add(SimpleUtils.getFullWeekDayName(days.get(index)));
+            }
+        }
+        return fullWeekDays;
     }
 
     @FindBy(css = "div.sch-calendar-day-dimension")
@@ -971,6 +991,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 String[] workRoleWords = workRole.split(" ");
                 for (int i=0; i <searchResults.size(); i++) {
                     scrollToElement(searchResults.get(i));
+                    waitForSeconds(3);
                     Map<String, String> shiftInfo= getShiftInfoFromInfoPopUp(searchResults.get(i));
                     String shiftWorkRole = shiftInfo.get("WorkRole");
                     String shiftJobTitle = shiftInfo.get("JobTitle");
@@ -1303,6 +1324,28 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     }
 
     @Override
+    public HashSet<Integer> getAddedShiftsIndexesByPlusIcon() throws Exception {
+        HashSet<Integer> indexes = new HashSet<>();
+        if (areListElementVisible(shiftsInWeekView, 5)) {
+            for (int i = 0; i < shiftsInWeekView.size(); i++) {
+                try {
+                    WebElement plusIcon = shiftsInWeekView.get(i).findElement(By.cssSelector("img[src*=\"added-shift\"]"));
+                    if (plusIcon != null) {
+                        indexes.add(i);
+                        SimpleUtils.pass("Get the index: " + i + " successfully!");
+                    }
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+        }
+        if (indexes.size() == 0) {
+            SimpleUtils.fail("Failed to get the index of the newly added shifts!", false);
+        }
+        return indexes;
+    }
+
+    @Override
     public boolean areShiftsPresent() throws Exception {
         boolean arePresent = false;
         if (areListElementVisible(dayViewAvailableShifts, 5)) {
@@ -1543,7 +1586,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(css = ".my-schedule-no-schedule")
     private WebElement myScheduleNoSchedule;
 
-    @FindBy(className = "sch-grid-container")
+    @FindBy(className = "sch-navigation-container")
     private WebElement scheduleTable;
 
     @FindBy(css = "div.lg-picker-input")
@@ -2308,7 +2351,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (action.equalsIgnoreCase("swap")) {
             if (areListElementVisible(warningMessagesInSwap, 15) && warningMessagesInSwap.size() > 0) {
                 for (int i = 0; i < warningMessagesInSwap.size(); i++) {
-                    if (warningMessagesInSwap.get(i).getText().contains(expectedMessage)) {
+                    if (warningMessagesInSwap.get(i).getText().toLowerCase().contains(expectedMessage.toLowerCase())) {
                         canFindTheExpectedMessage = true;
                         SimpleUtils.pass("The expected message can be find successfully");
                         break;
@@ -3217,6 +3260,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             if (moveForeward) {
                 mouseHoverDragandDrop(dayViewShiftGroups.get(index).findElement(By.cssSelector(".left-shift-box")),
                         dayViewShiftGroups.get(index).findElements(By.cssSelector(".sch-day-view-grid-cell")).get(0));
+                int xOffSet = -150;
+                moveDayViewCards(dayViewShiftGroups.get(index).findElement(By.cssSelector(".left-shift-box")), xOffSet);
             } else
                 mouseHoverDragandDrop(dayViewShiftGroups.get(index).findElement(By.cssSelector(".left-shift-box")),
                     dayViewShiftGroups.get(index).findElements(By.cssSelector(".sch-day-view-grid-cell")).get(dayViewShiftGroups.get(index).findElements(By.cssSelector(".sch-day-view-grid-cell")).size()-1));
@@ -3415,6 +3460,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             action.keyDown(Keys.CONTROL).build().perform();
             for (int i : set) {
                 action.click(names.get(i));
+                waitForSeconds(1);
             }
             action.keyUp(Keys.CONTROL).build().perform();
             if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
@@ -3427,6 +3473,34 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
         }
         return set;
+    }
+
+    @Override
+    public void selectSpecificShifts(HashSet<Integer> shiftIndexes) throws Exception {
+        List<WebElement> names = null;
+        if (areListElementVisible(namesWeekView, 10)) {
+            names = namesWeekView;
+        } else if (areListElementVisible(namesDayView, 10)) {
+            names = namesDayView;
+        }
+        if (names.size() >= shiftIndexes.size()) {
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (int i : shiftIndexes) {
+                scrollToElement(names.get(i));
+                waitForSeconds(1);
+                action.moveToElement(names.get(i)).click(names.get(i));
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftIndexes.size()) {
+                SimpleUtils.pass("Selected " + shiftIndexes.size() + " shifts successfully");
+            } else {
+                SimpleUtils.fail("Expected to select " + shiftIndexes.size() + " shifts, but actually selected " +
+                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+            }
+        } else {
+            SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+        }
     }
 
     @Override
@@ -4306,5 +4380,54 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             SimpleUtils.fail("The STAFF Card is not loaded correctly!", false);
         }
         return totalBudgetFromSTAFFSmartCard;
+    }
+
+    @Override
+    public boolean isScheduleTableDisplay () throws Exception {
+        boolean isScheduleTableDisplay = false;
+        if (isElementLoaded(scheduleTable,10)) {
+            isScheduleTableDisplay = true;
+            SimpleUtils.report("The schedule table is display correctly! ");
+        } else {
+            SimpleUtils.report("The schedule table is not display! ");
+        }
+        return isScheduleTableDisplay;
+    }
+
+    @Override
+    public void verifyConfirmBtnIsDisabledOnDragAndDropConfirmPage() throws Exception {
+        waitForSeconds(3);
+        if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage,15)
+                && confirmBtnOnDragAndDropConfirmPage.getText().equalsIgnoreCase("Confirm")
+                && confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")){
+            SimpleUtils.pass("Confirm button label display correctly and disabled!");
+        } else {
+            SimpleUtils.fail("Confirm button display incorrectly!",false);
+        }
+    }
+
+    @Override
+    public void verifySwapBtnIsEnabledOnDragAndDropConfirmPage() throws Exception {
+        waitForSeconds(3);
+        if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage,15)
+                && confirmBtnOnDragAndDropConfirmPage.getText().equalsIgnoreCase("Swap")
+                && !confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")){
+            SimpleUtils.pass("Swap button label display correctly and disabled!");
+        } else {
+            SimpleUtils.fail("Swap button display incorrectly!",false);
+        }
+    }
+
+
+    @Override
+    public void verifyAssignBtnIsEnabledOnDragAndDropConfirmPage() throws Exception {
+        waitForSeconds(3);
+        if (isElementLoaded(confirmBtnOnDragAndDropConfirmPage,15)
+                && confirmBtnOnDragAndDropConfirmPage.getText().equalsIgnoreCase("Assign")
+                && !confirmBtnOnDragAndDropConfirmPage.getAttribute("class").contains("disabled")){
+            SimpleUtils.pass("Assign button label display correctly and disabled!");
+        } else {
+            SimpleUtils.fail("Assign button display incorrectly!",false);
+        }
     }
 }

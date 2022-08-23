@@ -4,10 +4,7 @@ import com.legion.pages.BasePage;
 import com.legion.pages.LoginPage;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
 import org.openqa.selenium.support.FindBy;
@@ -85,6 +82,9 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 			getActiveConsoleName(loginButton);
 			userNameField.clear();
 			passwordField.clear();
+			if (userName.contains("@" + getEnterprise())) {
+				userName = userName.replace("@" + getEnterprise(), "");
+			}
 			userNameField.sendKeys(userName);
 			passwordField.sendKeys(Password);
 			clickTheElement(loginButton);
@@ -114,7 +114,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	private boolean isUserNameInputLoaded() {
 		boolean isLoaded = false;
 		try {
-			if (isElementLoaded(userNameField, 90) || isElementLoaded(newUserNameField, 90)) {
+			if (isElementLoaded(newUserNameField, 90) || isElementLoaded(userNameField, 90)) {
 				isLoaded = true;
 			}
 		} catch (Exception e) {
@@ -333,5 +333,19 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	}
 
 
+	@FindBy(xpath = "//div[@data-testid='tos-text']")
+	private WebElement legionTermsOfService;
+	@FindBy(css = "[data-testid=\"accept-btn\"]")
+	private WebElement legionTermsOfServiceAgreeButton;
+	@Override
+	public void verifyLegionTermsOfService() throws Exception {
+		if (isElementLoaded(legionTermsOfService,5)
+				&& isElementLoaded(legionTermsOfServiceAgreeButton, 5)) {
+			getDriver().executeScript("arguments[0].scrollIntoView()", legionTermsOfService.findElement(By.xpath("./p[68]")));
+			waitForSeconds(3);
+			clickTheElement(legionTermsOfServiceAgreeButton);
+		}else
+			SimpleUtils.report("There is no Legion Terms Of Service!");
+	}
 
 }

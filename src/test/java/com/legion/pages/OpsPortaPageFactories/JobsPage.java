@@ -124,4 +124,8 @@ public interface JobsPage {
     public void verifyDynamicGroupDisplayInSpecifyJobType(String type) throws Exception;
 
     public void createDynamicGroup(String type) throws Exception;
+
+    public void archiveSpecificJob(String jobTitle) throws Exception;
+
+    public void selectWeeksForJobToTakePlaceByIndex(int index);
 }

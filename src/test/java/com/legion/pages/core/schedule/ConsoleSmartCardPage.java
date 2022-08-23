@@ -627,7 +627,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
                 if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {
                     WebElement header = smartCard.findElement(By.tagName("h1"));
                     if (header != null && !header.getText().isEmpty()) {
-                        count = Integer.parseInt(header.getText().trim().substring(0, 1));
+                        count = Integer.parseInt(header.getText().trim().split(" ")[0]);
                         SimpleUtils.report("Compliance Card: Get: " + count + " compliance shift(s).");
                         break;
                     }
@@ -635,7 +635,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
             }
         }
         if (count == 0) {
-            SimpleUtils.fail("Compliance Card: Failed to get the count of the shift(s)!", false);
+            SimpleUtils.report("Compliance Card: Failed to get the count of the shift(s)!");
         }
         return count;
     }

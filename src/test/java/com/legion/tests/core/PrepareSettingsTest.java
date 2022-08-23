@@ -1,5 +1,6 @@
 package com.legion.tests.core;
 
+import com.legion.api.cache.RemoveTemplateSnapShotForLocationsAPI;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
@@ -216,6 +217,8 @@ public class PrepareSettingsTest extends TestBase {
                         !configurationPage.isStrictlyEnforceMinorViolationSettingEnabled(), false);
             //Publish the template
             configurationPage.publishNowTheTemplate();
+
+            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI("stoneman@legion.co", "admin11.a");
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

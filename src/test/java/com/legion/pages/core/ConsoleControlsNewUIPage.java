@@ -6304,7 +6304,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 	//added by Estelle to verify centralized schedule release
-	@FindBy(css = "yes-no[value=\"sp.enterprisePreference.centralizedScheduleRelease\"]")
+	@FindBy(css = "[question-title=\"Centralized Schedule Release\"] yes-no")
 	private WebElement centralizedScheduleRelease;
 
 
@@ -7625,6 +7625,63 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			waitForSeconds(2);
 		} else {
 			SimpleUtils.fail("Budget group section fail to load!", false);
+		}
+	}
+
+	//Add by Cosimo
+	@FindBy(css = "[question-title = \"Can manager override the assignment rule?\"]")
+	private WebElement btnOverrideAssignmentRuleForOP;
+
+	@FindBy(css = "[question-title = \"Can manager override the assignment rule?\"] div.lg-button-group-first")
+	private WebElement btnOverrideAssignmentRuleYesForOP;
+
+	@FindBy(css = "[question-title = \"Can manager override the assignment rule?\"] div.lg-button-group-last")
+	private WebElement btnOverrideAssignmentRuleNoForOP;
+
+	public void enableOverRideAssignmentRuleAsYesForOP() throws Exception {
+		if (isElementEnabled(btnOverrideAssignmentRuleForOP, 20)) {
+			if (isElementEnabled(btnOverrideAssignmentRuleYesForOP, 3)) {
+				if (btnOverrideAssignmentRuleYesForOP.getAttribute("class").contains("selected")) {
+					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button already enabled");
+				} else {
+					clickTheElement(btnOverrideAssignmentRuleYesForOP);
+					if (isElementLoaded(overridePopup, 10) && isElementLoaded(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")),10)){
+						clickTheElement(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")));
+					}
+					Actions actions = new Actions(getDriver());
+					actions.moveByOffset(0, 0).click().build().perform();
+					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button selected!");
+					displaySuccessMessage();
+				}
+			} else {
+				SimpleUtils.fail("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button not loaded!!", false);
+			}
+		}
+	}
+
+	@Override
+	public void enableOverRideAssignmentRuleAsNoForOP() throws Exception {
+		if (isElementEnabled(btnOverrideAssignmentRuleForOP, 20)) {
+			if (isElementEnabled(btnOverrideAssignmentRuleNoForOP, 10)) {
+				waitForSeconds(5);
+				if (btnOverrideAssignmentRuleNoForOP.getAttribute("class").contains("selected")) {
+					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'No' button already enabled");
+				} else {
+					scrollToElement(btnOverrideAssignmentRuleNoForOP);
+					clickTheElement(btnOverrideAssignmentRuleNoForOP);
+					if (isElementLoaded(overridePopup, 10) && isElementLoaded(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")),10)){
+						clickTheElement(overridePopup.findElement(By.cssSelector("[ng-click*=\"Overwrite()\"]")));
+					}
+					Actions actions = new Actions(getDriver());
+					actions.moveByOffset(0, 300).click().build().perform();
+					SimpleUtils.pass("Controls Page: Schedule Policies Override Assignment rule section 'No' button selected!");
+					displaySuccessMessage();
+				}
+			} else {
+				SimpleUtils.fail("Controls Page: Schedule Policies Override Assignment rule section 'Yes' button not loaded!!", false);
+			}
+		}else{
+			SimpleUtils.fail("The override toggle is not loaded correctly!", false);
 		}
 	}
 

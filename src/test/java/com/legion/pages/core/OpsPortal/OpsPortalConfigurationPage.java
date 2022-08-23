@@ -6081,7 +6081,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		return isStrictlyEnforceMinorViolationSettingEnabled;
 	}
 
-	@FindBy(css = "question-input[question-title=\"Can a manager add another locations' employee in schedule before the employee''s home location has published the schedule?\"] input-field")
+	@FindBy(css = "question-input[question-title=\"Can a manager add another locations' employee in schedule before the employee's home location has published the schedule?\"] input-field")
 	private WebElement canManagerAddAnotherLocationsEmployeeInSchedule;
 	@Override
 	public void updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule(String option) throws Exception {
@@ -6106,5 +6106,55 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		} else {
 			SimpleUtils.fail("OP Page: Global Configuration: Schedules : Labor Preferences for Forecast Summary Smartcard settings dropdown list not loaded.", false);
 		}
+	}
+
+	@FindBy(css = "question-input[question-title=\"Maximum Number of shifts an employee can have in one day.\"] input")
+	private WebElement maximumNumberOfShiftsPerDay;
+	@Override
+	public void updateMaximumNumberOfShiftsPerDay(int maximumNumber) throws Exception {
+		if (isElementLoaded(maximumNumberOfShiftsPerDay, 10)) {
+			maximumNumberOfShiftsPerDay.clear();
+			maximumNumberOfShiftsPerDay.sendKeys(String.valueOf(maximumNumber));
+			SimpleUtils.pass("OP Page: Set maximum number of shifts per day successfully");
+		} else {
+			SimpleUtils.fail("OP Page: Maximum number of shifts per day fail to load! ", false);
+		}
+	}
+
+	@Override
+	public int getMaximumNumberOfShiftsPerDay() throws Exception {
+		int maximumNumber = 0;
+		if (isElementLoaded(maximumNumberOfShiftsPerDay, 10)) {
+			maximumNumber = Integer.parseInt(maximumNumberOfShiftsPerDay.getText());
+			SimpleUtils.pass("OP Page: Set maximum number of shifts per day successfully");
+		} else {
+			SimpleUtils.fail("OP Page: Maximum number of shifts per day fail to load! ", false);
+		}
+		return maximumNumber;
+	}
+
+	@FindBy(css = "question-input[question-title=\"Minimum time (in minutes) required between shifts.\"] input")
+	private WebElement minimumTimeBetweenShifts;
+	@Override
+	public void updateMinimumTimeBetweenShifts(int minimumTime) throws Exception {
+		if (isElementLoaded(minimumTimeBetweenShifts, 10)) {
+			minimumTimeBetweenShifts.clear();
+			minimumTimeBetweenShifts.sendKeys(String.valueOf(minimumTime));
+			SimpleUtils.pass("OP Page: Set Minimum time (in minutes) required between shifts successfully");
+		} else {
+			SimpleUtils.fail("OP Page: Minimum time (in minutes) required between shifts fail to load! ", false);
+		}
+	}
+
+	@Override
+	public int getMinimumTimeBetweenShifts() throws Exception {
+		int minimumTime = 0;
+		if (isElementLoaded(minimumTimeBetweenShifts, 10)) {
+			minimumTime = Integer.parseInt(minimumTimeBetweenShifts.getText());
+			SimpleUtils.pass("OP Page: Set Minimum time (in minutes) required between shifts successfully");
+		} else {
+			SimpleUtils.fail("OP Page: Minimum time (in minutes) required between shifts fail to load! ", false);
+		}
+		return minimumTime;
 	}
 }

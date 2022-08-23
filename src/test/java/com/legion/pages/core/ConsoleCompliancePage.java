@@ -356,7 +356,7 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
     public List<String> getDataFromComplianceTableForGivenLocationInDMView(String location) throws Exception {
         List<String> complianceViolationsOnDMViewSmartCard = new ArrayList<>();
         boolean isLocationFound = false;
-        if (areListElementVisible(rowsInAnalyticsTable,10)) {
+        if (areListElementVisible(rowsInAnalyticsTable,50)) {
             for (WebElement row: rowsInAnalyticsTable) {
                 if (row.findElement(By.cssSelector("[jj-switch-when=\"cells.CELL_UNTOUCHED\"]")).getText().equals(location)) {
                     isLocationFound = true;

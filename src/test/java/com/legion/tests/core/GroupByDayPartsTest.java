@@ -507,8 +507,8 @@ public class GroupByDayPartsTest extends TestBase {
 
                 //delete unassigned shifts and open shifts.
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-                shiftOperatePage.deleteTMShiftInWeekView("open");
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
                 scheduleMainPage.saveSchedule();
                 List<String> shiftInfo = new ArrayList<>();
                 while (shiftInfo.size() == 0) {
@@ -570,8 +570,8 @@ public class GroupByDayPartsTest extends TestBase {
 
                 //delete unassigned shifts and open shifts.
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                shiftOperatePage.deleteTMShiftInWeekView("unassigned");
-                shiftOperatePage.deleteTMShiftInWeekView("open");
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
                 scheduleMainPage.saveSchedule();
                 List<String> shiftInfo = new ArrayList<>();
                 while (shiftInfo.size() == 0) {

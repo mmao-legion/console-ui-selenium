@@ -1600,13 +1600,13 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public boolean isMyAvailabilityLockedNewUI() throws Exception
 	{
-		if(isElementLoaded(myAvailability,10)) {
+		if(isElementLoaded(myAvailability,15)) {
 			waitForSeconds(5);
 			if (isElementLoaded(lockIcon, 5)){
 				return true;
 			}
 		}else{
-			SimpleUtils.fail("My Availability section not loaded under 'My Work Preference' Tab.", true);
+			SimpleUtils.fail("My Availability section not loaded under 'My Work Preference' Tab.", false);
 		}
 		return false;
 	}
@@ -2360,7 +2360,20 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			if(isElementLoaded(userProfileImage, 5)){
 				clickTheElement(userProfileImage);
 				if (isElementLoaded(userNickName, 5)) {
-					nickName = userNickName.getText();
+					if (userNickName.getText().equalsIgnoreCase(getEnterprise())) {
+						clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));
+						if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 3)) {
+							nickName = getDriver().findElement(By.cssSelector(".userProfileText")).getText().trim().contains(" ") ?
+									getDriver().findElement(By.cssSelector(".userProfileText")).getText().trim().split(" ")[0] :
+									getDriver().findElement(By.cssSelector(".userProfileText")).getText().trim();
+						} else if (areListElementVisible(getDriver().findElements(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")),3)) {
+							nickName = getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")).getText().trim().contains(" ") ?
+									getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")).getText().trim().split(" ")[0] :
+									getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")).getText().trim();
+						}
+					} else {
+						nickName = userNickName.getText();
+					}
 				}
 				if(nickName != null && !nickName.isEmpty()){
 					SimpleUtils.pass("Get User's NickName: " + nickName + "Successfully");
@@ -2897,7 +2910,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@FindBy(css = "[ng-click=\"editUserProfile()\"]")
 	private WebElement editBtnOfProfile;
 
-	@FindBy(xpath = "//div[contains(text(),\"NAME\")]/../span")
+	@FindBy(xpath = "//div[contains(text(),\"Name\")]/../span")
 	private WebElement nameOfProfile;
 
 	@Override

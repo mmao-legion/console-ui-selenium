@@ -15,4 +15,8 @@ public interface ToggleSummaryPage {
     public float getStaffingGuidanceHrs() throws Exception;
     public boolean isLocationGroup();
     public void verifyOperatingHrsInToggleSummary(String day, String startTime, String endTime) throws Exception;
+    public void verifyTheContentInRosterUpdatesSection() throws Exception;
+    public void verifyTheContentInStaffSection() throws Exception;
+    public void verifyTheContentInOperatingHoursSection() throws Exception;
+    public String autoFillOpenShifts() throws Exception;
 }
