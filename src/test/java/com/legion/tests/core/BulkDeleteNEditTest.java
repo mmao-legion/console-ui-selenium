@@ -420,7 +420,7 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.verifyTheFunctionalityOfOffsetTime(null, "1", null, true);
             // Verify the functionality of Hours input in Start Time section
             editShiftPage.verifyTheFunctionalityOfOffsetTime("11", null, null, true);
-            editShiftPage.verifyTheFunctionalityOfOffsetTime("12", null, null, true);
+            editShiftPage.verifyTheFunctionalityOfOffsetTime("13", null, null, true);
             // Verify the functionality of Early/Late select in Start Time section
             editShiftPage.verifyTheFunctionalityOfOffsetTime(null, null, "Early", true);
             editShiftPage.verifyTheFunctionalityOfOffsetTime(null, null, "Late", true);
@@ -435,7 +435,7 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.verifyTheFunctionalityOfOffsetTime(null, "1", null, false);
             // Verify the functionality of Hours input in End Time section
             editShiftPage.verifyTheFunctionalityOfOffsetTime("11", null, null, false);
-            editShiftPage.verifyTheFunctionalityOfOffsetTime("12", null, null, false);
+            editShiftPage.verifyTheFunctionalityOfOffsetTime("13", null, null, false);
             // Verify the functionality of Early/Late select in End Time section
             editShiftPage.verifyTheFunctionalityOfOffsetTime(null, null, "Early", false);
             editShiftPage.verifyTheFunctionalityOfOffsetTime(null, null, "Late", false);

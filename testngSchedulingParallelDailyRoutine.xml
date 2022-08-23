@@ -643,8 +643,8 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                     <include name="verifyTheEditedColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingWorkRoleOnMultipleEditShiftsWindowAsInternalAdmin" />
 <!--                    <include name="verifyChangingShiftNameOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-6997 />-->
-                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" />
-                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" />
+<!--                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
+<!--                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
                 </methods>
             </class>
         </classes>
