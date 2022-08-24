@@ -7893,7 +7893,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.searchShiftOnSchedulePage("Open");
 			List<Integer> openShifts = scheduleShiftTablePage.getAddedShiftIndexes("Open");
 			SimpleUtils.assertOnFail("It should has one open shift in the schedule, actual has "+openShifts.size(),
-					openShifts.size()==1, false);
+					openShifts.size()>=1, false);
 			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(openShifts.get(0));
 			scheduleShiftTablePage.clickViewStatusBtn();
 			String offerTMInfo = shiftOperatePage.getOfferStatusFromOpenShiftStatusList(firstNameOfTM);
