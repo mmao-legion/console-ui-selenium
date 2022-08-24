@@ -1148,7 +1148,7 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Yang")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify user can view template if user only have template localization permission +View template")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyUserPermissionpAsSMA(String browser, String username, String password, String location) throws Exception {
         try {
             String locationName = "locationAutoCreateForYang";
