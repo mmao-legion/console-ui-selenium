@@ -44,7 +44,7 @@
                     <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                     <include name="verifySMCanSelectACalendarForMinorAsInternalAdmin" />
                     <!--                   <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" />Debug -->
-                    <include name="verifySchoolCalendarListAsInternalAdmin" />
+<!--                    <include name="verifySchoolCalendarListAsInternalAdmin" Blocked by SCH-7481/>-->
                     <include name="verifyCreateCalendarAsInternalAdmin" />
                     <include name="verifyAddDatesForBreaksAsInternalAdmin" />
                     <!-- blocked by cache                   <include name="verifyTurnOffMinorRuleAsInternalAdmin" /> -->

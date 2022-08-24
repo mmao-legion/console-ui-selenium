@@ -631,6 +631,11 @@ public class CinemarkMinorTest extends TestBase {
             // Create another new calendar via Store Manager
             teamPage.createNewCalendarByName("Calendar" + random4);
 
+            System.out.println(random1);
+            System.out.println(random2);
+            System.out.println(random3);
+            System.out.println(random4);
+
             // Check the School Calendars list
             if (teamPage.isCalendarDisplayedByName("Calendar" + random1) && teamPage.isCalendarDisplayedByName("Calendar" + random2)
                     && teamPage.isCalendarDisplayedByName("Calendar" + random3) && teamPage.isCalendarDisplayedByName("Calendar" + random4))

@@ -2360,7 +2360,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			if(isElementLoaded(userProfileImage, 5)){
 				clickTheElement(userProfileImage);
 				if (isElementLoaded(userNickName, 5)) {
-					if (userNickName.getText().equalsIgnoreCase(getEnterprise())) {
+					if (userNickName.getText().replaceAll(" ", "").replaceAll("-", "")
+							.equalsIgnoreCase(getEnterprise().replaceAll(" ", "").replaceAll("-", ""))) {
 						clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));
 						if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 3)) {
 							nickName = getDriver().findElement(By.cssSelector(".userProfileText")).getText().trim().contains(" ") ?
