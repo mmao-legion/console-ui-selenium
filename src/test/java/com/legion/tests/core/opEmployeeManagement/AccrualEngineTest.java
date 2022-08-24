@@ -3,6 +3,7 @@ package com.legion.tests.core.opEmployeeManagement;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.legion.api.login.LoginAPI;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.TeamPage;
@@ -1081,7 +1082,8 @@ public class AccrualEngineTest extends TestBase {
         teamPage.navigateToTimeOffPage();
 
         //get session id via login
-        String sessionId = logIn();
+        //String sessionId = logIn();
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI("sophia.zhang+36@legion.co", "legion01");
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -1144,10 +1146,10 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Bereavement2", "4.8");//HireDate~Specified/worked hours/rate/ 0.2
         expectedTOBalance.put("Bereavement3", "7.2");//Specified~HireDate/worked hours/rate/ 0.3
         expectedTOBalance.put("Bereavement4", "9.6");//Specified~Specified/worked hours/rate/ 0.4
-        expectedTOBalance.put("Covid1", "0");//HireDate~HireDate/worked hours/fix days
-        expectedTOBalance.put("Covid2", "0");//HireDate~Specified/worked hours/fix days
-        expectedTOBalance.put("Covid3", "0");//Specified~HireDate/worked hours/fix days
-        expectedTOBalance.put("Covid4", "0");//Specified~Specified/worked hours/fix days
+        expectedTOBalance.put("Covid1", "30");//HireDate~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid2", "17");//HireDate~Specified/worked hours/fix days
+        expectedTOBalance.put("Covid3", "30");//Specified~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid4", "4");//Specified~Specified/worked hours/fix days
         expectedTOBalance.put("Floating Holiday", "30");//HireDate~HireDate/Monthly /hire month/ begin
         expectedTOBalance.put("Grandparents Day Off1", "21");//Specified~Specified/Weekly
 
@@ -1171,10 +1173,10 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Bereavement4", "16");//Specified~Specified/worked hours/rate/ 0.4
         expectedTOBalance.put("Floating Holiday", "30");//HireDate~HireDate/Monthly /hire month/ begin
         expectedTOBalance.put("Grandparents Day Off1", "21");//Specified~Specified/Weekly
-        expectedTOBalance.put("Covid1", "0");//HireDate~HireDate/worked hours/fix days
-        expectedTOBalance.put("Covid2", "0");//HireDate~Specified/worked hours/fix days
-        expectedTOBalance.put("Covid3", "0");//Specified~HireDate/worked hours/fix days
-        expectedTOBalance.put("Covid4", "0");//Specified~Specified/worked hours/fix days
+        expectedTOBalance.put("Covid1", "30");//HireDate~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid2", "20");//HireDate~Specified/worked hours/fix days
+        expectedTOBalance.put("Covid3", "27");//Specified~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid4", "7");//Specified~Specified/worked hours/fix days
 
         accrualBalance0531 = timeOffPage.getTimeOffBalance();
 
@@ -1873,7 +1875,8 @@ public class AccrualEngineTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDefineAccrualUnitsAbilityAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
         //get session id via login
-        String sessionId = logIn();
+        //String sessionId = logIn();
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI("sophia.zhang+36@legion.co", "legion01");
         String workerId = "4e75ebc1-1cff-4424-a04e-594e7255fde4";
         //Delete a worker's accrual
         String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
@@ -1984,7 +1987,9 @@ public class AccrualEngineTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyWorkRoleAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
         //get session id via login
-        String sessionId = logIn();
+        //String sessionId = logIn();
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI("sophia.zhang+36@legion.co", "legion01");
+
         String workerId = "02fc40f3-2b13-4a89-85cd-17c508b6588d";
         //Delete a worker's accrual
         String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
@@ -2068,9 +2073,9 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance01.put("Grandparents Day Off2", "0");
         expectedTOBalance01.put("Grandparents Day Off3", "39");
         expectedTOBalance01.put("Grandparents Day Off4", "39");
-        expectedTOBalance01.put("Pandemic1", "10");
+        expectedTOBalance01.put("Pandemic1", "0");
         expectedTOBalance01.put("Pandemic2", "50");
-        expectedTOBalance01.put("Pandemic3", "20");
+        expectedTOBalance01.put("Pandemic3", "0");
         expectedTOBalance01.put("Pandemic4", "30");
         expectedTOBalance01.put("Personal Emergency", "0");
         expectedTOBalance01.put("PTO", "0");
@@ -2079,7 +2084,7 @@ public class AccrualEngineTest extends TestBase {
 
         HashMap<String, String> actualTOB01 = timeOffPage.getTimeOffBalance();
         System.out.println(actualTOB01.get("PTO"));
-        Assert.assertEquals(actualTOB01, expectedTOBalance01, "Failed to assert clear the accrual balance!");
+        Assert.assertEquals(actualTOB01, expectedTOBalance01, "Failed to run accrual job!");
 
         accrualResponse = runAccrualJobToSimulateDate(workerId, "2022-09-30", sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse), 200, "Failed to run accrual job!");
@@ -2425,7 +2430,8 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = logIn();
+        //String sessionId = logIn();
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI(username, password);
         //set UseAbsenceMgmtConfiguration Toggle On
 //        if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
 //            String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");

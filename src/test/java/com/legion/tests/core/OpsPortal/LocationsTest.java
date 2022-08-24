@@ -1,6 +1,7 @@
 package com.legion.tests.core.OpsPortal;
 
 import com.alibaba.fastjson.JSONObject;
+import com.legion.api.login.LoginAPI;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
@@ -2010,7 +2011,8 @@ public class LocationsTest extends TestBase {
 
         locationsPage.verifyDownloadTransaltionsButtonisClicked();
 
-        String sessionId = logIn();
+        //String sessionId = logIn();
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI("estelle+51@legion.co", "admin11.a");
 
         String reponse[] = HttpUtil.httpGet0(Constants.downloadTransation1,sessionId,null);
 
