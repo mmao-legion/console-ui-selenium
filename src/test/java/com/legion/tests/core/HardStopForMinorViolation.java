@@ -827,7 +827,7 @@ public class HardStopForMinorViolation extends TestBase {
                 //Wait for the timed cache
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 Thread.sleep(60000);
-                CacheAPI.refreshTemplateCache("stoneman@legion.co", "admin11.a");
+                CacheAPI.refreshTemplateCache(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
                 i++;
             }
         }
