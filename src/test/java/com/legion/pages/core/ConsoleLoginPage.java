@@ -209,10 +209,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	@Override
 	public void verifyLoginPageIsLoaded() throws Exception {
 		try{
-			if (isElementLoaded(loginPanel,15)
-					&& isElementLoaded(userNameField,5)
-					&& isElementLoaded(passwordField, 5)
-					&& isElementLoaded(loginButton, 5)) {
+			if (isElementLoaded(newUserNameField,5) && isElementLoaded(newSignInBtn, 5)) {
 				SimpleUtils.pass("Login page is loaded successfully! ");
 			}else
 				SimpleUtils.fail("Login page not loaded successfully!", false);

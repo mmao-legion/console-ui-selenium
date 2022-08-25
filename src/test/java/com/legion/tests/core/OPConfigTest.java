@@ -267,7 +267,8 @@ public class OPConfigTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI("stoneman@legion.co", "admin11.a");
+            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI(getUserNameNPwdForCallingAPI().get(0),
+                    getUserNameNPwdForCallingAPI().get(1));
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ForecastPage forecastPage = pageFactory.createForecastPage();
@@ -346,7 +347,8 @@ public class OPConfigTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI("stoneman@legion.co", "admin11.a");
+            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI(getUserNameNPwdForCallingAPI().get(0),
+                    getUserNameNPwdForCallingAPI().get(1));
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ForecastPage forecastPage = pageFactory.createForecastPage();

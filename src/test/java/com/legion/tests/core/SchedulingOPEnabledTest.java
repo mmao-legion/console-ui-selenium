@@ -1362,11 +1362,11 @@ public class SchedulingOPEnabledTest  extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-            // Select one team member to view profile
+            // Select one team member which has the account to view profile
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
             teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-            teamPage.selectATeamMemberToViewProfile();
+            teamPage.searchAndSelectTeamMemberByName("Pena");
 
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             //Verify User Profile Section is loaded
