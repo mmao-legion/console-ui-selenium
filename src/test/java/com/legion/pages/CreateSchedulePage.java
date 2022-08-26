@@ -75,5 +75,6 @@ public interface CreateSchedulePage {
     public String getComplianceShiftsMessageOnScheduleSuccessModal() throws Exception;
     public void createSuggestedSchedule() throws Exception;
     public void clickCreateScheduleButton() throws Exception;
+    public void selectLocationOnCreateScheduleEditOperatingHoursPage(String locationName) throws Exception;
 
 }

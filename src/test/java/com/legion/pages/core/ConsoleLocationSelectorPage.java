@@ -1638,7 +1638,7 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
             availableLocationCardsName = getDriver().findElements(By.cssSelector("[class=\"lg-picker-input__wrapper lg-ng-animate\"] div.lg-search-options__option"));
             if (availableLocationCardsName.size() != 0) {
                 for (WebElement upperFieldCardName : availableLocationCardsName) {
-                    upperFieldNames.add(upperFieldCardName.getText());
+                    upperFieldNames.add(upperFieldCardName.getText().split("\n")[0]);
                     SimpleUtils.pass("Get upper filed name successfully! ");
                 }
             } else

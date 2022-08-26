@@ -46,7 +46,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Day')]")
 	private WebElement dayViewButton;
 
-	@FindBy(css = ".ng-scope.lg-button-group-selected.lg-button-group-first")
+	@FindBy(css = "[id=\"legion_cons_schedule_forecast_Demand_button\"] span")
 	private WebElement shoppersTab;
 
 	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Labor')]")
@@ -2452,6 +2452,15 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		return null;
 	}
 
+	@FindBy(css = "[id=\"legion_cons_schedule_forecast_Chart_area\"]")
+	private WebElement demandForecastChart;
+	@Override
+	public void verifyDemandForecastCanLoad() throws Exception {
+		if (isElementLoaded(demandForecastChart,10) && isElementLoaded(editForecastBtn, 5))
+			SimpleUtils.pass("Forecast Page: Demand forecast page should be loaded successfully");
+		else
+			SimpleUtils.fail("Forecast Page: Demand forecast page is not loaded",false);
+	}
 
 
 }
