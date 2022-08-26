@@ -89,5 +89,13 @@ public interface ScheduleMainPage {
     public List<String> getSpecificFilterNames (String filterText) throws Exception;
     public boolean isScheduleMainPageLoaded () throws Exception;
     public boolean isManagerViewSelected () throws Exception;
+    public boolean isMoreActionsBtnClickable() throws Exception;
+    public void goToEditOperatingHoursView() throws Exception;
+    public void checkOperatingHoursOnToggleSummary() throws Exception;
+    public void checkOperatingHoursOnEditDialog() throws Exception;
+    public void clickCancelBtnOnEditOpeHoursPage() throws Exception;
+    public void editTheOperatingHoursWithFixedValue(List<String> weekDaysToClose, String startTime, String endTime) throws Exception;
+    public void closeTheParticularOperatingDay(List<String> weekDaysToClose) throws Exception;
+    public void openTheParticularOperatingDay(List<String> weekDaysToOpen) throws Exception;
 }
 
