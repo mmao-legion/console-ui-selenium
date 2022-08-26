@@ -555,10 +555,10 @@ public abstract class TestBase {
         }
         newShiftPage.clickOnCreateOrNextBtn();
         if (assignment.equals(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue())) {
-            shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             if (tmName != null && !tmName.isEmpty()) {
                 newShiftPage.searchTeamMemberByName(tmName);
             } else {
+                shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
                 for (int i = 0; i < shiftPerDay; i++) {
                     selectedTMs.add(newShiftPage.selectTeamMembers());
                 }

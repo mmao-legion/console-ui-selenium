@@ -588,6 +588,7 @@ SCH-5862-->
                     <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
                     <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
                     <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6889-->
+                    <include name="validateNavigationRosterScheduleAndDashboardOfP2PLGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

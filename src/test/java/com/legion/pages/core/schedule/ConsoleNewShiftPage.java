@@ -536,7 +536,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     }
 
 
-    @FindBy(css = "[id=\"workRole\"] div.react-select__placeholder")
+    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_WorkRole_menu\"] div.react-select__placeholder")
     private WebElement workRoleOnNewShiftPage;
 
     @FindBy(className = "react-select__option")
@@ -761,9 +761,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private List<WebElement> scheduleOperatingHrsOnEditPage;
     @FindBy(className = "tma-time-slider")
     private WebElement scheduleOperatingHrsSlider;
-    @FindBy(css = "[id=\"shiftStart\"]")
+    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_ShiftStart_field\"]")
     private WebElement shiftStartInputOnNewCreateShiftPage;
-    @FindBy(css = "[id=\"shiftEnd\"]")
+    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_ShiftEnd_field\"]")
     private WebElement shiftEndInputOnNewCreateShiftPage;
 
     public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception {
@@ -2285,7 +2285,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return searchResult;
     }
 
-    @FindBy(css = "[id=\"shiftName\"]")
+    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_ShiftName_field\"]")
     private WebElement shiftNameOnNewCreateShiftPage;
     public boolean checkIfShiftNameInputIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
@@ -2353,7 +2353,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return isLoaded;
     }
 
-    @FindBy(css = "[id=\"shiftsPerDay\"]")
+    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_ShiftsPerDay_field\"]")
     private WebElement shiftPerDayInputOnNewCreateShiftPage;
     public boolean checkIfShiftPerDayInputIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
