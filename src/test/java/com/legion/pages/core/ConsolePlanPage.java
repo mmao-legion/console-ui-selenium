@@ -956,6 +956,10 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                     SimpleUtils.pass("The set in effect button is enabled in plan");
                     clickTheElement(scenarioPlanSetInEffectBTN);
                     waitForSeconds(2);
+                    if (isElementLoaded(setInEffectPopup)){
+                        clickTheElement(setInEffectButtonOnSetInEffectPopup);
+                        waitForSeconds(3);
+                    }
                     //check the parent plan changed to in effect
                     if(searchAPlan(planName)){
                         //check status for prent plan
