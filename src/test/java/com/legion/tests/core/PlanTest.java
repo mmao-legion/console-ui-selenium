@@ -497,8 +497,8 @@ public class PlanTest extends TestBase {
 
         // Login as StoreManager
         loginAsDifferentRole(AccessRoles.SMPlanner.getValue());
-        dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+//        dashboardPage = pageFactory.createConsoleDashboardPage();
+//        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
         if(!planPage.verifyPlanConsoleTabShowing()){
             SimpleUtils.pass("Store Manager can't see plan tab by default");
