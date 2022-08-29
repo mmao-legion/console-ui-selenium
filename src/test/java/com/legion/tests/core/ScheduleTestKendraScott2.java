@@ -7761,8 +7761,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
-//	@Enterprise(name = "Vailqacn_Enterprise")
-	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
 	@TestName(description = "Verify scheduled hours and number of shifts in offers when the TM is scheduled in 2 locations")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -7877,6 +7877,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.clickRadioBtnStaffingOption(staffingOption.ManualShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
 			newShiftPage.searchWithOutSelectTM(firstNameOfTM+ " "+lastName);
+			Thread.sleep(5000);
 			HashMap<String, Integer> totalShiftHrsAndShiftCountThisWeek = shiftOperatePage.getTotalShiftHrsAndShiftCountThisWeek();
 			SimpleUtils.assertOnFail("The expected total shift hrs this week is 6, the actual is "
 							+totalShiftHrsAndShiftCountThisWeek.get("shiftHrs"),
