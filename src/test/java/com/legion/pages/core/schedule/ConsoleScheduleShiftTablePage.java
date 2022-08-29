@@ -2909,6 +2909,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private List<WebElement> profileIconsRingsInWeekView;
     @FindBy(css = ".sch-day-view-shift-outer .allow-pointer-events")
     private List<WebElement> profileIconsRingsInDayView;
+    @FindBy(css = ".sch-day-view-shift-outer")
+    private List<WebElement> shiftOuterInDayView;
+
     @Override
     public void verifyShiftsHasMinorsColorRing(String minorsType) throws Exception {
         if (areListElementVisible(profileIconsRingsInDayView, 15)){
@@ -3449,8 +3452,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> names = null;
         if (areListElementVisible(namesWeekView, 10)) {
             names = namesWeekView;
-        } else if (areListElementVisible(namesDayView, 10)) {
-            names = namesDayView;
+        } else if (areListElementVisible(shiftOuterInDayView, 10)) {
+            names = shiftOuterInDayView;
         }
         scrollToBottom();
         waitForSeconds(2);
@@ -3459,7 +3462,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             Actions action = new Actions(getDriver());
             action.keyDown(Keys.CONTROL).build().perform();
             for (int i : set) {
-                action.click(names.get(i));
+                action.moveToElement(names.get(i)).click(names.get(i));
                 waitForSeconds(1);
             }
             action.keyUp(Keys.CONTROL).build().perform();

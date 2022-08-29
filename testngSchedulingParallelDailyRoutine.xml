@@ -82,7 +82,7 @@
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
                     <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" />
-                    <include name="verifyComplianceSmartCardFunctionality" />
+                    <include name="verifyComplianceSmartCardFunctionalityAsInternalAdmin" />
 <!--                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/> https://legiontech.atlassian.net/browse/SCH-5994 -->
                     <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>

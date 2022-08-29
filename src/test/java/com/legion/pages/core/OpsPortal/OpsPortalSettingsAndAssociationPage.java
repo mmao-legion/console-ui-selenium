@@ -640,7 +640,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                     isExisting = true;
                     scrollToElement(settingsType.findElement(By.cssSelector("lg-paged-search")));
                     clickTheElement(settingsType.findElement(By.cssSelector("div.header-add-icon button")));
-                    if (isElementLoaded(popUpWindow, 3)) {
+                    if (isElementLoaded(popUpWindow, 5)) {
                         NameInput = fieldsInput.get(0).findElement(By.xpath("//input[contains(@placeholder, 'Input Stream')]"));
                         NameInput.sendKeys(inputStreamSpecificInfo.get("Name"));
                         //Verify if the input name is existing
@@ -654,7 +654,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                             return;
                         }
 
-                        fieldsInput.get(2).findElement(By.cssSelector("input[aria-label=\"Data Tag\"]")).sendKeys(inputStreamSpecificInfo.get("Tag"));
+                        fieldsInput.get(3).findElement(By.cssSelector("input[aria-label=\"Data Tag\"]")).sendKeys(inputStreamSpecificInfo.get("Tag"));
                         if (!"Base".equalsIgnoreCase(inputStreamSpecificInfo.get("Type"))){
                             clickTheElement(streamType);
                             Select typeSelect = new Select(streamType);

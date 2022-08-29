@@ -1819,8 +1819,8 @@ public class ActivityTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the first approved one will get the shift when two or multiple TM claim the same open shift offer")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead(String browser, String username, String password, String location) throws Exception {
@@ -1947,7 +1947,7 @@ public class ActivityTest extends TestBase {
             scheduleShiftTablePage.clickViewStatusBtn();
             shiftOperatePage.verifyTMInTheOfferList(teamMemberName2, "offered");
             shiftOperatePage.closeViewStatusContainer();
-            //wait for the offer to send to TMs
+//            wait for the offer to send to TMs
             Thread.sleep(120000);
             loginPage.logOut();
 
@@ -1955,7 +1955,7 @@ public class ActivityTest extends TestBase {
             loginAsDifferentRole(AccessRoles.TeamLead.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
                     dashboardPage.isDashboardPageLoaded(), false);
-            profileNewUIPage.getNickNameFromProfile();
+            profileNewUIPage.clickOnUserProfileImage();
             if (dashboardPage.isSwitchToEmployeeViewPresent()) {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
@@ -1984,7 +1984,7 @@ public class ActivityTest extends TestBase {
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",
                     dashboardPage.isDashboardPageLoaded(), false);
-            profileNewUIPage.getNickNameFromProfile();
+            profileNewUIPage.clickOnUserProfileImage();
             if (dashboardPage.isSwitchToEmployeeViewPresent()) {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }
@@ -2012,7 +2012,7 @@ public class ActivityTest extends TestBase {
             mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
             Thread.sleep(5000);
             //Switch to manager view and approve all the offer activities
-            profileNewUIPage.getNickNameFromProfile();
+            profileNewUIPage.clickOnUserProfileImage();
             if (dashboardPage.isSwitchToEmployeeViewPresent()) {
                 dashboardPage.clickOnSwitchToEmployeeView();
             }

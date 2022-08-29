@@ -1579,6 +1579,15 @@ public class ConfigurationTest extends TestBase {
             //Go to Templates tab
             settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
             //Add new demand driver template, warning message will show up when no driver created
+            if(configurationPage.searchTemplate(templateName)){
+                configurationPage.clickOnTemplateName(templateName);
+                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+                configurationPage.deleteOneDynamicGroup(templateName);
+                configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+                configurationPage.setLeaveThisPageButton();
+                configurationPage.archiveOrDeleteTemplate(templateName);
+            }
             configurationPage.createNewTemplate(templateName);
             configurationPage.clickOnTemplateName(templateName);
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
@@ -4723,8 +4732,6 @@ public class ConfigurationTest extends TestBase {
             String locationName = "updateOHViaIntegration";
             int moveCount = 4;
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-//            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-//            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
