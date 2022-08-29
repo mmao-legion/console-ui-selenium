@@ -496,7 +496,8 @@ public class PlanTest extends TestBase {
         loginPage.logOut();
 
         // Login as StoreManager
-        loginAsDifferentRole(AccessRoles.SMPlanner.getValue());
+//        loginAsDifferentRole(AccessRoles.SMPlanner.getValue());
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("fiona+188@legion.co", "admin11.a","");
 //        dashboardPage = pageFactory.createConsoleDashboardPage();
 //        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
