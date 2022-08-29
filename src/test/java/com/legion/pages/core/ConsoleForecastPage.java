@@ -1341,16 +1341,16 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	public boolean verifyIsShopperTypeSelectedByDefaultAndLaborTabIsClickable() throws Exception {
 		boolean flag=false;
 		if (isElementLoaded(shoppersTab,5)) {
-			if (shoppersTab.findElement(By.cssSelector("span")).getText().toLowerCase().contains("shopper")){
-				if (shoppersTab.getAttribute("class").contains("selected")) {
-					SimpleUtils.pass("shopper forecast is selected by default");
+			if (shoppersTab.getText().toLowerCase().contains("shopper") || shoppersTab.getText().toLowerCase().contains("demand")){
+				if (shoppersTab.findElement(By.xpath("./..")).getAttribute("class").contains("selected")) {
+					SimpleUtils.pass("Shopper/Demand forecast is selected by default");
 					clickOnLabor();
 					flag = true;
 				}else {
-					SimpleUtils.fail("shopper forecast is not selected by default",false);
+					SimpleUtils.fail("Shopper forecast is not selected by default",false);
 				}
 			} else {
-				SimpleUtils.report("Shopper tap is not loaded!");
+				SimpleUtils.report("Shopper tab is not loaded!");
 			}
 		}else {
 			flag = false;
