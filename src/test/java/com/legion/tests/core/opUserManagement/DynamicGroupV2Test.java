@@ -1856,4 +1856,145 @@ public class DynamicGroupV2Test extends TestBase {
         laborModelPage.clickOkBtnOnDeleteAttributeDialog();
         laborModelPage.clickOnSaveButton();
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @TestName(description = "Validate location attributes on the Association page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void VerifyLocationAttributesOnTheAssociationPagesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHH");
+        String currentTime = dfs.format(new Date()).trim();
+        Random random = new Random();
+        int randomValue = random.nextInt(20);
+        String templateName = "AutoTemp" + currentTime;
+        String location1 = "AttributeTest-001";
+        String location2 = "AttributeTest-002";
+        String attributeName = "AutoAttribute" + currentTime;
+        String label = "External Attributes";
+        String attributeValue = Integer.toString(randomValue);
+        String attributeValueUpdated = Integer.toString(randomValue + 2);
+        String attributeDescription = attributeName;
+        List<String> fieldsToSet = new ArrayList<>();
+        HashMap<String, List<String>> externalAttributeInfo = new HashMap<>();
+        List<String> fromValues = new ArrayList<String>(Arrays.asList("-1", "11.2", "test", "a"));
+
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        //Go to labor model and create external attribute
+        laborModelPage.clickOnLaborModelTab();
+        laborModelPage.goToLaborStandardRepositoryTile();
+        laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+        laborModelPage.clickOnEditButton();
+        laborModelPage.clickOnAddAttributeButton();
+        laborModelPage.createNewAttribute(attributeName, attributeValue, attributeDescription);
+        laborModelPage.clickOnSaveButton();
+        laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+        externalAttributeInfo = laborModelPage.getValueAndDescriptionForEachAttributeAtGlobalLevel();
+        laborModelPage.clickOnLaborModelTab();
+
+        //Select two locations, one keep default value, change values for another. Both are override
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.goToLocationDetailsPage(location1);
+        locationsPage.clickOnConfigurationTabOfLocation();
+        locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+        laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+        locationsPage.updateLocationLevelExternalAttributes(attributeName, attributeValue, attributeDescription);
+        locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
+        locationsPage.goBack();
+        locationsPage.goToLocationDetailsPage(location2);
+        locationsPage.clickOnConfigurationTabOfLocation();
+        locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+        laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
+        locationsPage.updateLocationLevelExternalAttributes(attributeName, attributeValueUpdated, attributeDescription);
+        locationsPage.verifyOverrideStatusAtLocationLevel("Labor Model","Yes");
+        //Go to "time and attendance" template
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.TimeAttendance.getValue());
+        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+
+        //Location attribute values to check
+        HashMap<String, String> defaultLocationAttributes = new HashMap<String, String>();
+        defaultLocationAttributes.put(attributeName, externalAttributeInfo.get(attributeName).get(0));
+        defaultLocationAttributes.put("testByJane", externalAttributeInfo.get("testByJane").get(0));
+
+        HashMap<String, List<String>> invalidLocationAttributes = new HashMap<String, List<String>>();
+        List<String> invalidValues1 = new ArrayList<>();
+        List<String> invalidValues2 = new ArrayList<>();
+        List<String> invalidValues3 = new ArrayList<>();
+        invalidValues1.add("-1");
+        invalidValues1.add("3.2");
+        invalidValues2.add("a");
+        invalidValues2.add("test");
+        invalidLocationAttributes.put(attributeName, invalidValues1);
+        invalidLocationAttributes.put("testByJane", invalidValues2);
+
+        HashMap<String, List<String>> validLocationAttributes = new HashMap<String, List<String>>();
+        List<String> validValues1 = new ArrayList<>();
+        List<String> validValues2 = new ArrayList<>();
+        validValues1.add(attributeValueUpdated);
+        validValues1.add(attributeValueUpdated);
+        validValues2.add(externalAttributeInfo.get("testByJane").get(0));
+        validValues2.add(externalAttributeInfo.get("testByJane").get(0));
+        validLocationAttributes.put(attributeName, validValues1);
+        validLocationAttributes.put("testByJane", validValues2);
+
+        //Set required fields in settings page
+        fieldsToSet.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue());
+        fieldsToSet.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.State.getValue());
+        settingsAndAssociationPage.setupRequiredFields(fieldsToSet);
+        settingsAndAssociationPage.clearUpSelectedLocationAttributes();
+        for (String key : defaultLocationAttributes.keySet()){
+            settingsAndAssociationPage.setupLocationAttributes(key);
+        }
+
+        settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage("AutoGroup"+ System.currentTimeMillis());
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue(), "IN", "United States");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.State.getValue(), "IN", "Any");
+        settingsAndAssociationPage.verifyLocationAttributesInAssociation(defaultLocationAttributes);
+        //Default attributes value can work well
+        String resultString = settingsAndAssociationPage.clickOnTestBtnAndGetResultString();
+        SimpleUtils.assertOnFail("Test result is not coming up!", resultString != null, false);
+        String matchNumber = resultString.split(" ")[0];
+        SimpleUtils.assertOnFail("There should be at least 1 locations matched!", Integer.parseInt(matchNumber) > 0, false);
+        //Check for invalid values
+        settingsAndAssociationPage.fillInValuesForLocationAttributes(invalidLocationAttributes);
+        SimpleUtils.assertOnFail("Wrong handling for the attribute values on association page", settingsAndAssociationPage.verifyAttributeValuesInAssociationPage(), false);
+        invalidLocationAttributes.clear();
+        invalidValues3.add("11");
+        invalidValues3.add("10");
+        invalidLocationAttributes.put("testByJane", invalidValues3);
+        settingsAndAssociationPage.fillInValuesForLocationAttributes(invalidLocationAttributes);
+        SimpleUtils.assertOnFail("Wrong handling for the attribute values on association page", settingsAndAssociationPage.verifyAttributeValuesInAssociationPage(), false);
+
+        //Check for valid values
+        settingsAndAssociationPage.fillInValuesForLocationAttributes(validLocationAttributes);
+        SimpleUtils.assertOnFail("Wrong handling for the attribute values on association page", settingsAndAssociationPage.verifyAttributeValuesInAssociationPage(), false);
+        String resultString1 = settingsAndAssociationPage.clickOnTestBtnAndGetResultString();
+        SimpleUtils.assertOnFail("Test result is not coming up!", resultString != null, false);
+        String matchNumber1 = resultString.split(" ")[0];
+        SimpleUtils.assertOnFail("There should be at least 1 locations matched!", Integer.parseInt(matchNumber) > 0, false);
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+        configurationPage.publishNowTemplate();
+        configurationPage.archiveOrDeleteTemplate(templateName);
+
+        //Delete the location attribute
+        laborModelPage.clickOnLaborModelTab();
+        laborModelPage.goToLaborStandardRepositoryTile();
+        laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+        laborModelPage.clickOnEditButton();
+        laborModelPage.clickOnDeleteAttributeButton(attributeName);
+        laborModelPage.clickOkBtnOnDeleteAttributeDialog();
+        laborModelPage.clickOnSaveButton();
+    }
+
 }
