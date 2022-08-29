@@ -2249,8 +2249,10 @@ public class P2PLGTest extends TestBase {
 
             teamPage.goToTeam();
             int parentRosterCount = teamPage.verifyTMCountIsCorrectOnRoster();
-
+            dashboardPage.clickOnDashboardConsoleMenu();
+            int upcomingShiftCountOnParentSMDashboard = dashboardPage.getUpComingShifts().size();
             int childRosterCount = 0;
+            int upcomingShiftCountOnChildSMDashboard = 0;
             String tmName = "";
             for (String childLocation: locationNames) {
                 locationSelectorPage.changeUpperFieldDirect(Location, childLocation);
@@ -2262,12 +2264,10 @@ public class P2PLGTest extends TestBase {
                 forecastPage.verifyDemandForecastCanLoad();
                 forecastPage.clickOnLabor();
                 forecastPage.verifyLaborForecastCanLoad();
-                //Verify the P2P LG schedule can be accessed as parent location or sub-location
-                scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-                SimpleUtils.assertOnFail("The schedule page should be load!",
-                        scheduleMainPage.isScheduleMainPageLoaded(), false);
+
                 //Verify TMs in one location can be searched out on other locations for P2P LG
                 if (!tmName.equalsIgnoreCase("")) {
+                    goToSchedulePageScheduleTab();
                     scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                     scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmName);
                     createShiftsWithSpecificValues(workRole, null, null, "9:00am", "12:00pm",
@@ -2280,11 +2280,29 @@ public class P2PLGTest extends TestBase {
                 teamPage.goToTeam();
                 childRosterCount = childRosterCount + teamPage.verifyTMCountIsCorrectOnRoster();
                 tmName = teamPage.selectATeamMemberToViewProfile();
+
+                dashboardPage.clickOnDashboardConsoleMenu();
+                upcomingShiftCountOnParentSMDashboard = upcomingShiftCountOnParentSMDashboard
+                        + dashboardPage.getUpComingShifts().size();
+
+                //Verify the P2P LG schedule can be accessed as parent location or sub-location
+                goToSchedulePageScheduleTab();
+                SimpleUtils.assertOnFail("The schedule page should be load!",
+                        scheduleMainPage.isScheduleMainPageLoaded(), false);
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmName.split(" ")[0]);
+                scheduleMainPage.saveSchedule();
+                Thread.sleep(2000);
             }
             //Verify the roster is at sub-location level for P2P LG
             SimpleUtils.assertOnFail("The parent location roster count is:"+parentRosterCount
                             + " the child locations roster count is:"+childRosterCount,
                     parentRosterCount >= childRosterCount, false);
+
+            //Verify the SM dashboard of P2P LG, SM Dashboard will aggregate data for the widgets
+            SimpleUtils.assertOnFail("The parent location upcoming shift count is:"+upcomingShiftCountOnParentSMDashboard
+                            + " the child locations upcoming shift count is:"+upcomingShiftCountOnChildSMDashboard,
+                    upcomingShiftCountOnParentSMDashboard == upcomingShiftCountOnChildSMDashboard, false);
 
             //Verify all the sub locations will be ungenerated when ungenerate parent level location for P2P LG
             locationSelectorPage.changeUpperFieldDirect(Location, location);

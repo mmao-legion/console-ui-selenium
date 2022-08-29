@@ -389,7 +389,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	private WebElement projectedDemand;
 	@FindBy (className = "no-shifts-message")
 	private WebElement noShiftMessage;
-	@FindBy (xpath = "//div[contains(@class,'MuiBox-root')]/div/div")
+	@FindBy (css = "div.upcoming-shift-text div.upcoming-shift")
 	private List<WebElement> upComingShifts;
 	@FindBy (css = "h4.title-blue.text-left")
 	private WebElement startingSoonTitle;
