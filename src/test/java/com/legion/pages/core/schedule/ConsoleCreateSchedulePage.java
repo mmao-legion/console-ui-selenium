@@ -2134,7 +2134,9 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     public void createSuggestedSchedule() throws Exception {
         if (!isElementLoaded(activScheduleType, 5)){
             clickCreateScheduleBtn();
-            if (isElementEnabled(suggestScheduleModalWeek, 50)) {
+            if (isElementLoaded(upgradeAndGenerateScheduleBtn)) {
+                click(upgradeAndGenerateScheduleBtn);
+            } else if (isElementEnabled(suggestScheduleModalWeek, 50)) {
                 selectWhichWeekToCopyFrom("SUGGESTED");
                 clickOnFinishButtonOnCreateSchedulePage();
             }
