@@ -2101,7 +2101,7 @@ public class FTSERelevantTest extends TestBase {
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             profileNewUIPage.getNickNameFromProfile();
             String myWorkPreferencesLabel = "My Work Preferences";
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+            profileNewUIPage.selectProfilePageSubSectionByLabel(myWorkPreferencesLabel);
 
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("The shift's info doesn't include info icon!",
