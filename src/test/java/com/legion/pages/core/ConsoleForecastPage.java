@@ -2456,7 +2456,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	private WebElement demandForecastChart;
 	@Override
 	public void verifyDemandForecastCanLoad() throws Exception {
-		if (isElementLoaded(demandForecastChart,10) && isElementLoaded(editForecastBtn, 5))
+		if (isElementLoaded(demandForecastChart,10))
 			SimpleUtils.pass("Forecast Page: Demand forecast page should be loaded successfully");
 		else
 			SimpleUtils.fail("Forecast Page: Demand forecast page is not loaded",false);
