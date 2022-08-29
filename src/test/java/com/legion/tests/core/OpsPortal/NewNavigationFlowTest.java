@@ -644,6 +644,8 @@ public class NewNavigationFlowTest extends TestBase {
         }
 
         ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
+        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         if(scheduleOverviewPage.loadScheduleOverview()){
             String schedulePageDistrcit = dashboardPage.getCurrentDistrict();
             String schedulePageLocation = dashboardPage.getCurrentLocationInDMView();

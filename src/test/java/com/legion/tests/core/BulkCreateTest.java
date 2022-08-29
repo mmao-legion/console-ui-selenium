@@ -30,7 +30,6 @@ public class BulkCreateTest extends TestBase {
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) {
         try {
-            ABSwitchAPI.enableABSwitch(AbSwitches.NewCreateShift.getValue(), (String) params[1], (String) params[2]);
             this.createDriver((String) params[0], "69", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
@@ -47,6 +46,7 @@ public class BulkCreateTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
+            ABSwitchAPI.enableABSwitch(AbSwitches.NewCreateShift.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -149,6 +149,7 @@ public class BulkCreateTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateAllItemsOnTheSelectTMPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
+            ABSwitchAPI.enableABSwitch(AbSwitches.NewCreateShift.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -383,6 +384,7 @@ public class BulkCreateTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateAssignOrOfferTMsInSearchAndRecommendedTabsAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
+            ABSwitchAPI.enableABSwitch(AbSwitches.NewCreateShift.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
