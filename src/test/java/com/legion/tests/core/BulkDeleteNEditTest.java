@@ -406,6 +406,7 @@ public class BulkDeleteNEditTest extends TestBase {
             // Verify the functionality of Update button
             editShiftPage.clickOnUpdateButton();
 
+            Thread.sleep(2000);
             scheduleShiftTablePage.selectSpecificShifts(set);
             scheduleShiftTablePage.rightClickOnSelectedShifts(set);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
