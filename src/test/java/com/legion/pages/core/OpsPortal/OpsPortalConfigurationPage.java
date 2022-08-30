@@ -4231,11 +4231,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css = "lg-global-dynamic-group-table[dynamic-groups=\"newsFeedDg\"]")
 	private WebElement dynamicEmployeeGroup;
-
+	@FindBy(css = "[title=\"Dynamic Employee Groups\"] .lg-dashboard-card")
+	private WebElement dynamicEmployeeGroupSection;
 	@Override
 	public void goToDynamicEmployeeGroupPage() {
-		if (isElementEnabled(dynamicGroupSection, 20)) {
-			clickTheElement(dynamicGroupSection);
+		if (isElementEnabled(dynamicEmployeeGroupSection, 20)) {
+			clickTheElement(dynamicEmployeeGroupSection);
 			if (isElementEnabled(dynamicEmployeeGroup, 20)) {
 				SimpleUtils.pass("Can go to dynamic group page successfully");
 			} else

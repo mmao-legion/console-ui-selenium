@@ -631,6 +631,11 @@ public class CinemarkMinorTest extends TestBase {
             // Create another new calendar via Store Manager
             teamPage.createNewCalendarByName("Calendar" + random4);
 
+            System.out.println(random1);
+            System.out.println(random2);
+            System.out.println(random3);
+            System.out.println(random4);
+
             // Check the School Calendars list
             if (teamPage.isCalendarDisplayedByName("Calendar" + random1) && teamPage.isCalendarDisplayedByName("Calendar" + random2)
                     && teamPage.isCalendarDisplayedByName("Calendar" + random3) && teamPage.isCalendarDisplayedByName("Calendar" + random4))
@@ -1954,7 +1959,7 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            ToggleAPI.enableToggle(Toggles.MinorRulesTemplate.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.MinorRulesTemplate.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -2106,7 +2111,7 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.goToTeam();
             teamPage.searchAndSelectTeamMemberByName(minorName);
             name = profileNewUIPage.getMinorRuleTemplateName();
-            CacheAPI.refreshTemplateCache("stoneman@legion.co", "admin11.a");
+            CacheAPI.refreshTemplateCache(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
             i++;
         }
         SimpleUtils.assertOnFail("The minor rule template name of "+templateName+" display incorrectly! The actual is: "+name,
@@ -2122,7 +2127,7 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            ToggleAPI.enableToggle(Toggles.MinorRulesTemplate.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.MinorRulesTemplate.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 

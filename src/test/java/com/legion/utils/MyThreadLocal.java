@@ -179,7 +179,13 @@ public class MyThreadLocal {
 
 	public static void setTestCaseExistsFlag(boolean value) { testCaseExistsFlag.set(value); }
 
-	public static boolean getTestCaseExistsFlag() { return testCaseExistsFlag.get(); }
+	public static boolean getTestCaseExistsFlag() {
+		if (testCaseExistsFlag != null) {
+			return testCaseExistsFlag.get();
+		} else {
+			return false;
+		}
+	}
 
 	public static void setTestResultFlag(boolean value) { testResultFlag.set(value); }
 

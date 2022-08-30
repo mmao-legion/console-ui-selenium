@@ -1,6 +1,7 @@
 package com.legion.tests.core.OpsPortal;
 
 import com.alibaba.fastjson.JSONObject;
+import com.legion.api.login.LoginAPI;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
@@ -774,6 +775,7 @@ public class LocationsTest extends TestBase {
             } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
                 newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
             }
+            newShiftPage.setStartTimeAndEndTimeForShift("8","10");
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName("Aglae");
@@ -873,6 +875,7 @@ public class LocationsTest extends TestBase {
             } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
                 newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
             }
+            newShiftPage.setStartTimeAndEndTimeForShift("8","10");
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName("Brisa");
@@ -2010,7 +2013,8 @@ public class LocationsTest extends TestBase {
 
         locationsPage.verifyDownloadTransaltionsButtonisClicked();
 
-        String sessionId = logIn();
+        //String sessionId = logIn();
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI("estelle+51@legion.co", "admin11.a");
 
         String reponse[] = HttpUtil.httpGet0(Constants.downloadTransation1,sessionId,null);
 
@@ -2136,9 +2140,9 @@ public class LocationsTest extends TestBase {
             advanceStaffRuleStatues.add("This rule is enabled for this location.");
             configurationPage.verifyAdvanceStaffRuleStatusFromLocationLevel(advanceStaffRuleStatues);
             //Verify user can't add location level advance staffing rules.
-            configurationPage.verifyCanNotAddAdvancedStaffingRuleFromTemplateLevel();
+            //configurationPage.verifyCanNotAddAdvancedStaffingRuleFromTemplateLevel();
             //Verify user can't edit/delete location level location level advance staffing rules.
-            configurationPage.verifyCanNotEditDeleteAdvancedStaffingRuleFromTemplateLevel();
+            //configurationPage.verifyCanNotEditDeleteAdvancedStaffingRuleFromTemplateLevel();
             //Verify user can disable location level location level advance staffing rules.
             configurationPage.changeAdvanceStaffRuleStatusFromLocationLevel(0);
             advanceStaffRuleStatues.clear();

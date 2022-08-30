@@ -2759,9 +2759,11 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
     }
 
+    @FindBy(xpath = "//*[@id=\"create-new-shift-react\"]/div/div/div[1]/div[2]/div[2]/div/div[2]/div/div[2]/div/div[2]/div")
+    private List<WebElement> searchResultsNew;
     @Override
     public boolean verifyWFSFunction() {
-        if (searchResults.size()!=0) {
+        if (searchResultsNew.size()!=0) {
             SimpleUtils.pass("Can search team members in Workforce sharing group");
             return true;
         }else
