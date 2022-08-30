@@ -1085,7 +1085,7 @@ public class AccrualEngineTest extends TestBase {
 
         //get session id via login
         //String sessionId = logIn();
-        String sessionId = LoginAPI.getSessionIdFromLoginAPI("sophia.zhang+36@legion.co", "legion01");
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -1165,19 +1165,19 @@ public class AccrualEngineTest extends TestBase {
 
         //expected accrual
         expectedTOBalance.put("Annual Leave", "24");// HireDate~HireDate/Monthly /hire month/end
-        expectedTOBalance.put("Annual Leave1", "4");// HireDate~HireDate/Worked Hours /total hours/ 10 1
+        expectedTOBalance.put("Annual Leave1", "5");// HireDate~HireDate/Worked Hours /total hours/ 10 1
         expectedTOBalance.put("Annual Leave2", "2");// HireDate~Specified/Worked Hours /total hours/ 20 1
-        expectedTOBalance.put("Annual Leave3", "2");// Specified~HireDate/worked hours/total hours/ 15 1
+        expectedTOBalance.put("Annual Leave3", "3");// Specified~HireDate/worked hours/total hours/ 15 1
         expectedTOBalance.put("Annual Leave4", "8");// Specified~Specified/worked hours/total hour/ 5 1
-        expectedTOBalance.put("Bereavement1", "4");//Specified~Specified/worked hours/rate/ 0.1
+        expectedTOBalance.put("Bereavement1", "4.8");//Specified~Specified/worked hours/rate/ 0.1
         expectedTOBalance.put("Bereavement2", "8");//Specified~Specified/worked hours/rate/ 0.2
-        expectedTOBalance.put("Bereavement3", "12");//Specified~Specified/worked hours/rate/ 0.3
+        expectedTOBalance.put("Bereavement3", "14.4");//Specified~Specified/worked hours/rate/ 0.3
         expectedTOBalance.put("Bereavement4", "16");//Specified~Specified/worked hours/rate/ 0.4
         expectedTOBalance.put("Floating Holiday", "30");//HireDate~HireDate/Monthly /hire month/ begin
         expectedTOBalance.put("Grandparents Day Off1", "21");//Specified~Specified/Weekly
-        expectedTOBalance.put("Covid1", "30");//HireDate~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid1", "19");//HireDate~HireDate/worked hours/fix days
         expectedTOBalance.put("Covid2", "20");//HireDate~Specified/worked hours/fix days
-        expectedTOBalance.put("Covid3", "27");//Specified~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid3", "28");//Specified~HireDate/worked hours/fix days
         expectedTOBalance.put("Covid4", "7");//Specified~Specified/worked hours/fix days
 
         accrualBalance0531 = timeOffPage.getTimeOffBalance();
@@ -1908,8 +1908,7 @@ public class AccrualEngineTest extends TestBase {
     public void verifyDefineAccrualUnitsAbilityAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
         //get session id via login
         //String sessionId = logIn();
-        String sessionId = LoginAPI.getSessionIdFromLoginAPI("sophia.zhang+36@legion.co", "legion01");
-        //ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
         String workerId = "4e75ebc1-1cff-4424-a04e-594e7255fde4";
         //Delete a worker's accrual
         String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
@@ -2021,7 +2020,7 @@ public class AccrualEngineTest extends TestBase {
     public void verifyWorkRoleAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
         //get session id via login
         //String sessionId = logIn();
-        String sessionId = LoginAPI.getSessionIdFromLoginAPI("sophia.zhang+36@legion.co", "legion01");
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
 
         String workerId = "02fc40f3-2b13-4a89-85cd-17c508b6588d";
         //Delete a worker's accrual
@@ -2135,20 +2134,20 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance02.put("Bereavement3", "0");
         expectedTOBalance02.put("Bereavement4", "0");
         expectedTOBalance02.put("Covid1", "12");
-        expectedTOBalance02.put("Covid2", "11");
+        expectedTOBalance02.put("Covid2", "12");
         expectedTOBalance02.put("Covid3", "0");
         expectedTOBalance02.put("Covid4", "0");
         expectedTOBalance02.put("DayUnit", "1");
         expectedTOBalance02.put("DayUnit1", "0");
-        expectedTOBalance02.put("DayUnit2", "2");
+        expectedTOBalance02.put("DayUnit2", "0");
         expectedTOBalance02.put("DayUnit3", "0");
         expectedTOBalance02.put("Grandparents Day Off1", "52");
         expectedTOBalance02.put("Grandparents Day Off2", "52");
         expectedTOBalance02.put("Grandparents Day Off3", "52");
         expectedTOBalance02.put("Grandparents Day Off4", "52");
-        expectedTOBalance02.put("Pandemic1", "10");
+        expectedTOBalance02.put("Pandemic1", "0");
         expectedTOBalance02.put("Pandemic2", "100");
-        expectedTOBalance02.put("Pandemic3", "20");
+        expectedTOBalance02.put("Pandemic3", "0");
         expectedTOBalance02.put("Pandemic4", "30");
         expectedTOBalance02.put("Personal Emergency", "8");
         expectedTOBalance02.put("PTO", "10");
@@ -2463,7 +2462,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = LoginAPI.getSessionIdFromLoginAPI("nancy.nan+timeoff@legion.co", "admin11.a");
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
 
         //confirm template
         String workerId = "b4bf7ed1-ac9c-4e84-adaa-0d8e1420160b";
