@@ -58,7 +58,7 @@
             </class>
         </classes>
     </test>
-
+<!--
     <test name="Parent Child LG Test">
         <classes>
             <class name="com.legion.tests.core.ParentChildLGTest">
@@ -69,7 +69,7 @@
             </class>
         </classes>
     </test>
-
+https://legiontech.atlassian.net/browse/SCH-7510 -->
     <test name="LiquidDashboard Test">
         <classes>
             <class name="com.legion.tests.core.LiquidDashboardTest">
