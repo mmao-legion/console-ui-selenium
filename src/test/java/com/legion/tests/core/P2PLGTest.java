@@ -2256,6 +2256,9 @@ public class P2PLGTest extends TestBase {
             String tmName = "";
             for (String childLocation: locationNames) {
                 locationSelectorPage.changeUpperFieldDirect(Location, childLocation);
+                dashboardPage.clickOnDashboardConsoleMenu();
+                Thread.sleep(5000);
+                upcomingShiftCountOnChildSMDashboard = upcomingShiftCountOnParentSMDashboard+ dashboardPage.getUpComingShifts().size();
 
                 //Verify all sub-locations of P2P LG have their own demand forecasts/labor forecast/staffing guidance
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
