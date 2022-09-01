@@ -732,9 +732,7 @@ public class BulkDeleteNEditTest extends TestBase {
             List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
             List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             String startTime1 = shiftInfo1.get(6).split("-")[0].trim();
-            System.out.println(startTime1);
             String startTime2 = shiftInfo2.get(6).split("-")[0].trim();
-            System.out.println(startTime2);
             SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1) &&
                     inputStartTime.equalsIgnoreCase(startTime2), false);
 
@@ -842,6 +840,8 @@ public class BulkDeleteNEditTest extends TestBase {
             shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
             startTime1 = shiftInfo1.get(6).split("-")[0].trim();
             startTime2 = shiftInfo2.get(6).split("-")[0].trim();
+            System.out.println(startTime1);
+            System.out.println(startTime2);
             SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1) &&
                     inputStartTime.equalsIgnoreCase(startTime2), false);
 
@@ -899,8 +899,15 @@ public class BulkDeleteNEditTest extends TestBase {
 
             // Verify can change the end time without checking options
             String inputEndTime = "4:00 pm";
-            editShiftPage.inputStartOrEndTime(inputEndTime, true);
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
             editShiftPage.clickOnUpdateButton();
+
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            iterator = indexes.iterator();
+            indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
 
             // Verify the start time of the shifts is updated
             List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
@@ -926,10 +933,17 @@ public class BulkDeleteNEditTest extends TestBase {
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
 
-            // Verify error will pop up when changing the End time will cause violation
-            editShiftPage.inputStartOrEndTime(inputEndTime, true);
+            // Verify success will pop up when changing the End time will cause violation
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
             editShiftPage.clickOnUpdateButton();
-            mySchedulePage.verifyThePopupMessageOnTop("Error");
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            iterator = indexes.iterator();
+            indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
 
             scheduleShiftTablePage.selectSpecificShifts(indexes);
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
@@ -937,7 +951,7 @@ public class BulkDeleteNEditTest extends TestBase {
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
 
             // Verify can change the end time which will cause violation with selecting the options
-            editShiftPage.inputStartOrEndTime(inputEndTime, true);
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
             editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowConflicts.getOption(), true);
             editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowComplianceErrors.getOption(), true);
             editShiftPage.clickOnUpdateButton();
@@ -970,6 +984,14 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.checkUseOffset(false, true);
             editShiftPage.verifyTheFunctionalityOfOffsetTime("3", null, "Early", false);
             editShiftPage.clickOnUpdateButton();
+
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            iterator = indexes.iterator();
+            indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+
             inputEndTime = "4:00 pm";
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
             shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
@@ -978,14 +1000,22 @@ public class BulkDeleteNEditTest extends TestBase {
             SimpleUtils.assertOnFail("End time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
                     inputEndTime.equalsIgnoreCase(startTime2), false);
 
-            // Verify the start time shows correctly using later offset
+            // Verify the end time shows correctly using later offset
             scheduleShiftTablePage.selectSpecificShifts(indexes);
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
-            editShiftPage.checkUseOffset(true, true);
-            editShiftPage.verifyTheFunctionalityOfOffsetTime("1", null, "Late", true);
+            editShiftPage.checkUseOffset(false, true);
+            editShiftPage.verifyTheFunctionalityOfOffsetTime("1", null, "Late", false);
             editShiftPage.clickOnUpdateButton();
+
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            iterator = indexes.iterator();
+            indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+
             inputEndTime = "5:00 pm";
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
             shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
@@ -1002,6 +1032,62 @@ public class BulkDeleteNEditTest extends TestBase {
             startTime2 = shiftInfo2.get(6).split("-")[1].trim();
             SimpleUtils.assertOnFail("Start time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
                     inputEndTime.equalsIgnoreCase(startTime2), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of changing Date")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            String workRole = shiftOperatePage.getRandomWorkRole();
+
+//            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
+//            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
+                    2, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+
+            HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            editShiftPage.clickOnDateSelect();
+            List<String> dates = editShiftPage.getOptionsFromSpecificSelect();
+
+            // Verify can change the date without selecting the two options
+            editShiftPage.selectSpecificOptionByText(dates.get(1));
+            editShiftPage.clickOnUpdateButton();
+
+            HashSet<Integer> newIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            System.out.println(scheduleShiftTablePage.getOneDayShiftByName(1, assignedNames.get(0)).size());
+            SimpleUtils.assertOnFail("Shifts are not moved to the next day!", !indexes.equals(newIndexes), false);
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
+
+            // Verify the error will pop up when changing the date without selecting the two options
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
