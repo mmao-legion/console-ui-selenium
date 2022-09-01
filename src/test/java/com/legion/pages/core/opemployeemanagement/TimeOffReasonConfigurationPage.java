@@ -1,6 +1,7 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -170,11 +171,6 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     //Distribution type
     @FindBy(css = "question-input[question-title='Distribution type'] select")
     private WebElement distributionType;
-    //payable hour
-    @FindBy(css = "question-input[question-title='Payable hour types included in calculation'] lg-button[label='Configure']>button")
-    private WebElement payableConfig;
-    @FindBy(css = "modal[modal-title='Include Hour Types'] select")
-    private WebElement hoursTypeSelect;
 
     //service lever
     @FindBy(css = "table.lg-table.service-level tr:nth-child(2) input-field input")
@@ -231,6 +227,26 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     private WebElement fixedHours;
     @FindBy(css = "div.dt-container>div.table-wrapper.ng-scope tr:nth-child(2)>td:nth-child(2) input")
     private WebElement accruedHours;
+
+    //payable hours
+    @FindBy(css = "question-input[question-title='Payable hour types included in calculation'] h3")
+    private WebElement payableHoursTitle;
+    @FindBy(css = "question-input[question-title='Payable hour types included in calculation'] lg-button[label='Configure']>button")
+    private WebElement payableConfigBtn;
+    @FindBy(css = "modal[modal-title='Include Hour Types']>div>h1")
+    private WebElement includeHourTypesModalTitle;
+    @FindBy(css = "lg-button[label='Add More']>button")
+    private WebElement addMoreBtn;
+    @FindBy(css = "div.payable-hour-types lg-select")
+    private WebElement hoursTypeSelect;
+    @FindBy(css = "div.lg-search-options>div>div")
+    private List<WebElement> hoursTypeOptions;
+    @FindBy(css = "div.select-list-item.ng-scope>input-field")
+    private List<WebElement> timeOffOptions;
+    @FindBy(css = "div.hour-type-row.ng-scope>lg-cascade-select+i")
+    private List<WebElement> removeBtn;
+    @FindBy(css = "div.hour-type-row")
+    private List<WebElement> hourTypeRows;
 
     //submit
     @FindBy(css = "lg-button[label='Cancel']>button")
@@ -391,6 +407,24 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         return element.getText();
     }
 
+    //Set time off rules
+    public void setTimeOffRules(Boolean canRequest, Boolean partialDay, Boolean submitInTimesheet, String weeklyLimits, String daysInAdvance, String allDayDefault, String daysCanRequestOneTime, Boolean autoReject, Boolean overTime, Boolean trackAccrual, String maxHorsInAdvance, Boolean enforceYearlyLimits, String probationPeriod, String probationUnit, String annualUseLimit) {
+        setTimeOffRequestRuleAs("Employee can request ?", canRequest);
+        setTimeOffRequestRuleAs("Employee can request partial day ?", partialDay);
+        setTimeOffRequestRuleAs("Manager can submit in timesheet ?", submitInTimesheet);
+        setValueForTimeOffRequestRules("Weekly limits(hours)", weeklyLimits);
+        setValueForTimeOffRequestRules("Days request must be made in advance", daysInAdvance);
+        setValueForTimeOffRequestRules("Configure all day time off default", allDayDefault);
+        setValueForTimeOffRequestRules("Days an employee can request at one time", daysCanRequestOneTime);
+        setTimeOffRequestRuleAs("Auto reject time off which exceed accrued hours ?", autoReject);
+        setTimeOffRequestRuleAs("Allow Paid Time Off to compute to overtime ?", overTime);
+        setTimeOffRequestRuleAs("Does this time off reason track Accruals ?", trackAccrual);
+        setValueForTimeOffRequestRules("Max hours in advance of what you earn", maxHorsInAdvance);
+        setTimeOffRequestRuleAs("Enforce Yearly Limits", enforceYearlyLimits);
+        setValueForTimeOffRequestRules("Probation Period", probationPeriod);
+        setProbationUnitAs(probationUnit);
+        setValueForTimeOffRequestRules("Annual Use Limit", annualUseLimit);
+    }
 
     public ArrayList<String> getProbationPeriodUnitOptions() {
         ArrayList<String> opt = new ArrayList<String>();
@@ -618,4 +652,114 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         return fixedDaysLabel.getText();
     }
 
+    public String getPayableTitle() {
+        return payableHoursTitle.getText();
+    }
+
+    public boolean isPayableConfigButtonDisplayed() {
+        return payableConfigBtn.isDisplayed();
+    }
+
+    public void configurePayableHours() {
+        if (payableConfigBtn.isDisplayed()) {
+            payableConfigBtn.click();
+        } else {
+            System.out.println("Payable hours configure button wasn't displayed!");
+        }
+    }
+
+    public String getPayableModalTitle() {
+        return includeHourTypesModalTitle.getText();
+    }
+
+    public ArrayList<String> getHoursTypeOptions() {
+        hoursTypeSelect.click();
+        return getWebElementsText(hoursTypeOptions);
+    }
+
+    public void removeTheExistingHourType(){
+        int num=removeBtn.size();
+        for(int i=0; i<num; i++){
+            removeBtn.get(0).click();
+        }
+    }
+
+    public void addHourTypes(String hourType, String subType1, String subType2) {
+        addMore();
+        WebElement theLastHourType = hourTypeRows.get(hourTypeRows.size() - 1);
+        WebElement theLastSelect = theLastHourType.findElement(By.cssSelector("lg-cascade-select>lg-select"));
+        theLastSelect.click();
+        for (WebElement ty : hoursTypeOptions
+        ) {
+            if (ty.getText().equals(hourType)) {
+                ty.click();
+            }
+        }
+        boolean isThereSubSelect = true;
+        try {
+            theLastHourType.findElement(By.cssSelector("lg-cascade-select>lg-cascade-select"));
+        } catch (Exception NoSuchElementException) {
+            isThereSubSelect = false;
+        }
+        if (isThereSubSelect) {
+            WebElement subSelect = theLastHourType.findElement(By.cssSelector("lg-cascade-select>lg-cascade-select lg-picker-input"));
+            subSelect.click();
+            switch (hourType) {
+                case "Time Off Type":
+                    WebElement searchInput = subSelect.findElement(By.cssSelector("lg-search input"));
+                    if (subType1 != null) {
+                        searchInput.clear();
+                        searchInput.sendKeys(subType1);
+                        subSelect.findElement(By.cssSelector("div.select-list-item ng-form")).click();
+                    }
+                    if (subType2 != null) {
+                        searchInput.clear();
+                        searchInput.sendKeys(subType2);
+                        subSelect.findElement(By.cssSelector("div.select-list-item ng-form")).click();
+                    }
+                    break; //可选
+                case "Holiday":
+                    if (subType1 != null && subType1.equals("Fixed Hours")) {
+                        subSelect.findElement(By.cssSelector("input-field[label='Fixed Hours']>ng-form")).click();
+                    }
+                    if (subType2 != null && subType2.equals("Worked Hours")) {
+                        subSelect.findElement(By.cssSelector("input-field[label='Worked Hours']>ng-form")).click();
+                    }
+                    break; //可选
+                case "Other Pay Type":
+                    if (subType1 != null && subType1.equals("OtherPay1")) {
+                        subSelect.findElement(By.cssSelector("input-field[label='OtherPay1']>ng-form")).click();
+                    }
+                    if (subType2 != null && subType2.equals("OtherPay2")) {
+                        subSelect.findElement(By.cssSelector("input-field[label='OtherPay2']>ng-form")).click();
+                    }
+                    break; //可选
+                case "Compliance":
+                    if (subType1 != null && subType1.equals("Doubletime")) {
+                        subSelect.findElement(By.cssSelector("input-field[label='Doubletime']>ng-form")).click();
+                    }
+                    if (subType2 != null && subType2.equals("Overtime")) {
+                        subSelect.findElement(By.cssSelector("input-field[label='Overtime']>ng-form")).click();
+                    }
+                    break;
+            }
+        }
+    }
+
+    public ArrayList<String> getTimeOffOptions(){
+        ArrayList<String> timeOffLabels=new ArrayList<>();
+        for (WebElement timeOff:timeOffOptions
+             ) {
+            timeOffLabels.add(timeOff.getAttribute("label"));
+        }
+        return timeOffLabels;
+    }
+
+    public boolean isAddMoreButtonDisplayed() {
+        return addMoreBtn.isDisplayed();
+    }
+
+    public void addMore() {
+        addMoreBtn.click();
+    }
 }

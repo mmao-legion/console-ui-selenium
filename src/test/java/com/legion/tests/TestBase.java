@@ -555,10 +555,10 @@ public abstract class TestBase {
         }
         newShiftPage.clickOnCreateOrNextBtn();
         if (assignment.equals(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue())) {
-            shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             if (tmName != null && !tmName.isEmpty()) {
                 newShiftPage.searchTeamMemberByName(tmName);
             } else {
+                shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
                 for (int i = 0; i < shiftPerDay; i++) {
                     selectedTMs.add(newShiftPage.selectTeamMembers());
                 }
@@ -730,4 +730,16 @@ public abstract class TestBase {
         String[] response = HttpUtil.httpGet(toggleUrl, sessionId, togglePara);
     }
 
+    public static List<String> getUserNameNPwdForCallingAPI() {
+        List<String> usernameNPwd = new ArrayList<>();
+        HashMap<String, String> credentials = JsonUtil.getPropertiesFromJsonFile("src/test/resources/credentialsForCallingAPI.json");
+        if (credentials != null && credentials.size() > 0) {
+            if (credentials.containsKey(getEnterprise())) {
+                String[] values = credentials.get(getEnterprise()).split("/");
+                usernameNPwd.add(values[0]);
+                usernameNPwd.add(values[1]);
+            }
+        }
+        return usernameNPwd;
+    }
 }

@@ -40,7 +40,7 @@
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
-                    <include name="verifyComplianceSmartCardFunctionality" />
+                    <include name="verifyComplianceSmartCardFunctionalityAsInternalAdmin" />
                     <include name="verifyScheduleFunctionalityScheduleSmartCard"/>
                     <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin"/>

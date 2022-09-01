@@ -46,7 +46,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Day')]")
 	private WebElement dayViewButton;
 
-	@FindBy(css = ".ng-scope.lg-button-group-selected.lg-button-group-first")
+	@FindBy(css = "[id=\"legion_cons_schedule_forecast_Demand_button\"] span")
 	private WebElement shoppersTab;
 
 	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Labor')]")
@@ -1341,16 +1341,16 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	public boolean verifyIsShopperTypeSelectedByDefaultAndLaborTabIsClickable() throws Exception {
 		boolean flag=false;
 		if (isElementLoaded(shoppersTab,5)) {
-			if (shoppersTab.findElement(By.cssSelector("span")).getText().toLowerCase().contains("shopper")){
-				if (shoppersTab.getAttribute("class").contains("selected")) {
-					SimpleUtils.pass("shopper forecast is selected by default");
+			if (shoppersTab.getText().toLowerCase().contains("shopper") || shoppersTab.getText().toLowerCase().contains("demand")){
+				if (shoppersTab.findElement(By.xpath("./..")).getAttribute("class").contains("selected")) {
+					SimpleUtils.pass("Shopper/Demand forecast is selected by default");
 					clickOnLabor();
 					flag = true;
 				}else {
-					SimpleUtils.fail("shopper forecast is not selected by default",false);
+					SimpleUtils.fail("Shopper forecast is not selected by default",false);
 				}
 			} else {
-				SimpleUtils.report("Shopper tap is not loaded!");
+				SimpleUtils.report("Shopper tab is not loaded!");
 			}
 		}else {
 			flag = false;
@@ -2452,6 +2452,15 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		return null;
 	}
 
+	@FindBy(css = "[id=\"legion_cons_schedule_forecast_Chart_area\"]")
+	private WebElement demandForecastChart;
+	@Override
+	public void verifyDemandForecastCanLoad() throws Exception {
+		if (isElementLoaded(demandForecastChart,10))
+			SimpleUtils.pass("Forecast Page: Demand forecast page should be loaded successfully");
+		else
+			SimpleUtils.fail("Forecast Page: Demand forecast page is not loaded",false);
+	}
 
 
 }

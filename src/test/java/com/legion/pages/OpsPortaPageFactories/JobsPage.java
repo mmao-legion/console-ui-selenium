@@ -125,7 +125,16 @@ public interface JobsPage {
 
     public void createDynamicGroup(String type) throws Exception;
 
+    public void addWorkforceSharingDGWithMutiplyCriteria() throws Exception;
+
+    public void verifyDuplicatedDGErrorMessage() throws Exception;
+
+    public void editFirstDynamicGroup() throws Exception;
+
+    public void removeFirstDynamicGroup() throws Exception;
+
     public void archiveSpecificJob(String jobTitle) throws Exception;
 
     public void selectWeeksForJobToTakePlaceByIndex(int index);
+
 }

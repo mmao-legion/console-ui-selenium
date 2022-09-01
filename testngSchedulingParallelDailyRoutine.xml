@@ -72,6 +72,7 @@
                     <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
                     <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" />
+                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />
                 </methods>
             </class>
         </classes>
@@ -82,7 +83,7 @@
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
                     <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" />
-                    <include name="verifyComplianceSmartCardFunctionality" />
+                    <include name="verifyComplianceSmartCardFunctionalityAsInternalAdmin" />
 <!--                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/> https://legiontech.atlassian.net/browse/SCH-5994 -->
                     <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>
@@ -142,6 +143,10 @@
                     <!--                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7351-->
                     <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
                     <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
+                    <include name="verifyEditOperatingHoursUnderMoreActionsAsInternalAdmin" />
+                    <include name="verifyEditOpeHoursDisabledAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfEditOpeHoursAsInternalAdmin" />
+                    <include name="verifyTheSaveFunctionOnEditOpeHoursDialogAsInternalAdmin" />
                                    </methods>
                                </class>
                            </classes>
@@ -643,8 +648,8 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                     <include name="verifyTheEditedColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingWorkRoleOnMultipleEditShiftsWindowAsInternalAdmin" />
 <!--                    <include name="verifyChangingShiftNameOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-6997 />-->
-                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" />
-                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" />
+<!--                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
+<!--                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
                 </methods>
             </class>
         </classes>

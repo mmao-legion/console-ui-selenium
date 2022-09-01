@@ -22,5 +22,7 @@ public interface LoginPage {
     public boolean isErrorToastLoaded() throws Exception;
     public boolean isCreateAccountPageLoaded() throws Exception;
     public boolean isLoginSuccess() throws Exception;
+    public void refreshLoginPage() throws Exception;
+    public boolean isInvalidLoginErrorShowing() throws Exception;
     public void verifyLegionTermsOfService() throws Exception;
 }

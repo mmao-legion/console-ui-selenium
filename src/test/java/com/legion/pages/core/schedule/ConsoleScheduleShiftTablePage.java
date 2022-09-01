@@ -469,7 +469,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         ArrayList<String> gridTimeDurations = new ArrayList<String>();
         if (dayViewShiftsTimeDuration.size() != 0) {
             for (WebElement timeDuration : dayViewShiftsTimeDuration) {
-                gridTimeDurations.add(timeDuration.getText());
+                gridTimeDurations.add(timeDuration.getText().trim());
             }
         }
 
@@ -484,7 +484,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         ArrayList<String> BudgetedTMsCount = new ArrayList<String>();
         if (dayViewbudgetedTMCount.size() != 0) {
             for (WebElement BudgetedTMs : dayViewbudgetedTMCount) {
-                BudgetedTMsCount.add(BudgetedTMs.getText());
+                BudgetedTMsCount.add(BudgetedTMs.getText().trim());
             }
         }
 
@@ -512,6 +512,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private List<WebElement> namesWeekView;
     @FindBy(css = ".sch-day-view-shift-worker-name")
     private List<WebElement> namesDayView;
+    @FindBy(css = ".shift-selected-multi")
+    private List<WebElement> selectedShifts;
 
     @Override
     public void verifyShiftsChangeToOpenAfterTerminating(List<Integer> indexes, String name, String currentTime) throws Exception {
@@ -2909,6 +2911,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private List<WebElement> profileIconsRingsInWeekView;
     @FindBy(css = ".sch-day-view-shift-outer .allow-pointer-events")
     private List<WebElement> profileIconsRingsInDayView;
+    @FindBy(css = ".sch-day-view-shift-outer")
+    private List<WebElement> shiftOuterInDayView;
+
     @Override
     public void verifyShiftsHasMinorsColorRing(String minorsType) throws Exception {
         if (areListElementVisible(profileIconsRingsInDayView, 15)){
@@ -3449,8 +3454,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> names = null;
         if (areListElementVisible(namesWeekView, 10)) {
             names = namesWeekView;
-        } else if (areListElementVisible(namesDayView, 10)) {
-            names = namesDayView;
+        } else if (areListElementVisible(shiftOuterInDayView, 10)) {
+            names = shiftOuterInDayView;
         }
         scrollToBottom();
         waitForSeconds(2);
@@ -3459,7 +3464,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             Actions action = new Actions(getDriver());
             action.keyDown(Keys.CONTROL).build().perform();
             for (int i : set) {
-                action.click(names.get(i));
+                action.moveToElement(names.get(i)).click(names.get(i));
                 waitForSeconds(1);
             }
             action.keyUp(Keys.CONTROL).build().perform();
@@ -3477,29 +3482,31 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @Override
     public void selectSpecificShifts(HashSet<Integer> shiftIndexes) throws Exception {
-        List<WebElement> names = null;
-        if (areListElementVisible(namesWeekView, 10)) {
-            names = namesWeekView;
-        } else if (areListElementVisible(namesDayView, 10)) {
-            names = namesDayView;
-        }
-        if (names.size() >= shiftIndexes.size()) {
-            Actions action = new Actions(getDriver());
-            action.keyDown(Keys.CONTROL).build().perform();
-            for (int i : shiftIndexes) {
-                scrollToElement(names.get(i));
-                waitForSeconds(1);
-                action.moveToElement(names.get(i)).click(names.get(i));
+        if (!areListElementVisible(selectedShifts, 5)) {
+            List<WebElement> names = null;
+            if (areListElementVisible(namesWeekView, 10)) {
+                names = namesWeekView;
+            } else if (areListElementVisible(namesDayView, 10)) {
+                names = namesDayView;
             }
-            action.keyUp(Keys.CONTROL).build().perform();
-            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftIndexes.size()) {
-                SimpleUtils.pass("Selected " + shiftIndexes.size() + " shifts successfully");
+            if (names.size() >= shiftIndexes.size()) {
+                Actions action = new Actions(getDriver());
+                action.keyDown(Keys.CONTROL).build().perform();
+                for (int i : shiftIndexes) {
+                    scrollToElement(names.get(i));
+                    waitForSeconds(1);
+                    action.moveToElement(names.get(i)).click(names.get(i));
+                }
+                action.keyUp(Keys.CONTROL).build().perform();
+                if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftIndexes.size()) {
+                    SimpleUtils.pass("Selected " + shiftIndexes.size() + " shifts successfully");
+                } else {
+                    SimpleUtils.fail("Expected to select " + shiftIndexes.size() + " shifts, but actually selected " +
+                            getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+                }
             } else {
-                SimpleUtils.fail("Expected to select " + shiftIndexes.size() + " shifts, but actually selected " +
-                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+                SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
             }
-        } else {
-            SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
         }
     }
 

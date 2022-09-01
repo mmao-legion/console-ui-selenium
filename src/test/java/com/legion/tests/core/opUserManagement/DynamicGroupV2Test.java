@@ -1,12 +1,19 @@
 package com.legion.tests.core.opUserManagement;
 
+import com.legion.api.common.EnterpriseId;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.OpsPortaPageFactories.*;
+import com.legion.pages.ReportPage;
+import com.legion.pages.core.OpCommons.ConsoleNavigationPage;
+import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.pages.core.OpCommons.RightHeaderBarPage;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
 import com.legion.pages.core.OpsPortal.OpsPortalSettingsAndAssociationPage;
+import com.legion.pages.core.oplabormodel.LaborModelPanelPage;
+import com.legion.pages.core.oplabormodel.LaborModelRepositoryPage;
 import com.legion.tests.TestBase;
+import com.legion.utils.DBConnection;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -19,8 +26,8 @@ import org.testng.annotations.BeforeMethod;
 
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class DynamicGroupV2Test extends TestBase {
 
@@ -53,6 +60,8 @@ public class DynamicGroupV2Test extends TestBase {
     @TestName(description = "Validate the name for dynamic user group")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheNameForDynamicEmployeeGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        String templateName = "AutoTest"+System.currentTimeMillis();
+
         ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
         SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
         configurationPage.goToConfigurationPage();
@@ -60,7 +69,20 @@ public class DynamicGroupV2Test extends TestBase {
         settingsAndAssociationPage.goToTemplateListOrSettings("setting");
         settingsAndAssociationPage.verifyTitleOnTheSettingsPage("Employee");
         settingsAndAssociationPage.goToTemplateListOrSettings("template list");
-        configurationPage.clickOnTemplateName("");
+        //Create minor rules template
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
+        settingsAndAssociationPage.deleteAllCriteriaOnTheAssociationPageIfExist();
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Minor.getValue(), "IN", "15");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+        //Edit the template, check the title
+        configurationPage.clickOnTemplateName(templateName);
         settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
         settingsAndAssociationPage.verifyTitleOnTheSAssociationPage("Employee");
         configurationPage.clickOnTemplateDetailTab();
@@ -512,7 +534,7 @@ public class DynamicGroupV2Test extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Haya")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Validate criteria selection and usage for dynamic location group criteria")
+    @TestName(description = "Validate permission for settings tab")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCriteriaSelectionAndUsageForDynamicLocationGroupAsStoreManager(String browser, String username, String password, String location) throws Exception {
         ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -1322,5 +1344,516 @@ public class DynamicGroupV2Test extends TestBase {
     }
 
     //--------------Tests for Conflict Detection------------ End---------------
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate there are warning icons to indicate the template for conflicts among dynamic location groups")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyWarningIconsForConflictingDynamicLocationGroupsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        String templateName = "AutoTemp1" + System.currentTimeMillis();
+        String templateName2 = "AutoTemp2"+ System.currentTimeMillis();
 
+        //Go to Time and Attendance template
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.TimeAttendance.getValue());
+        //-------------go to settings page, check Country and State, uncheck other options-----------
+        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+        List<String> requiredFields = new ArrayList<>();
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue());
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.State.getValue());
+        settingsAndAssociationPage.setupRequiredFields(requiredFields);
+        settingsAndAssociationPage.goToTemplateListOrSettings("template list");
+        //-------------create two templates. make them conflict-------------
+        configurationPage.archiveOrDeleteAllTemplates();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage("AutoGroup"+ System.currentTimeMillis());
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue(), "IN", "Any");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.State.getValue(), "IN", "Abu Dhabi");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+
+        settingsAndAssociationPage.goToTemplateListOrSettings("template list");
+        configurationPage.createNewTemplate(templateName2);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue(), "IN", "Any");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.State.getValue(), "IN", "Abu Dhabi");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.clickOnTheSaveBtnOnConflictDetectedWindow();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+        //return to the template list, verify there are waring icons.
+        String expectedWarningMsg = "This template conflicts with other templates, please resolve.";
+        SimpleUtils.assertOnFail("Warning icons and message should correctly show up!", configurationPage.verifyWarningIconsDisplay(templateName2, expectedWarningMsg), false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Validate there are warning icons to indicate the template for conflicts among dynamic employee groups")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyWarningIconsForConflictingDynamicEmployeeGroupsAsInternalAdmin(String browser, String userName, String password, String location) throws Exception{
+        String templateName = "AutoTemp1" + System.currentTimeMillis();
+        String templateName1 = "AutoTemp2" + System.currentTimeMillis();
+        List<String> requiredFields = new ArrayList<>();
+
+        //-------------go to settings page, check Employment Status and Minor, uncheck other options-----------
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MealAndRest.getValue());
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.EmploymentStatus.getValue());
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Minor.getValue());
+        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+        settingsAndAssociationPage.setupRequiredFields(requiredFields);
+        settingsAndAssociationPage.goToTemplateListOrSettings("Template List");
+
+        //-------------create two templates. make them conflict-------------
+        configurationPage.archiveOrDeleteAllTemplates();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.EmploymentStatus.getValue(), "IN", "FullTime");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Minor.getValue(), "IN", "Any");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+
+        configurationPage.createNewTemplate(templateName1);
+        configurationPage.clickOnTemplateName(templateName1);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName1);
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.EmploymentStatus.getValue(), "IN", "FullTime");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Minor.getValue(), "IN", "<14");
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.clickOnTheSaveBtnOnConflictDetectedWindow();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+        //return to the template list, verify there are waring icons.
+        String WarningMsg = "This template conflicts with other templates, please resolve.";
+        SimpleUtils.assertOnFail("Warning icons and message should correctly show up!", configurationPage.verifyWarningIconsDisplay(templateName1, WarningMsg), false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @TestName(description = "Validate there are warning icons to indicate changes of required criteria")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void VerifyWarningIconsForRequiredCriteriaChangedAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        String templateName = "AutoTemp1" + System.currentTimeMillis();
+        String templateName1 = "AutoTemp2" + System.currentTimeMillis();
+        String WarningMsg = "Required fields changed, the associated Dynamic Group needs to be updated.";
+        String WarningMsg1 = "Required fields changed, the associated Dynamic Group needs to be updated.";
+
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.TimeAttendance.getValue());
+        //--------------Dynamic Location Groups: Start-----------------------------
+        //Create The first template
+        configurationPage.archiveOrDeleteAllTemplates();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
+        settingsAndAssociationPage.selectFirstOptionForCriteria();
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+        //Change the required fields in Settings tab.
+        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+        settingsAndAssociationPage.changeCriteriaInSettingsTab();
+        settingsAndAssociationPage.goToTemplateListOrSettings("Template List");
+        refreshPage();
+
+        //Check warning icons for the newly created template
+        SimpleUtils.assertOnFail("Dynamic Location Group Required fields changed, Warning icons and message should correctly show up!", configurationPage.verifyWarningIconsDisplay(templateName, WarningMsg), false);
+        //--------------Dynamic Location Groups: End-----------------------------
+
+        //--------------Dynamic Employee Groups: Start-----------------------------
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MealAndRest.getValue());
+
+        //Create the second template
+        configurationPage.createNewTemplate(templateName1);
+        configurationPage.clickOnTemplateName(templateName1);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName1);
+        settingsAndAssociationPage.selectFirstOptionForCriteria();
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+
+        //Change the required fields in Settings tab.
+        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+        settingsAndAssociationPage.changeCriteriaInSettingsTab();
+        settingsAndAssociationPage.goToTemplateListOrSettings("Template List");
+        refreshPage();
+
+        //Check warning icons for the newly created template
+        SimpleUtils.assertOnFail("Dynamic Employee Group Required fields changed, Warning icons and message should correctly show up!", configurationPage.verifyWarningIconsDisplay(templateName1, WarningMsg1), false);
+        //--------------Dynamic Employee Groups: End-----------------------------
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @TestName(description = "Validate creation window for Dynamic Employee Group on the Association page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreationWindowForDynamicEmployeeGroupOnAssociationPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        String templateName = "AutoTemp" + System.currentTimeMillis();
+        List<String> requiredFields = new ArrayList<>();
+        List<String> valuesToCheck = new ArrayList<>();
+
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MealAndRest.getValue());
+        //select one field in settings tab and create new template
+        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Country.getValue());
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Minor.getValue());
+        settingsAndAssociationPage.setupRequiredFields(requiredFields);
+        settingsAndAssociationPage.goToTemplateListOrSettings("Template List");
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
+
+        //Check if there is in and not in for operators
+        valuesToCheck.add("IN");
+        valuesToCheck.add("NOT IN");
+        SimpleUtils.assertOnFail("Checking Operator value in and not in failed!", settingsAndAssociationPage.ifOperatorsCanBeSelected(valuesToCheck), false);;
+
+        //using not in for one criteria, and in for another criteria
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Country.getValue(), "NOT IN", "United Kingdom");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Minor.getValue(), "IN", "Any");
+
+        //Click "test" and check the match number.
+        String resultString = settingsAndAssociationPage.clickOnTestBtnAndGetResultString();
+        String matchNumber = resultString.split(" ")[0];
+        System.out.println("After click test button, the match number is: " + matchNumber);
+
+        String countryCode = "GB";
+        String sqlStatement = "select w.firstName, w.lastname, b.displayName from legiondb.Worker w \n" +
+                "join legiondb.Engagement en on w.objectId = en.workerId\n" +
+                "join legiondb.ExternalEmployee ex on ex.objectId = en.externalEmployeeId\n" +
+                "join legiondb.Business b on b.objectId = en.businessId and w.enterpriseId = '" +
+                EnterpriseId.op.getValue() + "' and (b.country != '" + countryCode + "' or b.country is null)";
+        int resultNumber = DBConnection.queryMultipleTableAndGetNumber(sqlStatement);
+        System.out.println("after query DB, the expected resultNumber is: " + resultNumber);
+        if(Integer.parseInt(matchNumber) == resultNumber){
+            SimpleUtils.pass("test match result number is correct!");
+        }else{
+            SimpleUtils.fail("test match result number is NOT correct!", false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @TestName(description = "Validate creation window for Dynamic Location Group on the Association page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreationWindowForDynamicLocationGroupOnAssociationPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        String templateName = "AutoTemp" + System.currentTimeMillis();
+        List<String> valuesToCheck = new ArrayList<>();
+        String countryCode = "GB";
+        String enterpriseId = EnterpriseId.op.getValue();
+        String querySqlStatement = "(locationType = \"Real\" or locationType = \"LocationGroup\") and integrationStatus = \"ENABLED\" and country!='" + countryCode +  "' and enterpriseId='" + enterpriseId + "'";
+
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.TimeAttendance.getValue());
+
+        //select one field in settings tab and create new template
+        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+        List<String> requiredFields = new ArrayList<>();
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Country.getValue());
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.State.getValue());
+        settingsAndAssociationPage.setupRequiredFields(requiredFields);
+        settingsAndAssociationPage.goToTemplateListOrSettings("Template List");
+
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage(templateName);
+
+        //Check if there is in and not in for operators
+        valuesToCheck.add("IN");
+        valuesToCheck.add("NOT IN");
+        String checkItem = "Operator";
+        SimpleUtils.assertOnFail("Checking Operator value in and not in failed!", settingsAndAssociationPage.ifOperatorsCanBeSelected(valuesToCheck), false);;
+
+        //using not in for one criteria, and in for another criteria
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.Country.getValue(), "NOT IN", "United Kingdom");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForEmployeeGroup.State.getValue(), "IN", "Any");
+
+        //Click "test" and check the match number.
+        String resultString = settingsAndAssociationPage.clickOnTestBtnAndGetResultString();
+        String matchNumber = resultString.split(" ")[0];
+        System.out.println("After click test button, the match number is: " + matchNumber);
+
+        int resultNumber = DBConnection.getQueryResultNumber("legiondb.Business", "objectId", querySqlStatement);
+        System.out.println("after query DB, the expected resultNumber is: " + resultNumber);
+        if(Integer.parseInt(matchNumber) == resultNumber){
+            SimpleUtils.pass("test match result number is correct!");
+        }else{
+            SimpleUtils.fail("test match result number is NOT correct!", false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @TestName(description = "Validate creation window for Dynamic Location Group in Location tab")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreationWindowForDynamicLocationGroupOnWorkforceSharingPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        String groupName = "Auto" + System.currentTimeMillis();
+        String countryCode = "UAE";
+        String stateCode = "AK";
+        String enterpriseId = EnterpriseId.op.getValue();
+        String querySqlStatement = "(locationType = \"Real\" or locationType = \"LocationGroup\") and integrationStatus = \"ENABLED\" and country!='" + countryCode + "' and state='" + stateCode + "' and enterpriseId='" + enterpriseId + "'";
+
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        //go to locations tab
+        locationsPage.clickOnLocationsTab();
+        //go to dynamic group, create dynamic groups
+        locationsPage.iCanSeeDynamicGroupItemInLocationsTab();
+        locationsPage.goToDynamicGroup();
+        locationsPage.clickOnAddBtnForSharingDynamicLocationGroup();
+        locationsPage.inputGroupNameForDynamicGroupOnWorkforceSharingPage(groupName);
+        locationsPage.selectAnOptionForCriteria("Country", "NOT IN", "United Arab Emirates");
+        locationsPage.clickAddMoreBtnOnWFSharing();
+        locationsPage.selectAnOptionForCriteria("State", "IN", "Alaska");
+
+        //Click "test" and check the match number.
+        String resultString = locationsPage.clickOnTestBtnAndGetResultString();
+        String matchNumber = SimpleUtils.isNumeric(resultString.split(" ")[0])? resultString.split(" ")[0] : "0";
+        System.out.println("After click test button, the match number is: " + matchNumber);
+
+        int resultNumber = DBConnection.getQueryResultNumber("legiondb.Business", "objectId", querySqlStatement);
+        System.out.println("after query DB, the expected resultNumber is: " + resultNumber);
+        if(Integer.parseInt(matchNumber) == resultNumber){
+            SimpleUtils.pass("test match result number is correct!");
+        }else{
+            SimpleUtils.fail("test match result number is NOT correct!", false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @TestName(description = "Validate ability to download Health Check report")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void VerifyAbilityToDownloadHealthCheckReportAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        ReportPage reportPage = pageFactory.createConsoleReportPage();
+        RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        modelSwitchPage.switchToConsole();
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("test");
+        reportPage.clickOnConsoleReportMenu();
+
+        //find OP Health Check report and export
+        SimpleUtils.assertOnFail("export failed!", reportPage.exportReportForAllLocations("health check"), false);
+
+        //verify the exported file
+        String FileExtensionExpected = "xlsx";
+        SimpleUtils.assertOnFail("The reported file is not expected!", reportPage.verifyFileExtension(FileExtensionExpected), false); ;
+
+        //open the file, and check the sheet
+        List<String> expectedSheets = new ArrayList<>();
+        expectedSheets.add("Location-Template Binding");
+        expectedSheets.add("Employee-Template Binding");
+        List<String> actualSheets = reportPage.verifyExcelSheet();
+        SimpleUtils.assertOnFail("Actual sheet name are not expected!", expectedSheets.containsAll(actualSheets), false);
+
+        //check column name for sheet "Location-Template Binding"
+        List<String> expectedColumnNames = new ArrayList<>();
+        expectedColumnNames.add("Location ID");
+        expectedColumnNames.add("Location Name");
+        expectedColumnNames.add("Template Type");
+        expectedColumnNames.add("Template");
+        expectedColumnNames.add("Version");
+        expectedColumnNames.add("Last Modified Date");
+        expectedColumnNames.add("Last Modified By");
+        System.out.println("");
+        SimpleUtils.assertOnFail("Column names are not expected for sheet: Location-Template Binding!", reportPage.verifyColumnNameOnSheet(expectedSheets.get(0) ,expectedColumnNames), false);
+
+        //check column name for sheet "Employee-Template Binding"
+        List<String> expectedColumnNames1 = new ArrayList<>();
+        expectedColumnNames1.add("Employee ID");
+        expectedColumnNames1.add("First Name");
+        expectedColumnNames1.add("Last Name");
+        expectedColumnNames1.add("Template Type");
+        expectedColumnNames1.add("Template");
+        expectedColumnNames1.add("Version");
+        expectedColumnNames1.add("Last Modified Date");
+        expectedColumnNames1.add("Last Modified By");
+        SimpleUtils.assertOnFail("Column names are not expected for sheet: Employee-Template Binding!", reportPage.verifyColumnNameOnSheet(expectedSheets.get(1) ,expectedColumnNames1), false);
+
+        //check Info for OP Health Check downloaded file.
+        List<String> templateTypesForLocation = new ArrayList<>();
+        List<String> templateTypesForEmployee = new ArrayList<>();
+        templateTypesForLocation.add("SchedulingPolicy");
+        templateTypesForLocation.add("ScheduleCompliance");
+        templateTypesForLocation.add("ScheduleCollaboration");
+        templateTypesForLocation.add("TimeAndAttendance");
+        templateTypesForLocation.add("DemandDriver");
+        templateTypesForLocation.add("StaffingRule");
+        templateTypesForLocation.add("LaborModel");
+        templateTypesForLocation.add("OperatingHours");
+        templateTypesForLocation.add("CommunicationsPolicy");
+        templateTypesForLocation.add("DifferentialPay");
+        templateTypesForLocation.add("RealTimeAttendance");
+
+        templateTypesForEmployee.add("Accruals");
+        templateTypesForEmployee.add("Minor");
+        templateTypesForEmployee.add("MealRestBreak");
+
+        Map<String, List<String>> dynamicGroupMap = new HashMap<>();
+        dynamicGroupMap.put(expectedSheets.get(0), templateTypesForLocation);
+        dynamicGroupMap.put(expectedSheets.get(1), templateTypesForEmployee);
+        SimpleUtils.assertOnFail("The content", reportPage.verifyInfoForOPHealthCheckExportedFile(dynamicGroupMap), false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @TestName(description = "Validate smart card for unassigned locations")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void VerifySmartCardForUnassignedLocationsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        String templateName = "AutoTemp" + System.currentTimeMillis();
+        String templateName1 = "AutoTemp1" + System.currentTimeMillis();
+        List<String> requiredFields = new ArrayList<>();
+
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.TimeAttendance.getValue());
+        //-------------go to settings page, check Country and State, uncheck other options-----------
+        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.ConfigType.getValue());
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue());
+        requiredFields.add(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.State.getValue());
+        settingsAndAssociationPage.setupRequiredFields(requiredFields);
+        settingsAndAssociationPage.goToTemplateListOrSettings("template list");
+        //-------------create two templates. one is matched with all locations-------------
+        //create template with 'in any' criteria, and get the total match number.
+        configurationPage.archiveOrDeleteAllTemplates();
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage("AutoGroup"+ System.currentTimeMillis());
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.ConfigType.getValue(), "IN", "Any");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue(), "IN", "Any");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.State.getValue(), "IN", "Any");
+
+        String resultString = settingsAndAssociationPage.clickOnTestBtnAndGetResultString();
+        String matchNumber = resultString.split(" ")[0];
+        System.out.println("After click test button, the match number for all location is: " + matchNumber);
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.saveADraftTemplate();
+
+        //create template with certain criteria, and get the total match number.
+        configurationPage.createNewTemplate(templateName1);
+        configurationPage.clickOnTemplateName(templateName1);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        settingsAndAssociationPage.clickOnAddBtnForDynamicGroupOnAssociationPage();
+        settingsAndAssociationPage.inputGroupNameForDynamicGroupOnAssociationPage("AutoGroup"+ System.currentTimeMillis());
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.ConfigType.getValue(), "IN", "Any");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue(), "IN", "United States");
+        settingsAndAssociationPage.selectAnOptionForCriteria(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.State.getValue(), "IN", "Any");
+
+        String resultString1 = settingsAndAssociationPage.clickOnTestBtnAndGetResultString();
+        String matchNumber1 = resultString1.split(" ")[0];
+        System.out.println("After click test button, the match number is: " + matchNumber1);
+        settingsAndAssociationPage.clickOnDoneBtnForDynamicGroupOnAssociationPage();
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+        int differenceNumber = Integer.parseInt(matchNumber) - Integer.parseInt(matchNumber1);
+        SimpleUtils.assertOnFail("the unassigned number is not expected!", configurationPage.getUnassignedNumber() == differenceNumber, false);
+
+        String exportFileName = "UnassignedLocations_" + "TimeAndAttendance";
+        Map<String, String> criteriaAndValue = new HashMap<String, String>();
+        criteriaAndValue.put(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.ConfigType.getValue(), "Any");
+        criteriaAndValue.put(OpsPortalSettingsAndAssociationPage.requiredFieldsForLocationGroup.Country.getValue(), "United States");
+        SimpleUtils.assertOnFail("the data meets current criteria, should not show up in the file!", configurationPage.verifyUnassignedSmartCardDownloadFile(exportFileName, criteriaAndValue), false);
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @TestName(description = "Validate location attributes on the Settings page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void VerifyLocationAttributesOnTheSettingsPagesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+        String label = "External Attributes";
+        String currentTime = dfs.format(new Date()).trim();
+        String attributeName = "AutoAttribute" + currentTime;
+        Random random = new Random();
+        String attributeValue = Integer.toString(random.nextInt(20));
+        String attributeDescription = attributeName;
+        List<String> expectedAttributeFields = new ArrayList<>();
+        HashMap<String, List<String>> externalAttributeInfo = new HashMap<>();
+
+        LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        //Go to labor model and create external attribute
+        laborModelPage.clickOnLaborModelTab();
+        laborModelPage.goToLaborStandardRepositoryTile();
+        laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+        laborModelPage.clickOnEditButton();
+        laborModelPage.clickOnAddAttributeButton();
+        laborModelPage.createNewAttribute(attributeName, attributeValue, attributeDescription);
+        laborModelPage.clickOnSaveButton();
+        laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+        externalAttributeInfo = laborModelPage.getValueAndDescriptionForEachAttributeAtGlobalLevel();
+        laborModelPage.clickOnLaborModelTab();
+
+        //Go to Configuration tab and time and attendance template
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.TimeAttendance.getValue());
+        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+        //Verify if the external attributes in settings page are same with in labor model
+        for(Map.Entry<String, List<String>> entry : externalAttributeInfo.entrySet()){
+            expectedAttributeFields.add(entry.getKey());
+        }
+        SimpleUtils.assertOnFail("Fields are not all expected!", expectedAttributeFields.containsAll(settingsAndAssociationPage.getExternalAttributesInSettingsPage()), false);
+        SimpleUtils.assertOnFail("Fail to find the location attribute you search!", settingsAndAssociationPage.searchLocationAttributeInSettingsPage(attributeName), false);
+
+        //Delete the location attribute
+        laborModelPage.clickOnLaborModelTab();
+        laborModelPage.goToLaborStandardRepositoryTile();
+        laborModelPage.selectLaborStandardRepositorySubTabByLabel(label);
+        laborModelPage.clickOnEditButton();
+        laborModelPage.clickOnDeleteAttributeButton(attributeName);
+        laborModelPage.clickOkBtnOnDeleteAttributeDialog();
+        laborModelPage.clickOnSaveButton();
+    }
 }

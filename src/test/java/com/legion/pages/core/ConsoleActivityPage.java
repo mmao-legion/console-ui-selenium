@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.loc;
 
 public class ConsoleActivityPage extends BasePage implements ActivityPage {
 
@@ -864,5 +865,22 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 			SimpleUtils.pass("Click the detail link successfully! ");
 		} else
 			SimpleUtils.fail("The detail links fail to load in activities! ", false);
+	}
+
+
+	@Override
+	public void verifyNewClaimOpenShiftCardShowsOnActivity(String requestUserName, String workRole, String shiftDateAndTime, String location) throws Exception {
+		String expectedMessage = requestUserName + " claimed the "+workRole+ " open shift on "+shiftDateAndTime+ " @"+location+".";
+		waitForSeconds(5);
+		if (areListElementVisible(activityCards, 15)) {
+			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
+			if (message != null && message.getText().equalsIgnoreCase(expectedMessage)) {
+				SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
+			}else {
+				SimpleUtils.fail("Failed to find the card that is new and contain: " + expectedMessage + "! Actual card is: " + message.getText(), false);
+			}
+		}else {
+			SimpleUtils.fail("Shift Swap Activity failed to Load!", false);
+		}
 	}
 }

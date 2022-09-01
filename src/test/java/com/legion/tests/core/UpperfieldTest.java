@@ -1079,7 +1079,7 @@ public class UpperfieldTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Julie")
     @Enterprise(name = "Vailqacn_Enterprise")
-    @TestName(description = "Verify Region Summary widget on Dashboard in Region View")
+    @TestName(description = "Verify District Summary widget on Dashboard in Region View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDistrictSummaryWidgetOnDashboardInRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {

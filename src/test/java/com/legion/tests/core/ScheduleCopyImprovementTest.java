@@ -51,7 +51,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            ToggleAPI.disableToggle(Toggles.UseLegionAccrual.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.UseLegionAccrual.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 

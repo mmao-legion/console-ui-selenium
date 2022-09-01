@@ -157,4 +157,22 @@ public interface UserManagementPage {
     public void clickLeaveThisPage() throws Exception;
 
     public void verifyBadgeInWorkRole() throws Exception;
-    }
+
+    public void addNewJobTitleGroup(String jobTitleGroupName,List<String> hrJobTitles,String averageHourlyRate,String allocationOrder,boolean isNonManagementGroup) throws Exception;
+
+    public void updateJobTitleGroup(String jobTitleGroupName,List<String> hrJobTitles,String averageHourlyRate,String allocationOrder,boolean isNonManagementGroup) throws Exception;
+
+    public void deleteJobTitleGroup(String jobTitleGroupName) throws Exception;
+
+    public void clickOnJobTitleGroupTab();
+
+    public void verifyJobTitleGroupPageUI() throws Exception;
+
+    public List<String> getAllJobTitleGroups();
+
+    public void clickOnAddWorkRoleButton();
+
+    public List<String> getOptionListOfJobTitleInAssignmentRule();
+
+    public ArrayList<String> workRole();
+}

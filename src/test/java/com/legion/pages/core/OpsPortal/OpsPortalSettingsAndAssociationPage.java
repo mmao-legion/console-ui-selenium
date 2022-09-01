@@ -8,6 +8,7 @@ import org.apache.commons.collections.ListUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
@@ -536,6 +537,17 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                 streamNames.add(inputStreamRow.findElement(By.cssSelector("td:first-child span")).getText());
             }
         }
+        while (isElementLoaded(settingsTypes.get(2).findElement(By.cssSelector(".lg-pagination__arrow--right")), 5)
+                && !settingsTypes.get(2).findElement(By.cssSelector(".lg-pagination__arrow--right")).getAttribute("class").contains("disabled")) {
+            clickTheElement(settingsTypes.get(2).findElement(By.cssSelector(".lg-pagination__arrow--right")));
+            for (WebElement inputStreamRow : inputStreamRows){
+                if(streamType.equalsIgnoreCase(inputStreamRow.findElements(By.cssSelector("td")).get(1).getText())){
+                    streamNames.add(inputStreamRow.findElement(By.cssSelector("td:first-child span")).getText());
+                }else if (streamType.equalsIgnoreCase("All")){
+                    streamNames.add(inputStreamRow.findElement(By.cssSelector("td:first-child span")).getText());
+                }
+            }
+        }
         return  streamNames;
     }
 
@@ -789,4 +801,121 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         }
     }
 
+    @Override
+    public void changeCriteriaInSettingsTab() throws Exception{
+        if (areListElementVisible(fieldListFromSettingsTab, 10)){
+            for (WebElement fieldRow: fieldListFromSettingsTab){
+                if (isElementLoaded(fieldRow.findElement(By.tagName("input")), 10)
+                        && fieldRow.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")){
+                    waitForSeconds(2);
+                    clickTheElement(fieldRow.findElement(By.tagName("input")));
+                    break;
+                }
+            }
+        } else {
+            SimpleUtils.fail("Fail to find fields!", false);
+        }
+    }
+
+    @Override
+    public void selectFirstOptionForCriteria() {
+        int FirstOptionCheckedCount = 0;
+        if (areListElementVisible(criteriaOnTheAssociationPage, 10)){
+            for (WebElement criteriaLine : criteriaOnTheAssociationPage){
+                click(criteriaLine.findElement(By.cssSelector("lg-cascade-select[required=\"true\"] lg-cascade-select lg-multiple-select")));
+                List<WebElement> selectList = criteriaLine.findElements(By.cssSelector("lg-cascade-select[required=\"true\"] div.select-list-item"));
+                click(selectList.get(1).findElement(By.cssSelector("input-field")));
+                Actions actions = new Actions(getDriver());
+                actions.moveByOffset(0, 0).click().build().perform();
+                FirstOptionCheckedCount++;
+                System.out.println(selectList.get(1).findElement(By.cssSelector("input-field")).getText() + " is checked!");
+            }
+        }
+
+        if(FirstOptionCheckedCount == criteriaOnTheAssociationPage.size()){
+            SimpleUtils.pass("First Option for the criteria are all checked!");
+        }else {
+            SimpleUtils.fail("Failed to check the first option!", false);
+        }
+    }
+
+    @FindBy(css = "lg-select[ng-if=\"$ctrl.selectedOption.operatorSelect\"]")
+    private List<WebElement> OperatorsInAssociation;
+    @Override
+    public boolean ifOperatorsCanBeSelected(List<String> valuesToCheck) {
+        boolean flag = false;
+        if (areListElementVisible(OperatorsInAssociation)){
+            for (WebElement operator : OperatorsInAssociation){
+                click(operator);
+                List<WebElement> operatorValues = operator.findElements(By.cssSelector("div[class=\"lg-search-options__option ng-binding lg-search-options__subLabel\"]"));
+                List<String> actualOperatorValues = new ArrayList<>();
+                for (WebElement operatorValue : operatorValues){
+                    actualOperatorValues.add(operatorValue.getText());
+                    if (!isElementEnabled(operatorValue)){
+                        break;
+                    }
+                }
+                Actions actions = new Actions(getDriver());
+                actions.moveByOffset(0, 0).click().build().perform();
+                if (valuesToCheck.containsAll(actualOperatorValues)){
+                    flag = true;
+                }else{
+                    SimpleUtils.fail("Actual Operators value are not expeted!", false);
+                }
+            }
+        }else {
+            SimpleUtils.fail("Can not find the operator element!", false);
+        }
+
+        return flag;
+    }
+
+    @FindBy(css = "lg-paged-search[ng-if*=\"$ctrl.attributeFieldList\"]")
+    private WebElement externalAttributesSetting;
+    @FindBy(css = "input-field input[placeholder*=\"location attribute\"]")
+    private WebElement attributeSearchInput;
+    @FindBy(css = "[ng-repeat*=\"$ctrl.sortedRows\"]")
+    private List<WebElement> locationAttributesInSettings;
+    public boolean verifyExternalAttributeExistInSettingsPage() throws Exception {
+        boolean isExist = false;
+        if (isElementLoaded(externalAttributesSetting, 5)
+                && isElementLoaded(attributeSearchInput, 5)
+                && areListElementVisible(locationAttributesInSettings, 5)){
+            isExist = true;
+        }
+        return isExist;
+    }
+
+    @Override
+    public List<String> getExternalAttributesInSettingsPage() throws Exception {
+        List<String> resultList = new ArrayList<>();
+        if (verifyExternalAttributeExistInSettingsPage()){
+            for (WebElement fieldRow: locationAttributesInSettings){
+                if (isElementLoaded(fieldRow.findElement(By.cssSelector("td.ng-binding")), 10)){
+                    resultList.add(fieldRow.findElement(By.cssSelector("td.ng-binding")).getText());
+                }
+            }
+        }else{
+                SimpleUtils.fail("Fail to find attribute fields!", false);
+        }
+        return resultList;
+    }
+    @FindBy(css = "[ng-repeat*=\"$ctrl.sortedRows\"]")
+    private List<WebElement> attributeSearchResults;
+    @Override
+    public boolean searchLocationAttributeInSettingsPage(String attributeName) throws Exception {
+        boolean isFound = false;
+        if (verifyExternalAttributeExistInSettingsPage()){
+            scrollToElement(attributeSearchInput);
+            attributeSearchInput.sendKeys(attributeName);
+            waitForSeconds(3);
+            if (getDriver().findElements(By.cssSelector("[ng-repeat*=\"$ctrl.sortedRows\"]")).size() > 0 &&
+                    getDriver().findElements(By.cssSelector("[ng-repeat*=\"$ctrl.sortedRows\"]")).get(0).findElement(By.cssSelector("td.ng-binding")).getText().equalsIgnoreCase(attributeName)){
+                isFound = true;
+            }
+        }else{
+            SimpleUtils.fail("Fail to find attribute fields!", false);
+        }
+        return isFound;
+    }
 }

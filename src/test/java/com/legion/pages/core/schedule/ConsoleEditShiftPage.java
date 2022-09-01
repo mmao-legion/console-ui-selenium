@@ -54,7 +54,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     private WebElement editShiftWindow;
     @FindBy (css = ".modal-instance-header-title")
     private WebElement windowTitle;
-    @FindBy (css = ".sc-fYdnlA.HdRBM")
+    @FindBy (css = ".sc-cURemW.dymphv")
     private WebElement subTitle;
     @FindBy (css = ".generate-modal-location")
     private WebElement locationInfo;
@@ -64,7 +64,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     private WebElement cancelButton;
     @FindBy (css = ".confirm")
     private WebElement updateButton;
-    @FindBy (css = ".sc-cTGpgC.bhwvsW")
+    @FindBy (css = ".sc-WpdFT.jIViWD")
     private WebElement optionsSection;
     @FindBy (css = "[data-testid=ReplayIcon]")
     private WebElement clearEditedFieldsBtn;
@@ -472,8 +472,13 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         WebElement select = timeSection.findElement(By.cssSelector(".react-select__dropdown-indicator"));
 
         hoursInput.click();
-        hoursInput.clear();
-        minsInput.clear();
+        for (int i = 0; i < 4; i++) {
+            hoursInput.sendKeys(Keys.BACK_SPACE);
+        }
+        minsInput.click();
+        for (int i = 0; i < 4; i++) {
+            minsInput.sendKeys(Keys.BACK_SPACE);
+        }
         if (hours != null && !hours.isEmpty()) {
             hoursInput.sendKeys(hours);
             if (Integer.parseInt(hours) >= 12) {
@@ -485,6 +490,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         if (mins != null && !mins.isEmpty()) {
             minsInput.sendKeys(mins);
             if (Integer.parseInt(mins) != 0 && Integer.parseInt(mins) != 15 && Integer.parseInt(mins) != 45 && Integer.parseInt(mins) != 60) {
+                hoursInput.click();
                 hoursInput.clear();
                 WebElement warning = timeSection.findElement(By.cssSelector(".MuiFormHelperText-root"));
                 SimpleUtils.assertOnFail("Warning message 'Must match slots' failed to show!'", warning.getText()

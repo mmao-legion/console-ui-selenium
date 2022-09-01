@@ -44,7 +44,7 @@
                     <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                     <include name="verifySMCanSelectACalendarForMinorAsInternalAdmin" />
                     <!--                   <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" />Debug -->
-                    <include name="verifySchoolCalendarListAsInternalAdmin" />
+<!--                    <include name="verifySchoolCalendarListAsInternalAdmin" Blocked by SCH-7481/>-->
                     <include name="verifyCreateCalendarAsInternalAdmin" />
                     <include name="verifyAddDatesForBreaksAsInternalAdmin" />
                     <!-- blocked by cache                   <include name="verifyTurnOffMinorRuleAsInternalAdmin" /> -->
@@ -108,6 +108,10 @@
                     <!--                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7351-->
                     <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
                     <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
+                    <include name="verifyEditOperatingHoursUnderMoreActionsAsInternalAdmin" />
+                    <include name="verifyEditOpeHoursDisabledAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfEditOpeHoursAsInternalAdmin" />
+                    <include name="verifyTheSaveFunctionOnEditOpeHoursDialogAsInternalAdmin" />
                    </methods>
                </class>
            </classes>
@@ -263,6 +267,7 @@
 <!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5368/>-->
 <!--                    <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />Blocked by SCH-5419/>-->
                     <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" />
+                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />
                     </methods>
                 </class>
             </classes>
@@ -537,8 +542,8 @@ SCH-5862-->
                     <include name="verifyTheCurrentColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyTheEditedColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
 <!--                    <include name="verifyChangingShiftNameOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: https://legiontech.atlassian.net/browse/SCH-6997/>-->
-                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" />
-                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" />
+<!--                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
+<!--                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
                 </methods>
             </class>
         </classes>
@@ -571,7 +576,7 @@ SCH-5862-->
                     <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
                     <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnP2PLGAsInternalAdmin" />
                     <!--                      <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnP2PLGScheduleAsInternalAdmin" />
-                                        <include name="verifyBulkDragAndDropShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> -->
+                                        <include name="verifyMoveShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> -->
                     <include name="verifyTheFunctionalityOfPeerLocationsInTheScheduleOverviewPageAsInternalAdmin" />
                     <include name="verifyCanCreateScheduleForAllPeerLocationsAsInternalAdmin" />
                     <include name="verifyTheActionForEachPeerLocationsInDifferentStatusAsInternalAdmin" />
@@ -584,6 +589,11 @@ SCH-5862-->
                     <include name="verifyAnalyticsTableOnTimesheetInDMViewWhenItIncludesLGAsInternalAdmin" />
                     <include name="verifyTheContentOnMultipleEditShiftsWindowForP2PAsInternalAdmin" />
                     <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForP2PAsInternalAdmin" />
+<!--
+                    <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6889-->
+                    <include name="validateNavigationRosterScheduleAndDashboardOfP2PLGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -596,9 +606,14 @@ SCH-5862-->
                     <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
                     <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
                      <!--                   <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnParentChildLGScheduleAsInternalAdmin" />
-                                        <include name="verifyBulkDragAndDropShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" /> -->
+                                        <include name="verifyMoveShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" /> -->
                     <include name="verifyTheContentOnMultipleEditShiftsWindowForPCAsInternalAdmin" />
                     <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForParentChildLGAsInternalAdmin" />
+<!--
+                    <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6889-->
+                    <include name="validateNavigationRosterScheduleAndDashboardOfParentChildLGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

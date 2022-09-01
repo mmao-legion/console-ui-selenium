@@ -95,7 +95,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     private List<WebElement> editWagesHrs;
     @FindBy(css = "generate-modal-operating-hours-step [label=\"Edit\"]")
     private WebElement operatingHoursEditBtn;
-    @FindBy(css = ".generate-modal-operating-hours-step-container .lg-picker-input")
+    @FindBy(css = ".generate-modal-operating-hours-step-container .lg-picker-input input")
     private WebElement locationSelectorOnCreateSchedulePage;
     @FindBy(css = ".modal-instance .lg-search-options__option")
     private List<WebElement> locationsInLocationSelectorOnCreateSchedulePage;
@@ -539,10 +539,10 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     public void clickOnFinishButtonOnCreateSchedulePage() throws Exception {
         if (isElementLoaded(nextButtonOnCreateSchedule, 5) && isClickable(nextButtonOnCreateSchedule, 5)) {
             clickTheElement(nextButtonOnCreateSchedule);
-            WebElement element = (new WebDriverWait(getDriver(), 120))
-                    .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
-            waitForSeconds(3);
-            if (isElementLoaded(element, 15) && isClickable(element, 15)) {
+//            WebElement element = (new WebDriverWait(getDriver(), 360))
+//                    .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
+//            waitForSeconds(3);
+            if (isElementLoaded(checkOutTheScheduleButton, 360)) {
                 checkoutSchedule();
                 SimpleUtils.pass("Schedule Page: Schedule is generated within 2 minutes successfully");
             } else {
@@ -2134,7 +2134,9 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     public void createSuggestedSchedule() throws Exception {
         if (!isElementLoaded(activScheduleType, 5)){
             clickCreateScheduleBtn();
-            if (isElementEnabled(suggestScheduleModalWeek, 50)) {
+            if (isElementLoaded(upgradeAndGenerateScheduleBtn)) {
+                click(upgradeAndGenerateScheduleBtn);
+            } else if (isElementEnabled(suggestScheduleModalWeek, 50)) {
                 selectWhichWeekToCopyFrom("SUGGESTED");
                 clickOnFinishButtonOnCreateSchedulePage();
             }
@@ -2154,6 +2156,27 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         } else {
             SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
         }
+    }
+
+
+    public void selectLocationOnCreateScheduleEditOperatingHoursPage(String locationName) throws Exception {
+        if (isElementLoaded(locationSelectorOnCreateSchedulePage, 5)) {
+            clickTheElement(locationSelectorOnCreateSchedulePage);
+            if (areListElementVisible(locationsInLocationSelectorOnCreateSchedulePage, 5)
+                    && locationsInLocationSelectorOnCreateSchedulePage.size()!=0) {
+                if (isElementLoaded(searchLocationOnCreateSchedulePage, 5)) {
+                    searchLocationOnCreateSchedulePage.sendKeys(locationName);
+                }
+                click(locationsInLocationSelectorOnCreateSchedulePage.get(0));
+                if (selectedLocationOnCreateSchedulePage.getText().equals(locationName)) {
+                    SimpleUtils.pass("Select locations on Edit Operating hours successfully! ");
+                } else
+                    SimpleUtils.fail("Select locations on Edit Operating hours failed! ", false);
+            }else
+                SimpleUtils.fail("There is no locations in the location selector! ", false);
+        }else
+            SimpleUtils.fail("The location selector is fail to load! ", false);
+
     }
 }
 

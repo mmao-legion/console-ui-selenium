@@ -140,6 +140,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
         if (isElementLoaded(scheduleDayViewButton)) {
             if (!scheduleDayViewButton.getAttribute("class").toString().contains("enabled")) {
                 clickTheElement(scheduleDayViewButton);
+                waitForSeconds(3);
             }
             SimpleUtils.pass("Schedule Page day view loaded successfully!");
         } else {
@@ -879,7 +880,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
             SimpleUtils.pass("Template effective day is the first day of selected week.");
         } else {
             flag = false;
-            SimpleUtils.fail("Template effective day is the first day of selected week.", true);
+            SimpleUtils.report("Template effective day is NOT the first day of selected week.");
         }
         return flag;
     }

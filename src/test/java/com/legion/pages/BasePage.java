@@ -1012,6 +1012,21 @@ public class BasePage {
         return flag;
     }
 
+    public static boolean isEleExist(String xpathLocator)
+    {
+        boolean flag;
+        try {
+            if(getDriver().findElements(By.xpath(xpathLocator)).size()>0){
+                flag = true;
+            }else {
+                flag = false;
+            }
+        } catch (NoSuchElementException e) {
+            flag = false;
+        }
+        return flag;
+    }
+
 //
 //
 //     public void assertIsDisplay(Map<String,String> map){
@@ -1047,8 +1062,8 @@ public class BasePage {
         Date endTimeDate1;
         Date startTimeDate2;
         Date endTimeDate2;
-        startTimeDate1 = df.parse(compareTime.split("-")[0].trim());
-        endTimeDate1 = df.parse(compareTime.split("-")[1].trim());
+        startTimeDate1 = df.parse(compareTime.split("-")[0].trim().replace(" ", ""));
+        endTimeDate1 = df.parse(compareTime.split("-")[1].trim().replace(" ", ""));
         startTimeDate2 = df.parse(periodTime.split("-")[0].trim());
         endTimeDate2 = df.parse(periodTime.split("-")[1].trim());
 
@@ -1060,5 +1075,35 @@ public class BasePage {
             SimpleUtils.report("The time :" + compareTime +" is not belong to : "+ periodTime);
             return false;
         }
+    }
+
+    public static boolean isSorted(List<String> dateStrings, boolean isAsc, String format) throws ParseException {
+        boolean isSort = false;
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        if (dateStrings != null && dateStrings.size() > 0) {
+            for (int i = 0; i < dateStrings.size() - 1; i++) {
+                try {
+                    Date date1 = sdf.parse(dateStrings.get(i));
+                    Date date2 = sdf.parse(dateStrings.get(i+1));
+                    if (isAsc) {
+                        //sorted by ascend
+                        if (date2.before(date1)) {
+                            isSort = true;
+                        }
+                    } else {
+                        //sorted by descend
+                        if (date2.after(date1)) {
+                            isSort = false;
+                        }
+                    }
+                } catch (ParseException pe) {
+                    isSort = false;
+                    break;
+                }
+            }
+        } else {
+            isSort = false;
+        }
+        return isSort;
     }
 }
