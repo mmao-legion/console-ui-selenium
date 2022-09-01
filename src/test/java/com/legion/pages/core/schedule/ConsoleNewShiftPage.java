@@ -576,6 +576,42 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     }
 
+    @Override
+    public void selectWorkRoleCaseSensitive(String workRole) throws Exception {
+        if (isElementLoaded(btnWorkRole, 5)) {
+            clickTheElement(btnWorkRole);
+            SimpleUtils.pass("Work Role button clicked Successfully");
+            if (listWorkRoles.size() > 0) {
+                for (WebElement listWorkRole : listWorkRoles) {
+                    if (listWorkRole.getText().trim().contains(workRole)) {
+                        click(listWorkRole);
+                        SimpleUtils.pass("Work Role " + workRole + "selected Successfully");
+                        break;
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Work Roles size are empty", false);
+            }
+        } else if (isElementLoaded(workRoleOnNewShiftPage, 15)) {
+            click(workRoleOnNewShiftPage);
+            SimpleUtils.pass("Work Role button clicked Successfully");
+            if (dropDownListOnNewCreateShiftPage.size() > 0) {
+                for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
+                    if (listWorkRole.getText().trim().contains(workRole)) {
+                        click(listWorkRole);
+                        SimpleUtils.pass("Work Role " + workRole + "selected Successfully");
+                        break;
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Work Roles size are empty", false);
+            }
+        } else {
+            SimpleUtils.fail("Work Role button is not clickable", false);
+        }
+
+    }
+
     @FindBy(id = "shiftsPerDay")
     private WebElement shiftsPerDay;
 

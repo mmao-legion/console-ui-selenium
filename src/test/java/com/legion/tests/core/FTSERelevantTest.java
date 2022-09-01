@@ -749,6 +749,7 @@ public class FTSERelevantTest extends TestBase {
                 configurationPage.clickOnEditButtonOnTemplateDetailsPage();
                 Thread.sleep(3000);
                 controlsNewUIPage.selectClopeningHoursOP("12");
+                Thread.sleep(60000);
                 if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
                     //Back to the console page
                     switchToConsoleWindow();
