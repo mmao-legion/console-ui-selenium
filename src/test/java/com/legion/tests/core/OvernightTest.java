@@ -284,7 +284,7 @@ public class OvernightTest extends TestBase {
             //waiting for the cache
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             int j =0;
-            while (j< 5) {
+            while (j< 7) {
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 Thread.sleep(60000);
                 j++;

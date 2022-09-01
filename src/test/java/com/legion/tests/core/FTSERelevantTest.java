@@ -1406,7 +1406,7 @@ public class FTSERelevantTest extends TestBase {
                 controlsNewUIPage.clickOnControlsConsoleMenu();
                 controlsNewUIPage.clickOnControlsComplianceSection();
                 controlsNewUIPage.turnOnOrTurnOffSplitShiftToggle(true);
-                controlsNewUIPage.editSplitShiftPremium("1", "30", true);
+                controlsNewUIPage.editSplitShiftPremium("1", "60", true);
             }else {
                 //Go to OP page
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
@@ -1428,7 +1428,7 @@ public class FTSERelevantTest extends TestBase {
                 configurationPage.clickOnEditButtonOnTemplateDetailsPage();
                 Thread.sleep(3000);
                 controlsNewUIPage.turnOnOrTurnOffSplitShiftToggle(true);
-                controlsNewUIPage.editSplitShiftPremium("1", "30", true);
+                controlsNewUIPage.editSplitShiftPremium("1", "60", true);
                 configurationPage.publishNowTheTemplate();
 
                 if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
