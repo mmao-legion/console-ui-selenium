@@ -1086,9 +1086,51 @@ public class BulkDeleteNEditTest extends TestBase {
             HashSet<Integer> newIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             System.out.println(scheduleShiftTablePage.getOneDayShiftByName(1, assignedNames.get(0)).size());
             SimpleUtils.assertOnFail("Shifts are not moved to the next day!", !indexes.equals(newIndexes), false);
-            scheduleMainPage.clickOnCancelButtonOnEditMode();
 
             // Verify the error will pop up when changing the date without selecting the two options
+            createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", assignedNames.get(0));
+            createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", assignedNames.get(1));
+            Thread.sleep(2000);
+            scheduleShiftTablePage.selectSpecificShifts(newIndexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(newIndexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.clickOnDateSelect();
+            editShiftPage.selectSpecificOptionByText(dates.get(0));
+            editShiftPage.clickOnUpdateButton();
+
+            mySchedulePage.verifyThePopupMessageOnTop("Error");
+
+            // Verify can change the date with selecting the two options
+            scheduleShiftTablePage.selectSpecificShifts(newIndexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(newIndexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.clickOnDateSelect();
+            editShiftPage.selectSpecificOptionByText(dates.get(0));
+            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowConflicts.getOption(), true);
+            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowComplianceErrors.getOption(), true);
+            editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+            SimpleUtils.assertOnFail("The previous assigned shifts are not converted to open shifts!",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, "Open").size() >= 2, false);
+
+            // Verify the shifts are moved to the selected day
+            String firstName1 = assignedNames.get(0).contains(" ") ? assignedNames.get(0).split(" ")[0] : assignedNames.get(0);
+            String firstName2 = assignedNames.get(1).contains(" ") ? assignedNames.get(1).split(" ")[0] : assignedNames.get(1);
+            SimpleUtils.assertOnFail("Shift with name: " + firstName1 + " is not moved to the selected date!",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstName1).size() == 1, false);
+            SimpleUtils.assertOnFail("Shift with name: " + firstName2 + " is not moved to the selected date!",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstName2).size() == 1, false);
+
+            // Verify the changes can be saved successfully
+            scheduleMainPage.saveSchedule();
+            SimpleUtils.assertOnFail("Shift with name: " + firstName1 + " is not moved to the selected date!",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstName1).size() == 1, false);
+            SimpleUtils.assertOnFail("Shift with name: " + firstName2 + " is not moved to the selected date!",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstName2).size() == 1, false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
