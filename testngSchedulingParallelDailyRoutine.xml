@@ -72,6 +72,7 @@
                     <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
                     <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" />
+                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />
                 </methods>
             </class>
         </classes>

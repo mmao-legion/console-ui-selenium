@@ -267,6 +267,7 @@
 <!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5368/>-->
 <!--                    <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />Blocked by SCH-5419/>-->
                     <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" />
+                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />
                     </methods>
                 </class>
             </classes>
