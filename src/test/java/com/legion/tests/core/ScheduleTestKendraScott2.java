@@ -7308,7 +7308,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Go to the schedule view table
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-			Thread.sleep(60000);
+			Thread.sleep(6000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -7323,7 +7323,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
-			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("09:00AM", "09:00PM");
 
 			//Delete all specific shifts
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
@@ -7352,6 +7352,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				shiftCount2++;
 			}
 
+			if(workRole1.equalsIgnoreCase("mod")){
+				workRole1 = "MOD";
+			}
+
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
@@ -7363,7 +7367,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
-			newShiftPage.selectWorkRole(workRole1);
+			newShiftPage.selectWorkRoleCaseSensitive(workRole1);
 			newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
 			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
@@ -7394,6 +7398,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
 			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", isCorrect, false);
 			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
+			Thread.sleep(3);
 			shiftOperatePage.clickOnCloseBtnOfAssignDialog();
 
 		} catch (Exception e) {
