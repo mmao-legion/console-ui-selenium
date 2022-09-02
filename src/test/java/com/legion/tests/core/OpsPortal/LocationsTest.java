@@ -1375,12 +1375,11 @@ public class LocationsTest extends TestBase {
         }
     }
 
-//    Blocked by https://legiontech.atlassian.net/browse/OPS-4525
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "User can view the default location level external attribute")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDefaultValueOfExternalAttributesInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
@@ -1427,16 +1426,17 @@ public class LocationsTest extends TestBase {
 
             //Compare location level default external attributes value should be same with template level.
             locationsPage.backToConfigurationTabInLocationLevel();
-            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfo.get(7).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Labor model template is not overridden at location level");
+//            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            if (locationsPage.verifyIsOverrideStatusAtLocationLevel("Labor Model")) {
+                SimpleUtils.pass("Labor model template is overridden at location level");
+                locationsPage.clickActionsForTemplate("Labor Model", "Reset");
             } else {
-                SimpleUtils.pass("Labor model template is already overridden at location level");
-                locationsPage.editLocationBtnIsClickableInLocationDetails();
-                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Reset");
+                SimpleUtils.pass("Labor model template is NOT overridden at location level");
+
             }
 
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "View");
+//            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "View");
+            locationsPage.clickActionsForTemplate("Labor Model", "View");
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
             HashMap<String, List<String>> locationLevelAttributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
             for (String key : templateLevelAttributesInfoInLocation.keySet()) {
@@ -2485,12 +2485,11 @@ public class LocationsTest extends TestBase {
         }
     }
 
-    //new feature is not released to rc
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "opauto")
     @TestName(description = "Labor Budget Plan Section UI")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyLaborBudgetPlanSectionUIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -2503,12 +2502,11 @@ public class LocationsTest extends TestBase {
         }
     }
 
-    //new feature is not released to rc
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "opauto")
     @TestName(description = "update Labor Budget Plan settings")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUpdateLaborBudgetPlanSettingsAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             boolean subPlans = true;
