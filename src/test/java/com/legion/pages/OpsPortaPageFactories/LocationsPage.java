@@ -337,4 +337,5 @@ public interface LocationsPage {
     public String clickOnTestBtnAndGetResultString() throws Exception;
     public String getLaborBudgetPlanComputeSettings();
     public void UpdateOptionOfComputeBudgetCost();
+    public boolean verifyIsOverrideStatusAtLocationLevel(String templateName) throws Exception;
 }

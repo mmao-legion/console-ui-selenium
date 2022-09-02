@@ -786,7 +786,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
             if (areListElementVisible(scenarioPlans)) {
                 SimpleUtils.pass("Plan with scenario plans loaded successfully after it was expanded!");
                 for (WebElement scplan : scenarioPlans) {
-                    if (scplan.findElement(By.cssSelector(" div:nth-child(1)")).getText().trim().equals(scplanName)) {
+                    if (scplan.findElement(By.cssSelector(" div:nth-child(1)")).getText().trim().contains(scplanName)) {
                         SimpleUtils.pass("Find the scenario plan successfully!");
                         scplanExist = true;
                         SimpleUtils.pass("Find the tested scenario plan");
@@ -801,7 +801,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                             if (isElementLoaded(scenarioPlanNameInDeatil) && isElementLoaded(scenarioPlanDetailEmail)) {
                                 //get the title of the scenario plan
                                 String planTitleInDetails = scenarioPlanNameInDeatil.getText().trim();
-                                if (planTitleInDetails.equals(scplanNameInList))
+                                if (planTitleInDetails.equals(scplanNameInList)||planTitleInDetails.contains(scplanName))
                                     SimpleUtils.pass("View link navigate to the plan detail successfully");
                                 else
                                     SimpleUtils.fail("View link navigate to the plan detail failed", false);
