@@ -2513,6 +2513,10 @@ public class LocationsTest extends TestBase {
             boolean compressed = true;
             String computeBudgetCost ="Work Role";
             String subPlansLevel = "Region";
+            boolean subPlans1 = false;
+            boolean compressed1 = false;
+            String computeBudgetCost1 ="Work Role";
+            String subPlansLevel1 = "Region";
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             locationsPage.clickOnLocationsTab();
@@ -2520,17 +2524,19 @@ public class LocationsTest extends TestBase {
             locationsPage.clickOnEditButtonOnGlobalConfigurationPage();
             locationsPage.updateLaborBudgetPlanSettings(subPlans,subPlansLevel,compressed,computeBudgetCost);
             locationsPage.saveTheGlobalConfiguration();
+            locationsPage.clickOnEditButtonOnGlobalConfigurationPage();
+            locationsPage.updateLaborBudgetPlanSettings(subPlans1,subPlansLevel1,compressed1,computeBudgetCost1);
+            locationsPage.saveTheGlobalConfiguration();
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
-    //new feature is not released to rc
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "opauto")
     @TestName(description = "Labor Budget Section is controlled by toggle")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyLaborBudgetSectionIsControlledByToggleAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -2538,7 +2544,7 @@ public class LocationsTest extends TestBase {
             locationsPage.clickOnLocationsTab();
             locationsPage.goToGlobalConfigurationInLocations();
             //Turn off EnableLongTermBudgetPlan toggle
-            ToggleAPI.disableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
             refreshPage();
             if(!locationsPage.isBudgetPlanSectionShowing()){
                 SimpleUtils.pass("Budget plan section is Not showing when EnableLongTermBudgetPlan is off");
@@ -2546,7 +2552,8 @@ public class LocationsTest extends TestBase {
                 SimpleUtils.fail("Budget plan section is showing when EnableLongTermBudgetPlan is off",false);
             }
             //Turn on EnableLongTermBudgetPlan toggle
-            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
+            refreshPage();
             refreshPage();
             if(locationsPage.isBudgetPlanSectionShowing()){
                 SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is on");
@@ -2558,18 +2565,17 @@ public class LocationsTest extends TestBase {
         }
     }
 
-    //new feature is not released to rc
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "opauto")
     @TestName(description = "Compute LRB by work role or by job title groups")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyComputeLRBByWorkRoleOrByJobTitleGroupsAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             String time= sdf.format(new Date());
             String planName = "AutoUsing-ComputeMethod";
-            String scplan = "AutoUsing-ComputeMethod scenario 1";
+            String scplan = "AutoUsing-ComputeMethod sce";
 
             //go to op side to get the getLaborBudgetPlanComputeSettings
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -2626,7 +2632,6 @@ public class LocationsTest extends TestBase {
 
             //go to console side to check the plan page UI
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("RegionForPlan_Auto");
             locationSelectorPage.changeDistrict("DistrcitForPlan2");
             planPage.clickOnPlanConsoleMenuItem();
