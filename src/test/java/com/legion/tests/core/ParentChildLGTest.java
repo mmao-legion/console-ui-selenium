@@ -4487,4 +4487,147 @@ public class ParentChildLGTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Cosimo")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of \"Edit Operating hours\" option for location group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyEditOperatingHoursForLGAsInternalAdmin(String username, String password, String browser, String location)
+            throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+
+            //Go to the schedule page
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnWeekView();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            Thread.sleep(5000);
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            //The P2P location has a dropdown list which includes child locations
+            scheduleMainPage.goToToggleSummaryView();
+            scheduleMainPage.checkOperatingHoursOnToggleSummary();
+            SimpleUtils.assertOnFail("The drop down list is unavailable!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
+
+            //Compare the operating hours between Editing and Toggle Summary pages
+            scheduleMainPage.goToToggleSummaryView();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            Thread.sleep(3);
+            String childLocation = "Child002";
+            createSchedulePage.selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(childLocation);
+            scheduleMainPage.checkOperatingHoursOnToggleSummary();
+            scheduleMainPage.clickEditBtnOnToggleSummary();
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation);
+            scheduleMainPage.checkOperatingHoursOnEditDialog();
+
+            //Go to Edit Operating Hours page and check relevant content
+            scheduleMainPage.isSaveBtnLoadedOnEditOpeHoursPageForOP();
+            scheduleMainPage.isCancelBtnLoadedOnEditOpeHoursPageForOP();
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Cosimo")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of SAVE button on \"Edit operating hours\" window for location group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyEditOperatingHoursFunctionForLGAsInternalAdmin(String username, String password, String browser, String location)
+            throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+
+            //Go to the schedule page
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnWeekView();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            Thread.sleep(5000);
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            //Edit the operating day and cancel all actions.
+            scheduleMainPage.goToToggleSummaryView();
+            scheduleMainPage.clickEditBtnOnToggleSummary();
+            String childLocation1 = "Child001";
+            String childLocation2 = "Child002";
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation2);
+            List<String> weekDay = new ArrayList<>(Arrays.asList("Sunday"));
+            scheduleMainPage.closeTheParticularOperatingDay(weekDay);
+            scheduleMainPage.openTheParticularOperatingDay(weekDay);
+            scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDay, "10:00AM","10:00PM");
+            scheduleMainPage.clickCancelBtnOnEditOpeHoursPageForOP();
+            scheduleMainPage.checkOperatingHoursOnToggleSummary();
+
+            //Edit the operating day and save all actions.
+            scheduleMainPage.clickEditBtnOnToggleSummary();
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation2);
+            List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
+            scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "10:00AM","10:00PM");
+            scheduleMainPage.clickSaveBtnOnEditOpeHoursPageForOP();
+            scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "10AM-10PM");
+
+            //Check the closed operating day.
+            scheduleMainPage.clickEditBtnOnToggleSummary();
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation1);
+            scheduleMainPage.closeTheParticularOperatingDay(weekDays);
+            scheduleMainPage.clickSaveBtnOnEditOpeHoursPageForOP();
+            Thread.sleep(3);
+
+            scheduleMainPage.clickEditBtnOnToggleSummary();
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation2);
+            scheduleMainPage.closeTheParticularOperatingDay(weekDays);
+            scheduleMainPage.clickSaveBtnOnEditOpeHoursPageForOP();
+            Thread.sleep(3);
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnWeekView();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(childLocation1);
+            scheduleMainPage.checkClosedDayOnToggleSummary(weekDays);
+            createSchedulePage.closeSearchBoxForLocations();
+            createSchedulePage.selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(childLocation2);
+            scheduleMainPage.checkClosedDayOnToggleSummary(weekDays);
+            createSchedulePage.closeSearchBoxForLocations();
+
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdate();
+            scheduleCommonPage.clickOnWeekView();
+            int shiftCountWeek = scheduleShiftTablePage.getShiftsCount();
+            SimpleUtils.assertOnFail("The schedule is not empty!", shiftCountWeek == 0, false);
+            scheduleCommonPage.clickOnDayView();
+            int shiftCountDay = scheduleShiftTablePage.getShiftsCount();
+            SimpleUtils.assertOnFail("The current day is not empty!", shiftCountDay == 0, false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }

@@ -8031,10 +8031,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 
 			//Go to the schedule page
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -8049,14 +8049,93 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			Thread.sleep(5000);
 			createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-			//Check the content of week days on operating hours page, it matches with toggle summary view
+			//Open, close, edit the operating day, the operating hours should be changed sync with toggle summary.
 			scheduleMainPage.goToToggleSummaryView();
 			scheduleMainPage.goToEditOperatingHoursView();
-			List<String> weekDays = new ArrayList<>(Arrays.asList("Sunday"));
-			scheduleMainPage.closeTheParticularOperatingDay(weekDays);
-			scheduleMainPage.openTheParticularOperatingDay(weekDays);
+			List<String> weekDay = new ArrayList<>(Arrays.asList("Sunday"));
+			scheduleMainPage.closeTheParticularOperatingDay(weekDay);
+			scheduleMainPage.openTheParticularOperatingDay(weekDay);
+			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDay, "10:00AM","10:00PM");
+			scheduleMainPage.clickCancelBtnOnEditOpeHoursPage();
+			scheduleMainPage.goToEditOperatingHoursView();
+
+			List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
 			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "10:00AM","10:00PM");
 			scheduleMainPage.clickCancelBtnOnEditOpeHoursPage();
+			scheduleMainPage.checkOperatingHoursOnToggleSummary();
+			scheduleMainPage.goToEditOperatingHoursView();
+			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "10:00AM","10:00PM");
+			scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
+			scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "10AM-10PM");
+
+			scheduleMainPage.goToEditOperatingHoursView();
+			scheduleMainPage.closeTheParticularOperatingDay(weekDays);
+			scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
+			scheduleMainPage.checkClosedDayOnToggleSummary(weekDays);
+			scheduleMainPage.goToToggleSummaryView();
+			Thread.sleep(3);
+
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdate();
+
+			//Check the closed operating day.
+			scheduleCommonPage.clickOnWeekView();
+			int shiftCount = scheduleShiftTablePage.getShiftsCount();
+			SimpleUtils.assertOnFail("The schedule is not empty!", shiftCount == 0, false);
+			scheduleCommonPage.clickOnDayView();
+			SimpleUtils.assertOnFail("The current day is not closed!", scheduleCommonPage.isStoreClosedForActiveWeek(), false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Veirfy shifts should have \"Outside Operating hours\" violation when reducing the operating hours")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheOutOpeHrsViolationAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+
+			//Go to the schedule page
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			//Edit the operating hours for the current week.
+			scheduleMainPage.goToToggleSummaryView();
+			scheduleMainPage.goToEditOperatingHoursView();
+			List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
+			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "06:00AM","08:00AM");
+			scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
+			scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "6AM-8AM");
+
+			//Refresh the schedule page
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+
+			//Check the Outside Operating Hours violation on the shifts
+			List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
+			SimpleUtils.assertOnFail("The Outside Operating Hours violation is not shown!", complianceMessage.contains("Outside Operating hours"), false);
 
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
