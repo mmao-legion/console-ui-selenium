@@ -340,8 +340,10 @@ public abstract class TestBase {
         TestRailOperation.addResultForTest();
         if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
             try {
-                getDriver().manage().deleteAllCookies();
-                getDriver().quit();
+                if (getDriver() != null) {
+                    getDriver().manage().deleteAllCookies();
+                    getDriver().quit();
+                }
             } catch (Exception exp) {
                 Reporter.log("Error closing browser");
             }
