@@ -4338,6 +4338,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
+	@FindBy(css="div.lg-tabs nav div:nth-child(2)")
+	private WebElement externalAttributesTab;
 	@Override
 	public void clickActionsForTemplate(String templateName, String action) {
 		scrollToBottom();
@@ -4361,8 +4363,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					verifyResetWindowDisplay();
 					click(okBtnInSelectLocation);
 				}else {
-					SimpleUtils.report("Location level External Attributes is not overridden");
-					clickTheElement(cancelBTNOnLocationLevelTemplateDetailsPage);
+					SimpleUtils.report("Location level Work Roles is not overridden");
+					clickTheElement(externalAttributesTab);
+					if (isExist(resetButton)) {
+						clickTheElement(resetButton);
+						verifyResetWindowDisplay();
+						click(okBtnInSelectLocation);
+					}else {
+						clickTheElement(cancelBTNOnLocationLevelTemplateDetailsPage);
+					}
 				}
 			}else{
 				click(okBtnInSelectLocation);
@@ -4518,6 +4527,19 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Template is reset");
 			}
 		}
+	}
+
+	@Override
+	public boolean verifyIsOverrideStatusAtLocationLevel(String templateName) throws Exception {
+		boolean flag = false;
+		if (getDriver().findElements(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/*")).size() == 1) {
+			SimpleUtils.pass("template is overridden");
+			flag=true;
+		}else{
+			SimpleUtils.pass("Template is NOT overridden");
+			flag=false;
+		}
+		return flag;
 	}
 
 	public void verifyModifiedByAtLocationLevel(String templateName, String user) throws Exception {
