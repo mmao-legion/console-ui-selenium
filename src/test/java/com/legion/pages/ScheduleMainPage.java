@@ -97,5 +97,16 @@ public interface ScheduleMainPage {
     public void editTheOperatingHoursWithFixedValue(List<String> weekDaysToClose, String startTime, String endTime) throws Exception;
     public void closeTheParticularOperatingDay(List<String> weekDaysToClose) throws Exception;
     public void openTheParticularOperatingDay(List<String> weekDaysToOpen) throws Exception;
+    public void clickSaveBtnOnEditOpeHoursPage() throws Exception;
+    public void checkClosedDayOnToggleSummary(List<String> weekDays) throws Exception;
+    public void isSaveBtnLoadedOnEditOpeHoursPage() throws Exception;
+    public void isCancelBtnLoadedOnEditOpeHoursPage() throws Exception;
+    public void checkOpeHrsOfParticualrDayOnToggleSummary(List<String> weekDays, String duration) throws Exception;
+    public void clickEditBtnOnToggleSummary() throws Exception;
+    public void isCancelBtnLoadedOnEditOpeHoursPageForOP() throws Exception;
+    public void isSaveBtnLoadedOnEditOpeHoursPageForOP() throws Exception;
+    public void clickCancelBtnOnEditOpeHoursPageForOP() throws Exception;
+    public void clickSaveBtnOnEditOpeHoursPageForOP() throws Exception;
+
 }
 
