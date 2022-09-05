@@ -1148,10 +1148,10 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Bereavement2", "4.8");//HireDate~Specified/worked hours/rate/ 0.2
         expectedTOBalance.put("Bereavement3", "7.2");//Specified~HireDate/worked hours/rate/ 0.3
         expectedTOBalance.put("Bereavement4", "9.6");//Specified~Specified/worked hours/rate/ 0.4
-        expectedTOBalance.put("Covid1", "30");//HireDate~HireDate/worked hours/fix days
-        expectedTOBalance.put("Covid2", "17");//HireDate~Specified/worked hours/fix days
-        expectedTOBalance.put("Covid3", "30");//Specified~HireDate/worked hours/fix days
-        expectedTOBalance.put("Covid4", "4");//Specified~Specified/worked hours/fix days
+        expectedTOBalance.put("Covid1", "0");//HireDate~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid2", "0");//HireDate~Specified/worked hours/fix days
+        expectedTOBalance.put("Covid3", "0");//Specified~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid4", "0");//Specified~Specified/worked hours/fix days
         expectedTOBalance.put("Floating Holiday", "30");//HireDate~HireDate/Monthly /hire month/ begin
         expectedTOBalance.put("Grandparents Day Off1", "21");//Specified~Specified/Weekly
 
@@ -1175,10 +1175,10 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Bereavement4", "16");//Specified~Specified/worked hours/rate/ 0.4
         expectedTOBalance.put("Floating Holiday", "30");//HireDate~HireDate/Monthly /hire month/ begin
         expectedTOBalance.put("Grandparents Day Off1", "21");//Specified~Specified/Weekly
-        expectedTOBalance.put("Covid1", "19");//HireDate~HireDate/worked hours/fix days
-        expectedTOBalance.put("Covid2", "20");//HireDate~Specified/worked hours/fix days
-        expectedTOBalance.put("Covid3", "28");//Specified~HireDate/worked hours/fix days
-        expectedTOBalance.put("Covid4", "7");//Specified~Specified/worked hours/fix days
+        expectedTOBalance.put("Covid1", "0");//HireDate~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid2", "0");//HireDate~Specified/worked hours/fix days
+        expectedTOBalance.put("Covid3", "0");//Specified~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid4", "0");//Specified~Specified/worked hours/fix days
 
         accrualBalance0531 = timeOffPage.getTimeOffBalance();
 
@@ -2462,7 +2462,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI("nancy.nan+timeoff@legion.co", "admin11.a");
 
         //confirm template
         String workerId = "b4bf7ed1-ac9c-4e84-adaa-0d8e1420160b";
@@ -2513,7 +2513,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> importedBalance = timeOffPage.getTimeOffBalance();
         String verification1 = validateTheAccrualResults(importedBalance, expectedTOBalance);
-        Assert.assertTrue(verification1.contains("Succeeded in validating"), verification1);
+        Assert.assertEquals(importedBalance, expectedTOBalance);
         SimpleUtils.pass("Succeeded in validating importing accrual balance successfully!");
 
     }

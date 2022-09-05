@@ -1371,7 +1371,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 		verifyDynamicGroupName();
 		verifyNoDistrictInTitle();
 
-		verifyRecentJobLocation("AutoCreateJob20220817013558");
+		verifyRecentJobLocation("AutoCreateJob20220831142346");
 
 		click(dynamicGroup);
 
