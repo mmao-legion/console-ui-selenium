@@ -193,7 +193,13 @@ public class MyThreadLocal {
 
 	public static void setTestSkippedFlag(boolean value) { testSkippedFlag.set(value); }
 
-	public static boolean getTestSkippedFlag() { return testSkippedFlag.get(); }
+	public static boolean getTestSkippedFlag() {
+		if (testSkippedFlag != null) {
+			return testSkippedFlag.get();
+		} else {
+			return false;
+		}
+	}
 
 	public static void setCurrentTestCaseIDList(List<Integer> value) { CurrentTestCaseIDList.set(value); }
 
