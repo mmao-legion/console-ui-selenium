@@ -147,6 +147,7 @@
                     <include name="verifyEditOpeHoursDisabledAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditOpeHoursAsInternalAdmin" />
                     <include name="verifyTheSaveFunctionOnEditOpeHoursDialogAsInternalAdmin" />
+                    <include name="verifyTheOutOpeHrsViolationAsInternalAdmin" />
                                    </methods>
                                </class>
                            </classes>

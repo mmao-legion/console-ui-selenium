@@ -1523,6 +1523,48 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }
     }
 
+    @Override
+    public void checkOpeHrsOfParticualrDayOnToggleSummary(List<String> weekDays, String duration) throws Exception {
+        if (areListElementVisible(operatingDays, 15)) {
+            for (WebElement dayList : operatingDays) {
+                WebElement weekDay = dayList.findElement(By.cssSelector(".ng-binding"));
+                if (weekDay != null) {
+                    WebElement startNEndTimes = dayList.findElement(By.cssSelector(".text-right.ng-binding"));
+                    if(weekDays.contains(weekDay)){
+                        SimpleUtils.assertOnFail("The operating hours is not expected!",
+                                startNEndTimes.getText().trim().equalsIgnoreCase(duration), false);
+                    }
+                }else{
+                    SimpleUtils.fail("The operating day is null!", false);
+                }
+            }
+        }else{
+            SimpleUtils.fail("The operating days are not loaded!", false);
+        }
+    }
+
+    @Override
+    public void checkClosedDayOnToggleSummary(List<String> weekDays) throws Exception {
+        if (areListElementVisible(operatingDays, 15)) {
+            for (WebElement dayList : operatingDays) {
+                WebElement weekDay = dayList.findElement(By.cssSelector(".ng-binding"));
+                WebElement closedText = dayList.findElement(By.cssSelector(".text-right.ng-binding.dirty"));
+                if (weekDay != null) {
+                    if (weekDays.contains(weekDay.getText())) {
+                        SimpleUtils.assertOnFail("The message of closed day is not correct!", closedText.getText().trim().equalsIgnoreCase("Closed"), false);
+                    }else{
+                        SimpleUtils.pass("The current day is not closed!");
+                        continue;
+                    }
+                }else{
+                    SimpleUtils.fail("The operating day is null!", false);
+                }
+            }
+        }else{
+            SimpleUtils.fail("The operating days are not loaded!", false);
+        }
+    }
+
     @FindBy(css = ".operating-hours-day-list-item.ng-scope")
     private List<WebElement> operatingHoursDayLists;
     @Override
@@ -1653,6 +1695,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     @FindBy(css = "[class=\"modal-instance-button ng-binding ng-scope\"]")
     private WebElement cancelBtnOnOpeHrsPage;
+    @FindBy(css = "[class=\"modal-instance-button ng-binding\"]")
+    private WebElement cancelBtnOnOpeHrsPageForOP;
     @Override
     public void clickCancelBtnOnEditOpeHoursPage() throws Exception {
         if (isElementLoaded(cancelBtnOnOpeHrsPage, 20)) {
@@ -1660,6 +1704,89 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             clickTheElement(cancelBtnOnOpeHrsPage);
         }else{
             SimpleUtils.fail("The Cancel button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void clickCancelBtnOnEditOpeHoursPageForOP() throws Exception {
+        if (isElementLoaded(cancelBtnOnOpeHrsPageForOP, 20)) {
+            SimpleUtils.pass("The Cancel button is loaded successfully!");
+            clickTheElement(cancelBtnOnOpeHrsPageForOP);
+        }else{
+            SimpleUtils.fail("The Cancel button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void isCancelBtnLoadedOnEditOpeHoursPage() throws Exception {
+        if (isElementLoaded(cancelBtnOnOpeHrsPage, 20)) {
+            SimpleUtils.pass("The Cancel button is loaded successfully!");
+        }else{
+            SimpleUtils.fail("The Cancel button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void isCancelBtnLoadedOnEditOpeHoursPageForOP() throws Exception {
+        if (isElementLoaded(cancelBtnOnOpeHrsPageForOP, 20)) {
+            SimpleUtils.pass("The Cancel button is loaded successfully!");
+        }else{
+            SimpleUtils.fail("The Cancel button is not loaded!", false);
+        }
+    }
+
+    @FindBy(css = "[class=\"modal-instance-button ng-binding confirm\"]")
+    private WebElement saveBtnOnOpeHrsPage;
+    @FindBy(css = "[class=\"modal-instance-button confirm ng-binding\"]")
+    private WebElement saveBtnOnOpeHrsPageForOP;
+    @Override
+    public void clickSaveBtnOnEditOpeHoursPage() throws Exception {
+        if (isElementLoaded(saveBtnOnOpeHrsPage, 20)) {
+            clickTheElement(saveBtnOnOpeHrsPage);
+            SimpleUtils.pass("The Save button is loaded successfully!");
+        }else{
+            SimpleUtils.fail("The Save button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void clickSaveBtnOnEditOpeHoursPageForOP() throws Exception {
+        if (isElementLoaded(saveBtnOnOpeHrsPageForOP, 20)) {
+            clickTheElement(saveBtnOnOpeHrsPageForOP);
+            SimpleUtils.pass("The Save button is loaded successfully!");
+        }else{
+            SimpleUtils.fail("The Save button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void isSaveBtnLoadedOnEditOpeHoursPage() throws Exception {
+        if (isElementLoaded(saveBtnOnOpeHrsPage, 20)) {
+            SimpleUtils.pass("The Save button is loaded successfully!");
+        }else{
+            SimpleUtils.fail("The Save button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void isSaveBtnLoadedOnEditOpeHoursPageForOP() throws Exception {
+        if (isElementLoaded(saveBtnOnOpeHrsPageForOP, 20)) {
+            SimpleUtils.pass("The Save button is loaded successfully!");
+        }else{
+            SimpleUtils.fail("The Save button is not loaded!", false);
+        }
+    }
+
+    @FindBy(css = "lg-button[label=\"Edit\"]")
+    private WebElement editButtonOnToggleSummary;
+    @Override
+    public void clickEditBtnOnToggleSummary() throws Exception {
+        if (isElementLoaded(editButtonOnToggleSummary, 20)) {
+            SimpleUtils.pass("Edit button on toggle summary is loaded!");
+            clickTheElement(editButtonOnToggleSummary);
+
+        }else{
+            SimpleUtils.fail("Edit button on toggle summary is not loaded!", false);
         }
     }
 

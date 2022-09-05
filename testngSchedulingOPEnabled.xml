@@ -615,6 +615,8 @@ SCH-5862-->
                     <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
                     <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6889-->
                     <include name="validateNavigationRosterScheduleAndDashboardOfParentChildLGAsInternalAdmin" />
+                    <include name="verifyEditOperatingHoursForLGAsInternalAdmin" />
+                    <include name="verifyEditOperatingHoursFunctionForLGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
