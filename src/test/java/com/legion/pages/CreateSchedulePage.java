@@ -76,5 +76,5 @@ public interface CreateSchedulePage {
     public void createSuggestedSchedule() throws Exception;
     public void clickCreateScheduleButton() throws Exception;
     public void selectLocationOnCreateScheduleEditOperatingHoursPage(String locationName) throws Exception;
-
+    public void createLGScheduleWithGivingTimeRange(String startTime, String endTime) throws Exception;
 }
