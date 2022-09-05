@@ -815,32 +815,36 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         String id = selectedShift.getAttribute("id");
         clickOnEditMeaLBreakTime();
         if (isMealBreakTimeWindowDisplayWell(true)) {
-            if (mealBreakBar.getAttribute("class").contains("disabled")) {
-                click(addMealBreakButton);
-                SimpleUtils.pass("Click Add Meal Break button successfully! ");
-                click(continueBtnInMealBreakButton);
-                SimpleUtils.pass("Click Continue button successfully! ");
-                if (isElementEnabled(confirmWindow, 5)) {
-                    click(okBtnOnConfirm);
-                    SimpleUtils.pass("Click OK button successfully! ");
+            if (isElementLoaded(mealBreakBar, 15)){
+                SimpleUtils.pass("The breaks bar is loaded successfully! ");
+                if (mealBreakBar.getAttribute("class").contains("disabled")) {
+                    click(addMealBreakButton);
+                    SimpleUtils.pass("Click Add Meal Break button successfully! ");
+                    click(continueBtnInMealBreakButton);
+                    SimpleUtils.pass("Click Continue button successfully! ");
+                    if (isElementEnabled(confirmWindow, 5)) {
+                        click(okBtnOnConfirm);
+                        SimpleUtils.pass("Click OK button successfully! ");
+                    }
+                    if (scheduleCommonPage.isScheduleDayViewActive()) {
+                        selectedShift = scheduleShiftTablePage.getShiftById(id);
+                        clickTheElement(selectedShift.findElement(By.cssSelector(".sch-day-view-shift .sch-shift-worker-img-cursor")));
+                        SimpleUtils.pass("Click the selected shift avatar in day view successfully! ");
+                    } else {
+                        clickTheElement(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+                        SimpleUtils.pass("Click the selected shift avatar in week view successfully! ");
+                    }
+                    clickOnEditMeaLBreakTime();
                 }
-                if (scheduleCommonPage.isScheduleDayViewActive()) {
-                    selectedShift = scheduleShiftTablePage.getShiftById(id);
-                    clickTheElement(selectedShift.findElement(By.cssSelector(".sch-day-view-shift .sch-shift-worker-img-cursor")));
-                    SimpleUtils.pass("Click the selected shift avatar in day view successfully! ");
-                } else {
-                    clickTheElement(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
-                    SimpleUtils.pass("Click the selected shift avatar in week view successfully! ");
-                }
-                clickOnEditMeaLBreakTime();
-            }
+            } else
+                SimpleUtils.fail("The breaks bar is fail to load! ", false);
             mealBreakTimeBeforeEdit = mealBreakTimes.get(0).getText();
             moveDayViewCards(mealBreaks.get(0), 40);
             mealBreakTimeAfterEdit = mealBreakTimes.get(0).getText();
             if (isSavedChange) {
                 click(continueBtnInMealBreakButton);
                 SimpleUtils.pass("Click Continue button to save break successfully! ");
-                if (isElementEnabled(confirmWindow, 5)) {
+                if (isElementEnabled(confirmWindow, 15)) {
                     click(okBtnOnConfirm);
                     SimpleUtils.pass("Click OK button to save break successfully! ");
                 }
@@ -3396,7 +3400,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public HashMap<String, Integer> getTotalShiftHrsAndShiftCountThisWeek() throws Exception {
         HashMap<String, Integer> totalShiftHrsAndShiftCount= new HashMap<String, Integer>();
         if (areListElementVisible(totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage, 5)) {
-            waitForSeconds(2);
+            waitForSeconds(5);
             try {
                 WebElement totalShiftHrs = totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage.get(0)
                         .findElement(By.xpath("./div/div[2]"));

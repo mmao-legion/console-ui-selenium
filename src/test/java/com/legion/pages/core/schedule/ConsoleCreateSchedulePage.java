@@ -394,6 +394,24 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                     }
                 }
 //                switchToManagerViewToCheckForSecondGenerate();
+            } else if (isElementLoaded(generateModalTitle, 5) && "Enter Budget".equalsIgnoreCase(generateModalTitle.getText().trim())){
+//                checkEnterBudgetWindowLoadedForNonDG();
+                waitForSeconds(2);
+                clickTheElement(nextButtonOnCreateSchedule);
+                if (isElementEnabled(suggestScheduleModalWeek, 50)) {
+                    selectWhichWeekToCopyFrom("SUGGESTED");
+                    clickOnFinishButtonOnCreateSchedulePage();
+                } else {
+                    WebElement element = (new WebDriverWait(getDriver(), 120))
+                            .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
+                    waitForSeconds(3);
+                    if (isElementLoaded(element, 15) && isClickable(element, 15)) {
+                        checkoutSchedule();
+                        SimpleUtils.pass("Schedule Page: Schedule is generated within 2 minutes successfully");
+                    } else {
+                        SimpleUtils.fail("Schedule Page: Schedule isn't generated within 2 minutes", false);
+                    }
+                }
             } else if (isElementLoaded(generateSheduleForEnterBudgetBtn, 5)) {
                 click(generateSheduleForEnterBudgetBtn);
                 if (isElementEnabled(checkOutTheScheduleButton, 10)) {
@@ -1587,7 +1605,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
     public boolean isCreateScheduleBtnLoadedOnSchedulePage() throws Exception {
         boolean isCreateScheduleBtnLoaded = false;
-        if (isElementLoaded(generateSheduleButton, 4)) {
+        if (isElementLoaded(generateSheduleButton, 25)) {
             isCreateScheduleBtnLoaded = true;
             SimpleUtils.report("Create Schedule button loaded successfully on schedule page! ");
         } else
