@@ -2462,7 +2462,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = LoginAPI.getSessionIdFromLoginAPI("nancy.nan+timeoff@legion.co", "admin11.a");
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
 
         //confirm template
         String workerId = "b4bf7ed1-ac9c-4e84-adaa-0d8e1420160b";
