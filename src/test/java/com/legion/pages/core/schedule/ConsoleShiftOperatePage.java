@@ -3397,8 +3397,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[4]/div")
     private List<WebElement> totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage;
     @Override
-    public HashMap<String, Integer> getTotalShiftHrsAndShiftCountThisWeek() throws Exception {
-        HashMap<String, Integer> totalShiftHrsAndShiftCount= new HashMap<String, Integer>();
+    public HashMap<String, Float> getTotalShiftHrsAndShiftCountThisWeek() throws Exception {
+        HashMap<String, Float> totalShiftHrsAndShiftCount= new HashMap<String, Float>();
         if (areListElementVisible(totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage, 5)) {
             waitForSeconds(5);
             try {
@@ -3410,8 +3410,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                         && !totalShiftHrs.getText().equals("")
                         && shiftCount.getText()!=null
                         && !shiftCount.getText().equals("")){
-                    totalShiftHrsAndShiftCount.put("shiftHrs", Integer.parseInt(totalShiftHrs.getText().split(" ")[0]));
-                    totalShiftHrsAndShiftCount.put("shiftCount", Integer.parseInt(shiftCount.getText().split(" ")[0]));
+                    totalShiftHrsAndShiftCount.put("shiftHrs", Float.parseFloat(totalShiftHrs.getText().split(" ")[0]));
+                    totalShiftHrsAndShiftCount.put("shiftCount", Float.parseFloat(shiftCount.getText().split(" ")[0]));
                 } else
                     SimpleUtils.fail("Fail to get the value of total shift hrs or shift count on search TM page! ", false);
 
@@ -3423,8 +3423,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     .findElements(By.cssSelector("worker-edit-this-week-hour")).get(0);
             WebElement shiftCount = totalShiftHrsAndShiftCountThisWeek.get(0)
                     .findElements(By.cssSelector("worker-edit-this-week-hour")).get(1);
-            totalShiftHrsAndShiftCount.put("shiftHrs", Integer.parseInt(totalShiftHrs.getText()));
-            totalShiftHrsAndShiftCount.put("shiftCount", Integer.parseInt(shiftCount.getText()));
+            totalShiftHrsAndShiftCount.put("shiftHrs", Float.parseFloat(totalShiftHrs.getText()));
+            totalShiftHrsAndShiftCount.put("shiftCount", Float.parseFloat(shiftCount.getText()));
         } else {
             SimpleUtils.fail("The total shift hrs and shift count this week section fail to load! ", false);
         }

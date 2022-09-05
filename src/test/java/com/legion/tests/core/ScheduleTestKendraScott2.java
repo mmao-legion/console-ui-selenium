@@ -7883,7 +7883,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.clickOnCreateOrNextBtn();
 			newShiftPage.searchWithOutSelectTM(firstNameOfTM+ " "+lastName);
 			Thread.sleep(5000);
-			HashMap<String, Integer> totalShiftHrsAndShiftCountThisWeek = shiftOperatePage.getTotalShiftHrsAndShiftCountThisWeek();
+			HashMap<String, Float> totalShiftHrsAndShiftCountThisWeek = shiftOperatePage.getTotalShiftHrsAndShiftCountThisWeek();
 			SimpleUtils.assertOnFail("The expected total shift hrs this week is 6, the actual is "
 							+totalShiftHrsAndShiftCountThisWeek.get("shiftHrs"),
 					totalShiftHrsAndShiftCountThisWeek.get("shiftHrs") == 6, false);
