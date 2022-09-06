@@ -1847,6 +1847,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement todayOnCalendar;
 	@FindBy (className = "header-user-switch-menu-item")
 	private List<WebElement> profileSubPageLabels;
+	@FindBy (css = ".header-user-switch-menu")
+	private WebElement profileSwitchMenu;
 	@FindBy (css = "div.in-range")
 	private List<WebElement> selectedDates;
 	@FindBy (css = "b.day-selected")
@@ -2363,15 +2365,15 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					if (userNickName.getText().replaceAll(" ", "").replaceAll("-", "")
 							.equalsIgnoreCase(getEnterprise().replaceAll(" ", "").replaceAll("-", ""))) {
 						clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));
-						if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 3)) {
-							nickName = getDriver().findElement(By.cssSelector(".userProfileText")).getText().trim().contains(" ") ?
-									getDriver().findElement(By.cssSelector(".userProfileText")).getText().trim().split(" ")[0] :
-									getDriver().findElement(By.cssSelector(".userProfileText")).getText().trim();
-						} else if (areListElementVisible(getDriver().findElements(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")),3)) {
-							nickName = getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")).getText().trim().contains(" ") ?
-									getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")).getText().trim().split(" ")[0] :
-									getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")).getText().trim();
+						WebElement nameElement = null;
+						if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 5)) {
+							nameElement = getDriver().findElement(By.cssSelector(".userProfileText"));
+						} else if (areListElementVisible(getDriver().findElements(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")),5)) {
+							nameElement = getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)"));
 						}
+						nickName = nameElement.getText().trim().contains(" ") ?
+								nameElement.getText().trim().split(" ")[0] :
+								nameElement.getText().trim();
 					} else {
 						nickName = userNickName.getText();
 					}
@@ -2401,6 +2403,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void selectProfileSubPageByLabelOnProfileImage(String profilePageSubSectionLabel) throws Exception {
+		if (!isElementLoaded(profileSwitchMenu, 5)) {
+			clickTheElement(userProfileImage);
+		}
 		if (areListElementVisible(profileSubPageLabels, 5)) {
 			for (WebElement label : profileSubPageLabels) {
 				if (label.getText().equals(profilePageSubSectionLabel)) {

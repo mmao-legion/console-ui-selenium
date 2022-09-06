@@ -108,4 +108,5 @@ public interface ForecastPage {
 	public void goToForecastLaborWeek() throws Exception;
 	public String getLaborBudgetOnSummarySmartCard() throws Exception;
 	public void clearLaborBudgetOnSummarySmartCard() throws Exception;
+	public void verifyDemandForecastCanLoad() throws Exception;
 }

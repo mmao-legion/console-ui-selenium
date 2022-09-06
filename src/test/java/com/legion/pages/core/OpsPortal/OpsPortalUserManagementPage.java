@@ -1094,6 +1094,8 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	private WebElement history;
 	@FindBy(css = "div#logContainer.lg-slider-pop__content.mt-20")
 	private WebElement historyDetail;
+	@FindBy(css = "div.show-more")
+	private WebElement showMore;
 
 	@Override
 	public void verifyHistoryDeductType() throws Exception {
@@ -1105,10 +1107,13 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 				click(history);
 				if(isElementEnabled(historyDetail,5)){
 					highlightElement(historyDetail);
-					if (historyDetail.getText().contains("max carryover") && historyDetail.getText().contains("max available") && historyDetail.getText().contains("annual earn limit")){
-						SimpleUtils.pass("deducted type display");
-					}else
-						SimpleUtils.fail("deducted type doesn't display",false);
+					if(isElementEnabled(showMore,5)){
+						clickTheElement(showMore);
+						if (historyDetail.getText().contains("max carryover") && historyDetail.getText().contains("max available") && historyDetail.getText().contains("annual earn limit")){
+							SimpleUtils.pass("deducted type display");
+						}else
+							SimpleUtils.fail("deducted type doesn't display",false);
+					}
 				}else
 					SimpleUtils.fail("user history detail loaded failed",false);
 			}else

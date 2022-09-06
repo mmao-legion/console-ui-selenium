@@ -2554,7 +2554,8 @@ public class LocationsTest extends TestBase {
             //Turn on EnableLongTermBudgetPlan toggle
             ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
             refreshPage();
-            refreshPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
             if(locationsPage.isBudgetPlanSectionShowing()){
                 SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is on");
             }else {

@@ -5764,8 +5764,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
-	@Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//	@Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
 	@TestName(description = "Verify the Edit Meal Break Time functionality in Context Menu in day view")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyEditMealBreakTimeInDayViewAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
@@ -6722,7 +6722,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Login as SM, check the Create Schedule button is disabled
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-			Thread.sleep(60000);
+			Thread.sleep(120000);
 			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -6771,7 +6771,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 				//Login as SM, check the Create Schedule button is enabled
 				loginPage.logOut();
-				Thread.sleep(60000);
+				Thread.sleep(120000);
 				loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 				SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 				scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -7308,7 +7308,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Go to the schedule view table
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-			Thread.sleep(60000);
+			Thread.sleep(6000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -7323,7 +7323,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
-			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("09:00AM", "09:00PM");
 
 			//Delete all specific shifts
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
@@ -7352,6 +7352,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				shiftCount2++;
 			}
 
+			if(workRole1.equalsIgnoreCase("mod")){
+				workRole1 = "MOD";
+			}
+
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
@@ -7363,7 +7367,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
-			newShiftPage.selectWorkRole(workRole1);
+			newShiftPage.selectWorkRoleCaseSensitive(workRole1);
 			newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
 			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
@@ -7394,6 +7398,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
 			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", isCorrect, false);
 			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
+			Thread.sleep(3);
 			shiftOperatePage.clickOnCloseBtnOfAssignDialog();
 
 		} catch (Exception e) {
@@ -7460,7 +7465,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-			if (isLocationUsingControlsConfiguration) {
+			if (!isLocationUsingControlsConfiguration) {
 				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
 				locationsPage.clickOnLocationsTab();
 				locationsPage.goToSubLocationsInLocationsPage();
@@ -7761,8 +7766,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
-//	@Enterprise(name = "Vailqacn_Enterprise")
-	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@Enterprise(name = "Vailqacn_Enterprise")
+//	@Enterprise(name = "CinemarkWkdy_Enterprise")
 	@TestName(description = "Verify scheduled hours and number of shifts in offers when the TM is scheduled in 2 locations")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -7810,7 +7815,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchTeamMemberByName(firstNameOfTM);
+			newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+ lastName);
 			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();
 			if (smartCardPage.isRequiredActionSmartCardLoaded()) {
@@ -7840,7 +7845,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchTeamMemberByName(firstNameOfTM);
+			newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+lastName);
 			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();
 			if (smartCardPage.isRequiredActionSmartCardLoaded()) {
@@ -7877,7 +7882,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.clickRadioBtnStaffingOption(staffingOption.ManualShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
 			newShiftPage.searchWithOutSelectTM(firstNameOfTM+ " "+lastName);
-			HashMap<String, Integer> totalShiftHrsAndShiftCountThisWeek = shiftOperatePage.getTotalShiftHrsAndShiftCountThisWeek();
+			Thread.sleep(5000);
+			HashMap<String, Float> totalShiftHrsAndShiftCountThisWeek = shiftOperatePage.getTotalShiftHrsAndShiftCountThisWeek();
 			SimpleUtils.assertOnFail("The expected total shift hrs this week is 6, the actual is "
 							+totalShiftHrsAndShiftCountThisWeek.get("shiftHrs"),
 					totalShiftHrsAndShiftCountThisWeek.get("shiftHrs") == 6, false);
@@ -7905,6 +7911,234 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					offerTMInfo.contains(totalShiftCountMessage.toLowerCase()), false);
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(),false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify \"Edit operating hours\" option is available")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyEditOperatingHoursUnderMoreActionsAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+
+			//Go to the schedule page
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+
+			//Check the edit operating hours page
+			scheduleMainPage.goToEditOperatingHoursView();
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify \"Edit operating hours\" option is disabled in edit mode")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyEditOpeHoursDisabledAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+
+			//Go to the schedule page
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			//Check the edit operating hours page is disable
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			SimpleUtils.assertOnFail("The More Actions button is clickable!", !(scheduleMainPage.isMoreActionsBtnClickable()), false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the functionality of \"Edit Operating hours\" option")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheFunctionalityOfEditOpeHoursAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+
+			//Go to the schedule page
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			//Check the content of week days on operating hours page, it matches with toggle summary view
+			scheduleMainPage.goToToggleSummaryView();
+			scheduleMainPage.checkOperatingHoursOnToggleSummary();
+			scheduleMainPage.goToEditOperatingHoursView();
+			scheduleMainPage.checkOperatingHoursOnEditDialog();
+			scheduleMainPage.clickCancelBtnOnEditOpeHoursPage();
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Verify the functionality of SAVE button on \"Edit operating hours\" window")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheSaveFunctionOnEditOpeHoursDialogAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+
+			//Go to the schedule page
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			//Open, close, edit the operating day, the operating hours should be changed sync with toggle summary.
+			scheduleMainPage.goToToggleSummaryView();
+			scheduleMainPage.goToEditOperatingHoursView();
+			List<String> weekDay = new ArrayList<>(Arrays.asList("Sunday"));
+			scheduleMainPage.closeTheParticularOperatingDay(weekDay);
+			scheduleMainPage.openTheParticularOperatingDay(weekDay);
+			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDay, "10:00AM","10:00PM");
+			scheduleMainPage.clickCancelBtnOnEditOpeHoursPage();
+			scheduleMainPage.goToEditOperatingHoursView();
+
+			List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
+			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "10:00AM","10:00PM");
+			scheduleMainPage.clickCancelBtnOnEditOpeHoursPage();
+			scheduleMainPage.checkOperatingHoursOnToggleSummary();
+			scheduleMainPage.goToEditOperatingHoursView();
+			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "10:00AM","10:00PM");
+			scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
+			scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "10AM-10PM");
+
+			scheduleMainPage.goToEditOperatingHoursView();
+			scheduleMainPage.closeTheParticularOperatingDay(weekDays);
+			scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
+			scheduleMainPage.checkClosedDayOnToggleSummary(weekDays);
+			scheduleMainPage.goToToggleSummaryView();
+			Thread.sleep(3);
+
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdate();
+
+			//Check the closed operating day.
+			scheduleCommonPage.clickOnWeekView();
+			int shiftCount = scheduleShiftTablePage.getShiftsCount();
+			SimpleUtils.assertOnFail("The schedule is not empty!", shiftCount == 0, false);
+			scheduleCommonPage.clickOnDayView();
+			SimpleUtils.assertOnFail("The current day is not closed!", scheduleCommonPage.isStoreClosedForActiveWeek(), false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Veirfy shifts should have \"Outside Operating hours\" violation when reducing the operating hours")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheOutOpeHrsViolationAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+
+			//Go to the schedule page
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			//Edit the operating hours for the current week.
+			scheduleMainPage.goToToggleSummaryView();
+			scheduleMainPage.goToEditOperatingHoursView();
+			List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
+			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "06:00AM","08:00AM");
+			scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
+			scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "6AM-8AM");
+
+			//Refresh the schedule page
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+
+			//Check the Outside Operating Hours violation on the shifts
+			List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
+			SimpleUtils.assertOnFail("The Outside Operating Hours violation is not shown!", complianceMessage.contains("Outside Operating hours"), false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
 }

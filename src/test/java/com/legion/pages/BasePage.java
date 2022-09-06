@@ -1062,8 +1062,8 @@ public class BasePage {
         Date endTimeDate1;
         Date startTimeDate2;
         Date endTimeDate2;
-        startTimeDate1 = df.parse(compareTime.split("-")[0].trim());
-        endTimeDate1 = df.parse(compareTime.split("-")[1].trim());
+        startTimeDate1 = df.parse(compareTime.split("-")[0].trim().replace(" ", ""));
+        endTimeDate1 = df.parse(compareTime.split("-")[1].trim().replace(" ", ""));
         startTimeDate2 = df.parse(periodTime.split("-")[0].trim());
         endTimeDate2 = df.parse(periodTime.split("-")[1].trim());
 

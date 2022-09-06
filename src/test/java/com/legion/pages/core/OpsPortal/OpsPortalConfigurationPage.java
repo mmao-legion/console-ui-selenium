@@ -22,6 +22,8 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
 import static com.legion.utils.MyThreadLocal.driver;
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.tests.TestBase.*;
@@ -941,7 +943,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if (isElementEnabled(editTemplatePopupPage, 5)) {
 				SimpleUtils.pass("Click edit button successfully!");
 				clickTheElement(okButton);
-				if (isElementEnabled(dropdownArrowButton)) {
+				if (isElementEnabled(dropdownArrowButton, 20)) {
 					SimpleUtils.pass("Template is in edit mode now");
 				} else {
 					SimpleUtils.fail("Template is not in edit mode now", false);
@@ -5265,7 +5267,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		boolean ifSuccess = false;
 		int optionsCount = 0;
 		String[] optionsToAdd;
-		HashMap<String, String> driverAndFactors = new HashMap<>();
+		ConcurrentHashMap<String, String> driverAndFactors = new ConcurrentHashMap<String, String>();
 
 		if (options != null) {
 			optionsToAdd = options.split(";");
@@ -5277,7 +5279,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			for (String optionToAdd : optionsToAdd) {
 				driverAndFactors.put(optionToAdd.split(",")[0], optionToAdd.split(",")[1]);
 			}
-
 			for (WebElement driverOption : aggregatedDriverOptions) {
 				for (Map.Entry<String, String> entry : driverAndFactors.entrySet()) {
 					if (driverOption.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty") ||
@@ -5289,6 +5290,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 										value.findElement(By.cssSelector("div")).getAttribute("innerText").replaceAll("\n", "").trim().equals(entry.getKey())) {
 									clickTheElement(driverOption.findElement(By.cssSelector("input")));
 									clickTheElement(value.findElement(By.cssSelector("div")));
+									break;
 								}
 							}
 							if (!driverOption.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty")) {
@@ -5299,7 +5301,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 									scaleFactor.sendKeys(entry.getValue());
 								}
 								driverAndFactors.remove(entry.getKey(), entry.getValue());
-								ifSuccess = true;
+								if (driverAndFactors.size() == 0){
+									ifSuccess = true;
+								}
 								break;
 							} else {
 								if (saveButton.getAttribute("disabled").equals("true")) {
@@ -7356,5 +7360,49 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("OP Page: Minimum time (in minutes) required between shifts fail to load! ", false);
 		}
 		return minimumTime;
+	}
+
+	@Override
+	public boolean verifyTemplateCardExist(String templateType) throws Exception {
+		boolean flag = false;
+		if (areListElementVisible(configurationCardsList)) {
+			for (WebElement configurationCard : configurationCardsList) {
+				if (configurationCard.getText().equals(templateType)) {
+					SimpleUtils.pass(templateType + " card is showing.");
+					flag = true;
+					break;
+				}
+			}
+		}else{
+			SimpleUtils.fail("Configuration card failed to load!", false);
+		}
+		return flag;
+	}
+
+	@FindBy(css="input-field[options=\"$ctrl.forecastSourceOptions\"] select")
+	private WebElement forecastSourceSelect;
+	@Override
+	public List<String> getAllForecastSourceType() throws Exception {
+		List<String> forecastSourceName = new ArrayList<>();
+
+		if (isElementLoaded(forecastSourceSelect, 5)){
+			Select typeSelect = new Select(forecastSourceSelect);
+			for (WebElement option : typeSelect.getOptions()){
+				forecastSourceName.add(option.getText());
+			}
+		}
+		return forecastSourceName;
+	}
+
+	@FindBy(css="lg-predictability-score>question-input[question-title=\"Predictability Score\"]")
+	private WebElement predictabilityScoreItem;
+	@Override
+	public boolean verifyPredictabilityScoreExist() throws Exception {
+		boolean flag = false;
+
+		if (isElementLoaded(predictabilityScoreItem, 5)){
+			flag = true;
+		}
+		return flag;
 	}
 }
