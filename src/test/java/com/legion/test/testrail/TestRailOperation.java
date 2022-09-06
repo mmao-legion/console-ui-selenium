@@ -19,21 +19,21 @@ public class TestRailOperation {
     static HashMap<String,String> testRailCfgOp = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_OP.json");
 
     public static String getTestRailURL(){
-       if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
+       if (!System.getProperty("enterprise").equalsIgnoreCase("opauto") && !System.getProperty("enterprise").equalsIgnoreCase("op")) {
             return testRailConfig.get("TEST_RAIL_URL");
         }else {
             return testRailCfgOp.get("TEST_RAIL_URL");
         }
     }
     public static String getTestRailUser(){
-        if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
+        if (!System.getProperty("enterprise").equalsIgnoreCase("opauto") && !System.getProperty("enterprise").equalsIgnoreCase("op")) {
             return testRailConfig.get("TEST_RAIL_USER");
         }else {
             return testRailCfgOp.get("TEST_RAIL_USER");
         }
     }
     public static String getTestRailPassword(){
-        if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
+        if (!System.getProperty("enterprise").equalsIgnoreCase("opauto") && !System.getProperty("enterprise").equalsIgnoreCase("op")) {
             return testRailConfig.get("TEST_RAIL_PASSWORD");
         }else {
             return testRailCfgOp.get("TEST_RAIL_PASSWORD");
