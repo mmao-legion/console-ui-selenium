@@ -4916,8 +4916,6 @@ public class ConfigurationTest extends TestBase {
 
             String templateType = "Operating Hours";
             String templateName ="FionaUsingUpdateLocationLevelOH";
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
-            String currentTime = dfs.format(new Date()).trim();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
 
             configurationPage.goToConfigurationPage();
@@ -4940,27 +4938,41 @@ public class ConfigurationTest extends TestBase {
         try {
 
             String locationName = "updateOHViaIntegration";
-            int moveCount = 4;
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            String openString = "09:00AM";
+            String closeString ="08:30PM";
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
+            if(locationsPage.verifyIsOverrideStatusAtLocationLevel("Operating Hours")){
+                locationsPage.clickActionsForTemplate("Operating Hours", "Reset");
+            }
+            //user can view location level OH template
             locationsPage.clickActionsForTemplate("Operating Hours", "View");
             locationsPage.backToConfigurationTabInLocationLevel();
+            //user can edit location level OH template
             locationsPage.clickActionsForTemplate("Operating Hours", "Edit");
-
             locationsPage.editBtnIsClickableInBusinessHours();
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            locationsPage.updateOpenCloseHourForOHTemplate(openString,closeString);
             locationsPage.selectDayInWorkingHoursPopUpWin(6);
             configurationPage.saveBtnIsClickable();
             configurationPage.saveBtnIsClickable();
-            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "Yes");
+            if(locationsPage.verifyIsOverrideStatusAtLocationLevel("Operating Hours")){
+                SimpleUtils.pass("User can update location level template successfully");
+            }else {
+                SimpleUtils.fail("User failed to update location level template",false);
+            }
+
             //reset
             locationsPage.clickActionsForTemplate("Operating Hours", "Reset");
-            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "No");
-
+            if(!locationsPage.verifyIsOverrideStatusAtLocationLevel("Operating Hours")){
+                SimpleUtils.pass("User can reset successfully");
+            }else {
+                SimpleUtils.fail("User failed to reset location level template",false);
+            }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
