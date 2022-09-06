@@ -5244,5 +5244,34 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			select.selectByVisibleText("By Work Role Hourly Rate");
 		}
 	}
+
+	@FindBy(css="lg-new-time-input[label=\"Open\"] input")
+	private WebElement openHour;
+	@FindBy(css="lg-new-time-input[label=\"Close\"] input")
+	private WebElement closeHour;
+
+	@Override
+	public void updateOpenCloseHourForOHTemplate(String openString,String closeString){
+		if(isElementEnabled(openHour,2) && isElementEnabled(closeHour,2)){
+//			openHour.sendKeys(Keys.TAB);
+			openHour.clear();
+			clickTheElement(openHour);
+			openHour.sendKeys(openString);
+			waitForSeconds(2);
+			openHour.sendKeys(Keys.TAB);
+			openHour.sendKeys(Keys.TAB);
+			closeHour.sendKeys(closeString);
+			waitForSeconds(2);
+			String openStr=getDriver().findElement(By.cssSelector("lg-new-time-input[label=\"Open\"] div.input-faked")).getAttribute("innerText").trim();
+			String closeStr=getDriver().findElement(By.cssSelector("lg-new-time-input[label=\"Close\"] div.input-faked")).getAttribute("innerText").trim();
+			if(openStr.equalsIgnoreCase(openString)&&closeStr.equalsIgnoreCase(closeString)){
+				SimpleUtils.pass("user can update open and close hour successfully in OH template");
+			}else {
+				SimpleUtils.fail("user can NOT update open and close hour successfully in OH template",false);
+			}
+		}else {
+			SimpleUtils.fail("open hours and close hours fields are not showing",false);
+		}
+	}
 }
 
