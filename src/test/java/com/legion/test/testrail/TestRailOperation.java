@@ -92,7 +92,7 @@ public class TestRailOperation {
         String testRailURL =        "";
         String testRailUser =       "";
         String testRailPassword =   "";
-        if (!System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
+        if (!System.getProperty("enterprise").equalsIgnoreCase("opauto") && !System.getProperty("enterprise").equalsIgnoreCase("op")) {
             testRailURL = testRailConfig.get("TEST_RAIL_URL");
             testRailUser = testRailConfig.get("TEST_RAIL_USER");
             testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
