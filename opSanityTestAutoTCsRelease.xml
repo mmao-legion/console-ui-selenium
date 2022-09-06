@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite verbose ="0" thread-count="10" name="LegionTest">
+    <parameter name="environment" value="QA"/>
+    <parameter name="testRail" value="Yes"/>
+    <parameter name="testRailRunName" value="Automation Regression OP For Release"/>
+    <listeners>
+        <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
+    </listeners>
+
+    <!--======================================================Start - This is OP tests===================================================-->
+
+    <test name="Location Test">
+        <classes>
+            <class name="com.legion.tests.core.OpsPortal.LocationsTest">
+                <methods>
+                    <include name="verifyCreateRegularLocationWithAllFieldsAndNavigateAsInternalAdmin" />
+                    <include name="verifyDisableEnableLocationFunctionAsInternalAdmin" />
+                    <include name="verifyExportLocationDistrictAsInternalAdmin" />
+                    <include name="verifyGlobalDynamicGroupFunctionInLocationsTabAsInternalAdmin" />
+                    <include name="verifyUserCanSeeEachTypeOfTemViaClickingTemNameAsInternalAdmin" />
+                    <include name="verifyOverriddenSchedulingRulesInLocationLevelAsInternalAdmin" />
+                    <include name="verifyOverriddenOperatingHoursInLocationLevelAsInternalAdmin" />
+                    <include name="verifyOverriddenAssignmentRulesInLocationLevelAsInternalAdmin" />
+                    <include name="verifyOverriddenLaborModelInLocationLevelAsInternalAdmin" />
+                    <include name="verifyDifferentLegionUserCanGenerateScheduleAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+        <test name="Navigation Test">
+            <classes>
+                <class name="com.legion.tests.core.OpsPortal.NewNavigationFlowTest">
+                    <methods>
+                        <include name="verifyLocationProfilePageInControlsAsAsInternalAdmin" />
+                        <include name="verifyManagerLocationForOneUserInControlsInControlsAsInternalAdmin" />
+                        <!--include name="verifyNavigationBarSearchDistrictFunctionInternalAdmin" />
+                        <include name="verifyNavigationBarSearchLocationFunctionAsInternalAdmin" />
+                        <include name="verifyNavigationBarWhenSwitchDifferentTabsAsInternalAdmin"/>
+                        <include name="verifyNavigationBarRecentlyViewListAsInternalAdmin"/-->
+                    </methods>
+                </class>
+            </classes>
+        </test>
+
+
+    <test name="Job Test">
+        <classes>
+            <class name="com.legion.tests.core.OpsPortal.JobTest">
+                <methods>
+                    <include name="verifyCreateScheduleJobFunctionAsInternalAdmin" />
+                    <include name="verifyCreateReleaseScheduleJobFunctionAsInternalAdmin"/>
+                    <!--include name="verifyAdjustBudgetJobFunctionAsInternalAdmin"/-->
+                    <include name="verifyAdjustForecastJobFunctionAsInternalAdmin" />
+                    <include name="verifyCopyStopResumeAndArchiveJobFunctionFunctionAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <!--
+     <test name="Configuration Test">
+         <classes>
+             <class name="com.legion.tests.core.OpsPortal.ConfigurationTest">
+                 <methods>
+                     <include name="verifyCreateEachTemplateWithDynamicGroupAsInternalAdminForConfiguration"/>
+                     <include name="verifyUserCanOpenEachTypeTemplateAsInternalAdminForConfiguration"/>
+                     <include name="verifyNewAdvancedStaffingRulePageAsInternalAdminForConfiguration"/>
+                     <include name="verifyCheckBoxOfDaysOfWeekAsInternalAdminForConfiguration"/>
+                     <include name="verifyInputFormulaForDaysOfWeekAsInternalAdminForConfiguration"/>
+                     <include name="verifyTimeOfDayStartSectionAsInternalAdminForConfiguration"/>
+                     <include name="verifyTimeOfDayDuringSectionAsInternalAdminForConfiguration"/>
+                     <include name="verifyTimeOfDayEndSectionAsInternalAdminForConfiguration"/>
+                     <include name="verifyTimeOfDayFormulaSectionAsInternalAdminForConfiguration"/>
+                     <include name="verifyMealAndRestBreaksAsInternalAdminForConfiguration"/>
+                     <include name="verifyNumberOfShiftsAsInternalAdminForConfiguration"/>
+                     <include name="verifyBadgesOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                     <include name="verifyCrossAndCheckMarkButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                     <include name="verifySaveAndCancelButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                     <include name="verifyAddEditDeleteFunctionOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+                     <include name="verifyCreateAllTypeTemplateAsInternalAdminForConfiguration"/>
+                     <include name="verifyAdvancedStaffingRulesShowWellAsInternalAdminForConfiguration"/>
+                 </methods>
+             </class>
+         </classes>
+     </test>-->
+
+ </suite> <!-- Suite -->

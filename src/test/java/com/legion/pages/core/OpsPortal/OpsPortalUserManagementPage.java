@@ -1865,7 +1865,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	@Override
 	public void deleteJobTitleGroup(String jobTitleGroupName) throws Exception{
 		waitForSeconds(3);
-		int beforeCount = jobTitleGroupList.size();
+//		int beforeCount = jobTitleGroupList.size();
 		if(isElementEnabled(removeButtonOfJobTitleGroup,3)){
 			clickTheElement(removeButtonOfJobTitleGroup);
 			waitForSeconds(3);
@@ -1884,8 +1884,14 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 					clickTheElement(jobTitleGroup);
 				}
 				waitForSeconds(2);
-				int afterCount = jobTitleGroupList.size();
-				if(beforeCount-afterCount==1){
+//				int afterCount = jobTitleGroupList.size();
+				List<String> nameList = new ArrayList<>();
+				for(WebElement jobTitleGr:jobTitleGroupList){
+					String jobTitleGroupNam = jobTitleGr.findElement(By.cssSelector(" td")).getText().trim();
+					nameList.add(jobTitleGroupNam);
+				}
+
+				if(!nameList.contains(jobTitleGroupName)){
 					SimpleUtils.pass("User can delete job title group successfully!");
 				}else {
 					SimpleUtils.fail("User failed to delete job title group",false);

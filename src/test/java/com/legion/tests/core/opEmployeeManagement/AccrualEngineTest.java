@@ -1085,7 +1085,7 @@ public class AccrualEngineTest extends TestBase {
 
         //get session id via login
         //String sessionId = logIn();
-        String sessionId = LoginAPI.getSessionIdFromLoginAPI("sophia.zhang+36@legion.co", "legion01");
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -1148,10 +1148,10 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Bereavement2", "4.8");//HireDate~Specified/worked hours/rate/ 0.2
         expectedTOBalance.put("Bereavement3", "7.2");//Specified~HireDate/worked hours/rate/ 0.3
         expectedTOBalance.put("Bereavement4", "9.6");//Specified~Specified/worked hours/rate/ 0.4
-        expectedTOBalance.put("Covid1", "30");//HireDate~HireDate/worked hours/fix days
-        expectedTOBalance.put("Covid2", "17");//HireDate~Specified/worked hours/fix days
-        expectedTOBalance.put("Covid3", "30");//Specified~HireDate/worked hours/fix days
-        expectedTOBalance.put("Covid4", "4");//Specified~Specified/worked hours/fix days
+        expectedTOBalance.put("Covid1", "0");//HireDate~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid2", "0");//HireDate~Specified/worked hours/fix days
+        expectedTOBalance.put("Covid3", "0");//Specified~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid4", "0");//Specified~Specified/worked hours/fix days
         expectedTOBalance.put("Floating Holiday", "30");//HireDate~HireDate/Monthly /hire month/ begin
         expectedTOBalance.put("Grandparents Day Off1", "21");//Specified~Specified/Weekly
 
@@ -1165,20 +1165,20 @@ public class AccrualEngineTest extends TestBase {
 
         //expected accrual
         expectedTOBalance.put("Annual Leave", "24");// HireDate~HireDate/Monthly /hire month/end
-        expectedTOBalance.put("Annual Leave1", "4");// HireDate~HireDate/Worked Hours /total hours/ 10 1
+        expectedTOBalance.put("Annual Leave1", "5");// HireDate~HireDate/Worked Hours /total hours/ 10 1
         expectedTOBalance.put("Annual Leave2", "2");// HireDate~Specified/Worked Hours /total hours/ 20 1
-        expectedTOBalance.put("Annual Leave3", "2");// Specified~HireDate/worked hours/total hours/ 15 1
+        expectedTOBalance.put("Annual Leave3", "3");// Specified~HireDate/worked hours/total hours/ 15 1
         expectedTOBalance.put("Annual Leave4", "8");// Specified~Specified/worked hours/total hour/ 5 1
-        expectedTOBalance.put("Bereavement1", "4");//Specified~Specified/worked hours/rate/ 0.1
+        expectedTOBalance.put("Bereavement1", "4.8");//Specified~Specified/worked hours/rate/ 0.1
         expectedTOBalance.put("Bereavement2", "8");//Specified~Specified/worked hours/rate/ 0.2
-        expectedTOBalance.put("Bereavement3", "12");//Specified~Specified/worked hours/rate/ 0.3
+        expectedTOBalance.put("Bereavement3", "14.4");//Specified~Specified/worked hours/rate/ 0.3
         expectedTOBalance.put("Bereavement4", "16");//Specified~Specified/worked hours/rate/ 0.4
         expectedTOBalance.put("Floating Holiday", "30");//HireDate~HireDate/Monthly /hire month/ begin
         expectedTOBalance.put("Grandparents Day Off1", "21");//Specified~Specified/Weekly
-        expectedTOBalance.put("Covid1", "30");//HireDate~HireDate/worked hours/fix days
-        expectedTOBalance.put("Covid2", "20");//HireDate~Specified/worked hours/fix days
-        expectedTOBalance.put("Covid3", "27");//Specified~HireDate/worked hours/fix days
-        expectedTOBalance.put("Covid4", "7");//Specified~Specified/worked hours/fix days
+        expectedTOBalance.put("Covid1", "0");//HireDate~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid2", "0");//HireDate~Specified/worked hours/fix days
+        expectedTOBalance.put("Covid3", "0");//Specified~HireDate/worked hours/fix days
+        expectedTOBalance.put("Covid4", "0");//Specified~Specified/worked hours/fix days
 
         accrualBalance0531 = timeOffPage.getTimeOffBalance();
 
@@ -1908,8 +1908,7 @@ public class AccrualEngineTest extends TestBase {
     public void verifyDefineAccrualUnitsAbilityAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
         //get session id via login
         //String sessionId = logIn();
-        String sessionId = LoginAPI.getSessionIdFromLoginAPI("sophia.zhang+36@legion.co", "legion01");
-        //ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
         String workerId = "4e75ebc1-1cff-4424-a04e-594e7255fde4";
         //Delete a worker's accrual
         String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
@@ -2021,7 +2020,7 @@ public class AccrualEngineTest extends TestBase {
     public void verifyWorkRoleAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
         //get session id via login
         //String sessionId = logIn();
-        String sessionId = LoginAPI.getSessionIdFromLoginAPI("sophia.zhang+36@legion.co", "legion01");
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
 
         String workerId = "02fc40f3-2b13-4a89-85cd-17c508b6588d";
         //Delete a worker's accrual
@@ -2135,20 +2134,20 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance02.put("Bereavement3", "0");
         expectedTOBalance02.put("Bereavement4", "0");
         expectedTOBalance02.put("Covid1", "12");
-        expectedTOBalance02.put("Covid2", "11");
+        expectedTOBalance02.put("Covid2", "12");
         expectedTOBalance02.put("Covid3", "0");
         expectedTOBalance02.put("Covid4", "0");
         expectedTOBalance02.put("DayUnit", "1");
         expectedTOBalance02.put("DayUnit1", "0");
-        expectedTOBalance02.put("DayUnit2", "2");
+        expectedTOBalance02.put("DayUnit2", "0");
         expectedTOBalance02.put("DayUnit3", "0");
         expectedTOBalance02.put("Grandparents Day Off1", "52");
         expectedTOBalance02.put("Grandparents Day Off2", "52");
         expectedTOBalance02.put("Grandparents Day Off3", "52");
         expectedTOBalance02.put("Grandparents Day Off4", "52");
-        expectedTOBalance02.put("Pandemic1", "10");
+        expectedTOBalance02.put("Pandemic1", "0");
         expectedTOBalance02.put("Pandemic2", "100");
-        expectedTOBalance02.put("Pandemic3", "20");
+        expectedTOBalance02.put("Pandemic3", "0");
         expectedTOBalance02.put("Pandemic4", "30");
         expectedTOBalance02.put("Personal Emergency", "8");
         expectedTOBalance02.put("PTO", "10");
@@ -2438,58 +2437,101 @@ public class AccrualEngineTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
-    @Owner(owner = "Nancy")
+    @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "OPS-3961 Ability to receive employee current accrual amount towards worked hour (total hour) distribution, annual use limit, annual earn limit")
+    @TestName(description = "OPS-4795 Add new Scheduled Hours distribution method.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAbilityToReceiveEmployeeCurrentAccrualAmountAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+    public void verifyScheduledHoursUIConfigurationAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
-        String templateName = "Activity";
+        String templateName = "AccrualAuto-ScheduledHours(Don't touch!!!)";
         absentManagePage.search(templateName);
         SimpleUtils.assertOnFail("Failed the find the target template!", absentManagePage.getResult().equals(templateName), false);
+        //configure: DayUnit
+        absentManagePage.configureTemplate(templateName);
+        //configure the first time off
+        absentManagePage.removeTimeOffRules("DayUnit");
+        absentManagePage.configureTimeOffRules("DayUnit");//scheduled hours/DayUnit
+        TimeOffReasonConfigurationPage configurationPage = new TimeOffReasonConfigurationPage();
+        configurationPage.setAccrualPeriod("Hire Date", "Hire Date", null, null, null, null);
+        //1.verify new distribution method--Scheduled Hours has been added
+        ArrayList<String> disOption = configurationPage.getDistributionOptions();
+        Assert.assertTrue(disOption.contains("Scheduled Hours"));
+        SimpleUtils.pass("Succeeded in validating new distribution method--Scheduled Hours has been added!");
+        //2.Scheduled Hours can be selected.
+        configurationPage.setDistributionMethod("Scheduled Hours");
+        SimpleUtils.pass("Succeeded in validating new distribution method--Scheduled Hours can be selected!");
+        //3. hours/accrual days(Day unit)
+        configurationPage.addSpecifiedServiceLever(0, "60", "0", "60");
+        Assert.assertEquals(configurationPage.getScheduledHourUnit(), "Accrued Days", "Failed to assert this type of time off is DayUnit!!!");
+        SimpleUtils.pass("Succeeded in validating the day unit of Scheduled Hours!");
+        //4.configure the distribution
+        configurationPage.setScheduledHourRule("1", "0.0061868891");
+        configurationPage.saveTimeOffConfiguration(true);
+        SimpleUtils.pass("Succeeded in configure Scheduled Hours as day unit!");
 
+        //configure the second time off
+        absentManagePage.removeTimeOffRules("Annual Leave");
+        absentManagePage.configureTimeOffRules("Annual Leave");//scheduled hours/hourUnit
+        configurationPage.setAccrualPeriod("Hire Date", "Specified Date", null, null, "December", "31");
+        configurationPage.setDistributionMethod("Scheduled Hours");
+        SimpleUtils.pass("Succeeded in validating new distribution method--Scheduled Hours can be selected!");
+        //3. hours/accrual days(hour unit)
+        configurationPage.addSpecifiedServiceLever(0, "60", "0", "60");
+        Assert.assertEquals(configurationPage.getScheduledHourUnit(), "Accrued Hours", "Failed to assert this type of time off is HourUnit!!!");
+        SimpleUtils.pass("Succeeded in validating the hour unit of Scheduled Hours!");
+        //4.configure the distribution
+        configurationPage.setScheduledHourRule("1", "0.0697312589");
+        configurationPage.saveTimeOffConfiguration(true);
+        SimpleUtils.pass("Succeeded in configure Scheduled Hours as hour unit!");
+        OpsCommonComponents commonComponents = new OpsCommonComponents();
+        commonComponents.saveTemplateAs("Save as draft");
+        SimpleUtils.pass("Succeeded in saving configurations as draft!");
+    }
+
+    //scheduled and published: 51(not include meal break and rest break) spe-4~sep10
+    //scheduled and unpublished:9.5(not include meal break) spe-11~sep17
+    @Automated(automated = "Automated")
+    @Owner(owner = "Sophia")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "OPS-4797 Add Scheduled Hours support to The Total Hours distribution type.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyScheduledHoursWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception {
+        //verify that the target template is here.
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        String templateName = "AccrualAuto-ScheduledHours(Don't touch!!!)";
+        absentManagePage.search(templateName);
+        SimpleUtils.assertOnFail("Failed the find the target template!", absentManagePage.getResult().equals(templateName), false);
         //switch to console
         RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
         modelSwitchPage.switchToNewTab();
         //search and go to the target location
         ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
-        consoleNavigationPage.searchLocation("verifyMock");
+        consoleNavigationPage.searchLocation("OMLocation16");
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        String teamMemName = "Nancy importBalance";
+        String teamMemName = "Ada Wang";
         timeOffPage.goToTeamMemberDetail(teamMemName);
         timeOffPage.switchToTimeOffTab();
-
         //get session id via login
-        String sessionId = LoginAPI.getSessionIdFromLoginAPI("nancy.nan+timeoff@legion.co", "admin11.a");
-
+        String sessionId = logIn();
+        //set UseAbsenceMgmtConfiguration Toggle On
+        if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
+            String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
+            Assert.assertEquals(getHttpStatusCode(toggleResponse), 200, "Failed to get the user's template!");
+        }
         //confirm template
-        String workerId = "b4bf7ed1-ac9c-4e84-adaa-0d8e1420160b";
-        String targetTemplate = "Activity";
+        String workerId = "cb51a64c-960c-4cc3-9fe3-57cd4680b1f0";
+        String targetTemplate = "AccrualAuto-ScheduledHours(Don't touch!!!)";
         String tempName = getUserTemplate(workerId, sessionId);
         Assert.assertEquals(tempName, targetTemplate, "The user wasn't associated to this Template!!! ");
         SimpleUtils.pass("Succeeded in confirming that employee was associated to the target template!");
 
         //create a time off balance map to store the expected time off balances.
         HashMap<String, String> expectedTOBalance = new HashMap<>();
-        expectedTOBalance.put("Annual Leave", "0");
-        expectedTOBalance.put("Annual Leave1", "0");
-        expectedTOBalance.put("Annual Leave2", "0");
-        expectedTOBalance.put("Annual Leave3", "0");
-        expectedTOBalance.put("Annual Leave4", "0");
-        expectedTOBalance.put("Bereavement1", "0");
-        expectedTOBalance.put("Bereavement2", "0");
-        expectedTOBalance.put("Bereavement3", "0");
-        expectedTOBalance.put("Bereavement4", "0");
-        expectedTOBalance.put("Covid1", "0");
-        expectedTOBalance.put("Covid2", "0");
-        expectedTOBalance.put("Covid3", "0");
-        expectedTOBalance.put("Covid4", "0");
-        expectedTOBalance.put("Floating Holiday", "0");
-        expectedTOBalance.put("Grandparents Day Off1", "0");
-
+        expectedTOBalance.put("Annual Leave", "0");//
+        expectedTOBalance.put("DayUnit", "0");
         //Delete the worker's accrual balance
         String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
         Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
@@ -2499,25 +2541,38 @@ public class AccrualEngineTest extends TestBase {
         Assert.assertEquals(actualTOB, expectedTOBalance, "Failed to assert clear the accrual balance!");
         SimpleUtils.pass("Succeeded in clearing employee's accrual balance!");
 
-        //import accrual balance via CSV file.
-        importAccrualBalance3961(sessionId);
-
-        expectedTOBalance.put("Annual Leave", "23");// HireDate~HireDate/Monthly /calendar month/begin
-        expectedTOBalance.put("Annual Leave1", "7");// HireDate~Specified/Monthly /hire month/end
-        expectedTOBalance.put("Annual Leave2", "6");// HireDate~HireDate/Monthly /calendar month/begin
-        expectedTOBalance.put("Annual Leave3", "9");// HireDate~Specified/Monthly /hire month/end
-
-        importAccrualBalance3961Invalid(sessionId);
-
+        //run engine to a specified date
+        String date1 = "2022-09-08";
+        String[] accrualResponse1 = runAccrualJobToSimulateDate(workerId, date1, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse1), 200, "Failed to run accrual job!");
+        //expected accrual
+        expectedTOBalance.put("Annual Leave", "3.63");//52*0.06973126=3.62602552 included rest break
+        expectedTOBalance.put("DayUnit", "0.32");//52*0.006186889=0.321718228
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
-        HashMap<String, String> importedBalance = timeOffPage.getTimeOffBalance();
-        String verification1 = validateTheAccrualResults(importedBalance, expectedTOBalance);
+        HashMap<String, String> accrualBalance220705 = timeOffPage.getTimeOffBalance();
+        System.out.println(accrualBalance220705);
+        String verification1 = validateTheAccrualResults(accrualBalance220705, expectedTOBalance);
         Assert.assertTrue(verification1.contains("Succeeded in validating"), verification1);
-        SimpleUtils.pass("Succeeded in validating importing accrual balance successfully!");
+        SimpleUtils.pass("Succeeded in validating accrual correctly!");
 
+        //run engine to a specified date
+        //Verify unpublished scheduled hours will not take into accrual
+        String date2 = "2022-09-12";
+        String[] accrualResponse2 = runAccrualJobToSimulateDate(workerId, date2, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse2), 200, "Failed to run accrual job!");
+        //expected accrual
+        expectedTOBalance.put("Annual Leave", "3.63");//52*0.06973126=3.62602552 included rest break
+        expectedTOBalance.put("DayUnit", "0.32");//52*0.006186889=0.321718228
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance220912 = timeOffPage.getTimeOffBalance();
+        System.out.println(accrualBalance220912);
+        String verification2 = validateTheAccrualResults(accrualBalance220912, expectedTOBalance);
+        Assert.assertTrue(verification2.contains("Succeeded in validating"), verification2);
+        SimpleUtils.pass("Succeeded in validating accrual correctly!");
     }
-
 
 }

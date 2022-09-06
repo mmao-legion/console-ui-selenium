@@ -1375,12 +1375,11 @@ public class LocationsTest extends TestBase {
         }
     }
 
-//    Blocked by https://legiontech.atlassian.net/browse/OPS-4525
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "User can view the default location level external attribute")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyDefaultValueOfExternalAttributesInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
@@ -1427,16 +1426,17 @@ public class LocationsTest extends TestBase {
 
             //Compare location level default external attributes value should be same with template level.
             locationsPage.backToConfigurationTabInLocationLevel();
-            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfo.get(7).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Labor model template is not overridden at location level");
+//            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            if (locationsPage.verifyIsOverrideStatusAtLocationLevel("Labor Model")) {
+                SimpleUtils.pass("Labor model template is overridden at location level");
+                locationsPage.clickActionsForTemplate("Labor Model", "Reset");
             } else {
-                SimpleUtils.pass("Labor model template is already overridden at location level");
-                locationsPage.editLocationBtnIsClickableInLocationDetails();
-                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Reset");
+                SimpleUtils.pass("Labor model template is NOT overridden at location level");
+
             }
 
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "View");
+//            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "View");
+            locationsPage.clickActionsForTemplate("Labor Model", "View");
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
             HashMap<String, List<String>> locationLevelAttributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
             for (String key : templateLevelAttributesInfoInLocation.keySet()) {
@@ -2485,12 +2485,11 @@ public class LocationsTest extends TestBase {
         }
     }
 
-    //new feature is not released to rc
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "opauto")
     @TestName(description = "Labor Budget Plan Section UI")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyLaborBudgetPlanSectionUIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -2503,18 +2502,21 @@ public class LocationsTest extends TestBase {
         }
     }
 
-    //new feature is not released to rc
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "opauto")
     @TestName(description = "update Labor Budget Plan settings")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUpdateLaborBudgetPlanSettingsAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             boolean subPlans = true;
             boolean compressed = true;
             String computeBudgetCost ="Work Role";
             String subPlansLevel = "Region";
+            boolean subPlans1 = false;
+            boolean compressed1 = false;
+            String computeBudgetCost1 ="Work Role";
+            String subPlansLevel1 = "Region";
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             locationsPage.clickOnLocationsTab();
@@ -2522,17 +2524,19 @@ public class LocationsTest extends TestBase {
             locationsPage.clickOnEditButtonOnGlobalConfigurationPage();
             locationsPage.updateLaborBudgetPlanSettings(subPlans,subPlansLevel,compressed,computeBudgetCost);
             locationsPage.saveTheGlobalConfiguration();
+            locationsPage.clickOnEditButtonOnGlobalConfigurationPage();
+            locationsPage.updateLaborBudgetPlanSettings(subPlans1,subPlansLevel1,compressed1,computeBudgetCost1);
+            locationsPage.saveTheGlobalConfiguration();
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
-    //new feature is not released to rc
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "opauto")
     @TestName(description = "Labor Budget Section is controlled by toggle")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyLaborBudgetSectionIsControlledByToggleAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -2540,7 +2544,7 @@ public class LocationsTest extends TestBase {
             locationsPage.clickOnLocationsTab();
             locationsPage.goToGlobalConfigurationInLocations();
             //Turn off EnableLongTermBudgetPlan toggle
-            ToggleAPI.disableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
             refreshPage();
             if(!locationsPage.isBudgetPlanSectionShowing()){
                 SimpleUtils.pass("Budget plan section is Not showing when EnableLongTermBudgetPlan is off");
@@ -2548,7 +2552,8 @@ public class LocationsTest extends TestBase {
                 SimpleUtils.fail("Budget plan section is showing when EnableLongTermBudgetPlan is off",false);
             }
             //Turn on EnableLongTermBudgetPlan toggle
-            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
+            refreshPage();
             refreshPage();
             if(locationsPage.isBudgetPlanSectionShowing()){
                 SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is on");
@@ -2560,18 +2565,17 @@ public class LocationsTest extends TestBase {
         }
     }
 
-    //new feature is not released to rc
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "opauto")
     @TestName(description = "Compute LRB by work role or by job title groups")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyComputeLRBByWorkRoleOrByJobTitleGroupsAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             String time= sdf.format(new Date());
             String planName = "AutoUsing-ComputeMethod";
-            String scplan = "AutoUsing-ComputeMethod scenario 1";
+            String scplan = "AutoUsing-ComputeMethod sce";
 
             //go to op side to get the getLaborBudgetPlanComputeSettings
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -2628,7 +2632,6 @@ public class LocationsTest extends TestBase {
 
             //go to console side to check the plan page UI
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("RegionForPlan_Auto");
             locationSelectorPage.changeDistrict("DistrcitForPlan2");
             planPage.clickOnPlanConsoleMenuItem();

@@ -4572,7 +4572,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 	//	@FindBy(css = "ng-transclude.lg-question-input__input input-field ng-form input")
-	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/ng-transclude/content-box/ng-transclude/div/div/div/question-input/div/div[1]/ng-transclude/input-field/ng-form/input")
+	@FindBy(id = "input1716")
 	private WebElement maxNumEmployeesInput;
 
 	public void verifymaxNumEmployeesInput(String num) throws Exception {

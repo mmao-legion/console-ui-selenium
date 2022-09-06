@@ -1062,7 +1062,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.switchToControlWindow();
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("NancyTest");
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("NancyTimeOff");
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
