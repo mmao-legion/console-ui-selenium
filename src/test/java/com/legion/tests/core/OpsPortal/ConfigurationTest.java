@@ -8,6 +8,7 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.SettingsAndAssociationPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.pages.core.OpCommons.OpsCommonComponents;
+import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
 import com.legion.pages.core.OpsPortal.OpsPortalSettingsAndAssociationPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffPage;
@@ -38,6 +39,8 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.*;
+
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 
 public class ConfigurationTest extends TestBase {
@@ -2714,7 +2717,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on DynamicGroupV2 toggle
-            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -2794,7 +2797,7 @@ public class ConfigurationTest extends TestBase {
             //Remove the associated locations and templates
             configurationPage.archiveOrDeleteAllTemplates();
             //Turn off DynamicGroupV2 toggle
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2837,7 +2840,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on DynamicGroupV2 toggle
-            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -2892,7 +2895,7 @@ public class ConfigurationTest extends TestBase {
                     salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo.get("Category")), false);
 
             //Turn off DynamicGroupV2 toggle
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             switchToNewWindow();
             //Remove the associated locations and templates
             configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
@@ -2920,7 +2923,7 @@ public class ConfigurationTest extends TestBase {
             String derivedType = "Distributed";
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -2934,7 +2937,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.clickAddOrEditForDriver("Add");
             configurationPage.verifyForDerivedDemandDriverUI(derivedType, null);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2954,7 +2957,7 @@ public class ConfigurationTest extends TestBase {
             String parentType = "Parent Location";
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -2971,7 +2974,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnCancelButton();
             configurationPage.clickAddOrEditForDriver("Add");
             configurationPage.verifyForDerivedDemandDriverUI(derivedType, parentType);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2989,7 +2992,7 @@ public class ConfigurationTest extends TestBase {
             String derivedType = "Aggregated";
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3003,7 +3006,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.clickAddOrEditForDriver("Add");
             configurationPage.verifyForDerivedDemandDriverUI(derivedType, null);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3062,7 +3065,7 @@ public class ConfigurationTest extends TestBase {
             };
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3093,7 +3096,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnTemplateDetailTab();
             configurationPage.publishNowTemplate();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3105,7 +3108,7 @@ public class ConfigurationTest extends TestBase {
     @TestName(description = "Validate Creation&Modification for Distributed Demand Driver.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyCreationAndEditForDistributedDemandDriverAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
+        try {
             String templateType = "Demand Drivers";
             SimpleDateFormat dfs = new SimpleDateFormat("MMddHHmm");
             String currentTime =  dfs.format(new Date()).trim();
@@ -3161,7 +3164,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3206,10 +3209,10 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnTemplateDetailTab();
             configurationPage.publishNowTemplate();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
@@ -3274,7 +3277,7 @@ public class ConfigurationTest extends TestBase {
             };
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3319,7 +3322,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnTemplateDetailTab();
             configurationPage.publishNowTemplate();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3373,7 +3376,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3404,7 +3407,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3459,7 +3462,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3490,7 +3493,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3534,7 +3537,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3565,7 +3568,7 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.assertOnFail("Verify remote:remote driver page failed in read only mode!", configurationPage.verifyDriverInViewMode(remoteLocationDriver), false);
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             configurationPage.archiveOrDeleteTemplate(templateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -3816,6 +3819,213 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.setLeaveThisPageButton();
             configurationPage.archiveOrDeleteTemplate(SchedulingRulesTemplate);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Demand Driver is visible for Legion Internal User")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDemandDriverIsAccessibleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            SimpleDateFormat dfs = new SimpleDateFormat("MMddHHmm");
+            String currentTime =  dfs.format(new Date()).trim();
+            String demandDriverTemplate = "CheckDerivedDriver" + currentTime;
+            List<String> derivedDriverType = new ArrayList<String>(Arrays.asList("Remote", "Aggregated", "Distributed"));
+
+            //Go to Configuration tab, check if demand driver exist.
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            SimpleUtils.assertOnFail("Demand Driver card should be visible for legion internal user!", configurationPage.verifyTemplateCardExist(templateType), false);
+
+            //EnableTahoeStorage is on, verify could view derived driver
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            refreshPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.createNewTemplate(demandDriverTemplate);
+            configurationPage.clickOnTemplateName(demandDriverTemplate);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            SimpleUtils.assertOnFail("Derived forecast source type should be visible with EnableTahoeStorage turned on!", configurationPage.getAllForecastSourceType().containsAll(derivedDriverType), false);
+
+            //EnableTahoeStorage is off, verify could not view derived driver
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            refreshPage();
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            SimpleUtils.assertOnFail("Derived forecast source type should be invisible with EnableTahoeStorage turned off!", !configurationPage.getAllForecastSourceType().containsAll(derivedDriverType), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Demand Driver is invisible for non-legion internal user")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDemandDriverIsNotAccessibleAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String normalAdminUserName = "jane.meng+admin01@legion.co";
+            String adminPassword = "P@ssword123";
+
+            //Go to Configuration tab, check demand driver should not exist.
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            OpsPortalNavigationPage opsPortalNavigationPage = new OpsPortalNavigationPage();
+            configurationPage.goToConfigurationPage();
+            SimpleUtils.assertOnFail("Demand Driver card should be invisible for store manager!", !configurationPage.verifyTemplateCardExist(templateType), false);
+            //logout
+            opsPortalNavigationPage.logout();
+
+            //log in with normal admin, check demand driver should not exist
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            SimpleUtils.report(getDriver().getCurrentUrl());
+            loginPage.loginToLegionWithCredential(normalAdminUserName, adminPassword);
+            configurationPage.goToConfigurationPage();
+            SimpleUtils.assertOnFail("Demand Driver card should be invisible for normal admin!", !configurationPage.verifyTemplateCardExist(templateType), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Predictability score is only for LegionML Forecast Source driver.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPredictabilityScoreIsOnlyForLegionMLForecastSourceAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+        String templateType = "Demand Drivers";
+        String templateName = "testPredictabilityScore";
+        HashMap<String, String> legionMLDriver = new HashMap<String, String>(){
+            {
+                put("Name", "LegionMLDriver");
+                put("Type", "Items");
+                put("Channel", "EDW");
+                put("Category", "Enrollments");
+                put("Show in App", "Yes");
+                put("Order", "1");
+                put("Forecast Source", "Legion ML");
+                put("Input Stream", "Items:EDW:Enrollments");
+            }
+        };
+        HashMap<String, String> importedLDriver = new HashMap<String, String>(){
+            {
+                put("Name", "ImportedDriver");
+                put("Type", "Items");
+                put("Channel", "EDW");
+                put("Category", "Verifications");
+                put("Show in App", "Yes");
+                put("Order", "2");
+                put("Forecast Source", "Imported");
+                put("Input Stream", "Items:EDW:Verifications");
+            }
+        };
+        HashMap<String, String> remoteLDriver = new HashMap<String, String>(){
+            {
+                put("Name", "RemoteDriver");
+                put("Type", "Amount");
+                put("Channel", "Channel01");
+                put("Category", "Enrollments");
+                put("Show in App", "Yes");
+                put("Order", "1");
+                put("Forecast Source", "Remote");
+                put("Specify Location", "Parent Location");
+                put("Parent Level", "2");
+            }
+        };
+        HashMap<String, String> aggregatedDriver = new HashMap<String, String>(){
+            {
+                put("Name", "AggregatedDriver");
+                put("Type", "Items");
+                put("Channel", "Channel01");
+                put("Category", "Verifications");
+                put("Show in App", "No");
+                put("Order", "1");
+                put("Forecast Source", "Aggregated");
+                put("Options", "LegionMLDriver,-1.98;ImportedDriver,7.23");
+            }
+        };
+        HashMap<String, String> distributedDriver = new HashMap<String, String>(){
+            {
+                put("Name", "DistributedDriver");
+                put("Type", "Items");
+                put("Channel", "Channel01");
+                put("Category", "Enrollments");
+                put("Show in App", "No");
+                put("Order", "1");
+                put("Forecast Source", "Distributed");
+                put("Source Demand Driver", "LegionMLDriver");
+                put("Distribution of Demand Driver", "ImportedDriver");
+            }
+        };
+        //Turn on EnableTahoeStorage toggle
+        ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+        refreshPage();
+        //Go to Demand Driver template
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(templateType);
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        //Check Predictability Score is visible for Legion ML Driver
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(legionMLDriver);
+        configurationPage.clickAddOrEditForDriver("Edit");
+        SimpleUtils.assertOnFail("Predictability Score should show up for Legion ML forecast source driver!", configurationPage.verifyPredictabilityScoreExist(), false);
+        //Check Predictability Score is invisible for Imported Driver
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(importedLDriver);
+        configurationPage.searchDriverInTemplateDetailsPage(importedLDriver.get("Name"));
+        configurationPage.clickAddOrEditForDriver("Edit");
+        configurationPage.setLeaveThisPageButton();
+        SimpleUtils.assertOnFail("Predictability Score should NOT show up for Imported forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
+        //Check Predictability Score is invisible for Remote Driver
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(remoteLDriver);
+        configurationPage.searchDriverInTemplateDetailsPage(remoteLDriver.get("Name"));
+        configurationPage.clickAddOrEditForDriver("Edit");
+        configurationPage.setLeaveThisPageButton();
+        SimpleUtils.assertOnFail("Predictability Score should NOT show up for Remote forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
+        //Check Predictability Score is invisible for Aggregated Driver
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(aggregatedDriver);
+        configurationPage.searchDriverInTemplateDetailsPage(aggregatedDriver.get("Name"));
+        configurationPage.clickAddOrEditForDriver("Edit");
+        configurationPage.setLeaveThisPageButton();
+        SimpleUtils.assertOnFail("Predictability Score should NOT show up for Aggregated forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
+        //Check Predictability Score is invisible for Distributed Driver
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(distributedDriver);
+        configurationPage.searchDriverInTemplateDetailsPage(distributedDriver.get("Name"));
+        configurationPage.clickAddOrEditForDriver("Edit");
+        configurationPage.setLeaveThisPageButton();
+        SimpleUtils.assertOnFail("Predictability Score should NOT show up for Distributed forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
+        configurationPage.clickOnBackButton();
+        configurationPage.createDynamicGroup(templateName, "Custom", templateName + "test");
+        configurationPage.selectOneDynamicGroup(templateName);
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+
+        //Delete the association and archive the template
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        configurationPage.deleteOneDynamicGroup(templateName);
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.setLeaveThisPageButton();
+        configurationPage.archiveOrDeleteTemplate(templateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

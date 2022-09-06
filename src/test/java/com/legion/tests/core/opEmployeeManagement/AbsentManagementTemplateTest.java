@@ -662,7 +662,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accruals Template Association")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//blocked by: https://legiontech.atlassian.net/browse/OPS-5396
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)//blocked by: https://legiontech.atlassian.net/browse/OPS-5396
     public void verifyAccrualTemplateAssociationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();

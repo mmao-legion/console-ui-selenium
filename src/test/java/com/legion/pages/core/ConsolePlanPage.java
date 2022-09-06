@@ -985,9 +985,9 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
             SimpleUtils.pass("The approve button displayed at scenario plan detail!");
             //click approve
             clickTheElement(scenarioPlanApproveBTN);
-            if(isElementLoaded(scenarioPlanApproveBTN,5)){
+            if(isElementLoaded(approveBudgetDialog,5)){
                 SimpleUtils.pass("Approve budget plan dialog pops up successfully!");
-                clickTheElement(scenarioPlanApproveBTN);
+                clickTheElement(approveBudgetDialog.findElement(By.cssSelector("lg-button[label=\"Approve\"] button")));
                 waitForSeconds(2);
 
             }
