@@ -943,7 +943,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if (isElementEnabled(editTemplatePopupPage, 5)) {
 				SimpleUtils.pass("Click edit button successfully!");
 				clickTheElement(okButton);
-				if (isElementEnabled(dropdownArrowButton)) {
+				if (isElementEnabled(dropdownArrowButton, 20)) {
 					SimpleUtils.pass("Template is in edit mode now");
 				} else {
 					SimpleUtils.fail("Template is not in edit mode now", false);

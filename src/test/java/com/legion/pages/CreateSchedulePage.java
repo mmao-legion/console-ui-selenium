@@ -75,5 +75,9 @@ public interface CreateSchedulePage {
     public String getComplianceShiftsMessageOnScheduleSuccessModal() throws Exception;
     public void createSuggestedSchedule() throws Exception;
     public void clickCreateScheduleButton() throws Exception;
-
+    public void selectLocationOnCreateScheduleEditOperatingHoursPage(String locationName) throws Exception;
+    public void createScheduleForNonDGFlowNewUIWithoutUpdate() throws Exception;
+    public void selectLocationOnEditOperatingHoursPage(String locationName) throws Exception;
+    public void closeSearchBoxForLocations() throws Exception;
+    public void createLGScheduleWithGivingTimeRange(String startTime, String endTime) throws Exception;
 }

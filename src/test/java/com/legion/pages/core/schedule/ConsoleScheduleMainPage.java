@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
+import com.legion.utils.JsonUtil;
 
 import java.util.*;
 
@@ -19,7 +20,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     public ConsoleScheduleMainPage() {
         PageFactory.initElements(getDriver(), this);
     }
-
+    private static HashMap<String, String> propertyOperatingHours = JsonUtil.getPropertiesFromJsonFile("src/test/resources/operatingHours.json");
 
     @FindBy(css = "lg-button[label=\"Analyze\"]")
     private WebElement analyze;
@@ -1442,6 +1443,352 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }
     }
 
+    @FindBy(css = "[class=\"modal-instance-header-title ng-binding\"]")
+    private WebElement editOpeHoursModalTitle;
+    @FindBy(css = "[class = \"modal-instance-buttons\"]")
+    private WebElement BtnsOnEditOpeHoursSchedule;
+    @Override
+    public boolean isMoreActionsBtnClickable() throws Exception {
+        Boolean isClickable = null;
+        if (isElementLoaded(dropdownToggle, 10)) {
+            try{
+                if (dropdownToggle.getAttribute("disabled") != null && dropdownToggle.getAttribute("disabled").equalsIgnoreCase("true")) {
+                    SimpleUtils.pass("The More Actions button is unclickable!");
+                    isClickable = false;
+                } else {
+                    SimpleUtils.pass("The More Actions button is clickable!");
+                    isClickable = true;
+                }
+            }catch (Exception e){
+                isClickable = false;
+            }
+        }else{
+            SimpleUtils.fail("The More Actions button is not loaded!",false);
+        }
+        return isClickable;
+    }
+
+    @Override
+    public void goToEditOperatingHoursView() throws Exception {
+        String subTitle = "Edit operating hours";
+        if (isElementLoaded(dropdownToggle,10)){
+            click(dropdownToggle);
+            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==3 ){
+                waitForSeconds(3);
+                click(dropdownMenuFormDropdownToggle.get(1));
+                SimpleUtils.pass("Edit operating hours has been clicked!");
+                if (isElementLoaded(editOpeHoursModalTitle, 20) && isElementLoaded(BtnsOnEditOpeHoursSchedule, 20)
+                        && editOpeHoursModalTitle.getText().trim().equalsIgnoreCase(subTitle)) {
+                    SimpleUtils.pass("The edit operating hours page is loaded correctly!");
+                }else{
+                    SimpleUtils.fail("The edit operating hours page is not loaded correctly!", false);
+                }
+            } else {
+                SimpleUtils.fail("After clicking dropdown toggle button, the expected menu is not loaded correctly!", false);
+            }
+        } else {
+            SimpleUtils.fail("There is no toggle drop down button in schedule page!", false);
+        }
+    }
+
+    @FindBy(css = "[ng-repeat=\"day in summary.workingHours\"]")
+    private List<WebElement> operatingDays;
+    @Override
+    public void checkOperatingHoursOnToggleSummary() throws Exception {
+        if (areListElementVisible(operatingDays, 15)) {
+            for (WebElement dayList : operatingDays) {
+                WebElement weekDay = dayList.findElement(By.cssSelector(".ng-binding"));
+                if (weekDay != null) {
+                    String[] operatingHours = null;
+                    operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
+                    WebElement startNEndTimes = dayList.findElement(By.cssSelector(".text-right.ng-binding"));
+                    if (operatingHours[0].contains("0") && operatingHours[1].contains("0")) {
+                        operatingHours[0] = operatingHours[0].replaceAll("0","");
+                        operatingHours[0] = operatingHours[0].replaceAll(":","");
+                        operatingHours[1] = operatingHours[1].replaceAll("0","");
+                        operatingHours[1] = operatingHours[1].replaceAll(":","");
+                    }
+                    String opeHrs = operatingHours[0].trim() + "-" + operatingHours[1].trim();
+                    if(startNEndTimes.getText().trim().equalsIgnoreCase(opeHrs) && startNEndTimes.getText().trim().equalsIgnoreCase(opeHrs)){
+                        continue;
+                    }else{
+                        SimpleUtils.fail("The operating hours are not match!", false);
+                    }
+                }else{
+                    SimpleUtils.fail("The operating day is null!", false);
+                }
+            }
+        }else{
+            SimpleUtils.fail("The operating days are not loaded!", false);
+        }
+    }
+
+    @Override
+    public void checkOpeHrsOfParticualrDayOnToggleSummary(List<String> weekDays, String duration) throws Exception {
+        if (areListElementVisible(operatingDays, 15)) {
+            for (WebElement dayList : operatingDays) {
+                WebElement weekDay = dayList.findElement(By.cssSelector(".ng-binding"));
+                if (weekDay != null) {
+                    WebElement startNEndTimes = dayList.findElement(By.cssSelector(".text-right.ng-binding"));
+                    if(weekDays.contains(weekDay)){
+                        SimpleUtils.assertOnFail("The operating hours is not expected!",
+                                startNEndTimes.getText().trim().equalsIgnoreCase(duration), false);
+                    }
+                }else{
+                    SimpleUtils.fail("The operating day is null!", false);
+                }
+            }
+        }else{
+            SimpleUtils.fail("The operating days are not loaded!", false);
+        }
+    }
+
+    @Override
+    public void checkClosedDayOnToggleSummary(List<String> weekDays) throws Exception {
+        if (areListElementVisible(operatingDays, 15)) {
+            for (WebElement dayList : operatingDays) {
+                WebElement weekDay = dayList.findElement(By.cssSelector(".ng-binding"));
+                WebElement closedText = dayList.findElement(By.cssSelector(".text-right.ng-binding.dirty"));
+                if (weekDay != null) {
+                    if (weekDays.contains(weekDay.getText())) {
+                        SimpleUtils.assertOnFail("The message of closed day is not correct!", closedText.getText().trim().equalsIgnoreCase("Closed"), false);
+                    }else{
+                        SimpleUtils.pass("The current day is not closed!");
+                        continue;
+                    }
+                }else{
+                    SimpleUtils.fail("The operating day is null!", false);
+                }
+            }
+        }else{
+            SimpleUtils.fail("The operating days are not loaded!", false);
+        }
+    }
+
+    @FindBy(css = ".operating-hours-day-list-item.ng-scope")
+    private List<WebElement> operatingHoursDayLists;
+    @Override
+    public void checkOperatingHoursOnEditDialog() throws Exception {
+        if (areListElementVisible(operatingHoursDayLists, 15)) {
+            for (WebElement dayList : operatingHoursDayLists) {
+                WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+                if (weekDay != null) {
+                    String[] operatingHours = null;
+                    operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
+                    List<WebElement> startAndEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+                    if(operatingHours[0].trim().equalsIgnoreCase(startAndEndTimes.get(0).getAttribute("value").trim()) && operatingHours[1].trim().equalsIgnoreCase(startAndEndTimes.get(1).getAttribute("value").trim())){
+                        continue;
+                    }else{
+                        SimpleUtils.fail("The operating hours are not match!", false);
+                    }
+                }else{
+                    SimpleUtils.fail("The operating day is null!", false);
+                }
+            }
+        }else{
+            SimpleUtils.fail("The operating days are not loaded!", false);
+        }
+    }
+
+    @Override
+    public void editTheOperatingHoursWithFixedValue(List<String> weekDays, String startTime, String endTime) throws Exception {
+        try {
+            if (areListElementVisible(operatingHoursDayLists, 15)) {
+                for (WebElement dayList : operatingHoursDayLists) {
+                    WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+                    if (weekDay != null) {
+                        WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                        if (weekDays.contains(weekDay.getText())) {
+                            if (checkbox.getAttribute("class").contains("ng-empty")) {
+                                clickTheElement(checkbox);
+                            }
+                            String[] operatingHours = null;
+                            List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+                            startNEndTimes.get(0).clear();
+                            startNEndTimes.get(1).clear();
+                            startNEndTimes.get(0).sendKeys(startTime);
+                            startNEndTimes.get(1).sendKeys(endTime);
+                            SimpleUtils.assertOnFail("The operating hours is not updated successfully!",
+                                    startNEndTimes.get(0).getAttribute("value").equalsIgnoreCase(startTime)
+                                            && startNEndTimes.get(1).getAttribute("value").equalsIgnoreCase(endTime), false);
+                        }
+                    } else {
+                        SimpleUtils.fail("Failed to find weekday element!", false);
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Operating days are not loaded Successfully!", false);
+            }
+        } catch (StaleElementReferenceException e) {
+            SimpleUtils.report(e.getMessage());
+        }
+    }
+
+    @Override
+    public void closeTheParticularOperatingDay(List<String> weekDaysToClose) throws Exception {
+        try {
+            if (areListElementVisible(operatingHoursDayLists, 15)) {
+                for (WebElement dayList : operatingHoursDayLists) {
+                    WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+                    if (weekDay != null) {
+                        WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                        if (weekDaysToClose.contains(weekDay.getText())) {
+                            if (checkbox.getAttribute("class").contains("ng-not-empty")) {
+                                clickTheElement(checkbox);
+                            }
+                            List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+                            String closeStartTime = startNEndTimes.get(0).getAttribute("placeholder").trim();
+                            String closeEndTime = startNEndTimes.get(1).getAttribute("placeholder").trim();
+                            String defaultValueForCloseDay = "- - : - -";
+                            SimpleUtils.assertOnFail("The operating hours is not null after close the day!",
+                                    closeStartTime.equalsIgnoreCase(defaultValueForCloseDay)
+                                            && closeEndTime.equalsIgnoreCase(defaultValueForCloseDay), false);
+                        } else {
+                            if (checkbox.getAttribute("class").contains("ng-empty")) {
+                                clickTheElement(checkbox);
+                            }
+                        }
+                    } else {
+                        SimpleUtils.fail("Failed to find weekday element!", false);
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Operating days are not loaded Successfully!", false);
+            }
+        } catch (StaleElementReferenceException e) {
+            SimpleUtils.report(e.getMessage());
+        }
+    }
+
+    @Override
+    public void openTheParticularOperatingDay(List<String> weekDaysToOpen) throws Exception {
+        try {
+            if (areListElementVisible(operatingHoursDayLists, 15)) {
+                for (WebElement dayList : operatingHoursDayLists) {
+                    WebElement weekDay = dayList.findElement(By.cssSelector(".operating-hours-day-list-item-day"));
+                    if (weekDay != null) {
+                        WebElement checkbox = dayList.findElement(By.cssSelector("input[type=\"checkbox\"]"));
+                        if (weekDaysToOpen.contains(weekDay.getText())) {
+                            if (checkbox.getAttribute("class").contains("ng-empty")) {
+                                clickTheElement(checkbox);
+                            }
+                            List<WebElement> startNEndTimes = dayList.findElements(By.cssSelector("[ng-if*=\"day.isOpened\"] input"));
+                            String closeStartTime = startNEndTimes.get(0).getAttribute("value").trim();
+                            String closeEndTime = startNEndTimes.get(1).getAttribute("value").trim();
+                            String defaultValueForCloseDay = "- - : - -";
+                            SimpleUtils.assertOnFail("The operating hours is not shown after open the day!",
+                                    closeStartTime != null && !(closeStartTime.equalsIgnoreCase(defaultValueForCloseDay))
+                                            && closeEndTime != null && !(closeEndTime.equalsIgnoreCase(defaultValueForCloseDay)), false);
+                        }
+                    } else {
+                        SimpleUtils.fail("Failed to find weekday element!", false);
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Operating days are not loaded Successfully!", false);
+            }
+        } catch (StaleElementReferenceException e) {
+            SimpleUtils.report(e.getMessage());
+        }
+    }
+
+
+    @FindBy(css = "[class=\"modal-instance-button ng-binding ng-scope\"]")
+    private WebElement cancelBtnOnOpeHrsPage;
+    @FindBy(css = "[class=\"modal-instance-button ng-binding\"]")
+    private WebElement cancelBtnOnOpeHrsPageForOP;
+    @Override
+    public void clickCancelBtnOnEditOpeHoursPage() throws Exception {
+        if (isElementLoaded(cancelBtnOnOpeHrsPage, 20)) {
+            SimpleUtils.pass("The Cancel button is loaded successfully!");
+            clickTheElement(cancelBtnOnOpeHrsPage);
+        }else{
+            SimpleUtils.fail("The Cancel button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void clickCancelBtnOnEditOpeHoursPageForOP() throws Exception {
+        if (isElementLoaded(cancelBtnOnOpeHrsPageForOP, 20)) {
+            SimpleUtils.pass("The Cancel button is loaded successfully!");
+            clickTheElement(cancelBtnOnOpeHrsPageForOP);
+        }else{
+            SimpleUtils.fail("The Cancel button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void isCancelBtnLoadedOnEditOpeHoursPage() throws Exception {
+        if (isElementLoaded(cancelBtnOnOpeHrsPage, 20)) {
+            SimpleUtils.pass("The Cancel button is loaded successfully!");
+        }else{
+            SimpleUtils.fail("The Cancel button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void isCancelBtnLoadedOnEditOpeHoursPageForOP() throws Exception {
+        if (isElementLoaded(cancelBtnOnOpeHrsPageForOP, 20)) {
+            SimpleUtils.pass("The Cancel button is loaded successfully!");
+        }else{
+            SimpleUtils.fail("The Cancel button is not loaded!", false);
+        }
+    }
+
+    @FindBy(css = "[class=\"modal-instance-button ng-binding confirm\"]")
+    private WebElement saveBtnOnOpeHrsPage;
+    @FindBy(css = "[class=\"modal-instance-button confirm ng-binding\"]")
+    private WebElement saveBtnOnOpeHrsPageForOP;
+    @Override
+    public void clickSaveBtnOnEditOpeHoursPage() throws Exception {
+        if (isElementLoaded(saveBtnOnOpeHrsPage, 20)) {
+            clickTheElement(saveBtnOnOpeHrsPage);
+            SimpleUtils.pass("The Save button is loaded successfully!");
+        }else{
+            SimpleUtils.fail("The Save button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void clickSaveBtnOnEditOpeHoursPageForOP() throws Exception {
+        if (isElementLoaded(saveBtnOnOpeHrsPageForOP, 20)) {
+            clickTheElement(saveBtnOnOpeHrsPageForOP);
+            SimpleUtils.pass("The Save button is loaded successfully!");
+        }else{
+            SimpleUtils.fail("The Save button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void isSaveBtnLoadedOnEditOpeHoursPage() throws Exception {
+        if (isElementLoaded(saveBtnOnOpeHrsPage, 20)) {
+            SimpleUtils.pass("The Save button is loaded successfully!");
+        }else{
+            SimpleUtils.fail("The Save button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void isSaveBtnLoadedOnEditOpeHoursPageForOP() throws Exception {
+        if (isElementLoaded(saveBtnOnOpeHrsPageForOP, 20)) {
+            SimpleUtils.pass("The Save button is loaded successfully!");
+        }else{
+            SimpleUtils.fail("The Save button is not loaded!", false);
+        }
+    }
+
+    @FindBy(css = "lg-button[label=\"Edit\"]")
+    private WebElement editButtonOnToggleSummary;
+    @Override
+    public void clickEditBtnOnToggleSummary() throws Exception {
+        if (isElementLoaded(editButtonOnToggleSummary, 20)) {
+            SimpleUtils.pass("Edit button on toggle summary is loaded!");
+            clickTheElement(editButtonOnToggleSummary);
+
+        }else{
+            SimpleUtils.fail("Edit button on toggle summary is not loaded!", false);
+        }
+    }
 
     @FindBy(css = "[class=\"week-schedule-shift-color\"]")
     private List<WebElement> workRoleIcons;

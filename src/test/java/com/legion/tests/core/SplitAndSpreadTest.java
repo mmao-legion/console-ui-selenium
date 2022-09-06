@@ -993,8 +993,8 @@ public class SplitAndSpreadTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify 'This will trigger spread hours' warning when dragging the shift to another day")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySpreadOfHoursViolationWhenDraggingTheShiftToAnotherDayAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1121,7 +1121,7 @@ public class SplitAndSpreadTest extends TestBase {
             scheduleShiftTablePage.moveAnywayWhenChangeShift();
             scheduleMainPage.saveSchedule();
             shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
-
+            Thread.sleep(5000);
             //check compliance smart card display
             SimpleUtils.assertOnFail("Compliance smart card display successfully!",
                     smartCardPage.verifyComplianceShiftsSmartCardShowing(), false);
