@@ -7390,7 +7390,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			for (WebElement option : typeSelect.getOptions()){
 				forecastSourceName.add(option.getText());
 			}
-			System.out.println("forecastSourceName: " + forecastSourceName);
 		}
 		return forecastSourceName;
 	}
