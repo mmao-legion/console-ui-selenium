@@ -5117,7 +5117,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public boolean isBudgetPlanSectionShowing(){
-		String locator = "general-form.enterprise-container form-section:nth-child(6)  question-input[question-title*=\"upperfield?\"] yes-no div.ng-scope";
+		String locator = "general-form.enterprise-container form-section:nth-child(6)  question-input[question-title*=\"upperfield?\"]";
 		boolean flag;
 		if(isElementExist(locator)){
 			flag = true;
