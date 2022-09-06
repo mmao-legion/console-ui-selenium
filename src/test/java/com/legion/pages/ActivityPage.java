@@ -39,4 +39,5 @@ public interface ActivityPage{
     public void approveOrRejectMultipleShiftOfferRequestOnActivity(String requestUserName, String action, int count) throws Exception;
     public HashMap<String, String> getBalanceHrsFromActivity() throws Exception;
     public void clickDetailLinksInActivitiesByIndex(int index) throws Exception;
+    public void verifyNewClaimOpenShiftCardShowsOnActivity(String requestUserName, String workRole, String shiftDateAndTime, String location) throws Exception;
 }

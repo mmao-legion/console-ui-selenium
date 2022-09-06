@@ -108,6 +108,10 @@
                     <!--                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7351-->
                     <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
                     <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
+                    <include name="verifyEditOperatingHoursUnderMoreActionsAsInternalAdmin" />
+                    <include name="verifyEditOpeHoursDisabledAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfEditOpeHoursAsInternalAdmin" />
+                    <include name="verifyTheSaveFunctionOnEditOpeHoursDialogAsInternalAdmin" />
                    </methods>
                </class>
            </classes>
@@ -263,6 +267,7 @@
 <!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5368/>-->
 <!--                    <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />Blocked by SCH-5419/>-->
                     <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" />
+                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />
                     </methods>
                 </class>
             </classes>
@@ -539,6 +544,7 @@ SCH-5862-->
 <!--                    <include name="verifyChangingShiftNameOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: https://legiontech.atlassian.net/browse/SCH-6997/>-->
 <!--                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
 <!--                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
+                    <include name="verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -588,6 +594,7 @@ SCH-5862-->
                     <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
                     <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
                     <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6889-->
+                    <include name="validateNavigationRosterScheduleAndDashboardOfP2PLGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -607,6 +614,9 @@ SCH-5862-->
                     <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
                     <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
                     <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6889-->
+                    <include name="validateNavigationRosterScheduleAndDashboardOfParentChildLGAsInternalAdmin" />
+                    <include name="verifyEditOperatingHoursForLGAsInternalAdmin" />
+                    <include name="verifyEditOperatingHoursFunctionForLGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

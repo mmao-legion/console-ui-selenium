@@ -512,6 +512,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private List<WebElement> namesWeekView;
     @FindBy(css = ".sch-day-view-shift-worker-name")
     private List<WebElement> namesDayView;
+    @FindBy(css = ".shift-selected-multi")
+    private List<WebElement> selectedShifts;
 
     @Override
     public void verifyShiftsChangeToOpenAfterTerminating(List<Integer> indexes, String name, String currentTime) throws Exception {
@@ -3455,13 +3457,13 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else if (areListElementVisible(shiftOuterInDayView, 10)) {
             names = shiftOuterInDayView;
         }
-        scrollToBottom();
-        waitForSeconds(2);
         if (names.size() >= shiftCount) {
-            SimpleUtils.randomSet(0, names.size(), shiftCount, set);
+            SimpleUtils.randomSet(0, names.size() - 1, shiftCount, set);
             Actions action = new Actions(getDriver());
             action.keyDown(Keys.CONTROL).build().perform();
             for (int i : set) {
+                scrollToElement(names.get(i));
+                waitForSeconds(1);
                 action.moveToElement(names.get(i)).click(names.get(i));
                 waitForSeconds(1);
             }
@@ -3480,29 +3482,31 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @Override
     public void selectSpecificShifts(HashSet<Integer> shiftIndexes) throws Exception {
-        List<WebElement> names = null;
-        if (areListElementVisible(namesWeekView, 10)) {
-            names = namesWeekView;
-        } else if (areListElementVisible(namesDayView, 10)) {
-            names = namesDayView;
-        }
-        if (names.size() >= shiftIndexes.size()) {
-            Actions action = new Actions(getDriver());
-            action.keyDown(Keys.CONTROL).build().perform();
-            for (int i : shiftIndexes) {
-                scrollToElement(names.get(i));
-                waitForSeconds(1);
-                action.moveToElement(names.get(i)).click(names.get(i));
+        if (!areListElementVisible(selectedShifts, 5)) {
+            List<WebElement> names = null;
+            if (areListElementVisible(namesWeekView, 10)) {
+                names = namesWeekView;
+            } else if (areListElementVisible(namesDayView, 10)) {
+                names = namesDayView;
             }
-            action.keyUp(Keys.CONTROL).build().perform();
-            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftIndexes.size()) {
-                SimpleUtils.pass("Selected " + shiftIndexes.size() + " shifts successfully");
+            if (names.size() >= shiftIndexes.size()) {
+                Actions action = new Actions(getDriver());
+                action.keyDown(Keys.CONTROL).build().perform();
+                for (int i : shiftIndexes) {
+                    scrollToElement(names.get(i));
+                    waitForSeconds(1);
+                    action.moveToElement(names.get(i)).click(names.get(i));
+                }
+                action.keyUp(Keys.CONTROL).build().perform();
+                if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftIndexes.size()) {
+                    SimpleUtils.pass("Selected " + shiftIndexes.size() + " shifts successfully");
+                } else {
+                    SimpleUtils.fail("Expected to select " + shiftIndexes.size() + " shifts, but actually selected " +
+                            getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+                }
             } else {
-                SimpleUtils.fail("Expected to select " + shiftIndexes.size() + " shifts, but actually selected " +
-                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+                SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
             }
-        } else {
-            SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
         }
     }
 
