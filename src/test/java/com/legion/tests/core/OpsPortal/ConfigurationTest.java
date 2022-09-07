@@ -4978,4 +4978,37 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "User can view location level OH when the button is on")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUserOnlyCanViewOperatingHoursInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+
+            String locationName = "updateOHViaInteTest";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+
+            //Verify user can only see view button in location level
+            List<String> actions = new ArrayList<>();
+            actions = locationsPage.actionsForTemplateInLocationLevel("Operating Hours");
+            if(actions.size()==1 && actions.get(0).equalsIgnoreCase("View")){
+                SimpleUtils.pass("User can only view location level Operating Hours when Override via integration is on");
+            }else {
+                SimpleUtils.fail("User can do other actions and not only view for location level OH when Override via integration is on",false);
+            }
+            //user can view location level OH template
+            locationsPage.clickActionsForTemplate("Operating Hours", "View");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }
