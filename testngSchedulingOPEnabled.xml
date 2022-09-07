@@ -589,7 +589,7 @@ SCH-5862-->
                     <include name="verifyAnalyticsTableOnComplianceInDMViewWhenItIncludesLGAsInternalAdmin" />
                     <include name="verifyAnalyticsTableOnTimesheetInDMViewWhenItIncludesLGAsInternalAdmin" />
                     <include name="verifyTheContentOnMultipleEditShiftsWindowForP2PAsInternalAdmin" />
-                    <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForP2PAsInternalAdmin" />
+<!--                    <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForP2PAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7352 -->
 <!--
                     <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
                     <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
