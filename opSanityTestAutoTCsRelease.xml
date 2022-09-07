@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="10" name="LegionTest">
+<suite verbose ="0" thread-count="5" name="LegionTestForRelease" parallel="tests">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Automation Regression OP For Release"/>
@@ -59,31 +59,31 @@
             </class>
         </classes>
     </test>
-    <!--
+
      <test name="Configuration Test">
          <classes>
              <class name="com.legion.tests.core.OpsPortal.ConfigurationTest">
                  <methods>
-                     <include name="verifyCreateEachTemplateWithDynamicGroupAsInternalAdminForConfiguration"/>
-                     <include name="verifyUserCanOpenEachTypeTemplateAsInternalAdminForConfiguration"/>
-                     <include name="verifyNewAdvancedStaffingRulePageAsInternalAdminForConfiguration"/>
-                     <include name="verifyCheckBoxOfDaysOfWeekAsInternalAdminForConfiguration"/>
-                     <include name="verifyInputFormulaForDaysOfWeekAsInternalAdminForConfiguration"/>
-                     <include name="verifyTimeOfDayStartSectionAsInternalAdminForConfiguration"/>
-                     <include name="verifyTimeOfDayDuringSectionAsInternalAdminForConfiguration"/>
-                     <include name="verifyTimeOfDayEndSectionAsInternalAdminForConfiguration"/>
-                     <include name="verifyTimeOfDayFormulaSectionAsInternalAdminForConfiguration"/>
-                     <include name="verifyMealAndRestBreaksAsInternalAdminForConfiguration"/>
-                     <include name="verifyNumberOfShiftsAsInternalAdminForConfiguration"/>
-                     <include name="verifyBadgesOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
-                     <include name="verifyCrossAndCheckMarkButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
-                     <include name="verifySaveAndCancelButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
-                     <include name="verifyAddEditDeleteFunctionOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
-                     <include name="verifyCreateAllTypeTemplateAsInternalAdminForConfiguration"/>
-                     <include name="verifyAdvancedStaffingRulesShowWellAsInternalAdminForConfiguration"/>
-                 </methods>
-             </class>
-         </classes>
-     </test>-->
+                     <include name="verifyUserCanOpenEachTypeTemplateAsInternalAdmin"/>
+                     <include name="verifyNewAdvancedStaffingRulePageAsInternalAdmin"/>
+                     <include name="verifyCheckBoxOfDaysOfWeekAsInternalAdmin"/>
+                     <include name="verifyInputFormulaForDaysOfWeekAsInternalAdmin"/>
+                     <include name="verifyCreateAllTypeTemplateAsInternalAdmin"/>
+    <!--        <include name="verifyTimeOfDayStartSectionAsInternalAdminForConfiguration"/>
+            <include name="verifyTimeOfDayDuringSectionAsInternalAdminForConfiguration"/>
+            <include name="verifyTimeOfDayEndSectionAsInternalAdminForConfiguration"/>
+            <include name="verifyTimeOfDayFormulaSectionAsInternalAdminForConfiguration"/>
+            <include name="verifyMealAndRestBreaksAsInternalAdminForConfiguration"/>
+            <include name="verifyNumberOfShiftsAsInternalAdminForConfiguration"/>
+            <include name="verifyBadgesOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+            <include name="verifyCrossAndCheckMarkButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+            <include name="verifySaveAndCancelButtonOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+            <include name="verifyAddEditDeleteFunctionOfAdvanceStaffingRulesAsInternalAdminForConfiguration"/>
+            <include name="verifyCreateAllTypeTemplateAsInternalAdminForConfiguration"/>
+            <include name="verifyAdvancedStaffingRulesShowWellAsInternalAdminForConfiguration"/>-->
+        </methods>
+    </class>
+</classes>
+</test>
 
  </suite> <!-- Suite -->
