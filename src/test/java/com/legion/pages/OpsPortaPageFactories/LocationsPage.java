@@ -339,4 +339,5 @@ public interface LocationsPage {
     public void UpdateOptionOfComputeBudgetCost();
     public boolean verifyIsOverrideStatusAtLocationLevel(String templateName) throws Exception;
     public void updateOpenCloseHourForOHTemplate(String openString,String closeString);
+    public List<String> actionsForTemplateInLocationLevel(String templateName);
 }
