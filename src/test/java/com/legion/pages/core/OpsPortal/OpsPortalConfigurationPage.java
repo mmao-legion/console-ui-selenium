@@ -7405,4 +7405,15 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 		return flag;
 	}
+
+	@Override
+	public boolean verifyOverrideViaIntegrationButtonShowingOrNot(){
+		boolean flag = false;
+		if(isElementEnabled(overrideViaIntegrationBTN,2)){
+			flag = true;
+		}else {
+			flag = false;
+		}
+		return flag;
+	}
 }

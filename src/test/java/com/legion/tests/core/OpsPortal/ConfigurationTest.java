@@ -5011,4 +5011,29 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify other template don't have Override via integration button")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOtherTemplateNoOverrideViaIntegrationButtonAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            String templateType = "Scheduling Policies";
+            String templateName ="UsedByAuto";
+
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.searchTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName,"view");
+            if(!configurationPage.verifyOverrideViaIntegrationButtonShowingOrNot()){
+                SimpleUtils.pass("There is no Override via integration button for other template types");
+            }else {
+                SimpleUtils.fail("There is Override via integration button for other template types",false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
