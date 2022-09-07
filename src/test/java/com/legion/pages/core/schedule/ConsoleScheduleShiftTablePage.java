@@ -2524,6 +2524,17 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
     }
 
+    @Override
+    public boolean isOkButtonInWarningModeLoaded() throws Exception {
+        if(isElementLoaded(okBtnInWarningMode, 5)) {
+            SimpleUtils.report("The OK button is loaded on warning mode!");
+            return true;
+        } else {
+            SimpleUtils.report("The OK button is not loaded on warning mode!");
+            return false;
+        }
+    }
+
 
     @Override
     public void moveAnywayWhenChangeShift() throws Exception {
