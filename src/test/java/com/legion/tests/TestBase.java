@@ -129,7 +129,8 @@ public abstract class TestBase {
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
-        if (System.getProperty("enterprise") != null && System.getProperty("enterprise").equalsIgnoreCase("opauto")) {
+        if (System.getProperty("enterprise") != null && (System.getProperty("enterprise").equalsIgnoreCase("opauto")
+        || System.getProperty("enterprise").equalsIgnoreCase("op"))) {
             testSuiteID = testRailCfgOp.get("TEST_RAIL_SUITE_ID");
             testRailProjectID = testRailCfgOp.get("TEST_RAIL_PROJECT_ID");
             finalTestRailRunName = testRailRunName;
@@ -187,33 +188,36 @@ public abstract class TestBase {
 
     @BeforeMethod(alwaysRun = true)
     protected void initTestFramework(Method method, ITestContext context) throws AWTException, IOException, APIException, JSONException {
-        Date date=new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy");
-        String testName = ExtentTestManager.getTestName(method);
-        String ownerName = ExtentTestManager.getOwnerName(method);
-        String automatedName = ExtentTestManager.getAutomatedName(method);
-        enterpriseName =  SimpleUtils.getEnterprise(method);
-        String platformName =  ExtentTestManager.getMobilePlatformName(method);
-        List<String> categories =  new ArrayList<String>();
-        categories.add(getClass().getSimpleName());
-        List<String> enterprises =  new ArrayList<String>();
-        enterprises.add(enterpriseName);
-        ExtentTestManager.createTest(getClass().getSimpleName() + " - "
-                + " " + method.getName() + " : " + testName + ""
-                + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
-        extent.setSystemInfo(method.getName(), enterpriseName.toString());
-        if (testRailRunId==null){
-            testRailRunId = 0;
+        try {
+            Date date = new Date();
+            String testName = ExtentTestManager.getTestName(method);
+            String ownerName = ExtentTestManager.getOwnerName(method);
+            String automatedName = ExtentTestManager.getAutomatedName(method);
+            enterpriseName = SimpleUtils.getEnterprise(method);
+            String platformName = ExtentTestManager.getMobilePlatformName(method);
+            List<String> categories = new ArrayList<String>();
+            categories.add(getClass().getSimpleName());
+            List<String> enterprises = new ArrayList<String>();
+            enterprises.add(enterpriseName);
+            ExtentTestManager.createTest(getClass().getSimpleName() + " - "
+                    + " " + method.getName() + " : " + testName + ""
+                    + " [" + ownerName + "/" + automatedName + "/" + platformName + "]", "", categories);
+            extent.setSystemInfo(method.getName(), enterpriseName.toString());
+            if (testRailRunId == null) {
+                testRailRunId = 0;
+            }
+            if (testRailReportingFlag != null) {
+                TestRailOperation.addNUpdateTestCaseIntoTestRail(testName, context);
+                MyThreadLocal.setTestResultFlag(false);
+                MyThreadLocal.setTestSkippedFlag(false);
+            }
+            setCurrentMethod(method);
+            setBrowserNeeded(true);
+            setCurrentTestMethodName(method.getName());
+            setSessionTimestamp(date.toString().replace(":", "_").replace(" ", "_"));
+        } catch (Exception e) {
+            SimpleUtils.fail("Error encountered when initing framework: " + e.getMessage(), false);
         }
-        if(testRailReportingFlag!=null){
-            TestRailOperation.addNUpdateTestCaseIntoTestRail(testName,context);
-            MyThreadLocal.setTestResultFlag(false);
-            MyThreadLocal.setTestSkippedFlag(false);
-        }
-        setCurrentMethod(method);
-        setBrowserNeeded(true);
-        setCurrentTestMethodName(method.getName());
-        setSessionTimestamp(date.toString().replace(":", "_").replace(" ", "_"));
     }
 
 
@@ -340,8 +344,10 @@ public abstract class TestBase {
         TestRailOperation.addResultForTest();
         if (Boolean.parseBoolean(propertyMap.get("close_browser"))) {
             try {
-                getDriver().manage().deleteAllCookies();
-                getDriver().quit();
+                if (getDriver() != null) {
+                    getDriver().manage().deleteAllCookies();
+                    getDriver().quit();
+                }
             } catch (Exception exp) {
                 Reporter.log("Error closing browser");
             }

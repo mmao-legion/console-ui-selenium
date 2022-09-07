@@ -610,6 +610,7 @@ public class DeleteScheduleTest extends TestBase {
             createSchedulePage.createSuggestedSchedule();
             //Go to Overview page, check the status of this week
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            Thread.sleep(5000);
             String scheduleStatusOnOverViewTable = scheduleOverviewPage.getScheduleWeeksStatus().get(index);
             //The status should be Not Started
             String expectedStatus = "Not Started";
