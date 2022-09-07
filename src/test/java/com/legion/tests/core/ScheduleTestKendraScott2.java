@@ -7400,6 +7400,25 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
 			Thread.sleep(3);
 			shiftOperatePage.clickOnCloseBtnOfAssignDialog();
+//			boolean okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
+//			for(int j =0 ; j < 3; j++){
+//				if(okBtnLoad){
+//					scheduleShiftTablePage.clickOnOkButtonInWarningMode();
+//					continue;
+//				}else{
+//					break;
+//				}
+//			}
+//
+//			boolean btnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
+//			for(int i =0 ; i < 3; i++){
+//				if(btnLoad){
+//					shiftOperatePage.clickOnCloseBtnOfAssignDialog();
+//					continue;
+//				}else{
+//					break;
+//				}
+//			}
 
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
@@ -8049,7 +8068,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			Thread.sleep(5000);
 			createSchedulePage.createScheduleForNonDGFlowNewUI();
 
-			//Open, close, edit the operating day, the operating hours should be changed sync with toggle summary.
+			//Edit the operating day and cancel all actions.
 			scheduleMainPage.goToToggleSummaryView();
 			scheduleMainPage.goToEditOperatingHoursView();
 			List<String> weekDay = new ArrayList<>(Arrays.asList("Sunday"));
@@ -8059,6 +8078,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.clickCancelBtnOnEditOpeHoursPage();
 			scheduleMainPage.goToEditOperatingHoursView();
 
+			//Editing the operating day and save all actions.
 			List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
 			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "10:00AM","10:00PM");
 			scheduleMainPage.clickCancelBtnOnEditOpeHoursPage();
@@ -8068,6 +8088,15 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
 			scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "10AM-10PM");
 
+			//Check the time duration on the day view
+			scheduleMainPage.goToToggleSummaryView();
+			scheduleCommonPage.clickOnDayView();
+			ArrayList<String> rimeDurations = scheduleShiftTablePage.getScheduleDayViewGridTimeDuration();
+			String timeDuration = rimeDurations.get(0) + "-" + rimeDurations.get(rimeDurations.size()-1);
+			SimpleUtils.assertOnFail("The time duration is not matched between day view and toggle summary view!", timeDuration.equalsIgnoreCase("8 AM-12 AM"), false);
+
+			//Close operating days, regenerate the schedule.
+			scheduleMainPage.goToToggleSummaryView();
 			scheduleMainPage.goToEditOperatingHoursView();
 			scheduleMainPage.closeTheParticularOperatingDay(weekDays);
 			scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();

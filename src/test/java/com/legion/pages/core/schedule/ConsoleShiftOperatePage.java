@@ -2454,6 +2454,18 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.fail("The close button on assign dialog is not loaded! ", false);
     }
 
+    @Override
+    public boolean isCloseBtnOfAssignDialogLoaded() throws Exception{
+        if(isElementLoaded(closeSelectTMWindowBtn)) {
+            SimpleUtils.report("the close button loaded on assign TM dialog! ");
+            return true;
+        }
+        else{
+            SimpleUtils.report("the close button is not loaded on assign TM dialog! ");
+            return false;
+        }
+    }
+
     @FindBy (className = "worker-edit-availability-status")
     private WebElement messageInSelectTeamMemberWindow;
 

@@ -173,4 +173,5 @@ public interface ScheduleShiftTablePage {
     public void verifyConfirmBtnIsDisabledOnDragAndDropConfirmPage() throws Exception;
     public void verifySwapBtnIsEnabledOnDragAndDropConfirmPage() throws Exception;
     public void verifyAssignBtnIsEnabledOnDragAndDropConfirmPage() throws Exception;
+    public boolean isOkButtonInWarningModeLoaded() throws Exception;
 }
