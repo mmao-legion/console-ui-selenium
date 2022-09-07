@@ -4981,7 +4981,7 @@ public class ConfigurationTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "User can view location level OH when the button is on")
+    @TestName(description = "User can only view location level OH when the button is on")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUserOnlyCanViewOperatingHoursInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
