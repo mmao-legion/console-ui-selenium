@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class P2PLGTest extends TestBase {
 
@@ -25,6 +26,7 @@ public class P2PLGTest extends TestBase {
     private static String District = "District";
     private static String Region = "Region";
     private static String BusinessUnit = "Business Unit";
+    private static String opEnterprice = "CinemarkWkdy_Enterprise";
 
     @Override
     @BeforeMethod()
@@ -2343,6 +2345,94 @@ public class P2PLGTest extends TestBase {
             createSchedulePage.selectWhichWeekToCopyFrom("SUGGESTED");
             createSchedulePage.clickOnFinishButtonOnCreateSchedulePage();
 
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Cosimo")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the Budget/Guidance hours show correctly when navigating from parent location to peer location")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void VerifyTheBudgetGuidanceColumnShowCorrectlyInChildAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            locationsPage.editLaborBudgetSettingContent();
+            locationsPage.turnOnOrTurnOffLaborBudgetToggle(true);
+            locationsPage.selectBudgetGroup("By Location");
+            locationsPage.saveTheGlobalConfiguration();
+            Thread.sleep(60000);
+
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
+                //Back to the console page
+                switchToConsoleWindow();
+            }
+
+            //Select parent location's budget/guidance value
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+//            Thread.sleep(15000);
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+
+            //Check child location's budget on schedule smart card, it won't same as parent
+            String parentLocation = "P2P_Test";
+            String childLocation1 = "Peer001";
+            String childLocation2 = "Peer02";
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(childLocation1);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()), false);
+            forecastPage.goToForecastLaborWeek();
+            forecastPage.editLaborBudgetOnSummarySmartCard();
+            String laborBudget1 = forecastPage.getLaborBudgetOnSummarySmartCard();
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(childLocation2);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()), false);
+            forecastPage.goToForecastLaborWeek();
+            forecastPage.editLaborBudgetOnSummarySmartCard();
+            String laborBudget2 = forecastPage.getLaborBudgetOnSummarySmartCard();
+
+            //Generate the parent schedule, compare the budget after the page loaded fully.
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(parentLocation);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            String parentBudget = smartCardPage.getBudgetValueFromScheduleBudgetSmartCard().trim();
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(childLocation1);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            String budgetOfChild1 = smartCardPage.getBudgetValueFromScheduleBudgetSmartCard().trim();
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(childLocation2);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            String budgetOfChild2 = smartCardPage.getBudgetValueFromScheduleBudgetSmartCard().trim();
+
+            SimpleUtils.assertOnFail("The budget on schedule view is not consisting with the edited value on Forecast page!",laborBudget1.equals(budgetOfChild1) && laborBudget2.equals(budgetOfChild2),false);
+
+            //Compare the budget between parent and child, they are not same
+            SimpleUtils.assertOnFail("The budget between parent and child location shouldn't be same!",!(parentBudget.equals(budgetOfChild1) && parentBudget.equals(budgetOfChild2)),false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
