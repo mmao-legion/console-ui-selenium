@@ -3874,7 +3874,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(css = "[value=\"config.allowConvertToOpen\"]")
     private WebElement allowConvertToOpenSwitch;
     public void enableOrDisableAllowComplianceErrorSwitch (boolean enableOrDisable) throws Exception {
-        if (isElementLoaded(allowComplianceErrorSwitch, 5)) {
+        if (isElementLoaded(allowComplianceErrorSwitch, 10)) {
             if (enableOrDisable) {
                 if (allowComplianceErrorSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
                     click(allowComplianceErrorSwitch);
