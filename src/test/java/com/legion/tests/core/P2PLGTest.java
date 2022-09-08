@@ -2,6 +2,7 @@ package com.legion.tests.core;
 
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -2345,6 +2346,87 @@ public class P2PLGTest extends TestBase {
 
 
         } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of changing location on P2P")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingLocationForP2POnMultipleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+            ArrayList<HashMap<String,String>> childLocations = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            List<String> locations = new ArrayList<>();
+            for (int i = 0; i < childLocations.size(); i++) {
+                locations.add(childLocations.get(i).get("optionName"));
+            }
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<String> shiftInfoList1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+            List<String> shiftInfoList2 = scheduleShiftTablePage.getTheShiftInfoByIndex(1);
+
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(0);
+            indexes.add(1);
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            Iterator<Integer> iterator = indexes.iterator();
+            List<Integer> indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            // Verify the child locations listed in the Location selector
+            editShiftPage.clickOnLocationSelect();
+            List<String> actualLocations = editShiftPage.getOptionsFromSpecificSelect();
+            for (int i = 0; i < locations.size(); i++) {
+                if (!locations.get(i).toLowerCase().trim().equalsIgnoreCase(actualLocations.get(i).toLowerCase().trim())) {
+                    SimpleUtils.fail("Child location list is incorrect!", false);
+                    break;
+                }
+            }
+            // Verify can change the location without selecting the two options
+            editShiftPage.selectSpecificOptionByText(actualLocations.get(1));
+            editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+            // Verify the shifts are moved to the selected child location
+            scheduleMainPage.selectGroupByFilter(actualLocations.get(1));
+            SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
+                    scheduleShiftTablePage.getOneDayShiftByName(0, shiftInfoList1.get(0)).size() == 1, false);
+            SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
+                    scheduleShiftTablePage.getOneDayShiftByName(1, shiftInfoList2.get(0)).size() == 1, false);
+            // Verify the shifts are saved successfully
+            scheduleMainPage.saveSchedule();
+            SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
+                    scheduleShiftTablePage.getOneDayShiftByName(0, shiftInfoList1.get(0)).size() == 1, false);
+            SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
+                    scheduleShiftTablePage.getOneDayShiftByName(1, shiftInfoList2.get(0)).size() == 1, false);
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
