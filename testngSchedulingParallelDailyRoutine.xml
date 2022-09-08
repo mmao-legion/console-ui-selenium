@@ -651,6 +651,8 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
 <!--                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
 <!--                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
                     <include name="verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

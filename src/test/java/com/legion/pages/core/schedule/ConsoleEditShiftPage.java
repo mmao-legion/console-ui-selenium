@@ -50,6 +50,20 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         }
     }
 
+    public enum assignmentOptions {
+        DoNotChangeAssignments("Do not change assignments"),
+        OpenShift("Open Shift: Auto Offer to TMs"),
+        AssignOrOffer("Assign or Offer to Specific TM's");
+
+        private final String option;
+        assignmentOptions(final String specificOption) {
+            option = specificOption;
+        }
+        public String getOption() {
+            return option;
+        }
+    }
+
     @FindBy (css = ".modal-content")
     private WebElement editShiftWindow;
     @FindBy (css = ".modal-instance-header-title")
@@ -316,6 +330,16 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
             moveToElementAndClick(workRoleSection.findElement(By.cssSelector(".react-select__indicators")));
         } else {
             SimpleUtils.fail("Work Role section on Edited column failed to load!", false);
+        }
+    }
+
+    @Override
+    public void clickOnLocationSelect() throws Exception {
+        WebElement locationSection = getSpecificElementByTypeAndColumn(sectionType.Location.getType(), "Edited");
+        if (isElementLoaded(locationSection, 5)) {
+            moveToElementAndClick(locationSection.findElement(By.cssSelector(".react-select__indicators")));
+        } else {
+            SimpleUtils.fail("Location section on Edited column failed to load!", false);
         }
     }
 
