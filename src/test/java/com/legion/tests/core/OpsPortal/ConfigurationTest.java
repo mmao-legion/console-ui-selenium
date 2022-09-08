@@ -57,7 +57,7 @@ public class ConfigurationTest extends TestBase {
     }
 
     @Override
-    @BeforeMethod()
+    @BeforeMethod(alwaysRun = true)
     public void firstTest(Method testMethod, Object[] params) throws Exception{
 
 
