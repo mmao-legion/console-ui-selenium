@@ -79,5 +79,5 @@ public interface CreateSchedulePage {
     public void createScheduleForNonDGFlowNewUIWithoutUpdate() throws Exception;
     public void selectLocationOnEditOperatingHoursPage(String locationName) throws Exception;
     public void closeSearchBoxForLocations() throws Exception;
-
+    public void createLGScheduleWithGivingTimeRange(String startTime, String endTime) throws Exception;
 }

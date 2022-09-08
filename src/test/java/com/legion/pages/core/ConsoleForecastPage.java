@@ -598,13 +598,13 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 	@Override
 	public void clickOnLabor() throws Exception {
-		if (isElementEnabled(laborTab, 5)) {
+		if (isElementEnabled(laborTab, 15)) {
 			click(laborTab);
 			if (isElementLoaded(workRoleFilterTitle, 5)) {
 				SimpleUtils.pass("labor tab is clickable");
 			}
 		} else {
-			SimpleUtils.fail("labor tab load failed", true);
+			SimpleUtils.fail("labor tab load failed", false);
 		}
 	}
 	@Override

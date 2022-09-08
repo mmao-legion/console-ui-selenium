@@ -970,8 +970,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             if (firstNameOfTM != null) {
                 for (int i=0; i< searchResults.size(); i++) {
                     String[] tmDetailName = shiftOperatePage.getTMDetailNameFromProfilePage(searchResults.get(i)).split(" ");
-                    if (firstNameOfTM.equals(tmDetailName[0])|| firstNameOfTM.equals(tmDetailName[1]) || tmDetailName[0].contains(firstNameOfTM)
-                            || tmDetailName[1].contains(firstNameOfTM)) {
+                    if (firstNameOfTM.equalsIgnoreCase(tmDetailName[0])
+                            || firstNameOfTM.equalsIgnoreCase(tmDetailName[1])
+                            || tmDetailName[0].toLowerCase().contains(firstNameOfTM.toLowerCase())
+                            || tmDetailName[1].toLowerCase().contains(firstNameOfTM.toLowerCase())) {
                         SimpleUtils.pass("The search result display correctly when search by TM first name");
                     } else {
                         SimpleUtils.fail("The search result incorrect when search by TM first name, the expected name is: " + firstNameOfTM+ ". The actual name is: " + tmDetailName[0] +" " +tmDetailName[1],false);
@@ -981,7 +983,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             } else if (lastNameOfTM != null) {
                 for (int i=0; i< searchResults.size(); i++) {
                     String[] tmDetailName = shiftOperatePage.getTMDetailNameFromProfilePage(searchResults.get(i)).split(" ");
-                    if (tmDetailName[0].contains(lastNameOfTM) || tmDetailName[1].contains(lastNameOfTM)) {
+                    if (tmDetailName[0].toLowerCase().contains(lastNameOfTM.toLowerCase())
+                            || tmDetailName[1].toLowerCase().contains(lastNameOfTM.toLowerCase())) {
                         SimpleUtils.pass("The search result display correctly when search by TM last name");
                     } else {
                         SimpleUtils.fail("The search result incorrect when search by TM last name",false);
@@ -3468,13 +3471,13 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else if (areListElementVisible(shiftOuterInDayView, 10)) {
             names = shiftOuterInDayView;
         }
-        scrollToBottom();
-        waitForSeconds(2);
         if (names.size() >= shiftCount) {
             SimpleUtils.randomSet(0, names.size() - 1, shiftCount, set);
             Actions action = new Actions(getDriver());
             action.keyDown(Keys.CONTROL).build().perform();
             for (int i : set) {
+                scrollToElement(names.get(i));
+                waitForSeconds(1);
                 action.moveToElement(names.get(i)).click(names.get(i));
                 waitForSeconds(1);
             }
