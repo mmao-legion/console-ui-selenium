@@ -10,6 +10,7 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java.ro.Si;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -28,6 +29,9 @@ public class BulkDeleteNEditTest extends TestBase {
     private ControlsPage controlsPage;
     private ControlsNewUIPage controlsNewUIPage;
     private MySchedulePage mySchedulePage;
+    private String action = "Edit";
+    private String success = "Success";
+    private String error = "Error";
 
     @Override
     @BeforeMethod()
@@ -1058,10 +1062,6 @@ public class BulkDeleteNEditTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             String workRole = shiftOperatePage.getRandomWorkRole();
 
-//            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
-//            scheduleMainPage.saveSchedule();
-
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
                     2, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
@@ -1134,5 +1134,174 @@ public class BulkDeleteNEditTest extends TestBase {
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of changing Assignment")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            String workRole = shiftOperatePage.getRandomWorkRole();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
+                    2, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+
+            HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            editShiftPage.clickOnAssignmentSelect();
+
+            // Verify the functionality of "Do not change assignments"
+            editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.DoNotChangeAssignments.getOption());
+            editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+
+            // Verify the shifts are converted to open shifts
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.clickOnAssignmentSelect();
+            editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.OpenShift.getOption());
+            editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+            SimpleUtils.assertOnFail("The previous assigned shifts are not converted to open shifts!",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, "Open").size() >= 2, false);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Verify the option "Assign or Offer to Specific TM's" is enabled
+            bulkEditShiftsByIndexes(indexes);
+            editShiftPage.clickOnAssignmentSelect();
+            List<String> assignments = editShiftPage.getOptionsFromSpecificSelect();
+            String assignOrOfferOption = ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption();
+            if (assignments.get(2).equals(assignOrOfferOption)) {
+                SimpleUtils.pass("Assign or Offer to Specific TM's is enabled!");
+            } else {
+                SimpleUtils.fail("Assign or Offer to Specific TM's is not enabled!", false);
+            }
+
+            // Verify Search Team Members page will show when selecting "Assign or Offer to Specific TM's
+            editShiftPage.selectSpecificOptionByText(assignOrOfferOption);
+            editShiftPage.clickOnUpdateButton();
+
+            // Verify can assign or offer to new team members
+            newShiftPage.searchTeamMemberByNameAndAssignOrOfferShift(assignedNames.get(0), true);
+            newShiftPage.searchTeamMemberByNameAndAssignOrOfferShift(assignedNames.get(1), true);
+            newShiftPage.clickOnCreateOrNextBtn();
+            scheduleMainPage.saveSchedule();
+
+            // Verify the offers are in draft status after saving the schedule
+            shiftOperatePage.clickOnProfileIconOfOpenShift();
+            scheduleShiftTablePage.clickViewStatusBtn();
+            shiftOperatePage.verifyTMInTheOfferList(assignedNames.get(0), "Draft Offer");
+            shiftOperatePage.verifyTMInTheOfferList(assignedNames.get(1), "Draft Offer");
+            shiftOperatePage.closeViewStatusContainer();
+            createSchedulePage.publishActiveSchedule();
+
+            // Verify the option "Assign or Offer to Specific TM's" is disabled
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+            createShiftsWithSpecificValues(workRole, "", "", "10:00am", "03:00pm",
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            bulkEditShiftsByIndexes(indexes);
+            editShiftPage.clickOnAssignmentSelect();
+            assignments = editShiftPage.getOptionsFromSpecificSelect();
+            assignOrOfferOption = ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption() +
+                    "\nOnly the shifts with same start time, end time, location and worker role can be bulk-assigned";
+            System.out.println(assignments.get(2));
+            System.out.println(assignOrOfferOption);
+            if (assignments.get(2).equals(assignOrOfferOption)) {
+                SimpleUtils.pass("Assign or Offer to Specific TM's is disabled!");
+            } else {
+                SimpleUtils.fail("Assign or Offer to Specific TM's is not disabled!", false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of changing shift notes")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            HashSet<Integer> indexes = scheduleShiftTablePage.verifyCanSelectMultipleShifts(2);
+            Iterator<Integer> iterator = indexes.iterator();
+            List<Integer> indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            // Verify can update the shift notes without selecting 2 options
+            String note = "Test Shift Notes";
+            editShiftPage.inputShiftNotes(note);
+            editShiftPage.clickOnUpdateButton();
+
+            // Verify the shift notes can show on the info popup
+            List<String> infoList1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            SimpleUtils.assertOnFail("Failed to update the shift notes!", note.equalsIgnoreCase(infoList1.get(10)), false);
+            List<String> infoList2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
+            SimpleUtils.assertOnFail("Failed to update the shift notes!", note.equalsIgnoreCase(infoList2.get(10)), false);
+
+            scheduleMainPage.saveSchedule();
+
+            // Verify the shift notes is saved successfully
+            infoList1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            SimpleUtils.assertOnFail("Failed to update the shift notes!", note.equalsIgnoreCase(infoList1.get(10)), false);
+            infoList2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
+            SimpleUtils.assertOnFail("Failed to update the shift notes!", note.equalsIgnoreCase(infoList2.get(10)), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    private void bulkEditShiftsByIndexes(HashSet<Integer> indexes) throws Exception {
+        scheduleShiftTablePage.selectSpecificShifts(indexes);
+        scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+        scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+        SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
     }
 }

@@ -1079,7 +1079,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             if (searchAndRecommendedTMTabs.size() == 2) {
                 //click(btnSearchteamMember.get(1));
                 if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
-                    textSearchOnNewCreateShiftPage.clear();
+                    textSearchOnNewCreateShiftPage.click();
+                    clearTheText(textSearchOnNewCreateShiftPage);
                     textSearchOnNewCreateShiftPage.sendKeys(name);
                     waitForSeconds(3);
                     if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
