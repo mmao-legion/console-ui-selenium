@@ -57,7 +57,7 @@ public class ConfigurationTest extends TestBase {
     }
 
     @Override
-    @BeforeMethod()
+    @BeforeMethod(alwaysRun = true)
     public void firstTest(Method testMethod, Object[] params) throws Exception{
 
 
@@ -4978,4 +4978,62 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "User can only view location level OH when the button is on")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUserOnlyCanViewOperatingHoursInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+
+            String locationName = "updateOHViaInteTest";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+
+            //Verify user can only see view button in location level
+            List<String> actions = new ArrayList<>();
+            actions = locationsPage.actionsForTemplateInLocationLevel("Operating Hours");
+            if(actions.size()==1 && actions.get(0).equalsIgnoreCase("View")){
+                SimpleUtils.pass("User can only view location level Operating Hours when Override via integration is on");
+            }else {
+                SimpleUtils.fail("User can do other actions and not only view for location level OH when Override via integration is on",false);
+            }
+            //user can view location level OH template
+            locationsPage.clickActionsForTemplate("Operating Hours", "View");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify other template don't have Override via integration button")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOtherTemplateNoOverrideViaIntegrationButtonAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            String templateType = "Scheduling Policies";
+            String templateName ="UsedByAuto";
+
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.searchTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName,"view");
+            if(!configurationPage.verifyOverrideViaIntegrationButtonShowingOrNot()){
+                SimpleUtils.pass("There is no Override via integration button for other template types");
+            }else {
+                SimpleUtils.fail("There is Override via integration button for other template types",false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

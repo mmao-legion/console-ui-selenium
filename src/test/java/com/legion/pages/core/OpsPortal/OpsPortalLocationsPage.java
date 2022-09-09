@@ -5273,5 +5273,17 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("open hours and close hours fields are not showing",false);
 		}
 	}
+
+
+	@Override
+	public List<String> actionsForTemplateInLocationLevel(String templateName) {
+		scrollToBottom();
+		List<WebElement> actions = getDriver().findElements(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span"));
+		List<String> actionsName=new ArrayList<>();
+		for (int i = 0; i < actions.size(); i++) {
+			actionsName.add(actions.get(i).getText().trim());
+		}
+		return actionsName;
+	}
 }
 
