@@ -4587,13 +4587,33 @@ public class ParentChildLGTest extends TestBase {
 
             //Edit the operating day and save all actions.
             scheduleMainPage.clickEditBtnOnToggleSummary();
-            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation2);
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation1);
             List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
             scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "10:00AM","10:00PM");
             scheduleMainPage.clickSaveBtnOnEditOpeHoursPageForOP();
+            scheduleMainPage.clickEditBtnOnToggleSummary();
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation2);
+            scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "10:00AM","10:00PM");
+            scheduleMainPage.clickSaveBtnOnEditOpeHoursPageForOP();
+
+            scheduleMainPage.goToToggleSummaryView();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(childLocation1);
             scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "10AM-10PM");
+            createSchedulePage.closeSearchBoxForLocations();
+            createSchedulePage.selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(childLocation2);
+            scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "10AM-10PM");
+            createSchedulePage.closeSearchBoxForLocations();
+
+            //Check the time duration on the day view
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdate();
+            scheduleCommonPage.clickOnDayView();
+            ArrayList<String> timeDurations = scheduleShiftTablePage.getScheduleDayViewGridTimeDuration();
+            String timeDuration = timeDurations.get(0) + "-" + timeDurations.get(timeDurations.size()-1);
+            SimpleUtils.assertOnFail("The time duration is not matched between day view and toggle summary view!", timeDuration.equalsIgnoreCase("8 AM-12 AM"), false);
 
             //Check the closed operating day.
+            scheduleMainPage.goToToggleSummaryView();
             scheduleMainPage.clickEditBtnOnToggleSummary();
             createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation1);
             scheduleMainPage.closeTheParticularOperatingDay(weekDays);
