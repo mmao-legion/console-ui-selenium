@@ -668,7 +668,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css = "[ng-click=\"removeBreak(b)\"]")
     private List<WebElement> deleteMealBreakButtons;
 
-    @FindBy(css = "div.noUi-draggable")
+    @FindBy(css = "div.noUi-draggable.color_meal")
     private List<WebElement> mealBreaks;
 
     @FindBy(css = "div.slider-section-description-break-time-item-meal")
@@ -817,7 +817,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if (isMealBreakTimeWindowDisplayWell(true)) {
             if (isElementLoaded(mealBreakBar, 15)){
                 SimpleUtils.pass("The breaks bar is loaded successfully! ");
-                if (mealBreakBar.getAttribute("class").contains("disabled")) {
+                if (!areListElementVisible(mealBreakTimes, 5)
+                        || !areListElementVisible(mealBreaks, 5)
+                        || mealBreakBar.getAttribute("class").contains("disabled")) {
                     click(addMealBreakButton);
                     SimpleUtils.pass("Click Add Meal Break button successfully! ");
                     click(continueBtnInMealBreakButton);
@@ -1722,7 +1724,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         WebElement selectedShift = shift;
         clickOnEditMeaLBreakTime();
         if (isMealBreakTimeWindowDisplayWell(true)) {
-            if (mealBreakBar.getAttribute("class").contains("disabled")) {
+            if (!areListElementVisible(mealBreakTimes, 5)
+                    || !areListElementVisible(mealBreaks, 5)
+                    || mealBreakBar.getAttribute("class").contains("disabled")) {
                 click(addMealBreakButton);
                 click(continueBtnInMealBreakButton);
                 if (isElementEnabled(confirmWindow, 5)) {
@@ -1773,7 +1777,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         WebElement selectedShift = scheduleShiftTablePage.getShiftById(shiftid);
         clickOnEditMeaLBreakTime();
         if (isMealBreakTimeWindowDisplayWell(true)) {
-            if (mealBreakBar.getAttribute("class").contains("disabled")) {
+            if (!areListElementVisible(mealBreakTimes, 5)
+                    || !areListElementVisible(mealBreaks, 5)
+                    || mealBreakBar.getAttribute("class").contains("disabled")) {
                 click(addMealBreakButton);
                 click(continueBtnInMealBreakButton);
                 if (isElementEnabled(confirmWindow, 5)) {

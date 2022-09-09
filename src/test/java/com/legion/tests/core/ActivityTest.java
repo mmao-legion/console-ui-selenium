@@ -2168,7 +2168,7 @@ public class ActivityTest extends TestBase {
             String shiftStartTime = "8AM";
             String shiftEndTime = "11AM";
             createShiftsWithSpecificValues(workRole, null, null,
-                    "8AM", "11AM", 1,  Arrays.asList(0),
+                    "9AM", "12PM", 1,  Arrays.asList(0),
                     ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), null, "");
 
             scheduleMainPage.saveSchedule();
@@ -2185,7 +2185,7 @@ public class ActivityTest extends TestBase {
             scheduleShiftTablePage.clickViewStatusBtn();
             shiftOperatePage.verifyTMInTheOfferList(teamMemberName1, "offered");
             shiftOperatePage.closeViewStatusContainer();
-            Thread.sleep(120000);
+//            Thread.sleep(120000);
             loginPage.logOut();
 
             // Login as two or more TMs and claim the offers

@@ -1013,6 +1013,10 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                             }
                                         }
                                     }
+                                    if(!areListElementVisible(assignedShiftsOnShiftAssignedSections, 5)
+                                            && !areListElementVisible(shiftOffersOnShiftAssignedSections, 5)){
+                                        SimpleUtils.fail("Fail to assign or offer TM on search or recommended TM page! ", false);
+                                    }
                                     break;
                                 }
                             }else {
