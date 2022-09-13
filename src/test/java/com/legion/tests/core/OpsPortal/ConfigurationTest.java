@@ -1,5 +1,6 @@
 package com.legion.tests.core.OpsPortal;
 
+import com.alibaba.fastjson.JSONObject;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
@@ -21,9 +22,12 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.Constants;
+import com.legion.utils.HttpUtil;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -1335,11 +1339,12 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
+    //blocked by https://legiontech.atlassian.net/browse/OPS-5621
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Multiple Template E2E flow")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
     public void verifyMultipleTemplateE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType="Operating Hours";
@@ -5100,6 +5105,83 @@ public class ConfigurationTest extends TestBase {
             }else {
                 SimpleUtils.fail("There is Override via integration button for other template types",false);
             }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    public void importBusinessHours(String sessionId) {
+        String filePath = "src/test/resources/uploadFile/LocationLevelWithoutDayparts.csv";
+        String url = "https://staging-enterprise.dev.legion.work/legion/integration/testUploadBusinessHoursData?isTest=false&fileName=" + filePath + "&encrypted=false";
+        String responseInfo = HttpUtil.fileUploadByHttpPost(url, sessionId, filePath);
+        if (StringUtils.isNotBlank(responseInfo)) {
+            JSONObject json = JSONObject.parseObject(responseInfo);
+            if (!json.isEmpty()) {
+                String value = json.getString("responseStatus");
+                System.out.println(value);
+            }
+        }
+    }
+
+    public int getHttpStatusCode(String[] httpResponse) {
+        return Integer.parseInt(httpResponse[0]);
+    }
+
+    private String logIn() {
+        //header
+        HashMap<String, String> loginHeader = new HashMap<String, String>();
+        //body
+        String loginString = "{\"enterpriseName\":\"opauto\",\"userName\":\"fiona+99@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
+        //post request
+        String[] postResponse = HttpUtil.httpPost(Constants.loginUrlRC, loginHeader, loginString);
+        Assert.assertEquals(getHttpStatusCode(postResponse), 200, "Failed to login!");
+        String sessionId = postResponse[1];
+        return sessionId;
+    }
+
+    //blocked by API error
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify user can update location level operating hours via integration")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifyUserCanUpdateLocationOHViaIntegrationAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            String locationName = "updateOHViaInteTest";
+            String templateName="updateOHViaInteTest";
+            String sessionId = logIn();
+            importBusinessHours(sessionId);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            //verify location level OH is overridden or not?
+            if(locationsPage.isOverrideStatusAtLocationLevel("Operating Hours")){
+                SimpleUtils.pass("User can update location level OH via integration");
+            }else {
+                SimpleUtils.fail("User can NOT update location level OH via integration",false);
+            }
+            //Go to configuration and edit this template's override button to false then reset location level OH
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Operating Hours");
+            configurationPage.clickOnSpecifyTemplateName(templateName,"edit");
+            configurationPage.turnOnOffOverrideViaIntegrationButton();
+            configurationPage.publishNowTemplate();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Operating Hours", "Reset");
+            //back to template details page to turn on the button
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Operating Hours");
+            configurationPage.clickOnSpecifyTemplateName(templateName,"edit");
+            configurationPage.turnOnOffOverrideViaIntegrationButton();
+            configurationPage.publishNowTemplate();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

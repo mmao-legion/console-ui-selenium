@@ -7451,4 +7451,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Get Predictability Score button should NOT be disabled!", false);
 		}
 	}
+
+	@Override
+	public void turnOnOffOverrideViaIntegrationButton(){
+		if(isElementEnabled(overrideViaIntegrationBTN,2)){
+			clickTheElement(overrideViaIntegrationBTN);
+			waitForSeconds(2);
+		}
+	}
 }

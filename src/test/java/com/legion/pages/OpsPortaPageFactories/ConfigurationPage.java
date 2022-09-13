@@ -257,4 +257,5 @@ public interface ConfigurationPage {
     public boolean verifyOverrideViaIntegrationButtonShowingOrNot();
     public boolean isGetPredictabilityScoreEnabled() throws Exception;
     public void clickGetPredictabilityScore() throws Exception;
+    public void turnOnOffOverrideViaIntegrationButton();
 }
