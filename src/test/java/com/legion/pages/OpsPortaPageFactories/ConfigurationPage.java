@@ -255,4 +255,6 @@ public interface ConfigurationPage {
     public List<String> getAllForecastSourceType() throws Exception;
     public boolean verifyPredictabilityScoreExist() throws Exception;
     public boolean verifyOverrideViaIntegrationButtonShowingOrNot();
+    public boolean isGetPredictabilityScoreEnabled() throws Exception;
+    public void clickGetPredictabilityScore() throws Exception;
 }
