@@ -70,6 +70,9 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     @FindBy(css = "div.modal-content")
     private WebElement popupAlertPremiumPay;
 
+    @FindBy(css = "._pendo-button-tertiaryButton")
+    private WebElement maybeLaterBtn;
+
     @FindBy(css = "button.btn.lgn-action-button.lgn-action-button-success")
     private WebElement btnEditAnyway;
 
@@ -224,6 +227,9 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                     SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
                 }
                 waitForSeconds(5);
+            }
+            if (isElementLoaded(maybeLaterBtn, 20)) {
+                clickTheElement(maybeLaterBtn);
             }
             if(checkSaveButton() && checkCancelButton()) {
                 SimpleUtils.pass("Save and Cancel buttons are enabled ");

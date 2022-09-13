@@ -514,6 +514,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private List<WebElement> namesDayView;
     @FindBy(css = ".shift-selected-multi")
     private List<WebElement> selectedShifts;
+    @FindBy(css = "._pendo-button-tertiaryButton")
+    private WebElement maybeLaterBtn;
 
     @Override
     public void verifyShiftsChangeToOpenAfterTerminating(List<Integer> indexes, String name, String currentTime) throws Exception {
@@ -3464,6 +3466,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @Override
     public HashSet<Integer> verifyCanSelectMultipleShifts(int shiftCount) throws Exception {
+        skipTheNewFeatureDialog();
         HashSet<Integer> set = new HashSet<>();
         List<WebElement> names = null;
         if (areListElementVisible(namesWeekView, 10)) {
@@ -3494,8 +3497,19 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         return set;
     }
 
+    private void skipTheNewFeatureDialog() throws Exception {
+        try {
+            if (isElementLoaded(maybeLaterBtn, 5)) {
+                clickTheElement(maybeLaterBtn);
+            }
+        } catch (Exception e) {
+            // Do nothing
+        }
+    }
+
     @Override
     public void selectSpecificShifts(HashSet<Integer> shiftIndexes) throws Exception {
+        skipTheNewFeatureDialog();
         if (!areListElementVisible(selectedShifts, 5)) {
             List<WebElement> names = null;
             if (areListElementVisible(namesWeekView, 10)) {
