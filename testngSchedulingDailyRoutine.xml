@@ -58,7 +58,7 @@
             </class>
         </classes>
     </test>
-
+<!--
     <test name="Parent Child LG Test">
         <classes>
             <class name="com.legion.tests.core.ParentChildLGTest">
@@ -69,7 +69,7 @@
             </class>
         </classes>
     </test>
-
+https://legiontech.atlassian.net/browse/SCH-7510 -->
     <test name="LiquidDashboard Test">
         <classes>
             <class name="com.legion.tests.core.LiquidDashboardTest">
@@ -99,8 +99,18 @@
                     <include name="verifyOverrideAssignmentRulesToNoAsInternalAdmin" />
                     <include name="verifyOverrideAssignmentRulesToYesAsInternalAdmin" />
                     <include name="" />
-           </methods>
-       </class>
-   </classes>
-</test>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Bulk Delete and Edit Test">
+        <classes>
+            <class name="com.legion.tests.core.BulkDeleteNEditTest">
+                <methods>
+                    <include name="verifyChangingWorkRoleOnMultipleEditShiftsWindowAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

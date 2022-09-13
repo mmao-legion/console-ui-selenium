@@ -185,7 +185,11 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
             teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
-            teamPage.selectATeamMemberToViewProfile();
+            if (getEnterprise().equalsIgnoreCase("vailqacn")) {
+                teamPage.searchAndSelectTeamMemberByName("Alexandra Theocharides");
+            } else {
+                teamPage.selectATeamMemberToViewProfile();
+            }
 
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             //Verify User Profile Section is loaded

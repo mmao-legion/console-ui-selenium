@@ -943,7 +943,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			if (isElementEnabled(editTemplatePopupPage, 5)) {
 				SimpleUtils.pass("Click edit button successfully!");
 				clickTheElement(okButton);
-				if (isElementEnabled(dropdownArrowButton)) {
+				if (isElementEnabled(dropdownArrowButton, 20)) {
 					SimpleUtils.pass("Template is in edit mode now");
 				} else {
 					SimpleUtils.fail("Template is not in edit mode now", false);
@@ -7405,6 +7405,18 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 		return flag;
 	}
+
+	@Override
+	public boolean verifyOverrideViaIntegrationButtonShowingOrNot(){
+		boolean flag = false;
+		if(isElementEnabled(overrideViaIntegrationBTN,2)){
+			flag = true;
+		}else {
+			flag = false;
+		}
+		return flag;
+  }
+
 	@FindBy(css="lg-button[label=\"Get Predictability Score\"] button")
 	private WebElement getScoreBtn;
 	@Override

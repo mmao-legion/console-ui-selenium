@@ -254,6 +254,7 @@ public interface ConfigurationPage {
     public boolean verifyTemplateCardExist(String templateType) throws Exception;
     public List<String> getAllForecastSourceType() throws Exception;
     public boolean verifyPredictabilityScoreExist() throws Exception;
+    public boolean verifyOverrideViaIntegrationButtonShowingOrNot();
     public boolean isGetPredictabilityScoreEnabled() throws Exception;
     public void clickGetPredictabilityScore() throws Exception;
 }

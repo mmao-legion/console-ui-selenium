@@ -30,6 +30,10 @@ public class ParentChildLGTest extends TestBase {
     private HashMap<String, Object[][]> swapCoverCredentials = null;
     private List<String> swapCoverNames = null;
     private String workRoleName = "";
+    private static String Location = "Location";
+    private static String District = "District";
+    private static String Region = "Region";
+    private static String BusinessUnit = "Business Unit";
 
     @Override
     @BeforeMethod()
@@ -3991,9 +3995,10 @@ public class ParentChildLGTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if(!isActiveWeekGenerated){
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createLGScheduleWithGivingTimeRange("06:00am", "06:00am");
             scheduleMainPage.clickOnFilterBtn();
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
             List<String> shiftInfo = new ArrayList<>();
@@ -4375,4 +4380,256 @@ public class ParentChildLGTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate navigation, roster, schedule and dashboard of Parent Child LG")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void validateNavigationRosterScheduleAndDashboardOfParentChildLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            goToSchedulePageScheduleTab();
+            //Verify the all slave locations will be generated when generate the master location for Master-Slave LG
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createLGScheduleWithGivingTimeRange("06:00am", "06:00am");
+            if(smartCardPage.isRequiredActionSmartCardLoaded()) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+                scheduleMainPage.saveSchedule();
+            }
+            createSchedulePage.publishActiveSchedule();
+            String workRole = shiftOperatePage.getRandomWorkRole();
+            List<String> locationNames = scheduleMainPage.getSpecificFilterNames("location");
+            scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+            ArrayList<HashMap<String,String>> locations  = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            SimpleUtils.assertOnFail("The sub location count is incorrectly on schedule! ",
+                    locationNames.size() == locations.size(), false);
+            List<String> locationsFromGroupByOption = new ArrayList<>();
+            for (HashMap<String, String> stringStringHashMap : locations) {
+                locationsFromGroupByOption.add(stringStringHashMap.get("optionName"));
+            }
+
+            SimpleUtils.assertOnFail("The locations from group by option are:"+locationsFromGroupByOption
+                            + " the locations from filter are:"+ locationNames,
+                    locationsFromGroupByOption.toString().equalsIgnoreCase(locationNames.toString()), false);
+
+            teamPage.goToTeam();
+            int parentRosterCount = teamPage.verifyTMCountIsCorrectOnRoster();
+            //Verify the roster can be at master or slave location level for Master-Slave LG
+            SimpleUtils.assertOnFail("The parent location roster count is:"+parentRosterCount,
+                    parentRosterCount > 0, false);
+            String tmName = teamPage.selectATeamMemberToViewProfile();
+            //Verify the SM dashboard of P2P LG, SM Dashboard will aggregate data for the widgets
+            dashboardPage.clickOnDashboardConsoleMenu();
+            Thread.sleep(3000);
+            int upcomingShiftCountOnParentSMDashboard = dashboardPage.getUpComingShifts().size();
+            SimpleUtils.assertOnFail("The parent location upcoming shift count is:"+upcomingShiftCountOnParentSMDashboard,
+                    upcomingShiftCountOnParentSMDashboard == 8
+                            || upcomingShiftCountOnParentSMDashboard == 0, false);
+            //Verify all sub-locations of master-slave LG have their own demand forecasts/labor forecast/staffing guidance
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            forecastPage.clickOnShopper();
+            forecastPage.verifyDemandForecastCanLoad();
+            forecastPage.clickOnLabor();
+            forecastPage.verifyLaborForecastCanLoad();
+
+            //Verify TMs in parent location can be searched out on other locations for Master-Slave LG
+            if (!tmName.equalsIgnoreCase("")) {
+                goToSchedulePageScheduleTab();
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmName);
+                createShiftsWithSpecificValues(workRole, null, locationNames.get(0), "9:00am", "12:00pm",
+                        1, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), null, tmName);
+                List<WebElement> tmShifts = scheduleShiftTablePage.getAllShiftsOfOneTM(tmName.split(" ")[0]);
+                SimpleUtils.assertOnFail("TM "+ tmName+"'s shift should be created! ",
+                        tmShifts.size()>0,false);
+                scheduleMainPage.clickOnCancelButtonOnEditMode();
+            }else
+                SimpleUtils.fail("The TM from parent child LG roster should not be null! ", false);
+
+            //Verify the all slave location will be ungenerated when ungenerate the master location for Master-Slave LG
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            SimpleUtils.assertOnFail("The schedule should be ungenerate successfully! ",
+                    !createSchedulePage.isWeekGenerated() && createSchedulePage.isGenerateButtonLoaded(), false);
+            //Verify the location navigation of Master-Slave LG
+            List<String> allLocations = locationSelectorPage.getAllUpperFieldNamesInUpperFieldDropdownList(Location);
+            SimpleUtils.assertOnFail("Parent location should display in location navigation list",
+                    allLocations.contains(location), false);
+            for (int i=0;i< locationNames.size(); i++){
+                SimpleUtils.assertOnFail("Child location "+ locationNames.get(i)+" should not display in location navigation list: "+ allLocations,
+                        !allLocations.contains(locationNames.get(i)), false);
+            }
+
+            //Verify all sub-locations of master-slave LG have their own operating hours
+            createSchedulePage.clickCreateScheduleButton();
+            for (int i=0;i< locationNames.size(); i++) {
+                createSchedulePage.selectLocationOnCreateScheduleEditOperatingHoursPage(locationNames.get(i));
+                createSchedulePage.editOperatingHoursWithGivingPrameters("8:00AM", "8:00PM");
+            }
+            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.selectWhichWeekToCopyFrom("SUGGESTED");
+            createSchedulePage.clickOnFinishButtonOnCreateSchedulePage();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Cosimo")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of \"Edit Operating hours\" option for location group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyEditOperatingHoursForLGAsInternalAdmin(String username, String password, String browser, String location)
+            throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+
+            //Go to the schedule page
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnWeekView();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            Thread.sleep(5000);
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            //The P2P location has a dropdown list which includes child locations
+            scheduleMainPage.goToToggleSummaryView();
+            scheduleMainPage.checkOperatingHoursOnToggleSummary();
+            SimpleUtils.assertOnFail("The drop down list is unavailable!", locationSelectorPage.isChangeLocationButtonLoaded(), false);
+
+            //Compare the operating hours between Editing and Toggle Summary pages
+            scheduleMainPage.goToToggleSummaryView();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            Thread.sleep(3);
+            String childLocation = "Child002";
+            createSchedulePage.selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(childLocation);
+            scheduleMainPage.checkOperatingHoursOnToggleSummary();
+            scheduleMainPage.clickEditBtnOnToggleSummary();
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation);
+            scheduleMainPage.checkOperatingHoursOnEditDialog();
+
+            //Go to Edit Operating Hours page and check relevant content
+            scheduleMainPage.isSaveBtnLoadedOnEditOpeHoursPageForOP();
+            scheduleMainPage.isCancelBtnLoadedOnEditOpeHoursPageForOP();
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Cosimo")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of SAVE button on \"Edit operating hours\" window for location group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyEditOperatingHoursFunctionForLGAsInternalAdmin(String username, String password, String browser, String location)
+            throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+
+            //Go to the schedule page
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnWeekView();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            Thread.sleep(5000);
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            //Edit the operating day and cancel all actions.
+            scheduleMainPage.goToToggleSummaryView();
+            scheduleMainPage.clickEditBtnOnToggleSummary();
+            String childLocation1 = "Child001";
+            String childLocation2 = "Child002";
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation2);
+            List<String> weekDay = new ArrayList<>(Arrays.asList("Sunday"));
+            scheduleMainPage.closeTheParticularOperatingDay(weekDay);
+            scheduleMainPage.openTheParticularOperatingDay(weekDay);
+            scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDay, "10:00AM","10:00PM");
+            scheduleMainPage.clickCancelBtnOnEditOpeHoursPageForOP();
+            scheduleMainPage.checkOperatingHoursOnToggleSummary();
+
+            //Edit the operating day and save all actions.
+            scheduleMainPage.clickEditBtnOnToggleSummary();
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation2);
+            List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
+            scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "10:00AM","10:00PM");
+            scheduleMainPage.clickSaveBtnOnEditOpeHoursPageForOP();
+            scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "10AM-10PM");
+
+            //Check the closed operating day.
+            scheduleMainPage.clickEditBtnOnToggleSummary();
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation1);
+            scheduleMainPage.closeTheParticularOperatingDay(weekDays);
+            scheduleMainPage.clickSaveBtnOnEditOpeHoursPageForOP();
+            Thread.sleep(3);
+
+            scheduleMainPage.clickEditBtnOnToggleSummary();
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation2);
+            scheduleMainPage.closeTheParticularOperatingDay(weekDays);
+            scheduleMainPage.clickSaveBtnOnEditOpeHoursPageForOP();
+            Thread.sleep(3);
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnWeekView();
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            createSchedulePage.selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(childLocation1);
+            scheduleMainPage.checkClosedDayOnToggleSummary(weekDays);
+            createSchedulePage.closeSearchBoxForLocations();
+            createSchedulePage.selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(childLocation2);
+            scheduleMainPage.checkClosedDayOnToggleSummary(weekDays);
+            createSchedulePage.closeSearchBoxForLocations();
+
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdate();
+            scheduleCommonPage.clickOnWeekView();
+            int shiftCountWeek = scheduleShiftTablePage.getShiftsCount();
+            SimpleUtils.assertOnFail("The schedule is not empty!", shiftCountWeek == 0, false);
+            scheduleCommonPage.clickOnDayView();
+            int shiftCountDay = scheduleShiftTablePage.getShiftsCount();
+            SimpleUtils.assertOnFail("The current day is not empty!", shiftCountDay == 0, false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }

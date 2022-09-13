@@ -1158,7 +1158,7 @@ public class ScheduleTest extends TestBase{
 
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-			profileNewUIPage.getNickNameFromProfile();
+			profileNewUIPage.clickOnUserProfileImage();
 			if (dashboardPage.isSwitchToEmployeeViewPresent()) {
 				dashboardPage.clickOnSwitchToEmployeeView();
 			}

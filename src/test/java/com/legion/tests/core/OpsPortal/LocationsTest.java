@@ -2535,39 +2535,6 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "opauto")
-    @TestName(description = "Labor Budget Section is controlled by toggle")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyLaborBudgetSectionIsControlledByToggleAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
-        try {
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            locationsPage.clickOnLocationsTab();
-            locationsPage.goToGlobalConfigurationInLocations();
-            //Turn off EnableLongTermBudgetPlan toggle
-            ToggleAPI.disableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
-            refreshPage();
-            if(!locationsPage.isBudgetPlanSectionShowing()){
-                SimpleUtils.pass("Budget plan section is Not showing when EnableLongTermBudgetPlan is off");
-            }else {
-                SimpleUtils.fail("Budget plan section is showing when EnableLongTermBudgetPlan is off",false);
-            }
-            //Turn on EnableLongTermBudgetPlan toggle
-            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
-            refreshPage();
-            refreshPage();
-            if(locationsPage.isBudgetPlanSectionShowing()){
-                SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is on");
-            }else {
-                SimpleUtils.fail("Budget plan section is NOT showing when EnableLongTermBudgetPlan is on",false);
-            }
-        }catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-    }
-
-    @Automated(automated = "Automated")
-    @Owner(owner = "Fiona")
-    @Enterprise(name = "opauto")
     @TestName(description = "Compute LRB by work role or by job title groups")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyComputeLRBByWorkRoleOrByJobTitleGroupsAsInternalAdmin(String username, String password, String browser, String location) throws Exception {

@@ -527,6 +527,8 @@ public class TimeOffRequestTest extends TestBase {
         TimeOffPage timeOffPage = new TimeOffPage();
         timeOffPage.switchToTimeOffTab();
         OpsCommonComponents commonComponents = new OpsCommonComponents();
+        timeOffPage.editTimeOffBalance("Annual Leave","1000");
+        commonComponents.okToActionInModal(true);
         timeOffPage.createTimeOff("Annual Leave",false,27,27);
         commonComponents.okToActionInModal(true);
 

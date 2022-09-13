@@ -5117,7 +5117,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public boolean isBudgetPlanSectionShowing(){
-		String locator = "general-form.enterprise-container form-section:nth-child(6)  question-input[question-title*=\"upperfield?\"] yes-no div.ng-scope";
+		String locator = "general-form.enterprise-container form-section:nth-child(6)  question-input[question-title*=\"upperfield?\"]";
 		boolean flag;
 		if(isElementExist(locator)){
 			flag = true;
@@ -5243,6 +5243,47 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}else {
 			select.selectByVisibleText("By Work Role Hourly Rate");
 		}
+	}
+
+	@FindBy(css="lg-new-time-input[label=\"Open\"] input")
+	private WebElement openHour;
+	@FindBy(css="lg-new-time-input[label=\"Close\"] input")
+	private WebElement closeHour;
+
+	@Override
+	public void updateOpenCloseHourForOHTemplate(String openString,String closeString){
+		if(isElementEnabled(openHour,2) && isElementEnabled(closeHour,2)){
+//			openHour.sendKeys(Keys.TAB);
+			openHour.clear();
+			clickTheElement(openHour);
+			openHour.sendKeys(openString);
+			waitForSeconds(2);
+			openHour.sendKeys(Keys.TAB);
+			openHour.sendKeys(Keys.TAB);
+			closeHour.sendKeys(closeString);
+			waitForSeconds(2);
+			String openStr=getDriver().findElement(By.cssSelector("lg-new-time-input[label=\"Open\"] div.input-faked")).getAttribute("innerText").trim();
+			String closeStr=getDriver().findElement(By.cssSelector("lg-new-time-input[label=\"Close\"] div.input-faked")).getAttribute("innerText").trim();
+			if(openStr.equalsIgnoreCase(openString)&&closeStr.equalsIgnoreCase(closeString)){
+				SimpleUtils.pass("user can update open and close hour successfully in OH template");
+			}else {
+				SimpleUtils.fail("user can NOT update open and close hour successfully in OH template",false);
+			}
+		}else {
+			SimpleUtils.fail("open hours and close hours fields are not showing",false);
+		}
+	}
+
+
+	@Override
+	public List<String> actionsForTemplateInLocationLevel(String templateName) {
+		scrollToBottom();
+		List<WebElement> actions = getDriver().findElements(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span"));
+		List<String> actionsName=new ArrayList<>();
+		for (int i = 0; i < actions.size(); i++) {
+			actionsName.add(actions.get(i).getText().trim());
+		}
+		return actionsName;
 	}
 }
 

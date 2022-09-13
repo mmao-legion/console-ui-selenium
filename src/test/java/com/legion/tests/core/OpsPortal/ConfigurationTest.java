@@ -57,7 +57,7 @@ public class ConfigurationTest extends TestBase {
     }
 
     @Override
-    @BeforeMethod()
+    @BeforeMethod(alwaysRun = true)
     public void firstTest(Method testMethod, Object[] params) throws Exception{
 
 
@@ -4984,8 +4984,6 @@ public class ConfigurationTest extends TestBase {
 
             String templateType = "Operating Hours";
             String templateName ="FionaUsingUpdateLocationLevelOH";
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
-            String currentTime = dfs.format(new Date()).trim();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
 
             configurationPage.goToConfigurationPage();
@@ -5008,30 +5006,102 @@ public class ConfigurationTest extends TestBase {
         try {
 
             String locationName = "updateOHViaIntegration";
-            int moveCount = 4;
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            String openString = "09:00AM";
+            String closeString ="08:30PM";
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
+            if(locationsPage.verifyIsOverrideStatusAtLocationLevel("Operating Hours")){
+                locationsPage.clickActionsForTemplate("Operating Hours", "Reset");
+            }
+            //user can view location level OH template
             locationsPage.clickActionsForTemplate("Operating Hours", "View");
             locationsPage.backToConfigurationTabInLocationLevel();
+            //user can edit location level OH template
             locationsPage.clickActionsForTemplate("Operating Hours", "Edit");
-
             locationsPage.editBtnIsClickableInBusinessHours();
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            locationsPage.updateOpenCloseHourForOHTemplate(openString,closeString);
             locationsPage.selectDayInWorkingHoursPopUpWin(6);
             configurationPage.saveBtnIsClickable();
             configurationPage.saveBtnIsClickable();
-            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "Yes");
+            if(locationsPage.verifyIsOverrideStatusAtLocationLevel("Operating Hours")){
+                SimpleUtils.pass("User can update location level template successfully");
+            }else {
+                SimpleUtils.fail("User failed to update location level template",false);
+            }
+
             //reset
             locationsPage.clickActionsForTemplate("Operating Hours", "Reset");
-            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "No");
-
+            if(!locationsPage.verifyIsOverrideStatusAtLocationLevel("Operating Hours")){
+                SimpleUtils.pass("User can reset successfully");
+            }else {
+                SimpleUtils.fail("User failed to reset location level template",false);
+            }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "User can only view location level OH when the button is on")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUserOnlyCanViewOperatingHoursInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+
+            String locationName = "updateOHViaInteTest";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+
+            //Verify user can only see view button in location level
+            List<String> actions = new ArrayList<>();
+            actions = locationsPage.actionsForTemplateInLocationLevel("Operating Hours");
+            if(actions.size()==1 && actions.get(0).equalsIgnoreCase("View")){
+                SimpleUtils.pass("User can only view location level Operating Hours when Override via integration is on");
+            }else {
+                SimpleUtils.fail("User can do other actions and not only view for location level OH when Override via integration is on",false);
+            }
+            //user can view location level OH template
+            locationsPage.clickActionsForTemplate("Operating Hours", "View");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify other template don't have Override via integration button")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOtherTemplateNoOverrideViaIntegrationButtonAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            String templateType = "Scheduling Policies";
+            String templateName ="UsedByAuto";
+
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.searchTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName,"view");
+            if(!configurationPage.verifyOverrideViaIntegrationButtonShowingOrNot()){
+                SimpleUtils.pass("There is no Override via integration button for other template types");
+            }else {
+                SimpleUtils.fail("There is Override via integration button for other template types",false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
