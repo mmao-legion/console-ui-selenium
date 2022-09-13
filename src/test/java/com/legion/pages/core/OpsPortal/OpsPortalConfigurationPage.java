@@ -7405,4 +7405,38 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 		return flag;
 	}
+	@FindBy(css="lg-button[label=\"Get Predictability Score\"] button")
+	private WebElement getScoreBtn;
+	@Override
+	public boolean isGetPredictabilityScoreEnabled() throws Exception {
+		boolean isEnabled = true;
+		if (!isElementExist("i[ng-if*=\"hasPublishedVersion\"]")){
+			if (isElementLoaded(getScoreBtn, 5)){
+				if (getScoreBtn.getAttribute("disabled") != null && getScoreBtn.getAttribute("disabled").equals("true")){
+					isEnabled = false;
+				}
+			}else{
+				SimpleUtils.fail("Failed to load 'Get Predictability Score button'!", false);
+			}
+		}
+
+		return isEnabled;
+	}
+
+	@FindBy(css="i[ng-if*=\"hasPublishedVersion\"]")
+	private WebElement spinButton;
+	@Override
+	public void clickGetPredictabilityScore() throws Exception {
+		if (isElementLoaded(spinButton)){
+			waitForNotExists(spinButton, 300);
+		}
+		if (isElementEnabled(getScoreBtn, 10)){
+			clickTheElement(getScoreBtn);
+			if (isElementLoaded(spinButton)){
+				SimpleUtils.pass("The Predictability Score can be requested again by click the button!");
+			}
+		}else{
+			SimpleUtils.fail("Get Predictability Score button should NOT be disabled!", false);
+		}
+	}
 }
