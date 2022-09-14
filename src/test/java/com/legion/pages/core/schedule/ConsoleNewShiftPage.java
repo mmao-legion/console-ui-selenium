@@ -542,6 +542,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(className = "react-select__option")
     private List<WebElement> dropDownListOnNewCreateShiftPage;
     public void selectWorkRole(String workRoles) throws Exception {
+        waitForSeconds(3);
         if (isElementLoaded(btnWorkRole, 5)) {
             clickTheElement(btnWorkRole);
             SimpleUtils.pass("Work Role button clicked Successfully");
@@ -556,7 +557,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             } else {
                 SimpleUtils.fail("Work Roles size are empty", false);
             }
-        } else if (isElementLoaded(workRoleOnNewShiftPage, 15)) {
+        } else if (isElementLoaded(workRoleOnNewShiftPage, 25)) {
             click(workRoleOnNewShiftPage);
             SimpleUtils.pass("Work Role button clicked Successfully");
             if (dropDownListOnNewCreateShiftPage.size() > 0) {
@@ -789,7 +790,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             } else
                 SimpleUtils.report("The 'at least one day selected' warning message fail to load! ");
         }else{
-            SimpleUtils.fail("Weeks Days failed to load!", true);
+            SimpleUtils.fail("Weeks Days failed to load!", false);
         }
     }
 
@@ -803,6 +804,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement shiftEndInputOnNewCreateShiftPage;
 
     public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception {
+        waitForSeconds(3);
         if (isElementLoaded(scheduleOperatingHrsSlider, 5)) {
             WebElement element = null;
             String am = "am";
@@ -851,8 +853,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
                 }
             }
-        } else if (isElementLoaded(shiftStartInputOnNewCreateShiftPage, 5)
-                && isElementLoaded(shiftEndInputOnNewCreateShiftPage, 5)) {
+        } else if (isElementLoaded(shiftStartInputOnNewCreateShiftPage, 25)
+                && isElementLoaded(shiftEndInputOnNewCreateShiftPage, 25)) {
             if (shiftTime.contains("am")) {
                 shiftTime = shiftTime.replace("am","")+ ":00"+"am";
             } else if (shiftTime.contains("pm")) {

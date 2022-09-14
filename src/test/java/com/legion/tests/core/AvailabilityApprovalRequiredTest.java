@@ -1114,7 +1114,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
         String myWorkPreferencesLabel = "My Work Preferences";
-        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+        profileNewUIPage.selectProfilePageSubSectionByLabel(myWorkPreferencesLabel);
         //cancel all availability change requests firstly.
         profileNewUIPage.cancelAllPendingAvailabilityRequest();
         //Update Preferred Hours
