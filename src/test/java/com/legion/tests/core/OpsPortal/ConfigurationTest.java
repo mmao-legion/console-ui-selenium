@@ -2284,7 +2284,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Forecast page when only default demand driver template exist")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true, priority = 7)
     public void verifyVisibilityOnForecastPageForDefaultDemandDriverTemplateOnlyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
@@ -4026,6 +4026,74 @@ public class ConfigurationTest extends TestBase {
         configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
         configurationPage.setLeaveThisPageButton();
         configurationPage.archiveOrDeleteTemplate(templateName);
+
+        //Turn off EnableTahoeStorage toggle
+        ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Predictability score is only enabled for ever published template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPredictabilityScoreIsOnlyEnabledForEverPublishedTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String templateName = "PredictabilityScoreTest";
+            HashMap<String, String> legionMLDriver = new HashMap<String, String>(){
+                {
+                    put("Name", "LegionMLDriver");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Enrollments");
+                    put("Show in App", "Yes");
+                    put("Order", "1");
+                    put("Forecast Source", "Legion ML");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+            //Check Predictability Score is disabled for draft version template
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(legionMLDriver);
+            configurationPage.saveADraftTemplate();
+            configurationPage.clickOnTemplateName(templateName);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Edit");
+            if( configurationPage.isGetPredictabilityScoreEnabled() == false){
+                SimpleUtils.pass("Get Predictability Score is Disabled as expected for the draft version template!");
+            }else{
+                SimpleUtils.fail("Get Predictability Score should not be Enabled for the draft version template!", false);
+            }
+
+            //Check Predictability Score is enabled for published version template
+            configurationPage.clickOnBackButton();
+            configurationPage.createDynamicGroup(templateName, "Custom", templateName + " test");
+            configurationPage.selectOneDynamicGroup(templateName);
+            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+            configurationPage.publishNowTemplate();
+            configurationPage.clickOnTemplateName(templateName);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Edit");
+            if(configurationPage.isGetPredictabilityScoreEnabled() == true){
+                SimpleUtils.pass("Get Predictability Score is Enabled as expected for the Published version template!");
+            }else{
+                SimpleUtils.fail("Get Predictability Score should not be Disabled for the Published version template!", false);
+            }
+
+            //Will uncomment below code when we can get forecast data back
+//            configurationPage.clickGetPredictabilityScore();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
