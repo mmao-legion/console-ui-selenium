@@ -4554,7 +4554,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("OKBtn button load failed ", false);
 	}
 
-	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/div/h2")
+	@FindBy(css = "form-section[form-title = 'Time Off']")
 	private WebElement timeOffText;
 	@FindBy(css = "div.lg-question-input__wrapper h3")
 	private WebElement maxNumEmployeesText;
@@ -4571,8 +4571,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-	//	@FindBy(css = "ng-transclude.lg-question-input__input input-field ng-form input")
-	@FindBy(id = "input1716")
+	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/ng-transclude/content-box/ng-transclude/div/lg-property-meta-field/div/div/question-input/div/div[1]/ng-transclude/input-field/ng-form/input")
 	private WebElement maxNumEmployeesInput;
 
 	public void verifymaxNumEmployeesInput(String num) throws Exception {
@@ -7415,6 +7414,41 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			flag = false;
 		}
 		return flag;
+  }
+
+	@FindBy(css="lg-button[label=\"Get Predictability Score\"] button")
+	private WebElement getScoreBtn;
+	@Override
+	public boolean isGetPredictabilityScoreEnabled() throws Exception {
+		boolean isEnabled = true;
+		if (!isElementExist("i[ng-if*=\"hasPublishedVersion\"]")){
+			if (isElementLoaded(getScoreBtn, 5)){
+				if (getScoreBtn.getAttribute("disabled") != null && getScoreBtn.getAttribute("disabled").equals("true")){
+					isEnabled = false;
+				}
+			}else{
+				SimpleUtils.fail("Failed to load 'Get Predictability Score button'!", false);
+			}
+		}
+
+		return isEnabled;
+	}
+
+	@FindBy(css="i[ng-if*=\"hasPublishedVersion\"]")
+	private WebElement spinButton;
+	@Override
+	public void clickGetPredictabilityScore() throws Exception {
+		if (isElementLoaded(spinButton)){
+			waitForNotExists(spinButton, 300);
+		}
+		if (isElementEnabled(getScoreBtn, 10)){
+			clickTheElement(getScoreBtn);
+			if (isElementLoaded(spinButton)){
+				SimpleUtils.pass("The Predictability Score can be requested again by click the button!");
+			}
+		}else{
+			SimpleUtils.fail("Get Predictability Score button should NOT be disabled!", false);
+		}
 	}
 
 	@FindBy(xpath = "//input-field[@type='text']//input")
