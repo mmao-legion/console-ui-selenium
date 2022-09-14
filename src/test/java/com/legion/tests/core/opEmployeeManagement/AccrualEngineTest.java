@@ -371,7 +371,7 @@ public class AccrualEngineTest extends TestBase {
         Map<String, String> togglePara = new HashMap<>();
         togglePara.put("toggle", toggleName);
         String[] response = HttpUtil.httpGet(togglesUrl, sessionId, togglePara);
-        Assert.assertEquals(getHttpStatusCode(response), 200, "Failed to login!");
+        Assert.assertEquals(getHttpStatusCode(response), 200, "Failed to get the toggle status!");
         //get the response
         boolean isToggleOn = Boolean.parseBoolean(JsonUtil.getJsonObjectValue(response[1], "record", "enabled"));
         return isToggleOn;
@@ -596,7 +596,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Look Back")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//https://legiontech.atlassian.net/browse/OPS-5634
     public void verifyAccrualEngineLookBackAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //worked hours look back function
         //verify that the target template is here.
@@ -619,7 +619,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = logIn();
+        String sessionId= getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -647,7 +647,8 @@ public class AccrualEngineTest extends TestBase {
         HashMap<String, String> actualTOB = timeOffPage.getTimeOffBalance();
         Assert.assertEquals(actualTOB, expectedTOBalance, "Failed to assert clear the accrual balance!");
 
-        //clocks
+        //clocks  rate:0.0577
+        //look back period: 5days
         //Jan-9 to Jan-13  60.2hours Approved.  1/3.47354
         //Jan-30 14.5 Pending
         //Jan-31 14 Approved  0.8078
