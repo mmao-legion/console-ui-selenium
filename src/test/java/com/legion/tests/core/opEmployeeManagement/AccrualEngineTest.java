@@ -3,8 +3,6 @@ package com.legion.tests.core.opEmployeeManagement;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.legion.api.abSwitch.ABSwitchAPI;
-import com.legion.api.abSwitch.AbSwitches;
 import com.legion.api.login.LoginAPI;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
@@ -31,7 +29,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AccrualEngineTest extends TestBase {
     @Override
