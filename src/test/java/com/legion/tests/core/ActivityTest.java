@@ -2168,7 +2168,7 @@ public class ActivityTest extends TestBase {
             String shiftStartTime = "8AM";
             String shiftEndTime = "11AM";
             createShiftsWithSpecificValues(workRole, null, null,
-                    "9AM", "12PM", 1,  Arrays.asList(0),
+                    shiftStartTime, shiftEndTime, 1,  Arrays.asList(0),
                     ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), null, "");
 
             scheduleMainPage.saveSchedule();

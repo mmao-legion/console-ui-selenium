@@ -542,6 +542,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(className = "react-select__option")
     private List<WebElement> dropDownListOnNewCreateShiftPage;
     public void selectWorkRole(String workRoles) throws Exception {
+        waitForSeconds(3);
         if (isElementLoaded(btnWorkRole, 5)) {
             clickTheElement(btnWorkRole);
             SimpleUtils.pass("Work Role button clicked Successfully");
@@ -556,7 +557,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             } else {
                 SimpleUtils.fail("Work Roles size are empty", false);
             }
-        } else if (isElementLoaded(workRoleOnNewShiftPage, 15)) {
+        } else if (isElementLoaded(workRoleOnNewShiftPage, 25)) {
             click(workRoleOnNewShiftPage);
             SimpleUtils.pass("Work Role button clicked Successfully");
             if (dropDownListOnNewCreateShiftPage.size() > 0) {
@@ -789,7 +790,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             } else
                 SimpleUtils.report("The 'at least one day selected' warning message fail to load! ");
         }else{
-            SimpleUtils.fail("Weeks Days failed to load!", true);
+            SimpleUtils.fail("Weeks Days failed to load!", false);
         }
     }
 
