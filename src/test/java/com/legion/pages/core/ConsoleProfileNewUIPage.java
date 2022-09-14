@@ -1730,14 +1730,14 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		if(isElementLoaded(myAvailabilityEditModeSaveBtn)) {
 			click(myAvailabilityEditModeSaveBtn);
 			if(availabilityChangesRepeat.toLowerCase().contains("repeat forward")) {
-				if(isElementLoaded(MyAvailabilityEditSaveRepeatForwordBtn)){
+				if(isElementLoaded(MyAvailabilityEditSaveRepeatForwordBtn, 10)){
 					moveToElementAndClick(MyAvailabilityEditSaveRepeatForwordBtn);
-					click(myAvailabilityConfirmSubmitBtn);
+					clickTheElement(myAvailabilityConfirmSubmitBtn);
 				}
 			} else {
-				if(isElementLoaded(MyAvailabilityEditSaveThisWeekOnlyBtn)){
+				if(isElementLoaded(MyAvailabilityEditSaveThisWeekOnlyBtn, 10)){
 					moveToElementAndClick(MyAvailabilityEditSaveThisWeekOnlyBtn);
-					click(myAvailabilityConfirmSubmitBtn);
+					clickTheElement(myAvailabilityConfirmSubmitBtn);
 				}
 			}
 			waitForSeconds(10);
