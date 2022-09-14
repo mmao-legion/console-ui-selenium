@@ -710,7 +710,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         Assert.assertTrue(absentManagePage.getDynamicEmployeeGroupDesc().equalsIgnoreCase(groupDesc), "Failed to search by group description!");
         SimpleUtils.pass("Succeeded in validating search by group description！");
         //4.label filter works well
-        String groupLabel = "accrual";
+        String groupLabel = "accrualLabelTest";
         absentManagePage.searchDynamicGroup(groupLabel);
         Boolean flag = true;
         for (int i = 0; i < absentManagePage.getDynamicEmployeeGroupLabs().size(); i++) {
@@ -744,7 +744,7 @@ public class AbsentManagementTemplateTest extends TestBase {
         Assert.assertEquals(absentManagePage.getViewModalTitle(), "Manage Dynamic Employee Group", "Failed to view dynamic employee group details!");
         SimpleUtils.pass("Succeeded in validating view button displayed and it is clickable！");
         //2 users associated to the template
-        Assert.assertEquals(absentManagePage.getAssociations(), "2 Users match", "Failed to get the associated user number!");
+        Assert.assertEquals(absentManagePage.getAssociations(), "1 User matches", "Failed to get the associated user number!");
         SimpleUtils.pass("Succeeded in validating users were associated to the target template！");
         OpsCommonComponents components = new OpsCommonComponents();
         components.okToActionInModal(false);
