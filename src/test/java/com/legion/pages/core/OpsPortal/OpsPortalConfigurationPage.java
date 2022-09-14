@@ -4554,7 +4554,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("OKBtn button load failed ", false);
 	}
 
-	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/div/h2")
+	@FindBy(css = "form-section[form-title = 'Time Off']")
 	private WebElement timeOffText;
 	@FindBy(css = "div.lg-question-input__wrapper h3")
 	private WebElement maxNumEmployeesText;
@@ -4571,8 +4571,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-	//	@FindBy(css = "ng-transclude.lg-question-input__input input-field ng-form input")
-	@FindBy(id = "input1716")
+	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/ng-transclude/content-box/ng-transclude/div/lg-property-meta-field/div/div/question-input/div/div[1]/ng-transclude/input-field/ng-form/input")
 	private WebElement maxNumEmployeesInput;
 
 	public void verifymaxNumEmployeesInput(String num) throws Exception {
