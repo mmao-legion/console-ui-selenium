@@ -1,6 +1,7 @@
 package com.legion.tests.core.OpsPortal;
 
 import com.alibaba.fastjson.JSONObject;
+import com.legion.api.login.LoginAPI;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
@@ -5123,22 +5124,6 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
-    public int getHttpStatusCode(String[] httpResponse) {
-        return Integer.parseInt(httpResponse[0]);
-    }
-
-    private String logIn() {
-        //header
-        HashMap<String, String> loginHeader = new HashMap<String, String>();
-        //body
-        String loginString = "{\"enterpriseName\":\"opauto\",\"userName\":\"fiona+99@legion.co\",\"passwordPlainText\":\"admin11.a\",\"sourceSystem\":\"legion\"}";
-        //post request
-        String[] postResponse = HttpUtil.httpPost(Constants.loginUrlRC, loginHeader, loginString);
-        Assert.assertEquals(getHttpStatusCode(postResponse), 200, "Failed to login!");
-        String sessionId = postResponse[1];
-        return sessionId;
-    }
-
     //blocked by API error
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
@@ -5152,7 +5137,7 @@ public class ConfigurationTest extends TestBase {
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             String locationName = "updateOHViaInteTest";
             String templateName="updateOHViaInteTest";
-            String sessionId = logIn();
+            String sessionId = LoginAPI.getSessionIdFromLoginAPI("fiona+99@legion.co","admin11.a");
             importBusinessHours(sessionId);
 
             locationsPage.clickOnLocationsTab();
