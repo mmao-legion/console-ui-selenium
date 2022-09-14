@@ -804,6 +804,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement shiftEndInputOnNewCreateShiftPage;
 
     public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception {
+        waitForSeconds(3);
         if (isElementLoaded(scheduleOperatingHrsSlider, 5)) {
             WebElement element = null;
             String am = "am";
@@ -852,8 +853,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     SimpleUtils.fail("Shift timings with Sliders not loaded on page Successfully", false);
                 }
             }
-        } else if (isElementLoaded(shiftStartInputOnNewCreateShiftPage, 5)
-                && isElementLoaded(shiftEndInputOnNewCreateShiftPage, 5)) {
+        } else if (isElementLoaded(shiftStartInputOnNewCreateShiftPage, 25)
+                && isElementLoaded(shiftEndInputOnNewCreateShiftPage, 25)) {
             if (shiftTime.contains("am")) {
                 shiftTime = shiftTime.replace("am","")+ ":00"+"am";
             } else if (shiftTime.contains("pm")) {
