@@ -181,6 +181,7 @@ public class ActivityTest extends TestBase {
 
         // For Swap Feature
         List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
+        mySchedulePage.selectSchedulFilter("Scheduled");
         int index = mySchedulePage.verifyClickOnAnyShift();
         String request = "Request to Swap Shift";
         String title = "Find Shifts to Swap";
