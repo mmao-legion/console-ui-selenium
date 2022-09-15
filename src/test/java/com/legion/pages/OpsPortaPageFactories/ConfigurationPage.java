@@ -259,5 +259,6 @@ public interface ConfigurationPage {
     public void inputTemplateName(String templateName) throws Exception;
     public boolean isGetPredictabilityScoreEnabled() throws Exception;
     public void clickGetPredictabilityScore() throws Exception;
+    public void turnOnOffOverrideViaIntegrationButton();
 }
 

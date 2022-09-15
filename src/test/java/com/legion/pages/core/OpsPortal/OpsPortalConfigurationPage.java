@@ -7451,6 +7451,14 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@Override
+	public void turnOnOffOverrideViaIntegrationButton(){
+		if(isElementEnabled(overrideViaIntegrationBTN,2)){
+			clickTheElement(overrideViaIntegrationBTN);
+			waitForSeconds(2);
+      }
+   }
+   
 	@FindBy(xpath = "//input-field[@type='text']//input")
 	private List<WebElement> inputFields;
 
