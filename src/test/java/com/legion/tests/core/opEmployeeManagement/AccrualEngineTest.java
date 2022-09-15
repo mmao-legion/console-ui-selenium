@@ -3,8 +3,6 @@ package com.legion.tests.core.opEmployeeManagement;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.legion.api.abSwitch.ABSwitchAPI;
-import com.legion.api.abSwitch.AbSwitches;
 import com.legion.api.login.LoginAPI;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
@@ -31,7 +29,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AccrualEngineTest extends TestBase {
     @Override
@@ -62,7 +63,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine Distribution Types")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//blocked by:https://legiontech.atlassian.net/browse/OPS-5083
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//blocked by:https://legiontech.atlassian.net/browse/OPS-5655/5656/5657
     public void verifyAccrualEngineWorksAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -84,7 +85,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = logIn();
+        String sessionId = getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -370,7 +371,7 @@ public class AccrualEngineTest extends TestBase {
         Map<String, String> togglePara = new HashMap<>();
         togglePara.put("toggle", toggleName);
         String[] response = HttpUtil.httpGet(togglesUrl, sessionId, togglePara);
-        Assert.assertEquals(getHttpStatusCode(response), 200, "Failed to login!");
+        Assert.assertEquals(getHttpStatusCode(response), 200, "Failed to get the toggle status!");
         //get the response
         boolean isToggleOn = Boolean.parseBoolean(JsonUtil.getJsonObjectValue(response[1], "record", "enabled"));
         return isToggleOn;
@@ -467,7 +468,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine Distribution Types")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false) //blocked by: https://legiontech.atlassian.net/browse/OPS-5083
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualEngineWorksWellAfterEditingAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -489,7 +490,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = logIn();
+        String sessionId = getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -595,7 +596,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Look Back")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//https://legiontech.atlassian.net/browse/OPS-5634
     public void verifyAccrualEngineLookBackAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //worked hours look back function
         //verify that the target template is here.
@@ -618,7 +619,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = logIn();
+        String sessionId= getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -646,7 +647,8 @@ public class AccrualEngineTest extends TestBase {
         HashMap<String, String> actualTOB = timeOffPage.getTimeOffBalance();
         Assert.assertEquals(actualTOB, expectedTOBalance, "Failed to assert clear the accrual balance!");
 
-        //clocks
+        //clocks  rate:0.0577
+        //look back period: 5days
         //Jan-9 to Jan-13  60.2hours Approved.  1/3.47354
         //Jan-30 14.5 Pending
         //Jan-31 14 Approved  0.8078
@@ -747,7 +749,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = logIn();
+        String sessionId = getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -849,7 +851,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Import employee time off balance")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//blocked by defect: https://legiontech.atlassian.net/browse/OPS-5394
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualEngineWorksWellAfterImportingAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -871,7 +873,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = logIn();
+        String sessionId = getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -1232,7 +1234,7 @@ public class AccrualEngineTest extends TestBase {
         SimpleUtils.pass("Succeeded in switching to the Specified date distribution!");
         //Verify holiday list
         ArrayList<String> hol = configurationPage.getHolidayList();
-        ArrayList<String> usHoliday = getHolidaysViaAPI(logIn());
+        ArrayList<String> usHoliday = getHolidaysViaAPI(getSession());
         Assert.assertTrue(hol.size() == usHoliday.size() && hol.containsAll(usHoliday) && usHoliday.containsAll(hol));
         SimpleUtils.pass("Succeeded in validating the holiday options are default US holidays!");
         //add new holidays
@@ -1264,7 +1266,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "OPS-4071 GM Holiday.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//known issue: https://legiontech.atlassian.net/browse/OPS-5085
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//known issue: https://legiontech.atlassian.net/browse/OPS-5652
     public void verifyAccrualGMHolidayWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -1287,7 +1289,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = logIn();
+        String sessionId = getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -1398,7 +1400,7 @@ public class AccrualEngineTest extends TestBase {
         Assert.assertTrue(verification5.contains("Succeeded in validating"), verification5);
         SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
 
-        //Run engine to the expire Date.
+        //Run engine to the expired Date.
         //expired on the end of the year
         String[] accrualResponse6 = runAccrualJobToSimulateDate(workerId, expireDate, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse6), 200, "Failed to run accrual job!");
@@ -1499,7 +1501,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = logIn();
+        String sessionId = getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -1557,7 +1559,8 @@ public class AccrualEngineTest extends TestBase {
         //blocked by OPS-4788
         String[] accrualResponse2 = runAccrualJobToSimulateDate(workerId, Date2, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse2), 200, "Failed to run accrual job!");
-        //expectedTOBalance.put("PTO", "3");
+        expectedTOBalance.put("Annual Leave", "3");
+        expectedTOBalance.put("PTO", "3");
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
@@ -1578,7 +1581,7 @@ public class AccrualEngineTest extends TestBase {
 
         String[] accrualResponse3 = runAccrualJobToSimulateDate(workerId, Date3, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse3), 200, "Failed to run accrual job!");
-        //expectedTOBalance.put("PTO", "3");
+        expectedTOBalance.put("PTO", "3");
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
@@ -1603,7 +1606,7 @@ public class AccrualEngineTest extends TestBase {
         String[] accrualResponse5 = runAccrualJobToSimulateDate(workerId, Date5, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse5), 200, "Failed to run accrual job!");
         expectedTOBalance.put("Annual Leave", "3");
-        //expectedTOBalance.put("PTO", "6");
+        expectedTOBalance.put("PTO", "6");
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
@@ -1626,7 +1629,7 @@ public class AccrualEngineTest extends TestBase {
         String[] accrualResponse6 = runAccrualJobToSimulateDate(workerId, Date6, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse6), 200, "Failed to run accrual job!");
         expectedTOBalance.put("Annual Leave", "3");
-        //expectedTOBalance.put("PTO", "6");
+        expectedTOBalance.put("PTO", "6");
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
@@ -1651,7 +1654,7 @@ public class AccrualEngineTest extends TestBase {
         String[] accrualResponse8 = runAccrualJobToSimulateDate(workerId, Date8, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse8), 200, "Failed to run accrual job!");
         expectedTOBalance.put("Annual Leave", "6");
-        //expectedTOBalance.put("PTO", "9");
+        expectedTOBalance.put("PTO", "9");
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
@@ -1674,7 +1677,7 @@ public class AccrualEngineTest extends TestBase {
         String[] accrualResponse9 = runAccrualJobToSimulateDate(workerId, Date9, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse9), 200, "Failed to run accrual job!");
         expectedTOBalance.put("Annual Leave", "6");
-        //expectedTOBalance.put("PTO", "9");
+        expectedTOBalance.put("PTO", "9");
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
@@ -1712,7 +1715,7 @@ public class AccrualEngineTest extends TestBase {
         components.okToActionInModal(true);
         runAccrualJobToSimulateDate(workerId, "2022-10-01", sessionId);
         expectedTOBalance.put("Annual Leave", "60");//hire date to specified date
-        //expectedTOBalance.put("PTO", "32");//5+27
+        expectedTOBalance.put("PTO", "32");//5+27
         refreshPage();
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance12 = timeOffPage.getTimeOffBalance();
@@ -1721,8 +1724,8 @@ public class AccrualEngineTest extends TestBase {
         SimpleUtils.pass("Succeeded in validating Annual earn limit works well with fixed days(Hire date to hire date)!");
         //Max carryover for hireDate to hireDate
         runAccrualJobToSimulateDate(workerId, "2022-10-21", sessionId);
-        //expectedTOBalance.put("Annual Leave", "5");//hire date to hire date
-        //expectedTOBalance.put("PTO", "34");//5+29
+        expectedTOBalance.put("Annual Leave", "5");//hire date to hire date
+        expectedTOBalance.put("PTO", "34");//5+29
         refreshPage();
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance13 = timeOffPage.getTimeOffBalance();
@@ -1822,7 +1825,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = logIn();
+        String sessionId = getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -2315,7 +2318,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Payable hour types included in calculation")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//end to end not ready
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyPayableHoursWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -2334,8 +2337,8 @@ public class AccrualEngineTest extends TestBase {
         String teamMemName = "Lily Hong";
         timeOffPage.goToTeamMemberDetail(teamMemName);
         timeOffPage.switchToTimeOffTab();
-        //get session id via login
-        String sessionId = logIn();
+        //get session id via localStorage
+        String sessionId = getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -2515,7 +2518,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.goToTeamMemberDetail(teamMemName);
         timeOffPage.switchToTimeOffTab();
         //get session id via login
-        String sessionId = logIn();
+        String sessionId = getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
@@ -2760,6 +2763,11 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Annual Leave3", "0");
         expectedTOBalance.put("Annual Leave4", "0");
         expectedTOBalance.put("Bereavement1", "0");
+        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement3", "0");
+        expectedTOBalance.put("Bereavement4", "0");
+        expectedTOBalance.put("Covid1", "0");
+
         //Delete the worker's accrual balance
         String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
         Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
@@ -2770,16 +2778,20 @@ public class AccrualEngineTest extends TestBase {
         SimpleUtils.pass("Succeeded in clearing employee's accrual balance!");
 
         //run engine to a specified date
-        String date1 = "2020-01-01";
+        String date1 = "2021-01-01";
         String[] accrualResponse1 = runAccrualJobToSimulateDate(workerId, date1, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse1), 200, "Failed to run accrual job!");
         //expected accrual
         expectedTOBalance.put("Annual Leave", "0");
         expectedTOBalance.put("Annual Leave1", "0");
-        expectedTOBalance.put("Annual Leave2", "0");
+        expectedTOBalance.put("Annual Leave2", "1");
         expectedTOBalance.put("Annual Leave3", "0");
         expectedTOBalance.put("Annual Leave4", "0");
-        expectedTOBalance.put("Bereavement1", "0");
+        expectedTOBalance.put("Bereavement1", "1");
+        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement3", "10");
+        expectedTOBalance.put("Bereavement4", "0");
+        expectedTOBalance.put("Covid1", "0");
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
@@ -2793,17 +2805,47 @@ public class AccrualEngineTest extends TestBase {
         String[] accrualResponse2 = runAccrualJobToSimulateDate(workerId, date2, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse2), 200, "Failed to run accrual job!");
         //expected accrual
-        expectedTOBalance.put("Annual Leave", "52");
+        expectedTOBalance.put("Annual Leave", "0");
         expectedTOBalance.put("Annual Leave1", "104");
         expectedTOBalance.put("Annual Leave2", "12");
         expectedTOBalance.put("Annual Leave3", "12");
         expectedTOBalance.put("Annual Leave4", "12");
         expectedTOBalance.put("Bereavement1", "12");
+        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement3", "5");
+        expectedTOBalance.put("Bereavement4", "0");
+        expectedTOBalance.put("Covid1", "0");
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance211231 = timeOffPage.getTimeOffBalance();
         Assert.assertEquals(expectedTOBalance,accrualBalance211231);
+        SimpleUtils.pass("Succeeded in validating accrual correctly!");
+
+        String date3 = "2022-01-01";
+        String[] accrualResponse3 = runAccrualJobToSimulateDate(workerId, date3, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse3), 200, "Failed to run accrual job!");
+
+        String date4 = "2022-09-31";
+        String[] accrualResponse4 = runAccrualJobToSimulateDate(workerId, date4, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse4), 200, "Failed to run accrual job!");
+
+        //expected accrual
+        expectedTOBalance.put("Annual Leave", "39");
+        expectedTOBalance.put("Annual Leave1", "104");
+        expectedTOBalance.put("Annual Leave2", "12");
+        expectedTOBalance.put("Annual Leave3", "12");
+        expectedTOBalance.put("Annual Leave4", "12");
+        expectedTOBalance.put("Bereavement1", "12");
+        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement3", "15");
+        expectedTOBalance.put("Bereavement4", "0");
+        expectedTOBalance.put("Covid1", "0");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance220931 = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(expectedTOBalance,accrualBalance220931);
         SimpleUtils.pass("Succeeded in validating accrual correctly!");
     }
 
