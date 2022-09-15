@@ -2763,6 +2763,11 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Annual Leave3", "0");
         expectedTOBalance.put("Annual Leave4", "0");
         expectedTOBalance.put("Bereavement1", "0");
+        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement3", "0");
+        expectedTOBalance.put("Bereavement4", "0");
+        expectedTOBalance.put("Covid1", "0");
+
         //Delete the worker's accrual balance
         String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
         Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
@@ -2773,16 +2778,20 @@ public class AccrualEngineTest extends TestBase {
         SimpleUtils.pass("Succeeded in clearing employee's accrual balance!");
 
         //run engine to a specified date
-        String date1 = "2020-01-01";
+        String date1 = "2021-01-01";
         String[] accrualResponse1 = runAccrualJobToSimulateDate(workerId, date1, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse1), 200, "Failed to run accrual job!");
         //expected accrual
         expectedTOBalance.put("Annual Leave", "0");
         expectedTOBalance.put("Annual Leave1", "0");
-        expectedTOBalance.put("Annual Leave2", "0");
+        expectedTOBalance.put("Annual Leave2", "1");
         expectedTOBalance.put("Annual Leave3", "0");
         expectedTOBalance.put("Annual Leave4", "0");
-        expectedTOBalance.put("Bereavement1", "0");
+        expectedTOBalance.put("Bereavement1", "1");
+        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement3", "10");
+        expectedTOBalance.put("Bereavement4", "0");
+        expectedTOBalance.put("Covid1", "0");
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
@@ -2796,17 +2805,47 @@ public class AccrualEngineTest extends TestBase {
         String[] accrualResponse2 = runAccrualJobToSimulateDate(workerId, date2, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse2), 200, "Failed to run accrual job!");
         //expected accrual
-        expectedTOBalance.put("Annual Leave", "52");
+        expectedTOBalance.put("Annual Leave", "0");
         expectedTOBalance.put("Annual Leave1", "104");
         expectedTOBalance.put("Annual Leave2", "12");
         expectedTOBalance.put("Annual Leave3", "12");
         expectedTOBalance.put("Annual Leave4", "12");
         expectedTOBalance.put("Bereavement1", "12");
+        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement3", "5");
+        expectedTOBalance.put("Bereavement4", "0");
+        expectedTOBalance.put("Covid1", "0");
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
         HashMap<String, String> accrualBalance211231 = timeOffPage.getTimeOffBalance();
         Assert.assertEquals(expectedTOBalance,accrualBalance211231);
+        SimpleUtils.pass("Succeeded in validating accrual correctly!");
+
+        String date3 = "2022-01-01";
+        String[] accrualResponse3 = runAccrualJobToSimulateDate(workerId, date3, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse3), 200, "Failed to run accrual job!");
+
+        String date4 = "2022-09-31";
+        String[] accrualResponse4 = runAccrualJobToSimulateDate(workerId, date4, sessionId);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse4), 200, "Failed to run accrual job!");
+
+        //expected accrual
+        expectedTOBalance.put("Annual Leave", "39");
+        expectedTOBalance.put("Annual Leave1", "104");
+        expectedTOBalance.put("Annual Leave2", "12");
+        expectedTOBalance.put("Annual Leave3", "12");
+        expectedTOBalance.put("Annual Leave4", "12");
+        expectedTOBalance.put("Bereavement1", "12");
+        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement3", "15");
+        expectedTOBalance.put("Bereavement4", "0");
+        expectedTOBalance.put("Covid1", "0");
+        //and verify the result in UI
+        refreshPage();
+        timeOffPage.switchToTimeOffTab();
+        HashMap<String, String> accrualBalance220931 = timeOffPage.getTimeOffBalance();
+        Assert.assertEquals(expectedTOBalance,accrualBalance220931);
         SimpleUtils.pass("Succeeded in validating accrual correctly!");
     }
 
