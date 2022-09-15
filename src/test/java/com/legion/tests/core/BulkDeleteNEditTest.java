@@ -600,7 +600,7 @@ public class BulkDeleteNEditTest extends TestBase {
             List<String> workRoleList2 = shiftOperatePage.getWorkRoleListFromChangeShiftRoleOption();
             scheduleMainPage.clickOnCancelButtonOnEditMode();
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyAll.getValue());
-            SimpleUtils.assertOnFail("Not all work role listed!", workRoleList.size() < workRoleList2.size(), false);
+            SimpleUtils.assertOnFail("Not all work role listed!", workRoleList.size() <= workRoleList2.size(), false);
 
             // Verify all available work roles will show on bulk edit shift dialog when override assignment rule is set to Yes
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
