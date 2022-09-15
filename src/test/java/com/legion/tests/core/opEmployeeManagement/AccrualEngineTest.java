@@ -1234,7 +1234,7 @@ public class AccrualEngineTest extends TestBase {
         SimpleUtils.pass("Succeeded in switching to the Specified date distribution!");
         //Verify holiday list
         ArrayList<String> hol = configurationPage.getHolidayList();
-        ArrayList<String> usHoliday = getHolidaysViaAPI(logIn());
+        ArrayList<String> usHoliday = getHolidaysViaAPI(getSession());
         Assert.assertTrue(hol.size() == usHoliday.size() && hol.containsAll(usHoliday) && usHoliday.containsAll(hol));
         SimpleUtils.pass("Succeeded in validating the holiday options are default US holidays!");
         //add new holidays
@@ -1266,7 +1266,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "OPS-4071 GM Holiday.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//known issue: https://legiontech.atlassian.net/browse/OPS-5085
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//known issue: https://legiontech.atlassian.net/browse/OPS-5652
     public void verifyAccrualGMHolidayWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -1289,7 +1289,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = logIn();
+        String sessionId = getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
