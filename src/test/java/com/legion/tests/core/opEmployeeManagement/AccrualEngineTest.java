@@ -2318,7 +2318,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Payable hour types included in calculation")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//end to end not ready
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyPayableHoursWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
