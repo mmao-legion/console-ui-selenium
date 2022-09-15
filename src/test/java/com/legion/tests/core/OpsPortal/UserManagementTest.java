@@ -1179,11 +1179,20 @@ public class UserManagementTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUserPermissionAsSMB(String browser, String username, String password, String location) throws Exception {
         try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime=dfs.format(new Date()).trim();
+            String templateName="AutoCreate"+currentTime;
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad("Operating Hours");
             configurationPage.verifyNewTemplateIsClickable();
-
+            configurationPage.inputTemplateName(templateName);
+            configurationPage.goToBusinessHoursEditPage("sunday");
+            configurationPage.verifyEachFieldsWithInvalidTexts();
+            configurationPage.clickOnCancelButton();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Operating Hours");
+            configurationPage.deleteTemplate(templateName);
             //get template level info of Scheduling rules
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad("Scheduling Rules");
