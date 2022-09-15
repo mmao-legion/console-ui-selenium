@@ -1375,11 +1375,12 @@ public class LocationsTest extends TestBase {
         }
     }
 
+    //blocked by https://legiontech.atlassian.net/browse/OPS-5625
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "User can view the default location level external attribute")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
     public void verifyDefaultValueOfExternalAttributesInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {

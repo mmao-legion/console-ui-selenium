@@ -4554,7 +4554,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("OKBtn button load failed ", false);
 	}
 
-	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/div/h2")
+	@FindBy(css = "form-section[form-title = 'Time Off']")
 	private WebElement timeOffText;
 	@FindBy(css = "div.lg-question-input__wrapper h3")
 	private WebElement maxNumEmployeesText;
@@ -4571,8 +4571,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-	//	@FindBy(css = "ng-transclude.lg-question-input__input input-field ng-form input")
-	@FindBy(id = "input1716")
+	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/ng-transclude/content-box/ng-transclude/div/lg-property-meta-field/div/div/question-input/div/div[1]/ng-transclude/input-field/ng-form/input")
 	private WebElement maxNumEmployeesInput;
 
 	public void verifymaxNumEmployeesInput(String num) throws Exception {
@@ -7449,6 +7448,52 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}else{
 			SimpleUtils.fail("Get Predictability Score button should NOT be disabled!", false);
+		}
+	}
+
+	@Override
+	public void turnOnOffOverrideViaIntegrationButton(){
+		if(isElementEnabled(overrideViaIntegrationBTN,2)){
+			clickTheElement(overrideViaIntegrationBTN);
+			waitForSeconds(2);
+      }
+   }
+   
+	@FindBy(xpath = "//input-field[@type='text']//input")
+	private List<WebElement> inputFields;
+
+	@Override
+	public void verifyEachFieldsWithInvalidTexts() {
+		List<String> invalidTexts = new ArrayList<String>() {{
+			add("m");
+			add("$");
+		}};
+		for (WebElement inputField : inputFields) {
+			for (String invalidText : invalidTexts) {
+				inputField.clear();
+				inputField.sendKeys(invalidText);
+
+			}
+		}
+	}
+
+	@Override
+	public void inputTemplateName(String templateName) throws Exception {
+		if (isElementLoaded(newTemplateBTN, 10)) {
+			clickTheElement(newTemplateBTN);
+			waitForSeconds(1);
+			if (isElementEnabled(createNewTemplatePopupWindow, 10)) {
+				SimpleUtils.pass("User can click new template button successfully!");
+				clickTheElement(newTemplateName);
+				newTemplateName.sendKeys(templateName);
+				clickTheElement(newTemplateDescription);
+				newTemplateDescription.sendKeys(templateName);
+				clickTheElement(continueBTN);
+				waitForSeconds(5);
+				if (isElementEnabled(welcomeCloseButton, 5)) {
+					clickTheElement(welcomeCloseButton);
+				}
+			}
 		}
 	}
 }
