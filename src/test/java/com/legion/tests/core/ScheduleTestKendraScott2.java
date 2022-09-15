@@ -8655,7 +8655,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Cosimo")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate the View Team Schedule permission after been turned off")
+	@TestName(description = "Validate the View Team Schedule permission after been turned on")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
