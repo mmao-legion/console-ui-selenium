@@ -499,7 +499,7 @@ public class PlanTest extends TestBase {
 
         loginPage.logOut();
 
-        // Login as District Manager
+        // Login as StoreManager
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("fiona+188@legion.co", "admin11.a","");
         if(loginPage.isInvalidLoginErrorShowing()){
             loginPage.refreshLoginPage();
