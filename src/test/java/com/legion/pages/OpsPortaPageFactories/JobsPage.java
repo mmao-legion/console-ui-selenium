@@ -137,4 +137,6 @@ public interface JobsPage {
 
     public void selectWeeksForJobToTakePlaceByIndex(int index);
 
+    public String createNewJob(String type);
+
 }

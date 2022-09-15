@@ -1361,6 +1361,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	private WebElement closeIcon;
 
 	public void addWorkforceSharingDGWithMutiplyCriteria() throws Exception {
+		String jobName = createNewJob("Create Schedule");
 		String testInfo = "";
 		click(createNewJobBtn);
 		jobTypeSelect.sendKeys("Adjust Forecast");
@@ -1371,7 +1372,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 		verifyDynamicGroupName();
 		verifyNoDistrictInTitle();
 
-		verifyRecentJobLocation("AutoCreateJob20220831142346");
+		verifyRecentJobLocation(jobName);
 
 		click(dynamicGroup);
 
@@ -1632,5 +1633,32 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			}
 		} else
 			SimpleUtils.fail("There is no selectable week selectors load! ", false);
+	}
+
+	@FindBy(css = "input[aria-label = 'Job Title']")
+	private WebElement jobTitle;
+	@FindBy(css = "input[placeholder = 'Search by location name, id, district, state, city etc']")
+	private WebElement locationSearchBox;
+	@FindBy(css = "input[type = 'checkbox']")
+	private WebElement locationCheckBox;
+
+	public String createNewJob(String type){
+		SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss ");
+		String currentTime = dfs.format(new Date());
+		String jobName = "AutoCreate" + currentTime;
+		click(createNewJobBtn);
+		jobTypeSelect.sendKeys(type);
+		lastWeek.click();
+		click(okBtnInCreateNewJobPage);
+		jobTitle.sendKeys(jobName);
+		click(addLocationBtn);
+		locationSearchBox.sendKeys("NancyTest");
+		locationSearchBox.sendKeys(Keys.ENTER);
+		waitForSeconds(2);
+		click(locationCheckBox);
+		click(addBtn);
+		click(okBtnInCreateNewJobPage);
+		click(createBtn);
+		return jobName;
 	}
 }
