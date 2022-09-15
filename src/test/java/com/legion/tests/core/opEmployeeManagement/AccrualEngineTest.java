@@ -1825,7 +1825,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
-        String sessionId = logIn();
+        String sessionId = getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
         if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
             String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
