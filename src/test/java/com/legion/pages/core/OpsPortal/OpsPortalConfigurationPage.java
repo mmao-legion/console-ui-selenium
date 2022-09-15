@@ -7456,6 +7456,44 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		if(isElementEnabled(overrideViaIntegrationBTN,2)){
 			clickTheElement(overrideViaIntegrationBTN);
 			waitForSeconds(2);
+      }
+   }
+   
+	@FindBy(xpath = "//input-field[@type='text']//input")
+	private List<WebElement> inputFields;
+
+	@Override
+	public void verifyEachFieldsWithInvalidTexts() {
+		List<String> invalidTexts = new ArrayList<String>() {{
+			add("m");
+			add("$");
+		}};
+		for (WebElement inputField : inputFields) {
+			for (String invalidText : invalidTexts) {
+				inputField.clear();
+				inputField.sendKeys(invalidText);
+
+			}
+		}
+	}
+
+	@Override
+	public void inputTemplateName(String templateName) throws Exception {
+		if (isElementLoaded(newTemplateBTN, 10)) {
+			clickTheElement(newTemplateBTN);
+			waitForSeconds(1);
+			if (isElementEnabled(createNewTemplatePopupWindow, 10)) {
+				SimpleUtils.pass("User can click new template button successfully!");
+				clickTheElement(newTemplateName);
+				newTemplateName.sendKeys(templateName);
+				clickTheElement(newTemplateDescription);
+				newTemplateDescription.sendKeys(templateName);
+				clickTheElement(continueBTN);
+				waitForSeconds(5);
+				if (isElementEnabled(welcomeCloseButton, 5)) {
+					clickTheElement(welcomeCloseButton);
+				}
+			}
 		}
 	}
 }
