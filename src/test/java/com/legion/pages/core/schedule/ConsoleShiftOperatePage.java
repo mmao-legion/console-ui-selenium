@@ -1410,6 +1410,30 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.fail("Search team member tab fail to load! ", false);
     }
 
+    @Override
+    public void clickAssignBtnOnCreateShiftDialog(String name) throws Exception {
+        if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
+            for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
+                List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                String tmName = tmInfo.get(0).getText();
+                List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
+                WebElement assignButton = assignAndOfferButtons.get(0);
+                if (tmName != null && assignButton != null) {
+                    if (tmName.toLowerCase().trim().replaceAll("\n", " ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                        if (MyThreadLocal.getAssignTMStatus()) {
+                            clickTheElement(assignButton);
+                        } else
+                            SimpleUtils.fail("Can't get the TM status!", false);
+                    } else
+                        SimpleUtils.fail("TM name not match!", false);
+                } else
+                    SimpleUtils.fail("TM name is null or assign button is unavailable!", false);
+            }
+        }else {
+            SimpleUtils.fail("No matched TM is displayed!", false);
+        }
+    }
+
     @FindBy(css="button.tma-action.sch-save")
     private WebElement btnOffer;
 

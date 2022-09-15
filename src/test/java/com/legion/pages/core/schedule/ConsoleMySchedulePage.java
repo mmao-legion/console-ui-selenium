@@ -422,7 +422,11 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         }
         if (isElementLoaded(okBtnOnConfirm, 5)) {
             click(okBtnOnConfirm);
-        }else {
+        }
+        if (isElementLoaded(cancelButton, 5)) {
+            click(cancelButton);
+        }
+        else {
             SimpleUtils.fail("Confirm Button failed to load!", true);
         }
     }
