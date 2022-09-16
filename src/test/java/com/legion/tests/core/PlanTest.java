@@ -258,6 +258,11 @@ public class PlanTest extends TestBase {
             String keywords = "checkPlanCount";
             String regionName="RegionForPlan_Auto";
 
+            //Turn on EnableLongTermBudgetPlan
+            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -284,11 +289,17 @@ public class PlanTest extends TestBase {
             String keywords = "SpecialChars";
             String regionName="RegionForPlan_Auto";
 
+            //Turn on EnableLongTermBudgetPlan
+            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
             //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
@@ -318,6 +329,12 @@ public class PlanTest extends TestBase {
             String scPlanName = "Scenario Plan Not Delete";
             String regionName="RegionForPlan_Auto";
             String copiedPlanName="Test Copy Generate Plan" + currentDate;
+
+            //Turn on EnableLongTermBudgetPlan
+            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginPage.loginToLegionWithCredential(username, password);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -344,6 +361,12 @@ public class PlanTest extends TestBase {
             String scPlanName = "TestCompletePlan-not delete";
             String regionName="RegionForPlan_Auto";
             String scToTestArchiveInprogress="check archive-not delete";
+
+            //Turn on EnableLongTermBudgetPlan
+            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -381,6 +404,12 @@ public class PlanTest extends TestBase {
             String scPlanName = "TestRerunBudget"+currentTime;
             String regionName="RegionForPlan_Auto";
             String compleleForecastPlan="CompleteForecastPlan";
+
+            //Turn on EnableLongTermBudgetPlan
+            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginToLegionAndVerifyIsLoginDone(username, password, location);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
