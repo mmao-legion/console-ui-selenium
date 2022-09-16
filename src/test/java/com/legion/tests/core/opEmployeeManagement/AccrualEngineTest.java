@@ -1446,7 +1446,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "OPS-3078 Puerto Rico")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//blocked by ticket:https://legiontech.atlassian.net/browse/OPS-5668
     public void verifyAccrualFixedDaysUIAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -1530,6 +1530,7 @@ public class AccrualEngineTest extends TestBase {
         //< eligibility rules:  10/21/2021~10/30/2021  in total:55.67(approved)   leave 10/29 5hrs as pending  8/18/28
         //> eligibility rules: 10/31/2021~11/09/2021  in total:60.6(approved)     leave 11/02 10hrs as pending   7/17/27
         //= eligibility rules: 11/10/2021~11/19/2021  in total:60(approved)     leave 11/19 2.5hrs as pending
+
         //PTO set as no eligibility rules. default value N/A
         //< eligibility rules:
         String Date1 = "2021-10-26";//<fixed days
@@ -1556,10 +1557,10 @@ public class AccrualEngineTest extends TestBase {
         SimpleUtils.pass("Succeeded in validating employee's accrual balance!");
 
         //Run engine to the fixed days:
-        //blocked by OPS-4788
+        //blocked by https://legiontech.atlassian.net/browse/OPS-5668
         String[] accrualResponse2 = runAccrualJobToSimulateDate(workerId, Date2, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse2), 200, "Failed to run accrual job!");
-        expectedTOBalance.put("Annual Leave", "3");
+        expectedTOBalance.put("Annual Leave", "0");
         expectedTOBalance.put("PTO", "3");
         //and verify the result in UI
         refreshPage();
@@ -1572,6 +1573,7 @@ public class AccrualEngineTest extends TestBase {
         //Delete the worker's accrual balance and directly run engine to the day>fixed days
         String[] deleteResponse1 = deleteAccrualByWorkerId(workerId, sessionId);
         Assert.assertEquals(getHttpStatusCode(deleteResponse1), 200, "Failed to delete the user's accrual!");
+        expectedTOBalance.put("Annual Leave", "0");
         expectedTOBalance.put("PTO", "0");
         refreshPage();
         timeOffPage.switchToTimeOffTab();
