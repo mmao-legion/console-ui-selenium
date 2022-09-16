@@ -132,4 +132,5 @@ public interface ShiftOperatePage {
     public void clickOnCloseBtnOfAssignDialog() throws Exception;
     public HashMap<String, Float> getTotalShiftHrsAndShiftCountThisWeek() throws Exception;
     public boolean isCloseBtnOfAssignDialogLoaded() throws Exception;
+    public void clickAssignBtnOnCreateShiftDialog(String name) throws Exception;
 }

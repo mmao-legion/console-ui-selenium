@@ -7400,25 +7400,19 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
 			Thread.sleep(3);
 			shiftOperatePage.clickOnCloseBtnOfAssignDialog();
-//			boolean okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
-//			for(int j =0 ; j < 3; j++){
-//				if(okBtnLoad){
-//					scheduleShiftTablePage.clickOnOkButtonInWarningMode();
-//					continue;
-//				}else{
-//					break;
-//				}
-//			}
-//
-//			boolean btnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
-//			for(int i =0 ; i < 3; i++){
-//				if(btnLoad){
-//					shiftOperatePage.clickOnCloseBtnOfAssignDialog();
-//					continue;
-//				}else{
-//					break;
-//				}
-//			}
+			boolean okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
+			while(okBtnLoad){
+				scheduleShiftTablePage.clickOnOkButtonInWarningMode();
+				Thread.sleep(3);
+				continue;
+			}
+
+			boolean closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
+			while(closeBtnLoad){
+				shiftOperatePage.clickOnCloseBtnOfAssignDialog();
+				Thread.sleep(3);
+				continue;
+			}
 
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
@@ -8123,7 +8117,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Cosimo")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Veirfy shifts should have \"Outside Operating hours\" violation when reducing the operating hours")
+	@TestName(description = "Verify shifts should have \"Outside Operating hours\" violation when reducing the operating hours")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheOutOpeHrsViolationAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
@@ -8169,6 +8163,853 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the Weekly OT violation when config is turned on")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTurnOnWeekOTViolationAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			String tmPartialName = "WMTester";
+			String workRole;
+			if (isLocationUsingControlsConfiguration){
+				//Go to compliance page and set week OT violation
+				workRole = "Retail Associate";
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsComplianceSection();
+				compliancePage.turnOnOrTurnOffWeeklyOTToggle(true);
+				compliancePage.editWeeklyOTSetting("40 hours");
+			}else {
+				workRole = "TEAM MEMBER CORPORATE-THEATRE";
+				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+				SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+				locationsPage.clickOnLocationsTab();
+				locationsPage.goToSubLocationsInLocationsPage();
+				locationsPage.searchLocation(location);
+				SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+				locationsPage.clickOnLocationInLocationResult(location);
+				locationsPage.clickOnConfigurationTabOfLocation();
+				HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+				ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+				configurationPage.goToConfigurationPage();
+				configurationPage.clickOnConfigurationCrad("Compliance");
+				configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
+				configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+				Thread.sleep(3000);
+				compliancePage.turnOnOrTurnOffWeeklyOTToggle(true);
+				compliancePage.editWeeklyOTSetting("40");
+				configurationPage.publishNowTheTemplate();
+				Thread.sleep(60000);
+				switchToConsoleWindow();
+			}
+
+			//Go to the schedule view table
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			//Delete all auto-generated shifts for the TM
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("WMTester C.");
+			scheduleMainPage.saveSchedule();
+
+			//Create multiple shifts and assign it to the same TM
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectSpecificWorkDay(5);
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("5:30pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("9:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmPartialName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+
+			//Create a new shift and assign it to the same TM to trigger the WeeklyOT
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectDaysByIndex(6,6,6);
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("10:00am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("9:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmPartialName);
+			newShiftPage.clickClearAssignmentsLink();
+
+			String statusMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+			SimpleUtils.assertOnFail("The Violation message on the Assign dialog is not expected!",
+					statusMessage.contains("Will trigger 1Hrs weekly OT"), false);
+
+			shiftOperatePage.clickAssignBtnOnCreateShiftDialog(tmPartialName);
+			String standardAssignAnyway = tmPartialName + " will incur 1 hours of weekly overtime";
+			String assignAnywayMessage = newShiftPage.getWarningMessageFromWarningModal();
+			SimpleUtils.assertOnFail("The Violation message on the AssignAnyway page is not expected!", assignAnywayMessage.contains(standardAssignAnyway), false);
+			shiftOperatePage.clickOnAssignAnywayButton();
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+
+			//Verify the WeekOT violation after saving.
+			scheduleMainPage.clickOnOpenSearchBoxButton();
+			scheduleMainPage.searchShiftOnSchedulePage(tmPartialName);
+			List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(5));
+			for(int i = 0; i< complianceMessage.size(); i++){
+				if (complianceMessage.get(i).contains("weekly overtime")) {
+					SimpleUtils.pass("The Weekly OT message is showing correctly!");
+					continue;
+				}else{
+					SimpleUtils.fail("The Weekly OT is not showing!", false);
+				}
+			}
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the Weekly OT violation when config is turned off")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTurnOffWeekOTViolationAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			String tmPartialName = "WMTester";
+			String workRole;
+			if (isLocationUsingControlsConfiguration){
+				//Go to compliance page and set week OT violation
+				workRole = "Retail Associate";
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsComplianceSection();
+				compliancePage.turnOnOrTurnOffWeeklyOTToggle(false);
+				compliancePage.editWeeklyOTSetting("40 hours");
+			}else {
+				workRole = "TEAM MEMBER CORPORATE-THEATRE";
+				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+				SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+				locationsPage.clickOnLocationsTab();
+				locationsPage.goToSubLocationsInLocationsPage();
+				locationsPage.searchLocation(location);
+				SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+				locationsPage.clickOnLocationInLocationResult(location);
+				locationsPage.clickOnConfigurationTabOfLocation();
+				HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+				ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+				configurationPage.goToConfigurationPage();
+				configurationPage.clickOnConfigurationCrad("Compliance");
+				configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
+				configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+				Thread.sleep(3000);
+				compliancePage.turnOnOrTurnOffWeeklyOTToggle(false);
+				compliancePage.editWeeklyOTSetting("40");
+				configurationPage.publishNowTheTemplate();
+				Thread.sleep(60000);
+				switchToConsoleWindow();
+			}
+
+			//Go to the schedule view table
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			//Delete all auto-generated shifts for the TM
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("WMTester C.");
+			scheduleMainPage.saveSchedule();
+
+			//Create multiple shifts and assign it to the same TM
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectSpecificWorkDay(5);
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("5:30pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("9:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmPartialName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+
+			//Create a new shift and assign it to the same TM to trigger the WeeklyOT
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectDaysByIndex(6,6,6);
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("10:00am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("9:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmPartialName);
+			newShiftPage.clickClearAssignmentsLink();
+
+			String statusMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+			SimpleUtils.assertOnFail("The Violation message on the Assign dialog is not expected!",
+					!(statusMessage.contains("Will trigger 1Hrs weekly OT")), false);
+
+			shiftOperatePage.clickAssignBtnOnCreateShiftDialog(tmPartialName);
+			String standardAssignAnyway = tmPartialName + " will incur 1 hours of weekly overtime";
+			String assignAnywayMessage = newShiftPage.getWarningMessageFromWarningModal();
+			SimpleUtils.assertOnFail("The Violation message on the AssignAnyway page is not expected!", !(assignAnywayMessage.contains(standardAssignAnyway)), false);
+			shiftOperatePage.clickOnAssignAnywayButton();
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+
+			//Verify the WeekOT violation after saving.
+			scheduleMainPage.clickOnOpenSearchBoxButton();
+			scheduleMainPage.searchShiftOnSchedulePage(tmPartialName);
+			List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(5));
+			for(int i = 0; i< complianceMessage.size(); i++){
+				if (!(complianceMessage.get(i).contains("weekly overtime"))) {
+					SimpleUtils.pass("The Weekly OT message is not showing!");
+					continue;
+				}
+				else{
+					SimpleUtils.fail("The Weekly OT is showing!", false);
+				}
+			}
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the View Team Schedule permission displays")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void VerifyTheViewTeamSchedulePermissionDisplayAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			String accessRoleTab = "Access Roles";
+			String section = "Schedule";
+			String permission = "View Team Schedule";
+			String role = "Team Member";
+			String actionOn = "on";
+			String actionOff = "off";
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			if (isLocationUsingControlsConfiguration){
+				//Go to Users and Roles page
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Check the View Team Schedule permission for SM and TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOff);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOff);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+
+			}else {
+				//Go to Users and Roles page and switch to the Access Roles sub tab
+				userManagementPage.clickOnUserManagementTab();
+				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+				userManagementPage.goToUserAndRoles();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Check the View Team Schedule permission for SM and TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section,permission,actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section,permission,actionOff);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOff);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section,permission,actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+
+			}
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		} finally {
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+			String accessRoleTab = "Access Roles";
+			String section = "Schedule";
+			String permission = "View Team Schedule";
+			String role = "Team Member";
+			String actionOn = "on";
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			if (isLocationUsingControlsConfiguration){
+				//Go to Users and Roles page
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the View Team Schedule permission for SM and TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+			}else {
+				//Go to Users and Roles page and switch to the Access Roles sub tab
+				userManagementPage.clickOnUserManagementTab();
+				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+				userManagementPage.goToUserAndRoles();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the View Team Schedule permission for SM and TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section,permission,actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+			}
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the View Team Schedule permission after been turned off")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void VerifyTheViewTeamSchedulePermissionTurnOffAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			String accessRoleTab = "Access Roles";
+			String section = "Schedule";
+			String permission = "View Team Schedule";
+			String role = "Team Member";
+			String actionOff = "off";
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			if (isLocationUsingControlsConfiguration){
+				//Go to Users and Roles page
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Remove the View Team Schedule permission for SM and TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOff);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOff);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(300000);
+			}else {
+				//Go to Users and Roles page and switch to the Access Roles sub tab
+				userManagementPage.clickOnUserManagementTab();
+				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+				userManagementPage.goToUserAndRoles();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Remove the View Team Schedule permission for SM and TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section,permission,actionOff);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOff);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(300000);
+
+				switchToConsoleWindow();
+			}
+
+			///Log in as store manager, check the Team Schedule sub tab
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			Thread.sleep(3000);
+			dashboardPage.clickOnProfileIconOnDashboard();
+			dashboardPage.clickOnSwitchToEmployeeView();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("The View Team Schedule tab is displayed!", !(scheduleCommonPage.verifyActivatedSubTab("Team Schedule")), false);
+
+			///Log in as TM, check the Team Schedule sub tab
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			Thread.sleep(3000);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("The View Team Schedule tab is displayed!", !(scheduleCommonPage.verifyActivatedSubTab("Team Schedule")), false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		} finally {
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			String accessRoleTab = "Access Roles";
+			String section = "Schedule";
+			String permission = "View Team Schedule";
+			String role = "Team Member";
+			String actionOn = "on";
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			if (isLocationUsingControlsConfiguration){
+				//Go to Users and Roles page
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the View Team Schedule permission for SM and TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(300000);
+			}else {
+				//Go to Users and Roles page and switch to the Access Roles sub tab
+				userManagementPage.clickOnUserManagementTab();
+				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+				userManagementPage.goToUserAndRoles();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the View Team Schedule permission for SM and TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(300000);
+			}
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the View Team Schedule permission after been turned on")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			String accessRoleTab = "Access Roles";
+			String section = "Schedule";
+			String permission = "View Team Schedule";
+			String role = "Team Member";
+			String actionOn = "on";
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			if (isLocationUsingControlsConfiguration){
+				//Go to Users and Roles page
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the View Team Schedule permission for SM and TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(300000);
+			}else {
+				//Go to Users and Roles page and switch to the Access Roles sub tab
+				userManagementPage.clickOnUserManagementTab();
+				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+				userManagementPage.goToUserAndRoles();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the View Team Schedule permission for SM and TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(300000);
+
+				switchToConsoleWindow();
+			}
+
+			///Log in as store manager, check the Team Schedule sub tab
+			String subTab = "Team Schedule";
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			Thread.sleep(3000);
+			dashboardPage.clickOnProfileIconOnDashboard();
+			dashboardPage.clickOnSwitchToEmployeeView();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(subTab);
+			SimpleUtils.assertOnFail("The View Team Schedule tab is not displayed!", scheduleCommonPage.verifyActivatedSubTab(subTab), false);
+
+			///Log in as TM, check the Team Schedule sub tab
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			Thread.sleep(3000);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(subTab);
+			SimpleUtils.assertOnFail("The View Team Schedule tab is not displayed!", scheduleCommonPage.verifyActivatedSubTab(subTab), false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the users won't affect each other with different View Team Schedule permission")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			String accessRoleTab = "Access Roles";
+			String section = "Schedule";
+			String permission = "View Team Schedule";
+			String role = "Team Member";
+			String actionOn = "on";
+			String actionOff = "off";
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			if (isLocationUsingControlsConfiguration){
+				//Go to Users and Roles page
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Remove the View Team Schedule permission for TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOff);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(300000);
+			}else {
+				//Go to Users and Roles page and switch to the Access Roles sub tab
+				userManagementPage.clickOnUserManagementTab();
+				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+				userManagementPage.goToUserAndRoles();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Remove the View Team Schedule permission for TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOff);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(300000);
+
+				switchToConsoleWindow();
+			}
+
+			///Log in as Store Manager, check the Team Schedule sub tab
+			String subTab = "Team Schedule";
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			Thread.sleep(3000);
+			dashboardPage.clickOnProfileIconOnDashboard();
+			dashboardPage.clickOnSwitchToEmployeeView();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("The View Team Schedule tab is not displayed!", scheduleCommonPage.verifyActivatedSubTab(subTab), false);
+			scheduleCommonPage.clickOnScheduleSubTab(subTab);
+
+			///Log in as Team Member, check the Team Schedule sub tab
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			Thread.sleep(3000);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			SimpleUtils.assertOnFail("The View Team Schedule tab is displayed!", !(scheduleCommonPage.verifyActivatedSubTab(subTab)), false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}finally {
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			String accessRoleTab = "Access Roles";
+			String section = "Schedule";
+			String permission = "View Team Schedule";
+			String role = "Team Member";
+			String actionOn = "on";
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			if (isLocationUsingControlsConfiguration){
+				//Go to Users and Roles page
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the View Team Schedule permission for SM and TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(10000);
+			}else {
+				//Go to Users and Roles page and switch to the Access Roles sub tab
+				userManagementPage.clickOnUserManagementTab();
+				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+				userManagementPage.goToUserAndRoles();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the View Team Schedule permission permission for SM and TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(10000);
+			}
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the Swap/Cover works fine when turn off View Team Schedule permission")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			String accessRoleTab = "Access Roles";
+			String section = "Schedule";
+			String permission = "View Team Schedule";
+			String role = "Team Member";
+			String actionOff = "off";
+			String teamMember = null;
+			String workRole = null;
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			if (isLocationUsingControlsConfiguration){
+				//Go to Users and Roles page
+				teamMember = "Danyka Walsh";
+				workRole = "Retail Associate";
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Remove the View Team Schedule permission for TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOff);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(300000);
+			}else {
+				//Go to Users and Roles page and switch to the Access Roles sub tab
+				teamMember = "Brandon Tackett";
+				workRole = "TEAM MEMBER CORPORATE-THEATRE";
+				userManagementPage.clickOnUserManagementTab();
+				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+				userManagementPage.goToUserAndRoles();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Remove the Manage Budget permission for TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOff);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(300000);
+
+				switchToConsoleWindow();
+			}
+
+			//Create a new schedule
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			//Delete all auto-generated shifts for the particular TM
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMember);
+			scheduleMainPage.saveSchedule();
+
+			//Create a new shift and assign it to the particular TM
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("6pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(teamMember);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+			createSchedulePage.publishActiveSchedule();
+
+			///Re-login as TM, check the cover/swap functions
+			String subTab = "Team Schedule";
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			Thread.sleep(3000);
+			SimpleUtils.assertOnFail("The View Team Schedule tab is displayed!", !(scheduleCommonPage.verifyActivatedSubTab(subTab)), false);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.MySchedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
+			Thread.sleep(3000);
+
+			// For Swap Feature
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			List<String> swapCoverRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
+			mySchedulePage.clickOnShiftByIndex(0);
+			String swapTitle = "Find Shifts to Swap";
+			mySchedulePage.clickTheShiftRequestByName(swapCoverRequests.get(0));
+			SimpleUtils.assertOnFail(swapTitle + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(swapTitle), false);
+			mySchedulePage.verifyClickCancelSwapOrCoverRequest();
+
+			// For Cover Feature
+			mySchedulePage.clickOnShiftByIndex(0);
+			String coverTitle = "Submit Cover Request";
+			mySchedulePage.clickTheShiftRequestByName(swapCoverRequests.get(1));
+			SimpleUtils.assertOnFail(coverTitle + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(coverTitle), false);
+			mySchedulePage.verifyClickCancelSwapOrCoverRequest();
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}finally {
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			String accessRoleTab = "Access Roles";
+			String section = "Schedule";
+			String permission = "View Team Schedule";
+			String role = "Team Member";
+			String actionOn = "on";
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			if (isLocationUsingControlsConfiguration){
+				//Go to Users and Roles page
+				controlsNewUIPage.clickOnControlsConsoleMenu();
+				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+				controlsNewUIPage.clickOnGlobalLocationButton();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the View Team Schedule permission for TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(10000);
+			}else {
+				//Go to Users and Roles page and switch to the Access Roles sub tab
+				userManagementPage.clickOnUserManagementTab();
+				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+				userManagementPage.goToUserAndRoles();
+				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+
+				//Add the View Team Schedule permission for TM
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+				Thread.sleep(10000);
+			}
 		}
 	}
 }
