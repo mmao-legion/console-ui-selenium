@@ -2621,4 +2621,40 @@ public class LocationsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify readyForForecast is added in location details page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyReadyForForecastAddedInLocationDetailsPageAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
+            String currentTime =  sdf.format(new Date()).trim();
+            String existingLocation = "";
+            String newLocation = "AutoTest" + currentTime;
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //go to sub-locations tab, check readyForForecast for existing location
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(location);
+            SimpleUtils.assertOnFail("Field readyForForecast Failed to show up for existing location!", locationsPage.verifyReadyForForecastFieldExist(), false);
+
+            //check readyForForecast for new location, default value should be 'No'
+            locationsPage.goBack();
+            locationsPage.addNewRegularLocationWithMandatoryFields(newLocation);
+            locationsPage.goToLocationDetailsPage(newLocation);
+            SimpleUtils.assertOnFail("Field readyForForecast Failed to show up for newly created location!", locationsPage.verifyReadyForForecastFieldExist(), false);
+            SimpleUtils.assertOnFail("ReadyForForecast value should be 'No' by default!", locationsPage.getReadyForForecastSelectedOption().equalsIgnoreCase("No"), false);
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

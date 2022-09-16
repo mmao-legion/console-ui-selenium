@@ -5285,5 +5285,30 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 		return actionsName;
 	}
+
+	@FindBy(css="yes-no[value*=\"readyForForecast\"] lg-button-group")
+	private WebElement readyForForecastOption;
+	@Override
+	public boolean verifyReadyForForecastFieldExist() throws Exception {
+		boolean isExisting = false;
+		scrollToBottom();
+		if (isElementLoaded(readyForForecastOption, 3)){
+			isExisting = true;
+		}
+		return isExisting;
+	}
+
+	@Override
+	public String getReadyForForecastSelectedOption() throws Exception {
+		String selectedOption = "";
+		List<WebElement> yesOrNoOptions = readyForForecastOption.findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
+		for (WebElement choose : yesOrNoOptions) {
+			if (choose.getAttribute("class").contains("lg-button-group-selected")) {
+				selectedOption = choose.findElement(By.cssSelector("span")).getText();
+				break;
+			}
+		}
+		return selectedOption;
+	}
 }
 
