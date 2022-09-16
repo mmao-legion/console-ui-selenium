@@ -1896,6 +1896,7 @@ public class ActivityTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             //to generate schedule  if current week is not generated
             scheduleCommonPage.navigateToNextWeek();
+            Thread.sleep(2000);
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(isActiveWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();

@@ -253,7 +253,9 @@ public class HardStopForMinorViolation extends TestBase {
             newShiftPage.selectWorkRole(minorWorkRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(minorName);
+            newShiftPage.searchWithOutSelectTM(minorName);
+            newShiftPage.selectTeamMembers();
+//            newShiftPage.searchTeamMemberByName(minorName);
             //Hard stop dialog with OK button will show
             SimpleUtils.assertOnFail("The warning modal should be loaded! ",
                     newShiftPage.ifWarningModeDisplay(), false);

@@ -2512,7 +2512,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			//Click X button to close search box
 			scheduleMainPage.clickOnCloseSearchBoxButton();
-
+			Thread.sleep(3000);
 			//Go to edit mode
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
