@@ -727,12 +727,16 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                     createPlanName.clear();
                     createPlanName.sendKeys(planName + "-n1_m1");
                     planCreateOKBTN.click();
-                    waitForSeconds(2);
                     //check plan create successfully.
-                    if (isElementLoaded(scenarioPlanNameInDeatil)) {
+                    if(isElementLoaded(errorToast, 3)){
+                        if (errorToast.getText().contains("plan name already exists"))
+                            SimpleUtils.pass("The plan name already exists!");
+                    }else if (isElementLoaded(scenarioPlanNameInDeatil, 3)) {
                         String planTitleInDetails = scenarioPlanNameInDeatil.getText().trim();
                         if (planTitleInDetails.equals(planName + "-n1_m1 scenario 1"))
                             SimpleUtils.pass("Plan created successfully and page navigated to the scenario plan detail successfully!");
+                    }else {
+                        SimpleUtils.fail("Plan failed to be created!", false);
                     }
                 }
 
