@@ -2840,7 +2840,7 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Annual Leave4", "12");
         expectedTOBalance.put("Bereavement1", "12");
         expectedTOBalance.put("Bereavement2", "0");
-        expectedTOBalance.put("Bereavement3", "15");
+        expectedTOBalance.put("Bereavement3", "5");
         expectedTOBalance.put("Bereavement4", "0");
         expectedTOBalance.put("Covid1", "0");
         //and verify the result in UI
