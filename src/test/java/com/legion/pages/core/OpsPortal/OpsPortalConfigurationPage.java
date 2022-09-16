@@ -7496,4 +7496,122 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}
 	}
+
+	@FindBy(css="sub-content-box[box-title=\"Dynamic Group\"] span.ng-binding")
+	private WebElement addButtonOfAdvancedStaffingRuleDynamicGroup;
+	@FindBy(css="h1.lg-modal__title")
+	private WebElement manageDynamicLocationGroupPopUp;
+	@Override
+	public void verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable() throws Exception {
+		if (isElementEnabled(dynamicGroupSection,3)) {
+			SimpleUtils.pass("There is dynamic location group on new advance staffing rule page");
+			isClickable(addButtonOfAdvancedStaffingRuleDynamicGroup,2);
+		} else {
+			SimpleUtils.fail("There is Not dynamic location group on new advance staffing rule page", false);
+		}
+	}
+
+	@Override
+	public void clickOnAddButtonOfDynamicLocationGroupOfAdvancedStaffingRule() throws Exception {
+		if (isElementEnabled(dynamicGroupSection,3)) {
+			SimpleUtils.pass("There is dynamic location group on new advance staffing rule page");
+			clickTheElement(addButtonOfAdvancedStaffingRuleDynamicGroup);
+			if(isElementEnabled(manageDynamicLocationGroupPopUp,2)){
+				SimpleUtils.pass("User can click add button Dynamic Location Group Of Advanced Staffing Rule successfully");
+			}else {
+				SimpleUtils.fail("User can click add button Dynamic Location Group Of Advanced Staffing Rule successfully",false);
+			}
+		} else {
+			SimpleUtils.fail("There is Not dynamic location group on new advance staffing rule page", false);
+		}
+	}
+
+	@Override
+	public void advanceStaffingRuleDynamicGroupDialogUICheck(String name) throws Exception {
+		if (isElementLoaded(addDynamicGroupButton, 5)) {
+			SimpleUtils.pass("The " + " icon for adding dynamic group button show as expected");
+			clickTheElement(addDynamicGroupButton);
+			if (manageDynamicGroupPopupTitle.getText().trim().equalsIgnoreCase("Manage Dynamic Location Group")) {
+				SimpleUtils.pass("Dynamic group dialog title show as expected");
+				//check the group name is required
+				if (dynamicGroupName.getAttribute("required").equals("true")) {
+					SimpleUtils.pass("Group name is required");
+					//input group name
+					dynamicGroupName.sendKeys(name);
+					//clear group name
+					dynamicGroupName.clear();
+					//get the required message
+					if (isElementLoaded(dynamicGroupNameRequiredMsg) && dynamicGroupNameRequiredMsg.getText().contains("Group Name is required"))
+						SimpleUtils.pass("group name is required message displayed if not input");
+					dynamicGroupName.sendKeys(name);
+					waitForSeconds(2);
+					String[] criteriaOps = {"Custom", "District", "Country", "State", "City", "Location Name",
+							"Location Id", "Location Type", "UpperField", "Config Type"};
+					for (String ss : criteriaOps) {
+						//check every criteria options is selectable
+						clickTheElement(dynamicGroupCriteria);
+						waitForSeconds(4);
+						String optionType = ".lg-search-options__option[title='" + ss + "']";
+						getDriver().findElement(By.cssSelector(optionType)).click();
+						SimpleUtils.pass("The criteria " + ss + " was selected!");
+						waitForSeconds(3);
+					}
+					//set up value
+					clickTheElement(dynamicGroupCriteriaValueInputs.get(1));
+					waitForSeconds(2);
+					if (areListElementVisible(dynamicGroupCriteriaResults, 5)) {
+						SimpleUtils.pass("The current selected Criteria has value options");
+						clickTheElement(dynamicGroupCriteriaResults.get(0));
+						waitForSeconds(3);
+						//click add more link//click add more link
+						clickTheElement(dynamicGroupCriteriaAddMoreLink);
+						waitForSeconds(2);
+						//Check the delete icon showed
+						if (areListElementVisible(dynamicGroupCriteriaAddDelete) && dynamicGroupCriteriaAddDelete.size() > 1) {
+							clickTheElement(dynamicGroupCriteriaAddDelete.get(1));
+							waitForSeconds(2);
+							//select a criteria type
+							clickTheElement(dynamicGroupCriteria);
+							waitForSeconds(1);
+							String optionCountry = ".lg-search-options__option[title='Country']";
+							getDriver().findElement(By.cssSelector(optionCountry)).click();
+							waitForSeconds(2);
+							//set up criteria relationship
+							clickTheElement(dynamicGroupCriteriaValueInputs.get(0));
+							// check IN and NOTIN options supported
+							if (isElementLoaded(dynamicGroupCriteriaINOption) && isElementLoaded(dynamicGroupCriteriaINotNOption))
+								SimpleUtils.pass("The IN and NOt IN relation are supported for Criteria relationship.");
+							//set up criteria value
+							clickTheElement(dynamicGroupCriteriaValueInputs.get(1));
+							//choose the last value from drop down
+							clickTheElement(dynamicGroupCriteriaValueInputs.get(0));
+							clickTheElement(dynamicGroupCriteriaResults.get(dynamicGroupCriteriaResults.size() - 1));
+							waitForSeconds(2);
+							clickTheElement(dynamicGroupCriteriaResults.get(0));
+							waitForSeconds(2);
+							//click the test button to chek value
+							clickTheElement(dynamicGroupTestButton);
+							waitForSeconds(3);
+							//get the result
+							if (isElementLoaded(dynamicGroupTestInfo)) {
+								SimpleUtils.pass("Get results for the dynamic group");
+								String mappedRes = dynamicGroupTestInfo.getText().split("Location")[0].trim();
+								if (Integer.parseInt(mappedRes) > 0)
+									SimpleUtils.pass("Get mapped location for the dynamic group");
+							} else
+								SimpleUtils.fail("No result get for the dynamic group", true);
+							//click save
+							clickTheElement(okButtonOnManageDynamicGroupPopup);
+							waitForSeconds(3);
+						} else
+							SimpleUtils.fail("The delete criteria icon is not displayed!", false);
+					} else
+						SimpleUtils.fail("The current selected Criteria has no options can be selected", true);
+				} else
+					SimpleUtils.fail("Group name is not required on UI", true);
+			} else
+				SimpleUtils.fail("Dynamic group dialog title is not show as designed!", true);
+		} else
+			SimpleUtils.fail("The " + " icon for adding dynamic group missing!", false);
+	}
 }

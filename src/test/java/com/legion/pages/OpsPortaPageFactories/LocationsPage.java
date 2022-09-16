@@ -340,4 +340,6 @@ public interface LocationsPage {
     public boolean verifyIsOverrideStatusAtLocationLevel(String templateName) throws Exception;
     public void updateOpenCloseHourForOHTemplate(String openString,String closeString);
     public List<String> actionsForTemplateInLocationLevel(String templateName);
+    public boolean verifyReadyForForecastFieldExist() throws Exception;
+    public String getReadyForForecastSelectedOption() throws Exception;
 }
