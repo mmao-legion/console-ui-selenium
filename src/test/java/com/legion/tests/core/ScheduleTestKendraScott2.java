@@ -8732,7 +8732,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Cosimo")
 	@Enterprise(name = "KendraScott2_Enterprise")
-	@TestName(description = "Validate the users won't affect each other with different View Team Schedule permission ")
+	@TestName(description = "Validate the users won't affect each other with different View Team Schedule permission")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin(String username, String password, String browser, String location)
 			throws Exception {
