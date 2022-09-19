@@ -647,11 +647,11 @@ public class DragAndDropTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Drag the TM's avatar on Monday to the open shift on Tuesday
-            scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0,firstName,1,"Open");
             String weekday = scheduleShiftTablePage.getWeekDayTextByIndex(Integer.parseInt(shiftInfo.get(1)));
             String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
             String expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
                     + ". This shift will be converted to an open shift";
+            scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0,firstName,1,"Open");
             scheduleShiftTablePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage,"assign");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
 

@@ -2330,7 +2330,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         return count;
     }
 
-    @FindBy(css = ".drag-target-day-bottom .sch-calendar-day-label")
+    @FindBy(css = ".sch-calendar-day-label")
     private List<WebElement> weekDayLabels;
     @Override
     public String getWeekDayTextByIndex(int index) throws Exception {
