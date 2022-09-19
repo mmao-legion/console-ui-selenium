@@ -2167,7 +2167,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.fail("The OK button fail to load! ", false);
     }
 
-    @FindBy(css = "div.react-create-shift-modal")
+    @FindBy(css = "#create-new-shift-react")
     private WebElement newCreateShiftModal;
 
     public boolean checkIfNewCreateShiftPageDisplay() throws Exception {
