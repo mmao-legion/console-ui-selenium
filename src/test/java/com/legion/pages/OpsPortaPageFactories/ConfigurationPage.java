@@ -260,5 +260,8 @@ public interface ConfigurationPage {
     public boolean isGetPredictabilityScoreEnabled() throws Exception;
     public void clickGetPredictabilityScore() throws Exception;
     public void turnOnOffOverrideViaIntegrationButton();
+    public void verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable() throws Exception;
+    public void clickOnAddButtonOfDynamicLocationGroupOfAdvancedStaffingRule() throws Exception;
+    public void advanceStaffingRuleDynamicGroupDialogUICheck(String name) throws Exception;
 }
 
