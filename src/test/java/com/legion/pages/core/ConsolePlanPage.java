@@ -82,7 +82,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
     private WebElement budgetDownloadCSVLink;
     @FindBy(css = "modal[modal-title=\"Run budget\"]>div.lg-modal")
     private WebElement budgetRunDialog;
-    @FindBy(css = "lg-button[label=\"Run\"]")
+    @FindBy(css = "lg-button[label=\"Run\"] button")
     private WebElement budgetRunBTNOnDialog;
     @FindBy(css = "p[ng-if=\"showJobResult(downloadStates,'BudgetPlan')\"] span:nth-child(4)")
     private WebElement budgetValue;
