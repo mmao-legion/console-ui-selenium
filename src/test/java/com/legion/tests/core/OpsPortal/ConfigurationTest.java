@@ -4100,6 +4100,14 @@ public class ConfigurationTest extends TestBase {
 
             //Will uncomment below code when we can get forecast data back
 //            configurationPage.clickGetPredictabilityScore();
+
+            //Delete the association and archive the template
+            configurationPage.clickOnBackButton();
+            settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+            configurationPage.deleteOneDynamicGroup(templateName);
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.setLeaveThisPageButton();
+            configurationPage.archiveOrDeleteTemplate(templateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
