@@ -602,8 +602,8 @@ public class DeleteScheduleTest extends TestBase {
 //                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             int index = 1;
             //Check the week that you have released, Observe the status of this week
+            Thread.sleep(3000);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-
             //Select one week which status is Guidance, Click on this week
             scheduleOverviewPage.clickOnGuidanceBtnOnOverview(index);
             //Create the suggested schedule for this week

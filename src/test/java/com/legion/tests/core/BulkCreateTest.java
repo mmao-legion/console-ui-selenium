@@ -437,6 +437,11 @@ public class BulkCreateTest extends TestBase {
             //Click the Assign button of one TMs
             MyThreadLocal.setAssignTMStatus(true);
             String firstNameOfSelectedTM = newShiftPage.selectTeamMembers().split(" ")[0];
+            //Check the No. of shift per day display correctly:SCH-7055
+            int shiftPerday = newShiftPage.getNoOfShiftPerDayOnSearchTMPage();
+            SimpleUtils.assertOnFail("The shift per day display incorrectly, the expected is:"+count
+                            +" The actual is:"+shiftPerday,
+                    shiftPerday== count, false);
             //The TM will removed from the recommended list
             SimpleUtils.assertOnFail("The assinged TM should remove from search TM list! ",
                     newShiftPage.getSearchAndRecommendedResult().size() == resultCount-1, false);
@@ -456,6 +461,11 @@ public class BulkCreateTest extends TestBase {
             //Click the Offer button of one TMs
             MyThreadLocal.setAssignTMStatus(false);
             firstNameOfSelectedTM = newShiftPage.selectTeamMembers().split(" ")[0];
+            //Check the No. of shift per day display correctly:SCH-7055
+//            shiftPerday = newShiftPage.getNoOfShiftPerDayOnSearchTMPage();
+//            SimpleUtils.assertOnFail("The shift per day display incorrectly, the expected is:"+count
+//                            +" The actual is:"+shiftPerday,
+//                    shiftPerday== count, false);
             //The TM will removed from the recommended list
             SimpleUtils.assertOnFail("The offered TM should remove from search TM list! ",
                     newShiftPage.getSearchAndRecommendedResult().size() == resultCount-1, false);
@@ -467,8 +477,6 @@ public class BulkCreateTest extends TestBase {
                     newShiftPage.getSearchAndRecommendedResult().size() == resultCount, false);
             SimpleUtils.assertOnFail("It should has no offered TM display on the Shift Offers section! ",
                     newShiftPage.getShiftOffersOnShiftAssignedSection().size() == 0, false);
-
-
 
             //Check the TMs on Recommended TMs tabs, the TMs display with Assign and Offer buttons
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();

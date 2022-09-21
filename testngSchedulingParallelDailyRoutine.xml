@@ -72,7 +72,7 @@
                     <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin"/>
                     <include name="verifyTheContentOfRejectShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" />
-                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />
+<!--                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-7699-->
                 </methods>
             </class>
         </classes>
