@@ -1085,7 +1085,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate one shift which has both Unassigned and OOH violation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -1289,8 +1289,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     for (WebElement unassignedShift: unassignedShifts) {
                         unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();
                         oOOHShiftsCount = scheduleShiftTablePage.getAllOOOHShifts().size();
-                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
-                        if(unassignedShiftTimes.contains("8am - 1pm")) {
+                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText().toLowerCase());
+                        if(unassignedShiftTimes.contains("8:00 am - 1:00 pm")) {
                             isTheShiftWithBothViolationsExist = true;
                             //To close the i icon popup
                             scheduleMainPage.clickOnOpenSearchBoxButton();

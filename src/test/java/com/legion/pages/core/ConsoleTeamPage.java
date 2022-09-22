@@ -4825,14 +4825,22 @@ private List<WebElement> locationColumn;
 	private List<WebElement> theNonSummerDaysInTheLastSchoolMonth;
 
 	public void setNonSchoolDaysForNonSchoolWeek () {
-		if (areListElementVisible(theNonSummerDaysInTheLastSchoolMonth, 10)) {
+		if (areListElementVisible(theNonSummerDaysInTheLastSchoolMonth, 10)
+				&& theNonSummerDaysInTheLastSchoolMonth.size() > 8) {
 			//Click the school days in the last school week to change to non-school day
 			waitForSeconds(3);
 			click(theNonSummerDaysInTheLastSchoolMonth.get(theNonSummerDaysInTheLastSchoolMonth.size() - 1));
 			SimpleUtils.pass("Set the non-school week successfully! ");
+
+		} else if (areListElementVisible(schoolDays, 10)){
+			//Click the school days in the last school week to change to non-school day
+			waitForSeconds(3);
+			click(schoolDays.get(schoolDays.size() - 1));
+			SimpleUtils.pass("Set the non-school week successfully! ");
 		} else {
 			SimpleUtils.report("The school days fail to load! ");
 		}
+
 	}
 
 	@FindBy (css = "[label=\"Cancel Transfer\"]")

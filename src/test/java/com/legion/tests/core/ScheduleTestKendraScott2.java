@@ -7552,26 +7552,32 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
 			newShiftPage.searchWithOutSelectTM(firstNameOfTM);
+			//https://legiontech.atlassian.net/browse/SCH-7682
 			String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
-			SimpleUtils.assertOnFail("30 mins travel time needed message fail to load!",
-					shiftWarningMessage.toLowerCase().contains("30 mins travel time needed"), false);
+			String expectedWaningMessage= "Minimum time between shifts";
+			SimpleUtils.assertOnFail(expectedWaningMessage+ " message fail to load!",
+					shiftWarningMessage.toLowerCase().contains(expectedWaningMessage), false);
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
+			expectedWaningMessage = firstNameOfTM+ " does not have minimum time between shifts";
 			if(newShiftPage.ifWarningModeDisplay()){
 				String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-				if (warningMessage.contains("30 mins travel time needed")){
-					SimpleUtils.pass("30 mins travel time needed message displays");
+
+				if (warningMessage.contains(expectedWaningMessage)){
+					SimpleUtils.pass(expectedWaningMessage+" message displays");
 				} else {
-					SimpleUtils.fail("There is no '30 mins travel time needed' warning message displaying", false);
+					SimpleUtils.fail("There is no "+expectedWaningMessage+" warning message displaying", false);
 				}
 				shiftOperatePage.clickOnAssignAnywayButton();
 			} else {
-				SimpleUtils.fail("There is no '30 mins travel time needed' warning modal displaying!",false);
+				SimpleUtils.fail("There is no '"+expectedWaningMessage+"' warning modal displaying!",false);
 			}
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
 			List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
-			SimpleUtils.assertOnFail("'30 mins travel time needed' compliance message display failed",
-					scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).contains("30 mins travel time needed") , false);
+			//https://legiontech.atlassian.net/browse/SCH-7196
+			expectedWaningMessage = "Minimum time between shifts";
+			SimpleUtils.assertOnFail("'"+expectedWaningMessage+"' compliance message display failed",
+					scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).contains(expectedWaningMessage) , false);
 
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);

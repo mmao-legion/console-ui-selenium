@@ -130,7 +130,7 @@
                    <methods>
    <!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />   Blocked by SCH-5036 -->
 <!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />-->
-<!--                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin" Blocked by Bug/>-->
+                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin"/>
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                       <!--                  <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
@@ -273,8 +273,8 @@
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
 <!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5368/>-->
 <!--                    <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />Blocked by SCH-5419/>-->
-                    <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" />
-                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />
+<!--                    <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" /> -->
+<!--                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />https://legiontech.atlassian.net/browse/SCH-7699 -->
                     </methods>
                 </class>
             </classes>

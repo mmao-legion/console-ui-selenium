@@ -1049,7 +1049,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @FindBy(className = "popover-content")
     private WebElement popOverContent;
-    public Map<String, String> getShiftInfoFromInfoPopUp(WebElement shift) {
+    public Map<String, String> getShiftInfoFromInfoPopUp(WebElement shift) throws Exception {
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         Map<String, String> shiftInfo = new HashMap<String, String>();
         if (shift != null) {
@@ -1090,6 +1090,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 shiftInfo.put("WeeklyHrs", shiftHrs[1].trim().split(" ")[0]);
             }
         }
+        ScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
+        //To close the popup
+        scheduleMainPage.clickOnFilterBtn();
+        scheduleMainPage.clickOnFilterBtn();
         return shiftInfo;
     }
 

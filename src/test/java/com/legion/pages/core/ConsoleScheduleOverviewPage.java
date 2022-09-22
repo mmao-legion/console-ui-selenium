@@ -509,7 +509,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	//added by Nishant
 
 	public void clickOnGuidanceBtnOnOverview(int index){
-		if(areListElementVisible(weeklyScheduleDateElements, 25)
+		if(areListElementVisible(weeklyScheduleDateElements, 30)
 				&& weeklyScheduleDateElements.size()!=0){
 			click(weeklyScheduleDateElements.get(index));
 			waitForSeconds(4);

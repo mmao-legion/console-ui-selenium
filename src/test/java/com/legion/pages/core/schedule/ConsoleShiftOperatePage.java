@@ -2545,7 +2545,29 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception {
         String scheduled = "Scheduled";
         boolean isWarningShown = false;
-        if (isElementLoaded(textSearch, 15) && isElementLoaded(searchIcon, 15)) {
+        if (areListElementVisible(searchAndRecommendedTMTabs, 5)) {
+            if (searchAndRecommendedTMTabs.size() == 2 && isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+                textSearchOnNewCreateShiftPage.clear();
+                textSearchOnNewCreateShiftPage.sendKeys(userName);
+                if (areListElementVisible(searchResultsOnNewCreateShiftPage, 15)) {
+                    for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
+                        List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                        String workerName = tmInfo.get(0).getText();
+                        WebElement status = searchResult.findElement(By.xpath("//div[contains(@class,'MuiGrid-grid-xs-3')][2]/div"));
+                        if (workerName != null && workerName.toLowerCase().trim().contains(userName.trim().toLowerCase())) {
+                            if (status.getText().contains(scheduled)
+                                    && status.getText().replace(" - ", "-").contains(shiftTime)) {
+                                SimpleUtils.pass("Assign TM Warning: " + status.getText() + " shows correctly!");
+                                isWarningShown = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }else {
+                SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
+            }
+        } else if (isElementLoaded(textSearch, 15) && isElementLoaded(searchIcon, 15)) {
             textSearch.sendKeys(userName);
             clickTheElement(searchIcon);
             if (areListElementVisible(searchResults, 15)) {
