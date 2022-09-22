@@ -317,7 +317,7 @@ public class PlanTest extends TestBase {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("MMddHH");
             String currentDate =  dfs.format(new Date()).trim();
-            String planName = "testPlan-Not Delete";
+            String planName = "testNew-NotDelete";
             String scPlanName = "Scenario Plan Not Delete";
             String regionName="RegionForPlan_Auto";
             String copiedPlanName="Test Copy Generate Plan" + currentDate;
