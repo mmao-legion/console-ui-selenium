@@ -118,7 +118,9 @@
                             <include name="VerifyTheViewTeamSchedulePermissionTurnOffAsInternalAdmin" />
                             <include name="VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin" />
                             <include name="VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin" />
-                            <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" /> The code is not merged into RC yet -->
+                            <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" />
+                            <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />
+                            <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" /> The code is not merged into RC yet -->
                    </methods>
                </class>
            </classes>

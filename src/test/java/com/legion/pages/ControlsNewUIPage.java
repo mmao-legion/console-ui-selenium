@@ -374,4 +374,10 @@ public interface ControlsNewUIPage {
 	public void turnOnOrOffSpecificPermissionForSpecificRoles(String section, String role, String permission, String action) throws Exception;
 	public void enableOverRideAssignmentRuleAsYesForOP() throws Exception;
 	public void enableOverRideAssignmentRuleAsNoForOP() throws Exception;
+	public void isSenioritySectionLoaded() throws Exception;
+	public String getSeniorityToggleActiveBtnLabel() throws Exception;
+	public void updateSeniorityToggle(String isSeniorityToggleOpen) throws Exception;
+	public void isSortOfSenioritySectionLoaded() throws Exception;
+	public void selectSortOfSeniority(String optionValue) throws Exception;
+	public String getSenioritySort() throws Exception;
 }
