@@ -2109,7 +2109,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
-
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -2128,7 +2127,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//verify version number in analyze page
 
 			analyzePage.clickOnAnalyzeBtn("history");
-			String version0 = "Suggested Schedule";
+			String version0 = "0.0";
 			String version1 = "0.1";
 			String version2 = "1.1";
 			analyzePage.verifyScheduleVersion(version0);
