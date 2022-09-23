@@ -3458,7 +3458,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Configuration tab in locations level page load failed ", false);
 	}
 
-	@FindBy(css = "table.lg-table.ng-scope")
+	@FindBy(css = "table.lg-table.ng-scope tbody")
 	private List<WebElement> workRolesInSchedulingRulesInConfigurationLevel;
 
 	@Override
@@ -4514,6 +4514,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	public void verifyOverrideStatusAtLocationLevel(String templateName, String flag) throws Exception {
+		waitForSeconds(6);
 		if (flag.equalsIgnoreCase("Yes")) {
 			if (isExist(getDriver().findElement(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/span")))) {
 				SimpleUtils.pass("template is overrided");
