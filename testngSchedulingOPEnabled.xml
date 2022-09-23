@@ -118,9 +118,7 @@
                             <include name="VerifyTheViewTeamSchedulePermissionTurnOffAsInternalAdmin" />
                             <include name="VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin" />
                             <include name="VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin" />
-                            <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" />
-                            <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />
-                            <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" /> The code is not merged into RC yet -->
+                            <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" /> The code is not merged into RC yet -->
                    </methods>
                </class>
            </classes>
@@ -209,6 +207,17 @@
                     <include name="verifyShiftInfoInPersonalMyPreferenceAsInternalAdmin"/>
                     <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
                     <include name="verifyTheFunctionalityOfGreenOrGreyAvailableAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Seniority Relevant Testing">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleSeniorityTest">
+                <methods>
+                    <!--       <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />  SCH-7683 is not merged into RC yet-->
+                    <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
