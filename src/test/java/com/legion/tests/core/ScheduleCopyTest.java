@@ -253,6 +253,11 @@ public class ScheduleCopyTest extends TestBase {
             if (complianceCount == 0){
                 SimpleUtils.fail("The compliance count in Compliance smart card should not be 0! ", false);
             }
+            if (smartCardPage.isRequiredActionSmartCardLoaded()){
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+                scheduleMainPage.saveSchedule();
+            }
             createSchedulePage.publishActiveSchedule();
             String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
             if (firstWeekInfo.length() > 11) {

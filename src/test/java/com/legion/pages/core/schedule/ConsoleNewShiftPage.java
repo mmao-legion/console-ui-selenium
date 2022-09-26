@@ -1500,7 +1500,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             for (int i = 0; i < searchAssignTeamMember.length; i++) {
                 String[] searchTM = searchAssignTeamMember[i].split("\\.");
                 String searchText = searchTM[0];
-//                textSearchOnNewCreateShiftPage.clear();
+                textSearchOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+                textSearchOnNewCreateShiftPage.sendKeys(Keys.DELETE);
                 textSearchOnNewCreateShiftPage.sendKeys(searchText);
                 waitForSeconds(3);
                 selectedTMName = newShiftPage.selectAndGetTheSelectedTM();

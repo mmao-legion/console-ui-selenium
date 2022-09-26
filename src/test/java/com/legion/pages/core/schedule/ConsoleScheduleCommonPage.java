@@ -930,8 +930,8 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
     private WebElement dayAndWeekViewButton;
     public boolean checkIfDayAndWeekViewButtonEnabled () throws Exception {
         boolean isEnabled = false;
-        if (isElementLoaded(dayAndWeekViewButton, 5)) {
-            if (dayAndWeekViewButton.getAttribute("class").contains("disabled")){
+        if (isElementLoaded(dayAndWeekViewButton, 5) && isElementLoaded(scheduleDayViewButton)) {
+            if (scheduleDayViewButton.getAttribute("class").contains("disabled")){
                 isEnabled = true;
                 SimpleUtils.report("The  day and week view button is disabled! ");
             } else
