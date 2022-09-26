@@ -2659,7 +2659,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = "[search-results=\"workerSearchResult\"] [ng-class=\"swapStatusClass(worker)\"]")
     private List<WebElement> tmScheduledStatus;
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[3]/div")
+    @FindBy(css = ".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(2) .MuiGrid-item:nth-child(2)")
     private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
     @Override
     public String getTheMessageOfTMScheduledStatus() throws Exception {
