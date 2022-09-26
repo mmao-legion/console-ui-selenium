@@ -212,6 +212,17 @@
         </classes>
     </test>
 
+    <test name="Seniority Relevant Testing">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleSeniorityTest">
+                <methods>
+                    <!--       <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />  SCH-7683 is not merged into RC yet-->
+                    <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
     <test name="Upperfield Test">
         <classes>
             <class name="com.legion.tests.core.UpperfieldTest">
