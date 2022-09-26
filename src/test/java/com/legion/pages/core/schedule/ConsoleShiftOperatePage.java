@@ -2553,7 +2553,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
                         List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
                         String workerName = tmInfo.get(0).getText();
-                        WebElement status = searchResult.findElement(By.xpath("//div[contains(@class,'MuiGrid-grid-xs-3')][2]/div"));
+                        WebElement status = searchResult.findElement(By.cssSelector(
+                                ".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(2) .MuiGrid-item:nth-child(2)"));
                         if (workerName != null && workerName.toLowerCase().trim().contains(userName.trim().toLowerCase())) {
                             if (status.getText().contains(scheduled)
                                     && status.getText().replace(" - ", "-").contains(shiftTime)) {
