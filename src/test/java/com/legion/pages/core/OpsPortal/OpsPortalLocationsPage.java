@@ -1348,7 +1348,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			selectByVisibleText(locationGroupSelect, newLocationParas.get(parentRelationship));
-			clickTheElement(getDriver().findElement(By.cssSelector("input[aria-label=\"" + value + "\"] ")));
+			//clickTheElement(getDriver().findElement(By.cssSelector("input[aria-label=\"" + value + "\"] ")));
 			locationId.sendKeys(getLocationName());
 			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
