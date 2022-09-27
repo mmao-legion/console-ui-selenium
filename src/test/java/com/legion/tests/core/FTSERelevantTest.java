@@ -1487,6 +1487,7 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(tmPartialName);
+            newShiftPage.clickClearAssignmentsLink();
             String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
             SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("will trigger split shift"), false);
             newShiftPage.clickOnOfferOrAssignBtn();
@@ -1591,6 +1592,7 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(tmPartialName);
+            newShiftPage.clickClearAssignmentsLink();
             SimpleUtils.assertOnFail("The spread of hour violation fail to display in Status column! The actual message is: " + shiftOperatePage.getTheMessageOfTMScheduledStatus(),
                     shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Will trigger spread of hours"), false);
             newShiftPage.clickOnOfferOrAssignBtn();
