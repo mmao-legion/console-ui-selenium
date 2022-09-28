@@ -1322,13 +1322,24 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement okBtnOnConfirm;
     @FindBy(css="[ng-show=\"hasSearchResults()\"] tr.table-row.ng-scope")
     private List<WebElement> searchTMRows;
+    @FindBy(css = ".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(1) .MuiGrid-item")
+    private List<WebElement> searchTableColumns;
     public String selectAndGetTheSelectedTM() throws Exception {
         WebElement selectedTM = null;
         String selectedTMName = "";
 //		waitForSeconds(5);
         if (areListElementVisible(searchResultsOnNewCreateShiftPage, 5)) {
             for (WebElement searchResult: searchResultsOnNewCreateShiftPage) {
-                List<WebElement> allStatus= searchResult.findElements(By.cssSelector(".MuiGrid-grid-xs-2 .MuiTypography-body2"));
+                int index = 0;
+                if (areListElementVisible(searchTableColumns, 5)) {
+                    for (int i = 0; i < searchTableColumns.size(); i++) {
+                        if (searchTableColumns.get(i).getText().trim().toLowerCase().equalsIgnoreCase("status")) {
+                            index = i;
+                            break;
+                        }
+                    }
+                }
+                List<WebElement> allStatus= searchResult.findElements(By.cssSelector(".MuiGrid-item:nth-child("+ (index + 1) +")"));
                 StringBuilder tmAllStatus = new StringBuilder();
                 for (WebElement status: allStatus) {
                     tmAllStatus.append(" ").append(status.getText());
