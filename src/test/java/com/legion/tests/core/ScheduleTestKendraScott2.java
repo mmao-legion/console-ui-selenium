@@ -6399,7 +6399,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			String workRole = null;
 			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			if (isLocationUsingControlsConfiguration) {
+				workRole = "Training";
+			}else{
+				workRole = "AM SERVER";
+			}
 
 			//Go to the schedule view table
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -6421,14 +6427,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			//Create a new open shift
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
-			if (isLocationUsingControlsConfiguration) {
-				newShiftPage.addOpenShiftWithDefaultTime("Training");
-			}else{
-				newShiftPage.addOpenShiftWithDefaultTime("AM SERVER");
-			}
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			Thread.sleep(3000);
+			newShiftPage.clickCloseBtnForCreateShift();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(staffingOption.OpenShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();
-			createSchedulePage.publishActiveSchedule();
 
 			//Check the Open Shift in the WeekView
 			scheduleMainPage.selectGroupByFilter("Group by Job Title");
@@ -7397,19 +7406,19 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
 			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", isCorrect, false);
 			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
-			Thread.sleep(3);
+			Thread.sleep(3000);
 			shiftOperatePage.clickOnCloseBtnOfAssignDialog();
 			boolean okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
 			while(okBtnLoad){
 				scheduleShiftTablePage.clickOnOkButtonInWarningMode();
-				Thread.sleep(3);
+				Thread.sleep(3000);
 				continue;
 			}
 
 			boolean closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
 			while(closeBtnLoad){
 				shiftOperatePage.clickOnCloseBtnOfAssignDialog();
-				Thread.sleep(3);
+				Thread.sleep(3000);
 				continue;
 			}
 
@@ -8102,7 +8111,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
 			scheduleMainPage.checkClosedDayOnToggleSummary(weekDays);
 			scheduleMainPage.goToToggleSummaryView();
-			Thread.sleep(3);
+			Thread.sleep(3000);
 
 			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdate();

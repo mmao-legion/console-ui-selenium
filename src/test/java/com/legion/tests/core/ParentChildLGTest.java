@@ -4527,7 +4527,7 @@ public class ParentChildLGTest extends TestBase {
             //Compare the operating hours between Editing and Toggle Summary pages
             scheduleMainPage.goToToggleSummaryView();
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-            Thread.sleep(3);
+            Thread.sleep(3000);
             String childLocation = "Child002";
             createSchedulePage.selectRandomOrSpecificLocationOnUngenerateScheduleEditOperatingHoursPage(childLocation);
             scheduleMainPage.checkOperatingHoursOnToggleSummary();
@@ -4618,13 +4618,13 @@ public class ParentChildLGTest extends TestBase {
             createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation1);
             scheduleMainPage.closeTheParticularOperatingDay(weekDays);
             scheduleMainPage.clickSaveBtnOnEditOpeHoursPageForOP();
-            Thread.sleep(3);
+            Thread.sleep(3000);
 
             scheduleMainPage.clickEditBtnOnToggleSummary();
             createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation2);
             scheduleMainPage.closeTheParticularOperatingDay(weekDays);
             scheduleMainPage.clickSaveBtnOnEditOpeHoursPageForOP();
-            Thread.sleep(3);
+            Thread.sleep(3000);
 
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());

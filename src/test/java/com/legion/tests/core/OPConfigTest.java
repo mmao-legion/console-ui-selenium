@@ -429,7 +429,7 @@ public class OPConfigTest extends TestBase {
         ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
         scheduleMainPage.clickOnEditButton();
         configurationPage.updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(option);
-        Thread.sleep(3);
+        Thread.sleep(3000);
         controlsNewUIPage.clickOnSaveBtn();
 
 
