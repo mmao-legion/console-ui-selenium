@@ -2973,4 +2973,21 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);
         return isRecommendedTabSelected;
     }
+
+    @FindBy(id = "legion_cons_schedule_schedule_createshift_Close_button")
+    private WebElement closeBtnForCreateShift;
+    @FindBy(className = "modal-instance-header-title ng-binding")
+    private WebElement createShiftTitle;
+    @Override
+    public void clickCloseBtnForCreateShift() throws Exception {
+        if (isElementLoaded(closeBtnForCreateShift,5)) {
+            clickTheElement(closeBtnForCreateShift);
+            if (!isElementLoaded(createShiftTitle))
+                SimpleUtils.report("The Create Shift dialog is closed!");
+            else
+                SimpleUtils.fail("The Create Shift dialog is not closed!", false);
+        }else{
+            SimpleUtils.fail("The Close button is not loaded correctly!", false);
+        }
+    }
 }
