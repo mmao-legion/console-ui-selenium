@@ -1129,22 +1129,22 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
         if (org.length() > 1)
             org = org.substring(0, org.length()-1);
 
-        if(areListElementVisible(schedulesTableHeaders, 10) && schedulesTableHeaders.size() == 8){
+        if(areListElementVisible(schedulesTableHeaders, 30) && schedulesTableHeaders.size() == 8){
             String[] schedulesTableHeaderNames;
             if(isApplyBudget){
                 if(!isPastWeek)
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", ""};
+                            "Budget Hrs", "Published Hrs", "Projected Hrs", "Budget Variance", ""};
                 else
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", ""};
+                            "Budget Hrs", "Published Hrs", "Projected Hrs", "Budget Variance", ""};
             } else {
                 if(!isPastWeek)
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", ""};
+                            "Guidance Hrs", "Published Hrs", "Projected Hrs", "Guidance Variance", ""};
                 else
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", ""};
+                            "Guidance Hrs", "Published Hrs", "Projected Hrs", "Guidance Variance", ""};
             }
             for(int i= 0;i<schedulesTableHeaders.size(); i++){
                 if(schedulesTableHeaders.get(i).getText().equals(schedulesTableHeaderNames[i])){

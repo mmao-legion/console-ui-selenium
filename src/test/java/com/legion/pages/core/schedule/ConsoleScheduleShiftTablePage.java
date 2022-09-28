@@ -2549,7 +2549,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public void moveAnywayWhenChangeShift() throws Exception {
         if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")),10)){
-            if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().equals("MOVE ANYWAY")) {
+            if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().trim().equals("MOVE ANYWAY")) {
                 click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
                 SimpleUtils.pass("move anyway button clicked!");
             } else {
