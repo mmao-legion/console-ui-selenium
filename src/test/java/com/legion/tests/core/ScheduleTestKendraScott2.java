@@ -6428,7 +6428,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Create a new open shift
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
-			Thread.sleep(3);
+			Thread.sleep(3000);
 			newShiftPage.clickCloseBtnForCreateShift();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
@@ -7406,19 +7406,19 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
 			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", isCorrect, false);
 			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
-			Thread.sleep(3);
+			Thread.sleep(3000);
 			shiftOperatePage.clickOnCloseBtnOfAssignDialog();
 			boolean okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
 			while(okBtnLoad){
 				scheduleShiftTablePage.clickOnOkButtonInWarningMode();
-				Thread.sleep(3);
+				Thread.sleep(3000);
 				continue;
 			}
 
 			boolean closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
 			while(closeBtnLoad){
 				shiftOperatePage.clickOnCloseBtnOfAssignDialog();
-				Thread.sleep(3);
+				Thread.sleep(3000);
 				continue;
 			}
 
@@ -8111,7 +8111,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
 			scheduleMainPage.checkClosedDayOnToggleSummary(weekDays);
 			scheduleMainPage.goToToggleSummaryView();
-			Thread.sleep(3);
+			Thread.sleep(3000);
 
 			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdate();
