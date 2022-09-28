@@ -612,6 +612,7 @@ public class OfferTMTest extends TestBase {
             shiftOperatePage.clickOnConvertToOpenShift();
             shiftOperatePage.convertToOpenShiftDirectly();
             scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
 
             //verify the open shift in non-edit mode.
             shiftOperatePage.clickOnProfileIconOfOpenShift();
@@ -697,6 +698,7 @@ public class OfferTMTest extends TestBase {
             shiftOperatePage.clickOnConvertToOpenShift();
             shiftOperatePage.convertToOpenShiftDirectly();
             scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             WebElement selectedShift = shiftOperatePage.clickOnProfileIconOfOpenShift();
             String selectedShiftId= selectedShift.getAttribute("id");
@@ -704,6 +706,7 @@ public class OfferTMTest extends TestBase {
 
             //verify assign TM in edit mode.
             List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
+            scheduleMainPage.saveSchedule();
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
             shiftOperatePage.clickOnOfferTMOption();

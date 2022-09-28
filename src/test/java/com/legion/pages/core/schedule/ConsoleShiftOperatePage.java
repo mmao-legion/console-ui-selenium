@@ -2396,7 +2396,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             textSearch.clear();
             textSearch.sendKeys(NameOfTM);
             clickTheElement(searchIcon);
-            if(isElementLoaded(firstTableRow) && firstnameOfTM.getText().trim().contains(NameOfTM)){
+            if(isElementLoaded(firstTableRow) && firstnameOfTM.getText().trim().toLowerCase().contains(NameOfTM.toLowerCase())){
                 SimpleUtils.pass("The searched TM is displayed correctly!");
             }else{
                 SimpleUtils.fail("The searched TM is not displayed!", false);
