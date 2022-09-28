@@ -5020,7 +5020,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return flag;
 	}
 
-	@FindBy(css="general-form.enterprise-container form-section:nth-child(6)")
+	@FindBy(css="general-form.enterprise-container form-section:nth-child(7)")
 	WebElement laborBudgetPlanSection;
 
 	@Override
@@ -5118,7 +5118,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public boolean isBudgetPlanSectionShowing(){
-		String locator = "general-form.enterprise-container form-section:nth-child(6)  question-input[question-title*=\"upperfield?\"]";
+		String locator = "general-form.enterprise-container form-section:nth-child(7)  question-input[question-title*=\"upperfield?\"]";
 		boolean flag;
 		if(isElementExist(locator)){
 			flag = true;
