@@ -530,6 +530,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.fail("Cannot found TMs in recommended TMs tab! ", false);
 		}
 		newShiftPage.clickOnOfferOrAssignBtn();
+		Thread.sleep(5000);
 		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" ,
 				firstNameOfSelectedTM2.equals(scheduleShiftTablePage.getShiftById(selectedShiftId2).findElement(By.className("week-schedule-worker-name")).getText().split(" ")[0].trim()), false);
 		scheduleMainPage.clickOnFilterBtn();
@@ -7818,7 +7819,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			if(isActiveWeekGenerated){
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
-			createSchedulePage.createScheduleForNonDGFlowNewUI();
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "09:00pm");
 			List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 			String firstNameOfTM = shiftInfo1.get(0);
 			int shiftCount1 = 0;

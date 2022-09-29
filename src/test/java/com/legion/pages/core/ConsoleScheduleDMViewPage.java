@@ -1134,17 +1134,17 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             if(isApplyBudget){
                 if(!isPastWeek)
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Budget Hrs", "Published Hrs", "Projected Hrs", "Budget Variance", ""};
+                            "Budget Hrs", "Scheduled Hrs", "Projected Hrs", "Budget Variance", ""};
                 else
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Budget Hrs", "Published Hrs", "Projected Hrs", "Budget Variance", ""};
+                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", ""};
             } else {
                 if(!isPastWeek)
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Guidance Hrs", "Published Hrs", "Projected Hrs", "Guidance Variance", ""};
+                            "Guidance Hrs", "Scheduled Hrs", "Projected Hrs", "Guidance Variance", ""};
                 else
                     schedulesTableHeaderNames = new String[]{org, "Published Status", "Score",
-                            "Guidance Hrs", "Published Hrs", "Projected Hrs", "Guidance Variance", ""};
+                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", ""};
             }
             for(int i= 0;i<schedulesTableHeaders.size(); i++){
                 if(schedulesTableHeaders.get(i).getText().equals(schedulesTableHeaderNames[i])){
@@ -1900,10 +1900,10 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
             String[] schedulesTableHeaderNames;
             if(isApplyBudget){
                     schedulesTableHeaderNames = new String[]{"Peer Locations", "Published Status", "Score",
-                            "Budget Hrs", "Published Hrs", "Clocked Hrs", "Budget Variance", ""};
+                            "Budget Hrs", "Scheduled Hrs", "Projected Hrs", "Budget Variance", ""};
             } else {
                     schedulesTableHeaderNames = new String[]{"Peer Locations", "Published Status", "Score",
-                            "Guidance Hrs", "Published Hrs", "Clocked Hrs", "Guidance Variance", ""};
+                            "Guidance Hrs", "Scheduled Hrs", "Projected Hrs", "Guidance Variance", ""};
             }
             for(int i= 0;i<schedulesTableHeaders.size(); i++){
                 if(schedulesTableHeaders.get(i).getText().equals(schedulesTableHeaderNames[i])){
