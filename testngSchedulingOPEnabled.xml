@@ -91,6 +91,7 @@
                     <include name="verifyAssignTMInDayViewAsInternalAdmin" />
                     <include name="verifyConvertToOpenShiftInDayViewAsInternalAdmin" />
                     <include name="verifyEditShiftNotesInDayViewAsInternalAdmin" />
+                    <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
                     <!--                    <include name="verifyEditShiftTimeInDayViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5700-->
                     <include name="verifyEditMealBreakTimeInDayViewAsInternalAdmin" />
                     <include name="verifyDeleteShiftInDayViewAsInternalAdmin" />
@@ -107,7 +108,6 @@
                     <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
                     <!--                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7351-->
                     <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
-                    <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
                     <include name="verifyEditOperatingHoursUnderMoreActionsAsInternalAdmin" />
                     <include name="verifyEditOpeHoursDisabledAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditOpeHoursAsInternalAdmin" />
