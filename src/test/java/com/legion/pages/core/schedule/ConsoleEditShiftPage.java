@@ -68,7 +68,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     private WebElement editShiftWindow;
     @FindBy (css = ".modal-instance-header-title")
     private WebElement windowTitle;
-    @FindBy (css = ".sc-cvXFvT.kFidmJ")
+    @FindBy (css = ".sc-gRPDWq.bRvSQf")
     private WebElement subTitle;
     @FindBy (css = ".generate-modal-location")
     private WebElement locationInfo;
