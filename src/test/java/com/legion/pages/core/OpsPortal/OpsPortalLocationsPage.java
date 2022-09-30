@@ -732,7 +732,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	@Override
-	public void verifyImportLocationDistrict() {
+	public void verifyImportLocationDistrict(String filePath) {
 		String pth = System.getProperty("user.dir");
 		if (isElementEnabled(importBtn, 5)) {
 			click(importBtn);
@@ -740,11 +740,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Import location page show well");
 			} else
 				SimpleUtils.fail("Import location page load failed", true);
-			uploaderFileInputBtn.sendKeys(pth + "/src/test/resources/LocationImportTemplate.csv");
+			uploaderFileInputBtn.sendKeys(pth + filePath);
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
 			waitForSeconds(15);
-			click(okBtnInImportLocationPage);
 			SimpleUtils.pass("File import action done");
 
 		} else
@@ -5309,6 +5308,19 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}
 		}
 		return selectedOption;
+	}
+
+	@Override
+	public void chooseReadyForForecastValue(String value) throws Exception {
+		List<WebElement> yesOrNoOptions = readyForForecastOption.findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
+		for (WebElement choose : yesOrNoOptions) {
+			if (choose.findElement(By.cssSelector("span")).getText().equalsIgnoreCase(value) &&
+					!choose.getAttribute("class").contains("lg-button-group-selected")) {
+				clickTheElement(choose);
+				break;
+			}
+		}
+		click(saveBtnInUpdateLocationPage);
 	}
 }
 
