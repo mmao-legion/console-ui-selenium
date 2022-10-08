@@ -1,6 +1,7 @@
 package com.legion.tests.core.OpsPortal;
 
 import com.alibaba.fastjson.JSONObject;
+import com.legion.api.common.EnterpriseId;
 import com.legion.api.login.LoginAPI;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
@@ -2631,7 +2632,6 @@ public class LocationsTest extends TestBase {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
             String currentTime =  sdf.format(new Date()).trim();
-            String existingLocation = "";
             String newLocation = "AutoTest" + currentTime;
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -2653,6 +2653,142 @@ public class LocationsTest extends TestBase {
             locationsPage.goToLocationDetailsPage(newLocation);
             SimpleUtils.assertOnFail("Field readyForForecast Failed to show up for newly created location!", locationsPage.verifyReadyForForecastFieldExist(), false);
             SimpleUtils.assertOnFail("ReadyForForecast value should be 'No' by default!", locationsPage.getReadyForForecastSelectedOption().equalsIgnoreCase("No"), false);
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify readyForForecast option can be saved correctly")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyReadyForForecastOptionCanBeSavedCorrectlyAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
+            String currentTime =  sdf.format(new Date()).trim();
+            String newLocation = "AutoTest" + currentTime;
+            String optionToSelect = "";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //go to sub-locations tab
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(location);
+            //Existing location, Compare readyForForecast value in UI and DB
+            String readyForForecastValueInUI = locationsPage.getReadyForForecastSelectedOption();
+            System.out.println("readyForForecastValueInUI: " + readyForForecastValueInUI);
+            String readyForForecastInDB = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= 'SEA' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
+            System.out.println("readyForForecastInDB: " + readyForForecastInDB);
+            String parseValueInDB = readyForForecastInDB.equals("1")? "Yes":"No";
+            System.out.println("parseValueInDB: " + parseValueInDB);
+            if (readyForForecastValueInUI.equalsIgnoreCase(parseValueInDB)){
+                SimpleUtils.pass("For existing location, the readyForForecast Value in UI and DB are the same!");
+            }else {
+                SimpleUtils.fail("For existing locaiton, the readyForForecast Value in UI and DB are NOT the same!", false);
+            }
+            //Create new location, change readyForForecast from "No" to "Yes"
+            locationsPage.goBack();
+            locationsPage.addNewRegularLocationWithMandatoryFields(newLocation);
+            locationsPage.goToLocationDetailsPage(newLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.chooseReadyForForecastValue("Yes");
+            locationsPage.goToLocationDetailsPage(newLocation);
+            //New location, Compare readyForForecast value in UI and DB
+            String readyForForecastValueInUI1 = locationsPage.getReadyForForecastSelectedOption();
+            System.out.println("readyForForecastValueInUI1: " + readyForForecastValueInUI1);
+            String readyForForecastInDB1 = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= '"+ newLocation + "' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
+            System.out.println("readyForForecastInDB1: " + readyForForecastInDB1);
+            String parseValueInDB1 = readyForForecastInDB1.equals("1")? "Yes":"No";
+            System.out.println("parseValueInDB1: " + parseValueInDB1);
+            if (readyForForecastValueInUI1.equalsIgnoreCase("yes") && readyForForecastValueInUI1.equalsIgnoreCase(parseValueInDB1) ){
+                SimpleUtils.pass("For New location, the readyForForecast Value in UI and DB are the same!");
+            }else {
+                SimpleUtils.fail("For New location, the readyForForecast Value in UI and DB are NOT the same!", false);
+            }
+
+            //Change readyForForecast option for newly created location
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            optionToSelect = locationsPage.getReadyForForecastSelectedOption().equalsIgnoreCase("yes")?"No":"Yes";
+            locationsPage.chooseReadyForForecastValue(optionToSelect);
+            locationsPage.goToLocationDetailsPage(newLocation);
+
+            //After change, Compare readyForForecast value in UI and DB
+            String readyForForecastValueInUI2 = locationsPage.getReadyForForecastSelectedOption();
+            System.out.println("readyForForecastValueInUI2: " + readyForForecastValueInUI2);
+            String readyForForecastInDB2 = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= '"+ newLocation + "' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
+            System.out.println("readyForForecastInDB2: " + readyForForecastInDB2);
+            String parseValueInDB2 = readyForForecastInDB2.equals("1")? "Yes":"No";
+            System.out.println("parseValueInDB2: " + parseValueInDB2);
+            if (readyForForecastValueInUI2.equalsIgnoreCase(optionToSelect) && readyForForecastValueInUI2.equalsIgnoreCase(parseValueInDB2) ){
+                SimpleUtils.pass("After change for new location, the readyForForecast Value in UI and DB are the same!");
+            }else {
+                SimpleUtils.fail("After change for new location, the readyForForecast Value in UI and DB are NOT the same!", false);
+            }
+
+            //Change readyForForecast option for the existing location
+            locationsPage.goBack();
+            locationsPage.goToLocationDetailsPage(location);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            optionToSelect = locationsPage.getReadyForForecastSelectedOption().equalsIgnoreCase("yes")?"No":"Yes";
+            locationsPage.chooseReadyForForecastValue(optionToSelect);
+            locationsPage.goToLocationDetailsPage(location);
+
+            //After change, Compare readyForForecast value in UI and DB
+            String readyForForecastValueInUI3 = locationsPage.getReadyForForecastSelectedOption();
+            System.out.println("readyForForecastValueInUI3: " + readyForForecastValueInUI3);
+            String readyForForecastInDB3 = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= '"+ newLocation + "' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
+            System.out.println("readyForForecastInDB3: " + readyForForecastInDB3);
+            String parseValueInDB3 = readyForForecastInDB3.equals("1")? "Yes":"No";
+            System.out.println("parseValueInDB3: " + parseValueInDB3);
+            if (readyForForecastValueInUI3.equalsIgnoreCase(optionToSelect) && readyForForecastValueInUI3.equalsIgnoreCase(parseValueInDB3) ){
+                SimpleUtils.pass("After change for existing location, the readyForForecast Value in UI and DB are the same!");
+            }else {
+                SimpleUtils.fail("After change for existing location, the readyForForecast Value in UI and DB are NOT the same!", false);
+            }
+
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify readyForForecast when Import existing location through UI")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyReadyForForecastWhenImportExistingLocationLocationThroughUIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
+            String currentTime = sdf.format(new Date()).trim();
+            String existingLocation = "TestImportUpdateExisting";
+            String filePath = "\\src\\test\\resources\\uploadFile\\LocationTest\\UpdateLocationsWithNoReadyForForecast.csv";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //Before import, existing location, get readyForForecast value in UI
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(existingLocation);
+            String beforeImportValue = locationsPage.getReadyForForecastSelectedOption();
+            locationsPage.goBack();
+            //Update an existing location by import file
+            locationsPage.clickOnImportBtn();
+            locationsPage.verifyImportLocationDistrict(filePath);
+
+            //After import, existing location, get readyForForecast value in UI
+            locationsPage.goToLocationDetailsPage(existingLocation);
+            String afterImportValue = locationsPage.getReadyForForecastSelectedOption();
+            SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", beforeImportValue.equalsIgnoreCase(afterImportValue), false);
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -32,7 +32,7 @@ public interface LocationsPage {
     public void locationPageCommonFeatureCheck() throws Exception;
     public void checkEveryLocationTemplateConfig(String locName) throws Exception;
 
-    public void verifyImportLocationDistrict();
+    public void verifyImportLocationDistrict(String filePath);
 
 //    public void disableSwitch(String switchName,String enterpriseName);
 
@@ -342,4 +342,5 @@ public interface LocationsPage {
     public List<String> actionsForTemplateInLocationLevel(String templateName);
     public boolean verifyReadyForForecastFieldExist() throws Exception;
     public String getReadyForForecastSelectedOption() throws Exception;
+    public void chooseReadyForForecastValue(String value) throws Exception;
 }

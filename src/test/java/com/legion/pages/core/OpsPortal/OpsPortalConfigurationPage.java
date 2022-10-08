@@ -5343,7 +5343,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement warningToast;
 	@FindBy(css = "button[class*=\"btn lgn-action-button\"]")
 	private WebElement okBtn;
-	@FindBy(css = "tr[ng-repeat=\"rule in $ctrl.sortedRows\"] lg-button[label=\"Edit\"]")
+	@FindBy(css = "tr[ng-repeat=\"rule in $ctrl.sortedRows\"] lg-button[label=\"Edit\"] button")
 	private WebElement editBtnForDriver;
 	@FindBy(css = "input-field[options=\"$ctrl.remoteOptions\"]")
 	private WebElement remoteOption;

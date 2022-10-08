@@ -82,7 +82,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
     private WebElement budgetDownloadCSVLink;
     @FindBy(css = "modal[modal-title=\"Run budget\"]>div.lg-modal")
     private WebElement budgetRunDialog;
-    @FindBy(css = "lg-button[label=\"Run\"]")
+    @FindBy(css = "lg-button[label=\"Run\"] button")
     private WebElement budgetRunBTNOnDialog;
     @FindBy(css = "p[ng-if=\"showJobResult(downloadStates,'BudgetPlan')\"] span:nth-child(4)")
     private WebElement budgetValue;
@@ -754,7 +754,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
         if (isElementLoaded(planDialogArchiveBTN)) {
             SimpleUtils.pass("Archive button is showed in scenario plan detail page successfully");
             clickTheElement(planDialogArchiveBTN);
-            waitForSeconds(2);
+            waitForSeconds(5);
             if (isElementLoaded(scenarioPlanArchivedialog)){
                 SimpleUtils.pass("Archive dialog pops up successfully!");
                 //click the archive
@@ -835,6 +835,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
         if(isElementLoaded(planDialogCopyBTN)){
             SimpleUtils.pass("Copy button is showed in scenario plan detail page successfully");
             clickTheElement(planDialogCopyBTN);
+            waitForSeconds(3);
             if(isElementLoaded(scenarioPlanCopydialog)){
                 SimpleUtils.pass("Copy dialog pops up successfully!");
                 //get the default plan name

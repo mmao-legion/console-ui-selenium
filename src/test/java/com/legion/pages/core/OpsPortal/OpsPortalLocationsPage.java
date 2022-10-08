@@ -732,7 +732,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	@Override
-	public void verifyImportLocationDistrict() {
+	public void verifyImportLocationDistrict(String filePath) {
 		String pth = System.getProperty("user.dir");
 		if (isElementEnabled(importBtn, 5)) {
 			click(importBtn);
@@ -740,11 +740,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Import location page show well");
 			} else
 				SimpleUtils.fail("Import location page load failed", true);
-			uploaderFileInputBtn.sendKeys(pth + "/src/test/resources/LocationImportTemplate.csv");
+			uploaderFileInputBtn.sendKeys(pth + filePath);
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
 			waitForSeconds(15);
-			click(okBtnInImportLocationPage);
 			SimpleUtils.pass("File import action done");
 
 		} else
@@ -1348,7 +1347,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			selectByVisibleText(locationGroupSelect, newLocationParas.get(parentRelationship));
-			clickTheElement(getDriver().findElement(By.cssSelector("input[aria-label=\"" + value + "\"] ")));
+			//clickTheElement(getDriver().findElement(By.cssSelector("input[aria-label=\"" + value + "\"] ")));
 			locationId.sendKeys(getLocationName());
 			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
@@ -3458,7 +3457,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Configuration tab in locations level page load failed ", false);
 	}
 
-	@FindBy(css = "table.lg-table.ng-scope")
+	@FindBy(css = "table.lg-table.ng-scope tbody")
 	private List<WebElement> workRolesInSchedulingRulesInConfigurationLevel;
 
 	@Override
@@ -4514,6 +4513,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	public void verifyOverrideStatusAtLocationLevel(String templateName, String flag) throws Exception {
+		waitForSeconds(6);
 		if (flag.equalsIgnoreCase("Yes")) {
 			if (isExist(getDriver().findElement(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/span")))) {
 				SimpleUtils.pass("template is overrided");
@@ -5019,7 +5019,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return flag;
 	}
 
-	@FindBy(css="general-form.enterprise-container form-section:nth-child(6)")
+	@FindBy(css="general-form.enterprise-container form-section:nth-child(7)")
 	WebElement laborBudgetPlanSection;
 
 	@Override
@@ -5117,7 +5117,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public boolean isBudgetPlanSectionShowing(){
-		String locator = "general-form.enterprise-container form-section:nth-child(6)  question-input[question-title*=\"upperfield?\"]";
+		String locator = "general-form.enterprise-container form-section:nth-child(7)  question-input[question-title*=\"upperfield?\"]";
 		boolean flag;
 		if(isElementExist(locator)){
 			flag = true;
@@ -5309,6 +5309,19 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}
 		}
 		return selectedOption;
+	}
+
+	@Override
+	public void chooseReadyForForecastValue(String value) throws Exception {
+		List<WebElement> yesOrNoOptions = readyForForecastOption.findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
+		for (WebElement choose : yesOrNoOptions) {
+			if (choose.findElement(By.cssSelector("span")).getText().equalsIgnoreCase(value) &&
+					!choose.getAttribute("class").contains("lg-button-group-selected")) {
+				clickTheElement(choose);
+				break;
+			}
+		}
+		click(saveBtnInUpdateLocationPage);
 	}
 }
 
