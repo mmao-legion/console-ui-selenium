@@ -168,7 +168,7 @@ public class LocationsTest extends TestBase {
             String currentTime = TestBase.getCurrentTime().substring(4);
             String locationName = "AutoCreate" + currentTime;
             int index = 0;
-            String searchCharactor = "Checkpoint 1";
+            String searchCharactor = "No touch";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
