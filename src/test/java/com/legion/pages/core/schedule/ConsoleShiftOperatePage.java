@@ -3475,7 +3475,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = ".table-field.this-week-field ")
     private List<WebElement> totalShiftHrsAndShiftCountThisWeek;
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[4]/div")
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[3]/div")
     private List<WebElement> totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage;
     @Override
     public HashMap<String, Float> getTotalShiftHrsAndShiftCountThisWeek() throws Exception {
