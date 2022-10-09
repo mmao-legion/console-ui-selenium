@@ -346,7 +346,7 @@ public class LocationsGroupTestInOP extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify MS location group function for NSO")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyCreateMSLocationGroupWithNSOTypeFunctionAsInternalAdmin  (String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -394,7 +394,7 @@ public class LocationsGroupTestInOP extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Peer to peer location group function for NSO")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyCreateP2PLocationGroupWithNsoTypeFunctionAsInternalAdmin  (String browser, String username, String password, String location) throws Exception {
 
         try{
