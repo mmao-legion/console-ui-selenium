@@ -403,6 +403,9 @@ public class OvernightTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("6:00AM", "6:00AM");
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName1);
+            scheduleMainPage.saveSchedule();
             if (smartCardPage.isRequiredActionSmartCardLoaded()) {
                 shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             }

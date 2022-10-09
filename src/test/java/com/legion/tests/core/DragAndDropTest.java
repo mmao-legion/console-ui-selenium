@@ -565,7 +565,7 @@ public class DragAndDropTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Validate the box interaction color and message when SM tries to assign TM to an open shift that overlaps a time TM is already assigned to")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -793,9 +793,9 @@ public class DragAndDropTest extends TestBase {
                 i++;
                 Thread.sleep(2000);
             }
-            SimpleUtils.assertOnFail("Clopening message display incorrectly on swap section!",
+            SimpleUtils.assertOnFail("Clopening message display incorrectly on swap section! The expected is: "+firstNameOfTM1 + clopeningWarningMessage,
                     scheduleShiftTablePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "swap"), false);
-            SimpleUtils.assertOnFail("Clopening message display incorrectly on assign section!",
+            SimpleUtils.assertOnFail("Clopening message display incorrectly on assign section! The expected is: "+firstNameOfTM1 + clopeningWarningMessage,
                     scheduleShiftTablePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "assign"), false);
 
             // Swap TM1 and TM2, check the TMs been swapped successfully
