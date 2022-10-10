@@ -7407,21 +7407,25 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
 			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", isCorrect, false);
 			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
-			Thread.sleep(3000);
-			shiftOperatePage.clickOnCloseBtnOfAssignDialog();
 			boolean okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
-			while(okBtnLoad){
+			int count1 = 0;
+			while(okBtnLoad && count1 < 5){
 				scheduleShiftTablePage.clickOnOkButtonInWarningMode();
 				Thread.sleep(3000);
 				okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
+				count1++;
 				continue;
 			}
+			Thread.sleep(3000);
 
+			shiftOperatePage.clickOnCloseBtnOfAssignDialog();
 			boolean closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
-			while(closeBtnLoad){
+			int count2 = 0;
+			while(closeBtnLoad && count2 < 5){
 				shiftOperatePage.clickOnCloseBtnOfAssignDialog();
 				Thread.sleep(3000);
 				closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
+				count2++;
 				continue;
 			}
 
