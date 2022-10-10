@@ -7413,6 +7413,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			while(okBtnLoad){
 				scheduleShiftTablePage.clickOnOkButtonInWarningMode();
 				Thread.sleep(3000);
+				okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
 				continue;
 			}
 
@@ -7420,6 +7421,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			while(closeBtnLoad){
 				shiftOperatePage.clickOnCloseBtnOfAssignDialog();
 				Thread.sleep(3000);
+				closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
 				continue;
 			}
 
