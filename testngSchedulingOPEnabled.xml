@@ -543,7 +543,7 @@ SCH-5862-->
                     <include name="verifyShiftCanBeDragToPreviousDayAsInternalAdmin" />
                     <!-- unselect Continuous Operation -->
                     <include name="verifyShiftWhenDisableContinuousOperationOptionAsInternalAdmin" />
-                    <include name="verifyTMWithOutBadgeCannotClaimTheShiftWithWorkRoleThatRequiredBadgeAsTeamMember" />
+    <!--                <include name="verifyTMWithOutBadgeCannotClaimTheShiftWithWorkRoleThatRequiredBadgeAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-7699-->
 
                 </methods>
             </class>

@@ -2762,7 +2762,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     public List<WebElement> getSearchAndRecommendedResult() {
         List<WebElement> result = new ArrayList<>();
-        if (areListElementVisible(searchResultsOnNewCreateShiftPage, 15)) {
+        if (areListElementVisible(searchResultsOnNewCreateShiftPage, 25)) {
             result = searchResultsOnNewCreateShiftPage;
             SimpleUtils.report("Get search result successfully! ");
         } else

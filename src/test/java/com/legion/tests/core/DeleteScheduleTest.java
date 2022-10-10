@@ -619,9 +619,9 @@ public class DeleteScheduleTest extends TestBase {
             //Click on the week that the status is Not Started
             scheduleOverviewPage.clickOnGuidanceBtnOnOverview(index);
             // Should go to schedule create page, stay on the Manager tab, Create Schedule button is loaded
-            Thread.sleep(5000);
             SimpleUtils.assertOnFail("The manager schedule view is not display！",
                     scheduleMainPage.isManagerViewSelected(), false);
+            Thread.sleep(5000);
             boolean isScheduleCreated = createSchedulePage.isWeekGenerated();
             SimpleUtils.assertOnFail("The Create schedule button fail to load！",
                     !isScheduleCreated, false);

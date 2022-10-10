@@ -416,14 +416,14 @@ public class OvernightTest extends TestBase {
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.selectWorkRoleFilterByText(workRole, false);
             scheduleMainPage.clickOnFilterBtn();
-
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes("Open").get(0));
+            createSchedulePage.publishActiveSchedule();
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes("Open").get(1));
             shiftOperatePage.clickOnOfferTMOption();
             Thread.sleep(3000);
 
             newShiftPage.searchTeamMemberByNameNLocation(firstName1, location);
             newShiftPage.clickOnOfferOrAssignBtn();
-            shiftOperatePage.clickOnProfileIconOfOpenShift();
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes("Open").get(1));
             scheduleShiftTablePage.clickViewStatusBtn();
             shiftOperatePage.verifyTMInTheOfferList(firstName1, "offered");
             shiftOperatePage.closeViewStatusContainer();
