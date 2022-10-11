@@ -6883,7 +6883,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		//Create new template's history checking
 		if (areListElementVisible(historyRecordsList, 2) && option.contains("Created")) {
 			String format = "hh:mm:ss a','MM/dd/yyyy";
-			//content1  Template Edited ( Vrsion 1 )e
+			//content1  Template Edited ( Vrsion 1 )
 			String content1 = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
 			//content2   auto6 AD6 at 01:27:30 AM,07/28/2022
 			String content2 = historyRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();

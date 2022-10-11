@@ -1340,12 +1340,11 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
-    //blocked by https://legiontech.atlassian.net/browse/OPS-5621
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Multiple Template E2E flow")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMultipleTemplateE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String templateType="Operating Hours";
@@ -5232,12 +5231,12 @@ public class ConfigurationTest extends TestBase {
             configurationPage.verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable();
             //check dynamic group dialog UI
             configurationPage.advanceStaffingRuleDynamicGroupDialogUICheck(dynamicGpName);
-//            //edit the dynamic group
-//            configurationPage.editADynamicGroup(dynamicGpName);
-//            //search the dynamic group to delete
-//            configurationPage.deleteOneDynamicGroup(dynamicGpName);
-//            //save draft template
-//            configurationPage.saveADraftTemplate();
+            //edit the dynamic group
+            configurationPage.editADynamicGroup(dynamicGpName);
+            //search the dynamic group to delete
+            configurationPage.deleteOneDynamicGroup(dynamicGpName);
+            //save draft template
+            configurationPage.saveADraftTemplate();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
