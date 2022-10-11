@@ -1744,6 +1744,7 @@ public class P2PLGTest extends TestBase {
             // Verify the functionality of Edit button in week view
             String action = "Edit";
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            Thread.sleep(1000);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             // Verify the title of Edit Shifts window
             editShiftPage.verifyTheTitleOfEditShiftsWindow(selectedShiftCount, startOfWeek);
@@ -1777,6 +1778,7 @@ public class P2PLGTest extends TestBase {
             selectedDays = new ArrayList<>();
             selectedDays.add(fullWeekDay);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            Thread.sleep(3000);
             set = scheduleShiftTablePage.verifyCanSelectMultipleShifts(selectedShiftCount);
             scheduleShiftTablePage.rightClickOnSelectedShifts(set);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
