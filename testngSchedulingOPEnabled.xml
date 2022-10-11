@@ -279,11 +279,11 @@
                 <methods>
 <!--                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" Blocked by queue/>-->
 <!--                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />-->
-<!--                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5369/>-->
-<!--                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-6807 />-->
+                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
-<!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5368/>-->
-<!--                    <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />Blocked by SCH-5419/>-->
+                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />
 <!--                    <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" /> -->
 <!--                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />https://legiontech.atlassian.net/browse/SCH-7699 -->
                     </methods>
@@ -382,10 +382,10 @@
                 <methods>
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin" />
-                    <!--                    <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" /> Blocked by SCH-4331  -->
-                    <!--                    <include name="verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin" /> Blocked by SCH-4331  -->
-<!--                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsStoreManager" />
-                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5505-->
+                    <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsStoreManager" />
+                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsTeamMember" />
                 </methods>
             </class>
         </classes>
@@ -400,7 +400,7 @@
                     <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                     <!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG cannot be generated -->
- <!--                   <include name="validateTheOptionsOfScheduleFilterShouldBeInAlphabeticalAndNumbericalOrderAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7223-->
+                    <include name="validateTheOptionsOfScheduleFilterShouldBeInAlphabeticalAndNumbericalOrderAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
