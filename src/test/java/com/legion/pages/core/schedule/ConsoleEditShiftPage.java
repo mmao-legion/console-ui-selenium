@@ -68,7 +68,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     private WebElement editShiftWindow;
     @FindBy (css = ".modal-instance-header-title")
     private WebElement windowTitle;
-    @FindBy (css = ".sc-cURemW.dymphv")
+    @FindBy (css = "#edit-shift-react form>div:nth-child(1)>div")
     private WebElement subTitle;
     @FindBy (css = ".generate-modal-location")
     private WebElement locationInfo;
@@ -78,7 +78,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     private WebElement cancelButton;
     @FindBy (css = ".confirm")
     private WebElement updateButton;
-    @FindBy (css = ".sc-WpdFT.jIViWD")
+    @FindBy (css = "#edit-shift-react form>div:nth-child(3)>div")
     private WebElement optionsSection;
     @FindBy (css = "[data-testid=ReplayIcon]")
     private WebElement clearEditedFieldsBtn;

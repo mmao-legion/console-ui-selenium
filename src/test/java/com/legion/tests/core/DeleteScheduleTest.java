@@ -602,8 +602,8 @@ public class DeleteScheduleTest extends TestBase {
 //                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             int index = 1;
             //Check the week that you have released, Observe the status of this week
-            Thread.sleep(3000);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            refreshPage();
             //Select one week which status is Guidance, Click on this week
             scheduleOverviewPage.clickOnGuidanceBtnOnOverview(index);
             //Create the suggested schedule for this week
@@ -621,6 +621,7 @@ public class DeleteScheduleTest extends TestBase {
             // Should go to schedule create page, stay on the Manager tab, Create Schedule button is loaded
             SimpleUtils.assertOnFail("The manager schedule view is not display！",
                     scheduleMainPage.isManagerViewSelected(), false);
+            Thread.sleep(5000);
             boolean isScheduleCreated = createSchedulePage.isWeekGenerated();
             SimpleUtils.assertOnFail("The Create schedule button fail to load！",
                     !isScheduleCreated, false);

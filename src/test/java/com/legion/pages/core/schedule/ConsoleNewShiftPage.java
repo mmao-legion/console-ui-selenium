@@ -432,7 +432,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             }
         } else if(areListElementVisible(searchResultsOnNewCreateShiftPage,10)){
             for(int i=0; i<searchResultsOnNewCreateShiftPage.size();i++){
-                List<WebElement> allStatus= searchResultsOnNewCreateShiftPage.get(i).findElements(By.cssSelector(".MuiGrid-grid-xs-3 .MuiTypography-body2"));
+                List<WebElement> allStatus= searchResultsOnNewCreateShiftPage.get(i).findElements(By.cssSelector(".MuiGrid-grid-xs-2 .MuiTypography-body2"));
                 List<WebElement> tmInfo = searchResultsOnNewCreateShiftPage.get(i).findElements(By.cssSelector("p.MuiTypography-body1"));
                 String tmAllStatus = "";
                 for (WebElement status: allStatus) {
@@ -937,7 +937,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = ".MuiDialogContent-root button")
     private List<WebElement> buttonsOnWarningMode;
 
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-grid-xs-3')]/div[1]/p")
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-grid-xs-4')]/div[1]/p")
     private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
     public void searchTeamMemberByName(String name) throws Exception {
         if(areListElementVisible(btnSearchteamMember,5)) {
@@ -1322,13 +1322,24 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement okBtnOnConfirm;
     @FindBy(css="[ng-show=\"hasSearchResults()\"] tr.table-row.ng-scope")
     private List<WebElement> searchTMRows;
+    @FindBy(css = ".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(1) .MuiGrid-item")
+    private List<WebElement> searchTableColumns;
     public String selectAndGetTheSelectedTM() throws Exception {
         WebElement selectedTM = null;
         String selectedTMName = "";
 //		waitForSeconds(5);
         if (areListElementVisible(searchResultsOnNewCreateShiftPage, 5)) {
             for (WebElement searchResult: searchResultsOnNewCreateShiftPage) {
-                List<WebElement> allStatus= searchResult.findElements(By.cssSelector(".MuiGrid-grid-xs-3 .MuiTypography-body2"));
+                int index = 0;
+                if (areListElementVisible(searchTableColumns, 5)) {
+                    for (int i = 0; i < searchTableColumns.size(); i++) {
+                        if (searchTableColumns.get(i).getText().trim().toLowerCase().equalsIgnoreCase("status")) {
+                            index = i;
+                            break;
+                        }
+                    }
+                }
+                List<WebElement> allStatus= searchResult.findElements(By.cssSelector(".MuiGrid-item:nth-child("+ (index + 1) +")"));
                 StringBuilder tmAllStatus = new StringBuilder();
                 for (WebElement status: allStatus) {
                     tmAllStatus.append(" ").append(status.getText());
@@ -1500,7 +1511,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             for (int i = 0; i < searchAssignTeamMember.length; i++) {
                 String[] searchTM = searchAssignTeamMember[i].split("\\.");
                 String searchText = searchTM[0];
-//                textSearchOnNewCreateShiftPage.clear();
+                textSearchOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+                textSearchOnNewCreateShiftPage.sendKeys(Keys.DELETE);
                 textSearchOnNewCreateShiftPage.sendKeys(searchText);
                 waitForSeconds(3);
                 selectedTMName = newShiftPage.selectAndGetTheSelectedTM();
@@ -2750,7 +2762,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     public List<WebElement> getSearchAndRecommendedResult() {
         List<WebElement> result = new ArrayList<>();
-        if (areListElementVisible(searchResultsOnNewCreateShiftPage, 5)) {
+        if (areListElementVisible(searchResultsOnNewCreateShiftPage, 25)) {
             result = searchResultsOnNewCreateShiftPage;
             SimpleUtils.report("Get search result successfully! ");
         } else
@@ -2971,5 +2983,22 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         } else
             SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);
         return isRecommendedTabSelected;
+    }
+
+    @FindBy(id = "legion_cons_schedule_schedule_createshift_Close_button")
+    private WebElement closeBtnForCreateShift;
+    @FindBy(className = "modal-instance-header-title ng-binding")
+    private WebElement createShiftTitle;
+    @Override
+    public void clickCloseBtnForCreateShift() throws Exception {
+        if (isElementLoaded(closeBtnForCreateShift,5)) {
+            clickTheElement(closeBtnForCreateShift);
+            if (!isElementLoaded(createShiftTitle))
+                SimpleUtils.report("The Create Shift dialog is closed!");
+            else
+                SimpleUtils.fail("The Create Shift dialog is not closed!", false);
+        }else{
+            SimpleUtils.fail("The Close button is not loaded correctly!", false);
+        }
     }
 }

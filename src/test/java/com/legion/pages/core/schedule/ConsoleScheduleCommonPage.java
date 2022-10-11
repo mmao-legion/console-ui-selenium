@@ -110,14 +110,21 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
     @FindBy(className = "day-week-picker-arrow-left")
     private WebElement calendarNavigationPreviousWeekArrow;
+    @FindBy(id = "legion_cons_schedule_schedule_Week_button")
+    private WebElement weekSubTabBtn;
 
     @Override
     public void clickOnWeekView() throws Exception {
 		/*WebElement scheduleWeekViewButton = MyThreadLocal.getDriver().
 			findElement(By.cssSelector("[ng-click=\"selectDayWeekView($event, 'week')\"]"));*/
 
-        WebElement scheduleWeekViewButton = MyThreadLocal.getDriver().
-                findElement(By.cssSelector("div.lg-button-group-last"));
+        WebElement scheduleWeekViewButton = null;
+        if (isElementLoaded(weekSubTabBtn, 5)) {
+            scheduleWeekViewButton = weekSubTabBtn;
+        } else {
+            scheduleWeekViewButton = MyThreadLocal.getDriver().
+                    findElement(By.cssSelector("div.lg-button-group-last"));
+        }
         if (isElementLoaded(scheduleWeekViewButton,15)) {
             if (!scheduleWeekViewButton.getAttribute("class").toString().contains("selected"))//selected
             {
@@ -923,8 +930,9 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
     private WebElement dayAndWeekViewButton;
     public boolean checkIfDayAndWeekViewButtonEnabled () throws Exception {
         boolean isEnabled = false;
-        if (isElementLoaded(dayAndWeekViewButton, 5)) {
-            if (dayAndWeekViewButton.getAttribute("class").contains("disabled")){
+        if (isElementLoaded(dayAndWeekViewButton, 5) && isElementLoaded(scheduleDayViewButton)) {
+            if (scheduleDayViewButton.getAttribute("class").contains("disabled")
+                    || dayAndWeekViewButton.getAttribute("class").contains("disabled")){
                 isEnabled = true;
                 SimpleUtils.report("The  day and week view button is disabled! ");
             } else

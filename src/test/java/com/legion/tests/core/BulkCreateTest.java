@@ -486,8 +486,10 @@ public class BulkCreateTest extends TestBase {
             MyThreadLocal.setAssignTMStatus(true);
             firstNameOfSelectedTM = newShiftPage.selectTeamMembers().split(" ")[0];
             //The TM will removed from the recommended list
-            SimpleUtils.assertOnFail("The assigned TM should remove from recommended list! ",
-                    newShiftPage.getSearchAndRecommendedResult().size() == resultCount-1, false);
+            int actualCount = newShiftPage.getSearchAndRecommendedResult().size();
+            SimpleUtils.assertOnFail("The assigned TM should remove from recommended list! The expected count is "+(resultCount-1)
+                            + " the actual count is: "+actualCount,
+                    actualCount== resultCount-1, false);
             //The TMs will replace the ‘Open Shift’ avatars on Shifts Assigned sections
             SimpleUtils.assertOnFail("The assigned TM should remove from recommended list! ",
                     newShiftPage.getOpenShiftCountOnShiftAssignedSection() == openShiftCount-1, false);
@@ -657,8 +659,10 @@ public class BulkCreateTest extends TestBase {
             MyThreadLocal.setAssignTMStatus(true);
             firstNameOfSelectedTM = newShiftPage.selectTeamMembers().split(" ")[0];
             //The TM will removed from the recommended list
-            SimpleUtils.assertOnFail("The assigned TM should remove from recommended list! ",
-                    newShiftPage.getSearchAndRecommendedResult().size() == resultCount-1, false);
+            int actualCount = newShiftPage.getSearchAndRecommendedResult().size();
+            SimpleUtils.assertOnFail("The assigned TM should remove from recommended list! The expected count is:"
+                            + (resultCount-1)+" The actual count is: "+actualCount,
+                    actualCount == resultCount-1, false);
             //The TMs will replace the ‘Open Shift’ avatars on Shifts Assigned sections
             SimpleUtils.assertOnFail("The assigned TM should remove from recommended list! ",
                     newShiftPage.getOpenShiftCountOnShiftAssignedSection() == openShiftCount-1, false);

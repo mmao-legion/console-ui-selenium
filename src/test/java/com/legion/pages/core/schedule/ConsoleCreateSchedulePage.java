@@ -243,6 +243,14 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
     @Override
     public void publishActiveSchedule() throws Exception {
+        SmartCardPage smartCardPage = new ConsoleSmartCardPage();
+        ScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
+        ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
+        if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+            scheduleMainPage.saveSchedule();
+        }
         if (!isCurrentScheduleWeekPublished()) {
             if (isConsoleMessageError())
                 SimpleUtils.fail("Schedule Can not be publish because of Action Require for week: '" + getActiveWeekText() + "'", false);

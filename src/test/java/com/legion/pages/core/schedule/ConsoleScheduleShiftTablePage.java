@@ -2549,7 +2549,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public void moveAnywayWhenChangeShift() throws Exception {
         if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")),10)){
-            if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().equals("MOVE ANYWAY")) {
+            if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().trim().equals("MOVE ANYWAY")) {
                 click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
                 SimpleUtils.pass("move anyway button clicked!");
             } else {
@@ -2560,6 +2560,20 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
     }
 
+
+    @Override
+    public void copyAnywayWhenChangeShift() throws Exception {
+        if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")),10)){
+            if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().trim().equals("COPY ANYWAY")) {
+                click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
+                SimpleUtils.pass("copy anyway button clicked!");
+            } else {
+                SimpleUtils.fail("copy anyway button fail to load!",false);
+            }
+        } else {
+            SimpleUtils.fail("copy anyway button fail to load!",false);
+        }
+    }
 
     @Override
     public void verifyShiftIsMovedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {

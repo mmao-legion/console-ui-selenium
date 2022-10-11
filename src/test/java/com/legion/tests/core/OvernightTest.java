@@ -403,6 +403,9 @@ public class OvernightTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("6:00AM", "6:00AM");
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName1);
+            scheduleMainPage.saveSchedule();
             if (smartCardPage.isRequiredActionSmartCardLoaded()) {
                 shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             }
@@ -413,14 +416,14 @@ public class OvernightTest extends TestBase {
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
             scheduleMainPage.selectWorkRoleFilterByText(workRole, false);
             scheduleMainPage.clickOnFilterBtn();
-
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes("Open").get(0));
+            createSchedulePage.publishActiveSchedule();
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes("Open").get(1));
             shiftOperatePage.clickOnOfferTMOption();
             Thread.sleep(3000);
 
             newShiftPage.searchTeamMemberByNameNLocation(firstName1, location);
             newShiftPage.clickOnOfferOrAssignBtn();
-            shiftOperatePage.clickOnProfileIconOfOpenShift();
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes("Open").get(1));
             scheduleShiftTablePage.clickViewStatusBtn();
             shiftOperatePage.verifyTMInTheOfferList(firstName1, "offered");
             shiftOperatePage.closeViewStatusContainer();

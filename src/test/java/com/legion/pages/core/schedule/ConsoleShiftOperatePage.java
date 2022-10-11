@@ -2396,7 +2396,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             textSearch.clear();
             textSearch.sendKeys(NameOfTM);
             clickTheElement(searchIcon);
-            if(isElementLoaded(firstTableRow) && firstnameOfTM.getText().trim().contains(NameOfTM)){
+            if(isElementLoaded(firstTableRow) && firstnameOfTM.getText().trim().toLowerCase().contains(NameOfTM.toLowerCase())){
                 SimpleUtils.pass("The searched TM is displayed correctly!");
             }else{
                 SimpleUtils.fail("The searched TM is not displayed!", false);
@@ -2553,7 +2553,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
                         List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
                         String workerName = tmInfo.get(0).getText();
-                        WebElement status = searchResult.findElement(By.xpath("//div[contains(@class,'MuiGrid-grid-xs-3')][2]/div"));
+                        WebElement status = searchResult.findElement(By.cssSelector(
+                                ".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(2) .MuiGrid-item:nth-child(2)"));
                         if (workerName != null && workerName.toLowerCase().trim().contains(userName.trim().toLowerCase())) {
                             if (status.getText().contains(scheduled)
                                     && status.getText().replace(" - ", "-").contains(shiftTime)) {
@@ -2658,11 +2659,12 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = "[search-results=\"workerSearchResult\"] [ng-class=\"swapStatusClass(worker)\"]")
     private List<WebElement> tmScheduledStatus;
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[3]/div")
-    private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
+    @FindBy(css = ".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(1) .MuiGrid-item")
+    private List<WebElement> searchTableColumns;
     @Override
     public String getTheMessageOfTMScheduledStatus() throws Exception {
         String messageOfTMScheduledStatus = "";
+        List<WebElement> tmScheduledStatusOnNewCreateShiftPage = getTMScheduledStatusElementsOnNewCreateShiftPage();
         if (MyThreadLocal.getMessageOfTMScheduledStatus()==null || MyThreadLocal.getMessageOfTMScheduledStatus().equals("")) {
             if (areListElementVisible(tmScheduledStatus,5)){
                 for (WebElement status : tmScheduledStatus) {
@@ -2682,6 +2684,20 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             messageOfTMScheduledStatus = MyThreadLocal.getMessageOfTMScheduledStatus().replace(" AM", "am").replace(" PM", "pm").replace(":00", "");
         }
         return messageOfTMScheduledStatus;
+    }
+
+    private List<WebElement> getTMScheduledStatusElementsOnNewCreateShiftPage() {
+        int index = 0;
+        if (areListElementVisible(searchTableColumns, 5)) {
+            for (int i = 0; i < searchTableColumns.size(); i++) {
+                if (searchTableColumns.get(i).getText().trim().toLowerCase().equalsIgnoreCase("status")) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        return getDriver().findElements(By.cssSelector(".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(2) .MuiGrid-item:nth-child("
+        + (index + 1) + ")"));
     }
 
     @FindBy(css = "[class = \"worker-edit-availability-status\"]")
@@ -3459,7 +3475,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = ".table-field.this-week-field ")
     private List<WebElement> totalShiftHrsAndShiftCountThisWeek;
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[4]/div")
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[3]/div")
     private List<WebElement> totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage;
     @Override
     public HashMap<String, Float> getTotalShiftHrsAndShiftCountThisWeek() throws Exception {

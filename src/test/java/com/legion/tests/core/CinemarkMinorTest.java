@@ -1343,8 +1343,10 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.searchWithOutSelectTM(firstNameOfTM1);
 
         //check the violation message in Status column
-        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
-                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime.toLowerCase()), false);
+        String warningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! but actual is: "
+                        +warningMessage,
+                warningMessage.contains("Minor hrs "+ scheduleFromToTime.toLowerCase()), false);
         Thread.sleep(5000);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         Thread.sleep(5000);
@@ -1464,7 +1466,7 @@ public class CinemarkMinorTest extends TestBase {
                 !shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
+            warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
             if (!warningMessage.contains("Minor ")){
                 SimpleUtils.pass("There is no minor warning message display on the warning mode when shift is not avoid the minor setting! ");
             } else

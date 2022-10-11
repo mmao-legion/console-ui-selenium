@@ -94,8 +94,8 @@ public class ConsolidatingFiltersTest extends TestBase {
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             HashMap<String, Object[][]> teamMembers = new HashMap<>();
             if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))){
@@ -109,8 +109,6 @@ public class ConsolidatingFiltersTest extends TestBase {
             teamPage.activeTMAndRejectOrApproveAllAvailabilityAndTimeOff(firstNameOfTM1);
 
             // Go to Schedule page, Schedule tab
-
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -194,7 +192,6 @@ public class ConsolidatingFiltersTest extends TestBase {
             List<WebElement> shiftsOfThirdDay = scheduleShiftTablePage.getOneDayShiftByName(2, firstNameOfTM1);
             shiftOperatePage.deleteMealBreakForOneShift(shiftsOfThirdDay.get(0));
             scheduleMainPage.saveSchedule();
-
             scheduleMainPage.clickOnFilterBtn();
             int allShiftsCount = scheduleShiftTablePage.getShiftsCount();
             int complianceReviewCount = scheduleMainPage.getSpecificFiltersCount("Compliance Review");
@@ -206,7 +203,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM1);
             List<WebElement> shiftsOfSecondDay = scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1);
             shiftsOfThirdDay = scheduleShiftTablePage.getOneDayShiftByName(2, firstNameOfTM1);
-//            List<WebElement> shiftsOfForthDay = scheduleShiftTablePage.getOneDayShiftByName(3, firstNameOfTM1);
+            List<WebElement> shiftsOfForthDay = scheduleShiftTablePage.getOneDayShiftByName(3, firstNameOfTM1);
 
             //Check the clopening violation shifts on the first and second day
             SimpleUtils.assertOnFail("Clopening compliance message display failed",
@@ -217,9 +214,9 @@ public class ConsolidatingFiltersTest extends TestBase {
             SimpleUtils.assertOnFail("Meal break compliance message display failed",
                     scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal Break"), false);
 
-    //            //Check the OT violation shifts on the forth day. Blocked by SCH-4250
-    //            SimpleUtils.assertOnFail("OT compliance message display failed",
-    //                    scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("overtime"), false);
+                //Check the OT violation shifts on the forth day.
+                SimpleUtils.assertOnFail("OT compliance message display failed",
+                        scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("4 hrs daily overtime"), false);
 
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
@@ -252,12 +249,12 @@ public class ConsolidatingFiltersTest extends TestBase {
                             scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal Break"), false);
                 }
 
-                //Check the OT violation shifts on the forth day. Blocked by SCH-4250
-//                if (i==3) {
-//                      shiftsOfForthDay = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1);
-//                    SimpleUtils.assertOnFail("OT compliance message display failed",
-//                            scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("overtime"), false);
-//                }
+                //Check the OT violation shifts on the forth day.
+                if (i==3) {
+                      shiftsOfForthDay = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1);
+                    SimpleUtils.assertOnFail("OT compliance message display failed",
+                            scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("4 hrs daily overtime"), false);
+                }
             }
 
         } catch (Exception e){

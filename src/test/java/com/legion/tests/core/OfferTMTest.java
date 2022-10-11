@@ -114,24 +114,24 @@ public class OfferTMTest extends TestBase {
         //--verify in day view
         scheduleShiftTablePage.clickOnProfileIconOfShiftInDayView("open");
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", shiftOperatePage.isOfferTMOptionVisible(), false);
-        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be disabled!", !shiftOperatePage.isOfferTMOptionEnabled(), false);
         //--verify in week view
         scheduleCommonPage.clickOnWeekView();
         shiftOperatePage.clickOnProfileIconOfOpenShift();
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", shiftOperatePage.isOfferTMOptionVisible(), false);
-        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be disabled!", !shiftOperatePage.isOfferTMOptionEnabled(), false);
         scheduleMainPage.saveSchedule();
         //verify auto open shift in non-edit mode.
         //--verify in day view
         scheduleCommonPage.clickOnDayView();
         scheduleShiftTablePage.clickOnProfileIconOfShiftInDayView("open");
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", shiftOperatePage.isOfferTMOptionVisible(), false);
-        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be disabled when schedule is never published!", !shiftOperatePage.isOfferTMOptionEnabled(), false);
         //--verify in week view
         scheduleCommonPage.clickOnWeekView();
         shiftOperatePage.clickOnProfileIconOfOpenShift();
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", shiftOperatePage.isOfferTMOptionVisible(), false);
-        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be disabled when schedule is never published!", !shiftOperatePage.isOfferTMOptionEnabled(), false);
 
         //create manual open shifts.
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -149,24 +149,24 @@ public class OfferTMTest extends TestBase {
         //--verify in day view
         scheduleShiftTablePage.clickOnProfileIconOfShiftInDayView("open");
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", shiftOperatePage.isOfferTMOptionVisible(), false);
-        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be disabled!", !shiftOperatePage.isOfferTMOptionEnabled(), false);
         //--verify in week view
         scheduleCommonPage.clickOnWeekView();
         shiftOperatePage.clickOnProfileIconOfOpenShift();
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", shiftOperatePage.isOfferTMOptionVisible(), false);
-        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be disabled!", !shiftOperatePage.isOfferTMOptionEnabled(), false);
         scheduleMainPage.saveSchedule();
         //verify manual open shifts in non-edit mode.
         //--verify in day view
         scheduleCommonPage.clickOnDayView();
         scheduleShiftTablePage.clickOnProfileIconOfShiftInDayView("open");
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", shiftOperatePage.isOfferTMOptionVisible(), false);
-        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be disabled when schedule is never published!", !shiftOperatePage.isOfferTMOptionEnabled(), false);
         //--verify in week view
         scheduleCommonPage.clickOnWeekView();
         shiftOperatePage.clickOnProfileIconOfOpenShift();
         SimpleUtils.assertOnFail("Offer TMs option should be visible!", shiftOperatePage.isOfferTMOptionVisible(), false);
-        SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
+        SimpleUtils.assertOnFail("Offer TMs option should be disabled when schedule is never published!", !shiftOperatePage.isOfferTMOptionEnabled(), false);
     }
 
     @Automated(automated = "Automated")
@@ -329,6 +329,7 @@ public class OfferTMTest extends TestBase {
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
         scheduleMainPage.saveSchedule();
+        createSchedulePage.publishActiveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         WebElement selectedShift = shiftOperatePage.clickOnProfileIconOfOpenShift();
         String selectedShiftId= selectedShift.getAttribute("id");
@@ -336,6 +337,7 @@ public class OfferTMTest extends TestBase {
 
         //verify auto open shift in edit mode.
         List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
+        scheduleMainPage.saveSchedule();
         shiftOperatePage.clickOnProfileIconOfOpenShift();
         SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
         shiftOperatePage.clickOnOfferTMOption();
@@ -503,7 +505,8 @@ public class OfferTMTest extends TestBase {
             String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText(workRoleOfTM);
-            shiftOperatePage.deleteAllShiftsInWeekView();
+            //shiftOperatePage.deleteAllShiftsInWeekView();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
 
@@ -518,6 +521,7 @@ public class OfferTMTest extends TestBase {
             newShiftPage.verifySelectTeamMembersOption();
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             WebElement selectedShift = shiftOperatePage.clickOnProfileIconOfOpenShift();
             String selectedShiftId= selectedShift.getAttribute("id");
@@ -525,6 +529,7 @@ public class OfferTMTest extends TestBase {
 
             //verify manual open shift in edit mode.
             List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
+            scheduleMainPage.saveSchedule();
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
             shiftOperatePage.clickOnOfferTMOption();
@@ -607,6 +612,7 @@ public class OfferTMTest extends TestBase {
             shiftOperatePage.clickOnConvertToOpenShift();
             shiftOperatePage.convertToOpenShiftDirectly();
             scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
 
             //verify the open shift in non-edit mode.
             shiftOperatePage.clickOnProfileIconOfOpenShift();
@@ -692,6 +698,7 @@ public class OfferTMTest extends TestBase {
             shiftOperatePage.clickOnConvertToOpenShift();
             shiftOperatePage.convertToOpenShiftDirectly();
             scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             WebElement selectedShift = shiftOperatePage.clickOnProfileIconOfOpenShift();
             String selectedShiftId= selectedShift.getAttribute("id");
@@ -699,6 +706,7 @@ public class OfferTMTest extends TestBase {
 
             //verify assign TM in edit mode.
             List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
+            scheduleMainPage.saveSchedule();
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
             shiftOperatePage.clickOnOfferTMOption();
