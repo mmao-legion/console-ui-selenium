@@ -1347,7 +1347,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			selectByVisibleText(locationGroupSelect, newLocationParas.get(parentRelationship));
-			clickTheElement(getDriver().findElement(By.cssSelector("input[aria-label=\"" + value + "\"] ")));
+			//clickTheElement(getDriver().findElement(By.cssSelector("input[aria-label=\"" + value + "\"] ")));
 			locationId.sendKeys(getLocationName());
 			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
@@ -3457,7 +3457,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Configuration tab in locations level page load failed ", false);
 	}
 
-	@FindBy(css = "table.lg-table.ng-scope")
+	@FindBy(css = "table.lg-table.ng-scope tbody")
 	private List<WebElement> workRolesInSchedulingRulesInConfigurationLevel;
 
 	@Override
@@ -4513,6 +4513,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	public void verifyOverrideStatusAtLocationLevel(String templateName, String flag) throws Exception {
+		waitForSeconds(6);
 		if (flag.equalsIgnoreCase("Yes")) {
 			if (isExist(getDriver().findElement(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/span")))) {
 				SimpleUtils.pass("template is overrided");
@@ -5018,7 +5019,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return flag;
 	}
 
-	@FindBy(css="general-form.enterprise-container form-section:nth-child(6)")
+	@FindBy(css="general-form.enterprise-container form-section:nth-child(7)")
 	WebElement laborBudgetPlanSection;
 
 	@Override
@@ -5116,7 +5117,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public boolean isBudgetPlanSectionShowing(){
-		String locator = "general-form.enterprise-container form-section:nth-child(6)  question-input[question-title*=\"upperfield?\"]";
+		String locator = "general-form.enterprise-container form-section:nth-child(7)  question-input[question-title*=\"upperfield?\"]";
 		boolean flag;
 		if(isElementExist(locator)){
 			flag = true;

@@ -1169,7 +1169,7 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Annual Leave", "24");// HireDate~HireDate/Monthly /hire month/end
         expectedTOBalance.put("Annual Leave1", "5");// HireDate~HireDate/Worked Hours /total hours/ 10 1
         expectedTOBalance.put("Annual Leave2", "2");// HireDate~Specified/Worked Hours /total hours/ 20 1
-        expectedTOBalance.put("Annual Leave3", "3");// Specified~HireDate/worked hours/total hours/ 15 1
+        expectedTOBalance.put("Annual Leave3", "2");// Specified~HireDate/worked hours/total hours/ 15 1
         expectedTOBalance.put("Annual Leave4", "8");// Specified~Specified/worked hours/total hour/ 5 1
         expectedTOBalance.put("Bereavement1", "4.8");//Specified~Specified/worked hours/rate/ 0.1
         expectedTOBalance.put("Bereavement2", "8");//Specified~Specified/worked hours/rate/ 0.2
@@ -2134,10 +2134,10 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance02.put("Annual Leave2", "0");
         expectedTOBalance02.put("Annual Leave3", "0");
         expectedTOBalance02.put("Annual Leave4", "2");
-        expectedTOBalance02.put("Bereavement1", "0");
-        expectedTOBalance02.put("Bereavement2", "0");
-        expectedTOBalance02.put("Bereavement3", "0");
-        expectedTOBalance02.put("Bereavement4", "0");
+        expectedTOBalance02.put("Bereavement1", "4.5");
+        expectedTOBalance02.put("Bereavement2", "4.5");
+        expectedTOBalance02.put("Bereavement3", "4");
+        expectedTOBalance02.put("Bereavement4", "4");
         expectedTOBalance02.put("Covid1", "12");
         expectedTOBalance02.put("Covid2", "12");
         expectedTOBalance02.put("Covid3", "0");
@@ -2740,7 +2740,7 @@ public class AccrualEngineTest extends TestBase {
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        String teamMemName = "Nancy AccrualEngine";
+        String teamMemName = "Nancy AccrualEngine01";
         timeOffPage.goToTeamMemberDetail(teamMemName);
         timeOffPage.switchToTimeOffTab();
         //get session id via login
@@ -2751,7 +2751,7 @@ public class AccrualEngineTest extends TestBase {
             Assert.assertEquals(getHttpStatusCode(toggleResponse), 200, "Failed to get the user's template!");
         }
         //confirm template
-        String workerId = "1b4fb685-ef70-4120-8be9-87b6b7dd08d1";
+        String workerId = "6a425e51-47fa-4733-933a-33beeea89eea";
         String targetTemplate = "AccrualEngine";
         String tempName = getUserTemplate(workerId, sessionId);
         Assert.assertEquals(tempName, targetTemplate, "The user wasn't associated to this Template!!! ");
@@ -2786,11 +2786,11 @@ public class AccrualEngineTest extends TestBase {
         //expected accrual
         expectedTOBalance.put("Annual Leave", "0");
         expectedTOBalance.put("Annual Leave1", "0");
-        expectedTOBalance.put("Annual Leave2", "1");
+        expectedTOBalance.put("Annual Leave2", "0");
         expectedTOBalance.put("Annual Leave3", "0");
         expectedTOBalance.put("Annual Leave4", "0");
         expectedTOBalance.put("Bereavement1", "1");
-        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement2", "5");
         expectedTOBalance.put("Bereavement3", "10");
         expectedTOBalance.put("Bereavement4", "0");
         expectedTOBalance.put("Covid1", "0");
