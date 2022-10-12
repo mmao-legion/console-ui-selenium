@@ -3939,25 +3939,33 @@ public class DragAndDropTest extends TestBase {
         try{
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
+            int count = (int)(Math.random()*4+1);
+            String accessRole = "";
+            switch(count) {
+                case 1: accessRole = AccessRoles.StoreManager.getValue(); break;
+                case 2: accessRole = AccessRoles.TeamLead.getValue();break;
+                case 3: accessRole = AccessRoles.DistrictManager.getValue();break;
+                case 4: accessRole = AccessRoles.CustomerAdmin.getValue();break;
+            }
             //Verify the shifts can be created by new UI by original SM access role
-            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            loginAsDifferentRole(accessRole);
             bulkDragAndDropByDifferentAccessRoles();
             loginPage.logOut();
 
-            //Verify the shifts can be created by new UI by original TL access role
-            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
-            bulkDragAndDropByDifferentAccessRoles();
-            loginPage.logOut();
-
-            //Verify the shifts can be created by new UI by original DM access role
-            loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
-            bulkDragAndDropByDifferentAccessRoles();
-            loginPage.logOut();
-
-            //Verify the shifts can be created by new UI by original CA access role
-            loginAsDifferentRole(AccessRoles.CustomerAdmin.getValue());
-            bulkDragAndDropByDifferentAccessRoles();
-            loginPage.logOut();
+//            //Verify the shifts can be created by new UI by original TL access role
+//            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
+//            bulkDragAndDropByDifferentAccessRoles();
+//            loginPage.logOut();
+//
+//            //Verify the shifts can be created by new UI by original DM access role
+//            loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
+//            bulkDragAndDropByDifferentAccessRoles();
+//            loginPage.logOut();
+//
+//            //Verify the shifts can be created by new UI by original CA access role
+//            loginAsDifferentRole(AccessRoles.CustomerAdmin.getValue());
+//            bulkDragAndDropByDifferentAccessRoles();
+//            loginPage.logOut();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
