@@ -525,6 +525,8 @@
                     <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" />
                     <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" />
                     <include name="verifyTheMealPlacementViolationAsInternalAdmin" />
+                    <include name="VerifyAssignShiftMealBreakAsInternalAdmin" />
+                    <include name="VerifyOpenShiftMealBreakAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
