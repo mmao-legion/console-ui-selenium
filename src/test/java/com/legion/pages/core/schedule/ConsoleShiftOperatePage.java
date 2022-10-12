@@ -805,6 +805,35 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
     }
 
+    @Override
+    public boolean isMealBreaksLoaded() throws Exception {
+        boolean mealBreakLoaded = false;
+        if (isElementLoaded(editMealBreakTitle) && isElementLoaded(sliderInMealBreakButton) && isElementLoaded(shiftInfoContainer)){
+            if(areListElementVisible(mealBreaks, 5) && mealBreaks.size() >= 1){
+                SimpleUtils.report("The Meal Break block shows on the Editing Meal Break dialog!");
+                mealBreakLoaded = true;
+            }else{
+                SimpleUtils.report("The Meal Break block is not displayed on the Editing Meal Break dialog!");
+                mealBreakLoaded = false;
+            }
+        }else{
+            SimpleUtils.fail("The Meal Break window is not displayed on the Editing Meal Break dialog!", false);
+        }
+        return mealBreakLoaded;
+    }
+
+    @Override
+    public void clickCancelBtnOnMealBreakDialog() throws Exception {
+        ConsoleShiftOperatePage ShiftOperatePage = new ConsoleShiftOperatePage();
+        boolean mealBreakDialogLoaded = ShiftOperatePage.isMealBreakTimeWindowDisplayWell(true);
+        if (mealBreakDialogLoaded){
+            clickTheElement(cannelBtnInMealBreakButton);
+            SimpleUtils.report("Click the cancel button successfully!");
+        }else{
+            SimpleUtils.fail("The Meal Break dialog is not loaded!", false);
+        }
+    }
+
     public void verifyEditMealBreakTimeFunctionality(boolean isSavedChange) throws Exception {
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
@@ -3510,6 +3539,23 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.fail("The total shift hrs and shift count this week section fail to load! ", false);
         }
         return totalShiftHrsAndShiftCount;
+    }
+
+    @Override
+    public boolean isMealBreakBlockDisplayed(int index) throws Exception {
+        boolean mealBreakBlockDisplay = true;
+        if (areListElementVisible(dayViewAvailableShifts,10)){
+            try{
+                WebElement mealBreakBlock = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[ng-repeat=\"break in breaks\"]"));
+                if(isElementLoaded(mealBreakBlock)){
+                    SimpleUtils.report("The Meal Break is displayed in the shift box!");
+                }
+            }catch (Exception e){
+                SimpleUtils.report("The Meal Break is not displayed in the shift box!");
+                mealBreakBlockDisplay = false;
+            }
+        }
+        return mealBreakBlockDisplay;
     }
 }
 
