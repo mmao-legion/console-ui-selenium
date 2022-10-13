@@ -82,8 +82,8 @@ public class ConsolidatingFiltersTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate Compliance Review in week view and day view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -215,8 +215,9 @@ public class ConsolidatingFiltersTest extends TestBase {
                     scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfThirdDay.get(0)).contains("Missed Meal Break"), false);
 
                 //Check the OT violation shifts on the forth day.
-                SimpleUtils.assertOnFail("OT compliance message display failed",
-                        scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("4 hrs daily overtime"), false);
+            String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).toString();
+                SimpleUtils.assertOnFail("OT compliance message display failed, the actual is: "+actualMessage,
+                        actualMessage.contains("hrs daily overtime"), false);
 
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
@@ -252,8 +253,9 @@ public class ConsolidatingFiltersTest extends TestBase {
                 //Check the OT violation shifts on the forth day.
                 if (i==3) {
                       shiftsOfForthDay = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1);
-                    SimpleUtils.assertOnFail("OT compliance message display failed",
-                            scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).contains("4 hrs daily overtime"), false);
+                      actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfForthDay.get(0)).toString();
+                    SimpleUtils.assertOnFail("OT compliance message display failed, the actual is:"+actualMessage,
+                            actualMessage.contains(" hrs daily overtime"), false);
                 }
             }
 
