@@ -1064,20 +1064,18 @@ public class UserManagementTest extends TestBase {
             staffingRuleCondition.add("Slot");
             locationsPage.addStaffingRulesForWorkRole(staffingRuleCondition);
             locationsPage.clickOnSaveButton();
-            Thread.sleep(600000);
-
-
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
-            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
-            ForecastPage forecastPage  = pageFactory.createForecastPage();
-            scheduleCommonPage.navigateToNextWeek();
-            scheduleCommonPage.navigateToPreviousWeek();
-            forecastPage.clickOnLabor();
-            forecastPage.verifyWorkRoleInList(workRoleName);
+//            Thread.sleep(600000);
+//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+//            LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
+//            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+//            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+//            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+//            ForecastPage forecastPage  = pageFactory.createForecastPage();
+//            scheduleCommonPage.navigateToNextWeek();
+//            scheduleCommonPage.navigateToPreviousWeek();
+//            forecastPage.clickOnLabor();
+//            forecastPage.verifyWorkRoleInList(workRoleName);
             //disable the work role added and it can't be searched out
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             navigationPage.navigateToUserManagement();
