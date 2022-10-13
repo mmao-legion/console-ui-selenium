@@ -1329,22 +1329,23 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         String selectedTMName = "";
 //		waitForSeconds(5);
         if (areListElementVisible(searchResultsOnNewCreateShiftPage, 5)) {
-            for (WebElement searchResult: searchResultsOnNewCreateShiftPage) {
-                int index = 0;
-                if (areListElementVisible(searchTableColumns, 5)) {
-                    for (int i = 0; i < searchTableColumns.size(); i++) {
-                        if (searchTableColumns.get(i).getText().trim().toLowerCase().equalsIgnoreCase("status")) {
-                            index = i;
-                            break;
-                        }
+            int index = 0;
+            if (areListElementVisible(searchTableColumns, 5)) {
+                for (int i = 0; i < searchTableColumns.size(); i++) {
+                    if (searchTableColumns.get(i).getText().trim().toLowerCase().equalsIgnoreCase("status")) {
+                        index = i;
+                        break;
                     }
                 }
+            }
+            for (WebElement searchResult: searchResultsOnNewCreateShiftPage) {
                 List<WebElement> allStatus= searchResult.findElements(By.cssSelector(".MuiGrid-item:nth-child("+ (index + 1) +")"));
                 StringBuilder tmAllStatus = new StringBuilder();
                 for (WebElement status: allStatus) {
                     tmAllStatus.append(" ").append(status.getText());
                 }
-                if((tmAllStatus.toString().contains("Available") || tmAllStatus.toString().contains("Unknown")) && !tmAllStatus.toString().contains("Assigned to this shift")){
+                if((tmAllStatus.toString().contains("Available") || tmAllStatus.toString().contains("Unknown")) && !tmAllStatus.toString().contains("Assigned to this shift")
+                && !tmAllStatus.toString().contains("Role Violation")){
                     selectedTMName = searchResult.findElements(By.cssSelector("p.MuiTypography-body1")).get(0).getText();
                     List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
                     if (MyThreadLocal.getAssignTMStatus()) {
