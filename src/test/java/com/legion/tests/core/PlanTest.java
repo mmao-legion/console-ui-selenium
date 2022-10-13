@@ -506,10 +506,10 @@ public class PlanTest extends TestBase {
         loginPage.logOut();
 
         // Login as StoreManager
-        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("fiona+188@legion.co", "admin11.a","");
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("fiona+200@legion.co", "Test1234@","");
         if(loginPage.isInvalidLoginErrorShowing()){
             loginPage.refreshLoginPage();
-            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("fiona+188@legion.co", "admin11.a","");
+            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("fiona+200@legion.co", "Test1234@","");
         }
 
         if(!planPage.verifyPlanConsoleTabShowing()){
