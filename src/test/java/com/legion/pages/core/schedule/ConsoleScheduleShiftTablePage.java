@@ -2739,7 +2739,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> shiftsOfOneTM = new ArrayList<>();
         if (areListElementVisible(dayViewAvailableShifts, 5) && dayViewAvailableShifts != null && dayViewAvailableShifts.size() > 0) {
             for (WebElement shift : dayViewAvailableShifts) {
-                String shiftName = getShiftInfoFromInfoPopUp(shift).get("shiftName");
+                String shiftName = shift.findElement(By.cssSelector(".sch-day-view-shift-worker-name")).getText().split("\\(")[0].trim();
                 if (shiftName.toLowerCase().contains(name.toLowerCase())) {
                     shiftsOfOneTM.add(shift);
                     SimpleUtils.pass("shift exists on this day!");

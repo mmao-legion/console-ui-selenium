@@ -1399,7 +1399,7 @@ public class BulkCreateTest extends TestBase {
 
             List<WebElement> assignedShiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, assignedTM.split(" ")[0]);
             SimpleUtils.assertOnFail("The "+assignedTM+" shift is not exist on the first day! ",
-                    assignedShiftsOfOneDay.size()==1, false);
+                    assignedShiftsOfOneDay.size()>=1, false);
 
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             createSchedulePage.createScheduleForNonDGFlowNewUI();
