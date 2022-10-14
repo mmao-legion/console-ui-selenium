@@ -2450,8 +2450,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
-	@Enterprise(name = "KendraScott2_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//	@Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
 	@TestName(description = "Verify search bar on schedule page")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifySearchBarOnSchedulePageInWeekViewAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
@@ -7475,10 +7475,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
+//	@Enterprise(name = "Vailqacn_Enterprise")
 	@Enterprise(name = "CinemarkWkdy_Enterprise")
-	@TestName(description = "Verify the functionality of max shifts per day")
+	@TestName(description = "Verify the functionality of Minimum time between shifts")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+	public void verifyTheFunctionalityOfMinTimeBetweenShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 		try {
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
@@ -7493,44 +7494,45 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-			if (!isLocationUsingControlsConfiguration) {
-				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-				locationsPage.clickOnLocationsTab();
-				locationsPage.goToSubLocationsInLocationsPage();
-				locationsPage.searchLocation(location);
-				SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
-				locationsPage.clickOnLocationInLocationResult(location);
-				locationsPage.clickOnConfigurationTabOfLocation();
-				HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
-				ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-				configurationPage.goToConfigurationPage();
-				configurationPage.clickOnConfigurationCrad("Scheduling Policies");
-				//Click on the template which is associated to the location to view
-				configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
-				configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-				int maximumNumber = 3;
-				int minimumTime = 30;
-				configurationPage.updateMaximumNumberOfShiftsPerDay(maximumNumber);
-				configurationPage.updateMinimumTimeBetweenShifts(minimumTime);
-				configurationPage.publishNowTheTemplate();
-				switchToConsoleWindow();
-
-				loginPage.logOut();
-				loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-				int i = 0;
-				while (i<5) {
-					Thread.sleep(60000);
-					scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-					i++;
-				}
-			}
+//			if (!isLocationUsingControlsConfiguration) {
+//				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+//				locationsPage.clickOnLocationsTab();
+//				locationsPage.goToSubLocationsInLocationsPage();
+//				locationsPage.searchLocation(location);
+//				SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+//				locationsPage.clickOnLocationInLocationResult(location);
+//				locationsPage.clickOnConfigurationTabOfLocation();
+//				HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+//				ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+//				configurationPage.goToConfigurationPage();
+//				configurationPage.clickOnConfigurationCrad("Scheduling Policies");
+//				//Click on the template which is associated to the location to view
+//				configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+//				configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+//				int maximumNumber = 3;
+//				int minimumTime = 30;
+//				configurationPage.updateMaximumNumberOfShiftsPerDay(maximumNumber);
+//				configurationPage.updateMinimumTimeBetweenShifts(minimumTime);
+//				configurationPage.publishNowTheTemplate();
+//				switchToConsoleWindow();
+//
+//				loginPage.logOut();
+//				loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+//				int i = 0;
+//				while (i<5) {
+//					Thread.sleep(60000);
+//					scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//					i++;
+//				}
+//			}
 
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if(!isActiveWeekGenerated){
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
 			List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 			String firstNameOfTM = shiftInfo1.get(0);
 			int shiftCount1 = 0;
@@ -7572,13 +7574,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
 			String expectedWaningMessage= "Minimum time between shifts";
 			SimpleUtils.assertOnFail(expectedWaningMessage+ " message fail to load!",
-					shiftWarningMessage.toLowerCase().contains(expectedWaningMessage), false);
+					shiftWarningMessage.contains(expectedWaningMessage), false);
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
 			expectedWaningMessage = firstNameOfTM+ " does not have minimum time between shifts";
 			if(newShiftPage.ifWarningModeDisplay()){
 				String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
 
-				if (warningMessage.contains(expectedWaningMessage)){
+				if (warningMessage.toLowerCase().contains(expectedWaningMessage.toLowerCase())){
 					SimpleUtils.pass(expectedWaningMessage+" message displays");
 				} else {
 					SimpleUtils.fail("There is no "+expectedWaningMessage+" warning message displaying", false);
@@ -7592,12 +7594,59 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
 			//https://legiontech.atlassian.net/browse/SCH-7196
 			expectedWaningMessage = "Minimum time between shifts";
-			SimpleUtils.assertOnFail("'"+expectedWaningMessage+"' compliance message display failed",
-					scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).contains(expectedWaningMessage) , false);
+			String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).toString();
+			SimpleUtils.assertOnFail("'"+expectedWaningMessage+"' compliance message display failed, the actual message is:"+actualMessage,
+					actualMessage.contains(expectedWaningMessage) , false);
+			actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(1)).toString();
+			SimpleUtils.assertOnFail("'"+expectedWaningMessage+"' compliance message display failed, the actual message is:"+actualMessage,
+					actualMessage.contains(expectedWaningMessage) , false);
 
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(),false);
+		}
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+//	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Verify the functionality of max shifts per day")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		try {
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+			ForecastPage forecastPage = pageFactory.createForecastPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if(!isActiveWeekGenerated){
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			String firstNameOfTM = shiftInfo1.get(0);
+			int shiftCount1 = 0;
+			while ((firstNameOfTM.equalsIgnoreCase("open")
+					|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+				shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+				firstNameOfTM  = shiftInfo1.get(0);
+				shiftCount1++;
+			}
+			String workRole =  shiftInfo1.get(4);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
 			scheduleMainPage.saveSchedule();
+
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
@@ -7647,29 +7696,73 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
 			newShiftPage.searchTeamMemberByName(firstNameOfTM);
-			newShiftPage.searchWithOutSelectTM(firstNameOfTM);
-			shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
-			SimpleUtils.assertOnFail("Max shift per day violation message fail to load!",
-					shiftWarningMessage.toLowerCase().contains("Max shift per day violation"), false);
-			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
-			if(newShiftPage.ifWarningModeDisplay()){
-				String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-				if (warningMessage.contains("Max shift per day violation")){
-					SimpleUtils.pass("Max shift per day violation message displays");
-				} else {
-					SimpleUtils.fail("There is no 'Max shift per day violation' warning message displaying", false);
-				}
-				shiftOperatePage.clickOnAssignAnywayButton();
-			} else {
-				SimpleUtils.fail("There is no 'Max shift per day violation' warning modal displaying!",false);
-			}
+			//https://legiontech.atlassian.net/browse/SCH-7963
+//			newShiftPage.searchWithOutSelectTM(firstNameOfTM);
+//			String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+//			SimpleUtils.assertOnFail("Max shift per day violation message fail to load!",
+//					shiftWarningMessage.contains("Max shift per day violation"), false);
+//			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
+//			if(newShiftPage.ifWarningModeDisplay()){
+//				String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
+//				if (warningMessage.contains("Max shift per day violation")){
+//					SimpleUtils.pass("Max shift per day violation message displays");
+//				} else {
+//					SimpleUtils.fail("There is no 'Max shift per day violation' warning message displaying, the actual is:"+warningMessage, false);
+//				}
+//				shiftOperatePage.clickOnAssignAnywayButton();
+//			} else {
+//				SimpleUtils.fail("There is no 'Max shift per day violation' warning modal displaying!",false);
+//			}
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
-			shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
+			List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
+			String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(3)).toString();
 			SimpleUtils.assertOnFail("'Max shift per day violation' compliance message display failed",
-					scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(3)).contains("Max shift per day violation") , false);
+					actualMessage.contains("Max shift per day violation") , false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(),false);
+		}
+	}
 
 
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+//	@Enterprise(name = "Vailqacn_Enterprise")
+	@TestName(description = "Verify the functionality of daily OT")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheFunctionalityOfDailyOTAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		try {
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+			ForecastPage forecastPage = pageFactory.createForecastPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if(!isActiveWeekGenerated){
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			String firstNameOfTM = shiftInfo1.get(0);
+			int shiftCount1 = 0;
+			while ((firstNameOfTM.equalsIgnoreCase("open")
+					|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+				shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+				firstNameOfTM  = shiftInfo1.get(0);
+				shiftCount1++;
+			}
+			String workRole =  shiftInfo1.get(4);
+			String lastNameOfTM = shiftInfo1.get(5);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
 			scheduleMainPage.saveSchedule();
@@ -7697,17 +7790,19 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchWithOutSelectTM(firstNameOfTM);
-			shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
-			SimpleUtils.assertOnFail("Will trigger 1Hrs daily OT message fail to load!",
-					shiftWarningMessage.toLowerCase().contains("Will trigger 1Hrs daily OT"), false);
+			newShiftPage.searchWithOutSelectTM(firstNameOfTM+ " "+ lastNameOfTM);
+			String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+			String expectedMessage = "Will trigger 1.5Hrs daily OT";
+			SimpleUtils.assertOnFail(expectedMessage+ " message fail to load! The actual message is:"+shiftWarningMessage,
+					shiftWarningMessage.contains(expectedMessage), false);
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
+			expectedMessage = firstNameOfTM + " will incur 1.5 hours of daily overtime";
 			if(newShiftPage.ifWarningModeDisplay()){
 				String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-				if (warningMessage.contains("Will trigger 1Hrs daily OT")){
-					SimpleUtils.pass("Will trigger 1Hrs daily OT message displays");
+				if (warningMessage.contains(expectedMessage)){
+					SimpleUtils.pass(expectedMessage+ " message displays");
 				} else {
-					SimpleUtils.fail("There is no 'Will trigger 1Hrs daily OT' warning message displaying", false);
+					SimpleUtils.fail("There is no 'Will trigger 1Hrs daily OT' warning message displaying, the actual message is:"+warningMessage, false);
 				}
 				shiftOperatePage.clickOnAssignAnywayButton();
 			} else {
@@ -7715,9 +7810,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
-			shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
-			SimpleUtils.assertOnFail("'1 hrs daily overtime' compliance message display failed",
-					scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).contains("1 hrs daily overtime") , false);
+			List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
+			String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(1)).toString();
+			expectedMessage = "1.5 hrs daily overtime";
+			SimpleUtils.assertOnFail(expectedMessage+ " compliance message display failed, then actual message is: "+actualMessage,
+					actualMessage.contains(expectedMessage) , false);
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(),false);
 		}

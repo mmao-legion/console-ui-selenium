@@ -47,7 +47,7 @@ public class OvernightTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -67,14 +67,14 @@ public class OvernightTest extends TestBase {
             configurationPage.publishNowTheTemplate();
             Thread.sleep(3000);
             switchToConsoleWindow();
+            refreshCachesAfterChangeTemplate();
             //waiting for the cache
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-            int j =0;
-            while (j< 5) {
-                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-                Thread.sleep(60000);
-                j++;
-            }
+//            int j =0;
+//            while (j< 5) {
+//                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//                Thread.sleep(60000);
+//                j++;
+//            }
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
