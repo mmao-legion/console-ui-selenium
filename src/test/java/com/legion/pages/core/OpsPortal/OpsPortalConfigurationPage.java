@@ -5213,6 +5213,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css = "ul.staffing-dropdown-menu li:nth-child(1)")
 	private WebElement staffingRuleButton;
+	@FindBy(css = "ul.staffing-dropdown-menu li:nth-child(3)")
+	private WebElement shiftPatternButton;
 	@FindBy(css = ".constraint-box")
 	private WebElement staffingRuleFields;
 
@@ -5231,6 +5233,20 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				}
 			} else {
 				SimpleUtils.pass("Advance staffing rules tab is NOT show");
+			}
+		} else {
+			SimpleUtils.fail("Work role's staffing rules list page was loaded failed", false);
+		}
+	}
+
+	@Override
+	public void checkTheEntryOfAddShiftPatternRule() throws Exception {
+		if (isElementLoaded(addIconOnRulesListPage, 5)) {
+			clickTheElement(addIconOnRulesListPage);
+			if (isElementLoaded(shiftPatternButton, 5)) {
+				clickTheElement(shiftPatternButton);
+			} else {
+				SimpleUtils.fail("Shift Pattern option button is not loaded!", false);
 			}
 		} else {
 			SimpleUtils.fail("Work role's staffing rules list page was loaded failed", false);

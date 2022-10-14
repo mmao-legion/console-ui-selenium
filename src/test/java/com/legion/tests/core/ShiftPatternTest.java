@@ -28,6 +28,7 @@ public class ShiftPatternTest extends TestBase {
     private LocationsPage locationsPage;
     private NewShiftPage newShiftPage;
     private ConfigurationPage configurationPage;
+    private ShiftPatternPage shiftPatternPage;
 
     @Override
     @BeforeMethod()
@@ -44,6 +45,7 @@ public class ShiftPatternTest extends TestBase {
             locationsPage = pageFactory.createOpsPortalLocationsPage();
             newShiftPage = pageFactory.createNewShiftPage();
             configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            shiftPatternPage = pageFactory.createConsoleShiftPatternPage();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -69,11 +71,58 @@ public class ShiftPatternTest extends TestBase {
             configurationPage.deleteTemplate(templateName);
             String workRole = "General Manager";
 
-            //create new template with the 'New Template' button, there are 2 tabs: Detail and Association
+            // Create new template with the 'New Template' button, there are 2 tabs: Detail and Association
             configurationPage.createNewTemplate(templateName);
             configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.selectWorkRoleToEdit(workRole);
+            // Verify Shift Pattern option is available when click on + button
+            //Verify Shift Pattern is clickable
+            configurationPage.checkTheEntryOfAddShiftPatternRule();
+            // Verify the content on Shift Pattern Details
+            // Verify the default value of Role
+            shiftPatternPage.verifyTheContentOnShiftPatternDetails(workRole);
+            // Verify the mandatory fields
+            shiftPatternPage.verifyTheMandatoryFields();
+            // Verify can input the value in Name, Description and No. of instances* inputs
+            shiftPatternPage.inputNameDescriptionNInstances("test", "description", "2");
+            // Verify Select Start Date button is clickable
+            // Verify can select one week successfully
+            String selectedFirstDayOfWeek = shiftPatternPage.selectTheCurrentWeek();
+            // Verify the functionality of + Add Week section
+            // Verify the functionality of clicking on Off Week
+            shiftPatternPage.selectAddOnOrOffWeek(false);
+            // Verify the content on Off Week section
+            shiftPatternPage.verifyTheContentOnOffWeekSection();
+            // Verify the functionality of option "Auto schedule team members during off weeks"
+            shiftPatternPage.checkOrUnCheckAutoSchedule(true);
+            // Verify the functionality of each day checkbox
+            shiftPatternPage.checkOrUnCheckSpecificDay(true, "Everyday");
+            shiftPatternPage.checkOrUnCheckSpecificDay(false, "Everyday");
+            shiftPatternPage.checkOrUnCheckSpecificDay(true, "Sunday");
+            shiftPatternPage.checkOrUnCheckSpecificDay(false, "Sunday");
+            // Verify the functionality of clicking on On Week
+            shiftPatternPage.selectAddOnOrOffWeek(true);
+            // Verify the content on On Week section
+            shiftPatternPage.verifyTheContentOnOnWeekSection();
+            // Verify the functionality of expand week icon
+            shiftPatternPage.verifyTheFunctionalityOfExpandWeekIcon(2, false);
+            shiftPatternPage.verifyTheFunctionalityOfExpandWeekIcon(2, true);
+            // Verify the functionality of arrow icon
+            shiftPatternPage.verifyTheFunctionalityOfArrowIcon(2, false);
+            shiftPatternPage.verifyTheFunctionalityOfArrowIcon(2, true);
+            // Verify the functionality of Delete week button
+            int previousWeekCount = shiftPatternPage.getWeekCount();
+            shiftPatternPage.deleteTheWeek(2);
+            int currentWeekCount = shiftPatternPage.getWeekCount();
+            if (previousWeekCount - currentWeekCount == 1) {
+                SimpleUtils.pass("Delete the week successfully!");
+            } else {
+                SimpleUtils.fail("Failed to delete the week!", false);
+            }
+            // Verify the functionality of + Add Shift button
+            shiftPatternPage.selectAddOnOrOffWeek(true);
+            shiftPatternPage.clickOnAddShiftButton();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
