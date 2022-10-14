@@ -151,7 +151,7 @@ public class SplitAndSpreadTest extends TestBase {
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
         newShiftPage.searchTeamMemberByName(firstNameOfTM1);
-        String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+        String shiftWarningMessage = MyThreadLocal.getMessageOfTMScheduledStatus();
         SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("will trigger split shift"), false);
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();

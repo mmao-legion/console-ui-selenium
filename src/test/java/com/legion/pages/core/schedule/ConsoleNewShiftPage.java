@@ -939,6 +939,21 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(xpath = "//div[contains(@class,'MuiGrid-grid-xs-4')]/div[1]/p")
     private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
+
+    private List<WebElement> getTMScheduledStatusElementsOnNewCreateShiftPage() {
+        int index = 0;
+        if (areListElementVisible(searchTableColumns, 5)) {
+            for (int i = 0; i < searchTableColumns.size(); i++) {
+                if (searchTableColumns.get(i).getText().trim().toLowerCase().equalsIgnoreCase("status")) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        return getDriver().findElements(By.cssSelector(".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(2) .MuiGrid-item:nth-child("
+                + (index + 1) + ")"));
+    }
+
     public void searchTeamMemberByName(String name) throws Exception {
         if(areListElementVisible(btnSearchteamMember,5)) {
             if (btnSearchteamMember.size() == 2) {
@@ -985,9 +1000,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     waitForSeconds(3);
                     if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
                         for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
-                            if (areListElementVisible(tmScheduledStatusOnNewCreateShiftPage, 5)) {
+                            if (areListElementVisible(getTMScheduledStatusElementsOnNewCreateShiftPage(), 5)) {
                                 String statusMessage = "";
-                                for (WebElement status: tmScheduledStatusOnNewCreateShiftPage) {
+                                for (WebElement status: getTMScheduledStatusElementsOnNewCreateShiftPage()) {
                                     statusMessage = statusMessage + status.getText() + "\n";
                                 }
                                 MyThreadLocal.setMessageOfTMScheduledStatus(statusMessage);
