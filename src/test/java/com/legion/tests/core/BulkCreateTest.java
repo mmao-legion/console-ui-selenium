@@ -297,6 +297,9 @@ public class BulkCreateTest extends TestBase {
             String shiftAssignedExpectMessage = "Shifts Assigned 0 of "+count;
             String shiftAssignedActualMessage = newShiftPage.getShiftAssignedMessage();
             String shiftOffersExpectMessage = "0 Shift Offers for "+count+" Open Shifts";
+            if (count==1) {
+                shiftOffersExpectMessage = "0 Shift Offers for "+count+" Open Shift";
+            }
             String shiftOfferActualMessage = newShiftPage.getShiftOffersMessage();
             SimpleUtils.assertOnFail("The shift assigned message display incorrectly! the expect is:"+ shiftAssignedExpectMessage
                             +" the actual is: " +shiftAssignedActualMessage,
@@ -1201,8 +1204,8 @@ public class BulkCreateTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify offer shift by each days")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateOfferShiftByEachDaysAsInternalAdmin(String browser, String username, String password, String location) throws Exception{

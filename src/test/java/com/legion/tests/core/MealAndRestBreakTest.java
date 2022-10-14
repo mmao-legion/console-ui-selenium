@@ -827,4 +827,556 @@ public class MealAndRestBreakTest extends TestBase {
         int tempMinutes = SimpleUtils.getMinutesFromTime(shiftStartTime) + minutes;
         return SimpleUtils.convertMinutesToTime(tempMinutes);
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Cosimo")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the functionality of meal break for assigned shift")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void VerifyAssignShiftMealBreakAsInternalAdmin(String username, String password, String browser, String location)
+            throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+            if (isLocationUsingControlsConfiguration){
+                //Config the Meal Break
+                controlsNewUIPage.clickOnControlsConsoleMenu();
+                controlsNewUIPage.clickOnControlsComplianceSection();
+                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
+                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
+                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
+
+            }else {
+                //Config the Meal Break on OP
+                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                locationsPage.clickOnLocationsTab();
+                locationsPage.goToSubLocationsInLocationsPage();
+                locationsPage.searchLocation(location);
+                SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+                locationsPage.clickOnLocationInLocationResult(location);
+                locationsPage.clickOnConfigurationTabOfLocation();
+                HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+                configurationPage.goToConfigurationPage();
+                configurationPage.clickOnConfigurationCrad("Compliance");
+                configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
+                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                Thread.sleep(3000);
+                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
+                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
+                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
+
+                switchToConsoleWindow();
+            }
+
+            //Create a new schedule
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnWeekView();
+            scheduleCommonPage.navigateToNextWeek();
+            String firstNameOfTM = null;
+            String workRole = null;
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM = shiftInfo.get(0);
+                int shiftCount1 = 0;
+                while ((firstNameOfTM.equalsIgnoreCase("open")
+                        || firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+                    shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                    firstNameOfTM = shiftInfo.get(0);
+                    shiftCount1++;
+                }
+                workRole = shiftInfo.get(4);
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            Thread.sleep(5000);
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "11:00PM");
+
+            //Delete all auto-generated shifts on the current day
+            scheduleCommonPage.clickOnDayView();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleMainPage.saveSchedule();
+
+            //Create a 5hrs new shift and assign it to the particular TM
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtCertainPoint("3pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnOfferOrAssignBtn();
+
+            //Check the Meal Break block on the editing mode
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
+                    shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks Editing dialog is not loaded correctly!",
+                    shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
+            scheduleMainPage.saveSchedule();
+
+            //Check the Meal Break block after save
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!", shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleMainPage.saveSchedule();
+
+            //Create a new shift that less than 5Hrs
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnOfferOrAssignBtn();
+
+            SimpleUtils.assertOnFail("The Meal Break block is displayed in the shift's box!",
+                    !(shiftOperatePage.isMealBreakBlockDisplayed(0)), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks Editing dialog is not loaded correctly!",
+                    shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            SimpleUtils.assertOnFail("The Meal Breaks block is loaded!",
+                    !(shiftOperatePage.isMealBreaksLoaded()), false);
+            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
+            scheduleMainPage.saveSchedule();
+
+            SimpleUtils.assertOnFail("The Meal Break block is displayed in the shift's box!", !(shiftOperatePage.isMealBreakBlockDisplayed(0)), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks block is loaded!",
+                    !(shiftOperatePage.isMealBreaksLoaded()), false);
+            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleMainPage.saveSchedule();
+
+            //Create a new shift that large than 5Hrs
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtCertainPoint("4pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnOfferOrAssignBtn();
+
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
+                    shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks Editing dialog is not loaded!",
+                    shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.isMealBreaksLoaded();
+            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
+            scheduleMainPage.saveSchedule();
+
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!", shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleMainPage.saveSchedule();
+
+            //Create a new 5hrs shift, check the meal break when shift length is changing dynamically
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtCertainPoint("3pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnOfferOrAssignBtn();
+
+            //Check the Meal Break block on the editing mode
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
+                    shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks Editing dialog is not loaded correctly!",
+                    shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
+            scheduleMainPage.saveSchedule();
+
+            //Check the Meal Break block after save
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!", shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
+
+            //Reduce the shift length less than 5hrs
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+            shiftOperatePage.clickOnEditShiftTime();
+            shiftOperatePage.setShiftTimesOnEditShiftTimePage("10:00am","02:00pm",false);
+            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            Thread.sleep(5000);
+
+            //Check the Meal Break block on the editing mode
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
+                    !(shiftOperatePage.isMealBreakBlockDisplayed(0)), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks Editing dialog is not loaded correctly!",
+                    shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            SimpleUtils.assertOnFail("The Meal Breaks block is loaded!",
+                    !(shiftOperatePage.isMealBreaksLoaded()), false);
+            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
+            scheduleMainPage.saveSchedule();
+
+            //Check the Meal Break block on the normal mode
+            SimpleUtils.assertOnFail("The Meal Break block is displayed in the shift's box!", !(shiftOperatePage.isMealBreakBlockDisplayed(0)), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks block is loaded!",
+                    !(shiftOperatePage.isMealBreaksLoaded()), false);
+            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
+
+            //Increase the shift length larger than 5hrs
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+            shiftOperatePage.clickOnEditShiftTime();
+            shiftOperatePage.setShiftTimesOnEditShiftTimePage("10:00am","04:00pm",false);
+            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            Thread.sleep(5000);
+
+            //Check the Meal Break block on the editing mode
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
+                    shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks Editing dialog is not loaded correctly!",
+                    shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
+            scheduleMainPage.saveSchedule();
+
+            //Check the Meal Break block on the normal mode
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!", shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Cosimo")
+    @Enterprise(name = "KendraScott2_Enterprise")
+    @TestName(description = "Validate the functionality of meal break for open shift")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void VerifyOpenShiftMealBreakAsInternalAdmin(String username, String password, String browser, String location)
+            throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+            if (isLocationUsingControlsConfiguration){
+                //Config the Meal Break
+                controlsNewUIPage.clickOnControlsConsoleMenu();
+                controlsNewUIPage.clickOnControlsComplianceSection();
+                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
+                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
+                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
+
+            }else {
+                //Config the Meal Break on OP
+                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+                locationsPage.clickOnLocationsTab();
+                locationsPage.goToSubLocationsInLocationsPage();
+                locationsPage.searchLocation(location);
+                SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+                locationsPage.clickOnLocationInLocationResult(location);
+                locationsPage.clickOnConfigurationTabOfLocation();
+                HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+                configurationPage.goToConfigurationPage();
+                configurationPage.clickOnConfigurationCrad("Compliance");
+                configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
+                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                Thread.sleep(3000);
+                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
+                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
+                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
+
+                switchToConsoleWindow();
+            }
+
+            //Create a new schedule
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnWeekView();
+            scheduleCommonPage.navigateToNextWeek();
+            String firstNameOfTM = null;
+            String workRole = null;
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM = shiftInfo.get(0);
+                int shiftCount1 = 0;
+                while ((firstNameOfTM.equalsIgnoreCase("open")
+                        || firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+                    shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                    firstNameOfTM = shiftInfo.get(0);
+                    shiftCount1++;
+                }
+                workRole = shiftInfo.get(4);
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            Thread.sleep(5000);
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "11:00PM");
+
+            //Delete all auto-generated shifts on the current day
+            scheduleCommonPage.clickOnDayView();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleMainPage.saveSchedule();
+
+            //Create a 5hrs new open shift
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtCertainPoint("3pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+
+            //Check the Meal Break block on the editing mode
+            Thread.sleep(5000);
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
+                    shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks Editing dialog is not loaded correctly!",
+                    shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
+            scheduleMainPage.saveSchedule();
+
+            //Check the Meal Break block after save
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!", shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleMainPage.saveSchedule();
+
+            //Create a new shift that less than 5Hrs
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+
+            SimpleUtils.assertOnFail("The Meal Break block is displayed in the shift's box!",
+                    !(shiftOperatePage.isMealBreakBlockDisplayed(0)), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks Editing dialog is not loaded!",
+                    shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            SimpleUtils.assertOnFail("The Meal Breaks block is loaded!",
+                    !(shiftOperatePage.isMealBreaksLoaded()), false);
+            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
+            scheduleMainPage.saveSchedule();
+
+            Thread.sleep(5000);
+            SimpleUtils.assertOnFail("The Meal Break block is displayed in the shift's box!", !(shiftOperatePage.isMealBreakBlockDisplayed(0)), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks block is loaded!",
+                    !(shiftOperatePage.isMealBreaksLoaded()), false);
+            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleMainPage.saveSchedule();
+
+            //Create a new shift that large than 5Hrs
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtCertainPoint("4pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            Thread.sleep(5000);
+
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
+                    shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks Editing dialog is not loaded!",
+                    shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
+            scheduleMainPage.saveSchedule();
+
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!", shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleMainPage.saveSchedule();
+
+            //Create a new 5hrs shift, check the meal break when shift length is changing dynamically
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.moveSliderAtCertainPoint("3pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnOfferOrAssignBtn();
+
+            //Check the Meal Break block on the editing mode
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
+                    shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks Editing dialog is not loaded correctly!",
+                    shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
+            scheduleMainPage.saveSchedule();
+
+            //Check the Meal Break block after save
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!", shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
+
+            //Reduce the shift length less than 5hrs
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            Thread.sleep(5000);
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+            shiftOperatePage.clickOnEditShiftTime();
+            shiftOperatePage.setShiftTimesOnEditShiftTimePage("10:00am","02:00pm",false);
+            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+
+            //Check the Meal Break block on the editing mode
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
+                    !(shiftOperatePage.isMealBreakBlockDisplayed(0)), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks Editing dialog is not loaded correctly!",
+                    shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            SimpleUtils.assertOnFail("The Meal Breaks block is loaded!",
+                    !(shiftOperatePage.isMealBreaksLoaded()), false);
+            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
+            scheduleMainPage.saveSchedule();
+
+            //Check the Meal Break block on the normal mode
+            SimpleUtils.assertOnFail("The Meal Break block is displayed in the shift's box!", !(shiftOperatePage.isMealBreakBlockDisplayed(0)), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks block is loaded!",
+                    !(shiftOperatePage.isMealBreaksLoaded()), false);
+            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
+
+            //Increase the shift length larger than 5hrs
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            Thread.sleep(5000);
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+            shiftOperatePage.clickOnEditShiftTime();
+            shiftOperatePage.setShiftTimesOnEditShiftTimePage("10:00am","04:00pm",false);
+            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+
+            //Check the Meal Break block on the editing mode
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
+                    shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks Editing dialog is not loaded correctly!",
+                    shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
+            scheduleMainPage.saveSchedule();
+
+            //Check the Meal Break block on the normal mode
+            SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!", shiftOperatePage.isMealBreakBlockDisplayed(0), false);
+            shiftOperatePage.clickOnProfileIcon();
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded!",
+                    shiftOperatePage.isMealBreaksLoaded(), false);
+            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

@@ -3563,8 +3563,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             List<WebElement> names = null;
             if (areListElementVisible(namesWeekView, 10)) {
                 names = namesWeekView;
-            } else if (areListElementVisible(namesDayView, 10)) {
-                names = namesDayView;
+            } else if (areListElementVisible(shiftOuterInDayView, 10)) {
+                names = shiftOuterInDayView;
             }
             Actions action = new Actions(getDriver());
             for (int i : selectedIndex) {

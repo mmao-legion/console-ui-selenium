@@ -553,7 +553,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             SimpleUtils.fail("Schedule save button not found", false);
         }
         waitForSeconds(5);
-        if (isClickable(saveOnSaveConfirmationPopup, 20)) {
+        if (isClickable(saveOnSaveConfirmationPopup, 30)) {
             clickTheElement(saveOnSaveConfirmationPopup);
             waitForNotExists(saveOnSaveConfirmationPopup, 30);
             waitForSeconds(5);
