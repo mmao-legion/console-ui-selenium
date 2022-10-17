@@ -50,7 +50,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 List<WebElement> tempShifts = getDriver().findElements(By.cssSelector(".sch-day-view-shift-outer .right-shift-box"));
 //                scrollToElement(tempShifts.get(i));
                 scrollToBottom();
-                moveToElementAndClick(tempShifts.get(i));
+                clickTheElement(tempShifts.get(i));
                 deleteShift();
             }
         }
@@ -558,7 +558,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
 
 
-    @FindBy(xpath = "//div[@ng-if=\"!forceShowOpen && showWorkerImage(shift)\"]/worker-image/div/div")
+    @FindBy(css = ".sch-shift-worker-initials")
     private List<WebElement> profileIconsDayView;
 
     @Override
