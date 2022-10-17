@@ -2766,7 +2766,7 @@ public class LocationsTest extends TestBase {
             SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
             String currentTime = sdf.format(new Date()).trim();
             String existingLocation = "TestImportUpdateExisting";
-            String filePath = "\\src\\test\\resources\\uploadFile\\LocationTest\\UpdateLocationsWithNoReadyForForecast.csv";
+            String fileName = "UpdateLocationsWithNoReadyForForecast.csv";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -2780,9 +2780,11 @@ public class LocationsTest extends TestBase {
             locationsPage.goToLocationDetailsPage(existingLocation);
             String beforeImportValue = locationsPage.getReadyForForecastSelectedOption();
             locationsPage.goBack();
-            //Update an existing location by import file
-            locationsPage.clickOnImportBtn();
-            locationsPage.verifyImportLocationDistrict(filePath);
+
+            //get session id via login
+            String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+            //Update an existing location by import file API
+            locationsPage.importLocationsAndDistrict(fileName, sessionId);
 
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
