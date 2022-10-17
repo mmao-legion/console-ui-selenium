@@ -5321,7 +5321,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				break;
 			}
 		}
-		click(saveBtnInUpdateLocationPage);
+		waitForSeconds(2);
+		clickTheElement(saveBtnInUpdateLocationPage);
 	}
 }
 

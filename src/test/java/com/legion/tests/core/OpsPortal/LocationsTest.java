@@ -2742,7 +2742,7 @@ public class LocationsTest extends TestBase {
             //After change, Compare readyForForecast value in UI and DB
             String readyForForecastValueInUI3 = locationsPage.getReadyForForecastSelectedOption();
             System.out.println("readyForForecastValueInUI3: " + readyForForecastValueInUI3);
-            String readyForForecastInDB3 = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= '"+ newLocation + "' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
+            String readyForForecastInDB3 = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= '"+ location + "' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
             System.out.println("readyForForecastInDB3: " + readyForForecastInDB3);
             String parseValueInDB3 = readyForForecastInDB3.equals("1")? "Yes":"No";
             System.out.println("parseValueInDB3: " + parseValueInDB3);
@@ -2751,7 +2751,6 @@ public class LocationsTest extends TestBase {
             }else {
                 SimpleUtils.fail("After change for existing location, the readyForForecast Value in UI and DB are NOT the same!", false);
             }
-
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
