@@ -1,5 +1,6 @@
 package com.legion.pages.core.OpsPortal;
 
+import com.alibaba.fastjson.JSONObject;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
@@ -8,10 +9,12 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.utils.HttpUtil;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -5323,6 +5326,22 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 		waitForSeconds(2);
 		clickTheElement(saveBtnInUpdateLocationPage);
+	}
+
+	@Override
+		public void importLocationsAndDistrict(String fileName, String sessionId) throws Exception {
+		String url = "https://rc-enterprise.dev.legion.work/legion/integration/testAWSs3Put?bucketName=legion-rc-secure-ftp&key=opauto-rc/locations/" + fileName;
+		String filePath = "src/test/resources/uploadFile/LocationTest/" + fileName;
+		String responseInfo = HttpUtil.fileUploadByHttpPost(url, sessionId, filePath);
+		if (StringUtils.isNotBlank(responseInfo)) {
+			//转json数据
+			JSONObject json = JSONObject.parseObject(responseInfo);
+			if (!json.isEmpty()) {
+				//数据处理
+				String value = json.getString("responseStatus");
+				System.out.println(value);
+			}
+		}
 	}
 }
 
