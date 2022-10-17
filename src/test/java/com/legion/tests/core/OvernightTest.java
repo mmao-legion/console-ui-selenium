@@ -69,12 +69,12 @@ public class OvernightTest extends TestBase {
             switchToConsoleWindow();
             refreshCachesAfterChangeTemplate();
             //waiting for the cache
-//            int j =0;
-//            while (j< 5) {
-//                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-//                Thread.sleep(60000);
-//                j++;
-//            }
+            int j =0;
+            while (j< 2) {
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                Thread.sleep(60000);
+                j++;
+            }
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
@@ -632,7 +632,7 @@ public class OvernightTest extends TestBase {
             scheduleMainPage.saveSchedule();
             //Verify the overnight shift can display on previous day
             scheduleCommonPage.navigateDayViewWithIndex(1);
-            SimpleUtils.assertOnFail("The overnight shift also display on the previous day! ",
+            SimpleUtils.assertOnFail("The overnight shift "+firstNameOfTM1+" also display on the previous day! ",
                     scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).size()>0, false);
 
         } catch (Exception e) {

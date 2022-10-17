@@ -1827,9 +1827,10 @@ public class P2PLGTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if(!isActiveWeekGenerated){
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if(isActiveWeekGenerated){
+               createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00am", "06:00am");
             scheduleMainPage.clickOnFilterBtn();
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
             List<String> shiftInfo = new ArrayList<>();

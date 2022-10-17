@@ -7812,7 +7812,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.saveSchedule();
 			List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
 			String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(1)).toString();
-			expectedMessage = "1.5 hrs daily overtime";
+			expectedMessage = "hrs daily overtime";
 			SimpleUtils.assertOnFail(expectedMessage+ " compliance message display failed, then actual message is: "+actualMessage,
 					actualMessage.contains(expectedMessage) , false);
 		} catch (Exception e) {

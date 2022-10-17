@@ -653,7 +653,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
     @Override
     public void navigateToNextWeek() throws Exception {
         int currentWeekIndex = -1;
-        if (areListElementVisible(currentWeeks, 10)) {
+        if (areListElementVisible(currentWeeks, 20)) {
             for (int i = 0; i < currentWeeks.size(); i++) {
                 String className = currentWeeks.get(i).getAttribute("class");
                 if (className.contains("day-week-picker-period-active")) {

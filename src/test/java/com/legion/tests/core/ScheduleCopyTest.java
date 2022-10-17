@@ -244,7 +244,7 @@ public class ScheduleCopyTest extends TestBase {
                 newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
                 newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
                 newShiftPage.clickOnCreateOrNextBtn();
-                newShiftPage.selectTeamMembers();
+                newShiftPage.searchTeamMemberByName(location);
                 newShiftPage.clickOnOfferOrAssignBtn();
                 scheduleMainPage.saveSchedule();
             }
@@ -252,7 +252,8 @@ public class ScheduleCopyTest extends TestBase {
             complianceCount = smartCardPage.getComplianceShiftCountFromSmartCard("COMPLIANCE");
             if (complianceCount == 0){
                 SimpleUtils.fail("The compliance count in Compliance smart card should not be 0! ", false);
-            }
+            } else
+                SimpleUtils.pass("There are "+complianceCount+ " compliance shifts in the schedule! ");
             if (smartCardPage.isRequiredActionSmartCardLoaded()){
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
