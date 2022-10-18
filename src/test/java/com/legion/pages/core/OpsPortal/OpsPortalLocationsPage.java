@@ -2321,7 +2321,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private List<WebElement> deleteRuleIcon;
 	@FindBy(css = "lg-button[icon=\"'img/legion/add.png'\"]")
 	private List<WebElement> addDynamicGroupBtn;
-	@FindBy(css = "input[placeholder=\"You can search by name and description\"]")
+	@FindBy(xpath = "//lg-search//input")
 	private List<WebElement> dgSearchInput;
 	@FindBy(css = "[dynamic-groups=\"clockinDg\"] .fa-pencil")
 	private List<WebElement> editDGIconInClockIn;
