@@ -460,7 +460,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css = "input[placeholder*=\"You can search by name, id, district and city.\"]")
+	@FindBy(css = "input[placeholder*=\"You can search by name, id, district, country, state and city.\"]")
 	private WebElement searchInput;
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
@@ -4407,6 +4407,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	public void verifyAssignmentRulesFromLocationLevel(String assignmentRuleTitle) throws Exception {
 		boolean isAssignmentRuleExit = false;
+		waitForSeconds(5);
 		if (assignmentRules.size() != 0) {
 			for (WebElement title : assignmentConditionList) {
 				if (title.getText().contains(assignmentRuleTitle)) {
