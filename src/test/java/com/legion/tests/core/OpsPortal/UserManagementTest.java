@@ -1077,7 +1077,7 @@ public class UserManagementTest extends TestBase {
 //            forecastPage.clickOnLabor();
 //            forecastPage.verifyWorkRoleInList(workRoleName);
             //disable the work role added and it can't be searched out
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             navigationPage.navigateToUserManagement();
             panelPage.goToWorkRolesPage();
             workRolesPage.disableAWorkRole(workRoleName);
