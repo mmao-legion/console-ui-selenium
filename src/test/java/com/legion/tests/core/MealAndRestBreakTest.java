@@ -888,29 +888,28 @@ public class MealAndRestBreakTest extends TestBase {
             String firstNameOfTM = null;
             String workRole = null;
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (isActiveWeekGenerated) {
-                List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-                firstNameOfTM = shiftInfo.get(0);
-                int shiftCount1 = 0;
-                while ((firstNameOfTM.equalsIgnoreCase("open")
-                        || firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
-                    shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-                    firstNameOfTM = shiftInfo.get(0);
-                    shiftCount1++;
-                }
-                workRole = shiftInfo.get(4);
-                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            if (!isActiveWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "11:00PM");
             }
-            Thread.sleep(5000);
-            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "11:00PM");
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+            firstNameOfTM = shiftInfo.get(0);
+            int shiftCount1 = 0;
+            while ((firstNameOfTM.equalsIgnoreCase("open")
+                    || firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM = shiftInfo.get(0);
+                shiftCount1++;
+            }
+            workRole = shiftInfo.get(4);
+            Thread.sleep(3000);
 
-            //Delete all auto-generated shifts on the current day
-            scheduleCommonPage.clickOnDayView();
+            //Delete particular TM shifts on the current day
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
 
             //Create a 5hrs new shift and assign it to the particular TM
+            scheduleCommonPage.clickOnDayView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -924,6 +923,8 @@ public class MealAndRestBreakTest extends TestBase {
             newShiftPage.clickOnOfferOrAssignBtn();
 
             //Check the Meal Break block on the editing mode
+            scheduleMainPage.clickOnOpenSearchBoxButton();
+            scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
             SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
                     shiftOperatePage.isMealBreakBlockDisplayed(0), false);
             shiftOperatePage.clickOnProfileIcon();
@@ -1166,29 +1167,28 @@ public class MealAndRestBreakTest extends TestBase {
             String firstNameOfTM = null;
             String workRole = null;
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (isActiveWeekGenerated) {
-                List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-                firstNameOfTM = shiftInfo.get(0);
-                int shiftCount1 = 0;
-                while ((firstNameOfTM.equalsIgnoreCase("open")
-                        || firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
-                    shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-                    firstNameOfTM = shiftInfo.get(0);
-                    shiftCount1++;
-                }
-                workRole = shiftInfo.get(4);
-                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            if (!isActiveWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "11:00PM");
             }
-            Thread.sleep(5000);
-            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "11:00PM");
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+            firstNameOfTM = shiftInfo.get(0);
+            int shiftCount1 = 0;
+            while ((firstNameOfTM.equalsIgnoreCase("open")
+                    || firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM = shiftInfo.get(0);
+                shiftCount1++;
+            }
+            workRole = shiftInfo.get(4);
+            Thread.sleep(3000);
 
-            //Delete all auto-generated shifts on the current day
-            scheduleCommonPage.clickOnDayView();
+            //Delete all auto-generated open shifts in the week
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
 
             //Create a 5hrs new open shift
+            scheduleCommonPage.clickOnDayView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             newShiftPage.clickOnDayViewAddNewShiftButton();
