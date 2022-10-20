@@ -263,5 +263,6 @@ public interface ConfigurationPage {
     public void verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable() throws Exception;
     public void clickOnAddButtonOfDynamicLocationGroupOfAdvancedStaffingRule() throws Exception;
     public void advanceStaffingRuleDynamicGroupDialogUICheck(String name) throws Exception;
+    public void advanceStaffingRuleEditDeleteADynamicGroup(String dyname) throws Exception;
 }
 

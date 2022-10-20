@@ -5232,11 +5232,7 @@ public class ConfigurationTest extends TestBase {
             //check dynamic group dialog UI
             configurationPage.advanceStaffingRuleDynamicGroupDialogUICheck(dynamicGpName);
             //edit the dynamic group
-            configurationPage.editADynamicGroup(dynamicGpName);
-            //search the dynamic group to delete
-            configurationPage.deleteOneDynamicGroup(dynamicGpName);
-            //save draft template
-            configurationPage.saveADraftTemplate();
+            configurationPage.advanceStaffingRuleEditDeleteADynamicGroup(dynamicGpName);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
