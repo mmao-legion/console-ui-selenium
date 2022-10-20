@@ -2766,7 +2766,9 @@ public class LocationsTest extends TestBase {
             SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
             String currentTime = sdf.format(new Date()).trim();
             String existingLocation = "TestImportUpdateExisting";
-            String fileName = "UpdateLocationsWithNoReadyForForecast.csv";
+            String fileWithNoReadyForForecast = "UpdateLocationsWithNoReadyForForecast.csv";
+            String fileWithReadyForForecastNo = "UpdateLocationsWithReadyForForecastNo.csv";
+            String fileWithReadyForForecastYes = "UpdateLocationsWithReadyForForecastYes.csv";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -2780,18 +2782,36 @@ public class LocationsTest extends TestBase {
             locationsPage.goToLocationDetailsPage(existingLocation);
             String beforeImportValue = locationsPage.getReadyForForecastSelectedOption();
             locationsPage.goBack();
-
-            //get session id via login
-            String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
-            //Update an existing location by import file API
-            locationsPage.importLocationsAndDistrict(fileName, sessionId);
+            //Update an existing location by import file
+            locationsPage.clickOnImportBtn();
+            locationsPage.verifyImportLocationDistrict(fileWithNoReadyForForecast);
 
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
             String afterImportValue = locationsPage.getReadyForForecastSelectedOption();
             SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", beforeImportValue.equalsIgnoreCase(afterImportValue), false);
+            locationsPage.goBack();
+            //Update the existing location by import file, change  to No
+            locationsPage.clickOnImportBtn();
+            locationsPage.verifyImportLocationDistrict(fileWithReadyForForecastNo);
+
+            //After import, existing location, get readyForForecast value in UI
+            locationsPage.goToLocationDetailsPage(existingLocation);
+            afterImportValue = locationsPage.getReadyForForecastSelectedOption();
+            SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", "No".equalsIgnoreCase(afterImportValue), false);
+            locationsPage.goBack();
+
+            //Update the existing location by import file, change  to Yes
+            locationsPage.clickOnImportBtn();
+            locationsPage.verifyImportLocationDistrict(fileWithReadyForForecastYes);
+
+            //After import, existing location, get readyForForecast value in UI
+            locationsPage.goToLocationDetailsPage(existingLocation);
+            afterImportValue = locationsPage.getReadyForForecastSelectedOption();
+            SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", "Yes".equalsIgnoreCase(afterImportValue), false);
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
 }
