@@ -1,6 +1,7 @@
 package com.legion.pages.core.schedule;
 
 import com.legion.pages.*;
+import com.legion.tests.TestBase;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -1685,7 +1686,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     }
 
 
-    @FindBy(css = "span[ng-if=\"canEditWorkingHours\"]")
+    @FindBy(css = ".edit-operating-hours-link span.ng-binding")
     private List<WebElement> editOperatingHousButtonOnUngenerateSchedulePage;
 
     public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception {

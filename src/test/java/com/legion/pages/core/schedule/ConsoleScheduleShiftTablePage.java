@@ -1700,8 +1700,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public HashMap<String, String> getTheHoursNTheCountOfTMsForEachWeekDays() throws Exception {
         HashMap<String, String> hoursNTeamMembersCount = new HashMap<>();
-        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
-            for (int i = 0; i < weekDayDimensions.size(); i++) {
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 14) {
+            for (int i = 0; i < weekDayDimensions.size()-7; i++) {
                 WebElement weekDay = weekDayDimensions.get(i).findElement(By.className("sch-calendar-day-label"));
                 WebElement hoursNCount = weekDayDimensions.get(i).findElement(By.className("sch-calendar-day-summary"));
                 List<WebElement> shiftsInSameDay = getDriver().findElements(By.cssSelector("[data-day-index=\"" + i +"\"] .week-schedule-shift-wrapper"));
@@ -1724,10 +1724,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public HashMap<String, List<String>> getTheContentOfShiftsForEachWeekDay() throws Exception {
         HashMap<String, List<String>> shiftsForEachDay = new HashMap<>();
-        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
-            for (WebElement weekDayDimension : weekDayDimensions) {
-                WebElement weekDay = weekDayDimension.findElement(By.className("sch-calendar-day-label"));
-                List<WebElement> weekShiftWrappers = weekDayDimension.findElements(By.className("week-schedule-shift-wrapper"));
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 14) {
+            for (int i=0; i< weekDayDimensions.size()-7;i++) {
+                WebElement weekDay = weekDayDimensions.get(i).findElement(By.className("sch-calendar-day-label"));
+                List<WebElement> weekShiftWrappers = weekDayDimensions.get(i).findElements(By.className("week-schedule-shift-wrapper"));
                 List<String> infos = new ArrayList<>();
                 if (weekShiftWrappers != null && weekShiftWrappers.size() > 0) {
                     for (WebElement weekShiftWrapper : weekShiftWrappers) {
