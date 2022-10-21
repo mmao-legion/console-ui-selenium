@@ -918,9 +918,16 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	//Added by Julie
 	@FindBy(css = "[ng-click=\"switchView()\"]")
 	private WebElement switchToEmployeeView;
+	@FindBy(css = ".header-user-switch-menu")
+	private WebElement headerUserSwitchMenu;
+	@FindBy(id = "legion_Profile_button")
+	private WebElement profileIcon;
 
 	@Override
 	public boolean isSwitchToEmployeeViewPresent() throws Exception {
+		if (!isElementLoaded(headerUserSwitchMenu, 3)) {
+			clickTheElement(profileIcon);
+		}
 		if (isElementLoaded(switchToEmployeeView, 10))
 			return true;
 		else
@@ -930,7 +937,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public void clickOnSwitchToEmployeeView() throws Exception {
 		if (isElementLoaded(switchToEmployeeView, 10)) {
-			click(switchToEmployeeView);
+			clickTheElement(switchToEmployeeView);
 			SimpleUtils.pass("Click on Switch To Employee View Successfully!");
 		} else {
 			SimpleUtils.fail("Switch To Employee View not Loaded!", true);
