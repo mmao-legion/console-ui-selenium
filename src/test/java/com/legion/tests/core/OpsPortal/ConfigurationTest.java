@@ -1587,7 +1587,7 @@ public class ConfigurationTest extends TestBase {
             //Go to Templates tab
             settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
             //Add new demand driver template, warning message will show up when no driver created
-            if(configurationPage.searchTemplate(templateName)){
+            while(configurationPage.searchTemplate(templateName)){
                 configurationPage.clickOnTemplateName(templateName);
                 configurationPage.clickOnEditButtonOnTemplateDetailsPage();
                 settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();

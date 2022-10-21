@@ -20,6 +20,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
+import java.io.File;
 import java.util.*;
 
 import static com.jayway.restassured.RestAssured.given;
@@ -735,15 +736,21 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	@Override
-	public void verifyImportLocationDistrict(String filePath) {
-		String pth = System.getProperty("user.dir");
+	public void verifyImportLocationDistrict(String fileName) throws Exception{
+		String absolutePath = new File("").getCanonicalPath();
+		String relativePath = "/src/test/resources/uploadFile/LocationTest/";
+		String path = absolutePath + relativePath + fileName;
+		SimpleUtils.report("------------");
+		SimpleUtils.report("absolutePath is: " + absolutePath);
+		SimpleUtils.report("path is: " + path);
+		SimpleUtils.report("Just test: " + new File("").getAbsolutePath());
 		if (isElementEnabled(importBtn, 5)) {
 			click(importBtn);
 			if (verifyImportLocationsPageShow()) {
 				SimpleUtils.pass("Import location page show well");
 			} else
 				SimpleUtils.fail("Import location page load failed", true);
-			uploaderFileInputBtn.sendKeys(pth + filePath);
+			uploaderFileInputBtn.sendKeys(path);
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
 			waitForSeconds(15);
@@ -5305,6 +5312,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public String getReadyForForecastSelectedOption() throws Exception {
+		waitForSeconds(2);
+		scrollToBottom();
 		String selectedOption = "";
 		List<WebElement> yesOrNoOptions = readyForForecastOption.findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
 		for (WebElement choose : yesOrNoOptions) {
@@ -5326,7 +5335,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				break;
 			}
 		}
-		waitForSeconds(2);
+		waitForSeconds(5);
 		clickTheElement(saveBtnInUpdateLocationPage);
 	}
 
