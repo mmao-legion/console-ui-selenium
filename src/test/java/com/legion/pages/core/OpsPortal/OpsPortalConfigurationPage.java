@@ -7551,6 +7551,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 						SimpleUtils.pass("group name is required message displayed if not input");
 					dynamicGroupName.sendKeys(name);
 					waitForSeconds(2);
+					groupDescriptionInput.clear();
+					groupDescriptionInput.sendKeys("description_qaz123@_");
+					waitForSeconds(2);
+					groupDescriptionInput.clear();
 					String[] criteriaOps = {"Custom", "District", "Country", "State", "City", "Location Name",
 							"Location Id", "Location Type", "UpperField", "Config Type"};
 					for (String ss : criteriaOps) {
