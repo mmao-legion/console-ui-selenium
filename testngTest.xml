@@ -17,12 +17,12 @@
                     <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForP2PLGAsInternalAdmin" />
                     <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateP2PScheduleAsInternalAdmin" />
                     <include name="validateTheButtonsOnP2PLGSchedulePageAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForP2PLGAsInternalAdmin" />
+<!--                    <include name="validateTheFunctionOfAutoOpenShiftForP2PLGAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-7919-->
                     <include name="validateTheFunctionOfAutoOpenShiftInDayViewForP2PLGAsInternalAdmin" />
                     <include name="validateTheFunctionOfManualOpenShiftForP2PLGAsInternalAdmin" />
                     <include name="validateTheFunctionOfManualOpenShiftInDayViewFoP2PLGAsInternalAdmin" />
                     <include name="validateTheFunctionOfAssignTMShiftForP2PLGAsInternalAdmin" />
-                    <include name="verifyAssignTMWhenTMHasTimeOffThatDayForP2PLGAsStoreManager" />
+<!--                    <include name="verifyAssignTMWhenTMHasTimeOffThatDayForP2PLGAsStoreManager" /> -->
                     <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForP2PAsInternalAdmin" />
                     <include name="validateAssignTMWhenTMHasMaxNoOfShiftsScheduledForP2PAsInternalAdmin" />
                     <include name="validateAssignTMWhenTMHasOverlappingViolationForP2PAsInternalAdmin" />
@@ -52,7 +52,7 @@
                     <include name="validateTheFunctionOfManualOpenShiftForParentChildLGAsInternalAdmin" />
                     <include name="validateTheFunctionOfManualOpenShiftInDayViewForParentChildLGAsInternalAdminPC" />
                     <include name="validateTheFunctionOfAssignTMShiftForParentChildLGAsInternalAdmin" />
-                    <include name="verifyAssignTMWhenTMHasTimeOffThatDayForParentChildLGAsStoreManager" />
+<!--                    <include name="verifyAssignTMWhenTMHasTimeOffThatDayForParentChildLGAsStoreManager" /> -->
                     <include name="validateAssignTMWhenTMHasMaxNoOfShiftsScheduledForParentChildAsInternalAdmin" />
                     <include name="validateAssignTMWhenTMHasOverlappingViolationForParentChildAsInternalAdmin" />
                     <include name="validateTheGroupByDropdownListForParentChildAsInternalAdmin" />
@@ -67,6 +67,7 @@
             </class>
         </classes>
     </test>
+    <!--
     <test name="Schedule Test KendraScott2">
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
@@ -76,4 +77,5 @@
             </class>
         </classes>
     </test>
+    -->
 </suite> 

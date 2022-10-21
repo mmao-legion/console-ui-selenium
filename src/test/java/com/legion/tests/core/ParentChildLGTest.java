@@ -560,6 +560,8 @@ public class ParentChildLGTest extends TestBase {
             shiftOperatePage.verifyEditMealBreakTimeFunctionalityForAShift(true, selectedShift);
 
             //Offer Team members
+            scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
             shiftOperatePage.clickOnOfferTMOption();
@@ -575,6 +577,7 @@ public class ParentChildLGTest extends TestBase {
             shiftOperatePage.closeViewStatusContainer();
 
             //Assign TM
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
             shiftOperatePage.clickonAssignTM();
             newShiftPage.verifySelectTeamMembersOption();
@@ -688,6 +691,8 @@ public class ParentChildLGTest extends TestBase {
                 shiftOperatePage.verifyMealBreakTimeDisplayAndFunctionality(false);
 
             //Offer Team members
+            scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
             shiftOperatePage.clickOnOfferTMOption();
@@ -700,6 +705,7 @@ public class ParentChildLGTest extends TestBase {
             shiftOperatePage.closeViewStatusContainer();
 
             //Assign TM
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
             shiftOperatePage.clickonAssignTM();
             newShiftPage.verifySelectTeamMembersOption();

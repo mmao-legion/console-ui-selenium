@@ -568,7 +568,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @Override
     public WebElement clickOnProfileIcon() throws Exception {
         WebElement selectedShift = null;
-        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+        if(areListElementVisible(profileIcons, 10)&& areListElementVisible(shifts, 10)) {
             int randomIndex = (new Random()).nextInt(profileIcons.size());
             int i = 0;
             while (i < 100 && profileIcons.get(randomIndex).getAttribute("src").contains("openShiftImage")){
@@ -625,7 +625,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @Override
     public WebElement getShiftElementByIndex(int index) throws Exception {
         WebElement selectedShift = null;
-        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+        if(areListElementVisible(shifts, 10)) {
             selectedShift = shifts.get(index);
         } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
             selectedShift = dayViewAvailableShifts.get(index);
@@ -1295,7 +1295,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     public WebElement clickOnProfileIconOfOpenShift() throws Exception {
         WebElement selectedShift = null;
-        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+        if(areListElementVisible(profileIcons, 10)
+                && areListElementVisible(shifts, 10)) {
             int i;
             for (i=0; i<profileIcons.size(); i++){
                 if (profileIcons.get(i).getAttribute("src").contains("openShiftImage")){

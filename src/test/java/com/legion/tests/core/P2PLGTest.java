@@ -448,6 +448,8 @@ public class P2PLGTest extends TestBase {
             shiftOperatePage.verifyEditMealBreakTimeFunctionalityForAShift(true, selectedShift);
 
             //Offer Team members
+            scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
             shiftOperatePage.clickOnOfferTMOption();
@@ -463,6 +465,7 @@ public class P2PLGTest extends TestBase {
             shiftOperatePage.closeViewStatusContainer();
 
             //Assign TM
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
             shiftOperatePage.clickonAssignTM();
             newShiftPage.verifySelectTeamMembersOption();
@@ -580,6 +583,9 @@ public class P2PLGTest extends TestBase {
                 shiftOperatePage.verifyMealBreakTimeDisplayAndFunctionality(false);
 
             //Offer Team members
+            scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
+
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
             shiftOperatePage.clickOnOfferTMOption();
@@ -592,6 +598,7 @@ public class P2PLGTest extends TestBase {
             shiftOperatePage.closeViewStatusContainer();
 
             //Assign TM
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
             shiftOperatePage.clickonAssignTM();
             newShiftPage.verifySelectTeamMembersOption();
@@ -984,9 +991,10 @@ public class P2PLGTest extends TestBase {
             String[] items = activeWeek.split(" ");
             String fromDate = year.get(0)+ " " + items[3] + " " + items[4];
             String endDate = year.get(0)+ " " + items[6] + " " + items[7];
-            String nickNameFromProfile = profileNewUIPage.getNickNameFromProfile();
+//            String nickNameFromProfile = profileNewUIPage.getNickNameFromProfile();
             String myProfileLabel = "My Profile";
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+            String nickNameFromProfile = profileNewUIPage.getUserProfileName().get("fullName");
             String myTimeOffLabel = "My Time Off";
             profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
             String timeOffReasonLabel = "JURY DUTY";
@@ -1026,7 +1034,7 @@ public class P2PLGTest extends TestBase {
             String myProfileLabel = "My Profile";
             String myTimeOffLabel = "My Time Off";
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            profileNewUIPage.getNickNameFromProfile();
+            profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
             profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
             profileNewUIPage.cancelAllTimeOff();
