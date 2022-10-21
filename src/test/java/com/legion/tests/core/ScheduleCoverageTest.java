@@ -387,6 +387,8 @@ public class ScheduleCoverageTest extends TestBase {
                 String shiftTime = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(i).get(2);
                 if (shiftTime.replace(":00 ", "").toLowerCase().contains(timesInLaborForecastChart.get(0).toLowerCase())) {
                     scheduledHour += 1;
+                } else if (shiftTime.replace(":30 ", "").toLowerCase().contains(timesInLaborForecastChart.get(0).toLowerCase())){
+                    scheduledHour += 0.5;
                 }
             }
 

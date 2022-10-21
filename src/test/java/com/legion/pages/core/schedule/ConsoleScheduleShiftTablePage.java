@@ -514,6 +514,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private List<WebElement> namesDayView;
     @FindBy(css = ".shift-selected-multi")
     private List<WebElement> selectedShifts;
+    @FindBy(css = "._pendo-button-tertiaryButton")
+    private WebElement maybeLaterBtn;
 
     @Override
     public void verifyShiftsChangeToOpenAfterTerminating(List<Integer> indexes, String name, String currentTime) throws Exception {
@@ -970,8 +972,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             if (firstNameOfTM != null) {
                 for (int i=0; i< searchResults.size(); i++) {
                     String[] tmDetailName = shiftOperatePage.getTMDetailNameFromProfilePage(searchResults.get(i)).split(" ");
-                    if (firstNameOfTM.equals(tmDetailName[0])|| firstNameOfTM.equals(tmDetailName[1]) || tmDetailName[0].contains(firstNameOfTM)
-                            || tmDetailName[1].contains(firstNameOfTM)) {
+                    if (firstNameOfTM.equalsIgnoreCase(tmDetailName[0])
+                            || firstNameOfTM.equalsIgnoreCase(tmDetailName[1])
+                            || tmDetailName[0].toLowerCase().contains(firstNameOfTM.toLowerCase())
+                            || tmDetailName[1].toLowerCase().contains(firstNameOfTM.toLowerCase())) {
                         SimpleUtils.pass("The search result display correctly when search by TM first name");
                     } else {
                         SimpleUtils.fail("The search result incorrect when search by TM first name, the expected name is: " + firstNameOfTM+ ". The actual name is: " + tmDetailName[0] +" " +tmDetailName[1],false);
@@ -981,7 +985,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             } else if (lastNameOfTM != null) {
                 for (int i=0; i< searchResults.size(); i++) {
                     String[] tmDetailName = shiftOperatePage.getTMDetailNameFromProfilePage(searchResults.get(i)).split(" ");
-                    if (tmDetailName[0].contains(lastNameOfTM) || tmDetailName[1].contains(lastNameOfTM)) {
+                    if (tmDetailName[0].toLowerCase().contains(lastNameOfTM.toLowerCase())
+                            || tmDetailName[1].toLowerCase().contains(lastNameOfTM.toLowerCase())) {
                         SimpleUtils.pass("The search result display correctly when search by TM last name");
                     } else {
                         SimpleUtils.fail("The search result incorrect when search by TM last name",false);
@@ -1044,7 +1049,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @FindBy(className = "popover-content")
     private WebElement popOverContent;
-    public Map<String, String> getShiftInfoFromInfoPopUp(WebElement shift) {
+    public Map<String, String> getShiftInfoFromInfoPopUp(WebElement shift) throws Exception {
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         Map<String, String> shiftInfo = new HashMap<String, String>();
         if (shift != null) {
@@ -1085,6 +1090,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 shiftInfo.put("WeeklyHrs", shiftHrs[1].trim().split(" ")[0]);
             }
         }
+        ScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
+        //To close the popup
+        scheduleMainPage.clickOnFilterBtn();
+        scheduleMainPage.clickOnFilterBtn();
         return shiftInfo;
     }
 
@@ -2325,7 +2334,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         return count;
     }
 
-    @FindBy(css = ".drag-target-day-bottom .sch-calendar-day-label")
+    @FindBy(css = ".sch-calendar-day-label")
     private List<WebElement> weekDayLabels;
     @Override
     public String getWeekDayTextByIndex(int index) throws Exception {
@@ -2353,6 +2362,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (action.equalsIgnoreCase("swap")) {
             if (areListElementVisible(warningMessagesInSwap, 15) && warningMessagesInSwap.size() > 0) {
                 for (int i = 0; i < warningMessagesInSwap.size(); i++) {
+                    SimpleUtils.pass("The warning message is : "+warningMessagesInSwap.get(i).getText().toLowerCase());
                     if (warningMessagesInSwap.get(i).getText().toLowerCase().contains(expectedMessage.toLowerCase())) {
                         canFindTheExpectedMessage = true;
                         SimpleUtils.pass("The expected message can be find successfully");
@@ -2524,11 +2534,22 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
     }
 
+    @Override
+    public boolean isOkButtonInWarningModeLoaded() throws Exception {
+        if(isElementLoaded(okBtnInWarningMode, 5)) {
+            SimpleUtils.report("The OK button is loaded on warning mode!");
+            return true;
+        } else {
+            SimpleUtils.report("The OK button is not loaded on warning mode!");
+            return false;
+        }
+    }
+
 
     @Override
     public void moveAnywayWhenChangeShift() throws Exception {
         if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")),10)){
-            if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().equals("MOVE ANYWAY")) {
+            if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().trim().equals("MOVE ANYWAY")) {
                 click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
                 SimpleUtils.pass("move anyway button clicked!");
             } else {
@@ -2539,6 +2560,20 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
     }
 
+
+    @Override
+    public void copyAnywayWhenChangeShift() throws Exception {
+        if (isElementLoaded(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")),10)){
+            if (moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")).getText().trim().equals("COPY ANYWAY")) {
+                click(moveAnywayDialog.findElement(By.cssSelector(".lgn-action-button-success")));
+                SimpleUtils.pass("copy anyway button clicked!");
+            } else {
+                SimpleUtils.fail("copy anyway button fail to load!",false);
+            }
+        } else {
+            SimpleUtils.fail("copy anyway button fail to load!",false);
+        }
+    }
 
     @Override
     public void verifyShiftIsMovedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception {
@@ -2704,7 +2739,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> shiftsOfOneTM = new ArrayList<>();
         if (areListElementVisible(dayViewAvailableShifts, 5) && dayViewAvailableShifts != null && dayViewAvailableShifts.size() > 0) {
             for (WebElement shift : dayViewAvailableShifts) {
-                String shiftName = getShiftInfoFromInfoPopUp(shift).get("shiftName");
+                String shiftName = shift.findElement(By.cssSelector(".sch-day-view-shift-worker-name")).getText().split("\\(")[0].trim();
                 if (shiftName.toLowerCase().contains(name.toLowerCase())) {
                     shiftsOfOneTM.add(shift);
                     SimpleUtils.pass("shift exists on this day!");
@@ -3450,6 +3485,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @Override
     public HashSet<Integer> verifyCanSelectMultipleShifts(int shiftCount) throws Exception {
+        skipTheNewFeatureDialog();
         HashSet<Integer> set = new HashSet<>();
         List<WebElement> names = null;
         if (areListElementVisible(namesWeekView, 10)) {
@@ -3480,8 +3516,19 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         return set;
     }
 
+    private void skipTheNewFeatureDialog() throws Exception {
+        try {
+            if (isElementLoaded(maybeLaterBtn, 5)) {
+                clickTheElement(maybeLaterBtn);
+            }
+        } catch (Exception e) {
+            // Do nothing
+        }
+    }
+
     @Override
     public void selectSpecificShifts(HashSet<Integer> shiftIndexes) throws Exception {
+        skipTheNewFeatureDialog();
         if (!areListElementVisible(selectedShifts, 5)) {
             List<WebElement> names = null;
             if (areListElementVisible(namesWeekView, 10)) {
@@ -3516,8 +3563,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             List<WebElement> names = null;
             if (areListElementVisible(namesWeekView, 10)) {
                 names = namesWeekView;
-            } else if (areListElementVisible(namesDayView, 10)) {
-                names = namesDayView;
+            } else if (areListElementVisible(shiftOuterInDayView, 10)) {
+                names = shiftOuterInDayView;
             }
             Actions action = new Actions(getDriver());
             for (int i : selectedIndex) {
@@ -3874,7 +3921,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(css = "[value=\"config.allowConvertToOpen\"]")
     private WebElement allowConvertToOpenSwitch;
     public void enableOrDisableAllowComplianceErrorSwitch (boolean enableOrDisable) throws Exception {
-        if (isElementLoaded(allowComplianceErrorSwitch, 5)) {
+        if (isElementLoaded(allowComplianceErrorSwitch, 10)) {
             if (enableOrDisable) {
                 if (allowComplianceErrorSwitch.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")) {
                     click(allowComplianceErrorSwitch);

@@ -181,6 +181,7 @@ public class ActivityTest extends TestBase {
 
         // For Swap Feature
         List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
+        mySchedulePage.selectSchedulFilter("Scheduled");
         int index = mySchedulePage.verifyClickOnAnyShift();
         String request = "Request to Swap Shift";
         String title = "Find Shifts to Swap";
@@ -1148,6 +1149,7 @@ public class ActivityTest extends TestBase {
             }
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();
@@ -1895,6 +1897,7 @@ public class ActivityTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             //to generate schedule  if current week is not generated
             scheduleCommonPage.navigateToNextWeek();
+            Thread.sleep(2000);
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(isActiveWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -2168,7 +2171,7 @@ public class ActivityTest extends TestBase {
             String shiftStartTime = "8AM";
             String shiftEndTime = "11AM";
             createShiftsWithSpecificValues(workRole, null, null,
-                    "8AM", "11AM", 1,  Arrays.asList(0),
+                    shiftStartTime, shiftEndTime, 1,  Arrays.asList(0),
                     ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), null, "");
 
             scheduleMainPage.saveSchedule();
@@ -2185,7 +2188,7 @@ public class ActivityTest extends TestBase {
             scheduleShiftTablePage.clickViewStatusBtn();
             shiftOperatePage.verifyTMInTheOfferList(teamMemberName1, "offered");
             shiftOperatePage.closeViewStatusContainer();
-            Thread.sleep(120000);
+//            Thread.sleep(120000);
             loginPage.logOut();
 
             // Login as two or more TMs and claim the offers

@@ -19,6 +19,7 @@ public interface EditShiftPage {
     public void clickOnDateSelect() throws Exception;
     public void clickOnWorkRoleSelect() throws Exception;
     public void clickOnAssignmentSelect() throws Exception;
+    public void clickOnLocationSelect() throws Exception;
     public void selectSpecificOptionByText(String text) throws Exception;
     public String getSelectedWorkRole() throws Exception;
     public String getSelectedDate() throws Exception;

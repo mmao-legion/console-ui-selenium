@@ -207,4 +207,9 @@ public class ConsoleWebPageFactory implements PageFactory {
 
 	@Override
 	public EditShiftPage createEditShiftPage() {return new ConsoleEditShiftPage(); }
+
+	@Override
+	public ShiftPatternPage createConsoleShiftPatternPage() {
+		return new ConsoleShiftPatternPage();
+	}
 }

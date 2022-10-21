@@ -151,7 +151,7 @@ public class SplitAndSpreadTest extends TestBase {
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
         newShiftPage.searchTeamMemberByName(firstNameOfTM1);
-        String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+        String shiftWarningMessage = MyThreadLocal.getMessageOfTMScheduledStatus();
         SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("will trigger split shift"), false);
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
@@ -993,8 +993,8 @@ public class SplitAndSpreadTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify 'This will trigger spread hours' warning when dragging the shift to another day")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySpreadOfHoursViolationWhenDraggingTheShiftToAnotherDayAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1118,7 +1118,7 @@ public class SplitAndSpreadTest extends TestBase {
             // Swap TM1 and TM2, check the TMs been swapped successfully
             scheduleShiftTablePage.selectCopyOrMoveByOptionName("copy");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
-            scheduleShiftTablePage.moveAnywayWhenChangeShift();
+            scheduleShiftTablePage.copyAnywayWhenChangeShift();
             scheduleMainPage.saveSchedule();
             shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             Thread.sleep(5000);

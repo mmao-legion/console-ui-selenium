@@ -297,6 +297,9 @@ public class BulkCreateTest extends TestBase {
             String shiftAssignedExpectMessage = "Shifts Assigned 0 of "+count;
             String shiftAssignedActualMessage = newShiftPage.getShiftAssignedMessage();
             String shiftOffersExpectMessage = "0 Shift Offers for "+count+" Open Shifts";
+            if (count==1) {
+                shiftOffersExpectMessage = "0 Shift Offers for "+count+" Open Shift";
+            }
             String shiftOfferActualMessage = newShiftPage.getShiftOffersMessage();
             SimpleUtils.assertOnFail("The shift assigned message display incorrectly! the expect is:"+ shiftAssignedExpectMessage
                             +" the actual is: " +shiftAssignedActualMessage,
@@ -437,6 +440,11 @@ public class BulkCreateTest extends TestBase {
             //Click the Assign button of one TMs
             MyThreadLocal.setAssignTMStatus(true);
             String firstNameOfSelectedTM = newShiftPage.selectTeamMembers().split(" ")[0];
+            //Check the No. of shift per day display correctly:SCH-7055
+            int shiftPerday = newShiftPage.getNoOfShiftPerDayOnSearchTMPage();
+            SimpleUtils.assertOnFail("The shift per day display incorrectly, the expected is:"+count
+                            +" The actual is:"+shiftPerday,
+                    shiftPerday== count, false);
             //The TM will removed from the recommended list
             SimpleUtils.assertOnFail("The assinged TM should remove from search TM list! ",
                     newShiftPage.getSearchAndRecommendedResult().size() == resultCount-1, false);
@@ -456,6 +464,11 @@ public class BulkCreateTest extends TestBase {
             //Click the Offer button of one TMs
             MyThreadLocal.setAssignTMStatus(false);
             firstNameOfSelectedTM = newShiftPage.selectTeamMembers().split(" ")[0];
+            //Check the No. of shift per day display correctly:SCH-7055
+//            shiftPerday = newShiftPage.getNoOfShiftPerDayOnSearchTMPage();
+//            SimpleUtils.assertOnFail("The shift per day display incorrectly, the expected is:"+count
+//                            +" The actual is:"+shiftPerday,
+//                    shiftPerday== count, false);
             //The TM will removed from the recommended list
             SimpleUtils.assertOnFail("The offered TM should remove from search TM list! ",
                     newShiftPage.getSearchAndRecommendedResult().size() == resultCount-1, false);
@@ -468,8 +481,6 @@ public class BulkCreateTest extends TestBase {
             SimpleUtils.assertOnFail("It should has no offered TM display on the Shift Offers section! ",
                     newShiftPage.getShiftOffersOnShiftAssignedSection().size() == 0, false);
 
-
-
             //Check the TMs on Recommended TMs tabs, the TMs display with Assign and Offer buttons
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             resultCount = newShiftPage.getSearchAndRecommendedResult().size();
@@ -478,8 +489,10 @@ public class BulkCreateTest extends TestBase {
             MyThreadLocal.setAssignTMStatus(true);
             firstNameOfSelectedTM = newShiftPage.selectTeamMembers().split(" ")[0];
             //The TM will removed from the recommended list
-            SimpleUtils.assertOnFail("The assigned TM should remove from recommended list! ",
-                    newShiftPage.getSearchAndRecommendedResult().size() == resultCount-1, false);
+            int actualCount = newShiftPage.getSearchAndRecommendedResult().size();
+            SimpleUtils.assertOnFail("The assigned TM should remove from recommended list! The expected count is "+(resultCount-1)
+                            + " the actual count is: "+actualCount,
+                    actualCount== resultCount-1, false);
             //The TMs will replace the ‘Open Shift’ avatars on Shifts Assigned sections
             SimpleUtils.assertOnFail("The assigned TM should remove from recommended list! ",
                     newShiftPage.getOpenShiftCountOnShiftAssignedSection() == openShiftCount-1, false);
@@ -649,8 +662,10 @@ public class BulkCreateTest extends TestBase {
             MyThreadLocal.setAssignTMStatus(true);
             firstNameOfSelectedTM = newShiftPage.selectTeamMembers().split(" ")[0];
             //The TM will removed from the recommended list
-            SimpleUtils.assertOnFail("The assigned TM should remove from recommended list! ",
-                    newShiftPage.getSearchAndRecommendedResult().size() == resultCount-1, false);
+            int actualCount = newShiftPage.getSearchAndRecommendedResult().size();
+            SimpleUtils.assertOnFail("The assigned TM should remove from recommended list! The expected count is:"
+                            + (resultCount-1)+" The actual count is: "+actualCount,
+                    actualCount == resultCount-1, false);
             //The TMs will replace the ‘Open Shift’ avatars on Shifts Assigned sections
             SimpleUtils.assertOnFail("The assigned TM should remove from recommended list! ",
                     newShiftPage.getOpenShiftCountOnShiftAssignedSection() == openShiftCount-1, false);
@@ -1189,8 +1204,8 @@ public class BulkCreateTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify offer shift by each days")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateOfferShiftByEachDaysAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -1384,7 +1399,7 @@ public class BulkCreateTest extends TestBase {
 
             List<WebElement> assignedShiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, assignedTM.split(" ")[0]);
             SimpleUtils.assertOnFail("The "+assignedTM+" shift is not exist on the first day! ",
-                    assignedShiftsOfOneDay.size()==1, false);
+                    assignedShiftsOfOneDay.size()>=1, false);
 
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             createSchedulePage.createScheduleForNonDGFlowNewUI();

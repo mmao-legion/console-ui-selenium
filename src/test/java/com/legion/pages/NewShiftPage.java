@@ -112,5 +112,5 @@ public interface NewShiftPage {
     public String getTMAvailableColourForAssignedShift () throws Exception;
     public void setStartTimeAndEndTimeForShift(String start, String end) throws Exception;
     public void selectWorkRoleCaseSensitive(String workRoles) throws Exception;
-
+    public void clickCloseBtnForCreateShift() throws Exception;
 }

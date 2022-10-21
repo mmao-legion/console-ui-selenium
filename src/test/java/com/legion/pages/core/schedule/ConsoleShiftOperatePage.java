@@ -47,10 +47,10 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if (areListElementVisible(dayViewAvailableShifts,10)){
             int count = dayViewAvailableShifts.size();
             for (int i = 0; i < count; i++) {
-                List<WebElement> tempShifts = getDriver().findElements(By.cssSelector(".sch-day-view-shift-outer .right-shift-box"));
-//                scrollToElement(tempShifts.get(i));
-                scrollToBottom();
-                moveToElementAndClick(tempShifts.get(i));
+                WebElement tempShift = dayViewAvailableShifts.get(i).findElement(By.cssSelector(".sch-day-view-shift-outer .right-shift-box>div:nth-child(2)"));
+                scrollToElement(tempShift);
+                waitForSeconds(1);
+                moveToElementAndClick(tempShift);
                 deleteShift();
             }
         }
@@ -558,7 +558,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
 
 
-    @FindBy(xpath = "//div[@ng-if=\"!forceShowOpen && showWorkerImage(shift)\"]/worker-image/div/div")
+    @FindBy(css = ".sch-shift-worker-initials")
     private List<WebElement> profileIconsDayView;
 
     @Override
@@ -668,7 +668,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css = "[ng-click=\"removeBreak(b)\"]")
     private List<WebElement> deleteMealBreakButtons;
 
-    @FindBy(css = "div.noUi-draggable")
+    @FindBy(css = "div.noUi-draggable.color_meal")
     private List<WebElement> mealBreaks;
 
     @FindBy(css = "div.slider-section-description-break-time-item-meal")
@@ -805,6 +805,35 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
     }
 
+    @Override
+    public boolean isMealBreaksLoaded() throws Exception {
+        boolean mealBreakLoaded = false;
+        if (isElementLoaded(editMealBreakTitle) && isElementLoaded(sliderInMealBreakButton) && isElementLoaded(shiftInfoContainer)){
+            if(areListElementVisible(mealBreaks, 5) && mealBreaks.size() >= 1){
+                SimpleUtils.report("The Meal Break block shows on the Editing Meal Break dialog!");
+                mealBreakLoaded = true;
+            }else{
+                SimpleUtils.report("The Meal Break block is not displayed on the Editing Meal Break dialog!");
+                mealBreakLoaded = false;
+            }
+        }else{
+            SimpleUtils.fail("The Meal Break window is not displayed on the Editing Meal Break dialog!", false);
+        }
+        return mealBreakLoaded;
+    }
+
+    @Override
+    public void clickCancelBtnOnMealBreakDialog() throws Exception {
+        ConsoleShiftOperatePage ShiftOperatePage = new ConsoleShiftOperatePage();
+        boolean mealBreakDialogLoaded = ShiftOperatePage.isMealBreakTimeWindowDisplayWell(true);
+        if (mealBreakDialogLoaded){
+            clickTheElement(cannelBtnInMealBreakButton);
+            SimpleUtils.report("Click the cancel button successfully!");
+        }else{
+            SimpleUtils.fail("The Meal Break dialog is not loaded!", false);
+        }
+    }
+
     public void verifyEditMealBreakTimeFunctionality(boolean isSavedChange) throws Exception {
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
@@ -817,7 +846,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if (isMealBreakTimeWindowDisplayWell(true)) {
             if (isElementLoaded(mealBreakBar, 15)){
                 SimpleUtils.pass("The breaks bar is loaded successfully! ");
-                if (mealBreakBar.getAttribute("class").contains("disabled")) {
+                if (!areListElementVisible(mealBreakTimes, 5)
+                        || !areListElementVisible(mealBreaks, 5)
+                        || mealBreakBar.getAttribute("class").contains("disabled")) {
                     click(addMealBreakButton);
                     SimpleUtils.pass("Click Add Meal Break button successfully! ");
                     click(continueBtnInMealBreakButton);
@@ -1410,6 +1441,30 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.fail("Search team member tab fail to load! ", false);
     }
 
+    @Override
+    public void clickAssignBtnOnCreateShiftDialog(String name) throws Exception {
+        if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
+            for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
+                List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                String tmName = tmInfo.get(0).getText();
+                List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
+                WebElement assignButton = assignAndOfferButtons.get(0);
+                if (tmName != null && assignButton != null) {
+                    if (tmName.toLowerCase().trim().replaceAll("\n", " ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                        if (MyThreadLocal.getAssignTMStatus()) {
+                            clickTheElement(assignButton);
+                        } else
+                            SimpleUtils.fail("Can't get the TM status!", false);
+                    } else
+                        SimpleUtils.fail("TM name not match!", false);
+                } else
+                    SimpleUtils.fail("TM name is null or assign button is unavailable!", false);
+            }
+        }else {
+            SimpleUtils.fail("No matched TM is displayed!", false);
+        }
+    }
+
     @FindBy(css="button.tma-action.sch-save")
     private WebElement btnOffer;
 
@@ -1722,7 +1777,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         WebElement selectedShift = shift;
         clickOnEditMeaLBreakTime();
         if (isMealBreakTimeWindowDisplayWell(true)) {
-            if (mealBreakBar.getAttribute("class").contains("disabled")) {
+            if (!areListElementVisible(mealBreakTimes, 5)
+                    || !areListElementVisible(mealBreaks, 5)
+                    || mealBreakBar.getAttribute("class").contains("disabled")) {
                 click(addMealBreakButton);
                 click(continueBtnInMealBreakButton);
                 if (isElementEnabled(confirmWindow, 5)) {
@@ -1773,7 +1830,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         WebElement selectedShift = scheduleShiftTablePage.getShiftById(shiftid);
         clickOnEditMeaLBreakTime();
         if (isMealBreakTimeWindowDisplayWell(true)) {
-            if (mealBreakBar.getAttribute("class").contains("disabled")) {
+            if (!areListElementVisible(mealBreakTimes, 5)
+                    || !areListElementVisible(mealBreaks, 5)
+                    || mealBreakBar.getAttribute("class").contains("disabled")) {
                 click(addMealBreakButton);
                 click(continueBtnInMealBreakButton);
                 if (isElementEnabled(confirmWindow, 5)) {
@@ -2366,7 +2425,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             textSearch.clear();
             textSearch.sendKeys(NameOfTM);
             clickTheElement(searchIcon);
-            if(isElementLoaded(firstTableRow) && firstnameOfTM.getText().trim().contains(NameOfTM)){
+            if(isElementLoaded(firstTableRow) && firstnameOfTM.getText().trim().toLowerCase().contains(NameOfTM.toLowerCase())){
                 SimpleUtils.pass("The searched TM is displayed correctly!");
             }else{
                 SimpleUtils.fail("The searched TM is not displayed!", false);
@@ -2454,6 +2513,18 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.fail("The close button on assign dialog is not loaded! ", false);
     }
 
+    @Override
+    public boolean isCloseBtnOfAssignDialogLoaded() throws Exception{
+        if(isElementLoaded(closeSelectTMWindowBtn)) {
+            SimpleUtils.report("the close button loaded on assign TM dialog! ");
+            return true;
+        }
+        else{
+            SimpleUtils.report("the close button is not loaded on assign TM dialog! ");
+            return false;
+        }
+    }
+
     @FindBy (className = "worker-edit-availability-status")
     private WebElement messageInSelectTeamMemberWindow;
 
@@ -2503,7 +2574,30 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     public void verifyScheduledWarningWhenAssigning(String userName, String shiftTime) throws Exception {
         String scheduled = "Scheduled";
         boolean isWarningShown = false;
-        if (isElementLoaded(textSearch, 15) && isElementLoaded(searchIcon, 15)) {
+        if (areListElementVisible(searchAndRecommendedTMTabs, 5)) {
+            if (searchAndRecommendedTMTabs.size() == 2 && isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+                textSearchOnNewCreateShiftPage.clear();
+                textSearchOnNewCreateShiftPage.sendKeys(userName);
+                if (areListElementVisible(searchResultsOnNewCreateShiftPage, 15)) {
+                    for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
+                        List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                        String workerName = tmInfo.get(0).getText();
+                        WebElement status = searchResult.findElement(By.cssSelector(
+                                ".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(2) .MuiGrid-item:nth-child(2)"));
+                        if (workerName != null && workerName.toLowerCase().trim().contains(userName.trim().toLowerCase())) {
+                            if (status.getText().contains(scheduled)
+                                    && status.getText().replace(" - ", "-").contains(shiftTime)) {
+                                SimpleUtils.pass("Assign TM Warning: " + status.getText() + " shows correctly!");
+                                isWarningShown = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }else {
+                SimpleUtils.fail("Search team member should have two tabs, failed to load!", false);
+            }
+        } else if (isElementLoaded(textSearch, 15) && isElementLoaded(searchIcon, 15)) {
             textSearch.sendKeys(userName);
             clickTheElement(searchIcon);
             if (areListElementVisible(searchResults, 15)) {
@@ -2594,11 +2688,12 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = "[search-results=\"workerSearchResult\"] [ng-class=\"swapStatusClass(worker)\"]")
     private List<WebElement> tmScheduledStatus;
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[3]/div")
-    private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
+    @FindBy(css = ".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(1) .MuiGrid-item")
+    private List<WebElement> searchTableColumns;
     @Override
     public String getTheMessageOfTMScheduledStatus() throws Exception {
         String messageOfTMScheduledStatus = "";
+        List<WebElement> tmScheduledStatusOnNewCreateShiftPage = getTMScheduledStatusElementsOnNewCreateShiftPage();
         if (MyThreadLocal.getMessageOfTMScheduledStatus()==null || MyThreadLocal.getMessageOfTMScheduledStatus().equals("")) {
             if (areListElementVisible(tmScheduledStatus,5)){
                 for (WebElement status : tmScheduledStatus) {
@@ -2618,6 +2713,20 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             messageOfTMScheduledStatus = MyThreadLocal.getMessageOfTMScheduledStatus().replace(" AM", "am").replace(" PM", "pm").replace(":00", "");
         }
         return messageOfTMScheduledStatus;
+    }
+
+    private List<WebElement> getTMScheduledStatusElementsOnNewCreateShiftPage() {
+        int index = 0;
+        if (areListElementVisible(searchTableColumns, 5)) {
+            for (int i = 0; i < searchTableColumns.size(); i++) {
+                if (searchTableColumns.get(i).getText().trim().toLowerCase().equalsIgnoreCase("status")) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        return getDriver().findElements(By.cssSelector(".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(2) .MuiGrid-item:nth-child("
+        + (index + 1) + ")"));
     }
 
     @FindBy(css = "[class = \"worker-edit-availability-status\"]")
@@ -2785,6 +2894,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 waitForSeconds(3);
                 if (isElementLoaded(deleteShift, 15)) {
                     clickTheElement(deleteShift);
+                    waitForSeconds(1);
                     if (isElementLoaded(deleteBtnInDeleteWindows, 10)) {
                         click(deleteBtnInDeleteWindows);
                         SimpleUtils.pass("Schedule Week View: OOOH shift been deleted successfully");
@@ -3396,7 +3506,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = ".table-field.this-week-field ")
     private List<WebElement> totalShiftHrsAndShiftCountThisWeek;
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[4]/div")
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[3]/div")
     private List<WebElement> totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage;
     @Override
     public HashMap<String, Float> getTotalShiftHrsAndShiftCountThisWeek() throws Exception {
@@ -3431,6 +3541,23 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             SimpleUtils.fail("The total shift hrs and shift count this week section fail to load! ", false);
         }
         return totalShiftHrsAndShiftCount;
+    }
+
+    @Override
+    public boolean isMealBreakBlockDisplayed(int index) throws Exception {
+        boolean mealBreakBlockDisplay = true;
+        if (areListElementVisible(dayViewAvailableShifts,10)){
+            try{
+                WebElement mealBreakBlock = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[ng-repeat=\"break in breaks\"]"));
+                if(isElementLoaded(mealBreakBlock)){
+                    SimpleUtils.report("The Meal Break is displayed in the shift box!");
+                }
+            }catch (Exception e){
+                SimpleUtils.report("The Meal Break is not displayed in the shift box!");
+                mealBreakBlockDisplay = false;
+            }
+        }
+        return mealBreakBlockDisplay;
     }
 }
 

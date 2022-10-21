@@ -422,7 +422,11 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         }
         if (isElementLoaded(okBtnOnConfirm, 5)) {
             click(okBtnOnConfirm);
-        }else {
+        }
+        if (isElementLoaded(cancelButton, 5)) {
+            click(cancelButton);
+        }
+        else {
             SimpleUtils.fail("Confirm Button failed to load!", true);
         }
     }
@@ -1669,10 +1673,10 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     public void validateTheAvailabilityOfInfoIcon() throws Exception {
         if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20)) {
             if (hoverIcons.size() != 0) {
-                if (getDriver().findElements(By.xpath("//*[@class=\"right-shift-box\"]/div/div[1]")).size() == hoverIcons.size())
+                if (getDriver().findElements(By.xpath("//*[contains(@class,'right-shift-box')]/div/div[1]")).size() == hoverIcons.size())
                     SimpleUtils.pass("My Schedule Page: Info icon is present at the right side of a shift successfully");
                 else
-                    SimpleUtils.fail("My Schedule Page: Info icon isn't present at the right side of a shift", true);
+                    SimpleUtils.fail("My Schedule Page: Info icon isn't present at the right side of a shift", false);
             } else if (hoverIcons.size() == 0)
                 SimpleUtils.report("My Schedule Page: No shift hours in the schedule table");
         } else if (isElementLoaded(myScheduleNoSchedule, 10))

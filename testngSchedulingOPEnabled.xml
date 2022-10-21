@@ -91,6 +91,7 @@
                     <include name="verifyAssignTMInDayViewAsInternalAdmin" />
                     <include name="verifyConvertToOpenShiftInDayViewAsInternalAdmin" />
                     <include name="verifyEditShiftNotesInDayViewAsInternalAdmin" />
+                    <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
                     <!--                    <include name="verifyEditShiftTimeInDayViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5700-->
                     <include name="verifyEditMealBreakTimeInDayViewAsInternalAdmin" />
                     <include name="verifyDeleteShiftInDayViewAsInternalAdmin" />
@@ -103,15 +104,23 @@
                     <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" />
                     <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfMinTimeBetweenShiftsAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfDailyOTAsInternalAdmin" />
                     <!-- <include name="verifyTMOverTimeStatusAsInternalAdmin" /> -->
                     <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
-                    <!--                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7351-->
                     <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
-                    <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
                     <include name="verifyEditOperatingHoursUnderMoreActionsAsInternalAdmin" />
                     <include name="verifyEditOpeHoursDisabledAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditOpeHoursAsInternalAdmin" />
                     <include name="verifyTheSaveFunctionOnEditOpeHoursDialogAsInternalAdmin" />
+                    <!--  <include name="verifyTurnOnWeekOTViolationAsInternalAdmin" />
+                            <include name="verifyTurnOffWeekOTViolationAsInternalAdmin" />
+                            <include name="VerifyTheViewTeamSchedulePermissionDisplayAsInternalAdmin" />
+                            <include name="VerifyTheViewTeamSchedulePermissionTurnOffAsInternalAdmin" />
+                            <include name="VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin" />
+                            <include name="VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin" />
+                            <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" /> The code is not merged into RC yet -->
                    </methods>
                </class>
            </classes>
@@ -123,7 +132,7 @@
                    <methods>
    <!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />   Blocked by SCH-5036 -->
 <!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />-->
-<!--                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin" Blocked by Bug/>-->
+                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin"/>
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
                     <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
                       <!--                  <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
@@ -205,6 +214,17 @@
         </classes>
     </test>
 
+    <test name="Seniority Relevant Testing">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleSeniorityTest">
+                <methods>
+                    <!--       <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />  SCH-7683 is not merged into RC yet-->
+                    <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
     <test name="Upperfield Test">
         <classes>
             <class name="com.legion.tests.core.UpperfieldTest">
@@ -261,13 +281,13 @@
                 <methods>
 <!--                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" Blocked by queue/>-->
 <!--                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />-->
-<!--                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5369/>-->
-<!--                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-6807 />-->
+                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
-<!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" Blocked by SCH-5368/>-->
-<!--                    <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />Blocked by SCH-5419/>-->
-                    <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" />
-                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />
+                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />
+<!--                    <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" /> -->
+<!--                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />https://legiontech.atlassian.net/browse/SCH-7699 -->
                     </methods>
                 </class>
             </classes>
@@ -364,10 +384,10 @@
                 <methods>
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                     <include name="verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin" />
-                    <!--                    <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" /> Blocked by SCH-4331  -->
-                    <!--                    <include name="verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin" /> Blocked by SCH-4331  -->
-<!--                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsStoreManager" />
-                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5505-->
+                    <include name="verifyChangingDistrictOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifySearchingAndSelectingTheDistrictOnSMScheduleTabAsInternalAdmin" />
+                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsStoreManager" />
+                    <include name="verifyChangeLocationOnSchedulePageWhenLoginAsTeamMember" />
                 </methods>
             </class>
         </classes>
@@ -382,7 +402,7 @@
                     <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
                     <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                     <!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG cannot be generated -->
- <!--                   <include name="validateTheOptionsOfScheduleFilterShouldBeInAlphabeticalAndNumbericalOrderAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7223-->
+                    <include name="validateTheOptionsOfScheduleFilterShouldBeInAlphabeticalAndNumbericalOrderAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -440,6 +460,8 @@
                     <include name="verifyTheFunctionalityOfEditBreaksWeekViewAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" />
                     <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" />
+                    <include name="VerifyAssignShiftMealBreakAsInternalAdmin" />
+                    <include name="VerifyOpenShiftMealBreakAsInternalAdmin" />
 <!--                    <include name="verifyTheMealPlacementViolationAsInternalAdmin" /> -->
 <!--                    <include name="verifySettingsAreAppliedAsInternalAdmin" Blocked by new feature/>-->
 <!--                    <include name="verifyMissedMealBreakWhenUsingTemplateAsInternalAdmin" />-->
@@ -525,7 +547,7 @@ SCH-5862-->
                     <include name="verifyShiftCanBeDragToPreviousDayAsInternalAdmin" />
                     <!-- unselect Continuous Operation -->
                     <include name="verifyShiftWhenDisableContinuousOperationOptionAsInternalAdmin" />
-                    <include name="verifyTMWithOutBadgeCannotClaimTheShiftWithWorkRoleThatRequiredBadgeAsTeamMember" />
+    <!--                <include name="verifyTMWithOutBadgeCannotClaimTheShiftWithWorkRoleThatRequiredBadgeAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-7699-->
 
                 </methods>
             </class>
@@ -544,7 +566,9 @@ SCH-5862-->
 <!--                    <include name="verifyChangingShiftNameOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: https://legiontech.atlassian.net/browse/SCH-6997/>-->
 <!--                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
 <!--                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
-                    <include name="verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin" />
+<!--                    <include name="verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7592/>-->
+                    <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -595,6 +619,8 @@ SCH-5862-->
                     <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
                     <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6889-->
                     <include name="validateNavigationRosterScheduleAndDashboardOfP2PLGAsInternalAdmin" />
+                    <include name="verifyChangingLocationForP2POnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="VerifyTheBudgetGuidanceColumnShowCorrectlyInChildAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -610,6 +636,7 @@ SCH-5862-->
                                         <include name="verifyMoveShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" /> -->
                     <include name="verifyTheContentOnMultipleEditShiftsWindowForPCAsInternalAdmin" />
                     <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForParentChildLGAsInternalAdmin" />
+                    <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForParentChildAsInternalAdmin" />
 <!--
                     <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
                     <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
@@ -617,6 +644,7 @@ SCH-5862-->
                     <include name="validateNavigationRosterScheduleAndDashboardOfParentChildLGAsInternalAdmin" />
                     <include name="verifyEditOperatingHoursForLGAsInternalAdmin" />
                     <include name="verifyEditOperatingHoursFunctionForLGAsInternalAdmin" />
+                    <include name="verifyChangingLocationForPCOnMultipleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

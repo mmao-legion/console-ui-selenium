@@ -85,6 +85,7 @@ public interface ScheduleShiftTablePage {
     public String getWarningMessageInDragShiftWarningMode() throws Exception;
     public void clickOnOkButtonInWarningMode() throws Exception;
     public void moveAnywayWhenChangeShift() throws Exception;
+    public void copyAnywayWhenChangeShift() throws Exception;
     public void verifyShiftIsMovedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
     public void verifyShiftIsCopiedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
     public WebElement getTheShiftByIndex(int index) throws Exception;
@@ -173,4 +174,5 @@ public interface ScheduleShiftTablePage {
     public void verifyConfirmBtnIsDisabledOnDragAndDropConfirmPage() throws Exception;
     public void verifySwapBtnIsEnabledOnDragAndDropConfirmPage() throws Exception;
     public void verifyAssignBtnIsEnabledOnDragAndDropConfirmPage() throws Exception;
+    public boolean isOkButtonInWarningModeLoaded() throws Exception;
 }

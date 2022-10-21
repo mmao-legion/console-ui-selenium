@@ -1730,14 +1730,14 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		if(isElementLoaded(myAvailabilityEditModeSaveBtn)) {
 			click(myAvailabilityEditModeSaveBtn);
 			if(availabilityChangesRepeat.toLowerCase().contains("repeat forward")) {
-				if(isElementLoaded(MyAvailabilityEditSaveRepeatForwordBtn)){
+				if(isElementLoaded(MyAvailabilityEditSaveRepeatForwordBtn, 10)){
 					moveToElementAndClick(MyAvailabilityEditSaveRepeatForwordBtn);
-					click(myAvailabilityConfirmSubmitBtn);
+					clickTheElement(myAvailabilityConfirmSubmitBtn);
 				}
 			} else {
-				if(isElementLoaded(MyAvailabilityEditSaveThisWeekOnlyBtn)){
+				if(isElementLoaded(MyAvailabilityEditSaveThisWeekOnlyBtn, 10)){
 					moveToElementAndClick(MyAvailabilityEditSaveThisWeekOnlyBtn);
-					click(myAvailabilityConfirmSubmitBtn);
+					clickTheElement(myAvailabilityConfirmSubmitBtn);
 				}
 			}
 			waitForSeconds(10);
@@ -2363,23 +2363,15 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		try{
 			if(isElementLoaded(userProfileImage, 5)){
 				clickTheElement(userProfileImage);
-				if (isElementLoaded(userNickName, 5)) {
-					if (userNickName.getText().replaceAll(" ", "").replaceAll("-", "")
-							.equalsIgnoreCase(getEnterprise().replaceAll(" ", "").replaceAll("-", ""))) {
-						clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));
-						WebElement nameElement = null;
-						if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 5)) {
-							nameElement = getDriver().findElement(By.cssSelector(".userProfileText"));
-						} else if (areListElementVisible(getDriver().findElements(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")),5)) {
-							nameElement = getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)"));
-						}
-						nickName = nameElement.getText().trim().contains(" ") ?
-								nameElement.getText().trim().split(" ")[0] :
-								nameElement.getText().trim();
-					} else {
-						nickName = userNickName.getText();
-					}
+				clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));
+				WebElement nameElement = null;
+				if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 5)) {
+					nameElement = getDriver().findElement(By.cssSelector(".userProfileText"));
+				} else if (areListElementVisible(getDriver().findElements(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")),5)) {
+					nameElement = getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)"));
 				}
+				nickName = nameElement.getText().trim().contains(" ") ?
+						nameElement.getText().trim().split(" ")[0] : nameElement.getText().trim();
 				if(nickName != null && !nickName.isEmpty()){
 					SimpleUtils.pass("Get User's NickName: " + nickName + "Successfully");
 				}else{
@@ -3165,22 +3157,44 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	}
 
 	public void verifyFieldsInHRProfileInformationSection() throws Exception {
-		if (areListElementVisible(fieldsInHRProfileInformationSection, 5)
-				&& fieldsInHRProfileInformationSection.size() == 13
-				&& fieldsInHRProfileInformationSection.get(0).getText().equalsIgnoreCase("Name")
-				&& fieldsInHRProfileInformationSection.get(1).getText().equalsIgnoreCase("JOB TITLE")
-				&& fieldsInHRProfileInformationSection.get(2).getText().equalsIgnoreCase("MANAGER NAME")
-				&& fieldsInHRProfileInformationSection.get(3).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("HOME STORE")
-				&& fieldsInHRProfileInformationSection.get(4).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("EMPLOYEE ID")
-				&& fieldsInHRProfileInformationSection.get(5).getText().equalsIgnoreCase("DATE HIRED")
-				&& fieldsInHRProfileInformationSection.get(6).getText().equalsIgnoreCase("EMPLOYMENT TYPE")
-				&& fieldsInHRProfileInformationSection.get(7).getText().equalsIgnoreCase("HOURLY RATE")
-				&& fieldsInHRProfileInformationSection.get(8).getText().equalsIgnoreCase("EMPLOYMENT STATUS")
-				&& fieldsInHRProfileInformationSection.get(9).getText().equalsIgnoreCase("EXEMPT")
-				&& fieldsInHRProfileInformationSection.get(10).getText().equalsIgnoreCase("ADDRESS")
-				&& fieldsInHRProfileInformationSection.get(11).getText().equalsIgnoreCase("MINOR")
-				&& fieldsInHRProfileInformationSection.get(12).getText().equalsIgnoreCase("CONTACT INFORMATION")) {
-			SimpleUtils.pass("User Profile page: The fields in HR Profile Information section display correctly! ");
+		if (areListElementVisible(fieldsInHRProfileInformationSection, 5)) {
+			if (fieldsInHRProfileInformationSection.size() == 14) {
+				if (fieldsInHRProfileInformationSection.get(0).getText().equalsIgnoreCase("Name")
+						&& fieldsInHRProfileInformationSection.get(1).getText().equalsIgnoreCase("JOB TITLE")
+						&& fieldsInHRProfileInformationSection.get(2).getText().equalsIgnoreCase("SENIORITY")
+						&& fieldsInHRProfileInformationSection.get(3).getText().equalsIgnoreCase("MANAGER NAME")
+						&& fieldsInHRProfileInformationSection.get(4).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("HOME STORE")
+						&& fieldsInHRProfileInformationSection.get(5).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("EMPLOYEE ID")
+						&& fieldsInHRProfileInformationSection.get(6).getText().equalsIgnoreCase("DATE HIRED")
+						&& fieldsInHRProfileInformationSection.get(7).getText().equalsIgnoreCase("EMPLOYMENT TYPE")
+						&& fieldsInHRProfileInformationSection.get(8).getText().equalsIgnoreCase("HOURLY RATE")
+						&& fieldsInHRProfileInformationSection.get(9).getText().equalsIgnoreCase("EMPLOYMENT STATUS")
+						&& fieldsInHRProfileInformationSection.get(10).getText().equalsIgnoreCase("EXEMPT")
+						&& fieldsInHRProfileInformationSection.get(11).getText().equalsIgnoreCase("ADDRESS")
+						&& fieldsInHRProfileInformationSection.get(12).getText().equalsIgnoreCase("MINOR")
+						&& fieldsInHRProfileInformationSection.get(13).getText().equalsIgnoreCase("CONTACT INFORMATION")) {
+					SimpleUtils.pass("User Profile page: The fields in HR Profile Information section display correctly! ");
+				} else
+					SimpleUtils.fail("User Profile page: The fields in HR Profile Information section failed to display !", false);
+			} else if (fieldsInHRProfileInformationSection.size() == 13) {
+				if (fieldsInHRProfileInformationSection.get(0).getText().equalsIgnoreCase("Name")
+						&& fieldsInHRProfileInformationSection.get(1).getText().equalsIgnoreCase("JOB TITLE")
+						&& fieldsInHRProfileInformationSection.get(2).getText().equalsIgnoreCase("MANAGER NAME")
+						&& fieldsInHRProfileInformationSection.get(3).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("HOME STORE")
+						&& fieldsInHRProfileInformationSection.get(4).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("EMPLOYEE ID")
+						&& fieldsInHRProfileInformationSection.get(5).getText().equalsIgnoreCase("DATE HIRED")
+						&& fieldsInHRProfileInformationSection.get(6).getText().equalsIgnoreCase("EMPLOYMENT TYPE")
+						&& fieldsInHRProfileInformationSection.get(7).getText().equalsIgnoreCase("HOURLY RATE")
+						&& fieldsInHRProfileInformationSection.get(8).getText().equalsIgnoreCase("EMPLOYMENT STATUS")
+						&& fieldsInHRProfileInformationSection.get(9).getText().equalsIgnoreCase("EXEMPT")
+						&& fieldsInHRProfileInformationSection.get(10).getText().equalsIgnoreCase("ADDRESS")
+						&& fieldsInHRProfileInformationSection.get(11).getText().equalsIgnoreCase("MINOR")
+						&& fieldsInHRProfileInformationSection.get(12).getText().equalsIgnoreCase("CONTACT INFORMATION")) {
+					SimpleUtils.pass("User Profile page: The fields in HR Profile Information section display correctly! ");
+				} else
+					SimpleUtils.fail("User Profile page: The fields in HR Profile Information section failed to display !", false);
+			}else
+				SimpleUtils.fail("User Profile page: The fields in HR Profile Information section failed to display !", false);
 		} else
 			SimpleUtils.fail("User Profile page: The fields in HR Profile Information section failed to display !", false);
 	}

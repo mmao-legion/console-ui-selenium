@@ -3,6 +3,7 @@ package com.legion.tests;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.*;
+import com.legion.pages.core.ConsoleAdminPage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
 import com.legion.pages.pagefactories.PageFactory;
 import com.legion.pages.pagefactories.mobile.MobilePageFactory;
@@ -756,5 +757,13 @@ public abstract class TestBase {
         return usernameNPwd;
     }
 
-
+    public static void refreshCachesAfterChangeTemplate() throws Exception {
+        AdminPage adminPage = new ConsoleAdminPage();
+        adminPage.clickOnConsoleAdminMenu();
+        adminPage.clickOnInspectorTab();
+        adminPage.clickOnCacheTab();
+        adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.Template.getValue());
+        adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.TemplateAssociation.getValue());
+        adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.LocationBrokerContainer.getValue());
+    }
 }

@@ -565,7 +565,7 @@ public class DragAndDropTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Julie")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Validate the box interaction color and message when SM tries to assign TM to an open shift that overlaps a time TM is already assigned to")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager(String browser, String username, String password, String location) throws Exception {
@@ -647,11 +647,11 @@ public class DragAndDropTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Drag the TM's avatar on Monday to the open shift on Tuesday
-            scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0,firstName,1,"Open");
             String weekday = scheduleShiftTablePage.getWeekDayTextByIndex(Integer.parseInt(shiftInfo.get(1)));
             String fullWeekDay = SimpleUtils.getFullWeekDayName(weekday);
             String expectedMessage = shiftInfo.get(0) + " is scheduled " + shiftInfo.get(6).toUpperCase() + " on " + fullWeekDay
                     + ". This shift will be converted to an open shift";
+            scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0,firstName,1,"Open");
             scheduleShiftTablePage.verifySwapAndAssignWarningMessageInConfirmPage(expectedMessage,"assign");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
 
@@ -793,9 +793,9 @@ public class DragAndDropTest extends TestBase {
                 i++;
                 Thread.sleep(2000);
             }
-            SimpleUtils.assertOnFail("Clopening message display incorrectly on swap section!",
+            SimpleUtils.assertOnFail("Clopening message display incorrectly on swap section! The expected is: "+firstNameOfTM1 + clopeningWarningMessage,
                     scheduleShiftTablePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "swap"), false);
-            SimpleUtils.assertOnFail("Clopening message display incorrectly on assign section!",
+            SimpleUtils.assertOnFail("Clopening message display incorrectly on assign section! The expected is: "+firstNameOfTM1 + clopeningWarningMessage,
                     scheduleShiftTablePage.verifySwapAndAssignWarningMessageInConfirmPage(firstNameOfTM1 + clopeningWarningMessage, "assign"), false);
 
             // Swap TM1 and TM2, check the TMs been swapped successfully
@@ -3939,25 +3939,34 @@ public class DragAndDropTest extends TestBase {
         try{
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
+            int count = (int)(Math.random()*4+1);
+            String accessRole = "";
+            switch(count) {
+                case 1: accessRole = AccessRoles.StoreManager.getValue(); break;
+                case 2: accessRole = AccessRoles.TeamLead.getValue();break;
+                case 3: accessRole = AccessRoles.DistrictManager.getValue();break;
+                case 4: accessRole = AccessRoles.CustomerAdmin.getValue();break;
+            }
             //Verify the shifts can be created by new UI by original SM access role
-            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            System.out.println("Will login as: "+ accessRole);
+            loginAsDifferentRole(accessRole);
             bulkDragAndDropByDifferentAccessRoles();
             loginPage.logOut();
 
-            //Verify the shifts can be created by new UI by original TL access role
-            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
-            bulkDragAndDropByDifferentAccessRoles();
-            loginPage.logOut();
-
-            //Verify the shifts can be created by new UI by original DM access role
-            loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
-            bulkDragAndDropByDifferentAccessRoles();
-            loginPage.logOut();
-
-            //Verify the shifts can be created by new UI by original CA access role
-            loginAsDifferentRole(AccessRoles.CustomerAdmin.getValue());
-            bulkDragAndDropByDifferentAccessRoles();
-            loginPage.logOut();
+//            //Verify the shifts can be created by new UI by original TL access role
+//            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
+//            bulkDragAndDropByDifferentAccessRoles();
+//            loginPage.logOut();
+//
+//            //Verify the shifts can be created by new UI by original DM access role
+//            loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
+//            bulkDragAndDropByDifferentAccessRoles();
+//            loginPage.logOut();
+//
+//            //Verify the shifts can be created by new UI by original CA access role
+//            loginAsDifferentRole(AccessRoles.CustomerAdmin.getValue());
+//            bulkDragAndDropByDifferentAccessRoles();
+//            loginPage.logOut();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

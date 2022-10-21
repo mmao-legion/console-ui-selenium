@@ -70,6 +70,9 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     @FindBy(css = "div.modal-content")
     private WebElement popupAlertPremiumPay;
 
+    @FindBy(css = "._pendo-button-tertiaryButton")
+    private WebElement maybeLaterBtn;
+
     @FindBy(css = "button.btn.lgn-action-button.lgn-action-button-success")
     private WebElement btnEditAnyway;
 
@@ -224,6 +227,9 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                     SimpleUtils.fail("CANCEL And EDIT ANYWAY Buttons are not enabled on Alert Popup ",false);
                 }
                 waitForSeconds(5);
+            }
+            if (isElementLoaded(maybeLaterBtn, 20)) {
+                clickTheElement(maybeLaterBtn);
             }
             if(checkSaveButton() && checkCancelButton()) {
                 SimpleUtils.pass("Save and Cancel buttons are enabled ");
@@ -546,7 +552,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        if (isClickable(saveOnSaveConfirmationPopup, 20)) {
+        waitForSeconds(5);
+        if (isClickable(saveOnSaveConfirmationPopup, 30)) {
             clickTheElement(saveOnSaveConfirmationPopup);
             waitForNotExists(saveOnSaveConfirmationPopup, 30);
             waitForSeconds(5);
@@ -2306,10 +2313,11 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                 if (shiftTypeFilters.get(0).getText().contains("Action Required")
                         && shiftTypeFilters.get(1).getText().contains("Assigned")
                         && shiftTypeFilters.get(2).getText().contains("Compliance Review")
-                        && shiftTypeFilters.get(3).getText().contains("Open")
-                        && shiftTypeFilters.get(4).getText().contains("Unavailable")
+                        && shiftTypeFilters.get(3).getText().contains("New or Borrowed TM")
+                        && shiftTypeFilters.get(4).getText().contains("Open")
                         && shiftTypeFilters.get(5).getText().contains("Swap/Cover Requested")
-                        && shiftTypeFilters.get(6).getText().contains("Unpublished changes")
+                        && shiftTypeFilters.get(6).getText().contains("Unavailable")
+                        && shiftTypeFilters.get(7).getText().contains("Unpublished changes")
 //                        && shiftTypeFilters.get(7).getText().contains("New or Borrowed TM")
 //                        && (shiftTypeFilters.size()> 7? (shiftTypeFilters.get(7).getText().contains("Minor (14-15)") ||
 //                        shiftTypeFilters.get(7).getText().contains("Minor (16-17)")): true)

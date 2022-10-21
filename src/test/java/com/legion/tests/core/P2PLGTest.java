@@ -2,6 +2,7 @@ package com.legion.tests.core;
 
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -18,6 +19,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class P2PLGTest extends TestBase {
 
@@ -25,6 +27,7 @@ public class P2PLGTest extends TestBase {
     private static String District = "District";
     private static String Region = "Region";
     private static String BusinessUnit = "Business Unit";
+//    private static String opEnterprice = "CinemarkWkdy_Enterprise";
 
     @Override
     @BeforeMethod()
@@ -1741,6 +1744,7 @@ public class P2PLGTest extends TestBase {
             // Verify the functionality of Edit button in week view
             String action = "Edit";
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            Thread.sleep(1000);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             // Verify the title of Edit Shifts window
             editShiftPage.verifyTheTitleOfEditShiftsWindow(selectedShiftCount, startOfWeek);
@@ -1774,6 +1778,7 @@ public class P2PLGTest extends TestBase {
             selectedDays = new ArrayList<>();
             selectedDays.add(fullWeekDay);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            Thread.sleep(3000);
             set = scheduleShiftTablePage.verifyCanSelectMultipleShifts(selectedShiftCount);
             scheduleShiftTablePage.rightClickOnSelectedShifts(set);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
@@ -1822,9 +1827,10 @@ public class P2PLGTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if(!isActiveWeekGenerated){
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if(isActiveWeekGenerated){
+               createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00am", "06:00am");
             scheduleMainPage.clickOnFilterBtn();
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
             List<String> shiftInfo = new ArrayList<>();
@@ -1865,29 +1871,37 @@ public class P2PLGTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
+
             newShiftPage.searchWithOutSelectTM(firstNameOfTM);
             String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
-            SimpleUtils.assertOnFail("30 mins travel time needed violation message fail to load!",
-                    !shiftWarningMessage.toLowerCase().contains("30 mins travel time needed"), false);
+            String expectedWaningMessage= "Minimum time between shifts";
+            SimpleUtils.assertOnFail(expectedWaningMessage+ " message fail to load!",
+                    shiftWarningMessage.contains(expectedWaningMessage), false);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
+            expectedWaningMessage = firstNameOfTM+ " does not have minimum time between shifts";
             if(newShiftPage.ifWarningModeDisplay()){
-//                String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-//                if (warningMessage.contains("0 mins travel time needed violation")){
-//                    SimpleUtils.pass("30 mins travel time needed violation message displays");
-//                } else {
-//                    SimpleUtils.fail("There is no '30 mins travel time needed violation' warning message displaying", false);
-//                }
+                String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
+
+                if (warningMessage.toLowerCase().contains(expectedWaningMessage.toLowerCase())){
+                    SimpleUtils.pass(expectedWaningMessage+" message displays");
+                } else {
+                    SimpleUtils.fail("There is no "+expectedWaningMessage+" warning message displaying", false);
+                }
                 shiftOperatePage.clickOnAssignAnywayButton();
+            } else {
+                SimpleUtils.fail("There is no '"+expectedWaningMessage+"' warning modal displaying!",false);
             }
-//            else {
-//                SimpleUtils.fail("There is no '30 mins travel time needed violation' warning modal displaying!",false);
-//            }
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
-            SimpleUtils.assertOnFail("'30 mins travel time needed violation' compliance message display failed",
-                    !scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(1)).contains("Max shift per day violation") , false);
-
+            //https://legiontech.atlassian.net/browse/SCH-7977
+//            List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
+//            expectedWaningMessage = "Minimum time between shifts";
+//            String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).toString();
+//            SimpleUtils.assertOnFail("'"+expectedWaningMessage+"' compliance message display failed, the actual message is:"+actualMessage,
+//                    actualMessage.contains(expectedWaningMessage) , false);
+//            actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(1)).toString();
+//            SimpleUtils.assertOnFail("'"+expectedWaningMessage+"' compliance message display failed, the actual message is:"+actualMessage,
+//                    actualMessage.contains(expectedWaningMessage) , false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2343,6 +2357,177 @@ public class P2PLGTest extends TestBase {
             createSchedulePage.selectWhichWeekToCopyFrom("SUGGESTED");
             createSchedulePage.clickOnFinishButtonOnCreateSchedulePage();
 
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of changing location on P2P")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingLocationForP2POnMultipleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+            ArrayList<HashMap<String,String>> childLocations = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            List<String> locations = new ArrayList<>();
+            for (int i = 0; i < childLocations.size(); i++) {
+                locations.add(childLocations.get(i).get("optionName"));
+            }
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<String> shiftInfoList1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+            List<String> shiftInfoList2 = scheduleShiftTablePage.getTheShiftInfoByIndex(1);
+
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(0);
+            indexes.add(1);
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            Iterator<Integer> iterator = indexes.iterator();
+            List<Integer> indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            // Verify the child locations listed in the Location selector
+            editShiftPage.clickOnLocationSelect();
+            List<String> actualLocations = editShiftPage.getOptionsFromSpecificSelect();
+            for (int i = 0; i < locations.size(); i++) {
+                if (!locations.get(i).toLowerCase().trim().equalsIgnoreCase(actualLocations.get(i).toLowerCase().trim())) {
+                    SimpleUtils.fail("Child location list is incorrect!", false);
+                    break;
+                }
+            }
+            // Verify can change the location without selecting the two options
+            editShiftPage.selectSpecificOptionByText(actualLocations.get(1));
+            editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+            // Verify the shifts are moved to the selected child location
+            scheduleMainPage.selectGroupByFilter(actualLocations.get(1));
+            SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
+                    scheduleShiftTablePage.getOneDayShiftByName(0, shiftInfoList1.get(0)).size() == 1, false);
+            SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
+                    scheduleShiftTablePage.getOneDayShiftByName(1, shiftInfoList2.get(0)).size() == 1, false);
+            // Verify the shifts are saved successfully
+            scheduleMainPage.saveSchedule();
+            SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
+                    scheduleShiftTablePage.getOneDayShiftByName(0, shiftInfoList1.get(0)).size() == 1, false);
+            SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
+                    scheduleShiftTablePage.getOneDayShiftByName(1, shiftInfoList2.get(0)).size() == 1, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+    
+    @Automated(automated = "Automated")
+    @Owner(owner = "Cosimo")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the Budget/Guidance hours show correctly when navigating from parent location to peer location")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void VerifyTheBudgetGuidanceColumnShowCorrectlyInChildAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            locationsPage.editLaborBudgetSettingContent();
+            locationsPage.turnOnOrTurnOffLaborBudgetToggle(true);
+            locationsPage.selectBudgetGroup("By Location");
+            locationsPage.saveTheGlobalConfiguration();
+            Thread.sleep(60000);
+            switchToConsoleWindow();
+
+            //Select parent location's budget/guidance value
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            //Check child location's budget on schedule smart card, it won't same as parent
+            boolean isActiveWeekGenerated1 = createSchedulePage.isWeekGenerated();
+            if (!isActiveWeekGenerated1) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+
+            List <String> locationNames = scheduleMainPage.getSpecificFilterNames("location");
+            String childLocation1 = locationNames.get(0);
+            String childLocation2 = locationNames.get(1);
+
+            boolean isActiveWeekGenerated2 = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated2) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationNames.get(0));
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()), false);
+            forecastPage.goToForecastLaborWeek();
+            forecastPage.editLaborBudgetOnSummarySmartCard();
+            String laborBudget1 = forecastPage.getLaborBudgetOnSummarySmartCard();
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationNames.get(1));
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()), false);
+            forecastPage.goToForecastLaborWeek();
+            forecastPage.editLaborBudgetOnSummarySmartCard();
+            String laborBudget2 = forecastPage.getLaborBudgetOnSummarySmartCard();
+
+            //Generate the parent schedule, compare the budget after the page loaded fully.
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            String parentBudget = smartCardPage.getBudgetValueFromScheduleBudgetSmartCard().trim();
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(childLocation1);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            String budgetOfChild1 = smartCardPage.getBudgetValueFromScheduleBudgetSmartCard().trim();
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(childLocation2);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            String budgetOfChild2 = smartCardPage.getBudgetValueFromScheduleBudgetSmartCard().trim();
+
+            SimpleUtils.assertOnFail("The budget on schedule view is not consisting with the edited value on Forecast page!",laborBudget1.equals(budgetOfChild1) && laborBudget2.equals(budgetOfChild2),false);
+
+            //Compare the budget between parent and child, they are not same
+            SimpleUtils.assertOnFail("The budget between parent and child location shouldn't be same!",!(parentBudget.equals(budgetOfChild1) && parentBudget.equals(budgetOfChild2)),false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

@@ -4998,7 +4998,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		int index = 0;
 		if(isElementLoaded(saveButtonOnGlobalConfiguration,3)){
 			clickTheElement(saveButtonOnGlobalConfiguration);
-			Thread.sleep(3);
+			Thread.sleep(5000);
 			SimpleUtils.assertOnFail("Global Configuration page not saved successfully!", isElementLoaded(editOnGlobalConfigPage,3), false);
 		}
 	}
