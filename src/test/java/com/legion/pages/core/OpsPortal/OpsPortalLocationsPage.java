@@ -463,7 +463,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css = "input[placeholder*=\"You can search by name, id, district and city.\"]")
+	@FindBy(xpath = "//lg-tab-toolbar//lg-search//input")
 	private WebElement searchInput;
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
@@ -2321,7 +2321,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private List<WebElement> deleteRuleIcon;
 	@FindBy(css = "lg-button[icon=\"'img/legion/add.png'\"]")
 	private List<WebElement> addDynamicGroupBtn;
-	@FindBy(css = "input[placeholder=\"You can search by name and description\"]")
+	@FindBy(xpath = "//lg-search//input")
 	private List<WebElement> dgSearchInput;
 	@FindBy(css = "[dynamic-groups=\"clockinDg\"] .fa-pencil")
 	private List<WebElement> editDGIconInClockIn;
@@ -4410,6 +4410,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	public void verifyAssignmentRulesFromLocationLevel(String assignmentRuleTitle) throws Exception {
 		boolean isAssignmentRuleExit = false;
+		waitForSeconds(5);
 		if (assignmentRules.size() != 0) {
 			for (WebElement title : assignmentConditionList) {
 				if (title.getText().contains(assignmentRuleTitle)) {
@@ -5328,16 +5329,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		clickTheElement(saveBtnInUpdateLocationPage);
 	}
 
-	@Override
-		public void importLocationsAndDistrict(String fileName, String sessionId) throws Exception {
+	public void importLocationsAndDistrict(String fileName, String sessionId) throws Exception {
 		String url = "https://rc-enterprise.dev.legion.work/legion/integration/testAWSs3Put?bucketName=legion-rc-secure-ftp&key=opauto-rc/locations/" + fileName;
 		String filePath = "src/test/resources/uploadFile/LocationTest/" + fileName;
 		String responseInfo = HttpUtil.fileUploadByHttpPost(url, sessionId, filePath);
 		if (StringUtils.isNotBlank(responseInfo)) {
-			//转json数据
 			JSONObject json = JSONObject.parseObject(responseInfo);
 			if (!json.isEmpty()) {
-				//数据处理
 				String value = json.getString("responseStatus");
 				System.out.println(value);
 			}

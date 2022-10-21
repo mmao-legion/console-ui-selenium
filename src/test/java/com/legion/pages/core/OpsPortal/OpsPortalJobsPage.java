@@ -872,6 +872,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 				clickTheElement(stopBtnInJobListPage);
 				if (verifyJobActionsWarningPageShowWell()) {
 					clickTheElement(confirmBtnInStopJobPopUpWins);
+					waitForSeconds(15);
 					ArrayList<HashMap<String,String>> jobInfo = iCanGetJobInfo(jobTitle);
 					if (jobInfo.size()>0 && jobInfo.get(0).get("status").equalsIgnoreCase("Stopped")) {
 						SimpleUtils.pass("The job:" +jobTitle + " was stopped successfully");
