@@ -2662,7 +2662,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "opauto")
     @TestName(description = "Verify readyForForecast option can be saved correctly")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyReadyForForecastOptionCanBeSavedCorrectlyAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
@@ -2764,7 +2764,6 @@ public class LocationsTest extends TestBase {
     public void verifyReadyForForecastWhenImportExistingLocationLocationThroughUIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
-            String currentTime = sdf.format(new Date()).trim();
             String existingLocation = "TestImportUpdateExisting";
             String fileWithNoReadyForForecast = "UpdateLocationsWithNoReadyForForecast.csv";
             String fileWithReadyForForecastNo = "UpdateLocationsWithReadyForForecastNo.csv";
@@ -2789,6 +2788,7 @@ public class LocationsTest extends TestBase {
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
             String afterImportValue = locationsPage.getReadyForForecastSelectedOption();
+            System.out.println("afterImportValue is: " + afterImportValue);
             SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", beforeImportValue.equalsIgnoreCase(afterImportValue), false);
             locationsPage.goBack();
             //Update the existing location by import file, change  to No
@@ -2798,7 +2798,8 @@ public class LocationsTest extends TestBase {
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
             afterImportValue = locationsPage.getReadyForForecastSelectedOption();
-            SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", "No".equalsIgnoreCase(afterImportValue), false);
+            System.out.println("afterImportValue is: " + afterImportValue);
+            SimpleUtils.assertOnFail("ReadyForForecast value should be changed to No after import!", "No".equalsIgnoreCase(afterImportValue), false);
             locationsPage.goBack();
 
             //Update the existing location by import file, change  to Yes
@@ -2808,7 +2809,8 @@ public class LocationsTest extends TestBase {
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
             afterImportValue = locationsPage.getReadyForForecastSelectedOption();
-            SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", "Yes".equalsIgnoreCase(afterImportValue), false);
+            System.out.println("afterImportValue is: " + afterImportValue);
+            SimpleUtils.assertOnFail("ReadyForForecast value should be changed to Yes after import!", "Yes".equalsIgnoreCase(afterImportValue), false);
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -33,7 +33,7 @@ public interface LocationsPage {
     public void locationPageCommonFeatureCheck() throws Exception;
     public void checkEveryLocationTemplateConfig(String locName) throws Exception;
 
-    public void verifyImportLocationDistrict(String fileName) throws IOException;
+    public void verifyImportLocationDistrict(String fileName) throws Exception;
 
 //    public void disableSwitch(String switchName,String enterpriseName);
 
