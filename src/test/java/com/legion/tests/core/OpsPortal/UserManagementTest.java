@@ -1014,7 +1014,7 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Yang")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Work Role E2E")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyWorkRoleE2EAndCopyWorkRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
             String locationName = "locationAutoCreateForYang";
@@ -1064,22 +1064,20 @@ public class UserManagementTest extends TestBase {
             staffingRuleCondition.add("Slot");
             locationsPage.addStaffingRulesForWorkRole(staffingRuleCondition);
             locationsPage.clickOnSaveButton();
-            Thread.sleep(600000);
-
-
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
-            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
-            ForecastPage forecastPage  = pageFactory.createForecastPage();
-            scheduleCommonPage.navigateToNextWeek();
-            scheduleCommonPage.navigateToPreviousWeek();
-            forecastPage.clickOnLabor();
-            forecastPage.verifyWorkRoleInList(workRoleName);
+//            Thread.sleep(600000);
+//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+//            LocationSelectorPage locationSelectorPage = new ConsoleLocationSelectorPage();
+//            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName);
+//            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+//            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+//            ForecastPage forecastPage  = pageFactory.createForecastPage();
+//            scheduleCommonPage.navigateToNextWeek();
+//            scheduleCommonPage.navigateToPreviousWeek();
+//            forecastPage.clickOnLabor();
+//            forecastPage.verifyWorkRoleInList(workRoleName);
             //disable the work role added and it can't be searched out
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+//            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             navigationPage.navigateToUserManagement();
             panelPage.goToWorkRolesPage();
             workRolesPage.disableAWorkRole(workRoleName);
@@ -1148,7 +1146,7 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Yang")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify user can view template if user only have template localization permission +View template")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyUserPermissionpAsSMA(String browser, String username, String password, String location) throws Exception {
         try {
             String locationName = "locationAutoCreateForYang";
@@ -1179,11 +1177,20 @@ public class UserManagementTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUserPermissionAsSMB(String browser, String username, String password, String location) throws Exception {
         try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime=dfs.format(new Date()).trim();
+            String templateName="AutoCreate"+currentTime;
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad("Operating Hours");
             configurationPage.verifyNewTemplateIsClickable();
-
+            configurationPage.inputTemplateName(templateName);
+            configurationPage.goToBusinessHoursEditPage("sunday");
+            configurationPage.verifyEachFieldsWithInvalidTexts();
+            configurationPage.clickOnCancelButton();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Operating Hours");
+            configurationPage.deleteTemplate(templateName);
             //get template level info of Scheduling rules
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad("Scheduling Rules");
@@ -1220,12 +1227,12 @@ public class UserManagementTest extends TestBase {
         }
     }
 
-    //Blocked by https://legiontech.atlassian.net/browse/LRB-73
+
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Add Update Delete Job title groups")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAddUpdateDeleteJobTitleGroupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");

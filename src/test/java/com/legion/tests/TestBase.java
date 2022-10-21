@@ -2,7 +2,6 @@ package com.legion.tests;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.Status;
-import com.jayway.restassured.response.Response;
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleAdminPage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
@@ -13,7 +12,10 @@ import com.legion.test.testrail.APIException;
 import com.legion.test.testrail.TestRailOperation;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.core.ScheduleTestKendraScott2;
-import com.legion.tests.testframework.*;
+import com.legion.tests.testframework.ExtentReportManager;
+import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.tests.testframework.LegionWebDriverEventListener;
+import com.legion.tests.testframework.ScreenshotManager;
 import com.legion.utils.*;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
@@ -21,7 +23,10 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.json.JSONException;
-import org.openqa.selenium.*;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -30,7 +35,9 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.*;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
@@ -44,19 +51,13 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.rmi.UnexpectedException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static com.jayway.restassured.RestAssured.baseURI;
-import static com.jayway.restassured.RestAssured.given;
 import static com.legion.utils.MyThreadLocal.*;
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.test.testrail.TestRailOperation.addResultForTest;
-import static com.legion.test.testrail.TestRailOperation.addTestRun;
 import static java.lang.Thread.sleep;
 
 //import org.apache.log4j.Logger;
@@ -716,6 +717,12 @@ public abstract class TestBase {
 
     public static String getUrl() {
       return getDriver().getCurrentUrl();
+    }
+
+    public static String getSession() {
+        Object session;
+        session = getDriver().executeScript("return localStorage.getItem('legion.authToken');");
+        return session.toString().replace("\"", "");
     }
 
     public static String getSessionId(String payLoad){

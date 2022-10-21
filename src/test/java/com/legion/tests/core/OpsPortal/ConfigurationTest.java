@@ -1,5 +1,7 @@
 package com.legion.tests.core.OpsPortal;
 
+import com.alibaba.fastjson.JSONObject;
+import com.legion.api.login.LoginAPI;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
@@ -8,6 +10,7 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.SettingsAndAssociationPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.pages.core.OpCommons.OpsCommonComponents;
+import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
 import com.legion.pages.core.OpsPortal.OpsPortalSettingsAndAssociationPage;
 import com.legion.pages.core.opemployeemanagement.TimeOffPage;
@@ -20,9 +23,12 @@ import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.Constants;
+import com.legion.utils.HttpUtil;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -39,6 +45,8 @@ import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.*;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
+
 
 public class ConfigurationTest extends TestBase {
 
@@ -54,14 +62,14 @@ public class ConfigurationTest extends TestBase {
     }
 
     @Override
-    @BeforeMethod()
+    @BeforeMethod(alwaysRun = true)
     public void firstTest(Method testMethod, Object[] params) throws Exception{
 
 
         this.createDriver((String)params[0],"83","Window");
-        ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
-        ToggleAPI.enableToggle(Toggles.EnableDemandDriverTemplate.getValue(), "stoneman@legion.co", "admin11.a");
-        ToggleAPI.enableToggle(Toggles.MixedModeDemandDriverSwitch.getValue(), "stoneman@legion.co", "admin11.a");
+        ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+        ToggleAPI.enableToggle(Toggles.EnableDemandDriverTemplate.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+        ToggleAPI.enableToggle(Toggles.MixedModeDemandDriverSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1059,7 +1067,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.switchToControlWindow();
 
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("NancyTest");
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("NancyTimeOff");
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
@@ -1579,6 +1587,15 @@ public class ConfigurationTest extends TestBase {
             //Go to Templates tab
             settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
             //Add new demand driver template, warning message will show up when no driver created
+            if(configurationPage.searchTemplate(templateName)){
+                configurationPage.clickOnTemplateName(templateName);
+                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+                settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+                configurationPage.deleteOneDynamicGroup(templateName);
+                configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+                configurationPage.setLeaveThisPageButton();
+                configurationPage.archiveOrDeleteTemplate(templateName);
+            }
             configurationPage.createNewTemplate(templateName);
             configurationPage.clickOnTemplateName(templateName);
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
@@ -2150,7 +2167,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify default input streams when enter a new enterprise.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 3)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 7)
     public void verifyTheDefaultInputStreamsWhenEnterANewEnterpriseAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
@@ -2272,7 +2289,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Forecast page when only default demand driver template exist")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true, priority = 7)
     public void verifyVisibilityOnForecastPageForDefaultDemandDriverTemplateOnlyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
@@ -2705,7 +2722,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on DynamicGroupV2 toggle
-            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -2785,7 +2802,7 @@ public class ConfigurationTest extends TestBase {
             //Remove the associated locations and templates
             configurationPage.archiveOrDeleteAllTemplates();
             //Turn off DynamicGroupV2 toggle
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2828,7 +2845,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on DynamicGroupV2 toggle
-            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -2883,7 +2900,7 @@ public class ConfigurationTest extends TestBase {
                     salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo.get("Category")), false);
 
             //Turn off DynamicGroupV2 toggle
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             switchToNewWindow();
             //Remove the associated locations and templates
             configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
@@ -2911,7 +2928,7 @@ public class ConfigurationTest extends TestBase {
             String derivedType = "Distributed";
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -2925,7 +2942,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.clickAddOrEditForDriver("Add");
             configurationPage.verifyForDerivedDemandDriverUI(derivedType, null);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2945,7 +2962,7 @@ public class ConfigurationTest extends TestBase {
             String parentType = "Parent Location";
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -2962,7 +2979,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnCancelButton();
             configurationPage.clickAddOrEditForDriver("Add");
             configurationPage.verifyForDerivedDemandDriverUI(derivedType, parentType);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2980,7 +2997,7 @@ public class ConfigurationTest extends TestBase {
             String derivedType = "Aggregated";
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -2994,7 +3011,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.clickAddOrEditForDriver("Add");
             configurationPage.verifyForDerivedDemandDriverUI(derivedType, null);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3053,7 +3070,7 @@ public class ConfigurationTest extends TestBase {
             };
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3084,7 +3101,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnTemplateDetailTab();
             configurationPage.publishNowTemplate();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3152,7 +3169,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3197,7 +3214,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnTemplateDetailTab();
             configurationPage.publishNowTemplate();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3265,7 +3282,7 @@ public class ConfigurationTest extends TestBase {
             };
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3310,7 +3327,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnTemplateDetailTab();
             configurationPage.publishNowTemplate();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3364,7 +3381,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3395,7 +3412,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3450,7 +3467,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3481,7 +3498,7 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -3525,7 +3542,7 @@ public class ConfigurationTest extends TestBase {
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -3556,7 +3573,7 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.assertOnFail("Verify remote:remote driver page failed in read only mode!", configurationPage.verifyDriverInViewMode(remoteLocationDriver), false);
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "stoneman@legion.co", "admin11.a");
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             configurationPage.archiveOrDeleteTemplate(templateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -3807,6 +3824,289 @@ public class ConfigurationTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.setLeaveThisPageButton();
             configurationPage.archiveOrDeleteTemplate(SchedulingRulesTemplate);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Demand Driver is visible for Legion Internal User")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDemandDriverIsAccessibleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            SimpleDateFormat dfs = new SimpleDateFormat("MMddHHmm");
+            String currentTime =  dfs.format(new Date()).trim();
+            String demandDriverTemplate = "CheckDerivedDriver" + currentTime;
+            List<String> derivedDriverType = new ArrayList<String>(Arrays.asList("Remote", "Aggregated", "Distributed"));
+
+            //Go to Configuration tab, check if demand driver exist.
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            SimpleUtils.assertOnFail("Demand Driver card should be visible for legion internal user!", configurationPage.verifyTemplateCardExist(templateType), false);
+
+            //EnableTahoeStorage is on, verify could view derived driver
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            refreshPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.createNewTemplate(demandDriverTemplate);
+            configurationPage.clickOnTemplateName(demandDriverTemplate);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            SimpleUtils.assertOnFail("Derived forecast source type should be visible with EnableTahoeStorage turned on!", configurationPage.getAllForecastSourceType().containsAll(derivedDriverType), false);
+
+            //EnableTahoeStorage is off, verify could not view derived driver
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            refreshPage();
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            SimpleUtils.assertOnFail("Derived forecast source type should be invisible with EnableTahoeStorage turned off!", !configurationPage.getAllForecastSourceType().containsAll(derivedDriverType), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Demand Driver is invisible for non-legion internal user")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDemandDriverIsNotAccessibleAsStoreManager(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String normalAdminUserName = "jane.meng+admin01@legion.co";
+            String adminPassword = "P@ssword123";
+
+            //Go to Configuration tab, check demand driver should not exist.
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            OpsPortalNavigationPage opsPortalNavigationPage = new OpsPortalNavigationPage();
+            configurationPage.goToConfigurationPage();
+            SimpleUtils.assertOnFail("Demand Driver card should be invisible for store manager!", !configurationPage.verifyTemplateCardExist(templateType), false);
+            //logout
+            opsPortalNavigationPage.logout();
+
+            //log in with normal admin, check demand driver should not exist
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            SimpleUtils.report(getDriver().getCurrentUrl());
+            loginPage.loginToLegionWithCredential(normalAdminUserName, adminPassword);
+            configurationPage.goToConfigurationPage();
+            SimpleUtils.assertOnFail("Demand Driver card should be invisible for normal admin!", !configurationPage.verifyTemplateCardExist(templateType), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Predictability score is only for LegionML Forecast Source driver.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPredictabilityScoreIsOnlyForLegionMLForecastSourceAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+        String templateType = "Demand Drivers";
+        String templateName = "testPredictabilityScore";
+        HashMap<String, String> legionMLDriver = new HashMap<String, String>(){
+            {
+                put("Name", "LegionMLDriver");
+                put("Type", "Items");
+                put("Channel", "EDW");
+                put("Category", "Enrollments");
+                put("Show in App", "Yes");
+                put("Order", "1");
+                put("Forecast Source", "Legion ML");
+                put("Input Stream", "Items:EDW:Enrollments");
+            }
+        };
+        HashMap<String, String> importedLDriver = new HashMap<String, String>(){
+            {
+                put("Name", "ImportedDriver");
+                put("Type", "Items");
+                put("Channel", "EDW");
+                put("Category", "Verifications");
+                put("Show in App", "Yes");
+                put("Order", "2");
+                put("Forecast Source", "Imported");
+                put("Input Stream", "Items:EDW:Verifications");
+            }
+        };
+        HashMap<String, String> remoteLDriver = new HashMap<String, String>(){
+            {
+                put("Name", "RemoteDriver");
+                put("Type", "Amount");
+                put("Channel", "Channel01");
+                put("Category", "Enrollments");
+                put("Show in App", "Yes");
+                put("Order", "1");
+                put("Forecast Source", "Remote");
+                put("Specify Location", "Parent Location");
+                put("Parent Level", "2");
+            }
+        };
+        HashMap<String, String> aggregatedDriver = new HashMap<String, String>(){
+            {
+                put("Name", "AggregatedDriver");
+                put("Type", "Items");
+                put("Channel", "Channel01");
+                put("Category", "Verifications");
+                put("Show in App", "No");
+                put("Order", "1");
+                put("Forecast Source", "Aggregated");
+                put("Options", "LegionMLDriver,-1.98;ImportedDriver,7.23");
+            }
+        };
+        HashMap<String, String> distributedDriver = new HashMap<String, String>(){
+            {
+                put("Name", "DistributedDriver");
+                put("Type", "Items");
+                put("Channel", "Channel01");
+                put("Category", "Enrollments");
+                put("Show in App", "No");
+                put("Order", "1");
+                put("Forecast Source", "Distributed");
+                put("Source Demand Driver", "LegionMLDriver");
+                put("Distribution of Demand Driver", "ImportedDriver");
+            }
+        };
+        //Turn on EnableTahoeStorage toggle
+        ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+        refreshPage();
+        //Go to Demand Driver template
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(templateType);
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        //Check Predictability Score is visible for Legion ML Driver
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(legionMLDriver);
+        configurationPage.clickAddOrEditForDriver("Edit");
+        SimpleUtils.assertOnFail("Predictability Score should show up for Legion ML forecast source driver!", configurationPage.verifyPredictabilityScoreExist(), false);
+        //Check Predictability Score is invisible for Imported Driver
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(importedLDriver);
+        configurationPage.searchDriverInTemplateDetailsPage(importedLDriver.get("Name"));
+        configurationPage.clickAddOrEditForDriver("Edit");
+        configurationPage.setLeaveThisPageButton();
+        SimpleUtils.assertOnFail("Predictability Score should NOT show up for Imported forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
+        //Check Predictability Score is invisible for Remote Driver
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(remoteLDriver);
+        configurationPage.searchDriverInTemplateDetailsPage(remoteLDriver.get("Name"));
+        configurationPage.clickAddOrEditForDriver("Edit");
+        configurationPage.setLeaveThisPageButton();
+        SimpleUtils.assertOnFail("Predictability Score should NOT show up for Remote forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
+        //Check Predictability Score is invisible for Aggregated Driver
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(aggregatedDriver);
+        configurationPage.searchDriverInTemplateDetailsPage(aggregatedDriver.get("Name"));
+        configurationPage.clickAddOrEditForDriver("Edit");
+        configurationPage.setLeaveThisPageButton();
+        SimpleUtils.assertOnFail("Predictability Score should NOT show up for Aggregated forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
+        //Check Predictability Score is invisible for Distributed Driver
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.addOrEditDemandDriverInTemplate(distributedDriver);
+        configurationPage.searchDriverInTemplateDetailsPage(distributedDriver.get("Name"));
+        configurationPage.clickAddOrEditForDriver("Edit");
+        configurationPage.setLeaveThisPageButton();
+        SimpleUtils.assertOnFail("Predictability Score should NOT show up for Distributed forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
+        configurationPage.clickOnBackButton();
+        configurationPage.createDynamicGroup(templateName, "Custom", templateName + "test");
+        configurationPage.selectOneDynamicGroup(templateName);
+        configurationPage.clickOnTemplateDetailTab();
+        configurationPage.publishNowTemplate();
+
+        //Delete the association and archive the template
+        configurationPage.clickOnTemplateName(templateName);
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+        configurationPage.deleteOneDynamicGroup(templateName);
+        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+        configurationPage.setLeaveThisPageButton();
+        configurationPage.archiveOrDeleteTemplate(templateName);
+
+        //Turn off EnableTahoeStorage toggle
+        ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Predictability score is only enabled for ever published template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyPredictabilityScoreIsOnlyEnabledForEverPublishedTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String templateName = "PredictabilityScoreTest";
+            HashMap<String, String> legionMLDriver = new HashMap<String, String>(){
+                {
+                    put("Name", "LegionMLDriver");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Enrollments");
+                    put("Show in App", "Yes");
+                    put("Order", "1");
+                    put("Forecast Source", "Legion ML");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+            //Check Predictability Score is disabled for draft version template
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(legionMLDriver);
+            configurationPage.saveADraftTemplate();
+            configurationPage.clickOnTemplateName(templateName);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Edit");
+            if( configurationPage.isGetPredictabilityScoreEnabled() == false){
+                SimpleUtils.pass("Get Predictability Score is Disabled as expected for the draft version template!");
+            }else{
+                SimpleUtils.fail("Get Predictability Score should not be Enabled for the draft version template!", false);
+            }
+
+            //Check Predictability Score is enabled for published version template
+            configurationPage.clickOnBackButton();
+            configurationPage.createDynamicGroup(templateName, "Custom", templateName + " test");
+            configurationPage.selectOneDynamicGroup(templateName);
+            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+            configurationPage.publishNowTemplate();
+            configurationPage.clickOnTemplateName(templateName);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Edit");
+            if(configurationPage.isGetPredictabilityScoreEnabled() == true){
+                SimpleUtils.pass("Get Predictability Score is Enabled as expected for the Published version template!");
+            }else{
+                SimpleUtils.fail("Get Predictability Score should not be Disabled for the Published version template!", false);
+            }
+
+            //Will uncomment below code when we can get forecast data back
+//            configurationPage.clickGetPredictabilityScore();
+
+            //Delete the association and archive the template
+            configurationPage.clickOnBackButton();
+            settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+            configurationPage.deleteOneDynamicGroup(templateName);
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.setLeaveThisPageButton();
+            configurationPage.archiveOrDeleteTemplate(templateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -4697,8 +4997,6 @@ public class ConfigurationTest extends TestBase {
 
             String templateType = "Operating Hours";
             String templateName ="FionaUsingUpdateLocationLevelOH";
-            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
-            String currentTime = dfs.format(new Date()).trim();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
 
             configurationPage.goToConfigurationPage();
@@ -4721,32 +5019,222 @@ public class ConfigurationTest extends TestBase {
         try {
 
             String locationName = "updateOHViaIntegration";
-            int moveCount = 4;
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-//            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-//            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            String openString = "09:00AM";
+            String closeString ="08:30PM";
 
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
+            if(locationsPage.verifyIsOverrideStatusAtLocationLevel("Operating Hours")){
+                locationsPage.clickActionsForTemplate("Operating Hours", "Reset");
+            }
+            //user can view location level OH template
             locationsPage.clickActionsForTemplate("Operating Hours", "View");
             locationsPage.backToConfigurationTabInLocationLevel();
+            //user can edit location level OH template
             locationsPage.clickActionsForTemplate("Operating Hours", "Edit");
-
             locationsPage.editBtnIsClickableInBusinessHours();
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            locationsPage.updateOpenCloseHourForOHTemplate(openString,closeString);
             locationsPage.selectDayInWorkingHoursPopUpWin(6);
             configurationPage.saveBtnIsClickable();
             configurationPage.saveBtnIsClickable();
-            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "Yes");
+            if(locationsPage.verifyIsOverrideStatusAtLocationLevel("Operating Hours")){
+                SimpleUtils.pass("User can update location level template successfully");
+            }else {
+                SimpleUtils.fail("User failed to update location level template",false);
+            }
+
             //reset
             locationsPage.clickActionsForTemplate("Operating Hours", "Reset");
-            locationsPage.verifyOverrideStatusAtLocationLevel("Operating Hours", "No");
-
+            if(!locationsPage.verifyIsOverrideStatusAtLocationLevel("Operating Hours")){
+                SimpleUtils.pass("User can reset successfully");
+            }else {
+                SimpleUtils.fail("User failed to reset location level template",false);
+            }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "User can only view location level OH when the button is on")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUserOnlyCanViewOperatingHoursInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+
+            String locationName = "updateOHViaInteTest";
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+
+            //Verify user can only see view button in location level
+            List<String> actions = new ArrayList<>();
+            actions = locationsPage.actionsForTemplateInLocationLevel("Operating Hours");
+            if(actions.size()==1 && actions.get(0).equalsIgnoreCase("View")){
+                SimpleUtils.pass("User can only view location level Operating Hours when Override via integration is on");
+            }else {
+                SimpleUtils.fail("User can do other actions and not only view for location level OH when Override via integration is on",false);
+            }
+            //user can view location level OH template
+            locationsPage.clickActionsForTemplate("Operating Hours", "View");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify other template don't have Override via integration button")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOtherTemplateNoOverrideViaIntegrationButtonAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            String templateType = "Scheduling Policies";
+            String templateName ="UsedByAuto";
+
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.searchTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName,"view");
+            if(!configurationPage.verifyOverrideViaIntegrationButtonShowingOrNot()){
+                SimpleUtils.pass("There is no Override via integration button for other template types");
+            }else {
+                SimpleUtils.fail("There is Override via integration button for other template types",false);
+            }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    public void importBusinessHours(String sessionId) {
+        String filePath = "src/test/resources/uploadFile/LocationLevelWithoutDayparts.csv";
+        String url = "https://staging-enterprise.dev.legion.work/legion/integration/testUploadBusinessHoursData?isTest=false&fileName=" + filePath + "&encrypted=false";
+        String responseInfo = HttpUtil.fileUploadByHttpPost(url, sessionId, filePath);
+        if (StringUtils.isNotBlank(responseInfo)) {
+            JSONObject json = JSONObject.parseObject(responseInfo);
+            if (!json.isEmpty()) {
+                String value = json.getString("responseStatus");
+                System.out.println(value);
+            }
+        }
+    }
+
+    //blocked by API error
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify user can update location level operating hours via integration")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifyUserCanUpdateLocationOHViaIntegrationAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            String locationName = "updateOHViaInteTest";
+            String templateName="updateOHViaInteTest";
+            String sessionId = LoginAPI.getSessionIdFromLoginAPI("fiona+99@legion.co","admin11.a");
+            importBusinessHours(sessionId);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            //verify location level OH is overridden or not?
+            if(locationsPage.isOverrideStatusAtLocationLevel("Operating Hours")){
+                SimpleUtils.pass("User can update location level OH via integration");
+            }else {
+                SimpleUtils.fail("User can NOT update location level OH via integration",false);
+            }
+            //Go to configuration and edit this template's override button to false then reset location level OH
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Operating Hours");
+            configurationPage.clickOnSpecifyTemplateName(templateName,"edit");
+            configurationPage.turnOnOffOverrideViaIntegrationButton();
+            configurationPage.publishNowTemplate();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Operating Hours", "Reset");
+            //back to template details page to turn on the button
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Operating Hours");
+            configurationPage.clickOnSpecifyTemplateName(templateName,"edit");
+            configurationPage.turnOnOffOverrideViaIntegrationButton();
+            configurationPage.publishNowTemplate();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify the dynamic group should be shown in advance staffing rule page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyBasicFunctionOfDynamicGroupInADVAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "AutoADVDynamicGroup";
+            String workRole = "AutoUsing2";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify each field of dynamic location group of advance staffing rule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyEachFieldsOfDynamicGroupInADVAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "AutoADVDynamicGroup";
+            String workRole = "AutoUsing2";
+            String dynamicGpName = "FionaAutoTest";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable();
+            //check dynamic group dialog UI add dynamic group
+            configurationPage.advanceStaffingRuleDynamicGroupDialogUICheck(dynamicGpName);
+            //edit delete dynamic group
+            configurationPage.advanceStaffingRuleEditDeleteADynamicGroup(dynamicGpName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
