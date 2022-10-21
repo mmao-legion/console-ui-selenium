@@ -5329,16 +5329,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		clickTheElement(saveBtnInUpdateLocationPage);
 	}
 
-	@Override
-		public void importLocationsAndDistrict(String fileName, String sessionId) throws Exception {
+	public void importLocationsAndDistrict(String fileName, String sessionId) throws Exception {
 		String url = "https://rc-enterprise.dev.legion.work/legion/integration/testAWSs3Put?bucketName=legion-rc-secure-ftp&key=opauto-rc/locations/" + fileName;
 		String filePath = "src/test/resources/uploadFile/LocationTest/" + fileName;
 		String responseInfo = HttpUtil.fileUploadByHttpPost(url, sessionId, filePath);
 		if (StringUtils.isNotBlank(responseInfo)) {
-			//转json数据
 			JSONObject json = JSONObject.parseObject(responseInfo);
 			if (!json.isEmpty()) {
-				//数据处理
 				String value = json.getString("responseStatus");
 				System.out.println(value);
 			}
