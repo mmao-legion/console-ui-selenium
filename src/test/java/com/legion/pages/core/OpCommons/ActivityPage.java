@@ -68,7 +68,7 @@ public class ActivityPage extends BasePage{
 
     public void clickTimeOffDetail() throws Exception{
         Integer size = getActvityTimeOffSize();
-        for(int i=0; i<size; i++){
+        for(int i=0; i<size-1; i++){
             clickTheElement(activityTimeOffDetail.get(i));
         }
     }
@@ -137,7 +137,7 @@ public class ActivityPage extends BasePage{
 
     public void verifyActivityTimeOffStatus() throws Exception{
         int size = getActvityTimeOffSize();
-        for(int i=0; i<size; i++){
+        for(int i=0; i < size-1; i++){
             if(isElementLoaded(activityTimeOffStatus.get(i),5)){
                 if(activityTimeOffStatus.get(i).getText().equals("PENDING")){
                     SimpleUtils.pass("Activity time off status is correct");

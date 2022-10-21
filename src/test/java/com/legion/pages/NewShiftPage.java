@@ -110,6 +110,7 @@ public interface NewShiftPage {
     public void setShiftNotesOnNewCreateShiftPage (String shiftNotes) throws Exception;
     public void setShiftNameOnNewCreateShiftPage (String shiftName) throws Exception;
     public String getTMAvailableColourForAssignedShift () throws Exception;
+    public void setStartTimeAndEndTimeForShift(String start, String end) throws Exception;
     public void selectWorkRoleCaseSensitive(String workRoles) throws Exception;
 
 }

@@ -248,6 +248,14 @@ public class TimeOffReasonConfigurationPage extends BasePage {
     @FindBy(css = "div.hour-type-row")
     private List<WebElement> hourTypeRows;
 
+    //Scheduled hours
+    @FindBy(css = "lg-service-level-distribution>div>div:nth-child(3) tr>th:nth-child(2)")
+    private WebElement scheduledHourUnit;
+    @FindBy(css = "lg-service-level-distribution>div>div:nth-child(3) tr:nth-child(2)>td:nth-child(1) input")
+    private WebElement scheduledHour;
+    @FindBy(css = "lg-service-level-distribution>div>div:nth-child(3) tr:nth-child(2)>td:nth-child(2) input")
+    private WebElement accrualNum;
+
     //submit
     @FindBy(css = "lg-button[label='Cancel']>button")
     private WebElement cancelButton;
@@ -761,5 +769,22 @@ public class TimeOffReasonConfigurationPage extends BasePage {
 
     public void addMore() {
         addMoreBtn.click();
+    }
+
+    public String getScheduledHourUnit() {
+        String unit = null;
+        if (isElementDisplayed(scheduledHourUnit)) {
+            unit = scheduledHourUnit.getText();
+        } else {
+            System.out.println("Scheduled hours Unit didn't display!!!");
+        }
+        return unit;
+    }
+
+    public void setScheduledHourRule(String scheduledHrs, String rate) {
+        scheduledHour.clear();
+        scheduledHour.sendKeys(scheduledHrs);
+        accrualNum.clear();
+        accrualNum.sendKeys(rate);
     }
 }

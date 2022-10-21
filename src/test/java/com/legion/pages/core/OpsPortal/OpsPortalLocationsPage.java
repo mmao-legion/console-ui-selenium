@@ -1,5 +1,6 @@
 package com.legion.pages.core.OpsPortal;
 
+import com.alibaba.fastjson.JSONObject;
 import com.aventstack.extentreports.Status;
 import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
@@ -8,10 +9,12 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
+import com.legion.utils.HttpUtil;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -460,7 +463,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-	@FindBy(css = "input[placeholder*=\"You can search by name, id, district and city.\"]")
+	@FindBy(xpath = "//lg-tab-toolbar//lg-search//input")
 	private WebElement searchInput;
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
@@ -732,7 +735,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	@Override
-	public void verifyImportLocationDistrict() {
+	public void verifyImportLocationDistrict(String filePath) {
 		String pth = System.getProperty("user.dir");
 		if (isElementEnabled(importBtn, 5)) {
 			click(importBtn);
@@ -740,11 +743,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Import location page show well");
 			} else
 				SimpleUtils.fail("Import location page load failed", true);
-			uploaderFileInputBtn.sendKeys(pth + "/src/test/resources/LocationImportTemplate.csv");
+			uploaderFileInputBtn.sendKeys(pth + filePath);
 			waitForSeconds(5);
 			click(importBtnInImportLocationPage);
 			waitForSeconds(15);
-			click(okBtnInImportLocationPage);
 			SimpleUtils.pass("File import action done");
 
 		} else
@@ -904,7 +906,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (isElementLoaded(disableBtn, 5)) {
 				click(disableBtn);
 				if (validateDisableLocationAlertPage()) {
-					click(disableBtn);
+					moveToElementAndClick(getDriver().findElement(By.cssSelector("lg-button[label=Disable]:nth-child(2)>button")));
 					waitForSeconds(5);
 				}
 				click(backBtnInLocationDetailsPage);
@@ -1348,7 +1350,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			displayNameInput.sendKeys(locationName);
 			setLocationName(locationName);
 			selectByVisibleText(locationGroupSelect, newLocationParas.get(parentRelationship));
-			clickTheElement(getDriver().findElement(By.cssSelector("input[aria-label=\"" + value + "\"] ")));
+			//clickTheElement(getDriver().findElement(By.cssSelector("input[aria-label=\"" + value + "\"] ")));
 			locationId.sendKeys(getLocationName());
 			nameInput.sendKeys(getLocationName());
 			selectByVisibleText(timeZoonSelect, newLocationParas.get("Time_Zone"));
@@ -1550,8 +1552,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (locationRows.size() > 0) {
 			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(locationDetailsLinks.get(0));
-			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
-			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
+			moveToElementAndClick(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"]")));
+			waitForSeconds(2);
+			moveToElementAndClick(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"]:nth-child(2)>button")));
 			waitForSeconds(8);
 			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button")).getText().equals(action)) {
 				SimpleUtils.pass(action + " " + locationName + " successfully");
@@ -2319,7 +2322,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private List<WebElement> deleteRuleIcon;
 	@FindBy(css = "lg-button[icon=\"'img/legion/add.png'\"]")
 	private List<WebElement> addDynamicGroupBtn;
-	@FindBy(css = "input[placeholder=\"You can search by name and description\"]")
+	@FindBy(xpath = "//lg-search//input")
 	private List<WebElement> dgSearchInput;
 	@FindBy(css = "[dynamic-groups=\"clockinDg\"] .fa-pencil")
 	private List<WebElement> editDGIconInClockIn;
@@ -3458,7 +3461,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("Configuration tab in locations level page load failed ", false);
 	}
 
-	@FindBy(css = "table.lg-table.ng-scope")
+	@FindBy(css = "table.lg-table.ng-scope tbody")
 	private List<WebElement> workRolesInSchedulingRulesInConfigurationLevel;
 
 	@Override
@@ -4338,6 +4341,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
+	@FindBy(css="div.lg-tabs nav div:nth-child(2)")
+	private WebElement externalAttributesTab;
 	@Override
 	public void clickActionsForTemplate(String templateName, String action) {
 		scrollToBottom();
@@ -4361,8 +4366,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					verifyResetWindowDisplay();
 					click(okBtnInSelectLocation);
 				}else {
-					SimpleUtils.report("Location level External Attributes is not overridden");
-					clickTheElement(cancelBTNOnLocationLevelTemplateDetailsPage);
+					SimpleUtils.report("Location level Work Roles is not overridden");
+					clickTheElement(externalAttributesTab);
+					if (isExist(resetButton)) {
+						clickTheElement(resetButton);
+						verifyResetWindowDisplay();
+						click(okBtnInSelectLocation);
+					}else {
+						clickTheElement(cancelBTNOnLocationLevelTemplateDetailsPage);
+					}
 				}
 			}else{
 				click(okBtnInSelectLocation);
@@ -4399,6 +4411,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	public void verifyAssignmentRulesFromLocationLevel(String assignmentRuleTitle) throws Exception {
 		boolean isAssignmentRuleExit = false;
+		waitForSeconds(5);
 		if (assignmentRules.size() != 0) {
 			for (WebElement title : assignmentConditionList) {
 				if (title.getText().contains(assignmentRuleTitle)) {
@@ -4505,6 +4518,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	public void verifyOverrideStatusAtLocationLevel(String templateName, String flag) throws Exception {
+		waitForSeconds(6);
 		if (flag.equalsIgnoreCase("Yes")) {
 			if (isExist(getDriver().findElement(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/span")))) {
 				SimpleUtils.pass("template is overrided");
@@ -4518,6 +4532,19 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Template is reset");
 			}
 		}
+	}
+
+	@Override
+	public boolean verifyIsOverrideStatusAtLocationLevel(String templateName) throws Exception {
+		boolean flag = false;
+		if (getDriver().findElements(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/*")).size() == 1) {
+			SimpleUtils.pass("template is overridden");
+			flag=true;
+		}else{
+			SimpleUtils.pass("Template is NOT overridden");
+			flag=false;
+		}
+		return flag;
 	}
 
 	public void verifyModifiedByAtLocationLevel(String templateName, String user) throws Exception {
@@ -4997,7 +5024,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return flag;
 	}
 
-	@FindBy(css="general-form.enterprise-container form-section:nth-child(6)")
+	@FindBy(css="general-form.enterprise-container form-section:nth-child(7)")
 	WebElement laborBudgetPlanSection;
 
 	@Override
@@ -5095,7 +5122,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@Override
 	public boolean isBudgetPlanSectionShowing(){
-		String locator = "general-form.enterprise-container form-section:nth-child(6)  question-input[question-title*=\"upperfield?\"] yes-no div.ng-scope";
+		String locator = "general-form.enterprise-container form-section:nth-child(7)  question-input[question-title*=\"upperfield?\"]";
 		boolean flag;
 		if(isElementExist(locator)){
 			flag = true;
@@ -5220,6 +5247,99 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			select.selectByVisibleText("By Job Title Group Hourly Rate");
 		}else {
 			select.selectByVisibleText("By Work Role Hourly Rate");
+		}
+	}
+
+	@FindBy(css="lg-new-time-input[label=\"Open\"] input")
+	private WebElement openHour;
+	@FindBy(css="lg-new-time-input[label=\"Close\"] input")
+	private WebElement closeHour;
+
+	@Override
+	public void updateOpenCloseHourForOHTemplate(String openString,String closeString){
+		if(isElementEnabled(openHour,2) && isElementEnabled(closeHour,2)){
+//			openHour.sendKeys(Keys.TAB);
+			openHour.clear();
+			clickTheElement(openHour);
+			openHour.sendKeys(openString);
+			waitForSeconds(2);
+			openHour.sendKeys(Keys.TAB);
+			openHour.sendKeys(Keys.TAB);
+			closeHour.sendKeys(closeString);
+			waitForSeconds(2);
+			String openStr=getDriver().findElement(By.cssSelector("lg-new-time-input[label=\"Open\"] div.input-faked")).getAttribute("innerText").trim();
+			String closeStr=getDriver().findElement(By.cssSelector("lg-new-time-input[label=\"Close\"] div.input-faked")).getAttribute("innerText").trim();
+			if(openStr.equalsIgnoreCase(openString)&&closeStr.equalsIgnoreCase(closeString)){
+				SimpleUtils.pass("user can update open and close hour successfully in OH template");
+			}else {
+				SimpleUtils.fail("user can NOT update open and close hour successfully in OH template",false);
+			}
+		}else {
+			SimpleUtils.fail("open hours and close hours fields are not showing",false);
+		}
+	}
+
+
+	@Override
+	public List<String> actionsForTemplateInLocationLevel(String templateName) {
+		scrollToBottom();
+		List<WebElement> actions = getDriver().findElements(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span"));
+		List<String> actionsName=new ArrayList<>();
+		for (int i = 0; i < actions.size(); i++) {
+			actionsName.add(actions.get(i).getText().trim());
+		}
+		return actionsName;
+	}
+
+	@FindBy(css="yes-no[value*=\"readyForForecast\"] lg-button-group")
+	private WebElement readyForForecastOption;
+	@Override
+	public boolean verifyReadyForForecastFieldExist() throws Exception {
+		boolean isExisting = false;
+		scrollToBottom();
+		if (isElementLoaded(readyForForecastOption, 3)){
+			isExisting = true;
+		}
+		return isExisting;
+	}
+
+	@Override
+	public String getReadyForForecastSelectedOption() throws Exception {
+		String selectedOption = "";
+		List<WebElement> yesOrNoOptions = readyForForecastOption.findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
+		for (WebElement choose : yesOrNoOptions) {
+			if (choose.getAttribute("class").contains("lg-button-group-selected")) {
+				selectedOption = choose.findElement(By.cssSelector("span")).getText();
+				break;
+			}
+		}
+		return selectedOption;
+	}
+
+	@Override
+	public void chooseReadyForForecastValue(String value) throws Exception {
+		List<WebElement> yesOrNoOptions = readyForForecastOption.findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
+		for (WebElement choose : yesOrNoOptions) {
+			if (choose.findElement(By.cssSelector("span")).getText().equalsIgnoreCase(value) &&
+					!choose.getAttribute("class").contains("lg-button-group-selected")) {
+				clickTheElement(choose);
+				break;
+			}
+		}
+		waitForSeconds(2);
+		clickTheElement(saveBtnInUpdateLocationPage);
+	}
+
+	public void importLocationsAndDistrict(String fileName, String sessionId) throws Exception {
+		String url = "https://rc-enterprise.dev.legion.work/legion/integration/testAWSs3Put?bucketName=legion-rc-secure-ftp&key=opauto-rc/locations/" + fileName;
+		String filePath = "src/test/resources/uploadFile/LocationTest/" + fileName;
+		String responseInfo = HttpUtil.fileUploadByHttpPost(url, sessionId, filePath);
+		if (StringUtils.isNotBlank(responseInfo)) {
+			JSONObject json = JSONObject.parseObject(responseInfo);
+			if (!json.isEmpty()) {
+				String value = json.getString("responseStatus");
+				System.out.println(value);
+			}
 		}
 	}
 }
