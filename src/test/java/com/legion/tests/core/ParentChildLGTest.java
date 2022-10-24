@@ -2103,8 +2103,6 @@ public class ParentChildLGTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAutomaticallyExpandWhenGroupByInPCLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        String PCLocationGroup = getCrendentialInfo("PCLGInfo");
-        locationSelectorPage.changeLocation(PCLocationGroup);
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();

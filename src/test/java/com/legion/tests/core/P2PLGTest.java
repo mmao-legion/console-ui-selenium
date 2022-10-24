@@ -1084,6 +1084,8 @@ public class P2PLGTest extends TestBase {
             //Go to day view, check for TM: A at child location 1, has one shift, ex: 6am - 8am
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.clickCloseBtnForCreateShift();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(1);
@@ -1881,8 +1883,6 @@ public class P2PLGTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-            locationSelectorPage.changeDistrict("Bay Area District");
-            locationSelectorPage.changeLocation("LocGroup2");
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
