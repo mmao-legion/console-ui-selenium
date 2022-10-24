@@ -573,7 +573,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = ".upcoming-shift")
 	private List<WebElement> upcomingShifts;
 
-	@FindBy(css = "li[ng-click^='goToProfile']")
+	@FindBy(css = ".header-user-switch-menu-secondary-item")
 	private List<WebElement> goToProfile;
 
 	@FindBy(css = ".lgn-alert-modal")
