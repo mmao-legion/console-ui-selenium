@@ -175,6 +175,8 @@ public class BulkCreateTest extends TestBase {
             createSchedulePage.createScheduleForNonDGByWeekInfo("SUGGESTED", weekDaysToClose, null);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.clickCloseBtnForCreateShift();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
             SimpleUtils.assertOnFail("New create shift page is not display! ",
                     newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
             newShiftPage.clickOnCreateOrNextBtn();
@@ -430,7 +432,7 @@ public class BulkCreateTest extends TestBase {
             int count = (int)(Math.random()*(100-2)+2);
             newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
             newShiftPage.clearAllSelectedDays();
-            int dayCount = 7;
+            int dayCount = 1;
             newShiftPage.selectSpecificWorkDay(dayCount);
             newShiftPage.clickOnCreateOrNextBtn();
             //Check the TMs on search TMs tabs, the TMs display with Assign and Offer buttons
@@ -483,6 +485,7 @@ public class BulkCreateTest extends TestBase {
 
             //Check the TMs on Recommended TMs tabs, the TMs display with Assign and Offer buttons
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
+            Thread.sleep(5000);
             resultCount = newShiftPage.getSearchAndRecommendedResult().size();
             openShiftCount = newShiftPage.getOpenShiftCountOnShiftAssignedSection();
             //Click the Assign button of one TMs
@@ -1759,8 +1762,8 @@ public class BulkCreateTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the Next day check box on create shift modal")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheNextDayCheckBoxOnCreateShiftModalAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -1788,6 +1791,8 @@ public class BulkCreateTest extends TestBase {
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //Click New shift button to open create shift modal
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.clickCloseBtnForCreateShift();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             SimpleUtils.assertOnFail("New create shift page is not display! ",
                     newShiftPage.checkIfNewCreateShiftPageDisplay(), false);

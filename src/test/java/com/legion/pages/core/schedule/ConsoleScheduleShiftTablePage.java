@@ -3185,7 +3185,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if(!areListElementVisible(weekShifts, 10)){
             shifts = dayViewAvailableShifts;
             if (areListElementVisible(shifts, 20) && index < shifts.size()) {
-                String[] nameAndWorkRole = shifts.get(index).findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ");
+                String[] nameAndWorkRole = shifts.get(index).findElement(By.className("sch-day-view-shift-worker-name"))
+                        .getText().split("\\(")[0].trim().split(" ");
                 fullName = nameAndWorkRole[0] + " " + nameAndWorkRole[1];
             } else {
                 SimpleUtils.fail("Schedule Page: day shifts not loaded successfully!", false);
