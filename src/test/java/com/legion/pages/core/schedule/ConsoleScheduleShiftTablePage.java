@@ -4069,7 +4069,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         boolean shiftDurationInBoxLoaded = false;
         try {
             if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
-                WebElement shiftDuration = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[class=\"sch-day-view-shift-time pt-5 mr-10\"] [class=\"ng-binding ng-scope\"]"));
+                WebElement shiftDuration = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[class=\"sch-day-view-shift-time pt-5 mr-10\"]"));
                 if (isElementLoaded(shiftDuration)) {
                     shiftDurationInBoxLoaded = true;
                     SimpleUtils.report("The shift duration displays!");
@@ -4109,7 +4109,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         boolean profileNameAndWorkRoleLoaded = false;
         try {
             if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
-                WebElement profileNameAndWorkRole = dayViewAvailableShifts.get(index).findElement(By.cssSelector(".sch-day-view-shift-worker-name.ng-binding.ng-scope"));
+                WebElement profileNameAndWorkRole = dayViewAvailableShifts.get(index).findElement(By.cssSelector(".sch-day-view-shift-worker-name.row-fx.ng-scope"));
                 if (isElementLoaded(profileNameAndWorkRole)) {
                     profileNameAndWorkRoleLoaded = true;
                     SimpleUtils.report("The profile name and work role display!");
