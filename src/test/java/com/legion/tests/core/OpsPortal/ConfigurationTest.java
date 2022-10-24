@@ -5229,14 +5229,10 @@ public class ConfigurationTest extends TestBase {
             configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
             configurationPage.verifyAdvancedStaffingRulePageShowWell();
             configurationPage.verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable();
-            //check dynamic group dialog UI
+            //check dynamic group dialog UI add dynamic group
             configurationPage.advanceStaffingRuleDynamicGroupDialogUICheck(dynamicGpName);
-            //edit the dynamic group
-            configurationPage.editADynamicGroup(dynamicGpName);
-            //search the dynamic group to delete
-            configurationPage.deleteOneDynamicGroup(dynamicGpName);
-            //save draft template
-            configurationPage.saveADraftTemplate();
+            //edit delete dynamic group
+            configurationPage.advanceStaffingRuleEditDeleteADynamicGroup(dynamicGpName);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

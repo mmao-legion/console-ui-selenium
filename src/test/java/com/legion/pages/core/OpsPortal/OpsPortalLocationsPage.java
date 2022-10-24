@@ -913,7 +913,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			if (isElementLoaded(disableBtn, 5)) {
 				click(disableBtn);
 				if (validateDisableLocationAlertPage()) {
-					click(disableBtn);
+					moveToElementAndClick(getDriver().findElement(By.cssSelector("lg-button[label=Disable]:nth-child(2)>button")));
 					waitForSeconds(5);
 				}
 				click(backBtnInLocationDetailsPage);
@@ -1559,8 +1559,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (locationRows.size() > 0) {
 			List<WebElement> locationDetailsLinks = locationRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(locationDetailsLinks.get(0));
-			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
-			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
+			moveToElementAndClick(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"]")));
+			waitForSeconds(2);
+			moveToElementAndClick(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"]:nth-child(2)>button")));
 			waitForSeconds(8);
 			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button")).getText().equals(action)) {
 				SimpleUtils.pass(action + " " + locationName + " successfully");
