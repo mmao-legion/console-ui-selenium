@@ -114,7 +114,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
 
     @FindBy(css = "content-box[ng-if*=\"enableDynamicGroupForAssociation \"] lg-button[label=\"Edit\"]")
     private WebElement editDynamicGroupBtn;
-    @FindBy(css = "content-box[ng-if*=\"enableDynamicGroupForAssociation \"] lg-button[label=\"Done\"]")
+    @FindBy(css = "content-box[ng-if*=\"enableDynamicGroupForAssociation \"] lg-button[label=\"Done\"] button")
     private WebElement doneDynamicGroupBtn;
     @FindBy(css = "content-box[ng-if*=\"enableDynamicGroupForAssociation \"] lg-button[label=\"Cancel\"]")
     private WebElement cancelDynamicGroupBtn;
@@ -640,7 +640,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                     isExisting = true;
                     scrollToElement(settingsType.findElement(By.cssSelector("lg-paged-search")));
                     clickTheElement(settingsType.findElement(By.cssSelector("div.header-add-icon button")));
-                    if (isElementLoaded(popUpWindow, 3)) {
+                    if (isElementLoaded(popUpWindow, 5)) {
                         NameInput = fieldsInput.get(0).findElement(By.xpath("//input[contains(@placeholder, 'Input Stream')]"));
                         NameInput.sendKeys(inputStreamSpecificInfo.get("Name"));
                         //Verify if the input name is existing
@@ -654,7 +654,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                             return;
                         }
 
-                        fieldsInput.get(2).findElement(By.cssSelector("input[aria-label=\"Data Tag\"]")).sendKeys(inputStreamSpecificInfo.get("Tag"));
+                        fieldsInput.get(3).findElement(By.cssSelector("input[aria-label=\"Data Tag\"]")).sendKeys(inputStreamSpecificInfo.get("Tag"));
                         if (!"Base".equalsIgnoreCase(inputStreamSpecificInfo.get("Type"))){
                             clickTheElement(streamType);
                             Select typeSelect = new Select(streamType);
@@ -917,5 +917,143 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             SimpleUtils.fail("Fail to find attribute fields!", false);
         }
         return isFound;
+    }
+
+    public void clearUpSelectedLocationAttributes() throws Exception{
+        if (areListElementVisible(locationAttributesInSettings, 10)){
+            for (WebElement attributeField: locationAttributesInSettings){
+                if (isElementLoaded(attributeField.findElement(By.tagName("input")), 10)
+                        && attributeField.findElement(By.tagName("input")).getAttribute("class").contains("not-empty")){
+                    waitForSeconds(2);
+                    clickTheElement(attributeField.findElement(By.tagName("input")));
+                }
+            }
+        } else {
+            SimpleUtils.fail("Fail to find location attributes!", false);
+        }
+    }
+
+    @Override
+    public void setupLocationAttributes(String fields) throws Exception {
+        if (areListElementVisible(locationAttributesInSettings, 10)){
+            for (WebElement attributeField: locationAttributesInSettings){
+                if (isElementLoaded(attributeField.findElement(By.cssSelector("td.ng-binding"))) && fields.equalsIgnoreCase(attributeField.findElement(By.cssSelector("td.ng-binding")).getText())){
+                    if (isElementLoaded(attributeField.findElement(By.tagName("input")), 10) && attributeField.findElement(By.tagName("input")).getAttribute("class").contains("ng-empty")){
+                        waitForSeconds(2);
+                        clickTheElement(attributeField.findElement(By.tagName("input")));
+                    }
+                }
+            }
+        } else {
+            SimpleUtils.fail("Fail to find fields!", false);
+        }
+    }
+
+    @FindBy(xpath = "//div[contains(@ng-if, 'isAttribute')]/parent::div")
+    private List<WebElement> attributesInAssociation;
+    @Override
+    public void verifyLocationAttributesInAssociation(HashMap<String, String> locationAttributesToCheck) throws Exception {
+        HashMap<String, String> attributes = new HashMap<String, String>();
+        String attributeName = "";
+        String fromValue = "";
+        String toValue = "";
+
+        if (areListElementVisible(attributesInAssociation, 10)){
+            System.out.println("---attributesInAssociation size is: " + attributesInAssociation.size());
+
+            for (WebElement criteriaLine: attributesInAssociation) {
+                List<WebElement> fromToLabel = criteriaLine.findElements(By.cssSelector("div[ng-if*=\"isAttribute\"] div.dilf"));
+                if (fromToLabel.size() == 2) {
+                    for (WebElement label : fromToLabel) {
+                        if (label.findElement(By.tagName("span")).getText().toLowerCase().contains("from")){
+                            fromValue = label.findElement(By.cssSelector("input-field[value*=\"from\"] div")).getAttribute("innerText").replace("\n", "").trim();
+                        }
+                        if (label.findElement(By.tagName("span")).getText().toLowerCase().contains("to")){
+                            toValue = label.findElement(By.cssSelector("input-field[value*=\"to\"] div")).getAttribute("innerText").replace("\n", "").trim();
+                        }
+                    }
+                    if (fromValue.equals(toValue)) {
+                        attributeName = criteriaLine.findElement(By.cssSelector("div[disabled=\"disabled\"]")).getAttribute("innerText").replace("\n", "").trim();
+                        attributes.put(attributeName, fromValue);
+                    } else {
+                        SimpleUtils.fail("From value should be equals to To Value for the attribute!", false);
+                    }
+                } else {
+                    SimpleUtils.fail("Location Attribute should have From& To text box", false);
+                }
+            }
+            if (locationAttributesToCheck.equals(attributes)){
+                SimpleUtils.pass("Location Attribute items and values in association page are expected!");
+            }else {
+                SimpleUtils.fail("Location Attribute items and values in association page are not correct!", false);
+            }
+        } else {
+            SimpleUtils.fail("No location attributes on the page!", false);
+        }
+    }
+
+    @Override
+    public void fillInValuesForLocationAttributes(HashMap<String, List<String>> locationAttributes) throws Exception {
+        String attributeName = "";
+
+        if (areListElementVisible(attributesInAssociation, 10)){
+            for (WebElement criteriaLine: attributesInAssociation) {
+                for (Map.Entry<String, List<String>> attributeEntry : locationAttributes.entrySet()){
+                    attributeName = criteriaLine.findElement(By.cssSelector("div[disabled=\"disabled\"]")).getAttribute("innerText").replace("\n", "").trim();
+                    if (attributeEntry.getKey().equals(attributeName)){
+                        criteriaLine.findElement(By.cssSelector("input-field[value*=\"from\"] input")).clear();
+                        criteriaLine.findElement(By.cssSelector("input-field[value*=\"from\"] input")).sendKeys(attributeEntry.getValue().get(0));
+                        criteriaLine.findElement(By.cssSelector("input-field[value*=\"to\"] input")).clear();
+                        criteriaLine.findElement(By.cssSelector("input-field[value*=\"to\"] input")).sendKeys(attributeEntry.getValue().get(1));
+                    }
+                }
+            }
+        }else {
+            SimpleUtils.fail("No location attributes on the page!", false);
+        }
+    }
+
+    @Override
+    public boolean verifyAttributeValuesInAssociationPage() throws Exception {
+        String regex ="^(0|[1-9][0-9]*)$";
+        boolean flag1 = true;
+        boolean flag2 = true;
+        String fromValue = "";
+        String toValue = "";
+
+        if (areListElementVisible(attributesInAssociation, 10)){
+            //Verify if the values are legal
+            for (WebElement criteriaLine: attributesInAssociation) {
+                fromValue = criteriaLine.findElement(By.cssSelector("input-field[value*=\"from\"] div")).getAttribute("innerText").replace("\n", "").trim();
+                toValue = criteriaLine.findElement(By.cssSelector("input-field[value*=\"to\"] div")).getAttribute("innerText").replace("\n", "").trim();
+                if (fromValue.isEmpty() || toValue.isEmpty()){
+                    flag1 = false;
+                    break;
+                }
+                if (!fromValue.matches(regex) || !toValue.matches(regex)){
+                    flag1 = false;
+                    break;
+                }
+                if (Integer.parseInt(fromValue) > Integer.parseInt(toValue)){
+                    flag1 = false;
+                    break;
+                }
+            }
+            //Verify if the save button is clickable
+            if (flag1 == false){
+                if (!testButton.getAttribute("disabled").equals("true") || !doneDynamicGroupBtn.getAttribute("disabled").equals("true")){
+                    flag2 = false;
+                    SimpleUtils.fail("Button should be disabled as Illegal from&to value exist!", false);
+                }
+            }else{
+                if (testButton.getAttribute("disabled") != null || doneDynamicGroupBtn.getAttribute("disabled") != null){
+                    flag2 = false;
+                    SimpleUtils.fail("Button should be enabled as all from&to values are legal!", false);
+                }
+            }
+        }else {
+            SimpleUtils.fail("No location attributes on the page!", false);
+        }
+        return flag2;
     }
 }

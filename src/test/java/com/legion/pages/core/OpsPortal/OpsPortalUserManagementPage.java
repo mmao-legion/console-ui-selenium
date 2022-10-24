@@ -844,13 +844,13 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		}
 
 	}
-	@FindBy(css = "div.table-row:nth-child(6)>div:nth-child(1)")
+	@FindBy(css = "div.table-row:nth-child(7)>div:nth-child(1)")
 	private WebElement templateLocalization;
 	@FindBy(css = "div.table-row:nth-child(3)>div:nth-child(1)")
 	private WebElement createEditTemplates;
-	@FindBy(css = "div.table-row:nth-child(8)>div:nth-child(1)")
-	private WebElement operationManagement;
 	@FindBy(css = "div.table-row:nth-child(9)>div:nth-child(1)")
+	private WebElement operationManagement;
+	@FindBy(css = "div.table-row:nth-child(10)>div:nth-child(1)")
 	private WebElement viewTemplate;
 	@Override
 	public void verifyManageItemInUserManagementAccessRoleTab() throws Exception {
@@ -1094,6 +1094,8 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	private WebElement history;
 	@FindBy(css = "div#logContainer.lg-slider-pop__content.mt-20")
 	private WebElement historyDetail;
+	@FindBy(css = "div.show-more")
+	private WebElement showMore;
 
 	@Override
 	public void verifyHistoryDeductType() throws Exception {
@@ -1105,10 +1107,13 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 				click(history);
 				if(isElementEnabled(historyDetail,5)){
 					highlightElement(historyDetail);
-					if (historyDetail.getText().contains("max carryover") && historyDetail.getText().contains("max available") && historyDetail.getText().contains("annual earn limit")){
-						SimpleUtils.pass("deducted type display");
-					}else
-						SimpleUtils.fail("deducted type doesn't display",false);
+					if(isElementEnabled(showMore,5)){
+						clickTheElement(showMore);
+						if (historyDetail.getText().contains("max carryover") && historyDetail.getText().contains("max available") && historyDetail.getText().contains("annual earn limit")){
+							SimpleUtils.pass("deducted type display");
+						}else
+							SimpleUtils.fail("deducted type doesn't display",false);
+					}
 				}else
 					SimpleUtils.fail("user history detail loaded failed",false);
 			}else
@@ -1865,7 +1870,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	@Override
 	public void deleteJobTitleGroup(String jobTitleGroupName) throws Exception{
 		waitForSeconds(3);
-		int beforeCount = jobTitleGroupList.size();
+//		int beforeCount = jobTitleGroupList.size();
 		if(isElementEnabled(removeButtonOfJobTitleGroup,3)){
 			clickTheElement(removeButtonOfJobTitleGroup);
 			waitForSeconds(3);
@@ -1884,8 +1889,14 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 					clickTheElement(jobTitleGroup);
 				}
 				waitForSeconds(2);
-				int afterCount = jobTitleGroupList.size();
-				if(beforeCount-afterCount==1){
+//				int afterCount = jobTitleGroupList.size();
+				List<String> nameList = new ArrayList<>();
+				for(WebElement jobTitleGr:jobTitleGroupList){
+					String jobTitleGroupNam = jobTitleGr.findElement(By.cssSelector(" td")).getText().trim();
+					nameList.add(jobTitleGroupNam);
+				}
+
+				if(!nameList.contains(jobTitleGroupName)){
 					SimpleUtils.pass("User can delete job title group successfully!");
 				}else {
 					SimpleUtils.fail("User failed to delete job title group",false);

@@ -3980,7 +3980,8 @@ public class ParentChildLGTest extends TestBase {
             List<String> actualLocations = editShiftPage.getOptionsFromSpecificSelect();
             for (int i = 0; i < locations.size(); i++) {
                 if (!locations.get(i).toLowerCase().trim().equalsIgnoreCase(actualLocations.get(i).toLowerCase().trim())) {
-                    SimpleUtils.fail("Child location list is incorrect!", false);
+                    SimpleUtils.fail("Child location list is incorrect! The expected is: "+locations.get(i)
+                            +" The actual is: "+actualLocations.get(i), false);
                     break;
                 }
             }

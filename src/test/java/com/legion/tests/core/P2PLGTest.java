@@ -2976,7 +2976,6 @@ public class P2PLGTest extends TestBase {
             ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",

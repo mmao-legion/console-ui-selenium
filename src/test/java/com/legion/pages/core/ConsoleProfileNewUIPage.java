@@ -1852,8 +1852,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> calendarMonthNames;
 	@FindBy (css = "div.is-today")
 	private WebElement todayOnCalendar;
-	@FindBy (className = "header-user-switch-menu-item")
-	private List<WebElement> profileSubPageLabels;
+//	@FindBy (className = "header-user-switch-menu-item")
+//	private List<WebElement> profileSubPageLabels;
+    @FindBy (css = "div.header-user-switch-menu-secondary-item.ng-binding")
+    private List<WebElement> profileSubPageLabels;
 	@FindBy (css = ".header-user-switch-menu")
 	private WebElement profileSwitchMenu;
 	@FindBy (css = "div.in-range")
@@ -2368,23 +2370,15 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		try{
 			if(isElementLoaded(userProfileImage, 5)){
 				clickTheElement(userProfileImage);
-				if (isElementLoaded(userNickName, 5)) {
-					if (userNickName.getText().replaceAll(" ", "").replaceAll("-", "")
-							.equalsIgnoreCase(getEnterprise().replaceAll(" ", "").replaceAll("-", ""))) {
-						clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));
-						WebElement nameElement = null;
-						if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 5)) {
-							nameElement = getDriver().findElement(By.cssSelector(".userProfileText"));
-						} else if (areListElementVisible(getDriver().findElements(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")),5)) {
-							nameElement = getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)"));
-						}
-						nickName = nameElement.getText().trim().contains(" ") ?
-								nameElement.getText().trim().split(" ")[0] :
-								nameElement.getText().trim();
-					} else {
-						nickName = userNickName.getText();
-					}
+				clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));
+				WebElement nameElement = null;
+				if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 5)) {
+					nameElement = getDriver().findElement(By.cssSelector(".userProfileText"));
+				} else if (areListElementVisible(getDriver().findElements(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")),5)) {
+					nameElement = getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)"));
 				}
+				nickName = nameElement.getText().trim().contains(" ") ?
+						nameElement.getText().trim().split(" ")[0] : nameElement.getText().trim();
 				if(nickName != null && !nickName.isEmpty()){
 					SimpleUtils.pass("Get User's NickName: " + nickName + "Successfully");
 				}else{

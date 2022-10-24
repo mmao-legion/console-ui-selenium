@@ -536,7 +536,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     }
 
 
-    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_WorkRole_menu\"] div.react-select__placeholder")
+
+    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_WorkRole_menu\"]/div/div[1]")
     private WebElement workRoleOnNewShiftPage;
 
     @FindBy(className = "react-select__option")
@@ -1008,12 +1009,17 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                 MyThreadLocal.setMessageOfTMScheduledStatus(statusMessage);
                             }
                             List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                            String allTMInfo = "";
+                            for (WebElement info : tmInfo) {
+                                allTMInfo = allTMInfo+ info.getText();
+                            }
                             String tmName = tmInfo.get(0).getText();
                             List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
                             WebElement assignButton = assignAndOfferButtons.get(0);
                             WebElement offerButton = assignAndOfferButtons.get(1);
                             if (tmName != null && assignButton != null && offerButton != null) {
-                                if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                                if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())
+                                        || allTMInfo.contains(name)) {
                                     if (MyThreadLocal.getAssignTMStatus()) {
                                         clickTheElement(assignButton);
                                         SimpleUtils.report("Assign Team Member: " + name + " Successfully!");
@@ -3018,6 +3024,24 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 SimpleUtils.fail("The Create Shift dialog is not closed!", false);
         }else{
             SimpleUtils.fail("The Close button is not loaded correctly!", false);
+        }
+    }
+    
+    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_ShiftStart_field\"]")
+    private WebElement startTimeInput;
+    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_ShiftEnd_field\"]")
+    private WebElement endTimeInput;
+
+    @Override
+    public void setStartTimeAndEndTimeForShift(String start, String end) throws Exception {
+        String availableIconColour = null;
+        if (isElementLoaded(startTimeInput, 5)) {
+            startTimeInput.clear();
+            startTimeInput.sendKeys(start);
+        }
+        if (isElementLoaded(endTimeInput, 5)) {
+            endTimeInput.clear();
+            endTimeInput.sendKeys(end);
         }
     }
 }

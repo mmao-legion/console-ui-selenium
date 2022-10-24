@@ -44,4 +44,9 @@ public interface SettingsAndAssociationPage {
     public boolean ifOperatorsCanBeSelected(List<String> valuesToCheck) throws Exception;
     public List<String>  getExternalAttributesInSettingsPage() throws Exception;
     public boolean  searchLocationAttributeInSettingsPage(String attributeName) throws Exception;
+    public void setupLocationAttributes(String fields) throws Exception;
+    public void verifyLocationAttributesInAssociation(HashMap<String, String> locationAttributesToCheck) throws Exception;
+    public void clearUpSelectedLocationAttributes() throws Exception;
+    public void fillInValuesForLocationAttributes(HashMap<String, List<String>> locationAttributes) throws Exception;
+    public boolean verifyAttributeValuesInAssociationPage() throws Exception;
 }
