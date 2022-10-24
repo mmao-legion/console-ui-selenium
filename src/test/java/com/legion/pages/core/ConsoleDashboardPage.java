@@ -26,7 +26,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     @FindBy(css = "[ng-click=\"openSchedule()\"]")
     private WebElement goToTodayScheduleButton;
 
-    @FindBy(css = ".sc-hgkClB.hrveTm")
+    @FindBy(css = ".MuiBox-root>div:nth-child(3) button")
 	private WebElement viewMyScheduleBtn;
 
     @FindBy(css = "[ng-class = 'subNavigationViewLinkActiveClass(view)']")

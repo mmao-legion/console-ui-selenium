@@ -2579,15 +2579,18 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 textSearchOnNewCreateShiftPage.clear();
                 textSearchOnNewCreateShiftPage.sendKeys(userName);
                 if (areListElementVisible(searchResultsOnNewCreateShiftPage, 15)) {
+                    List<WebElement> allStatus =  getTMScheduledStatusElementsOnNewCreateShiftPage();
+                    String statusMessage = "";
+                    for (WebElement status: allStatus) {
+                        statusMessage = statusMessage + status.getText() + "\n";
+                    }
                     for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
                         List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
                         String workerName = tmInfo.get(0).getText();
-                        WebElement status = searchResult.findElement(By.cssSelector(
-                                ".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(2) .MuiGrid-item:nth-child(2)"));
                         if (workerName != null && workerName.toLowerCase().trim().contains(userName.trim().toLowerCase())) {
-                            if (status.getText().contains(scheduled)
-                                    && status.getText().replace(" - ", "-").contains(shiftTime)) {
-                                SimpleUtils.pass("Assign TM Warning: " + status.getText() + " shows correctly!");
+                            if (statusMessage.contains(scheduled)
+                                    && statusMessage.replace(" - ", "-").contains(shiftTime)) {
+                                SimpleUtils.pass("Assign TM Warning: " + statusMessage + " shows correctly!");
                                 isWarningShown = true;
                                 break;
                             }
@@ -2605,7 +2608,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
                     WebElement status = searchResult.findElement(By.className("worker-edit-availability-status"));
                     if (workerName != null && optionCircle != null && workerName.getText().toLowerCase().trim().contains(userName.trim().toLowerCase())) {
-                        if (status.getText().contains(scheduled) && status.getText().contains(shiftTime)) {
+                        if (status.getText().contains(scheduled) && status.getText().replaceAll(" ", "").contains(shiftTime.replaceAll(" ", ""))) {
                             SimpleUtils.pass("Assign TM Warning: " + status.getText() + " shows correctly!");
                             isWarningShown = true;
                             break;
