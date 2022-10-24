@@ -2008,6 +2008,9 @@ public class AccrualEngineTest extends TestBase {
         absentManagePage.otherDistributionMethodisDiabled();
         ArrayList<String> workRoleInEmployManagerment = absentManagePage.searchAndSelectWorkRole();
 
+        System.out.println(workRoleInUserManagerment.size());
+        System.out.println(workRoleInEmployManagerment.size());
+
         if(workRoleInUserManagerment.size() == workRoleInEmployManagerment.size()){
             SimpleUtils.pass("Work role in employ management is the same as user management");
         }else{
