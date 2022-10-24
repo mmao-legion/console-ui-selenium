@@ -3601,6 +3601,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	}
 
+	@FindBy(css="table.templateAssociation_table tr.ng-scope")
+	private List<WebElement> dynamicGroupList;
+	@FindBy(css="table.templateAssociation_table tr.ng-scope td:nth-child(1)")
+	private List<WebElement> dynamicGroupNameList;
 	@Override
 	public void editADynamicGroup(String dyname) throws Exception {
 		if (searchOneDynamicGroup(dyname)) {
@@ -6883,7 +6887,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		//Create new template's history checking
 		if (areListElementVisible(historyRecordsList, 2) && option.contains("Created")) {
 			String format = "hh:mm:ss a','MM/dd/yyyy";
-			//content1  Template Edited ( Vrsion 1 )e
+			//content1  Template Edited ( Vrsion 1 )
 			String content1 = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
 			//content2   auto6 AD6 at 01:27:30 AM,07/28/2022
 			String content2 = historyRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
@@ -7526,6 +7530,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
+	@FindBy(css="div.lg-multiple-select input-field[type=\"checkbox\"] input")
+	private List<WebElement> dynamicGroupCriteriaResultsList;
 	@Override
 	public void advanceStaffingRuleDynamicGroupDialogUICheck(String name) throws Exception {
 		if (isElementLoaded(addDynamicGroupButton, 5)) {
@@ -7545,6 +7551,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 						SimpleUtils.pass("group name is required message displayed if not input");
 					dynamicGroupName.sendKeys(name);
 					waitForSeconds(2);
+					groupDescriptionInput.clear();
+					groupDescriptionInput.sendKeys("description_qaz123@_");
+					waitForSeconds(2);
+					groupDescriptionInput.clear();
 					String[] criteriaOps = {"Custom", "District", "Country", "State", "City", "Location Name",
 							"Location Id", "Location Type", "UpperField", "Config Type"};
 					for (String ss : criteriaOps) {
@@ -7559,9 +7569,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					//set up value
 					clickTheElement(dynamicGroupCriteriaValueInputs.get(1));
 					waitForSeconds(2);
-					if (areListElementVisible(dynamicGroupCriteriaResults, 5)) {
+					if (areListElementVisible(dynamicGroupCriteriaResultsList, 5)) {
 						SimpleUtils.pass("The current selected Criteria has value options");
-						clickTheElement(dynamicGroupCriteriaResults.get(0));
+						clickTheElement(dynamicGroupCriteriaResultsList.get(0));
 						waitForSeconds(3);
 						//click add more link//click add more link
 						clickTheElement(dynamicGroupCriteriaAddMoreLink);
@@ -7585,9 +7595,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 							clickTheElement(dynamicGroupCriteriaValueInputs.get(1));
 							//choose the last value from drop down
 							clickTheElement(dynamicGroupCriteriaValueInputs.get(0));
-							clickTheElement(dynamicGroupCriteriaResults.get(dynamicGroupCriteriaResults.size() - 1));
+							clickTheElement(dynamicGroupCriteriaResultsList.get(dynamicGroupCriteriaResultsList.size() - 1));
 							waitForSeconds(2);
-							clickTheElement(dynamicGroupCriteriaResults.get(0));
+							clickTheElement(dynamicGroupCriteriaResultsList.get(0));
 							waitForSeconds(2);
 							//click the test button to chek value
 							clickTheElement(dynamicGroupTestButton);
@@ -7613,5 +7623,43 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				SimpleUtils.fail("Dynamic group dialog title is not show as designed!", true);
 		} else
 			SimpleUtils.fail("The " + " icon for adding dynamic group missing!", false);
+	}
+
+
+	@FindBy(css="table.lg-table.templateAssociation_table tr.ng-scope")
+	private List<WebElement> advanceStaffingRuleDynamicGroupList;
+	@Override
+	public void advanceStaffingRuleEditDeleteADynamicGroup(String dyname) throws Exception {
+		if (areListElementVisible(advanceStaffingRuleDynamicGroupList,5)) {
+			int beforeSize = advanceStaffingRuleDynamicGroupList.size();
+			for(WebElement advanceStaffingRuleDynamicGroup:advanceStaffingRuleDynamicGroupList){
+				String groupName = advanceStaffingRuleDynamicGroup.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+				WebElement editButton =advanceStaffingRuleDynamicGroup.findElement(By.cssSelector("td:nth-child(3) lg-button[label=\"Edit\"] button"));
+				WebElement removeButton =advanceStaffingRuleDynamicGroup.findElement(By.cssSelector("td:nth-child(3) lg-button[label=\"Remove\"] button"));
+				if(groupName.equalsIgnoreCase(dyname)){
+					//edit the dynamic group
+					clickTheElement(editButton);
+					waitForSeconds(2);
+					if (isElementLoaded(manageDynamicGroupPopupTitle)) {
+						SimpleUtils.pass("The edit dynamic group dialog pop up successfully!");
+						//cancel
+						clickTheElement(cancelButtonOnManageDynamicGroupPopup);
+						waitForSeconds(1);
+					} else
+						SimpleUtils.fail("The edit dynamic group dialog not pop up!", true);
+					//remove the dynamic group
+					clickTheElement(removeButton);
+					waitForSeconds(2);
+					clickTheElement(dynamicGroupRemoveBTNOnDialog);
+					waitForSeconds(1);
+					int afterSize = getDriver().findElements(By.cssSelector("table.lg-table.templateAssociation_table tr.ng-scope")).size();
+					if(beforeSize-afterSize==1){
+						SimpleUtils.pass("User can delete dynamic group in advance staffing rule successfully");
+					}else {
+						SimpleUtils.fail("User can't delete dynamic group in advance staffing rule successfully",false);
+					}
+				}
+			}
+		}
 	}
 }

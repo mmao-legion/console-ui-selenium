@@ -168,7 +168,7 @@ public class LocationsTest extends TestBase {
             String currentTime = TestBase.getCurrentTime().substring(4);
             String locationName = "AutoCreate" + currentTime;
             int index = 0;
-            String searchCharactor = "Checkpoint 1";
+            String searchCharactor = "No touch";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -2662,7 +2662,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "opauto")
     @TestName(description = "Verify readyForForecast option can be saved correctly")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyReadyForForecastOptionCanBeSavedCorrectlyAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
@@ -2742,7 +2742,7 @@ public class LocationsTest extends TestBase {
             //After change, Compare readyForForecast value in UI and DB
             String readyForForecastValueInUI3 = locationsPage.getReadyForForecastSelectedOption();
             System.out.println("readyForForecastValueInUI3: " + readyForForecastValueInUI3);
-            String readyForForecastInDB3 = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= '"+ newLocation + "' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
+            String readyForForecastInDB3 = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= '"+ location + "' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
             System.out.println("readyForForecastInDB3: " + readyForForecastInDB3);
             String parseValueInDB3 = readyForForecastInDB3.equals("1")? "Yes":"No";
             System.out.println("parseValueInDB3: " + parseValueInDB3);
@@ -2751,7 +2751,6 @@ public class LocationsTest extends TestBase {
             }else {
                 SimpleUtils.fail("After change for existing location, the readyForForecast Value in UI and DB are NOT the same!", false);
             }
-
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2765,9 +2764,10 @@ public class LocationsTest extends TestBase {
     public void verifyReadyForForecastWhenImportExistingLocationLocationThroughUIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
-            String currentTime = sdf.format(new Date()).trim();
             String existingLocation = "TestImportUpdateExisting";
-            String filePath = "\\src\\test\\resources\\uploadFile\\LocationTest\\UpdateLocationsWithNoReadyForForecast.csv";
+            String fileWithNoReadyForForecast = "UpdateLocationsWithNoReadyForForecast.csv";
+            String fileWithReadyForForecastNo = "UpdateLocationsWithReadyForForecastNo.csv";
+            String fileWithReadyForForecastYes = "UpdateLocationsWithReadyForForecastYes.csv";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -2783,14 +2783,37 @@ public class LocationsTest extends TestBase {
             locationsPage.goBack();
             //Update an existing location by import file
             locationsPage.clickOnImportBtn();
-            locationsPage.verifyImportLocationDistrict(filePath);
+            locationsPage.verifyImportLocationDistrict(fileWithNoReadyForForecast);
 
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
             String afterImportValue = locationsPage.getReadyForForecastSelectedOption();
+            System.out.println("afterImportValue is: " + afterImportValue);
             SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", beforeImportValue.equalsIgnoreCase(afterImportValue), false);
+            locationsPage.goBack();
+            //Update the existing location by import file, change  to No
+            locationsPage.clickOnImportBtn();
+            locationsPage.verifyImportLocationDistrict(fileWithReadyForForecastNo);
+
+            //After import, existing location, get readyForForecast value in UI
+            locationsPage.goToLocationDetailsPage(existingLocation);
+            afterImportValue = locationsPage.getReadyForForecastSelectedOption();
+            System.out.println("afterImportValue is: " + afterImportValue);
+            SimpleUtils.assertOnFail("ReadyForForecast value should be changed to No after import!", "No".equalsIgnoreCase(afterImportValue), false);
+            locationsPage.goBack();
+
+            //Update the existing location by import file, change  to Yes
+            locationsPage.clickOnImportBtn();
+            locationsPage.verifyImportLocationDistrict(fileWithReadyForForecastYes);
+
+            //After import, existing location, get readyForForecast value in UI
+            locationsPage.goToLocationDetailsPage(existingLocation);
+            afterImportValue = locationsPage.getReadyForForecastSelectedOption();
+            System.out.println("afterImportValue is: " + afterImportValue);
+            SimpleUtils.assertOnFail("ReadyForForecast value should be changed to Yes after import!", "Yes".equalsIgnoreCase(afterImportValue), false);
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
 }

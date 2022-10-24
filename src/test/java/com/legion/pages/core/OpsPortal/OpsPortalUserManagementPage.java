@@ -844,13 +844,13 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		}
 
 	}
-	@FindBy(css = "div.table-row:nth-child(6)>div:nth-child(1)")
+	@FindBy(css = "div.table-row:nth-child(7)>div:nth-child(1)")
 	private WebElement templateLocalization;
 	@FindBy(css = "div.table-row:nth-child(3)>div:nth-child(1)")
 	private WebElement createEditTemplates;
-	@FindBy(css = "div.table-row:nth-child(8)>div:nth-child(1)")
-	private WebElement operationManagement;
 	@FindBy(css = "div.table-row:nth-child(9)>div:nth-child(1)")
+	private WebElement operationManagement;
+	@FindBy(css = "div.table-row:nth-child(10)>div:nth-child(1)")
 	private WebElement viewTemplate;
 	@Override
 	public void verifyManageItemInUserManagementAccessRoleTab() throws Exception {
