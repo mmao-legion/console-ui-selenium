@@ -1956,6 +1956,17 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		return workRoles;
 	}
 
+	@FindBy(css = "th:nth-child(2) > div > span")
+	private WebElement displayOrder;
+	@FindBy(css = " lg-paged-search > div > ng-transclude > table > tbody > tr:nth-child(2) > td:nth-child(2)")
+	private WebElement workRoleNum;
+
+	public String getWorkRoleNum() throws Exception{
+		click(displayOrder);
+		String num = workRoleNum.getAttribute("innerText");
+		return num;
+	}
+
 	@FindBy(css = "lg-dashboard-card:nth-child(3) > div > div.lg-dashboard-card__body > ul > li:nth-child(2)")
 	private WebElement Announcement;
 	@FindBy(css = "lg-dashboard-card[title=\"Dynamic Employee Groups\"]")

@@ -1986,7 +1986,7 @@ public class AccrualEngineTest extends TestBase {
         UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
         userManagementPage.clickOnUserManagementTab();
         userManagementPage.goToWorkRolesTile();
-        ArrayList<String> workRoleInUserManagerment = userManagementPage.workRole();
+        String num= userManagementPage.getWorkRoleNum();
         //verify that employee management is enabled.
         navigationPage.navigateToEmployeeManagement();
         SimpleUtils.pass("EmployeeManagement Module is enabled!");
@@ -2007,11 +2007,8 @@ public class AccrualEngineTest extends TestBase {
 
         absentManagePage.otherDistributionMethodisDiabled();
         ArrayList<String> workRoleInEmployManagerment = absentManagePage.searchAndSelectWorkRole();
-
-        System.out.println(workRoleInUserManagerment.size());
-        System.out.println(workRoleInEmployManagerment.size());
-
-        if(workRoleInUserManagerment.size() == workRoleInEmployManagerment.size()){
+        
+        if(Integer.parseInt(num) == workRoleInEmployManagerment.size()){
             SimpleUtils.pass("Work role in employ management is the same as user management");
         }else{
             SimpleUtils.fail("Work role in employ management is different from user management",false);

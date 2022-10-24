@@ -176,6 +176,8 @@ public interface UserManagementPage {
 
     public ArrayList<String> workRole();
 
+    public String getWorkRoleNum() throws Exception;
+
     public void verifyDynamicEmployeeGroupContainAnnouncement() throws Exception;
 
     public void goToDynamicEmployeeGroup() throws Exception;
