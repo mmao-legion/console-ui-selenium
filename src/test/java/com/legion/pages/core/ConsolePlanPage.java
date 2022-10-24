@@ -835,8 +835,8 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
         if(isElementLoaded(planDialogCopyBTN)){
             SimpleUtils.pass("Copy button is showed in scenario plan detail page successfully");
             clickTheElement(planDialogCopyBTN);
-            waitForSeconds(3);
-            if(isElementLoaded(scenarioPlanCopydialog)){
+            waitForSeconds(5);
+            if(isElementLoaded(scenarioPlanCopydialog, 10)){
                 SimpleUtils.pass("Copy dialog pops up successfully!");
                 //get the default plan name
                 String defaultCopyPlanName=scenarioPlanNameInput.getAttribute("value").trim();
