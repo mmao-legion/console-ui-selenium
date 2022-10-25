@@ -3562,5 +3562,74 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
         return mealBreakBlockDisplay;
     }
+
+    @FindBy(css = ".header-field.seniority-field.tl.ng-binding")
+    private WebElement seniorityTitleShownForAssign;
+    @FindBy(css = ".sc-kDyQdL.dNxwfH")
+    private List<WebElement> seniorityTitleShownForCreate;
+    @Override
+    public boolean isSeniorityColumnLoaded() throws Exception {
+        boolean seniorityColumnLoaded = true;
+        if (isElementLoaded(seniorityTitleShownForAssign,10)){
+            SimpleUtils.report("Seniority Column is displayed!");
+        }else if (areListElementVisible(seniorityTitleShownForCreate,10)){
+            String seniorityText = null;
+            for(WebElement seniorityTitle : seniorityTitleShownForCreate){
+                seniorityText = seniorityTitle.getText().trim();
+                if(seniorityText.equalsIgnoreCase("Seniority")){
+                    SimpleUtils.report("Seniority Column is displayed!");
+                    break;
+                }else
+                    continue;
+                }
+            if(!(seniorityText.equalsIgnoreCase("Seniority"))){
+                seniorityColumnLoaded = false;
+            }
+        }else{
+            seniorityColumnLoaded = false;
+        }
+        return seniorityColumnLoaded;
+    }
+
+
+    @FindBy(css = ".table-field.seniority-field")
+    private List<WebElement> seniorityValueForAssign;
+    @FindBy(css = "[class=\"MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 css-1909xa1\"] [class=\"sc-bLBzly cUEDBZ\"] [class*=\"MuiTypography-root\"]")
+    private List<WebElement> seniorityValueForOpen;
+
+    @Override
+    public ArrayList getTMSeniorityValues() throws Exception {
+        List<Integer> seniorityValues  = new ArrayList<Integer>();
+        if (areListElementVisible(seniorityValueForAssign,10)){
+            int i = 0;
+            for(WebElement element: seniorityValueForAssign){
+                String seniorityValue = element.getText().trim();
+                if(seniorityValue.equalsIgnoreCase("SENIORITY")) {
+                    continue;
+                }
+                if(seniorityValue == null || seniorityValue.equals("-")){
+                    seniorityValue = "0";
+                }
+                seniorityValues.add(i, Integer.parseInt(seniorityValue));
+                i++;
+            }
+        }else if (areListElementVisible(seniorityValueForOpen, 10)){
+            int j = 0;
+            for(WebElement element: seniorityValueForOpen){
+                String seniorityValue = element.getText().trim();
+                if(seniorityValue.equalsIgnoreCase("SENIORITY")) {
+                    continue;
+                }
+                if(seniorityValue == null || seniorityValue.equals("-")){
+                    seniorityValue = "0";
+                }
+                seniorityValues.add(j, Integer.parseInt(seniorityValue));
+                j++;
+            }
+        }else {
+            SimpleUtils.fail("Seniority values are not loaded!", false);
+        }
+        return (ArrayList) seniorityValues;
+    }
 }
 
