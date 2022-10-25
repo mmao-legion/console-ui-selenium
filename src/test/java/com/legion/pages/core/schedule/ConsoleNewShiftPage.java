@@ -432,7 +432,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             }
         } else if(areListElementVisible(searchResultsOnNewCreateShiftPage,10)){
             for(int i=0; i<searchResultsOnNewCreateShiftPage.size();i++){
-                List<WebElement> allStatus= searchResultsOnNewCreateShiftPage.get(i).findElements(By.cssSelector(".MuiGrid-grid-xs-2 .MuiTypography-body2"));
+                List<WebElement> allStatus= getTMScheduledStatusElementsOnNewCreateShiftPage();;
                 List<WebElement> tmInfo = searchResultsOnNewCreateShiftPage.get(i).findElements(By.cssSelector("p.MuiTypography-body1"));
                 String tmAllStatus = "";
                 for (WebElement status: allStatus) {

@@ -996,7 +996,8 @@ public class BulkCreateTest extends TestBase {
             Thread.sleep(5000);
             for (int i=0; i< dayCount; i++) {
                 List<WebElement> openShiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(i, "Open");
-                SimpleUtils.assertOnFail("The open shift is not exist on the "+(i+1)+" day! ",
+                SimpleUtils.assertOnFail("The open shift is not exist on the "+(i+1)+" day! The expected is: "+count
+                                +" The actual is:"+openShiftsOfOneDay.size(),
                         openShiftsOfOneDay.size()==count, false);
 
                 for (int j=0;j<count;j++) {

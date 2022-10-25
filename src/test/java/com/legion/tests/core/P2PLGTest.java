@@ -909,7 +909,7 @@ public class P2PLGTest extends TestBase {
                 scheduleDMViewPage.clickOnRefreshButton();
                 String publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(name)
                         .get("publishedStatus");
-                SimpleUtils.assertOnFail("The schedule status should be Published, but actual is:"+publishStatus,
+                SimpleUtils.assertOnFail("The "+name+" schedule status should be Published, but actual is:"+publishStatus,
                         publishStatus.equalsIgnoreCase("Published"), false);
             }
             scheduleOverviewPage.clickOnViewGroupScheduleButton();
