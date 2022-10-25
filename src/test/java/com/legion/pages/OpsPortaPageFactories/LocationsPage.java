@@ -2,6 +2,7 @@ package com.legion.pages.OpsPortaPageFactories;
 
 import org.openqa.selenium.WebElement;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +33,7 @@ public interface LocationsPage {
     public void locationPageCommonFeatureCheck() throws Exception;
     public void checkEveryLocationTemplateConfig(String locName) throws Exception;
 
-    public void verifyImportLocationDistrict();
+    public void verifyImportLocationDistrict(String fileName) throws IOException;
 
 //    public void disableSwitch(String switchName,String enterpriseName);
 
@@ -337,4 +338,10 @@ public interface LocationsPage {
     public String clickOnTestBtnAndGetResultString() throws Exception;
     public String getLaborBudgetPlanComputeSettings();
     public void UpdateOptionOfComputeBudgetCost();
+    public boolean verifyIsOverrideStatusAtLocationLevel(String templateName) throws Exception;
+    public void updateOpenCloseHourForOHTemplate(String openString,String closeString);
+    public List<String> actionsForTemplateInLocationLevel(String templateName);
+    public boolean verifyReadyForForecastFieldExist() throws Exception;
+    public String getReadyForForecastSelectedOption() throws Exception;
+    public void chooseReadyForForecastValue(String value) throws Exception;
 }

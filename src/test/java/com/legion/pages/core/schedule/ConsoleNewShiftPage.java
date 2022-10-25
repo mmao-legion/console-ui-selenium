@@ -432,7 +432,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             }
         } else if(areListElementVisible(searchResultsOnNewCreateShiftPage,10)){
             for(int i=0; i<searchResultsOnNewCreateShiftPage.size();i++){
-                List<WebElement> allStatus= searchResultsOnNewCreateShiftPage.get(i).findElements(By.cssSelector(".MuiGrid-grid-xs-2 .MuiTypography-body2"));
+                List<WebElement> allStatus= getTMScheduledStatusElementsOnNewCreateShiftPage();;
                 List<WebElement> tmInfo = searchResultsOnNewCreateShiftPage.get(i).findElements(By.cssSelector("p.MuiTypography-body1"));
                 String tmAllStatus = "";
                 for (WebElement status: allStatus) {
@@ -536,7 +536,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     }
 
 
-    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_WorkRole_menu\"] div.react-select__placeholder")
+
+    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_WorkRole_menu\"]/div/div[1]")
     private WebElement workRoleOnNewShiftPage;
 
     @FindBy(className = "react-select__option")
@@ -902,7 +903,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 }
             }else {
                 if (getEnterprise().equalsIgnoreCase(propertyMap.get(Constants.OpEnterprice))) {
-                    selectDaysByIndex(1, 1, 1);
+                    selectDaysByIndex(4, 4, 4);
                 } else {
                     selectDaysByIndex(1, 3, 5);
                 }
@@ -939,6 +940,21 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(xpath = "//div[contains(@class,'MuiGrid-grid-xs-4')]/div[1]/p")
     private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
+
+    private List<WebElement> getTMScheduledStatusElementsOnNewCreateShiftPage() {
+        int index = 0;
+        if (areListElementVisible(searchTableColumns, 5)) {
+            for (int i = 0; i < searchTableColumns.size(); i++) {
+                if (searchTableColumns.get(i).getText().trim().toLowerCase().equalsIgnoreCase("status")) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        return getDriver().findElements(By.cssSelector(".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(2) .MuiGrid-item:nth-child("
+                + (index + 1) + ")"));
+    }
+
     public void searchTeamMemberByName(String name) throws Exception {
         if(areListElementVisible(btnSearchteamMember,5)) {
             if (btnSearchteamMember.size() == 2) {
@@ -985,20 +1001,25 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     waitForSeconds(3);
                     if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
                         for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
-                            if (areListElementVisible(tmScheduledStatusOnNewCreateShiftPage, 5)) {
+                            if (areListElementVisible(getTMScheduledStatusElementsOnNewCreateShiftPage(), 5)) {
                                 String statusMessage = "";
-                                for (WebElement status: tmScheduledStatusOnNewCreateShiftPage) {
+                                for (WebElement status: getTMScheduledStatusElementsOnNewCreateShiftPage()) {
                                     statusMessage = statusMessage + status.getText() + "\n";
                                 }
                                 MyThreadLocal.setMessageOfTMScheduledStatus(statusMessage);
                             }
                             List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                            String allTMInfo = "";
+                            for (WebElement info : tmInfo) {
+                                allTMInfo = allTMInfo+ info.getText();
+                            }
                             String tmName = tmInfo.get(0).getText();
                             List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
                             WebElement assignButton = assignAndOfferButtons.get(0);
                             WebElement offerButton = assignAndOfferButtons.get(1);
                             if (tmName != null && assignButton != null && offerButton != null) {
-                                if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                                if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())
+                                        || allTMInfo.contains(name)) {
                                     if (MyThreadLocal.getAssignTMStatus()) {
                                         clickTheElement(assignButton);
                                         SimpleUtils.report("Assign Team Member: " + name + " Successfully!");
@@ -1331,22 +1352,23 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         String selectedTMName = "";
 //		waitForSeconds(5);
         if (areListElementVisible(searchResultsOnNewCreateShiftPage, 5)) {
-            for (WebElement searchResult: searchResultsOnNewCreateShiftPage) {
-                int index = 0;
-                if (areListElementVisible(searchTableColumns, 5)) {
-                    for (int i = 0; i < searchTableColumns.size(); i++) {
-                        if (searchTableColumns.get(i).getText().trim().toLowerCase().equalsIgnoreCase("status")) {
-                            index = i;
-                            break;
-                        }
+            int index = 0;
+            if (areListElementVisible(searchTableColumns, 5)) {
+                for (int i = 0; i < searchTableColumns.size(); i++) {
+                    if (searchTableColumns.get(i).getText().trim().toLowerCase().equalsIgnoreCase("status")) {
+                        index = i;
+                        break;
                     }
                 }
+            }
+            for (WebElement searchResult: searchResultsOnNewCreateShiftPage) {
                 List<WebElement> allStatus= searchResult.findElements(By.cssSelector(".MuiGrid-item:nth-child("+ (index + 1) +")"));
                 StringBuilder tmAllStatus = new StringBuilder();
                 for (WebElement status: allStatus) {
                     tmAllStatus.append(" ").append(status.getText());
                 }
-                if((tmAllStatus.toString().contains("Available") || tmAllStatus.toString().contains("Unknown")) && !tmAllStatus.toString().contains("Assigned to this shift")){
+                if((tmAllStatus.toString().contains("Available") || tmAllStatus.toString().contains("Unknown")) && !tmAllStatus.toString().contains("Assigned to this shift")
+                && !tmAllStatus.toString().contains("Role Violation")){
                     selectedTMName = searchResult.findElements(By.cssSelector("p.MuiTypography-body1")).get(0).getText();
                     List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
                     if (MyThreadLocal.getAssignTMStatus()) {
@@ -3003,7 +3025,25 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.fail("The Close button is not loaded correctly!", false);
         }
     }
+    
+    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_ShiftStart_field\"]")
+    private WebElement startTimeInput;
+    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_ShiftEnd_field\"]")
+    private WebElement endTimeInput;
 
+    @Override
+    public void setStartTimeAndEndTimeForShift(String start, String end) throws Exception {
+        String availableIconColour = null;
+        if (isElementLoaded(startTimeInput, 5)) {
+            startTimeInput.clear();
+            startTimeInput.sendKeys(start);
+        }
+        if (isElementLoaded(endTimeInput, 5)) {
+            endTimeInput.clear();
+            endTimeInput.sendKeys(end);
+        }
+    }
+  
     @FindBy(css = "[ng-click =\"cancelAction()\"]")
     private WebElement closeBtnForOfferShift;
     @FindBy(css = ".tma-header-text.fl-left.ng-binding")

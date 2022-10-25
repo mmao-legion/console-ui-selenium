@@ -1,11 +1,15 @@
 package com.legion.tests.core;
 
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
@@ -97,6 +101,8 @@ public class PlanTest extends TestBase {
     public void firstTest(Method testMethod, Object[] params) throws Exception {
         try {
             this.createDriver((String) params[0], "83", "Window");
+            //Turn on EnableLongTermBudgetPlan
+            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
         } catch (Exception e) {
@@ -285,6 +291,7 @@ public class PlanTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(regionName);
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
             //navigate to plan page
             PlanPage planPage = pageFactory.createConsolePlanPage();
             planPage.clickOnPlanConsoleMenuItem();
@@ -310,10 +317,11 @@ public class PlanTest extends TestBase {
         try {
             SimpleDateFormat dfs = new SimpleDateFormat("MMddHH");
             String currentDate =  dfs.format(new Date()).trim();
-            String planName = "testPlan-Not Delete";
+            String planName = "testNew-NotDelete";
             String scPlanName = "Scenario Plan Not Delete";
             String regionName="RegionForPlan_Auto";
             String copiedPlanName="Test Copy Generate Plan" + currentDate;
+
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -340,6 +348,7 @@ public class PlanTest extends TestBase {
             String scPlanName = "TestCompletePlan-not delete";
             String regionName="RegionForPlan_Auto";
             String scToTestArchiveInprogress="check archive-not delete";
+
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -377,6 +386,7 @@ public class PlanTest extends TestBase {
             String scPlanName = "TestRerunBudget"+currentTime;
             String regionName="RegionForPlan_Auto";
             String compleleForecastPlan="CompleteForecastPlan";
+
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             //navigate to some region
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -496,9 +506,11 @@ public class PlanTest extends TestBase {
         loginPage.logOut();
 
         // Login as StoreManager
-        loginAsDifferentRole(AccessRoles.SMPlanner.getValue());
-        dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+        loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("fiona+200@legion.co", "Test1234@","");
+        if(loginPage.isInvalidLoginErrorShowing()){
+            loginPage.refreshLoginPage();
+            loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("fiona+200@legion.co", "Test1234@","");
+        }
 
         if(!planPage.verifyPlanConsoleTabShowing()){
             SimpleUtils.pass("Store Manager can't see plan tab by default");
@@ -524,7 +536,7 @@ public class PlanTest extends TestBase {
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify new customer access role that assigned view plan permission can see plan tab")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyNewCustomerRoleThatAssignedViewPlanPermissionCanSeePlanTabAsDMWithPlanPermissionPlanner (String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -557,12 +569,11 @@ public class PlanTest extends TestBase {
         }
     }
 
-    //new feature, not release to rc, so disable it firstly
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Set In Effect Popup")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifySetInEffectPopupAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -574,7 +585,43 @@ public class PlanTest extends TestBase {
         PlanPage planPage = pageFactory.createConsolePlanPage();
         planPage.clickOnPlanConsoleMenuItem();
         String planName ="AutoUsing-CheckSetInEffectPopup";
-        String scName ="AutoUsing-CheckSetInEffectPopup scenario 1";
+        String scName ="AutoUsing-CheckSetInEffect";
         planPage.verifySetInEffectPopup(planName,scName);
     }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Labor Budget Section is controlled by toggle")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLaborBudgetSectionIsControlledByToggleAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            //Turn off EnableLongTermBudgetPlan toggle
+            ToggleAPI.disableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
+            refreshPage();
+            if(!locationsPage.isBudgetPlanSectionShowing()){
+                SimpleUtils.pass("Budget plan section is Not showing when EnableLongTermBudgetPlan is off");
+            }else {
+                SimpleUtils.fail("Budget plan section is showing when EnableLongTermBudgetPlan is off",false);
+            }
+            //Turn on EnableLongTermBudgetPlan toggle
+            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
+            refreshPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            if(locationsPage.isBudgetPlanSectionShowing()){
+                SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is on");
+            }else {
+                SimpleUtils.fail("Budget plan section is NOT showing when EnableLongTermBudgetPlan is on",false);
+            }
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }

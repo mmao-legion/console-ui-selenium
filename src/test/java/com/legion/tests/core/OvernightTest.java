@@ -47,7 +47,7 @@ public class OvernightTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -67,10 +67,10 @@ public class OvernightTest extends TestBase {
             configurationPage.publishNowTheTemplate();
             Thread.sleep(3000);
             switchToConsoleWindow();
+            refreshCachesAfterChangeTemplate();
             //waiting for the cache
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             int j =0;
-            while (j< 5) {
+            while (j< 2) {
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 Thread.sleep(60000);
                 j++;
@@ -632,7 +632,7 @@ public class OvernightTest extends TestBase {
             scheduleMainPage.saveSchedule();
             //Verify the overnight shift can display on previous day
             scheduleCommonPage.navigateDayViewWithIndex(1);
-            SimpleUtils.assertOnFail("The overnight shift also display on the previous day! ",
+            SimpleUtils.assertOnFail("The overnight shift "+firstNameOfTM1+" also display on the previous day! ",
                     scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).size()>0, false);
 
         } catch (Exception e) {

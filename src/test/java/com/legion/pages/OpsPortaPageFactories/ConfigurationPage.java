@@ -2,6 +2,7 @@ package com.legion.pages.OpsPortaPageFactories;
 
 import org.openqa.selenium.WebElement;
 
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,6 +145,7 @@ public interface ConfigurationPage {
     public String updateEffectiveDateOfFutureTemplate(String templateName,String button,int date) throws Exception;
     public List<String> getEffectiveDateForTemplate(String templateName) throws Exception;
     public void checkTheEntryOfAddBasicStaffingRule() throws Exception;
+    public void checkTheEntryOfAddShiftPatternRule() throws Exception;
     public boolean verifyWarningInfoForDemandDriver(String warningMsg) throws Exception;
     public void verifyStaffingRulePageShowWell() throws Exception;
     public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception;
@@ -250,4 +252,18 @@ public interface ConfigurationPage {
     public int getMaximumNumberOfShiftsPerDay() throws Exception;
     public void updateMinimumTimeBetweenShifts(int minimumTime) throws Exception;
     public int getMinimumTimeBetweenShifts() throws Exception;
+    public boolean verifyTemplateCardExist(String templateType) throws Exception;
+    public List<String> getAllForecastSourceType() throws Exception;
+    public boolean verifyPredictabilityScoreExist() throws Exception;
+    public boolean verifyOverrideViaIntegrationButtonShowingOrNot();
+    public void verifyEachFieldsWithInvalidTexts();
+    public void inputTemplateName(String templateName) throws Exception;
+    public boolean isGetPredictabilityScoreEnabled() throws Exception;
+    public void clickGetPredictabilityScore() throws Exception;
+    public void turnOnOffOverrideViaIntegrationButton();
+    public void verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable() throws Exception;
+    public void clickOnAddButtonOfDynamicLocationGroupOfAdvancedStaffingRule() throws Exception;
+    public void advanceStaffingRuleDynamicGroupDialogUICheck(String name) throws Exception;
+    public void advanceStaffingRuleEditDeleteADynamicGroup(String dyname) throws Exception;
 }
+

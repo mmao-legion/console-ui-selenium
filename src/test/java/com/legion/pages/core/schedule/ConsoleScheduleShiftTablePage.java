@@ -2464,10 +2464,11 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0 && weekDay!=null) {
             for (WebElement start : startElements) {
                 scrollToElement(start);
+                waitForSeconds(1);
                 WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
                 SimpleUtils.report("Check the tm name: "+ startName.getText().split(" ")[0]);
                 if (startName.getText().split(" ")[0].equalsIgnoreCase(firstName)) {
-                    mouseHoverDragandDrop(start, endElements.get(0));
+                    mouseHoverDragandDrop(startName, endElements.get(0));
                     SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + weekDay.getText() + " days Successfully!");
                     //verifyConfirmStoreOpenCloseHours();
                     isDragged = true;
@@ -2739,7 +2740,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> shiftsOfOneTM = new ArrayList<>();
         if (areListElementVisible(dayViewAvailableShifts, 5) && dayViewAvailableShifts != null && dayViewAvailableShifts.size() > 0) {
             for (WebElement shift : dayViewAvailableShifts) {
-                String shiftName = getShiftInfoFromInfoPopUp(shift).get("shiftName");
+                String shiftName = shift.findElement(By.cssSelector(".sch-day-view-shift-worker-name")).getText().split("\\(")[0].trim();
                 if (shiftName.toLowerCase().contains(name.toLowerCase())) {
                     shiftsOfOneTM.add(shift);
                     SimpleUtils.pass("shift exists on this day!");
@@ -3185,7 +3186,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if(!areListElementVisible(weekShifts, 10)){
             shifts = dayViewAvailableShifts;
             if (areListElementVisible(shifts, 20) && index < shifts.size()) {
-                String[] nameAndWorkRole = shifts.get(index).findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ");
+                String[] nameAndWorkRole = shifts.get(index).findElement(By.className("sch-day-view-shift-worker-name"))
+                        .getText().split("\\(")[0].trim().split(" ");
                 fullName = nameAndWorkRole[0] + " " + nameAndWorkRole[1];
             } else {
                 SimpleUtils.fail("Schedule Page: day shifts not loaded successfully!", false);
@@ -3563,8 +3565,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             List<WebElement> names = null;
             if (areListElementVisible(namesWeekView, 10)) {
                 names = namesWeekView;
-            } else if (areListElementVisible(namesDayView, 10)) {
-                names = namesDayView;
+            } else if (areListElementVisible(shiftOuterInDayView, 10)) {
+                names = shiftOuterInDayView;
             }
             Actions action = new Actions(getDriver());
             for (int i : selectedIndex) {
@@ -4069,7 +4071,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         boolean shiftDurationInBoxLoaded = false;
         try {
             if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
-                WebElement shiftDuration = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[class=\"sch-day-view-shift-time pt-5 mr-10\"] [class=\"ng-binding ng-scope\"]"));
+                WebElement shiftDuration = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[class=\"sch-day-view-shift-time pt-5 mr-10\"]"));
                 if (isElementLoaded(shiftDuration)) {
                     shiftDurationInBoxLoaded = true;
                     SimpleUtils.report("The shift duration displays!");
@@ -4109,7 +4111,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         boolean profileNameAndWorkRoleLoaded = false;
         try {
             if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
-                WebElement profileNameAndWorkRole = dayViewAvailableShifts.get(index).findElement(By.cssSelector(".sch-day-view-shift-worker-name.ng-binding.ng-scope"));
+                WebElement profileNameAndWorkRole = dayViewAvailableShifts.get(index).findElement(By.cssSelector(".sch-day-view-shift-worker-name.row-fx.ng-scope"));
                 if (isElementLoaded(profileNameAndWorkRole)) {
                     profileNameAndWorkRoleLoaded = true;
                     SimpleUtils.report("The profile name and work role display!");

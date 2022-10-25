@@ -1149,12 +1149,14 @@ public class ActivityTest extends TestBase {
             }
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();
 
             // For Cover Feature
             List<String> swapCoverRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
+            mySchedulePage.selectSchedulFilter("Scheduled");
             mySchedulePage.verifyClickOnAnyShift();
             String request = "Request to Cover Shift";
             mySchedulePage.clickTheShiftRequestByName(request);
@@ -1172,7 +1174,7 @@ public class ActivityTest extends TestBase {
             String coverName = profileNewUIPage.getNickNameFromProfile();
             if (dashboardPage.isSwitchToEmployeeViewPresent())
                 dashboardPage.clickOnSwitchToEmployeeView();
-            dashboardPage.goToTodayForNewUI();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();

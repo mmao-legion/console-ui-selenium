@@ -22,6 +22,8 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+
 import static com.legion.utils.MyThreadLocal.driver;
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.tests.TestBase.*;
@@ -3599,6 +3601,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	}
 
+	@FindBy(css="table.templateAssociation_table tr.ng-scope")
+	private List<WebElement> dynamicGroupList;
+	@FindBy(css="table.templateAssociation_table tr.ng-scope td:nth-child(1)")
+	private List<WebElement> dynamicGroupNameList;
 	@Override
 	public void editADynamicGroup(String dyname) throws Exception {
 		if (searchOneDynamicGroup(dyname)) {
@@ -4552,7 +4558,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("OKBtn button load failed ", false);
 	}
 
-	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/div/h2")
+	@FindBy(css = "form-section[form-title = 'Time Off']")
 	private WebElement timeOffText;
 	@FindBy(css = "div.lg-question-input__wrapper h3")
 	private WebElement maxNumEmployeesText;
@@ -4569,8 +4575,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 	}
 
-	//	@FindBy(css = "ng-transclude.lg-question-input__input input-field ng-form input")
-	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/ng-transclude/content-box/ng-transclude/div/div/div/question-input/div/div[1]/ng-transclude/input-field/ng-form/input")
+	@FindBy(xpath = "//lg-policies-form-template-details/form-section[5]/ng-transclude/content-box/ng-transclude/div/lg-property-meta-field/div/div/question-input/div/div[1]/ng-transclude/input-field/ng-form/input")
 	private WebElement maxNumEmployeesInput;
 
 	public void verifymaxNumEmployeesInput(String num) throws Exception {
@@ -5213,6 +5218,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css = "ul.staffing-dropdown-menu li:nth-child(1)")
 	private WebElement staffingRuleButton;
+	@FindBy(css = "ul.staffing-dropdown-menu li:nth-child(3)")
+	private WebElement shiftPatternButton;
 	@FindBy(css = ".constraint-box")
 	private WebElement staffingRuleFields;
 
@@ -5231,6 +5238,20 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				}
 			} else {
 				SimpleUtils.pass("Advance staffing rules tab is NOT show");
+			}
+		} else {
+			SimpleUtils.fail("Work role's staffing rules list page was loaded failed", false);
+		}
+	}
+
+	@Override
+	public void checkTheEntryOfAddShiftPatternRule() throws Exception {
+		if (isElementLoaded(addIconOnRulesListPage, 5)) {
+			clickTheElement(addIconOnRulesListPage);
+			if (isElementLoaded(shiftPatternButton, 5)) {
+				clickTheElement(shiftPatternButton);
+			} else {
+				SimpleUtils.fail("Shift Pattern option button is not loaded!", false);
 			}
 		} else {
 			SimpleUtils.fail("Work role's staffing rules list page was loaded failed", false);
@@ -5265,7 +5286,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		boolean ifSuccess = false;
 		int optionsCount = 0;
 		String[] optionsToAdd;
-		HashMap<String, String> driverAndFactors = new HashMap<>();
+		ConcurrentHashMap<String, String> driverAndFactors = new ConcurrentHashMap<String, String>();
 
 		if (options != null) {
 			optionsToAdd = options.split(";");
@@ -5277,7 +5298,6 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			for (String optionToAdd : optionsToAdd) {
 				driverAndFactors.put(optionToAdd.split(",")[0], optionToAdd.split(",")[1]);
 			}
-
 			for (WebElement driverOption : aggregatedDriverOptions) {
 				for (Map.Entry<String, String> entry : driverAndFactors.entrySet()) {
 					if (driverOption.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty") ||
@@ -5289,6 +5309,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 										value.findElement(By.cssSelector("div")).getAttribute("innerText").replaceAll("\n", "").trim().equals(entry.getKey())) {
 									clickTheElement(driverOption.findElement(By.cssSelector("input")));
 									clickTheElement(value.findElement(By.cssSelector("div")));
+									break;
 								}
 							}
 							if (!driverOption.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-empty")) {
@@ -5299,7 +5320,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 									scaleFactor.sendKeys(entry.getValue());
 								}
 								driverAndFactors.remove(entry.getKey(), entry.getValue());
-								ifSuccess = true;
+								if (driverAndFactors.size() == 0){
+									ifSuccess = true;
+								}
 								break;
 							} else {
 								if (saveButton.getAttribute("disabled").equals("true")) {
@@ -5340,7 +5363,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private WebElement warningToast;
 	@FindBy(css = "button[class*=\"btn lgn-action-button\"]")
 	private WebElement okBtn;
-	@FindBy(css = "tr[ng-repeat=\"rule in $ctrl.sortedRows\"] lg-button[label=\"Edit\"]")
+	@FindBy(css = "tr[ng-repeat=\"rule in $ctrl.sortedRows\"] lg-button[label=\"Edit\"] button")
 	private WebElement editBtnForDriver;
 	@FindBy(css = "input-field[options=\"$ctrl.remoteOptions\"]")
 	private WebElement remoteOption;
@@ -6880,7 +6903,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		//Create new template's history checking
 		if (areListElementVisible(historyRecordsList, 2) && option.contains("Created")) {
 			String format = "hh:mm:ss a','MM/dd/yyyy";
-			//content1  Template Edited ( Vrsion 1 )e
+			//content1  Template Edited ( Vrsion 1 )
 			String content1 = historyRecordsList.get(0).findElement(By.cssSelector("div.templateInfo")).getText().trim();
 			//content2   auto6 AD6 at 01:27:30 AM,07/28/2022
 			String content2 = historyRecordsList.get(0).findElement(By.cssSelector("p")).getText().trim();
@@ -7356,5 +7379,303 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("OP Page: Minimum time (in minutes) required between shifts fail to load! ", false);
 		}
 		return minimumTime;
+	}
+
+	@Override
+	public boolean verifyTemplateCardExist(String templateType) throws Exception {
+		boolean flag = false;
+		if (areListElementVisible(configurationCardsList)) {
+			for (WebElement configurationCard : configurationCardsList) {
+				if (configurationCard.getText().equals(templateType)) {
+					SimpleUtils.pass(templateType + " card is showing.");
+					flag = true;
+					break;
+				}
+			}
+		}else{
+			SimpleUtils.fail("Configuration card failed to load!", false);
+		}
+		return flag;
+	}
+
+	@FindBy(css="input-field[options=\"$ctrl.forecastSourceOptions\"] select")
+	private WebElement forecastSourceSelect;
+	@Override
+	public List<String> getAllForecastSourceType() throws Exception {
+		List<String> forecastSourceName = new ArrayList<>();
+
+		if (isElementLoaded(forecastSourceSelect, 5)){
+			Select typeSelect = new Select(forecastSourceSelect);
+			for (WebElement option : typeSelect.getOptions()){
+				forecastSourceName.add(option.getText());
+			}
+		}
+		return forecastSourceName;
+	}
+
+	@FindBy(css="lg-predictability-score>question-input[question-title=\"Predictability Score\"]")
+	private WebElement predictabilityScoreItem;
+	@Override
+	public boolean verifyPredictabilityScoreExist() throws Exception {
+		boolean flag = false;
+
+		if (isElementLoaded(predictabilityScoreItem, 5)){
+			flag = true;
+		}
+		return flag;
+	}
+
+	@Override
+	public boolean verifyOverrideViaIntegrationButtonShowingOrNot(){
+		boolean flag = false;
+		if(isElementEnabled(overrideViaIntegrationBTN,2)){
+			flag = true;
+		}else {
+			flag = false;
+		}
+		return flag;
+  }
+
+	@FindBy(css="lg-button[label=\"Get Predictability Score\"] button")
+	private WebElement getScoreBtn;
+	@Override
+	public boolean isGetPredictabilityScoreEnabled() throws Exception {
+		boolean isEnabled = true;
+		if (!isElementExist("i[ng-if*=\"hasPublishedVersion\"]")){
+			if (isElementLoaded(getScoreBtn, 5)){
+				if (getScoreBtn.getAttribute("disabled") != null && getScoreBtn.getAttribute("disabled").equals("true")){
+					isEnabled = false;
+				}
+			}else{
+				SimpleUtils.fail("Failed to load 'Get Predictability Score button'!", false);
+			}
+		}
+
+		return isEnabled;
+	}
+
+	@FindBy(css="i[ng-if*=\"hasPublishedVersion\"]")
+	private WebElement spinButton;
+	@Override
+	public void clickGetPredictabilityScore() throws Exception {
+		if (isElementLoaded(spinButton)){
+			waitForNotExists(spinButton, 300);
+		}
+		if (isElementEnabled(getScoreBtn, 10)){
+			clickTheElement(getScoreBtn);
+			if (isElementLoaded(spinButton)){
+				SimpleUtils.pass("The Predictability Score can be requested again by click the button!");
+			}
+		}else{
+			SimpleUtils.fail("Get Predictability Score button should NOT be disabled!", false);
+		}
+	}
+
+	@Override
+	public void turnOnOffOverrideViaIntegrationButton(){
+		if(isElementEnabled(overrideViaIntegrationBTN,2)){
+			clickTheElement(overrideViaIntegrationBTN);
+			waitForSeconds(2);
+      }
+   }
+   
+	@FindBy(xpath = "//input-field[@type='text']//input")
+	private List<WebElement> inputFields;
+
+	@Override
+	public void verifyEachFieldsWithInvalidTexts() {
+		List<String> invalidTexts = new ArrayList<String>() {{
+			add("m");
+			add("$");
+		}};
+		for (WebElement inputField : inputFields) {
+			for (String invalidText : invalidTexts) {
+				inputField.clear();
+				inputField.sendKeys(invalidText);
+
+			}
+		}
+	}
+
+	@Override
+	public void inputTemplateName(String templateName) throws Exception {
+		if (isElementLoaded(newTemplateBTN, 10)) {
+			clickTheElement(newTemplateBTN);
+			waitForSeconds(1);
+			if (isElementEnabled(createNewTemplatePopupWindow, 10)) {
+				SimpleUtils.pass("User can click new template button successfully!");
+				clickTheElement(newTemplateName);
+				newTemplateName.sendKeys(templateName);
+				clickTheElement(newTemplateDescription);
+				newTemplateDescription.sendKeys(templateName);
+				clickTheElement(continueBTN);
+				waitForSeconds(5);
+				if (isElementEnabled(welcomeCloseButton, 5)) {
+					clickTheElement(welcomeCloseButton);
+				}
+			}
+		}
+	}
+
+	@FindBy(css="sub-content-box[box-title=\"Dynamic Group\"] span.ng-binding")
+	private WebElement addButtonOfAdvancedStaffingRuleDynamicGroup;
+	@FindBy(css="h1.lg-modal__title")
+	private WebElement manageDynamicLocationGroupPopUp;
+	@Override
+	public void verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable() throws Exception {
+		if (isElementEnabled(dynamicGroupSection,3)) {
+			SimpleUtils.pass("There is dynamic location group on new advance staffing rule page");
+			isClickable(addButtonOfAdvancedStaffingRuleDynamicGroup,2);
+		} else {
+			SimpleUtils.fail("There is Not dynamic location group on new advance staffing rule page", false);
+		}
+	}
+
+	@Override
+	public void clickOnAddButtonOfDynamicLocationGroupOfAdvancedStaffingRule() throws Exception {
+		if (isElementEnabled(dynamicGroupSection,3)) {
+			SimpleUtils.pass("There is dynamic location group on new advance staffing rule page");
+			clickTheElement(addButtonOfAdvancedStaffingRuleDynamicGroup);
+			if(isElementEnabled(manageDynamicLocationGroupPopUp,2)){
+				SimpleUtils.pass("User can click add button Dynamic Location Group Of Advanced Staffing Rule successfully");
+			}else {
+				SimpleUtils.fail("User can click add button Dynamic Location Group Of Advanced Staffing Rule successfully",false);
+			}
+		} else {
+			SimpleUtils.fail("There is Not dynamic location group on new advance staffing rule page", false);
+		}
+	}
+
+	@FindBy(css="div.lg-multiple-select input-field[type=\"checkbox\"] input")
+	private List<WebElement> dynamicGroupCriteriaResultsList;
+	@Override
+	public void advanceStaffingRuleDynamicGroupDialogUICheck(String name) throws Exception {
+		if (isElementLoaded(addDynamicGroupButton, 5)) {
+			SimpleUtils.pass("The " + " icon for adding dynamic group button show as expected");
+			clickTheElement(addDynamicGroupButton);
+			if (manageDynamicGroupPopupTitle.getText().trim().equalsIgnoreCase("Manage Dynamic Location Group")) {
+				SimpleUtils.pass("Dynamic group dialog title show as expected");
+				//check the group name is required
+				if (dynamicGroupName.getAttribute("required").equals("true")) {
+					SimpleUtils.pass("Group name is required");
+					//input group name
+					dynamicGroupName.sendKeys(name);
+					//clear group name
+					dynamicGroupName.clear();
+					//get the required message
+					if (isElementLoaded(dynamicGroupNameRequiredMsg) && dynamicGroupNameRequiredMsg.getText().contains("Group Name is required"))
+						SimpleUtils.pass("group name is required message displayed if not input");
+					dynamicGroupName.sendKeys(name);
+					waitForSeconds(2);
+					groupDescriptionInput.clear();
+					groupDescriptionInput.sendKeys("description_qaz123@_");
+					waitForSeconds(2);
+					groupDescriptionInput.clear();
+					String[] criteriaOps = {"Custom", "District", "Country", "State", "City", "Location Name",
+							"Location Id", "Location Type", "UpperField", "Config Type"};
+					for (String ss : criteriaOps) {
+						//check every criteria options is selectable
+						clickTheElement(dynamicGroupCriteria);
+						waitForSeconds(4);
+						String optionType = ".lg-search-options__option[title='" + ss + "']";
+						getDriver().findElement(By.cssSelector(optionType)).click();
+						SimpleUtils.pass("The criteria " + ss + " was selected!");
+						waitForSeconds(3);
+					}
+					//set up value
+					clickTheElement(dynamicGroupCriteriaValueInputs.get(1));
+					waitForSeconds(2);
+					if (areListElementVisible(dynamicGroupCriteriaResultsList, 5)) {
+						SimpleUtils.pass("The current selected Criteria has value options");
+						clickTheElement(dynamicGroupCriteriaResultsList.get(0));
+						waitForSeconds(3);
+						//click add more link//click add more link
+						clickTheElement(dynamicGroupCriteriaAddMoreLink);
+						waitForSeconds(2);
+						//Check the delete icon showed
+						if (areListElementVisible(dynamicGroupCriteriaAddDelete) && dynamicGroupCriteriaAddDelete.size() > 1) {
+							clickTheElement(dynamicGroupCriteriaAddDelete.get(1));
+							waitForSeconds(2);
+							//select a criteria type
+							clickTheElement(dynamicGroupCriteria);
+							waitForSeconds(1);
+							String optionCountry = ".lg-search-options__option[title='Country']";
+							getDriver().findElement(By.cssSelector(optionCountry)).click();
+							waitForSeconds(2);
+							//set up criteria relationship
+							clickTheElement(dynamicGroupCriteriaValueInputs.get(0));
+							// check IN and NOTIN options supported
+							if (isElementLoaded(dynamicGroupCriteriaINOption) && isElementLoaded(dynamicGroupCriteriaINotNOption))
+								SimpleUtils.pass("The IN and NOt IN relation are supported for Criteria relationship.");
+							//set up criteria value
+							clickTheElement(dynamicGroupCriteriaValueInputs.get(1));
+							//choose the last value from drop down
+							clickTheElement(dynamicGroupCriteriaValueInputs.get(0));
+							clickTheElement(dynamicGroupCriteriaResultsList.get(dynamicGroupCriteriaResultsList.size() - 1));
+							waitForSeconds(2);
+							clickTheElement(dynamicGroupCriteriaResultsList.get(0));
+							waitForSeconds(2);
+							//click the test button to chek value
+							clickTheElement(dynamicGroupTestButton);
+							waitForSeconds(3);
+							//get the result
+							if (isElementLoaded(dynamicGroupTestInfo)) {
+								SimpleUtils.pass("Get results for the dynamic group");
+								String mappedRes = dynamicGroupTestInfo.getText().split("Location")[0].trim();
+								if (Integer.parseInt(mappedRes) > 0)
+									SimpleUtils.pass("Get mapped location for the dynamic group");
+							} else
+								SimpleUtils.fail("No result get for the dynamic group", true);
+							//click save
+							clickTheElement(okButtonOnManageDynamicGroupPopup);
+							waitForSeconds(3);
+						} else
+							SimpleUtils.fail("The delete criteria icon is not displayed!", false);
+					} else
+						SimpleUtils.fail("The current selected Criteria has no options can be selected", true);
+				} else
+					SimpleUtils.fail("Group name is not required on UI", true);
+			} else
+				SimpleUtils.fail("Dynamic group dialog title is not show as designed!", true);
+		} else
+			SimpleUtils.fail("The " + " icon for adding dynamic group missing!", false);
+	}
+
+
+	@FindBy(css="table.lg-table.templateAssociation_table tr.ng-scope")
+	private List<WebElement> advanceStaffingRuleDynamicGroupList;
+	@Override
+	public void advanceStaffingRuleEditDeleteADynamicGroup(String dyname) throws Exception {
+		if (areListElementVisible(advanceStaffingRuleDynamicGroupList,5)) {
+			int beforeSize = advanceStaffingRuleDynamicGroupList.size();
+			for(WebElement advanceStaffingRuleDynamicGroup:advanceStaffingRuleDynamicGroupList){
+				String groupName = advanceStaffingRuleDynamicGroup.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+				WebElement editButton =advanceStaffingRuleDynamicGroup.findElement(By.cssSelector("td:nth-child(3) lg-button[label=\"Edit\"] button"));
+				WebElement removeButton =advanceStaffingRuleDynamicGroup.findElement(By.cssSelector("td:nth-child(3) lg-button[label=\"Remove\"] button"));
+				if(groupName.equalsIgnoreCase(dyname)){
+					//edit the dynamic group
+					clickTheElement(editButton);
+					waitForSeconds(2);
+					if (isElementLoaded(manageDynamicGroupPopupTitle)) {
+						SimpleUtils.pass("The edit dynamic group dialog pop up successfully!");
+						//cancel
+						clickTheElement(cancelButtonOnManageDynamicGroupPopup);
+						waitForSeconds(1);
+					} else
+						SimpleUtils.fail("The edit dynamic group dialog not pop up!", true);
+					//remove the dynamic group
+					clickTheElement(removeButton);
+					waitForSeconds(2);
+					clickTheElement(dynamicGroupRemoveBTNOnDialog);
+					waitForSeconds(1);
+					int afterSize = getDriver().findElements(By.cssSelector("table.lg-table.templateAssociation_table tr.ng-scope")).size();
+					if(beforeSize-afterSize==1){
+						SimpleUtils.pass("User can delete dynamic group in advance staffing rule successfully");
+					}else {
+						SimpleUtils.fail("User can't delete dynamic group in advance staffing rule successfully",false);
+					}
+				}
+			}
+		}
 	}
 }

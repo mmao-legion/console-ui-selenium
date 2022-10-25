@@ -47,10 +47,10 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if (areListElementVisible(dayViewAvailableShifts,10)){
             int count = dayViewAvailableShifts.size();
             for (int i = 0; i < count; i++) {
-                List<WebElement> tempShifts = getDriver().findElements(By.cssSelector(".sch-day-view-shift-outer .right-shift-box"));
-//                scrollToElement(tempShifts.get(i));
-                scrollToBottom();
-                moveToElementAndClick(tempShifts.get(i));
+                WebElement tempShift = dayViewAvailableShifts.get(i).findElement(By.cssSelector(".sch-day-view-shift-outer .right-shift-box>div:nth-child(2)"));
+                scrollToElement(tempShift);
+                waitForSeconds(1);
+                moveToElementAndClick(tempShift);
                 deleteShift();
             }
         }
@@ -558,7 +558,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
 
 
-    @FindBy(xpath = "//div[@ng-if=\"!forceShowOpen && showWorkerImage(shift)\"]/worker-image/div/div")
+    @FindBy(css = ".sch-shift-worker-initials")
     private List<WebElement> profileIconsDayView;
 
     @Override
@@ -2579,15 +2579,18 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 textSearchOnNewCreateShiftPage.clear();
                 textSearchOnNewCreateShiftPage.sendKeys(userName);
                 if (areListElementVisible(searchResultsOnNewCreateShiftPage, 15)) {
+                    List<WebElement> allStatus =  getTMScheduledStatusElementsOnNewCreateShiftPage();
+                    String statusMessage = "";
+                    for (WebElement status: allStatus) {
+                        statusMessage = statusMessage + status.getText() + "\n";
+                    }
                     for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
                         List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
                         String workerName = tmInfo.get(0).getText();
-                        WebElement status = searchResult.findElement(By.cssSelector(
-                                ".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(2) .MuiGrid-item:nth-child(2)"));
                         if (workerName != null && workerName.toLowerCase().trim().contains(userName.trim().toLowerCase())) {
-                            if (status.getText().contains(scheduled)
-                                    && status.getText().replace(" - ", "-").contains(shiftTime)) {
-                                SimpleUtils.pass("Assign TM Warning: " + status.getText() + " shows correctly!");
+                            if (statusMessage.contains(scheduled)
+                                    && statusMessage.replace(" - ", "-").contains(shiftTime)) {
+                                SimpleUtils.pass("Assign TM Warning: " + statusMessage + " shows correctly!");
                                 isWarningShown = true;
                                 break;
                             }
@@ -2605,7 +2608,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
                     WebElement status = searchResult.findElement(By.className("worker-edit-availability-status"));
                     if (workerName != null && optionCircle != null && workerName.getText().toLowerCase().trim().contains(userName.trim().toLowerCase())) {
-                        if (status.getText().contains(scheduled) && status.getText().contains(shiftTime)) {
+                        if (status.getText().contains(scheduled) && status.getText().replaceAll(" ", "").contains(shiftTime.replaceAll(" ", ""))) {
                             SimpleUtils.pass("Assign TM Warning: " + status.getText() + " shows correctly!");
                             isWarningShown = true;
                             break;
@@ -2872,9 +2875,11 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
     }
 
+    @FindBy(xpath = "//*[@id=\"create-new-shift-react\"]/div/div/div[1]/div[2]/div[2]/div/div[2]/div/div[2]/div/div[2]/div")
+    private List<WebElement> searchResultsNew;
     @Override
     public boolean verifyWFSFunction() {
-        if (searchResults.size()!=0) {
+        if (searchResultsNew.size()!=0) {
             SimpleUtils.pass("Can search team members in Workforce sharing group");
             return true;
         }else
@@ -3504,7 +3509,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = ".table-field.this-week-field ")
     private List<WebElement> totalShiftHrsAndShiftCountThisWeek;
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[3]/div")
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[4]/div")
     private List<WebElement> totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage;
     @Override
     public HashMap<String, Float> getTotalShiftHrsAndShiftCountThisWeek() throws Exception {

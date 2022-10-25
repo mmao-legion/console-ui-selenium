@@ -1685,7 +1685,7 @@ public class FTSERelevantTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
             shiftOperatePage.clickOnEditShiftTime();
-            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","11:30am",false);
+            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","11:45am",false);
             shiftOperatePage.clickOnUpdateEditShiftTimeButton();
             scheduleMainPage.saveSchedule();
             SimpleUtils.assertOnFail("The shift's info doesn't include shift length or shift duration!",

@@ -184,7 +184,7 @@ public class CinemarkMinorTest extends TestBase {
                     teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
             String calendarName = "Automation" + new Random().nextInt(100) + new Random().nextInt(100) + new Random().nextInt(100);
 
-            teamPage.deleteCalendarByName(calendarName);
+            teamPage.deleteCalendarByName("Automation");
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
@@ -2056,6 +2056,8 @@ public class CinemarkMinorTest extends TestBase {
 //            verifyTemplateNameOnProfilePage(minor13Name, minor13TemplateName);
 //            verifyTemplateNameOnProfilePage(minor15Name, minor15TemplateName);
 //            verifyTemplateNameOnProfilePage(minor16Name, minor16TemplateName);
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            refreshCachesAfterChangeTemplate();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }

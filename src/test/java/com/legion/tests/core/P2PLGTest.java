@@ -879,7 +879,6 @@ public class P2PLGTest extends TestBase {
             ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -910,7 +909,7 @@ public class P2PLGTest extends TestBase {
                 scheduleDMViewPage.clickOnRefreshButton();
                 String publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(name)
                         .get("publishedStatus");
-                SimpleUtils.assertOnFail("The schedule status should be Published, but actual is:"+publishStatus,
+                SimpleUtils.assertOnFail("The "+name+" schedule status should be Published, but actual is:"+publishStatus,
                         publishStatus.equalsIgnoreCase("Published"), false);
             }
             scheduleOverviewPage.clickOnViewGroupScheduleButton();
@@ -1827,9 +1826,10 @@ public class P2PLGTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if(!isActiveWeekGenerated){
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if(isActiveWeekGenerated){
+               createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00am", "06:00am");
             scheduleMainPage.clickOnFilterBtn();
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
             List<String> shiftInfo = new ArrayList<>();
@@ -1846,6 +1846,8 @@ public class P2PLGTest extends TestBase {
             scheduleMainPage.saveSchedule();
             //Go to day view, check for TM: A at child location 1, has one shift, ex: 6am - 8am
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.clickCloseBtnForCreateShift();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
@@ -1870,29 +1872,37 @@ public class P2PLGTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
+
             newShiftPage.searchWithOutSelectTM(firstNameOfTM);
             String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
-            SimpleUtils.assertOnFail("30 mins travel time needed violation message fail to load!",
-                    !shiftWarningMessage.toLowerCase().contains("30 mins travel time needed"), false);
+            String expectedWaningMessage= "Minimum time between shifts";
+            SimpleUtils.assertOnFail(expectedWaningMessage+ " message fail to load!",
+                    shiftWarningMessage.contains(expectedWaningMessage), false);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
+            expectedWaningMessage = firstNameOfTM+ " does not have minimum time between shifts";
             if(newShiftPage.ifWarningModeDisplay()){
-//                String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-//                if (warningMessage.contains("0 mins travel time needed violation")){
-//                    SimpleUtils.pass("30 mins travel time needed violation message displays");
-//                } else {
-//                    SimpleUtils.fail("There is no '30 mins travel time needed violation' warning message displaying", false);
-//                }
+                String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
+
+                if (warningMessage.toLowerCase().contains(expectedWaningMessage.toLowerCase())){
+                    SimpleUtils.pass(expectedWaningMessage+" message displays");
+                } else {
+                    SimpleUtils.fail("There is no "+expectedWaningMessage+" warning message displaying", false);
+                }
                 shiftOperatePage.clickOnAssignAnywayButton();
+            } else {
+                SimpleUtils.fail("There is no '"+expectedWaningMessage+"' warning modal displaying!",false);
             }
-//            else {
-//                SimpleUtils.fail("There is no '30 mins travel time needed violation' warning modal displaying!",false);
-//            }
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
-            SimpleUtils.assertOnFail("'30 mins travel time needed violation' compliance message display failed",
-                    !scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(1)).contains("Max shift per day violation") , false);
-
+            //https://legiontech.atlassian.net/browse/SCH-7977
+//            List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
+//            expectedWaningMessage = "Minimum time between shifts";
+//            String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(0)).toString();
+//            SimpleUtils.assertOnFail("'"+expectedWaningMessage+"' compliance message display failed, the actual message is:"+actualMessage,
+//                    actualMessage.contains(expectedWaningMessage) , false);
+//            actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(1)).toString();
+//            SimpleUtils.assertOnFail("'"+expectedWaningMessage+"' compliance message display failed, the actual message is:"+actualMessage,
+//                    actualMessage.contains(expectedWaningMessage) , false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
