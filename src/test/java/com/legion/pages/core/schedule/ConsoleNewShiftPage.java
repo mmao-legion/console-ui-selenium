@@ -903,7 +903,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 }
             }else {
                 if (getEnterprise().equalsIgnoreCase(propertyMap.get(Constants.OpEnterprice))) {
-                    selectDaysByIndex(1, 1, 1);
+                    selectDaysByIndex(4, 4, 4);
                 } else {
                     selectDaysByIndex(1, 3, 5);
                 }
