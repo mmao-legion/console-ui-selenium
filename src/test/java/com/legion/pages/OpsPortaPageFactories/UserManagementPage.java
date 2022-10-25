@@ -175,4 +175,16 @@ public interface UserManagementPage {
     public List<String> getOptionListOfJobTitleInAssignmentRule();
 
     public ArrayList<String> workRole();
+
+    public String getWorkRoleNum() throws Exception;
+
+    public void verifyDynamicEmployeeGroupContainAnnouncement() throws Exception;
+
+    public void goToDynamicEmployeeGroup() throws Exception;
+
+    public void verifyBothEmployeeAndAnnouncementDisplay() throws Exception;
+
+    public void verifyAnnouncementBlankInfo() throws Exception;
+
+    public void addAnnouncement() throws Exception;
 }

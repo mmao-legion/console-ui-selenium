@@ -1324,4 +1324,26 @@ public class UserManagementTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Announcement")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAnnouncementAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            //go to User Management Dynamic Employee Groups
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            //userManagementPage.iCanSeeDynamicGroupItemTileInUserManagementTab();
+            userManagementPage.verifyDynamicEmployeeGroupContainAnnouncement();
+            userManagementPage.goToDynamicEmployeeGroup();
+
+            userManagementPage.verifyBothEmployeeAndAnnouncementDisplay();
+            userManagementPage.verifyAnnouncementBlankInfo();
+            //userManagementPage.addAnnouncement();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

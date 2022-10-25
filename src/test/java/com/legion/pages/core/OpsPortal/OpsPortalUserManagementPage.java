@@ -1955,5 +1955,94 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		ArrayList<String> workRoles = getWebElementsText(workRoleItems);
 		return workRoles;
 	}
+
+	@FindBy(css = "th:nth-child(2) > div > span")
+	private WebElement displayOrder;
+	@FindBy(css = " lg-paged-search > div > ng-transclude > table > tbody > tr:nth-child(2) > td:nth-child(2)")
+	private WebElement workRoleNum;
+
+	public String getWorkRoleNum() throws Exception{
+		click(displayOrder);
+		String num = workRoleNum.getAttribute("innerText");
+		return num;
+	}
+
+	@FindBy(css = "lg-dashboard-card:nth-child(3) > div > div.lg-dashboard-card__body > ul > li:nth-child(2)")
+	private WebElement Announcement;
+	@FindBy(css = "lg-dashboard-card[title=\"Dynamic Employee Groups\"]")
+	private WebElement dynamicGroupCardAccouncement;
+
+	public void verifyDynamicEmployeeGroupContainAnnouncement() throws Exception{
+		if(isElementLoaded(dynamicGroupCardAccouncement)){
+			highlightElement(Announcement);
+			if(isElementLoaded(Announcement))
+				SimpleUtils.pass("Announcement display");
+			else
+				SimpleUtils.fail("Announcement doesn't display",false);
+		}else
+			SimpleUtils.fail("Dynamic Group Card doesn't display",false);
+	}
+
+	@FindBy(css = "lg-dashboard-card[title=\"Dynamic Employee Groups\"]")
+	private  WebElement dynamicEmployeeGroupCard;
+	@FindBy(css = "div.center.ng-scope")
+	private WebElement dynamicEmployeeGroupTable;
+
+	public void goToDynamicEmployeeGroup() throws Exception{
+		if(isElementLoaded(dynamicEmployeeGroupCard)){
+			click(dynamicEmployeeGroupCard);
+			if (isElementEnabled(dynamicEmployeeGroupTable,5)) {
+				SimpleUtils.pass("Can go to dynamic employee group page successfully");
+			}else
+				SimpleUtils.fail("Go to dynamic employee group page failed",false);
+		}
+		else
+			SimpleUtils.fail("Dynamic employee group card load successfully",false);
+	}
+
+	@FindBy(css = "form-section:nth-child(1) > div > h2")
+	private WebElement dynamicEmployee;
+	@FindBy(css = "form-section:nth-child(2) > div > h2")
+	private WebElement announcement;
+
+	public void verifyBothEmployeeAndAnnouncementDisplay() throws Exception{
+		if(isElementLoaded(dynamicEmployee) && isElementLoaded(announcement))
+			SimpleUtils.pass("Employee and announcement both display");
+		else
+			SimpleUtils.fail("Employee and announcement doesn't display",false);
+	}
+
+	@FindBy(css = "form-section:nth-child(2) > ng-transclude > content-box > ng-transclude > lg-global-dynamic-group-table > lg-paged-search-new > div > ng-transclude > div")
+	private WebElement annoncementBlankInfo;
+
+	public void verifyAnnouncementBlankInfo() throws Exception{
+		if(isElementLoaded(annoncementBlankInfo))
+			if(annoncementBlankInfo.getAttribute("innerText").contains("There is no dynamic announcement group created yet"))
+				SimpleUtils.pass("Accouncement blank information is correct");
+			else
+				SimpleUtils.fail("Accouncement blank information is wrong",false);
+		else
+			SimpleUtils.fail("Accouncement blank info doesn't display",false);
+	}
+
+	@FindBy(css = "form-section:nth-child(2) > ng-transclude > content-box > ng-transclude > lg-global-dynamic-group-table > div > div.col-sm-2.templateAssociation_action.gray > lg-button > button > img")
+	private WebElement addAnnouncement;
+	@FindBy(css = "input[aria-label='Group Name']")
+	private WebElement announcementGroupName;
+	@FindBy(css = "div.lg-modal__title-icon.ng-binding")
+	private WebElement addAnnouncementPopUpTitle;
+
+	public void addAnnouncement() throws Exception{
+		click(addAnnouncement);
+
+//		if(addAnnouncementPopUpTitle.getAttribute("innerTest").contains("Manage Dynamic Announcement Group"))
+//			SimpleUtils.pass("Add announcement pop up title is correct");
+//		else
+//			SimpleUtils.fail("Add announcement pop up title is wrong",false);
+
+		announcementGroupName.sendKeys("AutoCreate");
+		selectByVisibleText(criteriaSelect.get(0),"Job Title");
+
+	}
 }
 
