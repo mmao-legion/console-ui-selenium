@@ -1,6 +1,8 @@
 package com.legion.tests.core.OpsPortal;
 
 import com.alibaba.fastjson.JSONObject;
+import com.legion.api.common.EnterpriseId;
+import com.legion.api.login.LoginAPI;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
@@ -166,7 +168,7 @@ public class LocationsTest extends TestBase {
             String currentTime = TestBase.getCurrentTime().substring(4);
             String locationName = "AutoCreate" + currentTime;
             int index = 0;
-            String searchCharactor = "Checkpoint 1";
+            String searchCharactor = "No touch";
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -774,6 +776,7 @@ public class LocationsTest extends TestBase {
             } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
                 newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
             }
+            newShiftPage.setStartTimeAndEndTimeForShift("8","10");
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName("Aglae");
@@ -873,6 +876,7 @@ public class LocationsTest extends TestBase {
             } else if (getDriver().getCurrentUrl().contains(propertyMap.get("Op_Enterprise"))) {
                 newShiftPage.selectWorkRole(scheduleWorkRoles.get("MGR ON DUTY"));
             }
+            newShiftPage.setStartTimeAndEndTimeForShift("8","10");
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName("Brisa");
@@ -1372,12 +1376,12 @@ public class LocationsTest extends TestBase {
         }
     }
 
-//    Blocked by https://legiontech.atlassian.net/browse/OPS-4525
+    //blocked by https://legiontech.atlassian.net/browse/OPS-5625
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "User can view the default location level external attribute")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
     public void verifyDefaultValueOfExternalAttributesInLocationLevelAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
 
         try {
@@ -1424,16 +1428,17 @@ public class LocationsTest extends TestBase {
 
             //Compare location level default external attributes value should be same with template level.
             locationsPage.backToConfigurationTabInLocationLevel();
-            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfo.get(7).get("Overridden").equalsIgnoreCase("No")) {
-                SimpleUtils.pass("Labor model template is not overridden at location level");
+//            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
+            if (locationsPage.verifyIsOverrideStatusAtLocationLevel("Labor Model")) {
+                SimpleUtils.pass("Labor model template is overridden at location level");
+                locationsPage.clickActionsForTemplate("Labor Model", "Reset");
             } else {
-                SimpleUtils.pass("Labor model template is already overridden at location level");
-                locationsPage.editLocationBtnIsClickableInLocationDetails();
-                locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Reset");
+                SimpleUtils.pass("Labor model template is NOT overridden at location level");
+
             }
 
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "View");
+//            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "View");
+            locationsPage.clickActionsForTemplate("Labor Model", "View");
             laborModelPage.selectLaborModelTemplateDetailsPageSubTabByLabel(label);
             HashMap<String, List<String>> locationLevelAttributesInfoInLocation = locationsPage.getValueAndDescriptionForEachAttributeAtLocationLevel();
             for (String key : templateLevelAttributesInfoInLocation.keySet()) {
@@ -2010,7 +2015,8 @@ public class LocationsTest extends TestBase {
 
         locationsPage.verifyDownloadTransaltionsButtonisClicked();
 
-        String sessionId = logIn();
+        //String sessionId = logIn();
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI("estelle+51@legion.co", "admin11.a");
 
         String reponse[] = HttpUtil.httpGet0(Constants.downloadTransation1,sessionId,null);
 
@@ -2136,9 +2142,9 @@ public class LocationsTest extends TestBase {
             advanceStaffRuleStatues.add("This rule is enabled for this location.");
             configurationPage.verifyAdvanceStaffRuleStatusFromLocationLevel(advanceStaffRuleStatues);
             //Verify user can't add location level advance staffing rules.
-            configurationPage.verifyCanNotAddAdvancedStaffingRuleFromTemplateLevel();
+            //configurationPage.verifyCanNotAddAdvancedStaffingRuleFromTemplateLevel();
             //Verify user can't edit/delete location level location level advance staffing rules.
-            configurationPage.verifyCanNotEditDeleteAdvancedStaffingRuleFromTemplateLevel();
+            //configurationPage.verifyCanNotEditDeleteAdvancedStaffingRuleFromTemplateLevel();
             //Verify user can disable location level location level advance staffing rules.
             configurationPage.changeAdvanceStaffRuleStatusFromLocationLevel(0);
             advanceStaffRuleStatues.clear();
@@ -2481,12 +2487,11 @@ public class LocationsTest extends TestBase {
         }
     }
 
-    //new feature is not released to rc
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "opauto")
     @TestName(description = "Labor Budget Plan Section UI")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyLaborBudgetPlanSectionUIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -2499,18 +2504,21 @@ public class LocationsTest extends TestBase {
         }
     }
 
-    //new feature is not released to rc
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "opauto")
     @TestName(description = "update Labor Budget Plan settings")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyUpdateLaborBudgetPlanSettingsAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             boolean subPlans = true;
             boolean compressed = true;
             String computeBudgetCost ="Work Role";
             String subPlansLevel = "Region";
+            boolean subPlans1 = false;
+            boolean compressed1 = false;
+            String computeBudgetCost1 ="Work Role";
+            String subPlansLevel1 = "Region";
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             locationsPage.clickOnLocationsTab();
@@ -2518,56 +2526,25 @@ public class LocationsTest extends TestBase {
             locationsPage.clickOnEditButtonOnGlobalConfigurationPage();
             locationsPage.updateLaborBudgetPlanSettings(subPlans,subPlansLevel,compressed,computeBudgetCost);
             locationsPage.saveTheGlobalConfiguration();
+            locationsPage.clickOnEditButtonOnGlobalConfigurationPage();
+            locationsPage.updateLaborBudgetPlanSettings(subPlans1,subPlansLevel1,compressed1,computeBudgetCost1);
+            locationsPage.saveTheGlobalConfiguration();
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
-    //new feature is not released to rc
-    @Automated(automated = "Automated")
-    @Owner(owner = "Fiona")
-    @Enterprise(name = "opauto")
-    @TestName(description = "Labor Budget Section is controlled by toggle")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
-    public void verifyLaborBudgetSectionIsControlledByToggleAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
-        try {
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            locationsPage.clickOnLocationsTab();
-            locationsPage.goToGlobalConfigurationInLocations();
-            //Turn off EnableLongTermBudgetPlan toggle
-            ToggleAPI.disableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "stoneman@legion.co", "admin11.a");
-            refreshPage();
-            if(!locationsPage.isBudgetPlanSectionShowing()){
-                SimpleUtils.pass("Budget plan section is Not showing when EnableLongTermBudgetPlan is off");
-            }else {
-                SimpleUtils.fail("Budget plan section is showing when EnableLongTermBudgetPlan is off",false);
-            }
-            //Turn on EnableLongTermBudgetPlan toggle
-            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "stoneman@legion.co", "admin11.a");
-            refreshPage();
-            if(locationsPage.isBudgetPlanSectionShowing()){
-                SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is on");
-            }else {
-                SimpleUtils.fail("Budget plan section is NOT showing when EnableLongTermBudgetPlan is on",false);
-            }
-        }catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-    }
-
-    //new feature is not released to rc
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "opauto")
     @TestName(description = "Compute LRB by work role or by job title groups")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyComputeLRBByWorkRoleOrByJobTitleGroupsAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
             String time= sdf.format(new Date());
             String planName = "AutoUsing-ComputeMethod";
-            String scplan = "AutoUsing-ComputeMethod scenario 1";
+            String scplan = "AutoUsing-ComputeMethod sce";
 
             //go to op side to get the getLaborBudgetPlanComputeSettings
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -2624,7 +2601,6 @@ public class LocationsTest extends TestBase {
 
             //go to console side to check the plan page UI
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon("RegionForPlan_Auto");
             locationSelectorPage.changeDistrict("DistrcitForPlan2");
             planPage.clickOnPlanConsoleMenuItem();
@@ -2646,4 +2622,196 @@ public class LocationsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify readyForForecast is added in location details page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyReadyForForecastAddedInLocationDetailsPageAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
+            String currentTime =  sdf.format(new Date()).trim();
+            String newLocation = "AutoTest" + currentTime;
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //go to sub-locations tab, check readyForForecast for existing location
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(location);
+            SimpleUtils.assertOnFail("Field readyForForecast Failed to show up for existing location!", locationsPage.verifyReadyForForecastFieldExist(), false);
+
+            //check readyForForecast for new location, default value should be 'No'
+            locationsPage.goBack();
+            locationsPage.addNewRegularLocationWithMandatoryFields(newLocation);
+            locationsPage.goToLocationDetailsPage(newLocation);
+            SimpleUtils.assertOnFail("Field readyForForecast Failed to show up for newly created location!", locationsPage.verifyReadyForForecastFieldExist(), false);
+            SimpleUtils.assertOnFail("ReadyForForecast value should be 'No' by default!", locationsPage.getReadyForForecastSelectedOption().equalsIgnoreCase("No"), false);
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify readyForForecast option can be saved correctly")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyReadyForForecastOptionCanBeSavedCorrectlyAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
+            String currentTime =  sdf.format(new Date()).trim();
+            String newLocation = "AutoTest" + currentTime;
+            String optionToSelect = "";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //go to sub-locations tab
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(location);
+            //Existing location, Compare readyForForecast value in UI and DB
+            String readyForForecastValueInUI = locationsPage.getReadyForForecastSelectedOption();
+            System.out.println("readyForForecastValueInUI: " + readyForForecastValueInUI);
+            String readyForForecastInDB = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= 'SEA' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
+            System.out.println("readyForForecastInDB: " + readyForForecastInDB);
+            String parseValueInDB = readyForForecastInDB.equals("1")? "Yes":"No";
+            System.out.println("parseValueInDB: " + parseValueInDB);
+            if (readyForForecastValueInUI.equalsIgnoreCase(parseValueInDB)){
+                SimpleUtils.pass("For existing location, the readyForForecast Value in UI and DB are the same!");
+            }else {
+                SimpleUtils.fail("For existing locaiton, the readyForForecast Value in UI and DB are NOT the same!", false);
+            }
+            //Create new location, change readyForForecast from "No" to "Yes"
+            locationsPage.goBack();
+            locationsPage.addNewRegularLocationWithMandatoryFields(newLocation);
+            locationsPage.goToLocationDetailsPage(newLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.chooseReadyForForecastValue("Yes");
+            locationsPage.goToLocationDetailsPage(newLocation);
+            //New location, Compare readyForForecast value in UI and DB
+            String readyForForecastValueInUI1 = locationsPage.getReadyForForecastSelectedOption();
+            System.out.println("readyForForecastValueInUI1: " + readyForForecastValueInUI1);
+            String readyForForecastInDB1 = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= '"+ newLocation + "' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
+            System.out.println("readyForForecastInDB1: " + readyForForecastInDB1);
+            String parseValueInDB1 = readyForForecastInDB1.equals("1")? "Yes":"No";
+            System.out.println("parseValueInDB1: " + parseValueInDB1);
+            if (readyForForecastValueInUI1.equalsIgnoreCase("yes") && readyForForecastValueInUI1.equalsIgnoreCase(parseValueInDB1) ){
+                SimpleUtils.pass("For New location, the readyForForecast Value in UI and DB are the same!");
+            }else {
+                SimpleUtils.fail("For New location, the readyForForecast Value in UI and DB are NOT the same!", false);
+            }
+
+            //Change readyForForecast option for newly created location
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            optionToSelect = locationsPage.getReadyForForecastSelectedOption().equalsIgnoreCase("yes")?"No":"Yes";
+            locationsPage.chooseReadyForForecastValue(optionToSelect);
+            locationsPage.goToLocationDetailsPage(newLocation);
+
+            //After change, Compare readyForForecast value in UI and DB
+            String readyForForecastValueInUI2 = locationsPage.getReadyForForecastSelectedOption();
+            System.out.println("readyForForecastValueInUI2: " + readyForForecastValueInUI2);
+            String readyForForecastInDB2 = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= '"+ newLocation + "' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
+            System.out.println("readyForForecastInDB2: " + readyForForecastInDB2);
+            String parseValueInDB2 = readyForForecastInDB2.equals("1")? "Yes":"No";
+            System.out.println("parseValueInDB2: " + parseValueInDB2);
+            if (readyForForecastValueInUI2.equalsIgnoreCase(optionToSelect) && readyForForecastValueInUI2.equalsIgnoreCase(parseValueInDB2) ){
+                SimpleUtils.pass("After change for new location, the readyForForecast Value in UI and DB are the same!");
+            }else {
+                SimpleUtils.fail("After change for new location, the readyForForecast Value in UI and DB are NOT the same!", false);
+            }
+
+            //Change readyForForecast option for the existing location
+            locationsPage.goBack();
+            locationsPage.goToLocationDetailsPage(location);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            optionToSelect = locationsPage.getReadyForForecastSelectedOption().equalsIgnoreCase("yes")?"No":"Yes";
+            locationsPage.chooseReadyForForecastValue(optionToSelect);
+            locationsPage.goToLocationDetailsPage(location);
+
+            //After change, Compare readyForForecast value in UI and DB
+            String readyForForecastValueInUI3 = locationsPage.getReadyForForecastSelectedOption();
+            System.out.println("readyForForecastValueInUI3: " + readyForForecastValueInUI3);
+            String readyForForecastInDB3 = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= '"+ location + "' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
+            System.out.println("readyForForecastInDB3: " + readyForForecastInDB3);
+            String parseValueInDB3 = readyForForecastInDB3.equals("1")? "Yes":"No";
+            System.out.println("parseValueInDB3: " + parseValueInDB3);
+            if (readyForForecastValueInUI3.equalsIgnoreCase(optionToSelect) && readyForForecastValueInUI3.equalsIgnoreCase(parseValueInDB3) ){
+                SimpleUtils.pass("After change for existing location, the readyForForecast Value in UI and DB are the same!");
+            }else {
+                SimpleUtils.fail("After change for existing location, the readyForForecast Value in UI and DB are NOT the same!", false);
+            }
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify readyForForecast when Import existing location through UI")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyReadyForForecastWhenImportExistingLocationLocationThroughUIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
+            String currentTime = sdf.format(new Date()).trim();
+            String existingLocation = "TestImportUpdateExisting";
+            String fileWithNoReadyForForecast = "UpdateLocationsWithNoReadyForForecast.csv";
+            String fileWithReadyForForecastNo = "UpdateLocationsWithReadyForForecastNo.csv";
+            String fileWithReadyForForecastYes = "UpdateLocationsWithReadyForForecastYes.csv";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //Before import, existing location, get readyForForecast value in UI
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(existingLocation);
+            String beforeImportValue = locationsPage.getReadyForForecastSelectedOption();
+            locationsPage.goBack();
+            //Update an existing location by import file
+            locationsPage.clickOnImportBtn();
+            locationsPage.verifyImportLocationDistrict(fileWithNoReadyForForecast);
+
+            //After import, existing location, get readyForForecast value in UI
+            locationsPage.goToLocationDetailsPage(existingLocation);
+            String afterImportValue = locationsPage.getReadyForForecastSelectedOption();
+            SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", beforeImportValue.equalsIgnoreCase(afterImportValue), false);
+            locationsPage.goBack();
+            //Update the existing location by import file, change  to No
+            locationsPage.clickOnImportBtn();
+            locationsPage.verifyImportLocationDistrict(fileWithReadyForForecastNo);
+
+            //After import, existing location, get readyForForecast value in UI
+            locationsPage.goToLocationDetailsPage(existingLocation);
+            afterImportValue = locationsPage.getReadyForForecastSelectedOption();
+            SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", "No".equalsIgnoreCase(afterImportValue), false);
+            locationsPage.goBack();
+
+            //Update the existing location by import file, change  to Yes
+            locationsPage.clickOnImportBtn();
+            locationsPage.verifyImportLocationDistrict(fileWithReadyForForecastYes);
+
+            //After import, existing location, get readyForForecast value in UI
+            locationsPage.goToLocationDetailsPage(existingLocation);
+            afterImportValue = locationsPage.getReadyForForecastSelectedOption();
+            SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", "Yes".equalsIgnoreCase(afterImportValue), false);
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }

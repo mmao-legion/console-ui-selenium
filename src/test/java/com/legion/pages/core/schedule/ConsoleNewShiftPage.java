@@ -432,7 +432,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             }
         } else if(areListElementVisible(searchResultsOnNewCreateShiftPage,10)){
             for(int i=0; i<searchResultsOnNewCreateShiftPage.size();i++){
-                List<WebElement> allStatus= searchResultsOnNewCreateShiftPage.get(i).findElements(By.cssSelector(".MuiGrid-grid-xs-2 .MuiTypography-body2"));
+                List<WebElement> allStatus= getTMScheduledStatusElementsOnNewCreateShiftPage();;
                 List<WebElement> tmInfo = searchResultsOnNewCreateShiftPage.get(i).findElements(By.cssSelector("p.MuiTypography-body1"));
                 String tmAllStatus = "";
                 for (WebElement status: allStatus) {
@@ -536,7 +536,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     }
 
 
-    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_WorkRole_menu\"] div.react-select__placeholder")
+
+    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_WorkRole_menu\"]/div/div[1]")
     private WebElement workRoleOnNewShiftPage;
 
     @FindBy(className = "react-select__option")
@@ -902,7 +903,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 }
             }else {
                 if (getEnterprise().equalsIgnoreCase(propertyMap.get(Constants.OpEnterprice))) {
-                    selectDaysByIndex(1, 1, 1);
+                    selectDaysByIndex(4, 4, 4);
                 } else {
                     selectDaysByIndex(1, 3, 5);
                 }
@@ -1008,12 +1009,17 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                 MyThreadLocal.setMessageOfTMScheduledStatus(statusMessage);
                             }
                             List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
+                            String allTMInfo = "";
+                            for (WebElement info : tmInfo) {
+                                allTMInfo = allTMInfo+ info.getText();
+                            }
                             String tmName = tmInfo.get(0).getText();
                             List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
                             WebElement assignButton = assignAndOfferButtons.get(0);
                             WebElement offerButton = assignAndOfferButtons.get(1);
                             if (tmName != null && assignButton != null && offerButton != null) {
-                                if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                                if (tmName.toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())
+                                        || allTMInfo.contains(name)) {
                                     if (MyThreadLocal.getAssignTMStatus()) {
                                         clickTheElement(assignButton);
                                         SimpleUtils.report("Assign Team Member: " + name + " Successfully!");
@@ -1056,9 +1062,11 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = ".MuiDialogContent-root")
     private WebElement overtimeWarningPopup;
 
-    @FindBy(linkText = "Offer anyway")
-    private WebElement offerAnywayBtn;
+//    @FindBy(linkText = "Offer anyway")
+//    private WebElement offerAnywayBtn;
 
+    @FindBy(css = ".sc-iIUQWv.dLvCCh")
+    private WebElement offerAnywayBtn;
     @Override
     public void searchTeamMemberByNameAndAssignOrOfferShift(String name, Boolean isOffering) throws Exception {
         if(areListElementVisible(btnSearchteamMember,10)) {
@@ -3013,6 +3021,41 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 SimpleUtils.report("The Create Shift dialog is closed!");
             else
                 SimpleUtils.fail("The Create Shift dialog is not closed!", false);
+        }else{
+            SimpleUtils.fail("The Close button is not loaded correctly!", false);
+        }
+    }
+    
+    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_ShiftStart_field\"]")
+    private WebElement startTimeInput;
+    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_ShiftEnd_field\"]")
+    private WebElement endTimeInput;
+
+    @Override
+    public void setStartTimeAndEndTimeForShift(String start, String end) throws Exception {
+        String availableIconColour = null;
+        if (isElementLoaded(startTimeInput, 5)) {
+            startTimeInput.clear();
+            startTimeInput.sendKeys(start);
+        }
+        if (isElementLoaded(endTimeInput, 5)) {
+            endTimeInput.clear();
+            endTimeInput.sendKeys(end);
+        }
+    }
+  
+    @FindBy(css = "[ng-click =\"cancelAction()\"]")
+    private WebElement closeBtnForOfferShift;
+    @FindBy(css = ".tma-header-text.fl-left.ng-binding")
+    private WebElement offerShiftdialogTitle;
+    @Override
+    public void clickCloseBtnForOfferShift() throws Exception {
+        if (isElementLoaded(closeBtnForOfferShift,5)) {
+            clickTheElement(closeBtnForOfferShift);
+            if (!isElementLoaded(offerShiftdialogTitle))
+                SimpleUtils.report("The Offer Shift dialog is closed!");
+            else
+                SimpleUtils.fail("The Offer Shift dialog is not closed!", false);
         }else{
             SimpleUtils.fail("The Close button is not loaded correctly!", false);
         }

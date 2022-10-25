@@ -2,6 +2,7 @@ package com.legion.pages;
 
 import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -136,4 +137,6 @@ public interface ShiftOperatePage {
     public boolean isMealBreakBlockDisplayed(int index) throws Exception;
     public boolean isMealBreaksLoaded() throws Exception;
     public void clickCancelBtnOnMealBreakDialog() throws Exception;
+    public boolean isSeniorityColumnLoaded() throws Exception;
+    public ArrayList getTMSeniorityValues() throws Exception;
 }

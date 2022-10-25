@@ -1845,8 +1845,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> calendarMonthNames;
 	@FindBy (css = "div.is-today")
 	private WebElement todayOnCalendar;
-	@FindBy (className = "header-user-switch-menu-item")
-	private List<WebElement> profileSubPageLabels;
+//	@FindBy (className = "header-user-switch-menu-item")
+//	private List<WebElement> profileSubPageLabels;
+    @FindBy (css = "div.header-user-switch-menu-secondary-item.ng-binding")
+    private List<WebElement> profileSubPageLabels;
 	@FindBy (css = ".header-user-switch-menu")
 	private WebElement profileSwitchMenu;
 	@FindBy (css = "div.in-range")
@@ -2942,7 +2944,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@FindBy(css = "[options=\"schoolCalendars\"] select")
 	private WebElement schoolCalendarSelect;
-	@FindBy(css = ".profile-assigned-school")
+	@FindBy(css = "[ng-if*=\"SchoolCalendars\"] p")
 	private WebElement assignedCalendar;
 
 	@Override

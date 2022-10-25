@@ -4220,7 +4220,7 @@ private List<WebElement> locationColumn;
 	public void deleteCalendarByName(String calendarName) throws Exception {
 		if (areListElementVisible(calendarTitles, 20)) {
 			for (WebElement title : calendarTitles) {
-				if (title.getText().trim().equalsIgnoreCase(calendarName)) {
+				if (title.getText().trim().contains(calendarName)) {
 					clickTheElement(title);
 					waitForSeconds(3);
 					if (areListElementVisible(calendarCells,  10) && isElementLoaded(deleteCalendarBtn, 10)) {

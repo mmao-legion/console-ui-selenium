@@ -181,8 +181,10 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     public String getsmartCardTextByLabel(String cardLabel) {
         if (carouselCards.size() != 0) {
             for (WebElement carouselCard : carouselCards) {
-                if (carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()))
+                if (carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase())){
+                    scrollToElement(carouselCard);
                     return carouselCard.getText();
+                }
             }
         }
         return null;
