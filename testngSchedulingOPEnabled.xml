@@ -216,8 +216,16 @@
         <classes>
             <class name="com.legion.tests.core.ScheduleSeniorityTest">
                 <methods>
-                    <!--       <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />  SCH-7683 is not merged into RC yet-->
+                    <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />
                     <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" />
+                    <include name="verifySeniorityNotDisplayWhenToggleTurnOffForSearchingAsInternalAdmin" />
+                    <include name="verifySeniorityNotDisplayWhenToggleTurnOffForRecommendAsInternalAdmin" />
+                    <include name="verifySeniorityDisplayWhenToggleTurnOnForSearchingAsInternalAdmin" />
+                    <include name="verifySeniorityDisplayWhenToggleTurnOnForRecommendAsInternalAdmin" />
+                    <include name="verifyAscendingOfSeniorityForSearchingAsInternalAdmin" />
+                    <include name="verifyAscendingOfSeniorityForRecommendAsInternalAdmin" />
+                    <include name="verifyDescendingOfSeniorityForSearchingAsInternalAdmin" />
+                    <include name="verifyDescendingOfSeniorityForRecommendAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

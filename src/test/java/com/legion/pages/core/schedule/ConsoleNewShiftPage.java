@@ -1041,9 +1041,11 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = ".MuiDialogContent-root")
     private WebElement overtimeWarningPopup;
 
-    @FindBy(linkText = "Offer anyway")
-    private WebElement offerAnywayBtn;
+//    @FindBy(linkText = "Offer anyway")
+//    private WebElement offerAnywayBtn;
 
+    @FindBy(css = ".sc-iIUQWv.dLvCCh")
+    private WebElement offerAnywayBtn;
     @Override
     public void searchTeamMemberByNameAndAssignOrOfferShift(String name, Boolean isOffering) throws Exception {
         if(areListElementVisible(btnSearchteamMember,10)) {
@@ -2997,6 +2999,23 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 SimpleUtils.report("The Create Shift dialog is closed!");
             else
                 SimpleUtils.fail("The Create Shift dialog is not closed!", false);
+        }else{
+            SimpleUtils.fail("The Close button is not loaded correctly!", false);
+        }
+    }
+
+    @FindBy(css = "[ng-click =\"cancelAction()\"]")
+    private WebElement closeBtnForOfferShift;
+    @FindBy(css = ".tma-header-text.fl-left.ng-binding")
+    private WebElement offerShiftdialogTitle;
+    @Override
+    public void clickCloseBtnForOfferShift() throws Exception {
+        if (isElementLoaded(closeBtnForOfferShift,5)) {
+            clickTheElement(closeBtnForOfferShift);
+            if (!isElementLoaded(offerShiftdialogTitle))
+                SimpleUtils.report("The Offer Shift dialog is closed!");
+            else
+                SimpleUtils.fail("The Offer Shift dialog is not closed!", false);
         }else{
             SimpleUtils.fail("The Close button is not loaded correctly!", false);
         }
