@@ -82,7 +82,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
     private WebElement budgetDownloadCSVLink;
     @FindBy(css = "modal[modal-title=\"Run budget\"]>div.lg-modal")
     private WebElement budgetRunDialog;
-    @FindBy(css = "lg-button[label=\"Run\"]")
+    @FindBy(css = "lg-button[label=\"Run\"] button")
     private WebElement budgetRunBTNOnDialog;
     @FindBy(css = "p[ng-if=\"showJobResult(downloadStates,'BudgetPlan')\"] span:nth-child(4)")
     private WebElement budgetValue;
@@ -727,12 +727,16 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                     createPlanName.clear();
                     createPlanName.sendKeys(planName + "-n1_m1");
                     planCreateOKBTN.click();
-                    waitForSeconds(2);
                     //check plan create successfully.
-                    if (isElementLoaded(scenarioPlanNameInDeatil)) {
+                    if(isElementLoaded(errorToast, 3)){
+                        if (errorToast.getText().contains("plan name already exists"))
+                            SimpleUtils.pass("The plan name already exists!");
+                    }else if (isElementLoaded(scenarioPlanNameInDeatil, 3)) {
                         String planTitleInDetails = scenarioPlanNameInDeatil.getText().trim();
                         if (planTitleInDetails.equals(planName + "-n1_m1 scenario 1"))
                             SimpleUtils.pass("Plan created successfully and page navigated to the scenario plan detail successfully!");
+                    }else {
+                        SimpleUtils.fail("Plan failed to be created!", false);
                     }
                 }
 
@@ -750,7 +754,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
         if (isElementLoaded(planDialogArchiveBTN)) {
             SimpleUtils.pass("Archive button is showed in scenario plan detail page successfully");
             clickTheElement(planDialogArchiveBTN);
-            waitForSeconds(2);
+            waitForSeconds(5);
             if (isElementLoaded(scenarioPlanArchivedialog)){
                 SimpleUtils.pass("Archive dialog pops up successfully!");
                 //click the archive
@@ -786,7 +790,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
             if (areListElementVisible(scenarioPlans)) {
                 SimpleUtils.pass("Plan with scenario plans loaded successfully after it was expanded!");
                 for (WebElement scplan : scenarioPlans) {
-                    if (scplan.findElement(By.cssSelector(" div:nth-child(1)")).getText().trim().equals(scplanName)) {
+                    if (scplan.findElement(By.cssSelector(" div:nth-child(1)")).getText().trim().contains(scplanName)) {
                         SimpleUtils.pass("Find the scenario plan successfully!");
                         scplanExist = true;
                         SimpleUtils.pass("Find the tested scenario plan");
@@ -801,7 +805,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                             if (isElementLoaded(scenarioPlanNameInDeatil) && isElementLoaded(scenarioPlanDetailEmail)) {
                                 //get the title of the scenario plan
                                 String planTitleInDetails = scenarioPlanNameInDeatil.getText().trim();
-                                if (planTitleInDetails.equals(scplanNameInList))
+                                if (planTitleInDetails.equals(scplanNameInList)||planTitleInDetails.contains(scplanName))
                                     SimpleUtils.pass("View link navigate to the plan detail successfully");
                                 else
                                     SimpleUtils.fail("View link navigate to the plan detail failed", false);
@@ -831,6 +835,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
         if(isElementLoaded(planDialogCopyBTN)){
             SimpleUtils.pass("Copy button is showed in scenario plan detail page successfully");
             clickTheElement(planDialogCopyBTN);
+            waitForSeconds(3);
             if(isElementLoaded(scenarioPlanCopydialog)){
                 SimpleUtils.pass("Copy dialog pops up successfully!");
                 //get the default plan name
@@ -956,6 +961,10 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                     SimpleUtils.pass("The set in effect button is enabled in plan");
                     clickTheElement(scenarioPlanSetInEffectBTN);
                     waitForSeconds(2);
+                    if (isElementLoaded(setInEffectPopup)){
+                        clickTheElement(setInEffectButtonOnSetInEffectPopup);
+                        waitForSeconds(3);
+                    }
                     //check the parent plan changed to in effect
                     if(searchAPlan(planName)){
                         //check status for prent plan
@@ -981,9 +990,9 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
             SimpleUtils.pass("The approve button displayed at scenario plan detail!");
             //click approve
             clickTheElement(scenarioPlanApproveBTN);
-            if(isElementLoaded(scenarioPlanApproveBTN,5)){
+            if(isElementLoaded(approveBudgetDialog,5)){
                 SimpleUtils.pass("Approve budget plan dialog pops up successfully!");
-                clickTheElement(scenarioPlanApproveBTN);
+                clickTheElement(approveBudgetDialog.findElement(By.cssSelector("lg-button[label=\"Approve\"] button")));
                 waitForSeconds(2);
 
             }
@@ -1062,7 +1071,8 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                 //Check the status and budget value
                 String status = scenarioPlanContents.get(2).getText().replaceAll(" ","").split(":")[1].trim();
                 String budgetStr=scenarioPlanContents.get(1).getText().split("\\$")[1];
-                String budgetValue =budgetStr.contains(",")? budgetStr.replaceAll(",","").trim():budgetStr.trim();
+                String budgetValue = budgetStr.contains(".")? budgetStr.split("\\.")[0]:budgetStr.trim();
+                budgetValue = budgetValue.contains(",")?budgetValue.replaceAll(",","").trim():budgetValue.trim();
                 if (status != null && status.equals("Completed") || status.equals("Ready For Review") || status.equals("Reviewed-Rejected") || status.equals("Reviewed-Approved")) {
                     SimpleUtils.report("The current plan status is:"+status);
                     //get the budget value and assert the budget value is greater than 0

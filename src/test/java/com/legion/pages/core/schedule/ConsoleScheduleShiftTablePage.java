@@ -2464,10 +2464,11 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0 && weekDay!=null) {
             for (WebElement start : startElements) {
                 scrollToElement(start);
+                waitForSeconds(1);
                 WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
                 SimpleUtils.report("Check the tm name: "+ startName.getText().split(" ")[0]);
                 if (startName.getText().split(" ")[0].equalsIgnoreCase(firstName)) {
-                    mouseHoverDragandDrop(start, endElements.get(0));
+                    mouseHoverDragandDrop(startName, endElements.get(0));
                     SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + weekDay.getText() + " days Successfully!");
                     //verifyConfirmStoreOpenCloseHours();
                     isDragged = true;
@@ -3185,7 +3186,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if(!areListElementVisible(weekShifts, 10)){
             shifts = dayViewAvailableShifts;
             if (areListElementVisible(shifts, 20) && index < shifts.size()) {
-                String[] nameAndWorkRole = shifts.get(index).findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ");
+                String[] nameAndWorkRole = shifts.get(index).findElement(By.className("sch-day-view-shift-worker-name"))
+                        .getText().split("\\(")[0].trim().split(" ");
                 fullName = nameAndWorkRole[0] + " " + nameAndWorkRole[1];
             } else {
                 SimpleUtils.fail("Schedule Page: day shifts not loaded successfully!", false);

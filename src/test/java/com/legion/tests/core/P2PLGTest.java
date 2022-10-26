@@ -879,7 +879,6 @@ public class P2PLGTest extends TestBase {
             ScheduleOverviewPage scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -910,7 +909,7 @@ public class P2PLGTest extends TestBase {
                 scheduleDMViewPage.clickOnRefreshButton();
                 String publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(name)
                         .get("publishedStatus");
-                SimpleUtils.assertOnFail("The schedule status should be Published, but actual is:"+publishStatus,
+                SimpleUtils.assertOnFail("The "+name+" schedule status should be Published, but actual is:"+publishStatus,
                         publishStatus.equalsIgnoreCase("Published"), false);
             }
             scheduleOverviewPage.clickOnViewGroupScheduleButton();
@@ -1847,6 +1846,8 @@ public class P2PLGTest extends TestBase {
             scheduleMainPage.saveSchedule();
             //Go to day view, check for TM: A at child location 1, has one shift, ex: 6am - 8am
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.clickCloseBtnForCreateShift();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();

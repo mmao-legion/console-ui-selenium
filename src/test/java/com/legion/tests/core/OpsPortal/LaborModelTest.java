@@ -626,27 +626,21 @@ public class LaborModelTest extends TestBase {
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
             locationsPage.goToConfigurationTabInLocationLevel();
-            List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "View");
+            locationsPage.clickActionsForTemplate("Labor Model", "View");
             locationsPage.backToConfigurationTabInLocationLevel();
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Edit");
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
             LaborModelPage laborModelPage = pageFactory.createOpsPortalLaborModelPage();
             laborModelPage.overriddenLaborModelRuleInLocationLevel(index);
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.saveBtnIsClickable();
-
-            List<HashMap<String, String>> templateInfoAftOverridden = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftOverridden.get(7).get("Overridden").equalsIgnoreCase("Yes")) {
+            if(locationsPage.isOverrideStatusAtLocationLevel("Labor Model")) {
                 SimpleUtils.pass("Overridden Labor Model successfully");
             } else
                 SimpleUtils.fail("Overridden Labor Model failed", false);
 
             //reset
-            locationsPage.editLocationBtnIsClickableInLocationDetails();
-            locationsPage.actionsForEachTypeOfTemplate(templateInfo.get(7).get("Template Type"), "Reset");
-            List<HashMap<String, String>> templateInfoAftReset = locationsPage.getLocationTemplateInfoInLocationLevel();
-            if (templateInfoAftReset.get(7).get("Overridden").equalsIgnoreCase("No")) {
+            locationsPage.clickActionsForTemplate("Labor Model", "Reset");
+            if (!locationsPage.isOverrideStatusAtLocationLevel("Labor Model")) {
                 SimpleUtils.pass("Reset Labor Model successfully");
             } else
                 SimpleUtils.fail("Reset Labor Model failed", false);
