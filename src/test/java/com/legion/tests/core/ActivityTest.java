@@ -385,12 +385,14 @@ public class ActivityTest extends TestBase {
             }
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();
 
             // For Swap Feature
             List<String> swapCoverRequsts = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
+            mySchedulePage.selectSchedulFilter("Scheduled");
             int index = mySchedulePage.verifyClickOnAnyShift();
             String request = "Request to Swap Shift";
             String title = "Find Shifts to Swap";

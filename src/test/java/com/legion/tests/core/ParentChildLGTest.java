@@ -4570,6 +4570,7 @@ public class ParentChildLGTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
             MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
 
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -4581,14 +4582,8 @@ public class ParentChildLGTest extends TestBase {
             if (isWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            List<String> locations = toggleSummaryPage.getChildLocationList();
             createSchedulePage.createScheduleForNonDGFlowNewUI();
-
-            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyLocation.getValue());
-            ArrayList<HashMap<String,String>> childLocations = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
-            List<String> locations = new ArrayList<>();
-            for (int i = 0; i < childLocations.size(); i++) {
-                locations.add(childLocations.get(i).get("optionName"));
-            }
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> shiftInfoList1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);

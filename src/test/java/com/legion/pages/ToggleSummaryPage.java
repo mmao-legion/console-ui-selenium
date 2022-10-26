@@ -19,4 +19,5 @@ public interface ToggleSummaryPage {
     public void verifyTheContentInStaffSection() throws Exception;
     public void verifyTheContentInOperatingHoursSection() throws Exception;
     public String autoFillOpenShifts() throws Exception;
+    public List<String> getChildLocationList() throws Exception;
 }
