@@ -2662,7 +2662,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "opauto")
     @TestName(description = "Verify readyForForecast option can be saved correctly")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
     public void verifyReadyForForecastOptionCanBeSavedCorrectlyAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
@@ -2742,7 +2742,7 @@ public class LocationsTest extends TestBase {
             //After change, Compare readyForForecast value in UI and DB
             String readyForForecastValueInUI3 = locationsPage.getReadyForForecastSelectedOption();
             System.out.println("readyForForecastValueInUI3: " + readyForForecastValueInUI3);
-            String readyForForecastInDB3 = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= '"+ location + "' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
+            String readyForForecastInDB3 = DBConnection.queryDB("legionrc.Business", "readyForForecast", "name= 'SEA' and enterpriseId='" + EnterpriseId.opauto.getValue() + "'");
             System.out.println("readyForForecastInDB3: " + readyForForecastInDB3);
             String parseValueInDB3 = readyForForecastInDB3.equals("1")? "Yes":"No";
             System.out.println("parseValueInDB3: " + parseValueInDB3);
@@ -2760,7 +2760,7 @@ public class LocationsTest extends TestBase {
     @Owner(owner = "Jane")
     @Enterprise(name = "opauto")
     @TestName(description = "Verify readyForForecast when Import existing location through UI")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyReadyForForecastWhenImportExistingLocationLocationThroughUIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
@@ -2815,5 +2815,4 @@ public class LocationsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
-
 }
