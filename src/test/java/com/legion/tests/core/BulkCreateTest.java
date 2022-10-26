@@ -1869,44 +1869,57 @@ public class BulkCreateTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             loginPage.logOut();
+            int count = (int)(Math.random()*8+1);
+            String accessRole = "";
+            switch(count) {
+                case 1: accessRole = AccessRoles.StoreManager.getValue(); break;
+                case 2: accessRole = AccessRoles.StoreManager2.getValue(); break;
+                case 3: accessRole = AccessRoles.TeamLead.getValue();break;
+                case 4: accessRole = AccessRoles.TeamLead2.getValue();break;
+                case 5: accessRole = AccessRoles.DistrictManager.getValue();break;
+                case 6: accessRole = AccessRoles.DistrictManager2.getValue();break;
+                case 7: accessRole = AccessRoles.CustomerAdmin.getValue();break;
+                case 8: accessRole = AccessRoles.CustomerAdmin.getValue();break;
+            }
+            System.out.println("Will login as: "+ accessRole);
             //Verify the shifts can be created by new UI by original SM access role
-            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            loginAsDifferentRole(accessRole);
             createShiftsByDifferentAccessRoles(false);
-            loginPage.logOut();
+//            loginPage.logOut();
 
-            //Verify the shifts can be created by new UI by custom SM access role
-            loginAsDifferentRole(AccessRoles.StoreManager2.getValue());
-            createShiftsByDifferentAccessRoles(false);
-            loginPage.logOut();
-
-            //Verify the shifts can be created by new UI by original TL access role
-            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
-            createShiftsByDifferentAccessRoles(true);
-            loginPage.logOut();
-
-            //Verify the shifts can be created by new UI by custom TL access role
-            loginAsDifferentRole(AccessRoles.TeamLead2.getValue());
-            createShiftsByDifferentAccessRoles(true);
-            loginPage.logOut();
-
-            //Verify the shifts can be created by new UI by original DM access role
-            loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
-            createShiftsByDifferentAccessRoles(false);
-            loginPage.logOut();
-
-            //Verify the shifts can be created by new UI by custom DM access role
-            loginAsDifferentRole(AccessRoles.DistrictManager2.getValue());
-            createShiftsByDifferentAccessRoles(false);
-            loginPage.logOut();
-
-            //Verify the shifts can be created by new UI by original CA access role
-            loginAsDifferentRole(AccessRoles.CustomerAdmin.getValue());
-            createShiftsByDifferentAccessRoles(false);
-            loginPage.logOut();
-
-            //Verify the shifts can be created by new UI by custom CA access role
-            loginAsDifferentRole(AccessRoles.CustomerAdmin2.getValue());
-            createShiftsByDifferentAccessRoles(false);
+//            //Verify the shifts can be created by new UI by custom SM access role
+//            loginAsDifferentRole(AccessRoles.StoreManager2.getValue());
+//            createShiftsByDifferentAccessRoles(false);
+//            loginPage.logOut();
+//
+//            //Verify the shifts can be created by new UI by original TL access role
+//            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
+//            createShiftsByDifferentAccessRoles(true);
+//            loginPage.logOut();
+//
+//            //Verify the shifts can be created by new UI by custom TL access role
+//            loginAsDifferentRole(AccessRoles.TeamLead2.getValue());
+//            createShiftsByDifferentAccessRoles(true);
+//            loginPage.logOut();
+//
+//            //Verify the shifts can be created by new UI by original DM access role
+//            loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
+//            createShiftsByDifferentAccessRoles(false);
+//            loginPage.logOut();
+//
+//            //Verify the shifts can be created by new UI by custom DM access role
+//            loginAsDifferentRole(AccessRoles.DistrictManager2.getValue());
+//            createShiftsByDifferentAccessRoles(false);
+//            loginPage.logOut();
+//
+//            //Verify the shifts can be created by new UI by original CA access role
+//            loginAsDifferentRole(AccessRoles.CustomerAdmin.getValue());
+//            createShiftsByDifferentAccessRoles(false);
+//            loginPage.logOut();
+//
+//            //Verify the shifts can be created by new UI by custom CA access role
+//            loginAsDifferentRole(AccessRoles.CustomerAdmin2.getValue());
+//            createShiftsByDifferentAccessRoles(false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

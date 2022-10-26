@@ -889,9 +889,10 @@ public class P2PLGTest extends TestBase {
 
             // create the schedule.
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isWeekGenerated) {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             List<String> locationNames = scheduleMainPage.getSpecificFilterNames("location");
             if (smartCardPage.isRequiredActionSmartCardLoaded()) {
                 scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyAll.getValue());
@@ -900,7 +901,6 @@ public class P2PLGTest extends TestBase {
                 scheduleMainPage.saveSchedule();
             }
             scheduleMainPage.publishOrRepublishSchedule();
-
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             //Check that the peer locations should be listed
             for (String name : locationNames) {
