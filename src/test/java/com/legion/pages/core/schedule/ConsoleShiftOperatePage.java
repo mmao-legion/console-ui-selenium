@@ -631,12 +631,17 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         return selectedShift;
     }
 
+    @FindBy(css = "[ng-if = \"!hasWorker() && isOpenShift()\"]")
+    private List<WebElement> profileIconsDayViewForOpen;
     @Override
     public boolean isProfileIconsEnable() throws Exception {
         if(areListElementVisible(profileIcons,10)){
             SimpleUtils.pass("Profile Icon is present for selected Employee");
             return true;
         } else if (areListElementVisible(profileIconsDayView,10)) {
+            SimpleUtils.pass("Profile Icon is present for selected Employee");
+            return true;
+        } else if (areListElementVisible(profileIconsDayViewForOpen,10)){
             SimpleUtils.pass("Profile Icon is present for selected Employee");
             return true;
         }
