@@ -5325,6 +5325,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return selectedOption;
 	}
 
+	@FindBy(css="lg-button[label=\"Save\"] span")
+	private WebElement saveBtnNew;
 	@Override
 	public void chooseReadyForForecastValue(String value) throws Exception {
 		List<WebElement> yesOrNoOptions = readyForForecastOption.findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
@@ -5335,8 +5337,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				break;
 			}
 		}
+		scrollToBottom();
+		clickTheElement(saveBtnNew);
 		waitForSeconds(5);
-		clickTheElement(saveBtnInUpdateLocationPage);
 	}
 
 	public void importLocationsAndDistrict(String fileName, String sessionId) throws Exception {
