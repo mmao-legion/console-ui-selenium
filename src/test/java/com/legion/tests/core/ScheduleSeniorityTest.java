@@ -635,14 +635,13 @@ public class ScheduleSeniorityTest extends TestBase {
 				workRole = shiftInfo.get(4);
 			}
 
-
 			//Create an open shift, then offer it to the TMs
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
 			scheduleMainPage.saveSchedule();
 			scheduleCommonPage.clickOnDayView();
-
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
@@ -653,6 +652,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();
 			scheduleMainPage.publishOrRepublishSchedule();
+
+			scheduleMainPage.clickOnOpenSearchBoxButton();
+			scheduleMainPage.searchShiftOnSchedulePage("Open");
 			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
 			shiftOperatePage.clickOnOfferTMOption();
 			shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
@@ -680,7 +682,6 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
 
-			scheduleMainPage.clickOnOpenSearchBoxButton();
 			scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
@@ -1043,7 +1044,8 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchText("C");
+			newShiftPage.searchTeamMemberByName("C");
+			newShiftPage.clickClearAssignmentsLink();
 
 			ArrayList <Integer> seniorityValuesForOpenAssign = shiftOperatePage.getTMSeniorityValues();
 			for (int i = 0; i < seniorityValuesForOpenAssign.size() - 1; i++){
