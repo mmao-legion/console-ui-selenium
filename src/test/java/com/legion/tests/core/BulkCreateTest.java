@@ -2018,4 +2018,64 @@ public class BulkCreateTest extends TestBase {
                         + " the actual is: "+ shiftNotesOfNewShift,
                 shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
     }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the Employee ID display correctly on select TM page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyTheEmployeeIDDisplayCorrectlyOnSelectTMPageAsInternalAdmin (String browser, String username, String password, String location) throws Exception{
+        try {
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            String workRole = shiftOperatePage.getRandomWorkRole();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            SimpleUtils.assertOnFail("New create shift page is not display! ",
+                    newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
+            //Fill the required option
+            newShiftPage.selectWorkRole(workRole);
+            String shiftStartTime = "8:00am";
+            String shiftEndTime = "11:00am";
+            newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            //Select 3 TMs to assign and click Create button
+            shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
+            HashMap<String, String> tmAllInfo = shiftOperatePage.getTMAllInfoFromSearchOrRecommendedListOnNewCreateShiftPageByIndex(0);
+            String tmName = tmAllInfo.get("tmname");
+            String employeeIdOnRecommendedPage = tmAllInfo.get("employeeid");
+            shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
+            newShiftPage.searchWithOutSelectTM(tmName);
+            tmAllInfo = shiftOperatePage.getTMAllInfoFromSearchOrRecommendedListOnNewCreateShiftPageByIndex(0);
+            String employeeIdOnSearchPage = tmAllInfo.get("employeeid");
+            newShiftPage.clickCloseBtnForCreateShift();
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMemberByName(tmName);
+            String employeeIDOnProfilePage = profileNewUIPage.getHRProfileInfo().get("EMPLOYEE ID");
+            SimpleUtils.assertOnFail("The employee id on profile page is: "+employeeIDOnProfilePage
+                            + ". The employee id on recommended page is: "+employeeIdOnRecommendedPage
+                            + ". The employee id on search Tm page is: "+ employeeIdOnSearchPage,
+                    employeeIDOnProfilePage.equalsIgnoreCase(employeeIdOnRecommendedPage)
+                            && employeeIDOnProfilePage.equalsIgnoreCase(employeeIdOnSearchPage), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
