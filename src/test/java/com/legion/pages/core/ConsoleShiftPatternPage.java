@@ -3,11 +3,12 @@ package com.legion.pages.core;
 import com.legion.pages.BasePage;
 import com.legion.pages.ShiftPatternPage;
 import com.legion.utils.SimpleUtils;
-import cucumber.api.java.ro.Si;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -16,6 +17,24 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
 
     public ConsoleShiftPatternPage() {
         PageFactory.initElements(getDriver(), this);
+    }
+
+    public enum sectionType {
+        WorkRole("Work Role"),
+        ShiftName("Shift Name"),
+        Description("Description"),
+        StartTime("Start Time"),
+        EndTime("End Time"),
+        Days("Select Day(s)"),
+        Breaks("Breaks"),
+        ShiftNotes("Shift Notes");
+        private final String type;
+        sectionType(final String newType){
+            type = newType;
+        }
+        public String getType(){
+            return type;
+        }
     }
 
     @FindBy (css = "content-box:nth-child(1) .lg-sub-content-box-title")
@@ -70,6 +89,245 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
     private List<WebElement> addShiftBtns;
     @FindBy (css = "[modal-title=\"Create New Shift\"]")
     private WebElement createNewShiftWindow;
+    @FindBy (css = "h6+div>.MuiGrid-container>div:nth-child(2)")
+    private List<WebElement> columnValueContainers;
+    @FindBy (css = "h6+div>.MuiGrid-container>div:nth-child(1)")
+    private List<WebElement> columnTitleContainers;
+    @FindBy (css = "[ng-click=\"close()\"]")
+    private WebElement cancelOnPopup;
+    @FindBy (css = "[ng-click=\"submit()\"]")
+    private WebElement createOnPopup;
+    @FindBy (css = ".MuiFormHelperText-root")
+    private List<WebElement> warningMsgs;
+    @FindBy (css = "[style=\"border-top: none;\"] div")
+    private List<WebElement> breakWarnings;
+    @FindBy (css = "h6+div>.MuiGrid-container>div:nth-child(2)")
+    private List<WebElement> sections;
+    @FindBy (id = "legion_cons_schedule_schedule_createshift_ShiftName_field")
+    private WebElement shiftNameInput;
+    @FindBy (id = "shiftDescription")
+    private WebElement descriptionInputOnNewShfit;
+    @FindBy (id = "legion_cons_schedule_schedule_createshift_ShiftNotes_field")
+    private WebElement shiftNotesInput;
+    @FindBy (id = "legion_cons_schedule_schedule_createshift_ShiftStart_field")
+    private WebElement startTimeInput;
+    @FindBy (id = "legion_cons_schedule_schedule_createshift_ShiftEnd_field")
+    private WebElement endTimeInput;
+    @FindBy (css = "[name*=\"selectedDays\"]")
+    private List<WebElement> dayInputs;
+    @FindBy (css = ".MuiCheckbox-root+span")
+    private List<WebElement> dayLabels;
+
+    private WebElement getSpecificSectionByName(String name) throws Exception {
+        if (name.equalsIgnoreCase(sectionType.WorkRole.getType())) {
+            return sections.get(0);
+        }
+        if (name.equalsIgnoreCase(sectionType.ShiftName.getType())) {
+            return sections.get(1);
+        }
+        if (name.equalsIgnoreCase(sectionType.Description.getType())) {
+            return sections.get(2);
+        }
+        if (name.equalsIgnoreCase(sectionType.StartTime.getType())) {
+            return sections.get(3);
+        }
+        if (name.equalsIgnoreCase(sectionType.EndTime.getType())) {
+            return sections.get(4);
+        }
+        if (name.equalsIgnoreCase(sectionType.Days.getType())) {
+            return sections.get(5);
+        }
+        if (name.equalsIgnoreCase(sectionType.Breaks.getType())) {
+            return sections.get(6);
+        }
+        if (name.equalsIgnoreCase(sectionType.ShiftNotes.getType())) {
+            return sections.get(7);
+        }
+        return null;
+    }
+
+    @Override
+    public void clickOnAddMealOrRestBreakBtn(boolean isMeal) throws Exception {
+        WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
+        WebElement addButton = null;
+        int index = 0;
+        if (isMeal) {
+            index = 1;
+        } else {
+            index = 2;
+        }
+        addButton = breakSection.findElement(By.cssSelector(".MuiGrid-container>div:nth-child(" + index + ") .add-break-button-title"));
+        clickTheElement(addButton);
+        if (areListElementVisible(breakSection.findElements(By.cssSelector(".MuiGrid-container>div:nth-child(" + index + ") input")),
+                3) && isElementLoaded(breakSection.findElement(By.cssSelector(".MuiGrid-container>div:nth-child(" + index + ") td>svg")), 3)) {
+            SimpleUtils.pass("Click on Add break button successfully!");
+        } else {
+            SimpleUtils.fail("Break Section: inputs and close button failed to show!", false);
+        }
+    }
+
+    @Override
+    public void deleteTheBreakByNumber(boolean isMeal, int number) throws Exception {
+        WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
+        int index = 0;
+        if (isMeal) {
+            index = 1;
+        } else {
+            index = 2;
+        }
+        List<WebElement> deleteButtons = breakSection.findElements(By.cssSelector(".MuiGrid-container>div:nth-child(" + index + ") td>svg"));
+        if (deleteButtons.size() >= number) {
+            clickTheElement(deleteButtons.get(number - 1));
+        }
+    }
+
+    @Override
+    public void inputShiftOffsetAndBreakDuration(int startOffset, int breakDuration, int number, boolean isMeal) throws Exception {
+        WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
+        int index = 0;
+        if (isMeal) {
+            index = 1;
+        } else {
+            index = 2;
+        }
+        List<WebElement> inputs = breakSection.findElements(By.cssSelector(".MuiGrid-container>div:nth-child(" + index + ") input"));
+        if (number == 1) {
+            if (inputs.size() == 0) {
+                clickOnAddMealOrRestBreakBtn(isMeal);
+            }
+            clearTheText(inputs.get(0));
+            inputs.get(0).click();
+            inputs.get(0).sendKeys(String.valueOf(startOffset));
+            clearTheText(inputs.get(1));
+            inputs.get(1).click();
+            inputs.get(1).sendKeys(String.valueOf(breakDuration));
+        }
+        if (number == 2) {
+            if (inputs.size() == 2) {
+                clickOnAddMealOrRestBreakBtn(isMeal);
+            }
+            clearTheText(inputs.get(2));
+            inputs.get(2).click();
+            inputs.get(2).sendKeys(String.valueOf(startOffset));
+            clearTheText(inputs.get(3));
+            inputs.get(3).click();
+            inputs.get(3).sendKeys(String.valueOf(breakDuration));
+        }
+    }
+
+    @Override
+    public void selectWorkDays(List<String> daysNeedSelect) throws Exception {
+        if (daysNeedSelect != null && daysNeedSelect.size() > 0 && areListElementVisible(dayInputs, 3) && areListElementVisible(dayLabels, 3)) {
+            for (int i = 0; i < dayLabels.size(); i++) {
+                if (daysNeedSelect.contains(dayLabels.get(i).getText())) {
+                    clickTheElement(dayInputs.get(i));
+                }
+            }
+        }
+    }
+
+    @Override
+    public void inputStartOrEndTime(String time, boolean isStart) throws Exception {
+        WebElement input = null;
+        if (isStart) {
+            input = startTimeInput;
+        } else {
+            input = endTimeInput;
+        }
+        clickTheElement(input);
+        clearTheText(input);
+        input.sendKeys(time);
+        if (!input.getAttribute("value").equalsIgnoreCase(time)) {
+            SimpleUtils.fail("Failed to input the time!", false);
+        }
+    }
+
+    @Override
+    public void verifyWorkRoleNameShows(String workRole) throws Exception {
+        WebElement workRoleElement = getSpecificSectionByName(sectionType.WorkRole.getType());
+        if (!workRoleElement.getText().equalsIgnoreCase(workRole)) {
+            SimpleUtils.fail("The work role on Create New Shift window is incorrect!", false);
+        }
+    }
+
+    @Override
+    public void inputShiftNameDescriptionNShiftNotes(String shiftName, String description, String shiftNotes) throws Exception {
+        if (shiftName != null && !shiftName.isEmpty()) {
+            shiftNameInput.click();
+            clearTheText(shiftNameInput);
+            shiftNameInput.sendKeys(shiftName);
+            if (!shiftNameInput.getAttribute("value").equalsIgnoreCase(shiftName)) {
+                SimpleUtils.fail("Failed to input the shift name!", false);
+            }
+        }
+        if (description != null && !description.isEmpty()) {
+            descriptionInputOnNewShfit.click();
+            clearTheText(descriptionInputOnNewShfit);
+            descriptionInputOnNewShfit.sendKeys(description);
+            if (!descriptionInputOnNewShfit.getAttribute("value").equalsIgnoreCase(description)) {
+                SimpleUtils.fail("Failed to input the description!", false);
+            }
+        }
+        if (shiftNotes != null && !shiftNotes.isEmpty()) {
+            shiftNotesInput.click();
+            clearTheText(shiftNotesInput);
+            shiftNotesInput.sendKeys(shiftNotes);
+            if (!shiftNotesInput.getAttribute("value").equalsIgnoreCase(shiftNotes)) {
+                SimpleUtils.fail("Failed to input the shift Notes!", false);
+            }
+        }
+    }
+
+    @Override
+    public void clickOnCancelButton() throws Exception {
+        clickTheElement(cancelOnPopup);
+    }
+
+    @Override
+    public void clickOnCreateButton() throws Exception {
+        clickTheElement(createOnPopup);
+    }
+
+    @Override
+    public List<String> getWarningMessages() throws Exception {
+        List<String> warningMessages = new ArrayList<>();
+        if (areListElementVisible(warningMsgs, 5)) {
+            for (WebElement warning : warningMsgs) {
+                warningMessages.add(warning.getText());
+            }
+        }
+        return warningMessages;
+    }
+
+    @Override
+    public List<String> getBreakWarnings() throws Exception {
+        List<String> warningMessages = new ArrayList<>();
+        if (areListElementVisible(breakWarnings, 5)) {
+            for (WebElement warning : breakWarnings) {
+                warningMessages.add(warning.getText());
+            }
+        }
+        return warningMessages;
+    }
+
+    @Override
+    public void verifyTheContentOnCreateNewShiftWindow() throws Exception {
+        if (isElementLoaded(createNewShiftWindow, 3) && areListElementVisible(columnTitleContainers, 3)
+        && areListElementVisible(columnValueContainers, 3) && columnTitleContainers.size() == 8 &&
+        columnValueContainers.size() == 8 && columnTitleContainers.get(0).getText().equalsIgnoreCase(sectionType.WorkRole.getType())
+        && columnTitleContainers.get(1).getText().equalsIgnoreCase(sectionType.ShiftName.getType()) &&
+                columnTitleContainers.get(2).getText().equalsIgnoreCase(sectionType.Description.getType()) &&
+                columnTitleContainers.get(3).getText().equalsIgnoreCase(sectionType.StartTime.getType()) &&
+                columnTitleContainers.get(4).getText().equalsIgnoreCase(sectionType.EndTime.getType()) &&
+                columnTitleContainers.get(5).getText().equalsIgnoreCase(sectionType.Days.getType()) &&
+                columnTitleContainers.get(6).getText().equalsIgnoreCase(sectionType.Breaks.getType()) &&
+                columnTitleContainers.get(7).getText().equalsIgnoreCase(sectionType.ShiftNotes.getType()) &&
+        isElementLoaded(cancelOnPopup, 3) && isElementLoaded(createOnPopup, 3)) {
+            SimpleUtils.pass("The content on Create New Shift window is correct!");
+        } else {
+            SimpleUtils.fail("The content on Create New Shift window is incorrect!", false);
+        }
+    }
 
     @Override
     public void verifyTheContentOnShiftPatternDetails(String workRole) throws Exception {
@@ -260,19 +518,20 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
     @Override
     public void verifyTheFunctionalityOfExpandWeekIcon(int weekNumber, boolean isExpanded) throws Exception {
         int index = weekNumber - 1;
+        WebElement weekPanel = getDriver().findElement(By.cssSelector(".lg-rule-details content-box:nth-child(" + (weekNumber + 1) + ")"));
         if (isExpanded) {
-            if (isElementLoaded(collapsedIcons.get(index), 3)) {
-                clickTheElement(collapsedIcons.get(index));
-                if (isElementLoaded(expandedIcons.get(index))) {
+            if (isElementLoaded(weekPanel.findElement(By.cssSelector(".settings-shift-pattern-week-details-edit-collapsed")), 3)) {
+                clickTheElement(weekPanel.findElement(By.cssSelector(".settings-shift-pattern-week-details-edit-collapsed")));
+                if (isElementLoaded(weekPanel.findElement(By.cssSelector(".settings-shift-pattern-week-details-edit-expanded")),3)) {
                     SimpleUtils.pass("Expand the week section for Week" + weekNumber);
                 } else {
                     SimpleUtils.fail("Failed to expand the week section for Week" + weekNumber, false);
                 }
             }
         } else {
-            if (isElementLoaded(expandedIcons.get(index), 3)) {
-                clickTheElement(expandedIcons.get(index));
-                if (isElementLoaded(collapsedIcons.get(index))) {
+            if (isElementLoaded(weekPanel.findElement(By.cssSelector(".settings-shift-pattern-week-details-edit-expanded")), 3)) {
+                clickTheElement(weekPanel.findElement(By.cssSelector(".settings-shift-pattern-week-details-edit-expanded")));
+                if (isElementLoaded(weekPanel.findElement(By.cssSelector(".settings-shift-pattern-week-details-edit-collapsed")), 3)) {
                     SimpleUtils.pass("Collapse the week section for Week" + weekNumber);
                 } else {
                     SimpleUtils.fail("Failed to collapse the week section for Week" + weekNumber, false);
