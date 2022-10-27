@@ -3636,5 +3636,50 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
         return (ArrayList) seniorityValues;
     }
+
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/parent::div/parent::div/parent::div/parent::div/parent::div/parent::div/parent::div/div[1]/div/div/span")
+    private List<WebElement> tmListHeaders;
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/parent::div/parent::div/parent::div/parent::div")
+    private List<WebElement> allTMsInSearchOrRecommendedList;
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/following-sibling::div/p[1]")
+    private List<WebElement> allTMNamesInSearchOrRecommendedList;
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/following-sibling::div/p[2]")
+    private List<WebElement> allTMJobTitlesInSearchOrRecommendedList;
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/following-sibling::div/p[3]")
+    private List<WebElement> allTMLocationsInSearchOrRecommendedList;
+
+    @Override
+    public HashMap<String, String> getTMAllInfoFromSearchOrRecommendedListOnNewCreateShiftPageByIndex(int index) throws Exception {
+        HashMap<String, String> allInfo= new HashMap<>();
+        if (areListElementVisible(allTMsInSearchOrRecommendedList, 5)
+                && areListElementVisible(allTMNamesInSearchOrRecommendedList, 5)
+                && areListElementVisible(allTMJobTitlesInSearchOrRecommendedList, 5)
+                && areListElementVisible(allTMLocationsInSearchOrRecommendedList, 5)
+                && allTMsInSearchOrRecommendedList.size() ==allTMNamesInSearchOrRecommendedList.size()
+                && allTMsInSearchOrRecommendedList.size() == allTMJobTitlesInSearchOrRecommendedList.size()
+                && allTMsInSearchOrRecommendedList.size() == allTMLocationsInSearchOrRecommendedList.size()) {
+            waitForSeconds(5);
+            for (int i =0; i< allTMsInSearchOrRecommendedList.size(); i++) {
+                //Get TM name
+                String tmFullName = allTMNamesInSearchOrRecommendedList.get(i).getText().replace("\"", "").replace("\\n", "").trim();
+                allInfo.put("tmname", tmFullName);
+                //Get TM job title
+                String tmJobTitle = allTMNamesInSearchOrRecommendedList.get(i).getText().trim();
+                allInfo.put("tmjobtitle", tmJobTitle);
+                //Get TM Location
+                String tmLocation = allTMLocationsInSearchOrRecommendedList.get(i).getText().trim();
+                allInfo.put("tmlocation", tmLocation);
+                //Get Employee ID
+                if (areListElementVisible(tmListHeaders, 5)
+                        && tmListHeaders.get(1).getText().equalsIgnoreCase("Employee ID")) {
+                    String employeeId = allTMsInSearchOrRecommendedList.get(i).findElement(By.xpath("./div[2]")).getText();
+                    allInfo.put("employeeid", employeeId);
+                }
+            }
+        }else {
+            SimpleUtils.fail("The TMs on search or recommended page fail to load! ", false);
+        }
+        return allInfo;
+    }
 }
 

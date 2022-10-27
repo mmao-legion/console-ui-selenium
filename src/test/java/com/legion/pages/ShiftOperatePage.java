@@ -139,4 +139,5 @@ public interface ShiftOperatePage {
     public void clickCancelBtnOnMealBreakDialog() throws Exception;
     public boolean isSeniorityColumnLoaded() throws Exception;
     public ArrayList getTMSeniorityValues() throws Exception;
+    public HashMap<String, String> getTMAllInfoFromSearchOrRecommendedListOnNewCreateShiftPageByIndex(int index) throws Exception;
 }

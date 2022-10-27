@@ -197,7 +197,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			Thread.sleep(10000);
 			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
 			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("No"),false);
-			Thread.sleep(180000);
+			Thread.sleep(200000);
 			switchToConsoleWindow();
 
 			//Back to Schedule page
@@ -207,10 +207,11 @@ public class ScheduleSeniorityTest extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.clickOnWeekView();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!(isActiveWeekGenerated)) {
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
 
 			//Catch one random shift
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
@@ -328,7 +329,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			Thread.sleep(10000);
 			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
 			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("No"),false);
-			Thread.sleep(180000);
+			Thread.sleep(200000);
 			switchToConsoleWindow();
 
 			//Back to Schedule page
@@ -338,10 +339,11 @@ public class ScheduleSeniorityTest extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.clickOnWeekView();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!(isActiveWeekGenerated)) {
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
 
 			//Catch one random shift
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
@@ -400,12 +402,10 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
 			shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
-			shiftOperatePage.verifyRecommendedTableHasTM();
 			SimpleUtils.assertOnFail("The Seniority Column is displayed on searching dialog!", !(shiftOperatePage.isSeniorityColumnLoaded()), false);
 			newShiftPage.clickCloseBtnForCreateShift();
 
 			//Pick up the created shift, assign it to other TM, check the Seniority Column
-			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
@@ -469,7 +469,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			Thread.sleep(10000);
 			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
 			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"),false);
-			Thread.sleep(180000);
+			Thread.sleep(200000);
 			switchToConsoleWindow();
 
 			//Back to Schedule page
@@ -479,10 +479,11 @@ public class ScheduleSeniorityTest extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.clickOnWeekView();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!(isActiveWeekGenerated)) {
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
 
 			//Catch one random shift
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
@@ -599,7 +600,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			Thread.sleep(10000);
 			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
 			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"),false);
-			Thread.sleep(180000);
+			Thread.sleep(200000);
 			switchToConsoleWindow();
 
 			//Back to Schedule page
@@ -609,10 +610,11 @@ public class ScheduleSeniorityTest extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.clickOnWeekView();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!(isActiveWeekGenerated)) {
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
 
 			//Catch one random shift
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
@@ -633,14 +635,13 @@ public class ScheduleSeniorityTest extends TestBase {
 				workRole = shiftInfo.get(4);
 			}
 
-
 			//Create an open shift, then offer it to the TMs
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
 			scheduleMainPage.saveSchedule();
 			scheduleCommonPage.clickOnDayView();
-
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
@@ -651,6 +652,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();
 			scheduleMainPage.publishOrRepublishSchedule();
+
+			scheduleMainPage.clickOnOpenSearchBoxButton();
+			scheduleMainPage.searchShiftOnSchedulePage("Open");
 			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
 			shiftOperatePage.clickOnOfferTMOption();
 			shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
@@ -678,7 +682,6 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
 
-			scheduleMainPage.clickOnOpenSearchBoxButton();
 			scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
@@ -740,10 +743,11 @@ public class ScheduleSeniorityTest extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.clickOnWeekView();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!(isActiveWeekGenerated)) {
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
 
 			//Catch up on random shift for further shift creation
 			String firstNameOfTM = null;
@@ -866,10 +870,11 @@ public class ScheduleSeniorityTest extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.clickOnWeekView();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!(isActiveWeekGenerated)) {
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
 
 			//Catch up on random shift for further shift creation
 			String firstNameOfTM = null;
@@ -1002,10 +1007,11 @@ public class ScheduleSeniorityTest extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.clickOnWeekView();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!(isActiveWeekGenerated)) {
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
 
 			//Catch up on random shift for further shift creation
 			String firstNameOfTM = null;
@@ -1038,7 +1044,8 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchText("C");
+			newShiftPage.searchTeamMemberByName("C");
+			newShiftPage.clickClearAssignmentsLink();
 
 			ArrayList <Integer> seniorityValuesForOpenAssign = shiftOperatePage.getTMSeniorityValues();
 			for (int i = 0; i < seniorityValuesForOpenAssign.size() - 1; i++){
@@ -1128,10 +1135,11 @@ public class ScheduleSeniorityTest extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.clickOnWeekView();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!(isActiveWeekGenerated)) {
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
 
 			//Catch up on random shift for further shift creation
 			String firstNameOfTM = null;

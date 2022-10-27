@@ -7542,6 +7542,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				firstNameOfTM  = shiftInfo1.get(0);
 				shiftCount1++;
 			}
+			String lastName = shiftInfo1.get(5);
 			String workRole =  shiftInfo1.get(4);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
@@ -7569,7 +7570,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchWithOutSelectTM(firstNameOfTM);
+			newShiftPage.searchWithOutSelectTM(firstNameOfTM+ " "+ lastName);
 			//https://legiontech.atlassian.net/browse/SCH-7682
 			String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
 			String expectedWaningMessage= "Minimum time between shifts";

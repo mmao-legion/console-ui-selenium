@@ -1841,6 +1841,7 @@ public class P2PLGTest extends TestBase {
                 firstNameOfTM = shiftInfo.get(0);
             }
             String workRole = shiftInfo.get(4);
+            String lastName = shiftInfo.get(5);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
@@ -1873,7 +1874,7 @@ public class P2PLGTest extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
 
-            newShiftPage.searchWithOutSelectTM(firstNameOfTM);
+            newShiftPage.searchWithOutSelectTM(firstNameOfTM+ " "+ lastName);
             String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
             String expectedWaningMessage= "Minimum time between shifts";
             SimpleUtils.assertOnFail(expectedWaningMessage+ " message fail to load!",

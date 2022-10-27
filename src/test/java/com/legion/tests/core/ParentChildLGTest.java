@@ -4554,6 +4554,24 @@ public class ParentChildLGTest extends TestBase {
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
+        } finally {
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            String childLocation1 = "Child001";
+            String childLocation2 = "Child002";
+            List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
+            scheduleMainPage.goToToggleSummaryView();
+            scheduleMainPage.clickEditBtnOnToggleSummary();
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation1);
+            scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "08:00AM","09:00PM");
+            scheduleMainPage.clickSaveBtnOnEditOpeHoursPageForOP();
+            Thread.sleep(3000);
+
+            scheduleMainPage.clickEditBtnOnToggleSummary();
+            createSchedulePage.selectLocationOnEditOperatingHoursPage(childLocation2);
+            scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "08:00AM","09:00PM");
+            scheduleMainPage.clickSaveBtnOnEditOpeHoursPageForOP();
+            Thread.sleep(3000);
         }
     }
 
