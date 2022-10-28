@@ -5,6 +5,7 @@ import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.openqa.selenium.*;
+import org.openqa.selenium.internal.FindsByCssSelector;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
@@ -410,6 +411,8 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	private  WebElement groupNameInput;
 	@FindBy(css = "input-field[value=\"$ctrl.dynamicGroup.description\"] >ng-form>input")
 	private  WebElement groupDescriptionInput;
+	@FindBy(css = "input-field[placeholder = 'Select one']>ng-form")
+	private  WebElement criteria;
 	@FindBy(css = "div.fl-left.groupField > input-field > ng-form > div.select-wrapper.ng-scope>select")
 	private  List<WebElement> criteriaSelect;
 	@FindBy(css = "div.fl-left.groupField > input-field > ng-form > div.select-wrapper.ng-scope>select>option")
@@ -2031,18 +2034,55 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	private WebElement announcementGroupName;
 	@FindBy(css = "div.lg-modal__title-icon.ng-binding")
 	private WebElement addAnnouncementPopUpTitle;
+	@FindBy(css = "div.lg-multiple-select")
+	private WebElement select;
+	@FindBy(css = "input[type = 'checkbox']")
+	private WebElement checkBox;
+	@FindBy(css = "form-section[form-title='Announcement']>ng-transclude>content-box>ng-transclude>lg-global-dynamic-group-table>lg-paged-search-new>div>ng-transclude>table>tbody>tr>td>div>div>lg-button[icon=\"'fa-times'\"]")
+	private WebElement deleteAccouncementIcon;
+	@FindBy(css = "form-section[form-title='Announcement']>ng-transclude>content-box>ng-transclude>lg-global-dynamic-group-table>lg-paged-search-new>div>ng-transclude>table>tbody>tr>td>div>div>lg-button")
+	private WebElement updateAccouncementIcon;
 
 	public void addAnnouncement() throws Exception{
 		click(addAnnouncement);
 
-//		if(addAnnouncementPopUpTitle.getAttribute("innerTest").contains("Manage Dynamic Announcement Group"))
-//			SimpleUtils.pass("Add announcement pop up title is correct");
-//		else
-//			SimpleUtils.fail("Add announcement pop up title is wrong",false);
+		if(addAnnouncementPopUpTitle.getAttribute("innerText").contains("Manage Dynamic Announcement Group"))
+			SimpleUtils.pass("Add announcement pop up title is correct");
+
+		else
+			SimpleUtils.fail("Add announcement pop up title is wrong",false);
 
 		announcementGroupName.sendKeys("AutoCreate");
-		selectByVisibleText(criteriaSelect.get(0),"Job Title");
+		click(criteria);
+		click(getDriver().findElement(By.cssSelector("div[title = 'Work Role']")));
+		click(select);
+		click(checkBox);
+		click(okBtnInCreateNewsFeedGroupPage);
+	}
 
+	public void updateAccouncement() throws Exception{
+		click(updateAccouncementIcon);
+
+		if(addAnnouncementPopUpTitle.getAttribute("innerText").contains("Manage Dynamic Announcement Group"))
+			SimpleUtils.pass("Update announcement pop up title is correct");
+
+		else
+			SimpleUtils.fail("Update announcement pop up title is wrong",false);
+
+		announcementGroupName.sendKeys("AutoCreateUpdate");
+		click(okBtnInCreateNewsFeedGroupPage);
+	}
+
+	public void deleteAnnouncement() throws Exception{
+		click(deleteAccouncementIcon);
+
+		if(addAnnouncementPopUpTitle.getAttribute("innerText").contains("Remove Dynamic Announcement Group"))
+			SimpleUtils.pass("Delete announcement pop up title is correct");
+
+		else
+			SimpleUtils.fail("Delete announcement pop up title is wrong",false);
+
+		click(removeJobTitleButton);
 	}
 }
 
