@@ -1335,13 +1335,14 @@ public class UserManagementTest extends TestBase {
             //go to User Management Dynamic Employee Groups
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
             userManagementPage.clickOnUserManagementTab();
-            //userManagementPage.iCanSeeDynamicGroupItemTileInUserManagementTab();
             userManagementPage.verifyDynamicEmployeeGroupContainAnnouncement();
             userManagementPage.goToDynamicEmployeeGroup();
 
             userManagementPage.verifyBothEmployeeAndAnnouncementDisplay();
             userManagementPage.verifyAnnouncementBlankInfo();
-            //userManagementPage.addAnnouncement();
+            userManagementPage.addAnnouncement();
+            userManagementPage.updateAccouncement();
+            userManagementPage.deleteAnnouncement();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
