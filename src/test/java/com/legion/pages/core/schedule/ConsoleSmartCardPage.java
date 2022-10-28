@@ -849,6 +849,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         return null;
     }
 
+
     @Override
     public String getBudgetValueFromScheduleBudgetSmartCard() throws Exception {
         if (isElementLoaded(scheduleSmartCard, 3)) {
@@ -860,5 +861,19 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         return null;
     }
 
-
+    @FindBy (css = "span[ng-if=\"!hasBeenAcknowledged\"]")
+    private WebElement acknowledgeButton;
+    @Override
+    public void clickOnAcknowledgeButtonOnAcknowledgeNotificationSmartCard () throws Exception {
+        if (isElementLoaded(acknowledgeButton, 3)) {
+            clickTheElement(acknowledgeButton);
+            waitForSeconds(5);
+            if(!isElementLoaded(acknowledgeButton, 3) && !isSpecificSmartCardLoaded("ACTION REQUIRED")){
+                SimpleUtils.pass("Acknowledge successfully! the acknowledge notification smart card and button has already disappear! ");
+            }else
+                SimpleUtils.fail("Acknowledge fail! the acknowledge notification smart card and button should disappear! ", false);
+        }else{
+            SimpleUtils.fail("The Acknowledge Button On Acknowledge Notification Smart Card is not loaded correctly!", false);
+        }
+    }
 }
