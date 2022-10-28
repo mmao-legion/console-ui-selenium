@@ -721,4 +721,14 @@ SCH-5862-->
             </class>
         </classes>
     </test>
+    <test name="Schedule Acknowledgement Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleAcknowledgementTest">
+                <methods>
+                    <include name="verifyTMCanAcknowledgeTheNotificationAfterPublishTheScheduleAsTeamMember" />
+                    <include name="verifySMCanAcknowledgeTheNotificationAfterPublishTheScheduleAsStoreManager" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->
