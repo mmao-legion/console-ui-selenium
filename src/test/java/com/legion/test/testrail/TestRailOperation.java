@@ -74,6 +74,7 @@ public class TestRailOperation {
                 name = TestBase.finalTestRailRunName+ " " + strDate;
             }
             data.put("name", name);
+            data.put("Content-Type", "application/json");
             JSONObject jSONObject = (JSONObject) client.sendPost(addResultString, data);
             long longTestRailRunId = (Long) jSONObject.get("id");
             //set test rail run ID=================================
