@@ -16,6 +16,7 @@
             <class name="com.legion.tests.core.OpsPortal.NewNavigationFlowTest"/>
             <class name="com.legion.tests.core.OpsPortal.ConfigurationTest"/>
             <class name="com.legion.tests.core.OpsPortal.UserManagementTest"/>
+            <class name="com.legion.tests.core.OpsPortal.DemandDriverTest"/>
             <class name="com.legion.tests.core.opUserManagement.AccessRoleTest"/>
             <class name="com.legion.tests.core.opEmployeeManagement.AbsentManagementTemplateTest"/>
             <class name="com.legion.tests.core.opEmployeeManagement.AccrualEngineTest"/>
