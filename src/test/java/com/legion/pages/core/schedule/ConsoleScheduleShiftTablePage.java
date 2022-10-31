@@ -1276,7 +1276,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
 
     @Override
-    public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception {
+    public void verifyUpComingShiftsConsistentWithSchedule(Map<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception {
         if (scheduleShifts.entrySet().containsAll(dashboardShifts.entrySet())) {
             SimpleUtils.pass("Up coming shifts from dashboard is consistent with the shifts in schedule!");
         }else {

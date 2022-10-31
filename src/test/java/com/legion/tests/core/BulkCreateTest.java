@@ -757,8 +757,8 @@ public class BulkCreateTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify assign shift by each days")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAssignShiftByEachDaysAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -912,6 +912,10 @@ public class BulkCreateTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             scheduleCommonPage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated && scheduleShiftTablePage.getAllAvailableShiftsInWeekView().size()==0) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
@@ -1838,7 +1842,9 @@ public class BulkCreateTest extends TestBase {
                         workRoleOfNewShift.equalsIgnoreCase(workRole), false);
                 SimpleUtils.assertOnFail("The new shift's hrs display incorrectly, the expected is:"+ shiftHrsOfNewShift
                                 + " the actual is: "+ shiftHrs,
-                        shiftHrsOfNewShift.equalsIgnoreCase(shiftHrs) || shiftHrsOfNewShift.equalsIgnoreCase("24.5 Hrs"), false);
+                        shiftHrsOfNewShift.equalsIgnoreCase(shiftHrs)
+                                || shiftHrsOfNewShift.equalsIgnoreCase("24.5 Hrs")
+                                || shiftHrsOfNewShift.equalsIgnoreCase("26 Hrs"), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

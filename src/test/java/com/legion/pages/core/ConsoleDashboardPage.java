@@ -493,8 +493,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	@Override
-	public HashMap<String, String> getUpComingShifts() throws Exception {
-		HashMap<String, String> shifts = new HashMap<>();
+	public Map<String, String> getUpComingShifts() throws Exception {
+		Map<String, String> shifts = new IdentityHashMap<>();
 		String name = null;
 		String role = null;
 		if (areListElementVisible(upComingShifts, 15)) {

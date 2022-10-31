@@ -39,7 +39,7 @@ public interface ScheduleShiftTablePage {
     public WebElement clickOnProfileIconOfShiftInDayView(String openOrNot) throws Exception;
     public String getTheShiftInfoByIndexInDayview(int index) throws Exception;
     public void verifySearchResult (String firstNameOfTM, String lastNameOfTM, String workRole, String jobTitle, List<WebElement> searchResults) throws Exception;
-    public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception;
+    public void verifyUpComingShiftsConsistentWithSchedule(Map<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception;
     public void verifyNewShiftsAreShownOnSchedule(String name) throws Exception;
     public List<Integer> getAddedShiftIndexes(String name) throws Exception;
     public boolean areShiftsPresent() throws Exception;
