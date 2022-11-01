@@ -564,6 +564,144 @@ public class ScheduleSeniorityTest extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Cosimo")
 	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the visibility of seniority column under searching tab")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifySeniorityAlwaysDisplayOnSearchingDialogAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			//Go to the Scheduling Policy page
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+			SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+			locationsPage.clickOnLocationsTab();
+			locationsPage.goToSubLocationsInLocationsPage();
+			locationsPage.searchLocation(location);
+			SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+			locationsPage.clickOnLocationInLocationResult(location);
+			locationsPage.clickOnConfigurationTabOfLocation();
+			HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+			configurationPage.goToConfigurationPage();
+			configurationPage.clickOnConfigurationCrad("Scheduling Policies");
+			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+
+			//Edit the seniority toggle as Yes, save the change
+			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+			Thread.sleep(3000);
+			controlsNewUIPage.isSenioritySectionLoaded();
+			controlsNewUIPage.updateSeniorityToggle("Yes");
+			configurationPage.publishNowTheTemplate();
+			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+			Thread.sleep(10000);
+			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
+			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"), false);
+			Thread.sleep(200000);
+			switchToConsoleWindow();
+
+			//Back to Schedule page
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			//Catch one random shift
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			String firstNameOfTM = null;
+			String workRole = null;
+			if (isActiveWeekGenerated) {
+				List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+				firstNameOfTM = shiftInfo.get(0);
+				int shiftCount1 = 0;
+				while ((firstNameOfTM.equalsIgnoreCase("open")
+						|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+					shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+					firstNameOfTM = shiftInfo.get(0);
+					shiftCount1++;
+				}
+				workRole = shiftInfo.get(4);
+			}
+
+			//Create an open shift, then assign it to the TMs
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			scheduleCommonPage.clickOnDayView();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.deleteAllShiftsInDayView();
+			scheduleMainPage.saveSchedule();
+
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			scheduleMainPage.saveSchedule();
+			scheduleMainPage.publishOrRepublishSchedule();
+			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+			shiftOperatePage.clickOnOfferTMOption();
+			newShiftPage.searchText(firstNameOfTM);
+			SimpleUtils.assertOnFail("The Seniority Column is not displayed on searching dialog!", shiftOperatePage.isSeniorityColumnLoaded(), false);
+			newShiftPage.emptySearchBox();
+			newShiftPage.clickSearchIcon();
+			SimpleUtils.assertOnFail("The Seniority Column is not displayed on searching dialog!", shiftOperatePage.isSeniorityColumnLoaded(), false);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			shiftOperatePage.deleteAllShiftsInDayView();
+			scheduleMainPage.saveSchedule();
+
+			//Create a new shift which using the TM name & role above, check the Seniority Column
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchText(firstNameOfTM);
+			newShiftPage.clickClearAssignmentsLink();
+			SimpleUtils.assertOnFail("The Seniority Column is not displayed on searching dialog!", shiftOperatePage.isSeniorityColumnLoaded(), false);
+			newShiftPage.emptySearchBox();
+			SimpleUtils.assertOnFail("The Seniority Column is not displayed on searching dialog!", shiftOperatePage.isSeniorityColumnLoaded(), false);
+			newShiftPage.searchTeamMemberByName(firstNameOfTM);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+
+			//Pick up the created shift, assign it to other TM, check the Seniority Column
+			scheduleMainPage.clickOnOpenSearchBoxButton();
+			scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+			shiftOperatePage.clickonAssignTM();
+			newShiftPage.searchText(firstNameOfTM);
+			newShiftPage.clickClearAssignmentsLink();
+			SimpleUtils.assertOnFail("The Seniority Column is not displayed on searching dialog!", shiftOperatePage.isSeniorityColumnLoaded(), false);
+			newShiftPage.emptySearchBox();
+			SimpleUtils.assertOnFail("The Seniority Column is not displayed on searching dialog!", shiftOperatePage.isSeniorityColumnLoaded(), false);
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
 	@TestName(description = "Validate the Seniority on TM recommend dialog when toggle is on")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifySeniorityDisplayWhenToggleTurnOnForRecommendAsInternalAdmin(String username, String password, String browser, String location)
