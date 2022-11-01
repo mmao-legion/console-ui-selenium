@@ -277,6 +277,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.report("Search input box displays!");
             textSearch.clear();
         }else if(isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+            SimpleUtils.report("Search input box displays!");
             textSearchOnNewCreateShiftPage.clear();
         }else {
             SimpleUtils.fail("Search input box is not loaded!",false);
