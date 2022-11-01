@@ -1262,6 +1262,7 @@ public class BulkDeleteNEditTest extends TestBase {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
 
+            scheduleMainPage.selectShiftTypeFilterByText("Assigned");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             HashSet<Integer> indexes = scheduleShiftTablePage.verifyCanSelectMultipleShifts(2);

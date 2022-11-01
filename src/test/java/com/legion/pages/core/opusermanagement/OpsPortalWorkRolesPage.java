@@ -315,13 +315,19 @@ public class OpsPortalWorkRolesPage extends BasePage {
     }
 
     public void inputWorkRoleDetail(String workRole, int displayOrder) throws Exception {
-        if (isElementLoaded(workRoleNameInput, 3) && isElementLoaded(workRoleClassSelect, 3) &&
-        isElementLoaded(hourlyRateInput, 3) && isElementLoaded(displayOrderInput, 3)) {
+        if (isElementLoaded(workRoleNameInput, 3) && isElementLoaded(workRoleClassSelect, 3)
+                && isElementLoaded(displayOrderInput, 3)) {
             workRoleNameInput.clear();
             workRoleNameInput.sendKeys(workRole);
             selectByVisibleText(workRoleClassSelect, "Deployed");
-            hourlyRateInput.clear();
-            hourlyRateInput.sendKeys("1");
+            try {
+                if (isElementLoaded(hourlyRateInput, 3)) {
+                    hourlyRateInput.clear();
+                    hourlyRateInput.sendKeys("1");
+                }
+            } catch (Exception e) {
+                // Do nothing
+            }
             displayOrderInput.clear();
             displayOrderInput.sendKeys(String.valueOf(displayOrder));
             clickTheElement(saveBtnOnDetails);
