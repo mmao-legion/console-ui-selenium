@@ -271,6 +271,28 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(className = "week-day-multi-picker-day")
     private List<WebElement> weekDays;
 
+    @Override
+    public void emptySearchBox() throws Exception {
+        if (isElementLoaded(textSearch, 10)) {
+            SimpleUtils.report("Search input box displays!");
+            textSearch.clear();
+        }else if(isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+            textSearchOnNewCreateShiftPage.clear();
+        }else {
+            SimpleUtils.fail("Search input box is not loaded!",false);
+        }
+    }
+
+    @Override
+    public void clickSearchIcon() throws Exception {
+        if (isElementLoaded(searchIcon, 10)) {
+            SimpleUtils.report("Search icon displays!");
+            clickTheElement(searchIcon);
+        }else{
+            SimpleUtils.fail("Search icon is not loaded!",false);
+        }
+    }
+
     public void verifySelectTeamMembersOption() throws Exception {
         waitForSeconds(3);
         if (isElementLoaded(selectRecommendedOption, 20)) {
@@ -1508,6 +1530,22 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);
         }
         return newSelectedTMs;
+    }
+
+    @FindBy(css = ".sc-gPgohB.dvZVRA")
+    List<WebElement> recommendedTMsOnCreation;
+    @Override
+    public boolean isRecommendedTabHasTMs() throws Exception {
+        boolean  recommendedTabHasTMs = true;
+        if (areListElementVisible(recommendedTMs, 10) && !(recommendedTMs.get(0).getText().equalsIgnoreCase("No result found"))) {
+            SimpleUtils.report("Recommended tab on Shift Assign dialog is not empty!");
+        } else if(areListElementVisible(recommendedTMsOnCreation, 10) && !(recommendedTMsOnCreation.get(0).getText().equalsIgnoreCase("No result found"))){
+            SimpleUtils.report("Recommended tab on Shift Creation dialog is not empty!");
+        }else{
+            SimpleUtils.report("Recommended tab is empty!");
+            recommendedTabHasTMs = false;
+        }
+        return recommendedTabHasTMs;
     }
 
 
