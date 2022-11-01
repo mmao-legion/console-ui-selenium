@@ -3948,10 +3948,10 @@ public class DragAndDropTest extends TestBase {
                 case 4: accessRole = AccessRoles.CustomerAdmin.getValue();break;
             }
             //Verify the shifts can be created by new UI by original SM access role
-            System.out.println("Will login as: "+ accessRole);
+            SimpleUtils.pass("Will login as: "+ accessRole);
             loginAsDifferentRole(accessRole);
             bulkDragAndDropByDifferentAccessRoles();
-            loginPage.logOut();
+//            loginPage.logOut();
 
 //            //Verify the shifts can be created by new UI by original TL access role
 //            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
