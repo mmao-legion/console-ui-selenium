@@ -1336,7 +1336,12 @@ public class UserManagementTest extends TestBase {
 
             userManagementPage.verifyBothEmployeeAndAnnouncementDisplay();
             userManagementPage.verifyAnnouncementBlankInfo();
-            userManagementPage.addAnnouncement();
+
+            SimpleDateFormat an = new SimpleDateFormat("yyyyMMddHHmmss");
+            String announcementName = "AutoCreate" + an.format(new Date());
+
+            userManagementPage.addAnnouncement(announcementName);
+            userManagementPage.searcchAccouncement(announcementName);
             userManagementPage.updateAccouncement();
             userManagementPage.deleteAnnouncement();
         } catch (Exception e) {

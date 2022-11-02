@@ -2043,7 +2043,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	@FindBy(css = "form-section[form-title='Announcement']>ng-transclude>content-box>ng-transclude>lg-global-dynamic-group-table>lg-paged-search-new>div>ng-transclude>table>tbody>tr>td>div>div>lg-button")
 	private WebElement updateAccouncementIcon;
 
-	public void addAnnouncement() throws Exception{
+	public void addAnnouncement(String accouncementName) throws Exception{
 		click(addAnnouncement);
 
 		if(addAnnouncementPopUpTitle.getAttribute("innerText").contains("Manage Dynamic Announcement Group"))
@@ -2052,7 +2052,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		else
 			SimpleUtils.fail("Add announcement pop up title is wrong",false);
 
-		announcementGroupName.sendKeys("AutoCreate");
+		announcementGroupName.sendKeys(accouncementName);
 		click(criteria);
 		click(getDriver().findElement(By.cssSelector("div[title = 'Work Role']")));
 		click(select);
@@ -2069,7 +2069,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		else
 			SimpleUtils.fail("Update announcement pop up title is wrong",false);
 
-		announcementGroupName.sendKeys("AutoCreateUpdate");
+		announcementGroupName.sendKeys("Update");
 		click(okBtnInCreateNewsFeedGroupPage);
 	}
 
@@ -2083,6 +2083,22 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			SimpleUtils.fail("Delete announcement pop up title is wrong",false);
 
 		click(removeJobTitleButton);
+	}
+
+	@FindBy(css = "form-section[form-title='Announcement']>ng-transclude>content-box>ng-transclude>lg-global-dynamic-group-table>lg-paged-search-new>div>lg-tab-toolbar>div>div>lg-search>input-field>ng-form>input")
+	private WebElement searchAccouncement;
+
+	public void searcchAccouncement(String accouncementName) throws Exception{
+		if(isElementLoaded(searchAccouncement,5)){
+			scrollToBottom();
+			searchAccouncement.sendKeys(accouncementName);
+			searchAccouncement.sendKeys(Keys.ENTER);
+			if(isElementLoaded(getDriver().findElement(By.cssSelector("form-section[form-title='Announcement']>ng-transclude>content-box>ng-transclude>lg-global-dynamic-group-table>lg-paged-search-new>div>ng-transclude>table>tbody>tr>td[title=\"" + accouncementName + "\"]")))){
+				SimpleUtils.pass("Search accouncement successfully");
+			}else
+				SimpleUtils.fail("Search accouncement failed",false);
+		}else
+			SimpleUtils.fail("Search accouncement input field doesn't display",false);
 	}
 }
 

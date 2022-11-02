@@ -186,9 +186,11 @@ public interface UserManagementPage {
 
     public void verifyAnnouncementBlankInfo() throws Exception;
 
-    public void addAnnouncement() throws Exception;
+    public void addAnnouncement(String accouncementName) throws Exception;
 
     public void updateAccouncement() throws Exception;
 
     public void deleteAnnouncement() throws Exception;
+
+    public void searcchAccouncement(String accouncementName) throws Exception;
 }
