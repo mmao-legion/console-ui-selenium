@@ -2363,7 +2363,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             if (areListElementVisible(warningMessagesInSwap, 15) && warningMessagesInSwap.size() > 0) {
                 for (int i = 0; i < warningMessagesInSwap.size(); i++) {
                     SimpleUtils.pass("The warning message is : "+warningMessagesInSwap.get(i).getText().toLowerCase());
-                    if (warningMessagesInSwap.get(i).getText().toLowerCase().contains(expectedMessage.toLowerCase())) {
+                    if (warningMessagesInSwap.get(i).getText().toLowerCase().replace("\\-", "").contains(expectedMessage.toLowerCase().replace("\\-", ""))) {
                         canFindTheExpectedMessage = true;
                         SimpleUtils.pass("The expected message can be find successfully");
                         break;
