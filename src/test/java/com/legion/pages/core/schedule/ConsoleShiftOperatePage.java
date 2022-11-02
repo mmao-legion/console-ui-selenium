@@ -1585,6 +1585,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 durations = restBreakDurations;
             }
             moveDayViewCards(durations.get(0), offset);
+        } else {
+            clickTheElement(addMealBreakButton);
         }
     }
 

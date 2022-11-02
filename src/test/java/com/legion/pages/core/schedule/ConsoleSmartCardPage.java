@@ -585,7 +585,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     public boolean isSpecificSmartCardLoaded(String cardName) throws Exception {
         boolean isLoaded = false;
         waitForSeconds(15);
-        if (areListElementVisible(smartCards, 15)) {
+        if (areListElementVisible(smartCards, 35)) {
             for (WebElement smartCard : smartCards) {
                 WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
                 if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {
