@@ -527,7 +527,6 @@ public class UserManagementTest extends TestBase {
             //log in with user has contorl manage job title permission
             loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+admin@legion.co", "admin11.a","verifyMock");
             RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
-            rightHeaderBarPage.switchToConsole();
             ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
             consoleNavigationPage.searchLocation("ClearDistrict");
             consoleNavigationPage.navigateTo("Controls");
