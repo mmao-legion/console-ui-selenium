@@ -2422,7 +2422,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.report("No shifts on the day for the TM: " + name);
             }
         } else {
-            SimpleUtils.fail("No shifts on the day",false);
+            SimpleUtils.fail("No shifts on the day: "+ indexOfDay,false);
         }
         return shiftsOfOneTM;
     }
