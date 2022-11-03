@@ -1312,8 +1312,8 @@ public class BulkCreateTest extends TestBase {
                 }
             }
             newShiftPage.clickOnCreateOrNextBtn();
-            scheduleMainPage.saveSchedule();
             Thread.sleep(5000);
+            scheduleMainPage.saveSchedule();
             for (int i =0; i< 7; i++) {
                 List<WebElement> openShiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(i, "Open");
                 SimpleUtils.assertOnFail("The open shift is not exist on the " +i +" day! ",
@@ -1392,8 +1392,8 @@ public class BulkCreateTest extends TestBase {
             MyThreadLocal.setAssignTMStatus(false);
             String offeredTM = newShiftPage.selectTeamMembers();
             newShiftPage.clickOnCreateOrNextBtn();
-            scheduleMainPage.saveSchedule();
             Thread.sleep(5000);
+            scheduleMainPage.saveSchedule();
             List<WebElement> openShiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, "Open");
             SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
                     openShiftsOfOneDay.size()==1, false);
