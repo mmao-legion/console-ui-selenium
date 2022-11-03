@@ -184,6 +184,8 @@ public interface UserManagementPage {
 
     public void verifyBothEmployeeAndAnnouncementDisplay() throws Exception;
 
+    public void verifyOnlyAnnouncementDisplay() throws Exception;
+
     public void verifyAnnouncementBlankInfo() throws Exception;
 
     public void addAnnouncement(String accouncementName) throws Exception;
@@ -192,5 +194,7 @@ public interface UserManagementPage {
 
     public void deleteAnnouncement() throws Exception;
 
-    public void searcchAccouncement(String accouncementName) throws Exception;
+    public void searchAccouncement(String accouncementName) throws Exception;
+
+    public void verifyDynamicSmartCartNotDispaly() throws Exception;
 }

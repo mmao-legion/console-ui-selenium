@@ -2,6 +2,7 @@ package com.legion.pages.core.OpsPortal;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
+import com.legion.tests.TestBase;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.openqa.selenium.*;
@@ -2009,10 +2010,21 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	private WebElement announcement;
 
 	public void verifyBothEmployeeAndAnnouncementDisplay() throws Exception{
+		waitForSeconds(300);
+		TestBase.refreshPage();
 		if(isElementLoaded(dynamicEmployee) && isElementLoaded(announcement))
 			SimpleUtils.pass("Employee and announcement both display");
 		else
 			SimpleUtils.fail("Employee and announcement doesn't display",false);
+	}
+
+	public void verifyOnlyAnnouncementDisplay() throws Exception{
+		waitForSeconds(300);
+		TestBase.refreshPage();
+		if(isElementLoaded(dynamicEmployee))
+			SimpleUtils.pass("Only announcement display");
+		else
+			SimpleUtils.fail("Announcement doesn't display only",false);
 	}
 
 	@FindBy(css = "form-section:nth-child(2) > ng-transclude > content-box > ng-transclude > lg-global-dynamic-group-table > lg-paged-search-new > div > ng-transclude > div")
@@ -2088,7 +2100,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	@FindBy(css = "form-section[form-title='Announcement']>ng-transclude>content-box>ng-transclude>lg-global-dynamic-group-table>lg-paged-search-new>div>lg-tab-toolbar>div>div>lg-search>input-field>ng-form>input")
 	private WebElement searchAccouncement;
 
-	public void searcchAccouncement(String accouncementName) throws Exception{
+	public void searchAccouncement(String accouncementName) throws Exception{
 		if(isElementLoaded(searchAccouncement,5)){
 			scrollToBottom();
 			searchAccouncement.sendKeys(accouncementName);
@@ -2099,6 +2111,19 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 				SimpleUtils.fail("Search accouncement failed",false);
 		}else
 			SimpleUtils.fail("Search accouncement input field doesn't display",false);
+	}
+
+	@FindBy(css = "div.lg-page-heading__breadcrumbs>a")
+	private WebElement back;
+
+	public void verifyDynamicSmartCartNotDispaly() throws Exception{
+		click(back);
+		waitForSeconds(300);
+		TestBase.refreshPage();
+		if(isElementLoaded(dynamicGroupCardAccouncement))
+			SimpleUtils.fail("Dynamic smart card display",false);
+		else
+			SimpleUtils.pass("Dynamic smart card doesn't display");
 	}
 }
 
