@@ -364,6 +364,7 @@ public class ScheduleAcknowledgementTest extends TestBase {
             SimpleUtils.assertOnFail("The pending employee count display incorrectly, the expected is: "
                             + (pendingEmployeeCountBeforeAcknowledge-1) + ". The actual is: "+pendingEmployeeCountAfterAcknowledge,
                     pendingEmployeeCountAfterAcknowledge == (pendingEmployeeCountBeforeAcknowledge-1) , false);
+            loginPage.logOut();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
