@@ -1,5 +1,8 @@
 package com.legion.tests.core.OpsPortal;
 
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
+import com.legion.pages.*;
 import com.legion.pages.LoginPage;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
@@ -1328,6 +1331,10 @@ public class UserManagementTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAnnouncementAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.enableToggle(Toggles.ShowAnnouncementGroupOP.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+
+            BasePage.waitForSeconds(300);
             //go to User Management Dynamic Employee Groups
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
             userManagementPage.clickOnUserManagementTab();
@@ -1341,9 +1348,26 @@ public class UserManagementTest extends TestBase {
             String announcementName = "AutoCreate" + an.format(new Date());
 
             userManagementPage.addAnnouncement(announcementName);
-            userManagementPage.searcchAccouncement(announcementName);
+            userManagementPage.searchAccouncement(announcementName);
             userManagementPage.updateAccouncement();
             userManagementPage.deleteAnnouncement();
+
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+
+            userManagementPage.verifyOnlyAnnouncementDisplay();
+
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.disableToggle(Toggles.ShowAnnouncementGroupOP.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+
+            userManagementPage.verifyOnlyAnnouncementDisplay();
+
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+
+            userManagementPage.verifyDynamicSmartCartNotDispaly();
+
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+
+            BasePage.waitForSeconds(180);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
