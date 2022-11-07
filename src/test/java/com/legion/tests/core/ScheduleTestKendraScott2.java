@@ -7286,7 +7286,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				SimpleUtils.assertOnFail("Scheduling Policies Page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
 				controlsNewUIPage.clickOnGlobalLocationButton();
 				controlsNewUIPage.enableOverRideAssignmentRuleAsNo();
-				Thread.sleep(10000);
+				Thread.sleep(5000);
 			} else {
 				//Go to OP page
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -7399,7 +7399,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("The Role Violation message on the Assign page is not expected!", realRoleVioMessage.contains(roleVioMessage), false);
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
 			String alertMessage1 = "This assignment will trigger a role violation";
-			String alertMessage2 = firstNameOfTM2 + " can not take a " + workRole1 + " shift";
+			String alertMessage2 = " can not take a " + workRole1 + " shift";
 			String realAlertMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
 			boolean isCorrect = realAlertMessage.contains(alertMessage1) && realAlertMessage.contains(alertMessage2);
 			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", isCorrect, false);
@@ -7409,7 +7409,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
 			boolean okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
 			int count1 = 0;
-			while(okBtnLoad && count1 < 5){
+			while(okBtnLoad && count1 < 3){
 				scheduleShiftTablePage.clickOnOkButtonInWarningMode();
 				Thread.sleep(3000);
 				okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
@@ -7417,11 +7417,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				continue;
 			}
 			Thread.sleep(3000);
-
 			shiftOperatePage.clickOnCloseBtnOfAssignDialog();
+
 			boolean closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
 			int count2 = 0;
-			while(closeBtnLoad && count2 < 5){
+			while(closeBtnLoad && count2 < 3){
 				shiftOperatePage.clickOnCloseBtnOfAssignDialog();
 				Thread.sleep(3000);
 				closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
