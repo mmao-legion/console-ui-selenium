@@ -361,10 +361,13 @@ public class ScheduleAcknowledgementTest extends TestBase {
             pendingEmployeeCountBeforeAcknowledge = smartCardPage.getCountFromSmartCardByName("SCHEDULE ACKNOWLEDGEMENT");
             loginAsTMAndAcknowledgeTheNotification(action);
             pendingEmployeeCountAfterAcknowledge = smartCardPage.getCountFromSmartCardByName("SCHEDULE ACKNOWLEDGEMENT");
-            SimpleUtils.assertOnFail("The pending employee count display incorrectly, the expected is: "
-                            + (pendingEmployeeCountBeforeAcknowledge-1) + ". The actual is: "+pendingEmployeeCountAfterAcknowledge,
-                    pendingEmployeeCountAfterAcknowledge == (pendingEmployeeCountBeforeAcknowledge-1) , false);
-            loginPage.logOut();
+//            SimpleUtils.assertOnFail("The pending employee count display incorrectly, the expected is: "
+//                            + (pendingEmployeeCountBeforeAcknowledge-1) + ". The actual is: "+pendingEmployeeCountAfterAcknowledge,
+//                     , false);
+            if (pendingEmployeeCountAfterAcknowledge == (pendingEmployeeCountBeforeAcknowledge-1)) {
+                SimpleUtils.pass("The pending employee count display correctly! ");
+            } else
+                SimpleUtils.fail("The pending employee count display incorrectly, the expected is: ", false);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
