@@ -2042,6 +2042,8 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 
 	@FindBy(css = "form-section:nth-child(2) > ng-transclude > content-box > ng-transclude > lg-global-dynamic-group-table > div > div.col-sm-2.templateAssociation_action.gray > lg-button > button > img")
 	private WebElement addAnnouncement;
+	@FindBy(css = "form-section:nth-child(1) > ng-transclude > content-box > ng-transclude > lg-global-dynamic-group-table > div > div.col-sm-2.templateAssociation_action.gray > lg-button > button > img")
+	private WebElement addAnnouncementForOnlyOneDisplay;
 	@FindBy(css = "input[aria-label='Group Name']")
 	private WebElement announcementGroupName;
 	@FindBy(css = "div.lg-modal__title-icon.ng-binding")
@@ -2057,6 +2059,23 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 
 	public void addAnnouncement(String accouncementName) throws Exception{
 		click(addAnnouncement);
+
+		if(addAnnouncementPopUpTitle.getAttribute("innerText").contains("Manage Dynamic Announcement Group"))
+			SimpleUtils.pass("Add announcement pop up title is correct");
+
+		else
+			SimpleUtils.fail("Add announcement pop up title is wrong",false);
+
+		announcementGroupName.sendKeys(accouncementName);
+		click(criteria);
+		click(getDriver().findElement(By.cssSelector("div[title = 'Work Role']")));
+		click(select);
+		click(checkBox);
+		click(okBtnInCreateNewsFeedGroupPage);
+	}
+
+	public void addAnnouncementForOnlyOneDisplay(String accouncementName) throws Exception{
+		click(addAnnouncementForOnlyOneDisplay);
 
 		if(addAnnouncementPopUpTitle.getAttribute("innerText").contains("Manage Dynamic Announcement Group"))
 			SimpleUtils.pass("Add announcement pop up title is correct");

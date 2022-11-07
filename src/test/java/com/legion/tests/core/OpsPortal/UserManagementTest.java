@@ -1356,6 +1356,11 @@ public class UserManagementTest extends TestBase {
 
             userManagementPage.verifyOnlyAnnouncementDisplay();
 
+            userManagementPage.addAnnouncementForOnlyOneDisplay(announcementName);
+            userManagementPage.searchAccouncement(announcementName);
+            userManagementPage.updateAccouncement();
+            userManagementPage.deleteAnnouncement();
+
             ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             ToggleAPI.disableToggle(Toggles.ShowAnnouncementGroupOP.getValue(), "jane.meng+006@legion.co", "P@ssword123");
 
