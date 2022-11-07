@@ -1657,6 +1657,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 		locationSearchBox.sendKeys(Keys.ENTER);
 		waitForSeconds(2);
 		click(locationCheckBox);
+		scrollToElement(addBtn);
 		click(addBtn);
 		click(okBtnInCreateNewJobPage);
 		click(createBtn);

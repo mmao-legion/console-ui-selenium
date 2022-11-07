@@ -39,7 +39,7 @@ import java.util.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 
-public class DemandDriverTest extends ConfigurationTest {
+public class DemandDriverTest extends TestBase {
 
     public enum modelSwitchOperation{
         Console("Console"),

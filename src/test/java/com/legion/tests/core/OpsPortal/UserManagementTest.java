@@ -1,6 +1,9 @@
 package com.legion.tests.core.OpsPortal;
 
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
+import com.legion.pages.LoginPage;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
@@ -14,13 +17,11 @@ import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.pages.core.OpCommons.RightHeaderBarPage;
 import com.legion.pages.core.opusermanagement.*;
 import com.legion.pages.core.schedule.ConsoleScheduleCommonPage;
-import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
-import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.Constants;
 import com.legion.utils.HttpUtil;
@@ -32,8 +33,6 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static com.legion.utils.MyThreadLocal.getDriver;
 
 
 public class UserManagementTest extends TestBase {
@@ -296,8 +295,9 @@ public class UserManagementTest extends TestBase {
         //employment type  Hourly/Salary - Eligible for Overtime/Salary - No Overtime
         ArrayList<String> empType = new ArrayList<String>();
         empType.add("Hourly");
-        empType.add("Salary - Eligible for Overtime");
-        empType.add("Salary - No Overtime");
+        empType.add("Salaried");
+        /*empType.add("Salary - Eligible for Overtime");
+        empType.add("Salary - No Overtime");*/
         List<String> empType1 = dynamicEmployeePage.getCriteriaValues("Employment Type");
         Assert.assertTrue(empType1.size() == empType.size() && empType1.containsAll(empType), "The Employment Type value validate failed!");
 
@@ -1331,6 +1331,10 @@ public class UserManagementTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAnnouncementAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.enableToggle(Toggles.ShowAnnouncementGroupOP.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+
+            BasePage.waitForSeconds(300);
             //go to User Management Dynamic Employee Groups
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
             userManagementPage.clickOnUserManagementTab();
@@ -1339,9 +1343,36 @@ public class UserManagementTest extends TestBase {
 
             userManagementPage.verifyBothEmployeeAndAnnouncementDisplay();
             userManagementPage.verifyAnnouncementBlankInfo();
-            userManagementPage.addAnnouncement();
+
+            SimpleDateFormat an = new SimpleDateFormat("yyyyMMddHHmmss");
+            String announcementName = "AutoCreate" + an.format(new Date());
+
+            userManagementPage.addAnnouncement(announcementName);
+            userManagementPage.searchAccouncement(announcementName);
             userManagementPage.updateAccouncement();
             userManagementPage.deleteAnnouncement();
+
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+
+            userManagementPage.verifyOnlyAnnouncementDisplay();
+
+            userManagementPage.addAnnouncementForOnlyOneDisplay(announcementName);
+            userManagementPage.searchAccouncement(announcementName);
+            userManagementPage.updateAccouncement();
+            userManagementPage.deleteAnnouncement();
+
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.disableToggle(Toggles.ShowAnnouncementGroupOP.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+
+            userManagementPage.verifyOnlyAnnouncementDisplay();
+
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+
+            userManagementPage.verifyDynamicSmartCartNotDispaly();
+
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+
+            BasePage.waitForSeconds(180);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
