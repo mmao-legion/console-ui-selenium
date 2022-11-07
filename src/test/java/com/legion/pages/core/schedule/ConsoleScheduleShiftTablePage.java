@@ -3586,7 +3586,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public void verifyTheContentOnBulkActionMenu(int selectedShiftCount) throws Exception {
         if (isElementLoaded(bulkActionMenu, 5) && bulkActionMenu.getText().contains(String.valueOf(selectedShiftCount))
-        && bulkActionMenu.getText().contains("Shifts Selected") && bulkActionMenu.getText().contains("Delete")) {
+        && (bulkActionMenu.getText().contains("Shifts Selected") || bulkActionMenu.getText().contains("Shift Selected") ) && bulkActionMenu.getText().contains("Delete")) {
             SimpleUtils.pass("The content on bulk action menu is correct!");
         } else {
             SimpleUtils.fail("The content on bulk action menu is incorrect!", false);
