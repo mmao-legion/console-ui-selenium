@@ -1040,7 +1040,7 @@ public class ConfigurationTest extends TestBase {
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Schedule Policy")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyTimeOffInSchedulePolicyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String action = "Archive";

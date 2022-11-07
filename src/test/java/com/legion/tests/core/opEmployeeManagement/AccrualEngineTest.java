@@ -2021,7 +2021,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "OPS-4801 Filter accrual rules by work role")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyWorkRoleAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
         //get session id via login
         //String sessionId = logIn();
