@@ -27,7 +27,8 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         EndTime("End Time"),
         Date("Date"),
         Assignment("Assignment"),
-        ShiftNotes("Shift Notes");
+        ShiftNotes("Shift Notes"),
+        Breaks("Breaks");
         private final String type;
         sectionType(final String newType){
             type = newType;
@@ -106,7 +107,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public void verifyTheTitleOfEditShiftsWindow(int selectedShiftCount, String startOfWeek) throws Exception {
-        String expectedTitle = "Edit " + selectedShiftCount + " Shift" + (selectedShiftCount == 0 ? "" : "s") + ": Week of "
+        String expectedTitle = "Edit " + selectedShiftCount + " Shift" + (selectedShiftCount == 0 || selectedShiftCount == 1 ? "" : "s") + ": Week of "
                 + startOfWeek;
         if (isElementLoaded(windowTitle, 5) && windowTitle.getText().trim().equalsIgnoreCase(expectedTitle)) {
             SimpleUtils.pass("The title of the Edit Shift window is correct: " + expectedTitle);
@@ -642,10 +643,279 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
                 } else if (type.equals(sectionType.ShiftNotes.getType())) {
                     element = gridContainers.get(8).findElement(By.cssSelector(selector));
                 }
+            }else if (gridContainers.size() == 10) {
+                if (type.equals(sectionType.WorkRole.getType())) {
+                    element = gridContainers.get(1).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.ShiftName.getType())) {
+                    element = gridContainers.get(2).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.StartTime.getType())) {
+                    element = gridContainers.get(3).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.EndTime.getType())) {
+                    element = gridContainers.get(4).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.Breaks.getType())) {
+                    element = gridContainers.get(5).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.Date.getType())) {
+                    element = gridContainers.get(7).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.Assignment.getType())) {
+                    element = gridContainers.get(8).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.ShiftNotes.getType())) {
+                    element = gridContainers.get(9).findElement(By.cssSelector(selector));
+                }
+            }else if (gridContainers.size() == 11) {
+                if (type.equals(sectionType.WorkRole.getType())) {
+                    element = gridContainers.get(1).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.ShiftName.getType())) {
+                    element = gridContainers.get(2).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.Location.getType())) {
+                    element = gridContainers.get(3).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.StartTime.getType())) {
+                    element = gridContainers.get(4).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.EndTime.getType())) {
+                    element = gridContainers.get(5).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.Breaks.getType())) {
+                    element = gridContainers.get(6).findElement(By.cssSelector(selector));
+                }else if (type.equals(sectionType.Date.getType())) {
+                    element = gridContainers.get(8).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.Assignment.getType())) {
+                    element = gridContainers.get(9).findElement(By.cssSelector(selector));
+                } else if (type.equals(sectionType.ShiftNotes.getType())) {
+                    element = gridContainers.get(10).findElement(By.cssSelector(selector));
+                }
             }
         } else {
             SimpleUtils.fail("Shift Details section failed to load!", false);
         }
         return element;
+    }
+
+    @FindBy (css = "#edit-shift-react form>div:nth-child(1)>div")
+    private WebElement shiftInfoCard;
+    @FindBy (css = "#edit-shift-react form>div:nth-child(1)>div span.MuiTypography-caption")
+    private WebElement employeeInfo;
+    @Override
+    public void verifyShiftInfoCard(List<String> shiftInfo) throws Exception {
+        if (isElementLoaded(shiftInfoCard, 3)) {
+            SimpleUtils.pass("The shift info card of the Single Edit Shift window is loaded! ");
+            String firstName = shiftInfo.get(0);
+            String lastName = shiftInfo.get(5);
+            String workRole = shiftInfo.get(4);
+            String jobTitle = shiftInfo.get(3);
+            String shiftTime = shiftInfo.get(6);
+            String shiftHours = shiftInfo.get(8);
+
+            //Check the Avatar is display
+            WebElement avatar = shiftInfoCard.findElement(By.cssSelector(".MuiAvatar-circular [alt=\""+firstName+" "+ lastName +"\"]"));
+            if (isElementLoaded(avatar, 3)) {
+                SimpleUtils.pass("The avatar on shift info card loaded successfully! ");
+            } else
+                SimpleUtils.fail("The avatar on shift info card fail to load! ", false);
+            //Check TM name, job title, work role
+            if (isElementLoaded(employeeInfo, 3)) {
+                SimpleUtils.pass("The section of employee info loaded successfully! ");
+                String employeeAllInfo = employeeInfo.getText();
+                String employeeFirstName = employeeAllInfo.split("\\(")[0].trim().split(" ")[0].trim();
+                String shiftWorkRole = employeeAllInfo.substring(employeeAllInfo.indexOf("(")+1, employeeAllInfo.indexOf(")")).trim();
+                String employeeJobTitle = employeeAllInfo.split("\\n")[employeeAllInfo.split("\\n").length-1].trim();
+                //https://legiontech.atlassian.net/browse/SCH-8165
+//                if (employeeFirstName.equalsIgnoreCase(firstName)
+//                        && shiftWorkRole.equalsIgnoreCase(workRole)
+//                        && employeeJobTitle.equalsIgnoreCase(jobTitle)) {
+//                    SimpleUtils.pass("The employee name, work role, job title display correctly on shift info card! ");
+//                } else
+//                    SimpleUtils.fail("The expected info are: "
+//                            + firstName+ ", "
+//                            + workRole+ ", "
+//                            + jobTitle+ ". The actual are:"
+//                            + employeeFirstName + ", "
+//                            + shiftWorkRole + ", "
+//                            + employeeJobTitle, false);
+                List<WebElement> shiftTimeAndHrs = shiftInfoCard.findElements(By.tagName("p"));
+                if (areListElementVisible(shiftTimeAndHrs, 3)&& shiftTimeAndHrs.size() == 2) {
+                    String shiftTimeOnShiftCard = shiftTimeAndHrs.get(0).getText();
+                    String shiftHrsOnShiftCard = shiftTimeAndHrs.get(1).getText();
+                    //Check shift time
+                    //Check shift hours
+                    //https://legiontech.atlassian.net/browse/SCH-8164
+//                    if (shiftTimeOnShiftCard.replace(" ", "").replace("–","").equalsIgnoreCase(shiftTime.replace(" ", "").replace("-", ""))
+//                            && shiftHrsOnShiftCard.equalsIgnoreCase(shiftHours)) {
+//                        SimpleUtils.pass("The shift time and shift hours display correctly on shift info card! ");
+//                    } else
+//                        SimpleUtils.fail("The expected info are: "
+//                                + shiftTime+ " "
+//                                + shiftHours+" The actual are:"
+//                                + shiftTimeOnShiftCard + " "
+//                                + shiftHrsOnShiftCard, false);
+                }
+
+            } else
+                SimpleUtils.fail("The section of employee info fail to load! ", false);
+
+
+        } else {
+            SimpleUtils.fail("The shift info card of the Single Edit Shift window is fail to load! ", false);
+        }
+    }
+
+    @Override
+    public void verifyTheContentOfOptionsSectionIsNotLoaded () throws Exception {
+        if (!isElementLoaded(optionsSection, 3)) {
+            SimpleUtils.pass("The content on options section is not loaded on single edit shift page!");
+        } else {
+            SimpleUtils.fail("The content on options section should no loaded on single edit shift page!", false);
+        }
+    }
+
+
+    @Override
+    public void verifyEditableTypesShowOnSingleEditShiftDetail() throws Exception {
+        if (areListElementVisible(gridContainers, 3)) {
+            if (gridContainers.size() == 10) {
+                if (gridContainers.get(1).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Work Role")
+                        && gridContainers.get(2).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Name")
+                        && gridContainers.get(3).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Start Time")
+                        && gridContainers.get(4).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("End Time")
+                        && gridContainers.get(5).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Breaks")
+                        && gridContainers.get(7).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Date")
+                        && gridContainers.get(8).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Assignment")
+                        && gridContainers.get(9).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Notes")) {
+                    SimpleUtils.pass("'Work Role', 'Shift Name', 'Start Time', 'End Time', 'Breaks', 'Date', 'Assignment', 'Shift Notes' " +
+                            "sections are loaded successfully!");
+                } else {
+                    SimpleUtils.fail("Sections on Shift Details is incorrect!", false);
+                }
+            } else if (gridContainers.size() == 11) {
+                if (gridContainers.get(1).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Work Role")
+                        && gridContainers.get(2).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Name")
+                        && gridContainers.get(3).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Location")
+                        && gridContainers.get(4).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Start Time")
+                        && gridContainers.get(5).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("End Time")
+                        && gridContainers.get(6).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Breaks")
+                        && gridContainers.get(8).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Date")
+                        && gridContainers.get(9).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Assignment")
+                        && gridContainers.get(10).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Notes")) {
+                    SimpleUtils.pass("'Work Role', 'Shift Name', 'Location', 'Start Time', 'End Time', 'Breaks', 'Date', 'Assignment', 'Shift Notes' " +
+                            "sections are loaded successfully for Location Group!");
+                } else {
+                    SimpleUtils.fail("Sections on Shift Details is incorrect!", false);
+                }
+            }
+        } else {
+            SimpleUtils.fail("Shift Details section failed to load!", false);
+        }
+    }
+
+
+    @Override
+    public void verifyTheTextInCurrentColumnOnSingleEditShiftPage(String type, String value) throws Exception {
+        WebElement gridRow = null;
+        if (areListElementVisible(gridContainers, 3)) {
+            if (gridContainers.size() == 10) {
+                if (type.equals(sectionType.WorkRole.getType())) {
+                    gridRow = gridContainers.get(1);
+                } else if (type.equals(sectionType.ShiftName.getType())) {
+                    gridRow = gridContainers.get(2);
+                } else if (type.equals(sectionType.StartTime.getType())) {
+                    gridRow = gridContainers.get(3);
+                } else if (type.equals(sectionType.EndTime.getType())) {
+                    gridRow = gridContainers.get(4);
+                } else if (type.equals(sectionType.Breaks.getType())) {
+                    gridRow = gridContainers.get(5);
+                } else if (type.equals(sectionType.Date.getType())) {
+                    gridRow = gridContainers.get(7);
+                } else if (type.equals(sectionType.Assignment.getType())) {
+                    gridRow = gridContainers.get(8);
+                } else if (type.equals(sectionType.ShiftNotes.getType())) {
+                    gridRow = gridContainers.get(9);
+                }
+            } else if (gridContainers.size() == 11) {
+                if (type.equals(sectionType.WorkRole.getType())) {
+                    gridRow = gridContainers.get(1);
+                } else if (type.equals(sectionType.Location.getType())) {
+                    gridRow = gridContainers.get(2);
+                } else if (type.equals(sectionType.ShiftName.getType())) {
+                    gridRow = gridContainers.get(3);
+                } else if (type.equals(sectionType.StartTime.getType())) {
+                    gridRow = gridContainers.get(4);
+                } else if (type.equals(sectionType.EndTime.getType())) {
+                    gridRow = gridContainers.get(5);
+                } else if (type.equals(sectionType.Breaks.getType())) {
+                    gridRow = gridContainers.get(6);
+                }else if (type.equals(sectionType.Date.getType())) {
+                    gridRow = gridContainers.get(8);
+                } else if (type.equals(sectionType.Assignment.getType())) {
+                    gridRow = gridContainers.get(9);
+                } else if (type.equals(sectionType.ShiftNotes.getType())) {
+                    gridRow = gridContainers.get(10);
+                }
+            }
+            if (type.equals(sectionType.Assignment.getType())){
+                String employeeNameOfAvatar = gridRow.findElement(By.tagName("img")).getAttribute("alt");
+                if (employeeNameOfAvatar.equalsIgnoreCase(value)) {
+                    SimpleUtils.pass("Verified for " + type + ", the value is correct!");
+                } else
+                    SimpleUtils.fail("Verified for " + type + ", the value is incorrect! Expected: " + value +
+                            ", But actual is: "+employeeNameOfAvatar, false);
+            }else if (type.equals(sectionType.Breaks.getType())) {
+                if (gridRow.findElement(By.cssSelector(".MuiGrid-item:nth-child(2)")).getText().contains(value.split(" and ")[0])
+                        && gridRow.findElement(By.cssSelector(".MuiGrid-item:nth-child(2)")).getText().contains(value.split(" and ")[1])) {
+                    SimpleUtils.pass("Verified for " + type + ", the value is correct!");
+                } else {
+                    SimpleUtils.fail("Verified for " + type + ", the value is incorrect! Expected: " + value +
+                            ", But actual is: " + gridRow.findElement(By.cssSelector(".MuiGrid-item:nth-child(2)")).getText().trim(), false);
+                }
+            }else {
+                if (gridRow.findElement(By.cssSelector(".MuiGrid-item:nth-child(2)")).getText().trim().equalsIgnoreCase(value)) {
+                    SimpleUtils.pass("Verified for " + type + ", the value is correct!");
+                } else {
+                    SimpleUtils.fail("Verified for " + type + ", the value is incorrect! Expected: " + value +
+                            ", But actual is: " + gridRow.findElement(By.cssSelector(".MuiGrid-item:nth-child(2)")).getText().trim(), false);
+                }
+            }
+        } else {
+            SimpleUtils.fail("Shift Details section failed to load!", false);
+        }
+    }
+
+
+    @FindBy (css = ".MuiGrid-spacing-xs-2 >div:nth-child(1) [data-testid=\"CancelRoundedIcon\"]")
+    private List<WebElement> removeMealBreakButtons;
+    @FindBy (css = ".MuiGrid-spacing-xs-2 >div:nth-child(1) [data-testid=\"AddOutlinedIcon\"]")
+    private WebElement addMealBreakButtons;
+    @FindBy (css = ".MuiGrid-spacing-xs-2 >div:nth-child(2) [data-testid=\"CancelRoundedIcon\"]")
+    private List<WebElement> removeRestBreakButtons;
+    @FindBy (css = ".MuiGrid-spacing-xs-2 >div:nth-child(2) [data-testid=\"AddOutlinedIcon\"]")
+    private WebElement addRestBreakButtons;
+
+    @Override
+    public void removeAllMealBreaks() {
+        if (areListElementVisible(removeMealBreakButtons, 3)){
+            for (WebElement button: removeMealBreakButtons) {
+                scrollToElement(button);
+                click(button);
+                SimpleUtils.pass("Click the meal break button successfully! ");
+            }
+            if (areListElementVisible(removeMealBreakButtons, 3)) {
+                SimpleUtils.fail("Remove all meal breaks fail, there still have "+removeMealBreakButtons.size()+" left", false);
+            } else
+                SimpleUtils.pass("Remove all meal breaks successfully! ");
+        } else
+            SimpleUtils.report("There is no meal break buttons! ");
+    }
+
+
+    @Override
+    public void removeAllRestBreaks() {
+        if (areListElementVisible(removeRestBreakButtons, 3)){
+            for (WebElement button: removeRestBreakButtons) {
+                scrollToElement(button);
+                click(button);
+                SimpleUtils.pass("Click the rest break button successfully! ");
+            }
+            if (areListElementVisible(removeRestBreakButtons, 3)) {
+                SimpleUtils.fail("Remove all rest breaks fail, there still have "+removeRestBreakButtons.size()+" left", false);
+            } else
+                SimpleUtils.pass("Remove all rest breaks successfully! ");
+        } else
+            SimpleUtils.report("There is no rest break buttons! ");
     }
 }
