@@ -2503,7 +2503,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(className = "lgn-action-button-success")
     private WebElement okBtnInWarningMode;
 
-    @FindBy(className = "lgn-action-button-success")
+    @FindBy(css = ".lgn-action-button-success")
     private WebElement okBtnOnConfirm;
     @FindBy(css = ".MuiDialogContent-root p")
     private List<WebElement> warningMessagesInWarningModeOnNewCreaeShiftPage;
