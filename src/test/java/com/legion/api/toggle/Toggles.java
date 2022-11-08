@@ -12,7 +12,9 @@ public enum Toggles {
     ScheduleEditShiftTimeNew( "ScheduleEditShiftTimeNew"),
     EnableTahoeStorage("EnableTahoeStorage"),
     EnableLongTermBudgetPlan("EnableLongTermBudgetPlan"),
-    ShowAnnouncementGroupOP("ShowAnnouncementGroupOP");
+    ShowAnnouncementGroupOP("ShowAnnouncementGroupOP"),
+    UseDemandDriverTemplateSwitch("UseDemandDriverTemplateSwitch"),
+    EnableChangeLocationGroupSetting("EnableChangeLocationGroupSetting");
     private final String value;
 
     Toggles(final String newValue) {
