@@ -30,11 +30,14 @@ public class RightHeaderBarPage extends BasePage {
     //profile
     @FindBy(css = "div.header-avatar.ng-scope>img")
     private WebElement userAvatar;
-    @FindBy(css = "div.header-user-switch-menu>ul>li:nth-child(2)")
+    //@FindBy(css = "div.header-user-switch-menu>ul>li:nth-child(2)")
+    @FindBy(id = "legion_Profile_MyProfile")
     private WebElement myProfile;
-    @FindBy(css = "div.header-user-switch-menu>ul>li:nth-child(3)")
+    //@FindBy(css = "div.header-user-switch-menu>ul>li:nth-child(3)")
+    @FindBy(id = "legion_Profile_MyWorkPrefs")
     private WebElement workPreferences;
-    @FindBy(css = "div.header-user-switch-menu>ul>li:nth-child(4)")
+    //@FindBy(css = "div.header-user-switch-menu>ul>li:nth-child(4)")
+    @FindBy(id = "legion_Profile_MyTimeOff")
     private WebElement timeOff;
 
 
