@@ -11,8 +11,9 @@ public enum Toggles {
     MealAndRestTemplate("MealAndRestTemplate"),
     ScheduleEditShiftTimeNew( "ScheduleEditShiftTimeNew"),
     EnableTahoeStorage("EnableTahoeStorage"),
-    EnableLongTermBudgetPlan("EnableLongTermBudgetPlan");
-
+    EnableLongTermBudgetPlan("EnableLongTermBudgetPlan"),
+    UseDemandDriverTemplateSwitch("UseDemandDriverTemplateSwitch"),
+    EnableChangeLocationGroupSetting("EnableChangeLocationGroupSetting");
     private final String value;
 
     Toggles(final String newValue) {
