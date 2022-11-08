@@ -13,7 +13,6 @@ public enum Toggles {
     EnableTahoeStorage("EnableTahoeStorage"),
     EnableLongTermBudgetPlan("EnableLongTermBudgetPlan"),
     ShowAnnouncementGroupOP("ShowAnnouncementGroupOP");
-
     private final String value;
 
     Toggles(final String newValue) {
