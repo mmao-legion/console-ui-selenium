@@ -175,4 +175,6 @@ public interface ScheduleShiftTablePage {
     public void verifySwapBtnIsEnabledOnDragAndDropConfirmPage() throws Exception;
     public void verifyAssignBtnIsEnabledOnDragAndDropConfirmPage() throws Exception;
     public boolean isOkButtonInWarningModeLoaded() throws Exception;
+    public void bulkEditTMShiftsInWeekView(String teamMemberName) throws Exception;
+    public ArrayList getErrorMessageOfTime() throws Exception;
 }

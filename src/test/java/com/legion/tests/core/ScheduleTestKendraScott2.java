@@ -7304,7 +7304,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				configurationPage.clickOnConfigurationCrad("Scheduling Policies");
 				configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 				configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-				Thread.sleep(3000);
+				Thread.sleep(10000);
 				controlsNewUIPage.enableOverRideAssignmentRuleAsNoForOP();
 				configurationPage.publishNowTheTemplate();
 				Thread.sleep(240000);
