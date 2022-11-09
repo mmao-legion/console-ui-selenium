@@ -114,33 +114,6 @@ public class ConfigurationTest extends TestBase {
         }
     }
 
-    // Blocked by https://legiontech.atlassian.net/browse/OPS-4223
-    @Automated(automated = "Automated")
-    @Owner(owner = "Lizzy")
-    @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "Verify Create Each Template with Dynamic Group Association ")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
-    public void verifyCreateEachTemplateWithDynamicGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        try{
-            String OHtemplate = "Operating Hours";
-            //scheduling rules is not included as some exception, will added later
-            String[] tempType={"Operating Hours","Scheduling Policies","Schedule Collaboration","Compliance","Communications","Time & Attendance"};
-            String templateNameVerify = "LizzyUsingToCreateTempTest";
-            String dynamicGpNameTempTest = "LZautoTestDyGpName";
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            //create other types of templates
-            for(String type:tempType){
-                configurationPage.goToConfigurationPage();
-                configurationPage.clickOnConfigurationCrad(type);
-                configurationPage.createTmpAndPublishAndArchive(type,templateNameVerify,dynamicGpNameTempTest);
-            }
-
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-    }
-
-
     @Automated(automated = "Automated")
     @Owner(owner = "Lizzy")
     @Enterprise(name = "Op_Enterprise")
@@ -2474,6 +2447,30 @@ public class ConfigurationTest extends TestBase {
             configurationPage.advanceStaffingRuleDynamicGroupDialogUICheck(dynamicGpName);
             //edit delete dynamic group
             configurationPage.advanceStaffingRuleEditDeleteADynamicGroup(dynamicGpName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Create Each Template with Dynamic Group Association ")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateEachTemplateWithDynamicGroupAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime=dfs.format(new Date()).trim();
+            String templateNameVerify="LizzyUsingToCreateTempTest"+currentTime;
+            String[] tempType={"Operating Hours","Scheduling Policies","Schedule Collaboration","Compliance","Time & Attendance","Scheduling Rules"};
+            String dynamicGpNameTempTest = "LZautoTestDyGpName"+currentTime;
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            //create other types of templates
+            for(String type:tempType){
+                configurationPage.goToConfigurationPage();
+                configurationPage.clickOnConfigurationCrad(type);
+                configurationPage.createTmpAndPublishAndArchive(type,templateNameVerify,dynamicGpNameTempTest);
+            }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
