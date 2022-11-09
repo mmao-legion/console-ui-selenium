@@ -4420,7 +4420,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             SimpleUtils.fail("Group by Location: The action popup fail to load!! ", false);
         return buttonNames;
     }
-    
+
     @FindBy(css = "[ng-class=\"hideItem('staffing.guidance')\"]")
     private WebElement staffSmartCard;
     @Override
@@ -4531,31 +4531,5 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.report("There is no shift for :"+teamMemberName+" !");
         }else
             SimpleUtils.report("Schedule Week View: shifts load failed or there is no shift in this week");
-    }
-
-    @FindBy(css = "#shiftStart-helper-text")
-    private WebElement startTimeErrorMessage;
-    @FindBy(css = "#shiftEnd-helper-text")
-    private WebElement endTimeErrorMessage;
-    @Override
-    public ArrayList getErrorMessageOfTime() throws Exception {
-        List<String> errorMessages = new ArrayList<>();
-        if (isElementLoaded(startTimeErrorMessage, 5) && !(isElementLoaded(endTimeErrorMessage, 5))) {
-            waitForSeconds(1);
-            errorMessages.add(0, startTimeErrorMessage.getText().trim());
-            SimpleUtils.report("Catch the error message of Start Time!");
-        }
-        else if (isElementLoaded(endTimeErrorMessage, 5) && !(isElementLoaded(startTimeErrorMessage, 5))) {
-            waitForSeconds(1);
-            errorMessages.add(0, endTimeErrorMessage.getText().trim());
-            SimpleUtils.report("Catch the error message of End Time!");
-        }
-        else if (isElementLoaded(startTimeErrorMessage, 5) && isElementLoaded(endTimeErrorMessage, 5)) {
-            waitForSeconds(1);
-            errorMessages.add(0, startTimeErrorMessage.getText().trim());
-            errorMessages.add(1, endTimeErrorMessage.getText().trim());
-            SimpleUtils.report("Catch the error message of Start Time & End Time!");
-        }
-        return (ArrayList) errorMessages;
     }
 }

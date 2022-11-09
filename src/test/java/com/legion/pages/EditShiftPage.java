@@ -1,5 +1,6 @@
 package com.legion.pages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface EditShiftPage {
@@ -33,4 +34,5 @@ public interface EditShiftPage {
     public void verifyTheFunctionalityOfOffsetTime(String hours, String mins, String earlyOrLate, boolean isStartTimeSection) throws Exception;
     public void checkOrUnCheckNextDayOnBulkEditPage(boolean isCheck) throws Exception;
     public void checkOrUncheckOptionsByName(String optionName, boolean isCheck) throws Exception;
+    public ArrayList getErrorMessageOfTime() throws Exception;
 }

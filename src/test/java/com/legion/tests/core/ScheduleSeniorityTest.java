@@ -197,8 +197,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			Thread.sleep(10000);
 			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
 			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("No"),false);
-			Thread.sleep(200000);
+			Thread.sleep(180000);
 			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
 
 			//Back to Schedule page
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -329,8 +330,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			Thread.sleep(10000);
 			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
 			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("No"),false);
-			Thread.sleep(240000);
+			Thread.sleep(180000);
 			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
 
 			//Back to Schedule page
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -469,8 +471,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			Thread.sleep(10000);
 			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
 			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"),false);
-			Thread.sleep(240000);
+			Thread.sleep(180000);
 			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
 
 			//Back to Schedule page
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -600,8 +603,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			Thread.sleep(10000);
 			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
 			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"), false);
-			Thread.sleep(200000);
+			Thread.sleep(180000);
 			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
 
 			//Back to Schedule page
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -738,8 +742,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			Thread.sleep(10000);
 			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
 			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"),false);
-			Thread.sleep(200000);
+			Thread.sleep(180000);
 			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
 
 			//Back to Schedule page
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -1132,8 +1137,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			controlsNewUIPage.updateSeniorityToggle("Yes");
 			controlsNewUIPage.selectSortOfSeniority("Descending");
 			configurationPage.publishNowTheTemplate();
-			Thread.sleep(240000);
+			Thread.sleep(180000);
 			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
 
 			//Create a schedule if there is no any
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
