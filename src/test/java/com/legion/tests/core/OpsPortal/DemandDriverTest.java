@@ -107,7 +107,7 @@ public enum modelSwitchOperation{
             forecastPage.clickForecast();
             salesForecastPage.navigateToSalesForecastTab();
             SimpleUtils.assertOnFail("The newly added category not exist in forecast page!",
-                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryName), false);
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", categoryName), false);
 
             //edit the category in settings
             switchToNewWindow();
@@ -116,7 +116,7 @@ public enum modelSwitchOperation{
             switchToNewWindow();
             refreshPage();
             SimpleUtils.assertOnFail("The edited category not exist in forecast page!",
-                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryEditName), false);
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", categoryEditName), false);
 
             //remove the category in settings
             switchToNewWindow();
@@ -125,7 +125,7 @@ public enum modelSwitchOperation{
             switchToNewWindow();
             refreshPage();
             SimpleUtils.assertOnFail("The removed edited category should not display in forecast page!",
-                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", "categoryEditName"), false);
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", "categoryEditName"), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -166,6 +166,7 @@ public enum modelSwitchOperation{
             scheduleCommonPage.goToSchedulePage();
             forecastPage.clickForecast();
             salesForecastPage.navigateToSalesForecastTab();
+            refreshPage();
             SimpleUtils.assertOnFail("The newly added channel not exist in forecast page!",
                     salesForecastPage.verifyChannelOrCategoryExistInForecastPage(verifyType, channelName), false);
 
@@ -1053,7 +1054,7 @@ public enum modelSwitchOperation{
             }
             for (int i = 0; i < categoryNameList.size(); i++){
                 SimpleUtils.assertOnFail("The category " + categoryNameList.get(i) + " should show up in forecast page!",
-                        salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryNameList.get(i)), false);
+                        salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", categoryNameList.get(i)), false);
             }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

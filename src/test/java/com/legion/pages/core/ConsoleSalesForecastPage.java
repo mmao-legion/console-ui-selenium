@@ -442,7 +442,7 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 	public boolean verifyChannelOrCategoryExistInForecastPage(String filterType, String filteryName) throws Exception {
 		WebElement filterLabel;
 		boolean isExisting = false;
-		if (isElementLoaded(filterButton,10)) {
+		if (isElementLoaded(filterButton,20)) {
 			if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
 				click(filterButton);
 			for (WebElement FilterElement : FilterElements) {
