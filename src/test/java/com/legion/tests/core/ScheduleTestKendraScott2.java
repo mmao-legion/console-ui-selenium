@@ -7307,12 +7307,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				Thread.sleep(10000);
 				controlsNewUIPage.enableOverRideAssignmentRuleAsNoForOP();
 				configurationPage.publishNowTheTemplate();
-				Thread.sleep(240000);
+				Thread.sleep(180000);
 				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
 					//Back to the console page
 					switchToConsoleWindow();
 				}
 			}
+			refreshCachesAfterChangeTemplate();
 
 			//Go to the schedule view table
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
