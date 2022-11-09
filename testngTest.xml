@@ -1,42 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="10" name="LegionTest">
+<suite verbose ="0" thread-count="5" name="LegionTest" parallel="tests">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
-    <parameter name="testRailRunName" value="Automation PR Code Check"/>
+    <parameter name="testRailRunName" value="Automation Ephemeral Debug"/>
 
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-    <test name="Schedule Copy Test">
+    <test name="Consolidating Filters Test">
         <classes>
-            <class name="com.legion.tests.core.ScheduleCopyTest">
+            <class name="com.legion.tests.core.ConsolidatingFiltersTest">
                 <methods>
-                    <include name="verifyTheContentOnCreateSchedulePageInWeekViewAsInternalAdmin" />
-                    <include name="verifyTheEnhancedCopyModalForNonDgFlowAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfCopyingASuggestedScheduleAsInternalAdmin" />
+                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
     </test>
 
-    <test name="Delete Schedule Test">
+    <test name="Overnight Test">
         <classes>
-            <class name="com.legion.tests.core.DeleteScheduleTest">
+            <class name="com.legion.tests.core.OvernightTest">
                 <methods>
-                    <include name="verifySMDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />
-                    <include name="verifyAdminDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />
+                    <include name="verifyShiftCanBeDragToPreviousDayAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
     </test>
 
-    <test name="Controls New UI Test">
+    <test name="Parent Child LG Test">
         <classes>
-            <class name="com.legion.tests.core.ControlsNewUITest">
+            <class name="com.legion.tests.core.ParentChildLGTest">
                 <methods>
-                    <include name="verifySmartCopyConfigsInNonOPNotWorkingAsInternalAdmin" />
+                    <include name="verifyTheContentOnMultipleEditShiftsWindowForPCAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Bulk Delete and Edit Test">
+        <classes>
+            <class name="com.legion.tests.core.BulkDeleteNEditTest">
+                <methods>
+                    <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Upperfield Test">
+        <classes>
+            <class name="com.legion.tests.core.UpperfieldTest">
+                <methods>
+                    <include name="verifyScheduleStatusOnScheduleInRegionViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Work Role Test">
+        <classes>
+            <class name="com.legion.tests.core.WorkRoleTest">
+                <methods>
+                    <include name="verifyFunctionalityOfDisplayOrderAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

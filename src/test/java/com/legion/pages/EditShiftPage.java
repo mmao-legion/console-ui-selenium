@@ -34,5 +34,11 @@ public interface EditShiftPage {
     public void verifyTheFunctionalityOfOffsetTime(String hours, String mins, String earlyOrLate, boolean isStartTimeSection) throws Exception;
     public void checkOrUnCheckNextDayOnBulkEditPage(boolean isCheck) throws Exception;
     public void checkOrUncheckOptionsByName(String optionName, boolean isCheck) throws Exception;
+    public void verifyShiftInfoCard(List<String> shiftInfo) throws Exception;
+    public void verifyTheContentOfOptionsSectionIsNotLoaded () throws Exception;
+    public void verifyEditableTypesShowOnSingleEditShiftDetail() throws Exception;
+    public void verifyTheTextInCurrentColumnOnSingleEditShiftPage(String type, String value) throws Exception;
+    public void removeAllMealBreaks();
+    public void removeAllRestBreaks();
     public ArrayList getErrorMessageOfTime() throws Exception;
 }

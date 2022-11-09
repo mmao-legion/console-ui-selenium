@@ -2363,7 +2363,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             if (areListElementVisible(warningMessagesInSwap, 15) && warningMessagesInSwap.size() > 0) {
                 for (int i = 0; i < warningMessagesInSwap.size(); i++) {
                     SimpleUtils.pass("The warning message is : "+warningMessagesInSwap.get(i).getText().toLowerCase());
-                    if (warningMessagesInSwap.get(i).getText().toLowerCase().contains(expectedMessage.toLowerCase())) {
+                    if (warningMessagesInSwap.get(i).getText().toLowerCase().replace("\\-", "").contains(expectedMessage.toLowerCase().replace("\\-", ""))) {
                         canFindTheExpectedMessage = true;
                         SimpleUtils.pass("The expected message can be find successfully");
                         break;
@@ -2422,7 +2422,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.report("No shifts on the day for the TM: " + name);
             }
         } else {
-            SimpleUtils.fail("No shifts on the day",false);
+            SimpleUtils.fail("No shifts on the day: "+ indexOfDay,false);
         }
         return shiftsOfOneTM;
     }
@@ -2503,7 +2503,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(className = "lgn-action-button-success")
     private WebElement okBtnInWarningMode;
 
-    @FindBy(className = "lgn-action-button-success")
+    @FindBy(css = ".lgn-action-button-success")
     private WebElement okBtnOnConfirm;
     @FindBy(css = ".MuiDialogContent-root p")
     private List<WebElement> warningMessagesInWarningModeOnNewCreaeShiftPage;
@@ -3586,7 +3586,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public void verifyTheContentOnBulkActionMenu(int selectedShiftCount) throws Exception {
         if (isElementLoaded(bulkActionMenu, 5) && bulkActionMenu.getText().contains(String.valueOf(selectedShiftCount))
-        && bulkActionMenu.getText().contains("Shifts Selected") && bulkActionMenu.getText().contains("Delete")) {
+        && (bulkActionMenu.getText().contains("Shifts Selected") || bulkActionMenu.getText().contains("Shift Selected") ) && bulkActionMenu.getText().contains("Delete")) {
             SimpleUtils.pass("The content on bulk action menu is correct!");
         } else {
             SimpleUtils.fail("The content on bulk action menu is incorrect!", false);

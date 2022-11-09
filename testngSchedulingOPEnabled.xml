@@ -603,6 +603,7 @@ SCH-5862-->
             <class name="com.legion.tests.core.ScheduleTemplateTest">
                 <methods>
                     <include name="validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin" />
+                    <include name="verifyTMCanAcknowledgeTheNotificationAfterScheduleTemplateLocationAsTeamMember" />
                 </methods>
             </class>
         </classes>
@@ -659,6 +660,7 @@ SCH-5862-->
                     <include name="verifyEditOperatingHoursForLGAsInternalAdmin" />
                     <include name="verifyEditOperatingHoursFunctionForLGAsInternalAdmin" />
                     <include name="verifyChangingLocationForPCOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <!--<include name="verifyEmployeeCanAcknowledgeTheNotificationForLGAsStoreManager" />  https://legiontech.atlassian.net/browse/SCH-7939-->
                 </methods>
             </class>
         </classes>
@@ -730,6 +732,21 @@ SCH-5862-->
                 <methods>
                     <include name="verifyTMCanAcknowledgeTheNotificationAfterPublishTheScheduleAsTeamMember" />
                     <include name="verifySMCanAcknowledgeTheNotificationAfterPublishTheScheduleAsStoreManager" />
+                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterEditShiftsAsTeamMember" />
+                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterDragAndDropShiftsAsTeamMember" />
+                    <include name="verifyEmployeeCanAcknowledgeTheNotificationFromNonHomeLocationWhenHomeScheduleIsPublishedAsTeamMemberOtherLocation1" />
+                    <include name="verifyEmployeeCanAcknowledgeTheNotificationFromNonHomeLocationWhenHomeScheduleIsNotPublishedAsTeamMemberOtherLocation1" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Single Shift Edit Test">
+        <classes>
+            <class name="com.legion.tests.core.SingleShiftEditTest">
+                <methods>
+                    <include name="verifyTheContentOnSingleEditShiftsWindowForRegularLocationAsInternalAdmin" />
+                    <include name="verifyTheCurrentColumnOnSingleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
