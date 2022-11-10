@@ -1,5 +1,6 @@
 package com.legion.pages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface EditShiftPage {
@@ -39,4 +40,5 @@ public interface EditShiftPage {
     public void verifyTheTextInCurrentColumnOnSingleEditShiftPage(String type, String value) throws Exception;
     public void removeAllMealBreaks();
     public void removeAllRestBreaks();
+    public ArrayList getErrorMessageOfTime() throws Exception;
 }

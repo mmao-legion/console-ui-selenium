@@ -582,6 +582,7 @@ SCH-5862-->
 <!--                    <include name="verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7592/>-->
                     <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
+<!--                    <include name="verifyErrorMessageOfStartAndEndTimeOnBulkEditAsInternalAdmin" />  Not merged into RC env  -->
                 </methods>
             </class>
         </classes>
@@ -596,7 +597,7 @@ SCH-5862-->
             </class>
         </classes>
     </test>
-    
+
     <test name="Schedule Template Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleTemplateTest">
