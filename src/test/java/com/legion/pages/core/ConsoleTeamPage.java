@@ -5108,26 +5108,10 @@ private List<WebElement> locationColumn;
 		}
 	}
 
-	@FindBy (css = "[ng-if=\"canViewWorkPreferences()\"] [class=\"collapsible-title-text\"]")
-	private WebElement myWorkPreferenceTab;
 	@FindBy (css = "[class*=\"select-wrapper ng-scope\"] select")
 	private WebElement averageAgreementList;
 	@FindBy (css = "[class=\"receiveOffers\"] [class*=\"averagingagreement\"]")
 	private WebElement averageAgreementText;
-	@Override
-	public void navigateToMyWorkPreferencePage() throws Exception {
-		if (isElementLoaded(myWorkPreferenceTab, 5)) {
-			click(myWorkPreferenceTab);
-			if (isElementLoaded(editShiftPreferButton, 15)) {
-				SimpleUtils.pass("Navigate to My Work Preference page Successfully!");
-			}else {
-				SimpleUtils.fail("My Work Preference page not loaded Successfully!", true);
-			}
-		}else {
-			SimpleUtils.fail("My Work Preference tab title not loaded Successfully!", true);
-		}
-	}
-
 	@Override
 	public void selectAverageAgreement(String optionValue) throws Exception {
 		if (isElementLoaded(averageAgreementList, 10)){

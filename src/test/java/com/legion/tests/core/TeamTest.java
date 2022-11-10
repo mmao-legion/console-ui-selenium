@@ -503,18 +503,27 @@ public class TeamTest extends TestBase{
 
 			//Go to the Team page
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			teamPage.goToTeam();
 			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
 			teamPage.searchAndSelectTeamMemberByName(tmName);
 			teamPage.isProfilePageLoaded();
-			teamPage.navigateToMyWorkPreferencePage();
+			String workPreferencesLabel = "Work Preferences";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
 
 			//Go to My Work Preference tab, edit the tab, check the None option in the Average Agreement dropdown list
 			teamPage.clickOnEditShiftPreference();
+			teamPage.selectAverageAgreement("5 x 8");
+			teamPage.clickSaveShiftPrefBtn();
+			String averageText = "Averaging Agreement: 5 x 8";
+			SimpleUtils.assertOnFail("The Averaging Agreement is not 5 x 8!",
+					teamPage.getTextOfAverageAgreement().equalsIgnoreCase(averageText),false);
+
+			teamPage.clickOnEditShiftPreference();
 			teamPage.selectAverageAgreement("None");
 			teamPage.clickSaveShiftPrefBtn();
-			String averageText = "Averaging Agreement: None";
+			averageText = "Averaging Agreement: None";
 			SimpleUtils.assertOnFail("The Averaging Agreement is not None!",
 					teamPage.getTextOfAverageAgreement().equalsIgnoreCase(averageText),false);
 
@@ -526,7 +535,6 @@ public class TeamTest extends TestBase{
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
 			//verify the Average Agreement value is None under the My Shift Preferences section on the MyPreference page
-			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			profileNewUIPage.getNickNameFromProfile();
 			String myWorkPreferencesLabel = "My Work Preferences";
 			profileNewUIPage.selectProfilePageSubSectionByLabel(myWorkPreferencesLabel);
