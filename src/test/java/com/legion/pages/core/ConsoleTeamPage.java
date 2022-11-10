@@ -19,6 +19,7 @@ import com.legion.pages.TeamPage;
 import com.legion.tests.core.TeamTestKendraScott2.timeOffRequestAction;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.support.ui.Select;
 
 import static com.legion.utils.MyThreadLocal.*;
 
@@ -5105,5 +5106,31 @@ private List<WebElement> locationColumn;
 		} else {
 			SimpleUtils.fail("Save edit user profile button is not loaded!", false);
 		}
+	}
+
+	@FindBy (css = "[class*=\"select-wrapper ng-scope\"] select")
+	private WebElement averageAgreementList;
+	@FindBy (css = "[class=\"receiveOffers\"] [class*=\"averagingagreement\"]")
+	private WebElement averageAgreementText;
+	@Override
+	public void selectAverageAgreement(String optionValue) throws Exception {
+		if (isElementLoaded(averageAgreementList, 10)){
+			Select selectedAverageAgreement = new Select(averageAgreementList);
+			selectedAverageAgreement.selectByVisibleText(optionValue);
+			SimpleUtils.report("Select '" + optionValue + "' as the budget group");
+			waitForSeconds(2);
+		} else {
+			SimpleUtils.fail("Average Agreement section fail to load!", false);
+		}
+	}
+
+	@Override
+	public String getTextOfAverageAgreement() throws Exception {
+		String textOfAverage = null;
+		if (isElementLoaded(averageAgreementText, 10)){
+			textOfAverage = averageAgreementText.getText().trim();
+		} else {
+			SimpleUtils.fail("Average Agreement text is not displayed!", true);
+		}return textOfAverage;
 	}
 }
