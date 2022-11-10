@@ -752,13 +752,13 @@ SCH-5862-->
         </classes>
     </test>
 
-    <test name="Team Page Test">
+<!--    <test name="Team Page Test">
         <classes>
             <class name="com.legion.tests.core.TeamTest">
                 <methods>
-<!--                    <include name="verifyNoneOptionInAveragingAgreementAsInternalAdmin" />  Not merged into RC yet. -->
+                    <include name="verifyNoneOptionInAveragingAgreementAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>   Not merged into RC yet. -->
 </suite> <!-- Suite -->
