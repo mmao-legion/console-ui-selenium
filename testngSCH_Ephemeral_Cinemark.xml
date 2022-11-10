@@ -45,7 +45,6 @@
                 <methods>
                     <include name="verifyDeleteMultipleShiftsInWeekViewAsInternalAdmin" />
                     <include name="verifyTheCurrentColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
-                    <include name="verifyTheEditedColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
                 </methods>
@@ -132,7 +131,6 @@
             <class name="com.legion.tests.core.OvernightTest">
                 <methods>
                     <include name="verifyShiftWhenEnableContinuousOperationOptionAsInternalAdmin" />
-                    <include name="verifyShiftCanBeDragToPreviousDayAsInternalAdmin" />
                     <include name="verifyShiftWhenDisableContinuousOperationOptionAsInternalAdmin" />
                 </methods>
             </class>
