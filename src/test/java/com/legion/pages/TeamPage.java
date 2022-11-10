@@ -193,4 +193,7 @@ public interface TeamPage {
 	public void deleteBadges() throws Exception;
 	public void clickBadgeSaveBtn() throws Exception;
 	public void saveEditProfileBtn();
+	public void navigateToMyWorkPreferencePage() throws Exception;
+	public void selectAverageAgreement(String optionValue) throws Exception;
+	public String getTextOfAverageAgreement() throws Exception;
 }

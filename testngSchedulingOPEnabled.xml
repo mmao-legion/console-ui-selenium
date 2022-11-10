@@ -751,4 +751,14 @@ SCH-5862-->
             </class>
         </classes>
     </test>
+
+    <test name="Team Page Test">
+        <classes>
+            <class name="com.legion.tests.core.TeamTest">
+                <methods>
+                    <include name="verifyNoneOptionInAveragingAgreementAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->
