@@ -762,7 +762,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
         <classes>
             <class name="com.legion.tests.core.TeamTest">
                 <methods>
-                    <include name="verifyNoneOptionInAveragingAgreementAsInternalAdmin" />
+<!--                    <include name="verifyNoneOptionInAveragingAgreementAsInternalAdmin" />  Not merged into RC yet. -->
                 </methods>
             </class>
         </classes>
