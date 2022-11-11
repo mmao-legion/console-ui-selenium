@@ -3,6 +3,7 @@ package com.legion.pages.core.opemployeemanagement;
 import com.legion.pages.BasePage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -277,7 +278,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement jobTitleAsWAAmbassador;
     @FindBy(css = "lg-select[label='After'] lg-picker-input")
     private WebElement criteriaAfter;
-    @FindBy(css = "lg-picker-input[label='After'] div.lg-search-options__scroller>div:nth-child(1)>div")
+    @FindBy(css = "lg-picker-input[label='After'] div.lg-search-options__scroller>div:nth-child(1)")
     private WebElement jobTitleAfterPromotion;
     @FindBy(css = "inline-input+div>lg-button[label='Add More']>button")
     private WebElement criteriaAddMoreButton;
@@ -846,6 +847,7 @@ public class AbsentManagePage extends BasePage {
     }
 
     public String getPromotionModalTitle() {
+        waitForSeconds(5);
         return promotionModalTitle.getText();
     }
 
@@ -891,9 +893,8 @@ public class AbsentManagePage extends BasePage {
         criteriaAfterSearchInput.sendKeys(jobTitleSelectBefore);
         try {
             jobTitleAfterPromotion.click();
-        } catch (Exception ElementNotInteractableException) {
+        } catch (ElementNotInteractableException exception ) {
             isDisabled = true;
-
         }
         return isDisabled;
     }
