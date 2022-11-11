@@ -775,4 +775,14 @@ public abstract class TestBase {
         }
         return result;
     }
+
+    public int getCharactersCount (String str, String key) {
+        int count = 0;
+        int index = 0;
+        while((index = str.indexOf(key))!=-1){
+            str = str.substring(index+key.length());
+            count++;
+        }
+        return count;
+    }
 }
