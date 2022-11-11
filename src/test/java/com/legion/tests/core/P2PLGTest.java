@@ -2535,4 +2535,192 @@ public class P2PLGTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the content on Edit Single Shift window for P2P location group")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheContentOnEditSingleShiftWindowForP2PAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            scheduleMainPage.clickOnFilterBtn();
+            List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+            scheduleMainPage.saveSchedule();
+            String workRole = shiftOperatePage.getRandomWorkRole();
+            BasePage basePage = new BasePage();
+            String activeWeek = basePage.getActiveWeekText();
+            String startOfWeek = activeWeek.split(" ")[3] + " " + activeWeek.split(" ")[4];
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            // Verify can select single shifts by pressing Ctrl/Cmd(Mac)
+            int selectedShiftCount = 1;
+            int index = 1;
+            HashSet<Integer> set = new HashSet<>();
+            set.add(index);
+            List<String> shiftInfo= scheduleShiftTablePage.getTheShiftInfoByIndex(index);
+            List<String> selectedDays = scheduleShiftTablePage.getSelectedWorkDays(set);
+            // Verify action menu will pop up when right clicking on anywhere of the selected shifts
+            scheduleShiftTablePage.rightClickOnSelectedShifts(set);
+            scheduleShiftTablePage.verifyTheContentOnBulkActionMenu(selectedShiftCount);
+            // Verify Edit action is visible when right clicking the selected shift in week view
+            // Verify the functionality of Edit button in week view
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            // Verify the title of Edit Shifts window
+            editShiftPage.verifyTheTitleOfEditShiftsWindow(selectedShiftCount, startOfWeek);
+            // Verify the selected days show correctly
+            editShiftPage.verifyShiftInfoCard(shiftInfo);
+            // Verify the Location Name shows correctly
+            editShiftPage.verifyLocationNameShowsCorrectly(location);
+            // Verify the visibility of buttons
+            editShiftPage.verifyTheVisibilityOfButtons();
+            // Verify the content of options section
+            editShiftPage.verifyTheContentOfOptionsSectionIsNotLoaded();
+            // Verify the visibility of Clear Edited Fields button
+            SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
+            // Verify the three columns show on Shift Details section
+            editShiftPage.verifyThreeColumns();
+            // Verify the editable types show on Shift Detail section
+            editShiftPage.verifyEditableTypesShowOnSingleEditShiftDetail();
+            // Verify the functionality of x button
+            editShiftPage.clickOnXButton();
+            SimpleUtils.assertOnFail("Click on X button failed!", !editShiftPage.isEditShiftWindowLoaded(), false);
+            // Verify the functionality of Cancel button
+            scheduleShiftTablePage.rightClickOnSelectedShifts(set);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.clickOnCancelButton();
+
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
+            scheduleCommonPage.clickOnDayView();
+            String weekDay = basePage.getActiveWeekText();
+            String fullWeekDay = SimpleUtils.getFullWeekDayName(weekDay.split(" ")[0].trim());
+            selectedDays = new ArrayList<>();
+            selectedDays.add(fullWeekDay);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.selectChildLocInCreateShiftWindow(childLocationNames.get(0));
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            scheduleMainPage.saveSchedule();
+            shiftInfo = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(index);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.rightClickOnSelectedShifts(set);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            // Verify the title of Edit Shifts window in day view
+            editShiftPage.verifyTheTitleOfEditShiftsWindow(selectedShiftCount, startOfWeek);
+            // Verify the selected days show correctly in day view
+            editShiftPage.verifyShiftInfoCard(shiftInfo);
+            // Verify the Location Name shows correctly in day view
+            editShiftPage.verifyLocationNameShowsCorrectly(location);
+            // Verify the visibility of buttons in day view
+            editShiftPage.verifyTheVisibilityOfButtons();
+            // Verify the content of options section in day view
+            editShiftPage.verifyTheContentOfOptionsSectionIsNotLoaded();
+            // Verify the visibility of Clear Edited Fields button in day view
+            SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
+            // Verify the three columns show on Shift Details section in day view
+            editShiftPage.verifyThreeColumns();
+            // Verify the editable types show on Shift Detail section in day view
+            editShiftPage.verifyEditableTypesShowOnSingleEditShiftDetail();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of changing location when selecting single shift on P2P LG")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingLocationForP2POnSingleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+            ArrayList<HashMap<String,String>> childLocations = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            List<String> locations = new ArrayList<>();
+            for (int i = 0; i < childLocations.size(); i++) {
+                locations.add(childLocations.get(i).get("optionName"));
+            }
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<String> shiftInfoList1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(0);
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            // Verify the child locations listed in the Location selector
+            editShiftPage.clickOnLocationSelect();
+            List<String> actualLocations = editShiftPage.getOptionsFromSpecificSelect();
+            for (int i = 0; i < locations.size(); i++) {
+                if (!locations.get(i).toLowerCase().trim().equalsIgnoreCase(actualLocations.get(i).toLowerCase().trim())) {
+                    SimpleUtils.fail("Child location list is incorrect!", false);
+                    break;
+                }
+            }
+            // Verify can change the location without selecting the two options
+            editShiftPage.selectSpecificOptionByText(actualLocations.get(1));
+            editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+            // Verify the shifts are moved to the selected child location
+            scheduleMainPage.selectGroupByFilter(actualLocations.get(1));
+            SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
+                    scheduleShiftTablePage.getOneDayShiftByName(0, shiftInfoList1.get(0)).size() == 1, false);
+            // Verify the shifts are saved successfully
+            scheduleMainPage.saveSchedule();
+            SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
+                    scheduleShiftTablePage.getOneDayShiftByName(0, shiftInfoList1.get(0)).size() == 1, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

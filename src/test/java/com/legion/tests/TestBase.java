@@ -766,4 +766,13 @@ public abstract class TestBase {
         adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.TemplateAssociation.getValue());
         adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.LocationBrokerContainer.getValue());
     }
+
+    //added by Mary. 09:00AM-->9:00am
+    public String changeTimeFormat(String time) throws Exception{
+        String result = time;
+        if (result.indexOf("0")==0){
+            result = result.substring(1).toLowerCase();
+        }
+        return result;
+    }
 }

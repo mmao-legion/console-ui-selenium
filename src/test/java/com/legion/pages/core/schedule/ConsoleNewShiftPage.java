@@ -2549,7 +2549,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             } else
                 SimpleUtils.fail("The New Create Shift page fail to close! ", false);
         } else
-            SimpleUtils.fail("The Close icon is not loaded on New Create Shift page! ", false);
+            SimpleUtils.report("The Close icon is not loaded on New Create Shift page! ");
     }
 
     @FindBy(xpath = "//div[contains(@id,'legion_cons_schedule_schedule_createshift_WorkRole_menu')]/following-sibling::p")

@@ -1,6 +1,8 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.schedule.ConsoleEditShiftPage;
 import com.legion.tests.TestBase;
@@ -8,6 +10,7 @@ import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
@@ -16,6 +19,8 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
 import java.util.*;
+
+import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class SingleShiftEditTest extends TestBase {
     private DashboardPage dashboardPage;
@@ -30,6 +35,7 @@ public class SingleShiftEditTest extends TestBase {
     private ControlsNewUIPage controlsNewUIPage;
     private MySchedulePage mySchedulePage;
     private BasePage basePage;
+    private SmartCardPage smartCardPage;
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{
@@ -49,6 +55,7 @@ public class SingleShiftEditTest extends TestBase {
             controlsNewUIPage = pageFactory.createControlsNewUIPage();
             mySchedulePage = pageFactory.createMySchedulePage();
             basePage = new BasePage();
+            smartCardPage = pageFactory.createSmartCardPage();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -163,7 +170,7 @@ public class SingleShiftEditTest extends TestBase {
 
 
     @Automated(automated ="Automated")
-    @Owner(owner = "Nora")
+    @Owner(owner = "Mary")
 //    @Enterprise(name = "Vailqacn_Enterprise")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the functionality of Current and Edit column when selecting single shifts")
@@ -266,6 +273,1120 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.verifyTheTextInCurrentColumnOnSingleEditShiftPage(ConsoleEditShiftPage.sectionType.Assignment.getType(), firstName+ " "+lastName);
             // Verify the original shift note will show when input new shift note
             editShiftPage.verifyTheTextInCurrentColumnOnSingleEditShiftPage(ConsoleEditShiftPage.sectionType.ShiftNotes.getType(), shiftNotes);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of changing work role on single edit shift")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+            setOverRideAssignmentRule(isLocationUsingControlsConfiguration, location, false);
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole1 = workRoles.get(0).get("optionName");
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.clickOnProfileIconByIndex(0);
+            shiftOperatePage.clickOnChangeRole();
+            List<String> workRoleList = shiftOperatePage.getWorkRoleListFromChangeShiftRoleOption();
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyAll.getValue());
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            // Create 2 shifts with all different
+            List<String> names = createShiftsWithSpecificValues(workRole1, "", "", "9:00am", "12:00pm",
+                    1, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            HashSet<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+
+            scheduleShiftTablePage.rightClickOnSelectedShifts(shiftIndexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            // Verify only elegible work roles will show when clicking on Change Shift Role and override assignment rule is set to No
+            editShiftPage.clickOnWorkRoleSelect();
+            List<String> actualWorkRoleList = editShiftPage.getOptionsFromSpecificSelect();
+            // Verify only elegible work roles will show on bulk edit shift dialog when override assignment rule is set to No
+            if (workRoleList.containsAll(actualWorkRoleList) && actualWorkRoleList.containsAll(workRoleList)) {
+                SimpleUtils.pass("Work role list shows correctly");
+            } else {
+                SimpleUtils.fail("Work role list is incorrect when override assignment rule is set to No!", false);
+            }
+            if (actualWorkRoleList.size() > 1) {
+                for (int i = 0; i < actualWorkRoleList.size(); i++) {
+                    if (actualWorkRoleList.get(i).equalsIgnoreCase(workRole1)) {
+                        actualWorkRoleList.remove(i);
+                        break;
+                    }
+                }
+            }
+            // Verify work role is updated
+            editShiftPage.selectSpecificOptionByText(actualWorkRoleList.get(0));
+            editShiftPage.clickOnUpdateButton();
+            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
+            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
+            // Verify work role is saved
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
+            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
+            // Verify there is no role violation
+            SimpleUtils.assertOnFail("Role violation should not show!",
+                    !scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(
+                            Integer.parseInt(shiftIndexes.toArray()[0].toString())
+                    )).contains("Role Violation"), false);
+            // Verify all available work roles will show when clicking on Change Shift Role and override assignment rule is set to Yes
+            setOverRideAssignmentRule(isLocationUsingControlsConfiguration, location, true);
+
+            goToSchedulePageScheduleTab();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            shiftOperatePage.clickOnProfileIconByIndex(0);
+            shiftOperatePage.clickOnChangeRole();
+            List<String> workRoleList2 = shiftOperatePage.getWorkRoleListFromChangeShiftRoleOption();
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyAll.getValue());
+            SimpleUtils.assertOnFail("Not all work role listed!", workRoleList.size() <= workRoleList2.size(), false);
+
+            // Verify all available work roles will show on bulk edit shift dialog when override assignment rule is set to Yes
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.rightClickOnSelectedShifts(shiftIndexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.clickOnWorkRoleSelect();
+            List<String> actualWorkRoleList2 = editShiftPage.getOptionsFromSpecificSelect();
+            if (workRoleList2.containsAll(actualWorkRoleList2) && actualWorkRoleList2.containsAll(workRoleList2)) {
+                SimpleUtils.pass("Work role list shows correctly");
+            } else {
+                SimpleUtils.fail("Work role list is incorrect when override assignment rule is set to Yes!", false);
+            }
+            // Verify work role is upated
+            actualWorkRoleList2.remove(workRole1);
+            editShiftPage.selectSpecificOptionByText(actualWorkRoleList2.get(0));
+            editShiftPage.clickOnUpdateButton();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
+            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
+            // Verify work role is saved
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
+            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        } finally {
+            newShiftPage.closeNewCreateShiftPage();
+            boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+            setOverRideAssignmentRule(isLocationUsingControlsConfiguration, location, true);
+        }
+    }
+
+
+    private void setOverRideAssignmentRule(boolean isLocationUsingControlsConfiguration, String location, boolean yesOrNo) throws Exception {
+        if (isLocationUsingControlsConfiguration) {
+            //Go to Controls page
+            controlsNewUIPage.clickOnControlsConsoleMenu();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            SimpleUtils.assertOnFail("Scheduling Policies Page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+            controlsNewUIPage.clickOnGlobalLocationButton();
+            controlsNewUIPage.enableOverRideAssignmentRuleAsNo();
+            Thread.sleep(10000);
+        } else {
+            //Go to OP page
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Scheduling Policies");
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            Thread.sleep(3000);
+            if (yesOrNo) {
+                controlsNewUIPage.enableOverRideAssignmentRuleAsYesForOP();
+            } else
+                controlsNewUIPage.enableOverRideAssignmentRuleAsNoForOP();
+            configurationPage.publishNowTheTemplate();
+//                Thread.sleep(240000);
+            switchToConsoleWindow();
+            refreshCachesAfterChangeTemplate();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify the functionality of changing shift name on single edit shift")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            HashSet<Integer> shiftIndexes = scheduleShiftTablePage.verifyCanSelectMultipleShifts(1);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(shiftIndexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            // Verify can update the shift name without selecting 2 options
+            String shiftName = "This is the shift name";
+            editShiftPage.inputShiftName(shiftName);
+            editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+            // Verify the shift name can show on the info popup
+            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            // Verify the shift name is saved successfully
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of changing Start Time on single edit shift page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            String workRole = shiftOperatePage.getRandomWorkRole();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "05:00pm",
+                    1, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+
+            HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            Iterator<Integer> iterator = indexes.iterator();
+            List<Integer> indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            // Verify can change the start time without checking options
+            String inputStartTime = "10:00 AM";
+            editShiftPage.inputStartOrEndTime(inputStartTime, true);
+            editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+
+            // Verify the start time of the shifts is updated
+            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            String startTime1 = shiftInfo1.get(6).split("-")[0].trim();
+            SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1) , false);
+
+            // Verify the start time is saved
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            startTime1 = shiftInfo1.get(6).split("-")[0].trim();
+            SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1) , false);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            inputStartTime = "4:00 AM";
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            // Verify error message will pop up when changing the start time will cause violation
+            editShiftPage.inputStartOrEndTime(inputStartTime, true);
+            editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Error! Could not edit 1 shift");
+
+            //Verify the start time of the shifts is not updated
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            startTime1 = shiftInfo1.get(6).split("-")[0].trim();
+            SimpleUtils.assertOnFail("Start time is not updated!", !inputStartTime.equalsIgnoreCase(startTime1) , false);
+
+            // Verify the start time is saved
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            startTime1 = shiftInfo1.get(6).split("-")[0].trim();
+            SimpleUtils.assertOnFail("Start time is not updated!", !inputStartTime.equalsIgnoreCase(startTime1), false);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Verify the start time shows correctly using early offset
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.checkUseOffset(true, true);
+            editShiftPage.verifyTheFunctionalityOfOffsetTime("1", null, "Early", true);
+            editShiftPage.clickOnUpdateButton();
+            inputStartTime = "9:00 am";
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            iterator = indexes.iterator();
+            indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            startTime1 = shiftInfo1.get(6).split("-")[0].trim();
+            SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1), false);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Verify the start time shows correctly using later offset
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.checkUseOffset(true, true);
+            editShiftPage.verifyTheFunctionalityOfOffsetTime("6", null, "Late", true);
+            editShiftPage.clickOnUpdateButton();
+            inputStartTime = "3:00 pm";
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            iterator = indexes.iterator();
+            indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            startTime1 = shiftInfo1.get(6).split("-")[0].trim();
+            System.out.println(startTime1);
+            SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1) , false);
+
+            // Verify the start time can be saved successfully
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            startTime1 = shiftInfo1.get(6).split("-")[0].trim();
+            SimpleUtils.assertOnFail("Start time is not updated!", inputStartTime.equalsIgnoreCase(startTime1), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of changing End Time on single edit shift page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingEndTimeOnSingleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            String workRole = shiftOperatePage.getRandomWorkRole();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "05:00pm",
+                    2, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+
+            HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            Iterator<Integer> iterator = indexes.iterator();
+            List<Integer> indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            // Verify can change the end time without checking options
+            String inputEndTime = "4:00 pm";
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
+            editShiftPage.clickOnUpdateButton();
+
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            iterator = indexes.iterator();
+            indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+
+            // Verify the start time of the shifts is updated
+            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
+            String startTime1 = shiftInfo1.get(6).split("-")[1].trim();
+            String startTime2 = shiftInfo2.get(6).split("-")[1].trim();
+            SimpleUtils.assertOnFail("End time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
+                    inputEndTime.equalsIgnoreCase(startTime2), false);
+
+            // Verify the end time is saved
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
+            startTime1 = shiftInfo1.get(6).split("-")[1].trim();
+            startTime2 = shiftInfo2.get(6).split("-")[1].trim();
+            SimpleUtils.assertOnFail("End time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
+                    inputEndTime.equalsIgnoreCase(startTime2), false);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            inputEndTime = "7:00 pm";
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            // Verify success will pop up when changing the End time will cause violation
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
+            editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            iterator = indexes.iterator();
+            indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            // Verify can change the end time which will cause violation with selecting the options
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
+            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowConflicts.getOption(), true);
+            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowComplianceErrors.getOption(), true);
+            editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+
+            // Verify the end time of the shifts is updated
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
+            startTime1 = shiftInfo1.get(6).split("-")[1].trim();
+            startTime2 = shiftInfo2.get(6).split("-")[1].trim();
+            SimpleUtils.assertOnFail("Start time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
+                    inputEndTime.equalsIgnoreCase(startTime2), false);
+
+            // Verify the end time is saved
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
+            startTime1 = shiftInfo1.get(6).split("-")[1].trim();
+            startTime2 = shiftInfo2.get(6).split("-")[1].trim();
+            SimpleUtils.assertOnFail("Start time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
+                    inputEndTime.equalsIgnoreCase(startTime2), false);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Verify the start time shows correctly using early offset
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.checkUseOffset(false, true);
+            editShiftPage.verifyTheFunctionalityOfOffsetTime("3", null, "Early", false);
+            editShiftPage.clickOnUpdateButton();
+
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            iterator = indexes.iterator();
+            indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+
+            inputEndTime = "4:00 pm";
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
+            startTime1 = shiftInfo1.get(6).split("-")[1].trim();
+            startTime2 = shiftInfo2.get(6).split("-")[1].trim();
+            SimpleUtils.assertOnFail("End time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
+                    inputEndTime.equalsIgnoreCase(startTime2), false);
+
+            // Verify the end time shows correctly using later offset
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.checkUseOffset(false, true);
+            editShiftPage.verifyTheFunctionalityOfOffsetTime("1", null, "Late", false);
+            editShiftPage.clickOnUpdateButton();
+
+            indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            iterator = indexes.iterator();
+            indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+
+            inputEndTime = "5:00 pm";
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
+            startTime1 = shiftInfo1.get(6).split("-")[1].trim();
+            startTime2 = shiftInfo2.get(6).split("-")[1].trim();
+            SimpleUtils.assertOnFail("End time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
+                    inputEndTime.equalsIgnoreCase(startTime2), false);
+
+            // Verify the start time can be saved successfully
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
+            startTime1 = shiftInfo1.get(6).split("-")[1].trim();
+            startTime2 = shiftInfo2.get(6).split("-")[1].trim();
+            SimpleUtils.assertOnFail("Start time is not updated!", inputEndTime.equalsIgnoreCase(startTime1) &&
+                    inputEndTime.equalsIgnoreCase(startTime2), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of changing Date on single edit shift page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingDateOnSingleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+                scheduleMainPage.saveSchedule();
+            }
+            String workRole = shiftOperatePage.getRandomWorkRole();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+
+            HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            editShiftPage.clickOnDateSelect();
+            List<String> dates = editShiftPage.getOptionsFromSpecificSelect();
+
+            // Verify can change the date without selecting the two options
+            editShiftPage.selectSpecificOptionByText(dates.get(1));
+            editShiftPage.clickOnUpdateButton();
+
+            HashSet<Integer> newIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            System.out.println(scheduleShiftTablePage.getOneDayShiftByName(1, assignedNames.get(0)).size());
+            SimpleUtils.assertOnFail("Shifts are not moved to the next day!", !indexes.equals(newIndexes), false);
+
+            // Verify the error will pop up when changing the date without selecting the two options
+            createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", assignedNames.get(0));
+            Thread.sleep(2000);
+            scheduleShiftTablePage.selectSpecificShifts(newIndexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(newIndexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.clickOnDateSelect();
+            editShiftPage.selectSpecificOptionByText(dates.get(0));
+            editShiftPage.clickOnUpdateButton();
+
+            mySchedulePage.verifyThePopupMessageOnTop("Error");
+
+            // Verify the shifts are moved to the selected day
+            String firstName1 = assignedNames.get(0).contains(" ") ? assignedNames.get(0).split(" ")[0] : assignedNames.get(0);
+            SimpleUtils.assertOnFail("Shift with name: " + firstName1 + " is not moved to the selected date!",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstName1).size() == 1, false);
+
+            // Verify the changes can be saved successfully
+            scheduleMainPage.saveSchedule();
+            SimpleUtils.assertOnFail("Shift with name: " + firstName1 + " is not moved to the selected date!",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstName1).size() == 1, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of changing Assignment on single edit shift page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingAssignmentOnSingleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+                scheduleMainPage.saveSchedule();
+            }
+            String workRole = shiftOperatePage.getRandomWorkRole();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+
+            HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            scheduleMainPage.saveSchedule();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            editShiftPage.clickOnAssignmentSelect();
+
+            // Verify the functionality of "Do not change assignments"
+            editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.DoNotChangeAssignments.getOption());
+            editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+
+            // Verify the shifts are converted to open shifts
+            scheduleShiftTablePage.selectSpecificShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.clickOnAssignmentSelect();
+            editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.OpenShift.getOption());
+            editShiftPage.clickOnUpdateButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+            SimpleUtils.assertOnFail("The previous assigned shifts are not converted to open shifts!",
+                    scheduleShiftTablePage.getOneDayShiftByName(0, "Open").size() >= 1, false);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            // Verify the option "Assign or Offer to Specific TM's" is enabled
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.clickOnAssignmentSelect();
+            List<String> assignments = editShiftPage.getOptionsFromSpecificSelect();
+            String assignOrOfferOption = ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption();
+            if (assignments.get(2).equals(assignOrOfferOption)) {
+                SimpleUtils.pass("Assign or Offer to Specific TM's is enabled!");
+            } else {
+                SimpleUtils.fail("Assign or Offer to Specific TM's is not enabled!", false);
+            }
+
+            // Verify Search Team Members page will show when selecting "Assign or Offer to Specific TM's
+            editShiftPage.selectSpecificOptionByText(assignOrOfferOption);
+            editShiftPage.clickOnUpdateButton();
+
+            // Verify can assign or offer to new team members
+            newShiftPage.searchTeamMemberByNameAndAssignOrOfferShift(assignedNames.get(0), true);
+            newShiftPage.clickOnCreateOrNextBtn();
+            scheduleMainPage.saveSchedule();
+
+            // Verify the offers are in draft status after saving the schedule
+            shiftOperatePage.clickOnProfileIconOfOpenShift();
+            scheduleShiftTablePage.clickViewStatusBtn();
+            shiftOperatePage.verifyTMInTheOfferList(assignedNames.get(0), "Draft Offer");
+            shiftOperatePage.closeViewStatusContainer();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of changing shift notes on single edit shift page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangingShiftNotesOnSingleEditShiftWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.selectShiftTypeFilterByText("Assigned");
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            HashSet<Integer> indexes = scheduleShiftTablePage.verifyCanSelectMultipleShifts(1);
+            Iterator<Integer> iterator = indexes.iterator();
+            List<Integer> indexList = new ArrayList<>();
+            while(iterator.hasNext()){
+                indexList.add(iterator.next());
+            }
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            // Verify can update the shift notes without selecting 2 options
+            String note = "Test Shift Notes";
+            editShiftPage.inputShiftNotes(note);
+            editShiftPage.clickOnUpdateButton();
+
+            // Verify the shift notes can show on the info popup
+            List<String> infoList1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            SimpleUtils.assertOnFail("Failed to update the shift notes!", note.equalsIgnoreCase(infoList1.get(10)), false);
+
+            scheduleMainPage.saveSchedule();
+
+            // Verify the shift notes is saved successfully
+            infoList1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
+            SimpleUtils.assertOnFail("Failed to update the shift notes!", note.equalsIgnoreCase(infoList1.get(10)), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the content of Breaks sections")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheContentOfBreaksSectionsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }else
+                createSchedulePage.publishActiveSchedule();
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.selectShiftTypeFilterByText("Assigned");
+            String workRole = shiftOperatePage.getRandomWorkRole();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+
+            HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            int index = indexes.iterator().next();
+            mySchedulePage.clickOnShiftByIndex(index);
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            List<String> breakTimes = shiftOperatePage.verifyEditBreaks();
+            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            String mealBreakTime = breakTimes.get(0).replace(" am", "am").replace(" pm", "pm");
+            String restBreakTime = breakTimes.get(1).replace(" am", "am").replace(" pm", "pm");
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            //Verify the meal and rest breaks time are display correctly in Edit column
+            Map<String, String> breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
+            String breakStartTime = changeTimeFormat(breakTimesOnSingleEditPage.get("mealStartTime")).replace(" ", "");
+            String breakEndTime = changeTimeFormat(breakTimesOnSingleEditPage.get("mealEndTime")).replace(" ", "");
+            SimpleUtils.assertOnFail("The expected break time is: "+mealBreakTime
+                            + ". The actual is: "+ (breakStartTime+ " "+breakEndTime),
+                    mealBreakTime.toLowerCase().contains(breakStartTime.toLowerCase())
+                            && mealBreakTime.toLowerCase().contains(breakEndTime.toLowerCase()), false);
+
+            Map<String, String> restTimesOnSingleEditPage = editShiftPage.getRestBreakTimes().get(0);
+            String restStartTime = changeTimeFormat(restTimesOnSingleEditPage.get("restStartTime")).replace(" ", "");
+            String restEndTime = changeTimeFormat(restTimesOnSingleEditPage.get("restEndTime")).replace(" ", "");
+            SimpleUtils.assertOnFail("The expected rest time is: "+restBreakTime
+                            + ". The actual is: "+ (restStartTime+ " "+restEndTime),
+                    restBreakTime.toLowerCase().contains(restStartTime.toLowerCase())
+                            && restBreakTime.toLowerCase().contains(restEndTime.toLowerCase()), false);
+            //Verify the two Add buttons in Edit column display correctly
+            editShiftPage.removeAllRestBreaks();
+            editShiftPage.removeAllMealBreaks();
+            editShiftPage.clickOnAddMealBreakButton();
+            editShiftPage.clickOnAddRestBreakButton();
+            //Verify the breaks time cannot out of shift time
+            editShiftPage.inputMealBreakTimes("8am", "8:20am", 0);
+            editShiftPage.inputRestBreakTimes("4pm", "4:30pm", 0);
+            String expectedBreakMessage = "Break cannot go beyond the shift";
+            List<String> mealBreakWarningMessages = editShiftPage.getMealBreakWarningMessage();
+            List<String> restBreakWarningMessages = editShiftPage.getRestBreakWarningMessage();
+            if (mealBreakWarningMessages.size()==0 || restBreakWarningMessages.size() ==0) {
+                SimpleUtils.fail("Get break warning message fail! The actual warning message count is: " +
+                        ""+mealBreakWarningMessages.size()+ " and "+restBreakWarningMessages.size(), false);
+            }
+            String mealBreakWarningMessage = mealBreakWarningMessages.get(0);
+            String restBreakWarningMessage = restBreakWarningMessages.get(0);
+            SimpleUtils.assertOnFail("The expected break message: "+expectedBreakMessage+
+                            ". The actual is: "+mealBreakWarningMessage,
+                    mealBreakWarningMessage.equals(expectedBreakMessage), false);
+            SimpleUtils.assertOnFail("The expected break message: "+expectedBreakMessage+
+                            ". The actual is: "+restBreakWarningMessage,
+                    restBreakWarningMessage.equals(expectedBreakMessage), false);
+            //Verify the breaks time cannot have overlapping with other breaks time
+            editShiftPage.inputMealBreakTimes("10:00am", "10:30am", 0);
+            editShiftPage.inputRestBreakTimes("10:00am", "10:30am", 0);
+            expectedBreakMessage = "Break is overlapping with another one";
+            restBreakWarningMessages = editShiftPage.getRestBreakWarningMessage();
+            if (restBreakWarningMessages.size() ==0) {
+                SimpleUtils.fail("Get break warning message fail! The actual warning message count is: " +
+                        ""+restBreakWarningMessages.size(), false);
+            }
+            restBreakWarningMessage = restBreakWarningMessages.get(0);
+            SimpleUtils.assertOnFail("The expected break message: "+expectedBreakMessage+
+                            ". The actual is: "+restBreakWarningMessage,
+                    restBreakWarningMessage.equals(expectedBreakMessage), false);
+            //Verify break start time cannot after end time
+            editShiftPage.inputMealBreakTimes("11:00am", "9:30am", 0);
+            editShiftPage.inputRestBreakTimes("11:00am", "10:30am", 0);
+            expectedBreakMessage = "Start time must be before end time";
+            mealBreakWarningMessages = editShiftPage.getMealBreakWarningMessage();
+            restBreakWarningMessages = editShiftPage.getRestBreakWarningMessage();
+            if (mealBreakWarningMessages.size()==0 || restBreakWarningMessages.size() ==0) {
+                SimpleUtils.fail("Get break warning message fail! The actual warning message count is: " +
+                        ""+mealBreakWarningMessages.size()+ " and "+restBreakWarningMessages.size(), false);
+            }
+            mealBreakWarningMessage = mealBreakWarningMessages.get(0);
+            restBreakWarningMessage = restBreakWarningMessages.get(0);
+            SimpleUtils.assertOnFail("The expected break message: "+expectedBreakMessage+
+                            ". The actual is: "+mealBreakWarningMessage,
+                    mealBreakWarningMessage.equals(expectedBreakMessage), false);
+            SimpleUtils.assertOnFail("The expected break message: "+expectedBreakMessage+
+                            ". The actual is: "+restBreakWarningMessage,
+                    restBreakWarningMessage.equals(expectedBreakMessage), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the functionality of edit meal breaks on single edit shift page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheFunctionalityOfEditMealBreaksOnSingleEditShiftPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }else
+                createSchedulePage.publishActiveSchedule();
+            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.selectShiftTypeFilterByText("Assigned");
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(0);
+            int index = indexes.iterator().next();
+            mySchedulePage.clickOnShiftByIndex(index);
+            shiftOperatePage.clickOnEditMeaLBreakTime();
+            shiftOperatePage.verifyEditBreaks();
+            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            //Delete all the meal and rest breaks
+            editShiftPage.removeAllRestBreaks();
+            editShiftPage.removeAllMealBreaks();
+            //Click Update button
+            editShiftPage.clickOnUpdateButton();
+            //Edit the shift again and check the breaks
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            //All breaks been delete successfully
+            int mealBreakCount = editShiftPage.getMealBreakCount();
+            int restBreakCount = editShiftPage.getRestBreakCount();
+            SimpleUtils.assertOnFail("All breaks should been deleted, but actual there are "+mealBreakCount+" meal breaks and "+restBreakCount+" rest breaks", mealBreakCount == 0
+                    && restBreakCount==0, false);
+
+            //Add break and rest breaks and Set times for the new added breaks without warning message
+            editShiftPage.clickOnAddMealBreakButton();
+            editShiftPage.clickOnAddRestBreakButton();
+            String mealBreakStartTime = "10:00 AM";
+            String mealBreakEndTime = "10:20 AM";
+            String restBreakStartTime = "01:00 PM";
+            String restBreakEndTime = "01:30 PM";
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.inputRestBreakTimes(restBreakStartTime, restBreakEndTime, 0);
+            List<String> mealBreakWarningMessages = editShiftPage.getMealBreakWarningMessage();
+            List<String> restBreakWarningMessages = editShiftPage.getRestBreakWarningMessage();
+            if (mealBreakWarningMessages.size()> 0 || restBreakWarningMessages.size() >0) {
+                SimpleUtils.fail("Get break warning message fail! The actual warning message count is: " +
+                        ""+mealBreakWarningMessages.size()+ " and "+restBreakWarningMessages.size(), false);
+            }
+            editShiftPage.clickOnUpdateButton();
+            //Edit the shift again and check the breaks
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            //All breaks been added successfully
+            mealBreakCount = editShiftPage.getMealBreakCount();
+            restBreakCount = editShiftPage.getRestBreakCount();
+            SimpleUtils.assertOnFail("All breaks should been added, but actual there are "+mealBreakCount+" meal breaks and "+restBreakCount+" rest breaks", mealBreakCount == 1
+                    && restBreakCount==1, false);
+
+            //Verify the meal and rest breaks time are display correctly in Edit column
+            Map<String, String> breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
+            String breakStartTime = breakTimesOnSingleEditPage.get("mealStartTime");
+            String breakEndTime = breakTimesOnSingleEditPage.get("mealEndTime");
+            SimpleUtils.assertOnFail("The expected break time is: "+mealBreakStartTime+ " "+ mealBreakEndTime
+                            + ". The actual is: "+ (breakStartTime+ " "+breakEndTime),
+                    mealBreakStartTime.equals(breakStartTime)
+                            && mealBreakEndTime.equals(breakEndTime), false);
+
+            Map<String, String> restTimesOnSingleEditPage = editShiftPage.getRestBreakTimes().get(0);
+            String restStartTime = restTimesOnSingleEditPage.get("restStartTime");
+            String restEndTime = restTimesOnSingleEditPage.get("restEndTime");
+            SimpleUtils.assertOnFail("The expected rest time is: "+restBreakEndTime+ " "+ restBreakStartTime
+                            + ". The actual is: "+ (restStartTime+ " "+restEndTime),
+                    restBreakStartTime.equals(restStartTime)
+                            && restBreakEndTime.equals(restEndTime), false);
+
+            mealBreakStartTime = "11:00 AM";
+            mealBreakEndTime = "11:20 AM";
+            restBreakStartTime = "12:00 PM";
+            restBreakEndTime = "12:30 PM";
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.inputRestBreakTimes(restBreakStartTime, restBreakEndTime, 0);
+            mealBreakWarningMessages = editShiftPage.getMealBreakWarningMessage();
+            restBreakWarningMessages = editShiftPage.getRestBreakWarningMessage();
+            if (mealBreakWarningMessages.size()> 0 || restBreakWarningMessages.size() >0) {
+                SimpleUtils.fail("Get break warning message fail! The actual warning message count is: " +
+                        ""+mealBreakWarningMessages.size()+ " and "+restBreakWarningMessages.size(), false);
+            }
+            editShiftPage.clickOnUpdateButton();
+            //Edit the shift again and check the breaks
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            //All breaks been added successfully
+            mealBreakCount = editShiftPage.getMealBreakCount();
+            restBreakCount = editShiftPage.getRestBreakCount();
+            SimpleUtils.assertOnFail("All breaks should been added, but actual there are "+mealBreakCount+" meal breaks and "+restBreakCount+" rest breaks", mealBreakCount == 1
+                    && restBreakCount==1, false);
+
+            //Verify the meal and rest breaks time are display correctly in Edit column
+            breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
+            breakStartTime = breakTimesOnSingleEditPage.get("mealStartTime");
+            breakEndTime = breakTimesOnSingleEditPage.get("mealEndTime");
+            SimpleUtils.assertOnFail("The expected break time is: "+mealBreakStartTime+ " "+ mealBreakEndTime
+                            + ". The actual is: "+ (breakStartTime+ " "+breakEndTime),
+                    mealBreakStartTime.equals(breakStartTime)
+                            && mealBreakEndTime.equals(breakEndTime), false);
+
+            restTimesOnSingleEditPage = editShiftPage.getRestBreakTimes().get(0);
+            restStartTime = restTimesOnSingleEditPage.get("restStartTime");
+            restEndTime = restTimesOnSingleEditPage.get("restEndTime");
+            SimpleUtils.assertOnFail("The expected rest time is: "+restBreakEndTime+ " "+ restBreakStartTime
+                            + ". The actual is: "+ (restStartTime+ " "+restEndTime),
+                    restBreakStartTime.equals(restStartTime)
+                            && restBreakEndTime.equals(restEndTime), false);
+            editShiftPage.clickOnUpdateButton();
+            scheduleMainPage.saveSchedule();
+            scheduleCommonPage.clickOnDayView();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            indexes.clear();
+            indexes.add(0);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            //Delete all the meal and rest breaks
+            editShiftPage.removeAllRestBreaks();
+            editShiftPage.removeAllMealBreaks();
+            //Click Update button
+            editShiftPage.clickOnUpdateButton();
+            //Edit the shift again and check the breaks
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            //All breaks been delete successfully
+            mealBreakCount = editShiftPage.getMealBreakCount();
+            restBreakCount = editShiftPage.getRestBreakCount();
+            SimpleUtils.assertOnFail("All breaks should been deleted, but actual there are "+mealBreakCount+" meal breaks and "+restBreakCount+" rest breaks", mealBreakCount == 0
+                    && restBreakCount==0, false);
+
+            //Add break and rest breaks and Set times for the new added breaks without warning message
+            editShiftPage.clickOnAddMealBreakButton();
+            editShiftPage.clickOnAddRestBreakButton();
+            mealBreakStartTime = "10:00 AM";
+            mealBreakEndTime = "10:20 AM";
+            restBreakStartTime = "01:00 PM";
+            restBreakEndTime = "01:30 PM";
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.inputRestBreakTimes(restBreakStartTime, restBreakEndTime, 0);
+            mealBreakWarningMessages = editShiftPage.getMealBreakWarningMessage();
+            restBreakWarningMessages = editShiftPage.getRestBreakWarningMessage();
+            if (mealBreakWarningMessages.size()> 0 || restBreakWarningMessages.size() >0) {
+                SimpleUtils.fail("Get break warning message fail! The actual warning message count is: " +
+                        ""+mealBreakWarningMessages.size()+ " and "+restBreakWarningMessages.size(), false);
+            }
+            editShiftPage.clickOnUpdateButton();
+            //Edit the shift again and check the breaks
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            //All breaks been added successfully
+            mealBreakCount = editShiftPage.getMealBreakCount();
+            restBreakCount = editShiftPage.getRestBreakCount();
+            SimpleUtils.assertOnFail("All breaks should been added, but actual there are "+mealBreakCount+" meal breaks and "+restBreakCount+" rest breaks", mealBreakCount == 1
+                    && restBreakCount==1, false);
+
+            //Verify the meal and rest breaks time are display correctly in Edit column
+            breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
+            breakStartTime = breakTimesOnSingleEditPage.get("mealStartTime");
+            breakEndTime = breakTimesOnSingleEditPage.get("mealEndTime");
+            SimpleUtils.assertOnFail("The expected break time is: "+mealBreakStartTime+ " "+ mealBreakEndTime
+                            + ". The actual is: "+ (breakStartTime+ " "+breakEndTime),
+                    mealBreakStartTime.equals(breakStartTime)
+                            && mealBreakEndTime.equals(breakEndTime), false);
+
+            restTimesOnSingleEditPage = editShiftPage.getRestBreakTimes().get(0);
+            restStartTime = restTimesOnSingleEditPage.get("restStartTime");
+            restEndTime = restTimesOnSingleEditPage.get("restEndTime");
+            SimpleUtils.assertOnFail("The expected rest time is: "+restBreakEndTime+ " "+ restBreakStartTime
+                            + ". The actual is: "+ (restStartTime+ " "+restEndTime),
+                    restBreakStartTime.equals(restStartTime)
+                            && restBreakEndTime.equals(restEndTime), false);
+
+            mealBreakStartTime = "11:00 AM";
+            mealBreakEndTime = "11:20 AM";
+            restBreakStartTime = "12:00 PM";
+            restBreakEndTime = "12:30 PM";
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.inputRestBreakTimes(restBreakStartTime, restBreakEndTime, 0);
+            mealBreakWarningMessages = editShiftPage.getMealBreakWarningMessage();
+            restBreakWarningMessages = editShiftPage.getRestBreakWarningMessage();
+            if (mealBreakWarningMessages.size()> 0 || restBreakWarningMessages.size() >0) {
+                SimpleUtils.fail("Get break warning message fail! The actual warning message count is: " +
+                        ""+mealBreakWarningMessages.size()+ " and "+restBreakWarningMessages.size(), false);
+            }
+            editShiftPage.clickOnUpdateButton();
+            //Edit the shift again and check the breaks
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            //All breaks been added successfully
+            mealBreakCount = editShiftPage.getMealBreakCount();
+            restBreakCount = editShiftPage.getRestBreakCount();
+            SimpleUtils.assertOnFail("All breaks should been added, but actual there are "+mealBreakCount+" meal breaks and "+restBreakCount+" rest breaks", mealBreakCount == 1
+                    && restBreakCount==1, false);
+
+            //Verify the meal and rest breaks time are display correctly in Edit column
+            breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
+            breakStartTime = breakTimesOnSingleEditPage.get("mealStartTime");
+            breakEndTime = breakTimesOnSingleEditPage.get("mealEndTime");
+            SimpleUtils.assertOnFail("The expected break time is: "+mealBreakStartTime+ " "+ mealBreakEndTime
+                            + ". The actual is: "+ (breakStartTime+ " "+breakEndTime),
+                    mealBreakStartTime.equals(breakStartTime)
+                            && mealBreakEndTime.equals(breakEndTime), false);
+
+            restTimesOnSingleEditPage = editShiftPage.getRestBreakTimes().get(0);
+            restStartTime = restTimesOnSingleEditPage.get("restStartTime");
+            restEndTime = restTimesOnSingleEditPage.get("restEndTime");
+            SimpleUtils.assertOnFail("The expected rest time is: "+restBreakEndTime+ " "+ restBreakStartTime
+                            + ". The actual is: "+ (restStartTime+ " "+restEndTime),
+                    restBreakStartTime.equals(restStartTime)
+                            && restBreakEndTime.equals(restEndTime), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
