@@ -41,16 +41,16 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class DemandDriverTest extends TestBase {
 
-    public enum modelSwitchOperation{
-        Console("Console"),
-        OperationPortal("Control Center");
+public enum modelSwitchOperation{
+    Console("Console"),
+    OperationPortal("Control Center");
 
-        private final String value;
-        modelSwitchOperation(final String newValue) {
-            value = newValue;
-        }
-        public String getValue() { return value; }
+    private final String value;
+    modelSwitchOperation(final String newValue) {
+        value = newValue;
     }
+    public String getValue() { return value; }
+}
 
     @Override
     @BeforeMethod(alwaysRun = true)
@@ -70,7 +70,7 @@ public class DemandDriverTest extends TestBase {
         SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
     }
-    
+
     @Automated(automated = "Automated")
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
@@ -107,7 +107,7 @@ public class DemandDriverTest extends TestBase {
             forecastPage.clickForecast();
             salesForecastPage.navigateToSalesForecastTab();
             SimpleUtils.assertOnFail("The newly added category not exist in forecast page!",
-                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryName), false);
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", categoryName), false);
 
             //edit the category in settings
             switchToNewWindow();
@@ -116,7 +116,7 @@ public class DemandDriverTest extends TestBase {
             switchToNewWindow();
             refreshPage();
             SimpleUtils.assertOnFail("The edited category not exist in forecast page!",
-                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryEditName), false);
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", categoryEditName), false);
 
             //remove the category in settings
             switchToNewWindow();
@@ -125,7 +125,7 @@ public class DemandDriverTest extends TestBase {
             switchToNewWindow();
             refreshPage();
             SimpleUtils.assertOnFail("The removed edited category should not display in forecast page!",
-                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", "categoryEditName"), false);
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", "categoryEditName"), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -166,6 +166,7 @@ public class DemandDriverTest extends TestBase {
             scheduleCommonPage.goToSchedulePage();
             forecastPage.clickForecast();
             salesForecastPage.navigateToSalesForecastTab();
+            refreshPage();
             SimpleUtils.assertOnFail("The newly added channel not exist in forecast page!",
                     salesForecastPage.verifyChannelOrCategoryExistInForecastPage(verifyType, channelName), false);
 
@@ -407,7 +408,7 @@ public class DemandDriverTest extends TestBase {
             String shortMonth = month.getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " ";
             String currentDate = (shortMonth + dfs.format(calendar.getTime())).replace(" 0", " ");
 
-           //Go to Demand Driver template
+            //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
 
@@ -434,58 +435,58 @@ public class DemandDriverTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 3)
     public void verifyDemandDriverTemplateDetailsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-        String templateName = "testDemand-NotDelete";
-        String templateType = "Demand Drivers";
-        HashMap<String, String> driverSpecificInfo = new HashMap<String, String>(){
-            {
-                put("Name", "Items:EDW:Verifications");
-                put("Type", "Items");
-                put("Channel", "EDW");
-                put("Category", "Verifications");
-                put("Show in App", "Yes");
-                put("Order", "1");
-                put("Forecast Source", "Imported");
-                put("Input Stream", "Items:EDW:Verifications");
-            }
-        };
+            String templateName = "testDemand-NotDelete";
+            String templateType = "Demand Drivers";
+            HashMap<String, String> driverSpecificInfo = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Verifications");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Verifications");
+                    put("Show in App", "Yes");
+                    put("Order", "1");
+                    put("Forecast Source", "Imported");
+                    put("Input Stream", "Items:EDW:Verifications");
+                }
+            };
 
-        HashMap<String, String> driverSpecificInfoUpdated = new HashMap<String, String>(){
-            {
-                put("Name", "Items:EDW:Verifications-Updated");
-                put("Type", "Items");
-                put("Channel", "EDW");
-                put("Category", "Verifications");
-                put("Show in App", "No");
-                put("Order", "2");
-                put("Forecast Source", "Legion ML");
-                put("Input Stream", "Items:EDW:Verifications");
-            }
-        };
+            HashMap<String, String> driverSpecificInfoUpdated = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Verifications-Updated");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Verifications");
+                    put("Show in App", "No");
+                    put("Order", "2");
+                    put("Forecast Source", "Legion ML");
+                    put("Input Stream", "Items:EDW:Verifications");
+                }
+            };
 
-        //Go to Demand Driver template
-        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
 
-        configurationPage.goToConfigurationPage();
-        configurationPage.clickOnConfigurationCrad(templateType);
-        //Go to Templates tab
-        settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Templates tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
 
-        //Enter the template, add a driver
-        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
-        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-        configurationPage.clickAddOrEditForDriver("Add");
-        configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfo);
-        SimpleUtils.assertOnFail("Can not find the driver you search!", configurationPage.searchDriverInTemplateDetailsPage(driverSpecificInfo.get("Name")), false);
+            //Enter the template, add a driver
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfo);
+            SimpleUtils.assertOnFail("Can not find the driver you search!", configurationPage.searchDriverInTemplateDetailsPage(driverSpecificInfo.get("Name")), false);
 
-        //Update the added driver
-        configurationPage.clickAddOrEditForDriver("Edit");
-        configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfoUpdated);
-        SimpleUtils.assertOnFail("Can not find the driver you search!", configurationPage.searchDriverInTemplateDetailsPage(driverSpecificInfoUpdated.get("Name")), false);
+            //Update the added driver
+            configurationPage.clickAddOrEditForDriver("Edit");
+            configurationPage.addOrEditDemandDriverInTemplate(driverSpecificInfoUpdated);
+            SimpleUtils.assertOnFail("Can not find the driver you search!", configurationPage.searchDriverInTemplateDetailsPage(driverSpecificInfoUpdated.get("Name")), false);
 
-        //Remove the added driver
-        configurationPage.clickRemove();
-        SimpleUtils.assertOnFail("Failed to removed the driver!", !configurationPage.searchDriverInTemplateDetailsPage(driverSpecificInfoUpdated.get("Name")), false);
+            //Remove the added driver
+            configurationPage.clickRemove();
+            SimpleUtils.assertOnFail("Failed to removed the driver!", !configurationPage.searchDriverInTemplateDetailsPage(driverSpecificInfoUpdated.get("Name")), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -498,67 +499,67 @@ public class DemandDriverTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 0)
     public void verifyCreationForInputStreamInSettingsPageCAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-        String templateType = "Demand Drivers";
-        String verifyType = "input stream";
-        String baseInputStreamName1 = "InputStreamTest-Base01";
-        String aggregatedInputStreamName1 = "InputStreamTest-Aggregated01";
-        String aggregatedInputStreamName2 = "InputStreamTest-Aggregated02";
+            String templateType = "Demand Drivers";
+            String verifyType = "input stream";
+            String baseInputStreamName1 = "InputStreamTest-Base01";
+            String aggregatedInputStreamName1 = "InputStreamTest-Aggregated01";
+            String aggregatedInputStreamName2 = "InputStreamTest-Aggregated02";
 
-        //input stream specification information to add
-        HashMap<String, String> baseInputStreamInfoToAdd = new HashMap<String, String>(){
-            {
-                put("Name", baseInputStreamName1);
-                put("Type", "Base");
-                put("Tag", "Items:EDW:Base01");
-            }
-        };
-        HashMap<String, String> aggregatedInputStreamInfoToAdd1 = new HashMap<String, String>(){
-            {
-                put("Name", aggregatedInputStreamName1);
-                put("Type", "Aggregated");
-                put("Operator", "IN");
-                put("Streams", "All");
-                put("Tag", aggregatedInputStreamName1);
-            }
-        };
-        HashMap<String, String> aggregatedInputStreamInfoToAdd2 = new HashMap<String, String>(){
-            {
-                put("Name", aggregatedInputStreamName2);
-                put("Type", "Aggregated");
-                put("Operator", "NOT IN");
-                put("Streams", baseInputStreamName1);
-                put("Tag", aggregatedInputStreamName2);
-            }
-        };
+            //input stream specification information to add
+            HashMap<String, String> baseInputStreamInfoToAdd = new HashMap<String, String>(){
+                {
+                    put("Name", baseInputStreamName1);
+                    put("Type", "Base");
+                    put("Tag", "Items:EDW:Base01");
+                }
+            };
+            HashMap<String, String> aggregatedInputStreamInfoToAdd1 = new HashMap<String, String>(){
+                {
+                    put("Name", aggregatedInputStreamName1);
+                    put("Type", "Aggregated");
+                    put("Operator", "IN");
+                    put("Streams", "All");
+                    put("Tag", aggregatedInputStreamName1);
+                }
+            };
+            HashMap<String, String> aggregatedInputStreamInfoToAdd2 = new HashMap<String, String>(){
+                {
+                    put("Name", aggregatedInputStreamName2);
+                    put("Type", "Aggregated");
+                    put("Operator", "NOT IN");
+                    put("Streams", baseInputStreamName1);
+                    put("Tag", aggregatedInputStreamName2);
+                }
+            };
 
-        //Go to Demand Driver template
-        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
 
-        configurationPage.goToConfigurationPage();
-        configurationPage.clickOnConfigurationCrad(templateType);
-        //Go to Settings tab
-        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Settings tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
 
-        //Add new Base input stream in settings
-        settingsAndAssociationPage.createInputStream(baseInputStreamInfoToAdd);
-        WebElement baseSearchElement = settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, baseInputStreamName1);
-        settingsAndAssociationPage.verifyInputStreamInList(baseInputStreamInfoToAdd, baseSearchElement);
-        settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, "");
+            //Add new Base input stream in settings
+            settingsAndAssociationPage.createInputStream(baseInputStreamInfoToAdd);
+            WebElement baseSearchElement = settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, baseInputStreamName1);
+            settingsAndAssociationPage.verifyInputStreamInList(baseInputStreamInfoToAdd, baseSearchElement);
+            settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, "");
 
-        //Add new Aggregated input stream with IN Operator in settings
-        settingsAndAssociationPage.createInputStream(aggregatedInputStreamInfoToAdd1);
-        WebElement aggregatedSearchElement = settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, aggregatedInputStreamName1);
-        settingsAndAssociationPage.verifyInputStreamInList(aggregatedInputStreamInfoToAdd1, aggregatedSearchElement);
-        settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, "");
+            //Add new Aggregated input stream with IN Operator in settings
+            settingsAndAssociationPage.createInputStream(aggregatedInputStreamInfoToAdd1);
+            WebElement aggregatedSearchElement = settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, aggregatedInputStreamName1);
+            settingsAndAssociationPage.verifyInputStreamInList(aggregatedInputStreamInfoToAdd1, aggregatedSearchElement);
+            settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, "");
 
-        //Add an input stream with existing name
-        settingsAndAssociationPage.createInputStream(baseInputStreamInfoToAdd);
+            //Add an input stream with existing name
+            settingsAndAssociationPage.createInputStream(baseInputStreamInfoToAdd);
 
-        //Add new Aggregated input stream with NOT IN Operator in settings
-        settingsAndAssociationPage.createInputStream(aggregatedInputStreamInfoToAdd2);
-        WebElement aggregatedSearchElement2 = settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, aggregatedInputStreamName2);
-        settingsAndAssociationPage.verifyInputStreamInList(aggregatedInputStreamInfoToAdd2, aggregatedSearchElement2);
+            //Add new Aggregated input stream with NOT IN Operator in settings
+            settingsAndAssociationPage.createInputStream(aggregatedInputStreamInfoToAdd2);
+            WebElement aggregatedSearchElement2 = settingsAndAssociationPage.searchSettingsForDemandDriver(verifyType, aggregatedInputStreamName2);
+            settingsAndAssociationPage.verifyInputStreamInList(aggregatedInputStreamInfoToAdd2, aggregatedSearchElement2);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -713,25 +714,25 @@ public class DemandDriverTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 2)
     public void verifyRemoveInputStreamAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-        String templateType = "Demand Drivers";
-        String verifyType = "input stream";
-        String baseInputStreamName1 = "InputStreamTest-Base01";
-        String aggregatedInputStreamName1 = "InputStreamTest-Aggregated01";
-        String aggregatedInputStreamName2 = "InputStreamTest-Aggregated02";
+            String templateType = "Demand Drivers";
+            String verifyType = "input stream";
+            String baseInputStreamName1 = "InputStreamTest-Base01";
+            String aggregatedInputStreamName1 = "InputStreamTest-Aggregated01";
+            String aggregatedInputStreamName2 = "InputStreamTest-Aggregated02";
 
-        //Go to Demand Driver template
-        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
-        configurationPage.goToConfigurationPage();
-        configurationPage.clickOnConfigurationCrad(templateType);
-        //Go to Settings tab
-        settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Settings tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
 
-        //Remove
-        settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, baseInputStreamName1);
-        settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, aggregatedInputStreamName1);
-        settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, aggregatedInputStreamName2);
-                } catch (Exception e) {
+            //Remove
+            settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, baseInputStreamName1);
+            settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, aggregatedInputStreamName1);
+            settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, aggregatedInputStreamName2);
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
@@ -804,28 +805,28 @@ public class DemandDriverTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 5)
     public void verifyDemandDriverTemplatesToArchiveAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-        String templateType = "Demand Drivers";
-        String templateName = "testDemand-NotDelete";
+            String templateType = "Demand Drivers";
+            String templateName = "testDemand-NotDelete";
 
-        //Go to Demand Driver template
-        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
-        configurationPage.goToConfigurationPage();
-        configurationPage.clickOnConfigurationCrad(templateType);
-        //Go to Templates tab
-        settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
-        //Delete the association and Archive the template
-        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
-        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
-        configurationPage.deleteOneDynamicGroup(templateName);
-        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-        configurationPage.setLeaveThisPageButton();
-        configurationPage.archiveOrDeleteTemplate(templateName);
-    } catch (Exception e) {
-        SimpleUtils.fail(e.getMessage(), false);
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Templates tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+            //Delete the association and Archive the template
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+            configurationPage.deleteOneDynamicGroup(templateName);
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.setLeaveThisPageButton();
+            configurationPage.archiveOrDeleteTemplate(templateName);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
-}
 
     @Automated(automated = "Automated")
     @Owner(owner = "Jane")
@@ -1053,7 +1054,7 @@ public class DemandDriverTest extends TestBase {
             }
             for (int i = 0; i < categoryNameList.size(); i++){
                 SimpleUtils.assertOnFail("The category " + categoryNameList.get(i) + " should show up in forecast page!",
-                        salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryNameList.get(i)), false);
+                        salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", categoryNameList.get(i)), false);
             }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1067,84 +1068,84 @@ public class DemandDriverTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyForecastPageForOneNewlyCreatedDemandDriverTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-        String templateType = "Demand Drivers";
-        String templateName = "testVisibility";
-        HashMap<String, String> visibledriverInfo = new HashMap<String, String>(){
-            {
-                put("Name", "Items:EDW:Enrollments");
-                put("Type", "Items");
-                put("Channel", "EDW");
-                put("Category", "Enrollments");
-                put("Show in App", "Yes");
-                put("Order", "1");
-                put("Forecast Source", "Legion ML");
-                put("Input Stream", "Items:EDW:Enrollments");
-            }
-        };
-        HashMap<String, String> invisibledriverInfo = new HashMap<String, String>(){
-            {
-                put("Name", "Items:EDW:Verifications");
-                put("Type", "Items");
-                put("Channel", "EDW");
-                put("Category", "Verifications");
-                put("Show in App", "No");
-                put("Order", "2");
-                put("Forecast Source", "Imported");
-                put("Input Stream", "Items:EDW:Verifications");
-            }
-        };
-        //Go to Demand Driver template
-        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
-        configurationPage.goToConfigurationPage();
-        configurationPage.clickOnConfigurationCrad(templateType);
+            String templateType = "Demand Drivers";
+            String templateName = "testVisibility";
+            HashMap<String, String> visibledriverInfo = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Enrollments");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Enrollments");
+                    put("Show in App", "Yes");
+                    put("Order", "1");
+                    put("Forecast Source", "Legion ML");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
+            HashMap<String, String> invisibledriverInfo = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Verifications");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Verifications");
+                    put("Show in App", "No");
+                    put("Order", "2");
+                    put("Forecast Source", "Imported");
+                    put("Input Stream", "Items:EDW:Verifications");
+                }
+            };
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
 
-        //Go to Templates tab
-        settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
-        //Add new demand driver template
-        configurationPage.createNewTemplate(templateName);
-        configurationPage.clickOnTemplateName(templateName);
-        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            //Go to Templates tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+            //Add new demand driver template
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnTemplateName(templateName);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 
-        //Add two drivers, set up visible and invisible
-        configurationPage.clickAddOrEditForDriver("Add");
-        configurationPage.addOrEditDemandDriverInTemplate(visibledriverInfo);
-        configurationPage.clickAddOrEditForDriver("Add");
-        configurationPage.addOrEditDemandDriverInTemplate(invisibledriverInfo);
-        //Add association and save
-        configurationPage.createDynamicGroup(templateName, "Location Name", location);
-        configurationPage.selectOneDynamicGroup(templateName);
-        //Could publish normally
-        configurationPage.clickOnTemplateDetailTab();
-        configurationPage.publishNowTemplate();
+            //Add two drivers, set up visible and invisible
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(visibledriverInfo);
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(invisibledriverInfo);
+            //Add association and save
+            configurationPage.createDynamicGroup(templateName, "Location Name", location);
+            configurationPage.selectOneDynamicGroup(templateName);
+            //Could publish normally
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.publishNowTemplate();
 
-        //Verify channel/category visibility in Forecast page
-        refreshCache("Template");
-        switchToNewWindow();
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-        ForecastPage forecastPage = pageFactory.createForecastPage();
-        SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
-        scheduleCommonPage.goToSchedulePage();
-        forecastPage.clickForecast();
-        salesForecastPage.navigateToSalesForecastTab();
-        SimpleUtils.assertOnFail("The channel EDW should show up in forecast page!",
-                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", visibledriverInfo.get("Channel")), false);
-        SimpleUtils.assertOnFail("The category Enrollments should show up in forecast page!",
-                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  visibledriverInfo.get("Category")), false);
-        SimpleUtils.assertOnFail("The category Verifications should not show up in forecast page!",
-                !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", invisibledriverInfo.get("Category")), false);
-        //Remove the associated locations and templates
-        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
-        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
-        configurationPage.deleteOneDynamicGroup(templateName);
-        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-        configurationPage.setLeaveThisPageButton();
-        configurationPage.deleteTemplate(templateName);
+            //Verify channel/category visibility in Forecast page
+            refreshCache("Template");
+            switchToNewWindow();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+            scheduleCommonPage.goToSchedulePage();
+            forecastPage.clickForecast();
+            salesForecastPage.navigateToSalesForecastTab();
+            SimpleUtils.assertOnFail("The channel EDW should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", visibledriverInfo.get("Channel")), false);
+            SimpleUtils.assertOnFail("The category Enrollments should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  visibledriverInfo.get("Category")), false);
+            SimpleUtils.assertOnFail("The category Verifications should not show up in forecast page!",
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", invisibledriverInfo.get("Category")), false);
+            //Remove the associated locations and templates
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+            configurationPage.deleteOneDynamicGroup(templateName);
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.setLeaveThisPageButton();
+            configurationPage.deleteTemplate(templateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1279,100 +1280,100 @@ public class DemandDriverTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyForecastPageForOneNewlyCreatedDemandDriverTemplateForDGV2AsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-        String templateType = "Demand Drivers";
-        String templateName = "testVisibility_V2";
-        String locationName1 = "Boston_V2";
-        String locationName2 = "Cleveland_V2";
-        HashMap<String, String> invisibleInfo_location = new HashMap<String, String>(){
-            {
-                put("Name", "Items:EDW:Verifications");
-                put("Type", "Items");
-                put("Channel", "EDW");
-                put("Category", "Verifications");
-                put("Show in App", "No");
-                put("Order", "1");
-                put("Forecast Source", "Imported");
-                put("Input Stream", "Items:EDW:Verifications");
-            }
-        };
-        HashMap<String, String> visibleInfo_location = new HashMap<String, String>(){
-            {
-                put("Name", "Items:EDW:Enrollments");
-                put("Type", "Items");
-                put("Channel", "EDW");
-                put("Category", "Enrollments");
-                put("Show in App", "Yes");
-                put("Order", "2");
-                put("Forecast Source", "Legion ML");
-                put("Input Stream", "Items:EDW:Enrollments");
-            }
-        };
+            String templateType = "Demand Drivers";
+            String templateName = "testVisibility_V2";
+            String locationName1 = "Boston_V2";
+            String locationName2 = "Cleveland_V2";
+            HashMap<String, String> invisibleInfo_location = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Verifications");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Verifications");
+                    put("Show in App", "No");
+                    put("Order", "1");
+                    put("Forecast Source", "Imported");
+                    put("Input Stream", "Items:EDW:Verifications");
+                }
+            };
+            HashMap<String, String> visibleInfo_location = new HashMap<String, String>(){
+                {
+                    put("Name", "Items:EDW:Enrollments");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Enrollments");
+                    put("Show in App", "Yes");
+                    put("Order", "2");
+                    put("Forecast Source", "Legion ML");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
 
-        //Go to Demand Driver template
-        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
-        configurationPage.goToConfigurationPage();
-        configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
 
-        //Go to Templates tab
-        settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
+            //Go to Templates tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Templates");
 
-        //Add first demand driver template
-        configurationPage.createNewTemplate(templateName);
-        configurationPage.clickOnTemplateName(templateName);
-        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            //Add first demand driver template
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnTemplateName(templateName);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 
-        //Add one driver, set up visibility
-        configurationPage.clickAddOrEditForDriver("Add");
-        configurationPage.addOrEditDemandDriverInTemplate(invisibleInfo_location);
-        configurationPage.clickAddOrEditForDriver("Add");
-        configurationPage.addOrEditDemandDriverInTemplate(visibleInfo_location);
-        //Add association and save
-        configurationPage.createDynamicGroup(templateName, "Location Name", locationName1);
-        configurationPage.selectOneDynamicGroup(templateName);
-        //Could publish normally
-        configurationPage.clickOnTemplateDetailTab();
-        configurationPage.publishNowTemplate();
+            //Add one driver, set up visibility
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(invisibleInfo_location);
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(visibleInfo_location);
+            //Add association and save
+            configurationPage.createDynamicGroup(templateName, "Location Name", locationName1);
+            configurationPage.selectOneDynamicGroup(templateName);
+            //Could publish normally
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.publishNowTemplate();
 
-        //Verify channel/category visibility in Forecast page
-        refreshCache("Template");
-        switchToNewWindow();
-        LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName1);
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-        ForecastPage forecastPage = pageFactory.createForecastPage();
-        SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
-        scheduleCommonPage.goToSchedulePage();
-        forecastPage.clickForecast();
-        salesForecastPage.navigateToSalesForecastTab();
-        //Check channel/category visibility for location1
-        SimpleUtils.assertOnFail("The channel EDW should show up in forecast page!",
-                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", visibleInfo_location.get("Channel")), false);
-        SimpleUtils.assertOnFail("The category Verifications should not show up in forecast page!",
-                !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  invisibleInfo_location.get("Category")), false);
-        SimpleUtils.assertOnFail("The category Enrollments should show up in forecast page!",
-                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo_location.get("Category")), false);
+            //Verify channel/category visibility in Forecast page
+            refreshCache("Template");
+            switchToNewWindow();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName1);
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            SalesForecastPage salesForecastPage = pageFactory.createSalesForecastPage();
+            scheduleCommonPage.goToSchedulePage();
+            forecastPage.clickForecast();
+            salesForecastPage.navigateToSalesForecastTab();
+            //Check channel/category visibility for location1
+            SimpleUtils.assertOnFail("The channel EDW should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", visibleInfo_location.get("Channel")), false);
+            SimpleUtils.assertOnFail("The category Verifications should not show up in forecast page!",
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  invisibleInfo_location.get("Category")), false);
+            SimpleUtils.assertOnFail("The category Enrollments should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo_location.get("Category")), false);
 
-        //Check channel/category visibility for location2
-        locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName2);
-        forecastPage.clickForecast();
-        salesForecastPage.navigateToSalesForecastTab();
-        SimpleUtils.assertOnFail("The channel EDW should show up in forecast page!",
-                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", visibleInfo_location.get("Channel")), false);
-        SimpleUtils.assertOnFail("The category Verifications should  show up in forecast page!",
-                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  invisibleInfo_location.get("Category")), false);
-        SimpleUtils.assertOnFail("The category Enrollments should show up in forecast page!",
-                salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo_location.get("Category")), false);
-        //Remove the associated locations and templates
-        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
-        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
-        configurationPage.deleteOneDynamicGroup(templateName);
-        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-        configurationPage.setLeaveThisPageButton();
-        configurationPage.archiveOrDeleteTemplate(templateName);
+            //Check channel/category visibility for location2
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationName2);
+            forecastPage.clickForecast();
+            salesForecastPage.navigateToSalesForecastTab();
+            SimpleUtils.assertOnFail("The channel EDW should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("channel", visibleInfo_location.get("Channel")), false);
+            SimpleUtils.assertOnFail("The category Verifications should  show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand",  invisibleInfo_location.get("Category")), false);
+            SimpleUtils.assertOnFail("The category Enrollments should show up in forecast page!",
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo_location.get("Category")), false);
+            //Remove the associated locations and templates
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+            configurationPage.deleteOneDynamicGroup(templateName);
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.setLeaveThisPageButton();
+            configurationPage.archiveOrDeleteTemplate(templateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1708,30 +1709,30 @@ public class DemandDriverTest extends TestBase {
     @TestName(description = "Check UI for Aggregated demand driver page.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyForAggregatedDemandDriverUIAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        try {
-            String templateType = "Demand Drivers";
-            String templateName = "testAggregated";
-            String derivedType = "Aggregated";
+//        try {
+        String templateType = "Demand Drivers";
+        String templateName = "testAggregated";
+        String derivedType = "Aggregated";
 
-            //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-            refreshPage();
-            //Go to Demand Driver template
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
-            configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad(templateType);
-            //Go to Template tab
-            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
-            configurationPage.createNewTemplate(templateName);
-            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
-            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            configurationPage.clickAddOrEditForDriver("Add");
-            configurationPage.verifyForDerivedDemandDriverUI(derivedType, null);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+        //Turn on EnableTahoeStorage toggle
+        ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+        refreshPage();
+        //Go to Demand Driver template
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad(templateType);
+        //Go to Template tab
+        settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+        configurationPage.createNewTemplate(templateName);
+        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        configurationPage.clickAddOrEditForDriver("Add");
+        configurationPage.verifyForDerivedDemandDriverUI(derivedType, null);
+        ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//        } catch (Exception e) {
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
     }
 
     @Automated(automated = "Automated")
@@ -2370,54 +2371,54 @@ public class DemandDriverTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTimeConfigurationChangedToTextInputAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-        String OHTemplateType = "Operating Hours";
-        String SchedulingRulesTemplateType = "Scheduling Rules";
-        SimpleDateFormat dfs = new SimpleDateFormat("MMddHHmm");
-        String currentTime =  dfs.format(new Date()).trim();
-        String OHTemplate = "OH" + currentTime;
-        String SchedulingRulesTemplate = "SchedulingRules" + currentTime;
-        String dayParts = "DP1-forAuto";
-        String workRole = "Auto";
+            String OHTemplateType = "Operating Hours";
+            String SchedulingRulesTemplateType = "Scheduling Rules";
+            SimpleDateFormat dfs = new SimpleDateFormat("MMddHHmm");
+            String currentTime =  dfs.format(new Date()).trim();
+            String OHTemplate = "OH" + currentTime;
+            String SchedulingRulesTemplate = "SchedulingRules" + currentTime;
+            String dayParts = "DP1-forAuto";
+            String workRole = "Auto";
 
-        //Go to OH template and create one
-        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-        configurationPage.goToConfigurationPage();
-        configurationPage.clickOnConfigurationCrad(OHTemplateType);
-        configurationPage.createNewTemplate(OHTemplate);
-        //Check time configuration changed to text input
-        configurationPage.clickOnSpecifyTemplateName(OHTemplate, "edit");
-        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-        //Check it for "None"
-        configurationPage.selectDaypart(dayParts);
-        configurationPage.goToBusinessHoursEditPage("sunday");
-        configurationPage.checkOpenAndCloseTime();
-        configurationPage.clickOnCancelButton();
-        //Check it for "Open / Close"
-        configurationPage.selectOperatingBufferHours("StartEnd");
-        configurationPage.clickOpenCloseTimeLink();
-        configurationPage.checkOpenAndCloseTime();
-        configurationPage.clickOnCancelButton();
-        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-        configurationPage.setLeaveThisPageButton();
-        configurationPage.archiveOrDeleteTemplate(OHTemplate);
-        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            //Go to OH template and create one
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(OHTemplateType);
+            configurationPage.createNewTemplate(OHTemplate);
+            //Check time configuration changed to text input
+            configurationPage.clickOnSpecifyTemplateName(OHTemplate, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            //Check it for "None"
+            configurationPage.selectDaypart(dayParts);
+            configurationPage.goToBusinessHoursEditPage("sunday");
+            configurationPage.checkOpenAndCloseTime();
+            configurationPage.clickOnCancelButton();
+            //Check it for "Open / Close"
+            configurationPage.selectOperatingBufferHours("StartEnd");
+            configurationPage.clickOpenCloseTimeLink();
+            configurationPage.checkOpenAndCloseTime();
+            configurationPage.clickOnCancelButton();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.setLeaveThisPageButton();
+            configurationPage.archiveOrDeleteTemplate(OHTemplate);
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
 
-        //Go to Scheduling Rules template and create one
-        configurationPage.clickOnConfigurationCrad(SchedulingRulesTemplateType);
-        configurationPage.createNewTemplate(SchedulingRulesTemplate);
-        //Check time configuration changed to text input
-        configurationPage.clickOnSpecifyTemplateName(SchedulingRulesTemplate, "edit");
-        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-        configurationPage.selectWorkRoleToEdit(workRole);
-        configurationPage.checkTheEntryOfAddBasicStaffingRule();
-        configurationPage.verifyStaffingRulePageShowWell();
-        configurationPage.selectStartTimeEvent("Specified Hours");
-        configurationPage.clickOpenCloseTimeLink();
-        configurationPage.checkOpenAndCloseTime();
-        configurationPage.clickOnCancelButton();
-        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-        configurationPage.archiveOrDeleteTemplate(OHTemplate);
+            //Go to Scheduling Rules template and create one
+            configurationPage.clickOnConfigurationCrad(SchedulingRulesTemplateType);
+            configurationPage.createNewTemplate(SchedulingRulesTemplate);
+            //Check time configuration changed to text input
+            configurationPage.clickOnSpecifyTemplateName(SchedulingRulesTemplate, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddBasicStaffingRule();
+            configurationPage.verifyStaffingRulePageShowWell();
+            configurationPage.selectStartTimeEvent("Specified Hours");
+            configurationPage.clickOpenCloseTimeLink();
+            configurationPage.checkOpenAndCloseTime();
+            configurationPage.clickOnCancelButton();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.archiveOrDeleteTemplate(OHTemplate);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2625,135 +2626,135 @@ public class DemandDriverTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyPredictabilityScoreIsOnlyForLegionMLForecastSourceAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-        String templateType = "Demand Drivers";
-        String templateName = "testPredictabilityScore";
-        HashMap<String, String> legionMLDriver = new HashMap<String, String>(){
-            {
-                put("Name", "LegionMLDriver");
-                put("Type", "Items");
-                put("Channel", "EDW");
-                put("Category", "Enrollments");
-                put("Show in App", "Yes");
-                put("Order", "1");
-                put("Forecast Source", "Legion ML");
-                put("Input Stream", "Items:EDW:Enrollments");
-            }
-        };
-        HashMap<String, String> importedLDriver = new HashMap<String, String>(){
-            {
-                put("Name", "ImportedDriver");
-                put("Type", "Items");
-                put("Channel", "EDW");
-                put("Category", "Verifications");
-                put("Show in App", "Yes");
-                put("Order", "2");
-                put("Forecast Source", "Imported");
-                put("Input Stream", "Items:EDW:Verifications");
-            }
-        };
-        HashMap<String, String> remoteLDriver = new HashMap<String, String>(){
-            {
-                put("Name", "RemoteDriver");
-                put("Type", "Amount");
-                put("Channel", "Channel01");
-                put("Category", "Enrollments");
-                put("Show in App", "Yes");
-                put("Order", "1");
-                put("Forecast Source", "Remote");
-                put("Specify Location", "Parent Location");
-                put("Parent Level", "2");
-            }
-        };
-        HashMap<String, String> aggregatedDriver = new HashMap<String, String>(){
-            {
-                put("Name", "AggregatedDriver");
-                put("Type", "Items");
-                put("Channel", "Channel01");
-                put("Category", "Verifications");
-                put("Show in App", "No");
-                put("Order", "1");
-                put("Forecast Source", "Aggregated");
-                put("Options", "LegionMLDriver,-1.98;ImportedDriver,7.23");
-            }
-        };
-        HashMap<String, String> distributedDriver = new HashMap<String, String>(){
-            {
-                put("Name", "DistributedDriver");
-                put("Type", "Items");
-                put("Channel", "Channel01");
-                put("Category", "Enrollments");
-                put("Show in App", "No");
-                put("Order", "1");
-                put("Forecast Source", "Distributed");
-                put("Source Demand Driver", "LegionMLDriver");
-                put("Distribution of Demand Driver", "ImportedDriver");
-            }
-        };
-        //Turn on EnableTahoeStorage toggle
-        ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-        refreshPage();
-        //Go to Demand Driver template
-        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-        SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
-        configurationPage.goToConfigurationPage();
-        configurationPage.clickOnConfigurationCrad(templateType);
-        configurationPage.createNewTemplate(templateName);
-        configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
-        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-        //Check Predictability Score is visible for Legion ML Driver
-        configurationPage.clickAddOrEditForDriver("Add");
-        configurationPage.addOrEditDemandDriverInTemplate(legionMLDriver);
-        configurationPage.clickAddOrEditForDriver("Edit");
-        SimpleUtils.assertOnFail("Predictability Score should show up for Legion ML forecast source driver!", configurationPage.verifyPredictabilityScoreExist(), false);
-        //Check Predictability Score is invisible for Imported Driver
-        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-        configurationPage.clickAddOrEditForDriver("Add");
-        configurationPage.addOrEditDemandDriverInTemplate(importedLDriver);
-        configurationPage.searchDriverInTemplateDetailsPage(importedLDriver.get("Name"));
-        configurationPage.clickAddOrEditForDriver("Edit");
-        configurationPage.setLeaveThisPageButton();
-        SimpleUtils.assertOnFail("Predictability Score should NOT show up for Imported forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
-        //Check Predictability Score is invisible for Remote Driver
-        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-        configurationPage.clickAddOrEditForDriver("Add");
-        configurationPage.addOrEditDemandDriverInTemplate(remoteLDriver);
-        configurationPage.searchDriverInTemplateDetailsPage(remoteLDriver.get("Name"));
-        configurationPage.clickAddOrEditForDriver("Edit");
-        configurationPage.setLeaveThisPageButton();
-        SimpleUtils.assertOnFail("Predictability Score should NOT show up for Remote forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
-        //Check Predictability Score is invisible for Aggregated Driver
-        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-        configurationPage.clickAddOrEditForDriver("Add");
-        configurationPage.addOrEditDemandDriverInTemplate(aggregatedDriver);
-        configurationPage.searchDriverInTemplateDetailsPage(aggregatedDriver.get("Name"));
-        configurationPage.clickAddOrEditForDriver("Edit");
-        configurationPage.setLeaveThisPageButton();
-        SimpleUtils.assertOnFail("Predictability Score should NOT show up for Aggregated forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
-        //Check Predictability Score is invisible for Distributed Driver
-        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-        configurationPage.clickAddOrEditForDriver("Add");
-        configurationPage.addOrEditDemandDriverInTemplate(distributedDriver);
-        configurationPage.searchDriverInTemplateDetailsPage(distributedDriver.get("Name"));
-        configurationPage.clickAddOrEditForDriver("Edit");
-        configurationPage.setLeaveThisPageButton();
-        SimpleUtils.assertOnFail("Predictability Score should NOT show up for Distributed forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
-        configurationPage.clickOnBackButton();
-        configurationPage.createDynamicGroup(templateName, "Custom", templateName + "test");
-        configurationPage.selectOneDynamicGroup(templateName);
-        configurationPage.clickOnTemplateDetailTab();
-        configurationPage.publishNowTemplate();
+            String templateType = "Demand Drivers";
+            String templateName = "testPredictabilityScore";
+            HashMap<String, String> legionMLDriver = new HashMap<String, String>(){
+                {
+                    put("Name", "LegionMLDriver");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Enrollments");
+                    put("Show in App", "Yes");
+                    put("Order", "1");
+                    put("Forecast Source", "Legion ML");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
+            HashMap<String, String> importedLDriver = new HashMap<String, String>(){
+                {
+                    put("Name", "ImportedDriver");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Verifications");
+                    put("Show in App", "Yes");
+                    put("Order", "2");
+                    put("Forecast Source", "Imported");
+                    put("Input Stream", "Items:EDW:Verifications");
+                }
+            };
+            HashMap<String, String> remoteLDriver = new HashMap<String, String>(){
+                {
+                    put("Name", "RemoteDriver");
+                    put("Type", "Amount");
+                    put("Channel", "Channel01");
+                    put("Category", "Enrollments");
+                    put("Show in App", "Yes");
+                    put("Order", "1");
+                    put("Forecast Source", "Remote");
+                    put("Specify Location", "Parent Location");
+                    put("Parent Level", "2");
+                }
+            };
+            HashMap<String, String> aggregatedDriver = new HashMap<String, String>(){
+                {
+                    put("Name", "AggregatedDriver");
+                    put("Type", "Items");
+                    put("Channel", "Channel01");
+                    put("Category", "Verifications");
+                    put("Show in App", "No");
+                    put("Order", "1");
+                    put("Forecast Source", "Aggregated");
+                    put("Options", "LegionMLDriver,-1.98;ImportedDriver,7.23");
+                }
+            };
+            HashMap<String, String> distributedDriver = new HashMap<String, String>(){
+                {
+                    put("Name", "DistributedDriver");
+                    put("Type", "Items");
+                    put("Channel", "Channel01");
+                    put("Category", "Enrollments");
+                    put("Show in App", "No");
+                    put("Order", "1");
+                    put("Forecast Source", "Distributed");
+                    put("Source Demand Driver", "LegionMLDriver");
+                    put("Distribution of Demand Driver", "ImportedDriver");
+                }
+            };
+            //Turn on EnableTahoeStorage toggle
+            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            refreshPage();
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            //Check Predictability Score is visible for Legion ML Driver
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(legionMLDriver);
+            configurationPage.clickAddOrEditForDriver("Edit");
+            SimpleUtils.assertOnFail("Predictability Score should show up for Legion ML forecast source driver!", configurationPage.verifyPredictabilityScoreExist(), false);
+            //Check Predictability Score is invisible for Imported Driver
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(importedLDriver);
+            configurationPage.searchDriverInTemplateDetailsPage(importedLDriver.get("Name"));
+            configurationPage.clickAddOrEditForDriver("Edit");
+            configurationPage.setLeaveThisPageButton();
+            SimpleUtils.assertOnFail("Predictability Score should NOT show up for Imported forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
+            //Check Predictability Score is invisible for Remote Driver
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(remoteLDriver);
+            configurationPage.searchDriverInTemplateDetailsPage(remoteLDriver.get("Name"));
+            configurationPage.clickAddOrEditForDriver("Edit");
+            configurationPage.setLeaveThisPageButton();
+            SimpleUtils.assertOnFail("Predictability Score should NOT show up for Remote forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
+            //Check Predictability Score is invisible for Aggregated Driver
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(aggregatedDriver);
+            configurationPage.searchDriverInTemplateDetailsPage(aggregatedDriver.get("Name"));
+            configurationPage.clickAddOrEditForDriver("Edit");
+            configurationPage.setLeaveThisPageButton();
+            SimpleUtils.assertOnFail("Predictability Score should NOT show up for Aggregated forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
+            //Check Predictability Score is invisible for Distributed Driver
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(distributedDriver);
+            configurationPage.searchDriverInTemplateDetailsPage(distributedDriver.get("Name"));
+            configurationPage.clickAddOrEditForDriver("Edit");
+            configurationPage.setLeaveThisPageButton();
+            SimpleUtils.assertOnFail("Predictability Score should NOT show up for Distributed forecast source driver!", !configurationPage.verifyPredictabilityScoreExist(), false);
+            configurationPage.clickOnBackButton();
+            configurationPage.createDynamicGroup(templateName, "Custom", templateName + "test");
+            configurationPage.selectOneDynamicGroup(templateName);
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.publishNowTemplate();
 
-        //Delete the association and archive the template
-        configurationPage.clickOnTemplateName(templateName);
-        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-        settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
-        configurationPage.deleteOneDynamicGroup(templateName);
-        configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-        configurationPage.setLeaveThisPageButton();
-        configurationPage.archiveOrDeleteTemplate(templateName);
+            //Delete the association and archive the template
+            configurationPage.clickOnTemplateName(templateName);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+            configurationPage.deleteOneDynamicGroup(templateName);
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            configurationPage.setLeaveThisPageButton();
+            configurationPage.archiveOrDeleteTemplate(templateName);
 
-        //Turn off EnableTahoeStorage toggle
-        ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            //Turn off EnableTahoeStorage toggle
+            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2827,6 +2828,41 @@ public class DemandDriverTest extends TestBase {
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.setLeaveThisPageButton();
             configurationPage.archiveOrDeleteTemplate(templateName);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify empty channel name is allowed")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyEmptyChannelNameIsAllowedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            String channelDisplayName = "ChannelTest";
+            String description = "This is a test for empty channel name!";
+            String verifyType = "channel";
+            String channelName = "";
+            String channelDisplayNameToUpdate = "ChannelToUpdate";
+
+            //Turn on UseDemandDriverTemplateSwitch toggle
+            ToggleAPI.enableToggle(Toggles.UseDemandDriverTemplateSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            refreshPage();
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Settings tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+            //Add new channel with empty channel name in settings.
+            settingsAndAssociationPage.createNewChannelOrCategory(verifyType, channelDisplayName, description, channelName);
+            //Update a channel to empty channel name
+            settingsAndAssociationPage.clickOnEditBtnInSettings(verifyType, channelDisplayName, channelDisplayNameToUpdate);
+            //Remove the channel
+            settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, channelDisplayNameToUpdate);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

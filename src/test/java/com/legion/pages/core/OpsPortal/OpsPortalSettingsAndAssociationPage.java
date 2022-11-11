@@ -419,7 +419,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
     @FindBy(css = "label.use-in-reporting input")
     private WebElement useInReportCheckbox;
     @Override
-    public void createNewChannelOrCategory(String type, String displayName, String description) throws Exception {
+    public void createNewChannelOrCategory(String type, String displayName, String... otherInfo) throws Exception {
         WebElement displayNameInput;
         WebElement NameOrSourceTypeInput;
         boolean isExisting = false;
@@ -432,7 +432,11 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                         NameOrSourceTypeInput = fieldsInput.get(1).findElement(By.cssSelector("input"));
                         displayNameInput.sendKeys(displayName);
                         if (NameOrSourceTypeInput.getText().equals(displayNameInput.getText())) {
-                            fieldsInput.get(2).findElement(By.cssSelector("textarea[ng-if=\"$ctrl.type === 'textarea'\"]")).sendKeys(description);
+                            fieldsInput.get(2).findElement(By.cssSelector("textarea[ng-if=\"$ctrl.type === 'textarea'\"]")).sendKeys(otherInfo[0]);
+                            if (otherInfo.length > 1){
+                                NameOrSourceTypeInput.clear();
+                                NameOrSourceTypeInput.sendKeys(otherInfo[1]);
+                            }
                             if ("Category".equalsIgnoreCase(type) && isElementLoaded(useInReportCheckbox) &&
                                     useInReportCheckbox.getAttribute("checked") == null) {
                                 useInReportCheckbox.click();
