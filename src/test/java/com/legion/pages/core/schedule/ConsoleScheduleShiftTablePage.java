@@ -3586,7 +3586,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public void verifyTheContentOnBulkActionMenu(int selectedShiftCount) throws Exception {
         if (isElementLoaded(bulkActionMenu, 5) && bulkActionMenu.getText().contains(String.valueOf(selectedShiftCount))
-        && bulkActionMenu.getText().contains("Shifts Selected") && bulkActionMenu.getText().contains("Delete")) {
+        && (bulkActionMenu.getText().contains("Shifts Selected") || bulkActionMenu.getText().contains("Shift Selected") ) && bulkActionMenu.getText().contains("Delete")) {
             SimpleUtils.pass("The content on bulk action menu is correct!");
         } else {
             SimpleUtils.fail("The content on bulk action menu is incorrect!", false);
@@ -4420,7 +4420,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             SimpleUtils.fail("Group by Location: The action popup fail to load!! ", false);
         return buttonNames;
     }
-    
+
     @FindBy(css = "[ng-class=\"hideItem('staffing.guidance')\"]")
     private WebElement staffSmartCard;
     @Override
@@ -4485,5 +4485,51 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else {
             SimpleUtils.fail("Assign button display incorrectly!",false);
         }
+    }
+
+    @Override
+    public void bulkEditTMShiftsInWeekView(String teamMemberName) throws Exception {
+        unSelectAllBulkSelectedShifts();
+        if (areListElementVisible(shiftsWeekView, 15)) {
+            HashSet<Integer> shiftIndexes = new HashSet<>();
+            //Get all index of TM's shifts
+            for (int i=0; i< shiftsWeekView.size(); i++) {
+                WebElement workerName = shiftsWeekView.get(i).findElement(By.className("week-schedule-worker-name"));
+                if (workerName != null) {
+                    if (workerName.getText().toLowerCase().trim().contains(teamMemberName.toLowerCase().trim())) {
+                        shiftIndexes.add(i);
+                        SimpleUtils.pass("Bulk edit: Get shift index :"+i+" successfully! ");
+                    }
+                }
+            }
+            if (shiftIndexes.size()>0) {
+                //Select the shifts
+                Actions action = new Actions(getDriver());
+                for (int i : shiftIndexes) {
+                    scrollToElement(shiftsWeekView.get(i));
+                    waitForSeconds(1);
+                    action.keyDown(Keys.CONTROL).build().perform();
+                    action.click(shiftsWeekView.get(i).findElement(By.className("week-schedule-worker-name")));
+                    action.keyUp(Keys.CONTROL).build().perform();
+                }
+                int selectedShiftCount = getDriver().findElements(By.cssSelector(".shift-selected-multi")).size();
+                if (selectedShiftCount == shiftIndexes.size()){
+                    SimpleUtils.pass("Bulk edit:Select shift successfully! ");
+                }else
+                    SimpleUtils.fail("Bulk edit: Fail to select shift! the expect count is:"+shiftIndexes.size()
+                            + " the actual count is: "+selectedShiftCount, false);
+                //Right click the selected shifts
+                waitForSeconds(2);
+                rightClickOnSelectedShifts(shiftIndexes);
+                // Verify the Delete button on Bulk Action Menu is clickable
+                clickOnBtnOnBulkActionMenuByText("Edit");
+                waitForSeconds(3);
+                // Verify the shifts are marked as X after clicking on Delete button
+                ConsoleEditShiftPage consoleEditShiftPage = new ConsoleEditShiftPage();
+                consoleEditShiftPage.verifyTheContentOfOptionsSection();
+            } else
+                SimpleUtils.report("There is no shift for :"+teamMemberName+" !");
+        }else
+            SimpleUtils.report("Schedule Week View: shifts load failed or there is no shift in this week");
     }
 }

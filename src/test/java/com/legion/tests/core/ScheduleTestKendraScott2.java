@@ -7310,15 +7310,16 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				configurationPage.clickOnConfigurationCrad("Scheduling Policies");
 				configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 				configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-				Thread.sleep(3000);
+				Thread.sleep(10000);
 				controlsNewUIPage.enableOverRideAssignmentRuleAsNoForOP();
 				configurationPage.publishNowTheTemplate();
-				Thread.sleep(240000);
+				Thread.sleep(180000);
 				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
 					//Back to the console page
 					switchToConsoleWindow();
 				}
 			}
+			refreshCachesAfterChangeTemplate();
 
 			//Go to the schedule view table
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -7785,7 +7786,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchTeamMemberByName(firstNameOfTM);
+			newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+ lastNameOfTM);
 			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();
 
@@ -9267,6 +9268,83 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+//	@Enterprise(name = "Vailqacn_Enterprise")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Verify 'Please confirm' messages on warning modal when there are more than one warnings")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyPleaseConfirmMessageOnWarningModalAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+		try {
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+			ForecastPage forecastPage = pageFactory.createForecastPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			goToSchedulePageScheduleTab();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if(!isActiveWeekGenerated){
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+
+			List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			String firstNameOfTM = shiftInfo1.get(0);
+			int shiftCount1 = 0;
+			while ((firstNameOfTM.equalsIgnoreCase("open")
+					|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+				shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+				firstNameOfTM  = shiftInfo1.get(0);
+				shiftCount1++;
+			}
+			String lastName = shiftInfo1.get(5);
+			String workRole =  shiftInfo1.get(4);
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+			scheduleMainPage.saveSchedule();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			createShiftsWithSpecificValues(workRole, "", "", "6am", "2pm",
+					1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(),
+					"", firstNameOfTM+ " "+lastName);
+			scheduleMainPage.saveSchedule();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectSpecificWorkDay(1);
+			newShiftPage.moveSliderAtCertainPoint("6pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("2:15pm", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchWithOutSelectTM(firstNameOfTM+ " "+ lastName);
+			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
+			String expectedMessage = "Please confirm";
+			if(newShiftPage.ifWarningModeDisplay()){
+				String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
+				int count = getCharactersCount(warningMessage, expectedMessage);
+				if (count==1){
+					SimpleUtils.pass(expectedMessage+ " message displays");
+				} else {
+					SimpleUtils.fail("The warning message display incorrectly, the actual message is:"+warningMessage, false);
+				}
+				shiftOperatePage.clickOnAssignAnywayButton();
+			} else {
+				SimpleUtils.fail("There is no warning modal displaying!",false);
+			}
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(),false);
 		}
 	}
 }

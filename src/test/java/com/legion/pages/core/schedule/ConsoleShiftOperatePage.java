@@ -1571,7 +1571,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             breakTimes.add(mealBreakTimes.get(0).getText());
             breakTimes.add(restBreakTimes.get(0).getText());
         }else
-            SimpleUtils.fail("Edit meal break window load failed",true);
+            SimpleUtils.fail("Edit meal break window load failed",false);
         return breakTimes;
     }
 
@@ -3634,7 +3634,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 j++;
             }
         }else {
-            SimpleUtils.fail("Seniority values are not loaded!", false);
+            SimpleUtils.report("Seniority values are not loaded!");
         }
         return (ArrayList) seniorityValues;
     }

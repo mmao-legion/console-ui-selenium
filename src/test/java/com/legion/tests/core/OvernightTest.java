@@ -343,19 +343,19 @@ public class OvernightTest extends TestBase {
             scheduleMainPage.saveSchedule();
             //Verify the overnight shift can display on next day
             scheduleCommonPage.navigateDayViewWithIndex(3);
-//            i =0;
+            i =0;
             int shiftCount = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).size();
-//            while (i<5 && shiftCount> 0){
-//                Thread.sleep(5000);
-//                loginPage.logOut();
-//                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-//                goToSchedulePageScheduleTab();
-//                scheduleCommonPage.navigateToNextWeek();
-//                scheduleCommonPage.clickOnDayView();
-//                scheduleCommonPage.navigateDayViewWithIndex(3);
-//                shiftCount = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).size();
-//                i++;
-//            }
+            while (i<5 && shiftCount> 0){
+                Thread.sleep(5000);
+                loginPage.logOut();
+                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+                goToSchedulePageScheduleTab();
+                scheduleCommonPage.navigateToNextWeek();
+                scheduleCommonPage.clickOnDayView();
+                scheduleCommonPage.navigateDayViewWithIndex(3);
+                shiftCount = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).size();
+                i++;
+            }
             SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should not display on the next day! ",
                     shiftCount == 0, false);
 
