@@ -158,6 +158,7 @@
                             <include name="VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin" />
                             <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" /> The code is not merged into RC yet -->
                     <include name="verifyRecommendTabHasTMsAsInternalAdmin" />
+                    <include name="verifyPleaseConfirmMessageOnWarningModalAsInternalAdmin" />
                                    </methods>
                                </class>
                            </classes>
