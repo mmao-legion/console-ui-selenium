@@ -1438,7 +1438,7 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.inputStartOrEndTime(inputStartTime, true);
             editShiftPage.clickOnUpdateButton();
             String errorMessage = "Hours on";
-            ArrayList <String> startErrorMessage = editShiftPage.getErrorMessageOfTime();
+            List<String> startErrorMessage = editShiftPage.getErrorMessageOfTime();
             SimpleUtils.assertOnFail("Error message of start time is not loaded correctly!", startErrorMessage.get(0).contains(errorMessage), false);
             shiftOperatePage.closeViewStatusContainer();
 
@@ -1454,7 +1454,7 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.inputStartOrEndTime(inputEndTime, false);
             editShiftPage.clickOnUpdateButton();
             String defaultMessage = "Start time should be before End time";
-            ArrayList <String> endErrorMessage = editShiftPage.getErrorMessageOfTime();
+            List<String> endErrorMessage = editShiftPage.getErrorMessageOfTime();
             SimpleUtils.assertOnFail("Error message of start time is not loaded correctly!", endErrorMessage.get(0).trim().equalsIgnoreCase(defaultMessage), false);
             shiftOperatePage.closeViewStatusContainer();
 

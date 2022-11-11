@@ -110,7 +110,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     public void clickOnCancelButtonOnEditMode() throws Exception {
         if (isElementLoaded(scheduleEditModeCancelButton)) {
-            click(scheduleEditModeCancelButton);
+            clickTheElement(scheduleEditModeCancelButton);
             SimpleUtils.pass("Schedule edit shift page cancelled successfully!");
         }
     }

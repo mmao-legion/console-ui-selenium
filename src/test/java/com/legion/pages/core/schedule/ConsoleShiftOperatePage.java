@@ -1571,7 +1571,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             breakTimes.add(mealBreakTimes.get(0).getText());
             breakTimes.add(restBreakTimes.get(0).getText());
         }else
-            SimpleUtils.fail("Edit meal break window load failed",true);
+            SimpleUtils.fail("Edit meal break window load failed",false);
         return breakTimes;
     }
 

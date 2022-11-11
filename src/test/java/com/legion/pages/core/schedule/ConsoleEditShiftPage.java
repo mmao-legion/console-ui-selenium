@@ -10,7 +10,9 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -99,7 +101,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     @Override
     public boolean isEditShiftWindowLoaded() throws Exception {
         waitForSeconds(5);
-        if (isElementLoaded(editShiftWindow, 5) && areListElementVisible(gridContainers, 10)) {
+        if (isElementLoaded(editShiftWindow, 15) && areListElementVisible(gridContainers, 10)) {
             return true;
         }
         return false;
@@ -880,11 +882,16 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     @FindBy (css = ".MuiGrid-spacing-xs-2 >div:nth-child(1) [data-testid=\"CancelRoundedIcon\"]")
     private List<WebElement> removeMealBreakButtons;
     @FindBy (css = ".MuiGrid-spacing-xs-2 >div:nth-child(1) [data-testid=\"AddOutlinedIcon\"]")
-    private WebElement addMealBreakButtons;
+    private WebElement addMealBreakButton;
     @FindBy (css = ".MuiGrid-spacing-xs-2 >div:nth-child(2) [data-testid=\"CancelRoundedIcon\"]")
     private List<WebElement> removeRestBreakButtons;
     @FindBy (css = ".MuiGrid-spacing-xs-2 >div:nth-child(2) [data-testid=\"AddOutlinedIcon\"]")
-    private WebElement addRestBreakButtons;
+    private WebElement addRestBreakButton;
+    @FindBy (css = ".MuiGrid-grid-xs-true:nth-child(1)  [style=\"border-top: none;\"] div")
+    private List<WebElement> mealBreakWarningMessages;
+    @FindBy (css = ".MuiGrid-grid-xs-true:nth-child(2)  [style=\"border-top: none;\"] div")
+    private List<WebElement> restBreakWarningMessages;
+
 
     @Override
     public void removeAllMealBreaks() {
@@ -924,24 +931,178 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     @FindBy(css = "#shiftEnd-helper-text")
     private WebElement endTimeErrorMessage;
     @Override
-    public ArrayList getErrorMessageOfTime() throws Exception {
+    public List<String> getErrorMessageOfTime() throws Exception {
         List<String> errorMessages = new ArrayList<>();
         if (isElementLoaded(startTimeErrorMessage, 5) && !(isElementLoaded(endTimeErrorMessage, 5))) {
             waitForSeconds(1);
             errorMessages.add(0, startTimeErrorMessage.getText().trim());
             SimpleUtils.report("Catch the error message of Start Time!");
-        }
-        else if (isElementLoaded(endTimeErrorMessage, 5) && !(isElementLoaded(startTimeErrorMessage, 5))) {
+        } else if (isElementLoaded(endTimeErrorMessage, 5) && !(isElementLoaded(startTimeErrorMessage, 5))) {
             waitForSeconds(1);
             errorMessages.add(0, endTimeErrorMessage.getText().trim());
             SimpleUtils.report("Catch the error message of End Time!");
-        }
-        else if (isElementLoaded(startTimeErrorMessage, 5) && isElementLoaded(endTimeErrorMessage, 5)) {
+        } else if (isElementLoaded(startTimeErrorMessage, 5) && isElementLoaded(endTimeErrorMessage, 5)) {
             waitForSeconds(1);
             errorMessages.add(0, startTimeErrorMessage.getText().trim());
             errorMessages.add(1, endTimeErrorMessage.getText().trim());
             SimpleUtils.report("Catch the error message of Start Time & End Time!");
         }
-        return (ArrayList) errorMessages;
+        return errorMessages;
+    }
+
+    @FindBy (css = "[name=\"mealBreaks.0.startMin\"]")
+    private List<WebElement> mealBreaksStartInputs;
+    @FindBy (css = "[name=\"mealBreaks.0.endMin\"]")
+    private List<WebElement> mealBreaksEndInputs;
+    @FindBy (css = "[name=\"restBreaks.0.startMin\"]")
+    private List<WebElement> restBreaksStartInputs;
+    @FindBy (css = "[name=\"restBreaks.0.endMin\"]")
+    private List<WebElement> restBreaksEndInputs;
+
+
+    @Override
+    public void inputMealBreakTimes(String startMealTime, String endMealTime, int index) throws Exception {
+        if (areListElementVisible(mealBreaksStartInputs, 3)
+                && areListElementVisible(mealBreaksEndInputs, 3)){
+            mealBreaksStartInputs.get(index).clear();
+            mealBreaksStartInputs.get(index).sendKeys(startMealTime);
+            mealBreaksEndInputs.get(index).clear();
+            mealBreaksEndInputs.get(index).sendKeys(endMealTime);
+            click(locationInfo);
+            SimpleUtils.pass("Set meal start and end time successfully! ");
+        } else
+            SimpleUtils.fail("Meal break start and end inputs fail to load! ", false);
+    }
+
+
+    @Override
+    public void inputRestBreakTimes(String startRestTime, String endRestTime, int index) throws Exception {
+        if (areListElementVisible(restBreaksEndInputs, 3)
+                && areListElementVisible(restBreaksEndInputs, 3)){
+            restBreaksEndInputs.get(index).clear();
+            restBreaksEndInputs.get(index).sendKeys(endRestTime);
+            restBreaksStartInputs.get(index).clear();
+            restBreaksStartInputs.get(index).sendKeys(startRestTime);
+            click(locationInfo);
+            SimpleUtils.pass("Set rest start and end time successfully! ");
+        } else
+            SimpleUtils.fail("Rest break start and end inputs fail to load! ", false);
+    }
+
+    @Override
+    public List<Map<String, String>> getMealBreakTimes() throws Exception {
+        List<Map<String, String>> mealBreakTimeList = new ArrayList<>();
+        if (areListElementVisible(mealBreaksStartInputs, 3)
+                && areListElementVisible(mealBreaksEndInputs, 3)
+                && mealBreaksStartInputs.size() == mealBreaksEndInputs.size()){
+            for (int i= 0; i< mealBreaksStartInputs.size();i++) {
+                Map<String, String> mealBreakTimes= new HashMap<>();
+                mealBreakTimes.put("mealStartTime", mealBreaksStartInputs.get(i).getAttribute("value"));
+                mealBreakTimes.put("mealEndTime", mealBreaksEndInputs.get(i).getAttribute("value"));
+                mealBreakTimeList.add(mealBreakTimes);
+            }
+
+            if (mealBreakTimeList.size() > 0) {
+                SimpleUtils.pass("Get meal breaks successfully! ");
+            } else
+                SimpleUtils.fail("Fail to get meal breaks! ", false);
+        } else
+            SimpleUtils.fail("Meal break start and end inputs fail to load! ", false);
+        return mealBreakTimeList;
+    }
+
+
+    @Override
+    public List<Map<String, String>> getRestBreakTimes() throws Exception {
+        List<Map<String, String>> restBreakTimeList = new ArrayList<>();
+        if (areListElementVisible(restBreaksStartInputs, 3)
+                && areListElementVisible(restBreaksEndInputs, 3)
+                && restBreaksStartInputs.size() == restBreaksEndInputs.size()){
+            for (int i= 0; i< restBreaksStartInputs.size();i++) {
+                Map<String, String> restBreakTimes= new HashMap<>();
+                restBreakTimes.put("restStartTime", restBreaksStartInputs.get(i).getAttribute("value"));
+                restBreakTimes.put("restEndTime", restBreaksEndInputs.get(i).getAttribute("value"));
+                restBreakTimeList.add(restBreakTimes);
+            }
+
+            if (restBreakTimeList.size() > 0) {
+                SimpleUtils.pass("Get rest breaks successfully! ");
+            } else
+                SimpleUtils.fail("Fail to get rest breaks! ", false);
+        } else
+            SimpleUtils.fail("Rest break start and end inputs fail to load! ", false);
+        return restBreakTimeList;
+    }
+
+
+    @Override
+    public void clickOnAddMealBreakButton() throws Exception {
+        if (isElementLoaded(addMealBreakButton, 5)) {
+            scrollToElement(addMealBreakButton);
+            click(addMealBreakButton);
+            SimpleUtils.pass("Click add meal break button successfully! ");
+        }else
+            SimpleUtils.fail("The add meal break button fail to load! ", false);
+    }
+
+    @Override
+    public void clickOnAddRestBreakButton() throws Exception {
+        if (isElementLoaded(addRestBreakButton, 5)) {
+            scrollToElement(addRestBreakButton);
+            click(addRestBreakButton);
+            SimpleUtils.pass("Click add rest break button successfully! ");
+        }else
+            SimpleUtils.fail("The add rest break button fail to load! ", false);
+    }
+
+
+    @Override
+    public List<String> getMealBreakWarningMessage() {
+        List<String> warningMessage = new ArrayList<>();
+        if (areListElementVisible(mealBreakWarningMessages, 3)){
+            for (WebElement message: mealBreakWarningMessages) {
+                warningMessage.add(message.getText());
+                SimpleUtils.pass("Set warning message: "+message.getAttribute("value")+" successfully!");
+            }
+        }else
+            SimpleUtils.report("The meal break warning message fail to load! ");
+        return warningMessage;
+    }
+
+
+    @Override
+    public List<String> getRestBreakWarningMessage() {
+        List<String> warningMessage = new ArrayList<>();
+        if (areListElementVisible(restBreakWarningMessages, 3)){
+            for (WebElement message: restBreakWarningMessages) {
+                warningMessage.add(message.getText());
+                SimpleUtils.pass("Set warning message: "+message.getAttribute("value")+" successfully!");
+            }
+        }else
+            SimpleUtils.report("The rest break warning message fail to load! ");
+        return warningMessage;
+    }
+
+
+    @Override
+    public int getMealBreakCount () throws Exception {
+        int count = 0;
+        if (mealBreaksStartInputs.size() == mealBreaksEndInputs.size()) {
+            count = mealBreaksStartInputs.size();
+            SimpleUtils.pass("Set meal break count successfully! ");
+        }else
+            SimpleUtils.fail("Meal breaks on single edit shift page display incorrectly", false);
+        return count;
+    }
+
+    @Override
+    public int getRestBreakCount () throws Exception {
+        int count = 0;
+        if (restBreaksStartInputs.size() == restBreaksEndInputs.size()) {
+            count = restBreaksStartInputs.size();
+            SimpleUtils.pass("Set reset break count successfully! ");
+        }else
+            SimpleUtils.fail("Rest breaks on single edit shift page display incorrectly", false);
+        return count;
     }
 }
