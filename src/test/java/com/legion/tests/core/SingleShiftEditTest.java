@@ -459,11 +459,10 @@ public class SingleShiftEditTest extends TestBase {
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
-                scheduleMainPage.saveSchedule();
-            }
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             HashSet<Integer> shiftIndexes = scheduleShiftTablePage.verifyCanSelectMultipleShifts(1);
@@ -991,11 +990,10 @@ public class SingleShiftEditTest extends TestBase {
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-            if (smartCardPage.isRequiredActionSmartCardLoaded()) {
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
-                scheduleMainPage.saveSchedule();
-            }
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            scheduleMainPage.saveSchedule();
             scheduleMainPage.selectShiftTypeFilterByText("Assigned");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
