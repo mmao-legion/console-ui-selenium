@@ -3572,16 +3572,16 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = ".header-field.seniority-field.tl.ng-binding")
     private WebElement seniorityTitleShownForAssign;
-    @FindBy(css = ".sc-kDyQdL.dNxwfH")
-    private List<WebElement> seniorityTitleShownForCreate;
+    @FindBy(css = ".MuiGrid-root.MuiGrid-item")
+    private List<WebElement> titlesOnCreationDialog;
     @Override
     public boolean isSeniorityColumnLoaded() throws Exception {
         boolean seniorityColumnLoaded = true;
         if (isElementLoaded(seniorityTitleShownForAssign,10)){
             SimpleUtils.report("Seniority Column is displayed!");
-        }else if (areListElementVisible(seniorityTitleShownForCreate,10)){
+        }else if (areListElementVisible(titlesOnCreationDialog,10)){
             String seniorityText = null;
-            for(WebElement seniorityTitle : seniorityTitleShownForCreate){
+            for(WebElement seniorityTitle : titlesOnCreationDialog){
                 seniorityText = seniorityTitle.getText().trim();
                 if(seniorityText.equalsIgnoreCase("Seniority")){
                     SimpleUtils.report("Seniority Column is displayed!");

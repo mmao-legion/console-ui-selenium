@@ -7185,11 +7185,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 			String firstNameOfTM1 = shiftInfo1.get(0);
+			String lastNameOfTM1 = shiftInfo1.get(5);
 			int shiftCount1 = 0;
 			while ((firstNameOfTM1.equalsIgnoreCase("open")
 					|| firstNameOfTM1.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
 				shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 				firstNameOfTM1  = shiftInfo1.get(0);
+				lastNameOfTM1  = shiftInfo1.get(5);
 				shiftCount1++;
 			}
 			String workRole1 =  shiftInfo1.get(4);
@@ -7197,6 +7199,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 			int shiftCount2 = 0;
 			String firstNameOfTM2 = shiftInfo2.get(0);
+			String lastNameOfTM2 = shiftInfo2.get(5);
 			String workRole2 = shiftInfo2.get(4);
 			while ((firstNameOfTM2.equalsIgnoreCase("open")
 					|| firstNameOfTM2.equalsIgnoreCase("unassigned")
@@ -7204,10 +7207,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					&& shiftCount2 < 150) {
 				shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 				firstNameOfTM2  = shiftInfo2.get(0);
+				lastNameOfTM2  = shiftInfo2.get(5);
 				workRole2 = shiftInfo2.get(4);
 				shiftCount2++;
 			}
 
+			String nameOfTM1= firstNameOfTM1 + " " + lastNameOfTM1;
+			String nameOfTM2= firstNameOfTM2 + " " + lastNameOfTM2;
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
@@ -7224,23 +7230,23 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+			newShiftPage.searchTeamMemberByName(nameOfTM1);
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
 
 			//Assign the specific shift to another TM whose role is not match
 			scheduleMainPage.clickOnOpenSearchBoxButton();
-			scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM1);
+			scheduleMainPage.searchShiftOnSchedulePage(nameOfTM1);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
 			shiftOperatePage.clickonAssignTM();
 			Boolean assignTMPage = shiftOperatePage.isAssignTeamMemberShowWell();
 			SimpleUtils.assertOnFail("The Assign TM page is not displayed correctly!", assignTMPage, false);
 			String roleVioMessage = "Role Violation";
-			shiftOperatePage.searchTMOnAssignPage(firstNameOfTM2);
+			shiftOperatePage.searchTMOnAssignPage(nameOfTM2);
 			String realRoleVioMessage = shiftOperatePage.getTheMessageOfAssignedShiftToTM();
 			SimpleUtils.assertOnFail("The Role Violation message on the Assign page is not expected!", realRoleVioMessage.contains(roleVioMessage), false);
-			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
+			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(nameOfTM2);
 			String alertMessage = "This assignment will trigger a role violation.";
 			String realAlertMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
 			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", realAlertMessage.contains(alertMessage), false);
@@ -7249,7 +7255,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.saveSchedule();
 
 			//Verify the Role Violation after saving.
-			scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM2);
+			scheduleMainPage.searchShiftOnSchedulePage(nameOfTM2);
 			List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
 			for(int i = 0; i< complianceMessage.size(); i++){
 				if (complianceMessage.get(i).contains("Role Violation")) {
@@ -7339,11 +7345,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 			String firstNameOfTM1 = shiftInfo1.get(0);
+			String lastNameOfTM1 = shiftInfo1.get(5);
 			int shiftCount1 = 0;
 			while ((firstNameOfTM1.equalsIgnoreCase("open")
 					|| firstNameOfTM1.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
 				shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 				firstNameOfTM1 = shiftInfo1.get(0);
+				lastNameOfTM1 = shiftInfo1.get(5);
 				shiftCount1++;
 			}
 			String workRole1 = shiftInfo1.get(4);
@@ -7351,20 +7359,20 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			int shiftCount2 = 0;
 			List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 			String firstNameOfTM2 = shiftInfo2.get(0);
+			String lastNameOfTM2 = shiftInfo2.get(5);
 			String workRole2 = shiftInfo2.get(4);
 			while ((firstNameOfTM2.equalsIgnoreCase("open")
 					|| firstNameOfTM2.equalsIgnoreCase("unassigned")
 					|| firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1) || workRole1.equalsIgnoreCase(workRole2)) && shiftCount2 < 150) {
 				shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 				firstNameOfTM2 = shiftInfo2.get(0);
+				lastNameOfTM2 = shiftInfo2.get(5);
 				workRole2 = shiftInfo2.get(4);
 				shiftCount2++;
 			}
 
-			if(workRole1.equalsIgnoreCase("mod")){
-				workRole1 = "MOD";
-			}
-
+			String nameOfTM1= firstNameOfTM1 + " " + lastNameOfTM1;
+			String nameOfTM2= firstNameOfTM2 + " " + lastNameOfTM2;
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
@@ -7381,30 +7389,30 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+			newShiftPage.searchTeamMemberByName(nameOfTM1);
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
 
 			//Assign the specific shift to another TM whose role is not match
 			scheduleMainPage.clickOnOpenSearchBoxButton();
-			scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM1);
+			scheduleMainPage.searchShiftOnSchedulePage(nameOfTM1);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
 			shiftOperatePage.clickonAssignTM();
 			Boolean assignTMPage = shiftOperatePage.isAssignTeamMemberShowWell();
 			SimpleUtils.assertOnFail("The Assign TM page is not displayed correctly!", assignTMPage, false);
 			String roleVioMessage = "Role Violation";
-			shiftOperatePage.searchTMOnAssignPage(firstNameOfTM2);
+			shiftOperatePage.searchTMOnAssignPage(nameOfTM2);
 			String realRoleVioMessage = shiftOperatePage.getTheMessageOfAssignedShiftToTM();
 			SimpleUtils.assertOnFail("The Role Violation message on the Assign page is not expected!", realRoleVioMessage.contains(roleVioMessage), false);
-			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
+			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(nameOfTM2);
 			String alertMessage1 = "This assignment will trigger a role violation";
 			String alertMessage2 = " can not take a " + workRole1 + " shift";
 			String realAlertMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
 			boolean isCorrect = realAlertMessage.contains(alertMessage1) && realAlertMessage.contains(alertMessage2);
 			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", isCorrect, false);
 			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
-			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM2);
+			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(nameOfTM2);
 			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", isCorrect, false);
 			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
 			boolean okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
