@@ -280,7 +280,7 @@ public class BulkDeleteNEditTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Nora")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify the content on Multiple Edit Shifts window for regular location")
+    @TestName(description = "Verify the functionality of Current column when selecting multiple shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheCurrentColumnOnMultipleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
