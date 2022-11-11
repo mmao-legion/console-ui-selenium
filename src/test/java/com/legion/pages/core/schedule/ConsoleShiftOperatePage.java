@@ -3572,7 +3572,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = ".header-field.seniority-field.tl.ng-binding")
     private WebElement seniorityTitleShownForAssign;
-    @FindBy(css = ".MuiGrid-root.MuiGrid-item")
+    @FindBy(css = ".MuiGrid-root.MuiGrid-item>span")
     private List<WebElement> titlesOnCreationDialog;
     @Override
     public boolean isSeniorityColumnLoaded() throws Exception {
