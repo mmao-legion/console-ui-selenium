@@ -861,6 +861,28 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         return null;
     }
 
+    @Override
+    public boolean isBudgetHoursSmartCardIsLoad() throws Exception {
+        boolean isLoaded = false;
+        if (isSpecificSmartCardLoaded("WEEKLY BUDGET")) {
+            isLoaded = true;
+        } else {
+            if (areListElementVisible(smartCards, 15)) {
+                for (WebElement smartCard : smartCards) {
+                    try {
+                        WebElement content = smartCard.findElement(By.tagName("h1"));
+                        if (content != null && content.getText().trim().equalsIgnoreCase("Budget Hours")) {
+                            isLoaded = true;
+                            break;
+                        }
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
+        }
+
+        return isLoaded;
+    }
     @FindBy (css = "span[ng-if=\"!hasBeenAcknowledged\"]")
     private WebElement acknowledgeButton;
     @Override

@@ -478,11 +478,18 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public String getTimeOffRequestStatus(String timeOffReasonLabel, String timeOffExplanationText,
 			String timeOffStartDuration, String timeOffEndDuration) throws Exception {
-		String timeOffStartDate = timeOffStartDuration.split(", ")[1].toUpperCase();
-//		String timeOffStartMonth = timeOffStartDuration.split(",")[0].split(" ")[0];
-		String timeOffEndDate = timeOffEndDuration.split(", ")[1].toUpperCase();
-//		String timeOffEndMonth = timeOffEndDuration.split(",")[0].split(" ")[0];
-
+//		String timeOffStartDate = timeOffStartDuration.split(", ")[1].toUpperCase();
+////		String timeOffStartMonth = timeOffStartDuration.split(",")[0].split(" ")[0];
+//		String timeOffEndDate = timeOffEndDuration.split(", ")[1].toUpperCase();
+////		String timeOffEndMonth = timeOffEndDuration.split(",")[0].split(" ")[0];
+		String timeOffStartDate = timeOffStartDuration;
+		String timeOffEndDate = timeOffEndDuration;
+		if (timeOffStartDuration.length()>10) {
+			timeOffStartDate = timeOffStartDuration.substring(5, 11);
+		}
+		if (timeOffEndDuration.length()>10){
+			timeOffEndDate = timeOffEndDuration.substring(5, 11);
+		}
 		String requestStatusText = "";
 		if(areListElementVisible(timeOffRequestRows, 10)) {
 			int timeOffRequestCount = timeOffRequestRows.size();
@@ -496,8 +503,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 						WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
 						String requestDateText = requestDate.getText().replaceAll("\n", " ");
 						if (requestDateText.contains("-")) {
-							if (requestDateText.split("-")[0].toLowerCase().contains(timeOffStartDate.toLowerCase())
-									&& requestDateText.split("-")[1].toLowerCase().contains(timeOffEndDate.toLowerCase())) {
+							if (requestDateText.split("-")[0].trim().toLowerCase().contains(timeOffStartDate.toLowerCase())
+									&& requestDateText.split("-")[1].trim().toLowerCase().contains(timeOffEndDate.toLowerCase())) {
 								requestStatusText = requestStatus.getText();
 							}
 						} else if ((requestDateText.split(" ")[2] + " " + requestDateText.split(" ")[1]).equalsIgnoreCase(timeOffStartDate)

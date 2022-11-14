@@ -1832,10 +1832,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Haya")
-	@Enterprise(name = "Coffee_Enterprise")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
 	@TestName(description = "verify Assign TM warning: TM status is on time off")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-	public void verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager(String browser, String username, String password, String location) {
+	public void verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager(String browser, String username, String password, String location) throws Exception {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
@@ -1844,53 +1844,52 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+
+			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (!isWeekGenerated){
+				createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "08:00pm");
+			}
+			//Get the date info of the week for create time off
+			String activeWeek = scheduleCommonPage.getActiveWeekText();
+			List<String> year = scheduleCommonPage.getYearsFromCalendarMonthYearText();
+			String[] items = activeWeek.split(" ");
+			String fromDate = year.get(0)+ " " + items[3] + " " + items[4];
+			String endDate = year.get(0)+ " " + items[6] + " " + items[7];
+//			//To avoid one issue -- the schedule cannot be generated when directly go to Team tab
+//			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+//					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+//			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+//			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+//					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 			String nickNameFromProfile = profileNewUIPage.getNickNameFromProfile();
 			String myProfileLabel = "My Profile";
 			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
-			SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
-			String aboutMeLabel = "About Me";
-			profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
 			String myTimeOffLabel = "My Time Off";
 			profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
-			profileNewUIPage.cancelAllTimeOff();
-			profileNewUIPage.clickOnCreateTimeOffBtn();
-			SimpleUtils.assertOnFail("New time off request window not loaded Successfully!", profileNewUIPage.isNewTimeOffWindowLoaded(), false);
-			String timeOffReasonLabel = "VACATION";
-			// select time off reason
-			profileNewUIPage.selectTimeOffReason(timeOffReasonLabel);
-			profileNewUIPage.selectStartAndEndDate();
-			profileNewUIPage.clickOnSaveTimeOffRequestBtn();
-
-
-
-			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
-			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
-
-			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!isWeekGenerated){
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			String timeOffReasonLabel = "JURY DUTY";
+			String timeOffExplanationText = "Sample Explanation Text";
+			String timeOffStatus = profileNewUIPage.getTimeOffRequestStatus(timeOffReasonLabel, timeOffExplanationText, fromDate, endDate);
+			if (!timeOffStatus.equalsIgnoreCase("approved")) {
+				profileNewUIPage.cancelAllTimeOff();
+				//Go to team page and create time off for tm
+				profileNewUIPage.createTimeOffOnSpecificDays(timeOffReasonLabel, timeOffExplanationText, fromDate, 6);
+				teamPage.approvePendingTimeOffRequest();
 			}
-			scheduleCommonPage.clickOnDayView();
-			//navigate to the time off day
-			for (int i=0; i<6;i++){
-				scheduleCommonPage.clickOnNextDaySchedule(scheduleCommonPage.getActiveAndNextDay());
-			}
+
+			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			String workRole = shiftOperatePage.getRandomWorkRole();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
-			newShiftPage.moveSliderAtCertainPoint("1:00pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-			/*if (getDriver().getCurrentUrl().contains(propertyMap.get("KendraScott2_Enterprise"))) {
-				newShiftPage.selectWorkRole(scheduleWorkRoles.get("MOD"));
-			} else if (getDriver().getCurrentUrl().contains(propertyMap.get("Coffee_Enterprise"))) {
-				newShiftPage.selectWorkRole(scheduleWorkRoles.get("WorkRole_BARISTA"));
-			}*/
 			newShiftPage.selectWorkRole(workRole);
+			newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("11am", shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
 			newShiftPage.searchTeamMemberByName(nickNameFromProfile);
@@ -1898,16 +1897,20 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			shiftOperatePage.verifyWarningModelForAssignTMOnTimeOff(nickNameFromProfile);
 			scheduleMainPage.clickOnCancelButtonOnEditMode();
 
-
-			//go to cancel the time off.
-			profileNewUIPage.getNickNameFromProfile();
-			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
-			SimpleUtils.assertOnFail("Profile page not loaded Successfully!", profileNewUIPage.isProfilePageLoaded(), false);
-			profileNewUIPage.selectProfilePageSubSectionByLabel(aboutMeLabel);
-			profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
-			profileNewUIPage.cancelAllTimeOff();
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
+		}
+		finally{
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			//go to cancel the time off.
+			String myProfileLabel = "My Profile";
+			String myTimeOffLabel = "My Time Off";
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			profileNewUIPage.getNickNameFromProfile();
+			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
+			profileNewUIPage.selectProfilePageSubSectionByLabel(myTimeOffLabel);
+			profileNewUIPage.cancelAllTimeOff();
 		}
 	}
 
@@ -6904,7 +6907,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.searchTeamMemberByName(firstNameOfTM1);
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
-
 			//Assign the shift to other TM, check the OT
 			scheduleMainPage.clickOnOpenSearchBoxButton();
 			scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM1);
