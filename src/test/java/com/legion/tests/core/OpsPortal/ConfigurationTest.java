@@ -2462,8 +2462,8 @@ public class ConfigurationTest extends TestBase {
             SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
             String currentTime=dfs.format(new Date()).trim();
             String templateNameVerify="LizzyUsingToCreateTempTest"+currentTime;
-            String[] tempType={"Operating Hours","Scheduling Policies","Schedule Collaboration","Compliance","Time & Attendance","Scheduling Rules"};
-            String dynamicGpNameTempTest = "LZautoTestDyGpName"+currentTime;
+            String[] tempType={"Operating Hours","Scheduling Policies","Schedule Collaboration","Compliance","Time & Attendance"};
+            String dynamicGpNameTempTest = "LZautoTestDyGpName";
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             //create other types of templates
             for(String type:tempType){
