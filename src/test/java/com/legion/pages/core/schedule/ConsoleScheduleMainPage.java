@@ -110,7 +110,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     public void clickOnCancelButtonOnEditMode() throws Exception {
         if (isElementLoaded(scheduleEditModeCancelButton)) {
-            click(scheduleEditModeCancelButton);
+            clickTheElement(scheduleEditModeCancelButton);
             SimpleUtils.pass("Schedule edit shift page cancelled successfully!");
         }
     }
@@ -2039,7 +2039,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     @FindBy (css = ".lg-filter__clear")
     private WebElement clearFilterOnFilterDropdownPopup;
     public void clickOnClearFilterOnFilterDropdownPopup() throws Exception {
-        if(isElementLoaded(clearFilterOnFilterDropdownPopup, 5)){
+        if(isElementLoaded(clearFilterOnFilterDropdownPopup, 15)){
             if(clearFilterOnFilterDropdownPopup.getAttribute("class").contains("active")){
                 scrollToElement(clearFilterOnFilterDropdownPopup);
                 click(clearFilterOnFilterDropdownPopup);

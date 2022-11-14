@@ -767,6 +767,7 @@ public abstract class TestBase {
         adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.TemplateAssociation.getValue());
         adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.LocationBrokerContainer.getValue());
     }
+
     public void deleteAllUnassignedShifts() throws Exception {
         SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
@@ -776,5 +777,23 @@ public abstract class TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
         }
+    }
+    //added by Mary. 09:00AM-->9:00am
+    public String changeTimeFormat(String time) throws Exception{
+        String result = time;
+        if (result.indexOf("0")==0){
+            result = result.substring(1).toLowerCase();
+        }
+        return result;
+    }
+
+    public int getCharactersCount (String str, String key) {
+        int count = 0;
+        int index = 0;
+        while((index = str.indexOf(key))!=-1){
+            str = str.substring(index+key.length());
+            count++;
+        }
+        return count;
     }
 }

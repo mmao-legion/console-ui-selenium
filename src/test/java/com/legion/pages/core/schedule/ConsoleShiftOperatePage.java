@@ -635,12 +635,17 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         return selectedShift;
     }
 
+    @FindBy(css = "[ng-if = \"!hasWorker() && isOpenShift()\"]")
+    private List<WebElement> profileIconsDayViewForOpen;
     @Override
     public boolean isProfileIconsEnable() throws Exception {
         if(areListElementVisible(profileIcons,10)){
             SimpleUtils.pass("Profile Icon is present for selected Employee");
             return true;
         } else if (areListElementVisible(profileIconsDayView,10)) {
+            SimpleUtils.pass("Profile Icon is present for selected Employee");
+            return true;
+        } else if (areListElementVisible(profileIconsDayViewForOpen,10)){
             SimpleUtils.pass("Profile Icon is present for selected Employee");
             return true;
         }
@@ -1571,7 +1576,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             breakTimes.add(mealBreakTimes.get(0).getText());
             breakTimes.add(restBreakTimes.get(0).getText());
         }else
-            SimpleUtils.fail("Edit meal break window load failed",true);
+            SimpleUtils.fail("Edit meal break window load failed",false);
         return breakTimes;
     }
 
@@ -1585,6 +1590,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 durations = restBreakDurations;
             }
             moveDayViewCards(durations.get(0), offset);
+        } else {
+            clickTheElement(addMealBreakButton);
         }
     }
 
@@ -3600,6 +3607,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         return mealBreakBlockDisplay;
     }
 
+
     public void deleteTMShiftsInDayView(String tmName) throws Exception {
         if (areListElementVisible(dayViewAvailableShifts,10)){
             int count = dayViewAvailableShifts.size();
@@ -3618,6 +3626,119 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 }
             }
         }
+    }
+    @FindBy(css = ".header-field.seniority-field.tl.ng-binding")
+    private WebElement seniorityTitleShownForAssign;
+    @FindBy(css = ".MuiGrid-root.MuiGrid-item>span")
+    private List<WebElement> titlesOnCreationDialog;
+    @Override
+    public boolean isSeniorityColumnLoaded() throws Exception {
+        boolean seniorityColumnLoaded = true;
+        if (isElementLoaded(seniorityTitleShownForAssign,10)){
+            SimpleUtils.report("Seniority Column is displayed!");
+        }else if (areListElementVisible(titlesOnCreationDialog,10)){
+            String seniorityText = null;
+            for(WebElement seniorityTitle : titlesOnCreationDialog){
+                seniorityText = seniorityTitle.getText().trim();
+                if(seniorityText.equalsIgnoreCase("Seniority")){
+                    SimpleUtils.report("Seniority Column is displayed!");
+                    break;
+                }else
+                    continue;
+                }
+            if(!(seniorityText.equalsIgnoreCase("Seniority"))){
+                seniorityColumnLoaded = false;
+            }
+        }else{
+            seniorityColumnLoaded = false;
+        }
+        return seniorityColumnLoaded;
+    }
+
+
+    @FindBy(css = ".table-field.seniority-field")
+    private List<WebElement> seniorityValueForAssign;
+    @FindBy(css = "[class=\"MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 css-1909xa1\"] [class=\"sc-bLBzly cUEDBZ\"] [class*=\"MuiTypography-root\"]")
+    private List<WebElement> seniorityValueForOpen;
+
+    @Override
+    public ArrayList getTMSeniorityValues() throws Exception {
+        List<Integer> seniorityValues  = new ArrayList<Integer>();
+        if (areListElementVisible(seniorityValueForAssign,10)){
+            int i = 0;
+            for(WebElement element: seniorityValueForAssign){
+                String seniorityValue = element.getText().trim();
+                if(seniorityValue.equalsIgnoreCase("SENIORITY")) {
+                    continue;
+                }
+                if(seniorityValue == null || seniorityValue.equals("-")){
+                    seniorityValue = "0";
+                }
+                seniorityValues.add(i, Integer.parseInt(seniorityValue));
+                i++;
+            }
+        }else if (areListElementVisible(seniorityValueForOpen, 10)){
+            int j = 0;
+            for(WebElement element: seniorityValueForOpen){
+                String seniorityValue = element.getText().trim();
+                if(seniorityValue.equalsIgnoreCase("SENIORITY")) {
+                    continue;
+                }
+                if(seniorityValue == null || seniorityValue.equals("-")){
+                    seniorityValue = "0";
+                }
+                seniorityValues.add(j, Integer.parseInt(seniorityValue));
+                j++;
+            }
+        }else {
+            SimpleUtils.report("Seniority values are not loaded!");
+        }
+        return (ArrayList) seniorityValues;
+    }
+
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/parent::div/parent::div/parent::div/parent::div/parent::div/parent::div/parent::div/div[1]/div/div/span")
+    private List<WebElement> tmListHeaders;
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/parent::div/parent::div/parent::div/parent::div")
+    private List<WebElement> allTMsInSearchOrRecommendedList;
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/following-sibling::div/p[1]")
+    private List<WebElement> allTMNamesInSearchOrRecommendedList;
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/following-sibling::div/p[2]")
+    private List<WebElement> allTMJobTitlesInSearchOrRecommendedList;
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/following-sibling::div/p[3]")
+    private List<WebElement> allTMLocationsInSearchOrRecommendedList;
+
+    @Override
+    public HashMap<String, String> getTMAllInfoFromSearchOrRecommendedListOnNewCreateShiftPageByIndex(int index) throws Exception {
+        HashMap<String, String> allInfo= new HashMap<>();
+        if (areListElementVisible(allTMsInSearchOrRecommendedList, 5)
+                && areListElementVisible(allTMNamesInSearchOrRecommendedList, 5)
+                && areListElementVisible(allTMJobTitlesInSearchOrRecommendedList, 5)
+                && areListElementVisible(allTMLocationsInSearchOrRecommendedList, 5)
+                && allTMsInSearchOrRecommendedList.size() ==allTMNamesInSearchOrRecommendedList.size()
+                && allTMsInSearchOrRecommendedList.size() == allTMJobTitlesInSearchOrRecommendedList.size()
+                && allTMsInSearchOrRecommendedList.size() == allTMLocationsInSearchOrRecommendedList.size()) {
+            waitForSeconds(5);
+            for (int i =0; i< allTMsInSearchOrRecommendedList.size(); i++) {
+                //Get TM name
+                String tmFullName = allTMNamesInSearchOrRecommendedList.get(i).getText().replace("\"", "").replace("\\n", "").trim();
+                allInfo.put("tmname", tmFullName);
+                //Get TM job title
+                String tmJobTitle = allTMNamesInSearchOrRecommendedList.get(i).getText().trim();
+                allInfo.put("tmjobtitle", tmJobTitle);
+                //Get TM Location
+                String tmLocation = allTMLocationsInSearchOrRecommendedList.get(i).getText().trim();
+                allInfo.put("tmlocation", tmLocation);
+                //Get Employee ID
+                if (areListElementVisible(tmListHeaders, 5)
+                        && tmListHeaders.get(1).getText().equalsIgnoreCase("Employee ID")) {
+                    String employeeId = allTMsInSearchOrRecommendedList.get(i).findElement(By.xpath("./div[2]")).getText();
+                    allInfo.put("employeeid", employeeId);
+                }
+            }
+        }else {
+            SimpleUtils.fail("The TMs on search or recommended page fail to load! ", false);
+        }
+        return allInfo;
     }
 }
 

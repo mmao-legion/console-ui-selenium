@@ -2951,7 +2951,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@FindBy(css = "[options=\"schoolCalendars\"] select")
 	private WebElement schoolCalendarSelect;
-	@FindBy(css = ".profile-assigned-school")
+	@FindBy(css = "[ng-if*=\"SchoolCalendars\"] p")
 	private WebElement assignedCalendar;
 
 	@Override

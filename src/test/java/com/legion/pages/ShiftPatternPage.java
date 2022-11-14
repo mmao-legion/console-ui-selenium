@@ -1,5 +1,7 @@
 package com.legion.pages;
 
+import java.util.List;
+
 public interface ShiftPatternPage {
 
     public void verifyTheContentOnShiftPatternDetails(String workRole) throws Exception;
@@ -16,4 +18,16 @@ public interface ShiftPatternPage {
     public int getWeekCount() throws Exception;
     public void deleteTheWeek(int weekNumber) throws Exception;
     public void clickOnAddShiftButton() throws Exception;
+    public void verifyTheContentOnCreateNewShiftWindow() throws Exception;
+    public void clickOnCancelButton() throws Exception;
+    public void clickOnCreateButton() throws Exception;
+    public List<String> getWarningMessages() throws Exception;
+    public List<String> getBreakWarnings() throws Exception;
+    public void inputShiftNameDescriptionNShiftNotes(String shiftName, String description, String shiftNotes) throws Exception;
+    public void verifyWorkRoleNameShows(String workRole) throws Exception;
+    public void inputStartOrEndTime(String time, boolean isStart) throws Exception;
+    public void selectWorkDays(List<String> daysNeedSelect) throws Exception;
+    public void clickOnAddMealOrRestBreakBtn(boolean isMeal) throws Exception;
+    public void deleteTheBreakByNumber(boolean isMeal, int number) throws Exception;
+    public void inputShiftOffsetAndBreakDuration(int startOffset, int breakDuration, int number, boolean isMeal) throws Exception;
 }

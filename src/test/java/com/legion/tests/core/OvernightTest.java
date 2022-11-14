@@ -282,13 +282,14 @@ public class OvernightTest extends TestBase {
             Thread.sleep(3000);
             switchToConsoleWindow();
             //waiting for the cache
+            refreshCachesAfterChangeTemplate();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-            int j =0;
-            while (j< 5) {
-                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-                Thread.sleep(60000);
-                j++;
-            }
+//            int j =0;
+//            while (j< 5) {
+//                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//                Thread.sleep(60000);
+//                j++;
+//            }
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -355,7 +356,7 @@ public class OvernightTest extends TestBase {
                 shiftCount = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).size();
                 i++;
             }
-            SimpleUtils.assertOnFail("The shift should not display on the next day! ",
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should not display on the next day! ",
                     shiftCount == 0, false);
 
         } catch (Exception e) {
@@ -590,9 +591,10 @@ public class OvernightTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             Thread.sleep(5000);
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isActiveWeekGenerated) {
-                createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("6:00AM", "6:00AM");
             Thread.sleep(5000);
             int i = 0;
             List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());

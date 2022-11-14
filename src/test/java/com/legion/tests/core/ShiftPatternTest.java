@@ -3,7 +3,6 @@ package com.legion.tests.core;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
-import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -16,7 +15,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ShiftPatternTest extends TestBase {
 
@@ -123,6 +124,77 @@ public class ShiftPatternTest extends TestBase {
             // Verify the functionality of + Add Shift button
             shiftPatternPage.selectAddOnOrOffWeek(true);
             shiftPatternPage.clickOnAddShiftButton();
+            // Verify the content on Create New Shift Window
+            shiftPatternPage.verifyTheContentOnCreateNewShiftWindow();
+            // Verify the functionality of Cancel button
+            shiftPatternPage.clickOnCancelButton();
+            // Verify the functionality of Create button without inputting anything
+            shiftPatternPage.clickOnAddShiftButton();
+            shiftPatternPage.clickOnCreateButton();
+            List<String> warnings = shiftPatternPage.getWarningMessages();
+            if (warnings.contains("At least one day should be selected") && warnings.contains("Field should not be empty")) {
+                SimpleUtils.pass("Mandatory fields should be entered when clicking Create button!");
+            } else {
+                SimpleUtils.fail("There is no warning messages when nothing inputted!", false);
+            }
+            // Verify the work role shows on the Create New Shift window
+            shiftPatternPage.verifyWorkRoleNameShows(workRole);
+            // Verify the functionality of Shift Name/Description/Shift Notes inputs
+            String shiftName = "Shift Name";
+            String description = "Description";
+            String shiftNotes = "Shift Notes";
+            shiftPatternPage.inputShiftNameDescriptionNShiftNotes(shiftName, description, shiftNotes);
+            // Verify the functionality of selecting work days
+            List<String> workDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
+            shiftPatternPage.selectWorkDays(workDays);
+            // Verify the functionality of Start Time and End Time inputs
+            String startTime = "09:00 AM";
+            String endTime = "05:00 PM";
+            shiftPatternPage.inputStartOrEndTime(startTime, true);
+            shiftPatternPage.inputStartOrEndTime(endTime, false);
+            // Verify Start Time should be before End Time
+            shiftPatternPage.inputStartOrEndTime("08:00 AM", false);
+            warnings = shiftPatternPage.getWarningMessages();
+            if (warnings.contains("Start time should be before End time")) {
+                SimpleUtils.pass("Start time should be before End time message shows!");
+            } else {
+                SimpleUtils.fail("Start time should be before End time failed to show!", false);
+            }
+            shiftPatternPage.inputStartOrEndTime(endTime, false);
+            // Verify the functionality of Add meal break button
+            shiftPatternPage.clickOnAddMealOrRestBreakBtn(true);
+            // Verify the shift offset and duration cannot be empty
+            shiftPatternPage.clickOnCreateButton();
+            warnings = shiftPatternPage.getBreakWarnings();
+            if (warnings.contains("Start Offset should not be empty") && warnings.contains("Break Duration should not be empty")) {
+                SimpleUtils.pass("Shift offset and break duration warning show correctly!");
+            } else {
+                SimpleUtils.fail("Shift offset and break duration warnings failed to show!", false);
+            }
+            // Verify the functionality of x button in meal break section
+            shiftPatternPage.deleteTheBreakByNumber(true, 1);
+            // Verify the functionality of Add rest break button
+            shiftPatternPage.clickOnAddMealOrRestBreakBtn(false);
+            // Verify the shift offset and duration cannot be empty
+            shiftPatternPage.clickOnCreateButton();
+            warnings = shiftPatternPage.getBreakWarnings();
+            if (warnings.contains("Start Offset should not be empty") && warnings.contains("Break Duration should not be empty")) {
+                SimpleUtils.pass("Shift offset and break duration warning show correctly!");
+            } else {
+                SimpleUtils.fail("Shift offset and break duration warnings failed to show!", false);
+            }
+            // Verify the functionality of x button in rest break section
+            shiftPatternPage.deleteTheBreakByNumber(false, 1);
+            // Verify can input the shift offset and break duration
+            shiftPatternPage.inputShiftOffsetAndBreakDuration(5, 5, 1, true);
+            // Verify the warning message "Start Offset must be in 5 minute increments" in meal break section
+            shiftPatternPage.inputShiftOffsetAndBreakDuration(1, 1, 1, true);
+            warnings = shiftPatternPage.getBreakWarnings();
+            if (warnings.contains("Break Start must be in 5 minute increments") && warnings.contains("Break End must be in 5 minute increments")) {
+                SimpleUtils.pass("Start Offset and Break Duration warning shows!");
+            } else {
+                SimpleUtils.fail("Start Offset and break duration warnings failed to show!", false);
+            }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

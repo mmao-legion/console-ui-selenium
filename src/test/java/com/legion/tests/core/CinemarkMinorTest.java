@@ -184,7 +184,7 @@ public class CinemarkMinorTest extends TestBase {
                     teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
             String calendarName = "Automation" + new Random().nextInt(100) + new Random().nextInt(100) + new Random().nextInt(100);
 
-            teamPage.deleteCalendarByName(calendarName);
+            teamPage.deleteCalendarByName("Automation");
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();

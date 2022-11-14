@@ -493,8 +493,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	@Override
-	public HashMap<String, String> getUpComingShifts() throws Exception {
-		HashMap<String, String> shifts = new HashMap<>();
+	public Map<String, String> getUpComingShifts() throws Exception {
+		Map<String, String> shifts = new IdentityHashMap<>();
 		String name = null;
 		String role = null;
 		if (areListElementVisible(upComingShifts, 15)) {
@@ -573,7 +573,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = ".upcoming-shift")
 	private List<WebElement> upcomingShifts;
 
-	@FindBy(css = "li[ng-click^='goToProfile']")
+	@FindBy(css = ".header-user-switch-menu-secondary-item")
 	private List<WebElement> goToProfile;
 
 	@FindBy(css = ".lgn-alert-modal")

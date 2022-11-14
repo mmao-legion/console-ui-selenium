@@ -19,6 +19,22 @@
         </classes>
     </test>
 
+    <test name="Hard Stop For Minor Violation Test">
+        <classes>
+            <class name="com.legion.tests.core.HardStopForMinorViolation">
+                <methods>
+                    <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
+                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" />
+                    <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
+                    <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
+                    <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
+                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" />
+                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
     <test name="Cinemark Minor Test">
         <classes>
             <class name="com.legion.tests.core.CinemarkMinorTest">
@@ -60,21 +76,7 @@
         </classes>
     </test>
 
-        <test name="Hard Stop For Minor Violation Test">
-            <classes>
-                <class name="com.legion.tests.core.HardStopForMinorViolation">
-                    <methods>
-                        <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
-                        <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" />
-                        <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
-                        <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
-                        <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
-                        <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" />
-                        <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
-                    </methods>
-                </class>
-            </classes>
-        </test>
+
     <test name="Schedule Test KendraScott2">
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
@@ -121,6 +123,8 @@
                             <include name="VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin" />
                             <include name="VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin" />
                             <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" /> The code is not merged into RC yet -->
+                    <include name="verifyRecommendTabHasTMsAsInternalAdmin" />
+                    <include name="verifyPleaseConfirmMessageOnWarningModalAsInternalAdmin" />
                    </methods>
                </class>
            </classes>
@@ -218,8 +222,17 @@
         <classes>
             <class name="com.legion.tests.core.ScheduleSeniorityTest">
                 <methods>
-                    <!--       <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />  SCH-7683 is not merged into RC yet-->
+                    <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />
                     <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" />
+                    <include name="verifySeniorityNotDisplayWhenToggleTurnOffForSearchingAsInternalAdmin" />
+                    <include name="verifySeniorityNotDisplayWhenToggleTurnOffForRecommendAsInternalAdmin" />
+                    <include name="verifySeniorityDisplayWhenToggleTurnOnForSearchingAsInternalAdmin" />
+                    <include name="verifySeniorityAlwaysDisplayOnSearchingDialogAsInternalAdmin" />
+                    <include name="verifySeniorityDisplayWhenToggleTurnOnForRecommendAsInternalAdmin" />
+                    <include name="verifyAscendingOfSeniorityForSearchingAsInternalAdmin" />
+                    <include name="verifyAscendingOfSeniorityForRecommendAsInternalAdmin" />
+                    <include name="verifyDescendingOfSeniorityForSearchingAsInternalAdmin" />
+                    <include name="verifyDescendingOfSeniorityForRecommendAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -311,6 +324,7 @@
                     <include name="validateTheShiftsCanBeCreatedAfterUpdateShiftInfoAsInternalAdmin" />
                     <include name="validateTheNextDayCheckBoxOnCreateShiftModalAsInternalAdmin" />
                     <include name="validateShiftsCanBeCreatedByNewUIByDifferentAccessRolesAsInternalAdmin" />
+                    <include name="verifyTheEmployeeIDDisplayCorrectlyOnSelectTMPageAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -569,6 +583,7 @@ SCH-5862-->
 <!--                    <include name="verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7592/>-->
                     <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
+<!--                    <include name="verifyErrorMessageOfStartAndEndTimeOnBulkEditAsInternalAdmin" />  Not merged into RC env  -->
                 </methods>
             </class>
         </classes>
@@ -583,12 +598,13 @@ SCH-5862-->
             </class>
         </classes>
     </test>
-    
+
     <test name="Schedule Template Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleTemplateTest">
                 <methods>
                     <include name="validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin" />
+                    <include name="verifyTMCanAcknowledgeTheNotificationAfterScheduleTemplateLocationAsTeamMember" />
                 </methods>
             </class>
         </classes>
@@ -642,6 +658,8 @@ SCH-5862-->
                     <include name="validateOperateP2PLGScheduleByDifferentUserAsInternalAdmin" />
                     <!--            <include name="validateBudgetHourSmartCardWhenSMWithManageBudgetPermissionForP2PLGAsInternalAdmin" /> -->
                     <include name="verifyAutomaticallyExpandWhenGroupByInP2PLGAsInternalAdmin" />
+                    <include name="verifyTheContentOnEditSingleShiftWindowForP2PAsInternalAdmin" />
+                    <include name="verifyChangingLocationForP2POnSingleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -687,6 +705,9 @@ SCH-5862-->
                     <include name="validateOperateParentChildLGScheduleByDifferentUserAsInternalAdmin" />
                     <!--        <include name="validateBudgetHourSmartCardWhenSMWithManageBudgetPermissionForParentChildLGAsInternalAdmin" /> -->
                     <include name="verifyAutomaticallyExpandWhenGroupByInPCLGAsInternalAdmin" />
+                    <!--<include name="verifyEmployeeCanAcknowledgeTheNotificationForLGAsStoreManager" />  https://legiontech.atlassian.net/browse/SCH-7939-->
+                    <include name="verifyTheContentOnEditSingleShiftWindowForParentChildAsInternalAdmin" />
+                    <include name="verifyChangingLocationForPCOnSingleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -752,4 +773,48 @@ SCH-5862-->
             </class>
         </classes>
     </test>
+    <test name="Schedule Acknowledgement Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleAcknowledgementTest">
+                <methods>
+                    <include name="verifyTMCanAcknowledgeTheNotificationAfterPublishTheScheduleAsTeamMember" />
+                    <include name="verifySMCanAcknowledgeTheNotificationAfterPublishTheScheduleAsStoreManager" />
+                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterEditShiftsAsTeamMember" />
+                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterDragAndDropShiftsAsTeamMember" />
+                    <include name="verifyEmployeeCanAcknowledgeTheNotificationFromNonHomeLocationWhenHomeScheduleIsPublishedAsTeamMemberOtherLocation1" />
+                    <include name="verifyEmployeeCanAcknowledgeTheNotificationFromNonHomeLocationWhenHomeScheduleIsNotPublishedAsTeamMemberOtherLocation1" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Single Shift Edit Test">
+        <classes>
+            <class name="com.legion.tests.core.SingleShiftEditTest">
+                <methods>
+                    <include name="verifyTheContentOnSingleEditShiftsWindowForRegularLocationAsInternalAdmin" />
+                    <include name="verifyTheCurrentColumnOnSingleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin" />
+                    <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" />
+                    <!--        <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
+                    <!--        <include name="verifyChangingEndTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
+                    <include name="verifyChangingDateOnSingleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyChangingAssignmentOnSingleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyChangingShiftNotesOnSingleEditShiftWindowAsInternalAdmin" />
+                    <include name="verifyTheContentOfBreaksSectionsAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfEditMealBreaksOnSingleEditShiftPageAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+<!--    <test name="Team Page Test">
+        <classes>
+            <class name="com.legion.tests.core.TeamTest">
+                <methods>
+                    <include name="verifyNoneOptionInAveragingAgreementAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>   Not merged into RC yet. -->
 </suite> <!-- Suite -->

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="10" name="LegionTest">
+<suite verbose ="0" thread-count="5" name="LegionTest" parallel="tests">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
-    <parameter name="testRailRunName" value="Automation PR Code Check"/>
+    <parameter name="testRailRunName" value="Automation Ephemeral Debug"/>
 
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
+
 
     <test name="P2P LG Test">
         <classes>
@@ -38,6 +39,7 @@
             </class>
         </classes>
     </test>
+
     <test name="Parent Child LG Test">
         <classes>
             <class name="com.legion.tests.core.ParentChildLGTest">
@@ -67,15 +69,4 @@
             </class>
         </classes>
     </test>
-    <!--
-    <test name="Schedule Test KendraScott2">
-        <classes>
-            <class name="com.legion.tests.core.ScheduleTestKendraScott2">
-                <methods>
-                    <include name="verifyAssignTMWarningForTMIsOnTimeOffAsStoreManager"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-    -->
 </suite> 
