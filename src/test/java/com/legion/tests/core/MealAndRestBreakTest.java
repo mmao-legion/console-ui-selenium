@@ -852,29 +852,6 @@ public class MealAndRestBreakTest extends TestBase {
                 controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
                         ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
 
-            }else {
-                //Config the Meal Break on OP
-                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-                locationsPage.clickOnLocationsTab();
-                locationsPage.goToSubLocationsInLocationsPage();
-                locationsPage.searchLocation(location);
-                SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
-                locationsPage.clickOnLocationInLocationResult(location);
-                locationsPage.clickOnConfigurationTabOfLocation();
-                HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
-                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-                configurationPage.goToConfigurationPage();
-                configurationPage.clickOnConfigurationCrad("Compliance");
-                configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
-                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-                Thread.sleep(3000);
-                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
-                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
-                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
-
-                switchToConsoleWindow();
             }
 
             //Create a new schedule
@@ -1149,29 +1126,6 @@ public class MealAndRestBreakTest extends TestBase {
                 controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
                         ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
 
-            }else {
-                //Config the Meal Break on OP
-                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-                locationsPage.clickOnLocationsTab();
-                locationsPage.goToSubLocationsInLocationsPage();
-                locationsPage.searchLocation(location);
-                SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
-                locationsPage.clickOnLocationInLocationResult(location);
-                locationsPage.clickOnConfigurationTabOfLocation();
-                HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
-                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-                configurationPage.goToConfigurationPage();
-                configurationPage.clickOnConfigurationCrad("Compliance");
-                configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
-                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-                Thread.sleep(3000);
-                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
-                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
-                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
-
-                switchToConsoleWindow();
             }
 
             //Create a new schedule
