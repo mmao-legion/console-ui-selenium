@@ -1429,9 +1429,10 @@ public class ParentChildLGTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
 
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isActiveWeekGenerated) {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createLGScheduleWithGivingTimeRange("08:00am", "09:00pm");
             createSchedulePage.publishActiveSchedule();
 
             // Verify the filter UI display correctly
@@ -1921,8 +1922,7 @@ public class ParentChildLGTest extends TestBase {
             /// Edit shifts(include edit shift time, assign TM, delete...)
             shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.clickOnEditShiftTime();
-            shiftOperatePage.moveSliderAtCertainPointOnEditShiftTimePage("11am", "End");
-            shiftOperatePage.moveSliderAtCertainPointOnEditShiftTimePage("8am", "Start");
+            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","11:00am",false);
             shiftOperatePage.clickOnUpdateEditShiftTimeButton();
 
             shiftOperatePage.clickOnProfileIcon();
@@ -1971,8 +1971,7 @@ public class ParentChildLGTest extends TestBase {
             /// Edit shifts(include edit shift time, assign TM, delete...)
             shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.clickOnEditShiftTime();
-            shiftOperatePage.moveSliderAtCertainPointOnEditShiftTimePage("11am", "End");
-            shiftOperatePage.moveSliderAtCertainPointOnEditShiftTimePage("8am", "Start");
+            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","11:00am",false);
             shiftOperatePage.clickOnUpdateEditShiftTimeButton();
 
             shiftOperatePage.clickOnProfileIcon();

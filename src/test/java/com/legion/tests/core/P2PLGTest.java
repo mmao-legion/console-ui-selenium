@@ -1090,8 +1090,8 @@ public class P2PLGTest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(1);
             newShiftPage.selectChildLocInCreateShiftWindow(childLocationNames.get(0));
-            newShiftPage.moveSliderAtCertainPoint("8:00am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-            newShiftPage.moveSliderAtCertainPoint("6:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10:00am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
@@ -1104,8 +1104,8 @@ public class P2PLGTest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(1);
             newShiftPage.selectChildLocInCreateShiftWindow(childLocationNames.get(1));
-            newShiftPage.moveSliderAtCertainPoint("10:15am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-            newShiftPage.moveSliderAtCertainPoint("8:15am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("12:15pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("10:15am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
@@ -1208,6 +1208,7 @@ public class P2PLGTest extends TestBase {
 
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
+            Thread.sleep(2000);
             newShiftPage.selectChildLocInCreateShiftWindow(childLocationNames.get(1));
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(1);
@@ -1313,6 +1314,7 @@ public class P2PLGTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
+            Thread.sleep(2000);
             newShiftPage.selectChildLocInCreateShiftWindow(childLocationNames.get(1));
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(1);
@@ -1419,9 +1421,10 @@ public class P2PLGTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
 
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isActiveWeekGenerated) {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createLGScheduleWithGivingTimeRange("08:00am", "09:00pm");
             createSchedulePage.publishActiveSchedule();
 
             // Verify the filter UI display correctly

@@ -44,7 +44,7 @@
                 <methods>
                     <include name="validateTheGenerationOfParentChildLGScheduleAsInternalAdmin" />
   <!--                  <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForParentChildLGAsInternalAdmin" /> -->
-                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateParentChildScheduleAsInternalAdmin" />
+ <!--                   <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateParentChildScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8208-->
                     <include name="validateTheButtonsOnParentChildLGSchedulePageAsInternalAdmin" />
                     <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForParentChildLGAsInternalAdmin" />
                     <include name="validateTheFunctionOfAutoOpenShiftForParentChildLGAsInternalAdmin" />
