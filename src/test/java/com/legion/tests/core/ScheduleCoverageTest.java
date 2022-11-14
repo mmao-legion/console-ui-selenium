@@ -450,7 +450,7 @@ public class ScheduleCoverageTest extends TestBase {
             float differenceHrs = Float.parseFloat(scheduleHrs.get("differenceHrs"));
             boolean hasArrowImgBeforeChange = differenceHrs != 0;
             int arrowImgsBeforeChange = scheduleShiftTablePage.getAllDifferenceHrsArrowImg().size();
-
+            SimpleUtils.pass("Get hrs of arrow img successfully");
             // Edit the schedule, increase the shift duration, let the coverage < 25%
             calculateShiftTimeAndChangeIt(scheduleHrs, "lessThan25");
 
@@ -600,6 +600,8 @@ public class ScheduleCoverageTest extends TestBase {
 
     private void calculateShiftTimeAndChangeIt(HashMap<String, String> scheduleHrs, String coverageStatus) throws Exception {
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+        System.out.println("The budget hrs is:"+scheduleHrs.get("budgetHrs"));
+        System.out.println("The different hrs is:"+ scheduleHrs.get("differenceHrs"));
         float budgetOrGuidanceHrs = Float.parseFloat(scheduleHrs.get("budgetHrs"));
         float differenceHrs = Float.parseFloat(scheduleHrs.get("differenceHrs"));
         float coverage = budgetOrGuidanceHrs/4;
