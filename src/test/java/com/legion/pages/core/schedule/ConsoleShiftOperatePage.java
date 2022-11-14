@@ -426,6 +426,10 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
         WebElement clickedShift = getShiftElementByIndex(0);
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+        if (isElementLoaded(cancelButtonChangeRole, 3)){
+            click(cancelButtonChangeRole);
+            SimpleUtils.pass("Quit the change role modal!");
+        }
         clickOnChangeRole();
         if(isElementEnabled(schWorkerInfoPrompt,5)) {
             SimpleUtils.pass("Various Work Role Prompt is displayed ");
@@ -564,7 +568,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @Override
     public WebElement clickOnProfileIcon() throws Exception {
         WebElement selectedShift = null;
-        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+        if(areListElementVisible(profileIcons, 10)&& areListElementVisible(shifts, 10)) {
             int randomIndex = (new Random()).nextInt(profileIcons.size());
             int i = 0;
             while (i < 100 && profileIcons.get(randomIndex).getAttribute("src").contains("openShiftImage")){
@@ -621,7 +625,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @Override
     public WebElement getShiftElementByIndex(int index) throws Exception {
         WebElement selectedShift = null;
-        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+        if(areListElementVisible(shifts, 10)) {
             selectedShift = shifts.get(index);
         } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
             selectedShift = dayViewAvailableShifts.get(index);
@@ -1296,7 +1300,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     public WebElement clickOnProfileIconOfOpenShift() throws Exception {
         WebElement selectedShift = null;
-        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+        if(areListElementVisible(profileIcons, 10)
+                && areListElementVisible(shifts, 10)) {
             int i;
             for (i=0; i<profileIcons.size(); i++){
                 if (profileIcons.get(i).getAttribute("src").contains("openShiftImage")){
@@ -1809,7 +1814,12 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }else
             SimpleUtils.fail("Meal break window load failed",true);
 
-        click(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+        ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+        if (scheduleCommonPage.isScheduleDayViewActive()) {
+            click(selectedShift.findElement(By.cssSelector(".sch-day-view-shift .sch-shift-worker-img-cursor")));
+        } else {
+            click(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+        }
         clickOnEditMeaLBreakTime();
         if (isMealBreakTimeWindowDisplayWell(true)) {
             if (isSavedChange) {
@@ -1901,7 +1911,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             isUnAssignedShift = By.cssSelector(".sch-day-view-shift-outer [class=\"allow-pointer-events \"]");
         WebElement shiftPlusBtn = shift.findElement(isUnAssignedShift);
         if (isElementLoaded(shiftPlusBtn)) {
-            click(shiftPlusBtn);
+            clickTheElement(shiftPlusBtn);
             if (isElementLoaded(shiftPopover, 10)) {
                 WebElement editShiftTimeOption = shiftPopover.findElement(By.cssSelector("[ng-if=\"canEditShiftTime && !isTmView()\"]"));
                 if (isElementLoaded(editShiftTimeOption, 20)) {
@@ -2456,6 +2466,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = ".worker-edit-availability-status")
     private WebElement messageForSelectTM;
+
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-grid-xs-3')]/div[1]/p")
+    private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
     @Override
     public void verifyMessageIsExpected(String messageExpected) throws Exception {
         if (isElementLoaded(messageForSelectTM,5)){
@@ -2463,6 +2476,13 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 SimpleUtils.pass("There is a message you want to see: "+messageExpected);
             } else {
                 SimpleUtils.fail("No message you expected! Actual message is "+ messageForSelectTM.getText(), false );
+            }
+        } else if (areListElementVisible(tmScheduledStatusOnNewCreateShiftPage, 5)){
+            if (tmScheduledStatusOnNewCreateShiftPage.get(0).getText()!=null
+                    && tmScheduledStatusOnNewCreateShiftPage.get(0).getText().toLowerCase().contains(messageExpected)){
+                SimpleUtils.pass("There is a message you want to see: "+messageExpected);
+            } else {
+                SimpleUtils.fail("No message you expected! Actual message is "+ tmScheduledStatusOnNewCreateShiftPage.get(0).getText(), false );
             }
         } else {
             SimpleUtils.fail("message for select TM is not loaded!", false);
@@ -2488,11 +2508,13 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css = "div.lgn-alert-message")
     private WebElement alertMessage;
 
-
+    @FindBy(css = ".MuiDialogContent-root p")
+    private List<WebElement> warningMessagesInWarningModeOnNewCreaeShiftPage;
     @Override
     public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception {
         String expectedMessageOnWarningModel1 = nickName.toLowerCase()+" is approved for time off";
         String expectedMessageOnWarningModel2 = "please cancel the approved time off before assigning";
+        NewShiftPage newShiftPage = new ConsoleNewShiftPage();
         waitForSeconds(1);
         if (isElementLoaded(alertMessage,15)) {
             String s = alertMessage.getText();
@@ -2504,8 +2526,23 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 if (isElementLoaded(closeSelectTMWindowBtn,5)){
                     click(closeSelectTMWindowBtn);
                 }
+            } else
+                SimpleUtils.fail("The message on warning model is incorrectly, the expected is:"
+                        +expectedMessageOnWarningModel1+ expectedMessageOnWarningModel2
+                        + " The actual is:"+s.toLowerCase(), false);
+        } else if (areListElementVisible(warningMessagesInWarningModeOnNewCreaeShiftPage, 5)) {
+            String warningMessage = newShiftPage.getWarningMessageFromWarningModal().toLowerCase();
+            SimpleUtils.assertOnFail("The message on warning model is incorrectly, the expected is:"
+                    +expectedMessageOnWarningModel1+ expectedMessageOnWarningModel2
+                    + " The actual is:"+warningMessage.toLowerCase(), warningMessage.contains(expectedMessageOnWarningModel1)
+                    && warningMessage.contains(expectedMessageOnWarningModel2), false);
+            waitForSeconds(1);
+            newShiftPage.clickOnOkButtonOnWarningModal();
+            SimpleUtils.pass("There is a warning model with one button labeled OK! and the message is expected!");
+            if (isElementLoaded(closeSelectTMWindowBtn,5)){
+                click(closeSelectTMWindowBtn);
             }
-        } else {
+        }else {
             SimpleUtils.fail("There is no warning model and warning message!", false);
         }
     }
@@ -3556,13 +3593,13 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @Override
     public boolean isMealBreakBlockDisplayed(int index) throws Exception {
         boolean mealBreakBlockDisplay = true;
-        if (areListElementVisible(dayViewAvailableShifts,10)){
-            try{
+        if (areListElementVisible(dayViewAvailableShifts, 10)) {
+            try {
                 WebElement mealBreakBlock = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[ng-repeat=\"break in breaks\"]"));
-                if(isElementLoaded(mealBreakBlock)){
+                if (isElementLoaded(mealBreakBlock)) {
                     SimpleUtils.report("The Meal Break is displayed in the shift box!");
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 SimpleUtils.report("The Meal Break is not displayed in the shift box!");
                 mealBreakBlockDisplay = false;
             }
@@ -3570,6 +3607,26 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         return mealBreakBlockDisplay;
     }
 
+
+    public void deleteTMShiftsInDayView(String tmName) throws Exception {
+        if (areListElementVisible(dayViewAvailableShifts,10)){
+            int count = dayViewAvailableShifts.size();
+            for (int i = 0; i < count; i++) {
+                WebElement workerName = null;
+                try{
+                    workerName = dayViewAvailableShifts.get(i).findElement(By.cssSelector(".sch-day-view-shift-worker-name"));
+                } catch (Exception e) {
+                SimpleUtils.fail("Fail to shift work name in day view! ", false);
+                }
+                if(workerName!= null && workerName.getText().contains(tmName)) {
+                    List<WebElement> tempShifts = getDriver().findElements(By.cssSelector(".sch-day-view-shift-outer .right-shift-box"));
+                    scrollToBottom();
+                    moveToElementAndClick(tempShifts.get(i));
+                    deleteShift();
+                }
+            }
+        }
+    }
     @FindBy(css = ".header-field.seniority-field.tl.ng-binding")
     private WebElement seniorityTitleShownForAssign;
     @FindBy(css = ".MuiGrid-root.MuiGrid-item>span")

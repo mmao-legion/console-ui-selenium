@@ -562,7 +562,8 @@ public abstract class TestBase {
             newShiftPage.setShiftNotesOnNewCreateShiftPage(shiftNotes);
         }
         newShiftPage.clickOnCreateOrNextBtn();
-        if (assignment.equals(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue())) {
+        if (assignment.equals(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue())
+                || assignment.equals(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue()) ) {
             if (tmName != null && !tmName.isEmpty()) {
                 newShiftPage.searchTeamMemberByName(tmName);
             } else {
@@ -767,6 +768,16 @@ public abstract class TestBase {
         adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.LocationBrokerContainer.getValue());
     }
 
+    public void deleteAllUnassignedShifts() throws Exception {
+        SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+        ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+            scheduleMainPage.saveSchedule();
+        }
+    }
     //added by Mary. 09:00AM-->9:00am
     public String changeTimeFormat(String time) throws Exception{
         String result = time;

@@ -673,8 +673,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             clickRadioBtnStaffingOption(staffingOption.OpenShift.getValue());
             if (isLocationLoaded())
                 selectLocation(location);
-            moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_END_TIME_3"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftEndTimeCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-            moveSliderAtSomePoint(propertyCustomizeMap.get("INCREASE_START_TIME_3"), ScheduleTestKendraScott2.sliderShiftCount.SliderShiftStartCount.getValue(), ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             clickOnCreateOrNextBtn();
             if (ifWarningModeDisplay() && isElementLoaded(okBtnInWarningMode,5))
                 click(okBtnInWarningMode);
@@ -1056,6 +1056,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                             if (buttonsOnWarningMode.get(1).getText().toLowerCase().equalsIgnoreCase("assign anyway")){
                                                 clickTheElement(buttonsOnWarningMode.get(1));
                                                 SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
+                                            } else if(buttonsOnWarningMode.get(1).getText().toLowerCase().equalsIgnoreCase("offer anyway")){
+                                                clickTheElement(buttonsOnWarningMode.get(1));
+                                                SimpleUtils.report("Assign Team Member: Click on 'OFFER ANYWAY' button Successfully!");
                                             }
                                         }
                                     }
@@ -1781,10 +1784,10 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 15)) {
                     textSearch.clear();
                     textSearch.sendKeys(name);
-                    click(searchIcon);
+                    clickTheElement(searchIcon);
                     if (areListElementVisible(searchResults, 15)) {
                         for (WebElement searchResult : searchResults) {
-                            WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-name"));
+                            WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
                             WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
                             WebElement locationInfo = searchResult.findElement(By.className("tma-description-fields"));
                             if (workerName != null && optionCircle != null) {

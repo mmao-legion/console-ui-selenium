@@ -9,21 +9,32 @@
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
 
-    <test name="Consolidating Filters Test">
-        <classes>
-            <class name="com.legion.tests.core.ConsolidatingFiltersTest">
-                <methods>
-                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
 
-    <test name="Overnight Test">
+    <test name="P2P LG Test">
         <classes>
-            <class name="com.legion.tests.core.OvernightTest">
+            <class name="com.legion.tests.core.P2PLGTest">
                 <methods>
-                    <include name="verifyShiftCanBeDragToPreviousDayAsInternalAdmin" />
+                    <include name="validateTheGenerationOfP2PLGScheduleAsInternalAdmin" />
+ <!--                   <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForP2PLGAsInternalAdmin" /> -->
+                    <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateP2PScheduleAsInternalAdmin" />
+                    <include name="validateTheButtonsOnP2PLGSchedulePageAsInternalAdmin" />
+<!--                    <include name="validateTheFunctionOfAutoOpenShiftForP2PLGAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-7919-->
+                    <include name="validateTheFunctionOfAutoOpenShiftInDayViewForP2PLGAsInternalAdmin" />
+                    <include name="validateTheFunctionOfManualOpenShiftForP2PLGAsInternalAdmin" />
+                    <include name="validateTheFunctionOfManualOpenShiftInDayViewFoP2PLGAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAssignTMShiftForP2PLGAsInternalAdmin" />
+<!--                    <include name="verifyAssignTMWhenTMHasTimeOffThatDayForP2PLGAsStoreManager" /> -->
+                    <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForP2PAsInternalAdmin" />
+                    <include name="validateAssignTMWhenTMHasMaxNoOfShiftsScheduledForP2PAsInternalAdmin" />
+                    <include name="validateAssignTMWhenTMHasOverlappingViolationForP2PAsInternalAdmin" />
+                    <include name="validateTheGroupByDropdownListForP2PAsInternalAdmin" />
+                    <include name="validateTheFilterOnSchedulePageForP2PAsInternalAdmin" />
+              <!--      <include name="verifyTheFunctionOfCopyScheduleForP2PAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8015-->
+             <!--       <include name="validatePrintScheduleForP2PAsInternalAdminP2P" /> cannot run on jenkins-->
+          <!--          <include name="validateUIPerformanceForLargeRosterAsInternalAdminP2P" /> This no envs to run the performance case-->
+                    <include name="validateOperateP2PLGScheduleByDifferentUserAsInternalAdmin" />
+        <!--            <include name="validateBudgetHourSmartCardWhenSMWithManageBudgetPermissionForP2PLGAsInternalAdmin" /> -->
+                    <include name="verifyAutomaticallyExpandWhenGroupByInP2PLGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -33,37 +44,27 @@
         <classes>
             <class name="com.legion.tests.core.ParentChildLGTest">
                 <methods>
-                    <include name="verifyTheContentOnMultipleEditShiftsWindowForPCAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Bulk Delete and Edit Test">
-        <classes>
-            <class name="com.legion.tests.core.BulkDeleteNEditTest">
-                <methods>
-                    <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Upperfield Test">
-        <classes>
-            <class name="com.legion.tests.core.UpperfieldTest">
-                <methods>
-                    <include name="verifyScheduleStatusOnScheduleInRegionViewAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Work Role Test">
-        <classes>
-            <class name="com.legion.tests.core.WorkRoleTest">
-                <methods>
-                    <include name="verifyFunctionalityOfDisplayOrderAsInternalAdmin" />
+                    <include name="validateTheGenerationOfParentChildLGScheduleAsInternalAdmin" />
+  <!--                  <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForParentChildLGAsInternalAdmin" /> -->
+ <!--                   <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateParentChildScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8208-->
+                    <include name="validateTheButtonsOnParentChildLGSchedulePageAsInternalAdmin" />
+                    <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForParentChildLGAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAutoOpenShiftForParentChildLGAsInternalAdmin" />
+                    <include name="validateTheFunctionOfAutoOpenShiftInDayViewForParentChildLGAsInternalAdmin" />
+                    <include name="validateTheFunctionOfManualOpenShiftForParentChildLGAsInternalAdmin" />
+                    <include name="validateTheFunctionOfManualOpenShiftInDayViewForParentChildLGAsInternalAdminPC" />
+                    <include name="validateTheFunctionOfAssignTMShiftForParentChildLGAsInternalAdmin" />
+<!--                    <include name="verifyAssignTMWhenTMHasTimeOffThatDayForParentChildLGAsStoreManager" /> -->
+                    <include name="validateAssignTMWhenTMHasMaxNoOfShiftsScheduledForParentChildAsInternalAdmin" />
+                    <include name="validateAssignTMWhenTMHasOverlappingViolationForParentChildAsInternalAdmin" />
+                    <include name="validateTheGroupByDropdownListForParentChildAsInternalAdmin" />
+                    <include name="validateTheFilterOnSchedulePageForParentChildAsInternalAdmin" />
+                    <include name="verifyTheFunctionOfCopyScheduleForParentChildAsInternalAdmin" />
+           <!--         <include name="validatePrintScheduleForParentChildAsInternalAdmin" /> cannot run on jenkins-->
+            <!--        <include name="validateUIPerformanceForLargeRosterAsInternalAdminPC" />This no envs to run the performance case-->
+                    <include name="validateOperateParentChildLGScheduleByDifferentUserAsInternalAdmin" />
+            <!--        <include name="validateBudgetHourSmartCardWhenSMWithManageBudgetPermissionForParentChildLGAsInternalAdmin" /> -->
+                    <include name="verifyAutomaticallyExpandWhenGroupByInPCLGAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

@@ -437,7 +437,9 @@ public class ActivityTest extends TestBase {
             mySchedulePage.verifySwapRequestShiftsLoaded();
             // Validate that recipient can claim the swap request shift.
             mySchedulePage.verifyClickAcceptSwapButton();
-
+            //SCH-6843
+            SimpleUtils.assertOnFail("The swap smart card should disappear",
+                    !smartCardPage.isSmartCardAvailableByLabel(smartCard), false);
             loginPage.logOut();
 
             // Login as Store Manager
