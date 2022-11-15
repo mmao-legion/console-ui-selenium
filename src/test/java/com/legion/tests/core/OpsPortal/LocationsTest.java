@@ -2831,7 +2831,7 @@ public class LocationsTest extends TestBase {
         locationsPage.clickOnLocationsTab();
         //Before import, existing location, get readyForForecast value in UI
         locationsPage.goToSubLocationsInLocationsPage();
-        String filePath = "\\src\\test\\resources\\uploadFile\\importLocation\\0325Upload3.csv";
+        String filePath = "src/test/resources/uploadFile/importLocation/0325Upload3.csv";
         String url = "https://rc-enterprise.dev.legion.work/legion/integration/uploadBusiness?isTest=false&isImport=true&isAsync=false&encrypted=false&check=false";
         String responseCode =  importFile.importFileAPI(getSession(), filePath, url);
         importFile.verifyResponseCode(responseCode,"400");
