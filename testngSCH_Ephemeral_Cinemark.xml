@@ -126,17 +126,6 @@
         </classes>
     </test>
 
-    <test name="Overnight Test">
-        <classes>
-            <class name="com.legion.tests.core.OvernightTest">
-                <methods>
-                    <include name="verifyShiftWhenEnableContinuousOperationOptionAsInternalAdmin" />
-                    <include name="verifyShiftWhenDisableContinuousOperationOptionAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
     <test name="P2P LG Test">
         <classes>
             <class name="com.legion.tests.core.P2PLGTest">
