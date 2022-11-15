@@ -1299,6 +1299,7 @@ public class P2PLGTest extends TestBase {
                 shiftCount1++;
             }
             String workRole =  shiftInfo1.get(4);
+            String lastNameOfTM = shiftInfo1.get(5);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
@@ -1323,7 +1324,7 @@ public class P2PLGTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+ lastNameOfTM);
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1337,7 +1338,7 @@ public class P2PLGTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchWithOutSelectTM(firstNameOfTM);
+            newShiftPage.searchWithOutSelectTM(firstNameOfTM + " "+lastNameOfTM);
             String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
             SimpleUtils.assertOnFail("Overlapping violation message fail to load! The actual message is: "+shiftWarningMessage,
                     shiftWarningMessage.contains(shiftStartTime+ " - "+shiftEndTime), false);
@@ -1886,35 +1887,33 @@ public class P2PLGTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
-
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
-            scheduleCommonPage.navigateToNextWeek();
 
             // Verify operate schedule by admin user
-
             /// Generate schedule
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(!isActiveWeekGenerated){
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-
+            scheduleMainPage.clickOnFilterBtn();
+            List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("Location");
             /// Publish schedule
             if(createSchedulePage.isPublishButtonLoadedOnSchedulePage() || createSchedulePage.isRepublishButtonLoadedOnSchedulePage())
                 createSchedulePage.publishActiveSchedule();
 
             /// Add shifts in schedule
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            newShiftPage.addOpenShiftWithDefaultTime(shiftOperatePage.getRandomWorkRole(),"Mountain View");
+            newShiftPage.addOpenShiftWithDefaultTime(shiftOperatePage.getRandomWorkRole(),childLocationNames.get(0));
 
             /// Edit shifts(include edit shift time, assign TM, delete...)
             shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.clickOnEditShiftTime();
-            shiftOperatePage.editShiftTime();
+            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","11:00am",false);
             shiftOperatePage.clickOnUpdateEditShiftTimeButton();
 
             shiftOperatePage.clickOnProfileIcon();
@@ -1936,7 +1935,7 @@ public class P2PLGTest extends TestBase {
 
             // Verify operate schedule by SM user
             /// Login as Store Manager
-            loginAsDifferentRole(AccessRoles.StoreManagerLG.getValue());
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
@@ -1958,12 +1957,12 @@ public class P2PLGTest extends TestBase {
 
             /// Add shifts in schedule
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            newShiftPage.addOpenShiftWithDefaultTime(shiftOperatePage.getRandomWorkRole());
+            newShiftPage.addOpenShiftWithDefaultTime(shiftOperatePage.getRandomWorkRole(),childLocationNames.get(1));
 
             /// Edit shifts(include edit shift time, assign TM, delete...)
             shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.clickOnEditShiftTime();
-            shiftOperatePage.editShiftTime();
+            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","11:00am",false);
             shiftOperatePage.clickOnUpdateEditShiftTimeButton();
 
             shiftOperatePage.clickOnProfileIcon();
