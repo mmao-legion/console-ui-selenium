@@ -1422,7 +1422,7 @@ public class BulkCreateTest extends TestBase {
             //Fill the required option
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue());
-            count =10;
+            count =7;
             newShiftPage.setShiftPerDayOnNewCreateShiftPage(count);
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(dayCount);

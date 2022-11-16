@@ -1174,6 +1174,11 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                             }
                                         }
                                     }
+                                    if (!areListElementVisible(shiftOffersOnShiftAssignedSections, 3)
+                                            && !areListElementVisible(assignedShiftsOnShiftAssignedSections, 3)){
+                                        SimpleUtils.fail("Fail to select employees to assign or offer! ", false);
+                                    }else
+                                        SimpleUtils.pass("TM been added to assign or offer section successfully! ");
                                     break;
                                 }
                             }else {

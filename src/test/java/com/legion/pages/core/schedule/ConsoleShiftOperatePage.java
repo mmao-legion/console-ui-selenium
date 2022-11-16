@@ -1672,7 +1672,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                             if (shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText().equals(newSelectedWorkRoleName)) {
                                 SimpleUtils.pass("Shift role been changed successfully ");
                             } else {
-                                SimpleUtils.fail("Shift role failed to change ", true);
+                                SimpleUtils.fail("Shift role failed to change ", false);
                             }
                         } else {
                             if (shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText().equals(originSelectedWorkRoleName)) {
