@@ -13,6 +13,7 @@ import com.legion.utils.HttpUtil;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import io.restassured.RestAssured;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.*;
@@ -5353,6 +5354,24 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				System.out.println(value);
 			}
 		}
+	}
+
+	public void importLocations(String filePath, String sessionId, String isImport, int expectedStatusCode) {
+
+		String url = "https://rc-enterprise.dev.legion.work/legion/integration/uploadBusiness";
+		File file = new File(filePath);
+
+		Map<String, String> params = new HashMap<>();
+		params.put("isTest", "false");
+		params.put("isImport", isImport);
+		params.put("isAsync", "false");
+		params.put("encrypted", "false");
+		params.put("check", "false");
+
+		RestAssured.given().log().all().
+				queryParams(params).contentType("multipart/form-data").multiPart("file", file).header("sessionId", sessionId).
+				when().post(url).
+				then().log().all().statusCode(expectedStatusCode);
 	}
 }
 
