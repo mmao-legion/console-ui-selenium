@@ -1331,8 +1331,12 @@ public class UserManagementTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAnnouncementAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-            ToggleAPI.enableToggle(Toggles.ShowAnnouncementGroupOP.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.enableToggle(Toggles.CommsAnnouncements.getValue(), "nancy.nan+toggle@legion.co", "Admin123");
+            ToggleAPI.enableToggle(Toggles.Announcements.getValue(), "nancy.nan+toggle@legion.co", "Admin123");
+            ToggleAPI.enableToggle(Toggles.NewAnnouncements.getValue(), "nancy.nan+toggle@legion.co", "Admin123");
+
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "nancy.nan+toggle@legion.co", "Admin123");
+            ToggleAPI.enableToggle(Toggles.ShowAnnouncementGroupOP.getValue(), "nancy.nan+toggle@legion.co", "Admin123");
 
             BasePage.waitForSeconds(300);
             //go to User Management Dynamic Employee Groups
@@ -1352,7 +1356,7 @@ public class UserManagementTest extends TestBase {
             userManagementPage.updateAccouncement();
             userManagementPage.deleteAnnouncement();
 
-            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "nancy.nan+toggle@legion.co", "Admin123");
 
             userManagementPage.verifyOnlyAnnouncementDisplay();
 
@@ -1361,16 +1365,16 @@ public class UserManagementTest extends TestBase {
             userManagementPage.updateAccouncement();
             userManagementPage.deleteAnnouncement();
 
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-            ToggleAPI.disableToggle(Toggles.ShowAnnouncementGroupOP.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "nancy.nan+toggle@legion.co", "Admin123");
+            ToggleAPI.disableToggle(Toggles.ShowAnnouncementGroupOP.getValue(), "nancy.nan+toggle@legion.co", "Admin123");
 
             userManagementPage.verifyOnlyAnnouncementDisplay();
 
-            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "nancy.nan+toggle@legion.co", "Admin123");
 
             userManagementPage.verifyDynamicSmartCartNotDispaly();
 
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "nancy.nan+toggle@legion.co", "Admin123");
 
             BasePage.waitForSeconds(180);
         } catch (Exception e) {
