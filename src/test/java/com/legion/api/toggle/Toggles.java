@@ -13,8 +13,12 @@ public enum Toggles {
     EnableTahoeStorage("EnableTahoeStorage"),
     EnableLongTermBudgetPlan("EnableLongTermBudgetPlan"),
     ShowAnnouncementGroupOP("ShowAnnouncementGroupOP"),
+    NewAnnouncements( "NewAnnouncements"),
+    CommsAnnouncements("CommsAnnouncements"),
+    Announcements("Announcements"),
     UseDemandDriverTemplateSwitch("UseDemandDriverTemplateSwitch"),
     EnableChangeLocationGroupSetting("EnableChangeLocationGroupSetting");
+
     private final String value;
 
     Toggles(final String newValue) {

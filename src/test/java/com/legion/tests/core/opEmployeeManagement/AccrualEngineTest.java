@@ -1014,8 +1014,14 @@ public class AccrualEngineTest extends TestBase {
         //Assert.assertEquals("2 Job Title Selected", absentManagePage.getJobTitleSelectedBeforePromotion(), "Failed to select 2 job titles!");
         SimpleUtils.pass("Succeeded in Validating job title before promotion is muti-select!");
         //4.2 job title selected before promotion should be disabled in after promotion.
-        //Assert.assertTrue(absentManagePage.verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion("Senior Ambassador") && absentManagePage.verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion("WA Ambassador"), "Failed to assert job title selected before promotion are disabled in after promotion!");
+        Assert.assertTrue(absentManagePage.verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion("Senior Ambassador"), "Failed to assert job title selected before promotion are disabled in after promotion!");
+        //Assert.assertTrue(absentManagePage.verifyJobTitleSelectedBeforePromotionShouldBeDisabledAfterPromotion("WA Ambassador"), "Failed to assert job title selected before promotion are disabled in after promotion!");
         SimpleUtils.pass("Succeeded in Validating job title selected before promotion are disabled in after promotion!");
+        //4.3 Get time off reason list in global settings
+        Assert.assertTrue(absentManagePage.getTimeOffReasonsInGlobalSetting().size()==absentManagePage.getTimeOffOptions().size(),"Failed to assert the time off list in the criteria is the full list of time off reasons in global settings!");
+        Assert.assertTrue(absentManagePage.getTimeOffOptions().containsAll(absentManagePage.getTimeOffReasonsInGlobalSetting()));
+        Assert.assertTrue(absentManagePage.getTimeOffReasonsInGlobalSetting().containsAll(absentManagePage.getTimeOffOptions()));
+        SimpleUtils.pass("Succeeded in Validating the time off list in the criteria is the full list of time off reasons in global settings!");
         //5: Add promotion actions
         absentManagePage.setPromotionAction("Annual Leave", "Floating Holiday");
         OpsCommonComponents commonComponents = new OpsCommonComponents();
@@ -1056,6 +1062,7 @@ public class AccrualEngineTest extends TestBase {
         }
         Assert.assertFalse(absentManagePage.isTherePromotionRule(), "Failed to assert there is no promotion rules!");
         SimpleUtils.pass("Succeeded in removing all the promotion rules just created!");
+
     }
 
     @Automated(automated = "Automated")

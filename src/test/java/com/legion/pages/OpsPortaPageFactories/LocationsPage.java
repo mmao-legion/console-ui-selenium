@@ -344,4 +344,5 @@ public interface LocationsPage {
     public boolean verifyReadyForForecastFieldExist() throws Exception;
     public String getReadyForForecastSelectedOption() throws Exception;
     public void chooseReadyForForecastValue(String value) throws Exception;
-}
+    public void importLocations(String filePath,String sessionId,String isImport,int expectedStatusCode);
+    }
