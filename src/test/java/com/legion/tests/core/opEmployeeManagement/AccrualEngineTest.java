@@ -377,7 +377,7 @@ public class AccrualEngineTest extends TestBase {
         return isToggleOn;
     }
 
-    private String[] turnOnToggle(String sessionId, String toggleName) {//UseAbsenceMgmtConfiguration
+    public String[] turnOnToggle(String sessionId, String toggleName) {//UseAbsenceMgmtConfiguration
         //url
         String toggleUrl = Constants.toggles;
         String url = toggleUrl + "?toggle=" + toggleName;
@@ -386,9 +386,23 @@ public class AccrualEngineTest extends TestBase {
         toggleHeader.put("sessionId", sessionId);
         toggleHeader.put("Content-Type", "application/json;charset=UTF-8");
         //body String
-        String setToggleStr = "{ \"level\": \"Enterprise\",\"record\": {\"name\": \"UseAbsenceMgmtConfiguration\",\"defaultValue\": false,\"rules\": [{\"enterpriseName\": \"opauto\"},{\"enterpriseName\": \"cinemark-wkdy\"},{\"enterpriseName\": \"carters\"},{\"enterpriseName\": \"op\"}]},\"valid\": true }";
+        String setToggleStr = "{ \"level\": \"Enterprise\",\"record\": {\"name\": \"" + toggleName + "\", \"defaultValue\": false,\"rules\": [{\"enterpriseName\": \"opauto\"},{\"enterpriseName\": \"cinemark-wkdy\"},{\"enterpriseName\": \"carters\"},{\"enterpriseName\": \"op\"}]},\"valid\": true }";
         //post
-        return HttpUtil.httpPost(url, toggleHeader, setToggleStr);
+        return HttpUtil.httpPost(toggleUrl, toggleHeader, setToggleStr);
+    }
+
+    public String[] turnOffToggle(String sessionId, String toggleName) {//UseAbsenceMgmtConfiguration
+        //url
+        String toggleUrl = Constants.toggles;
+        String url = toggleUrl + "?toggle=" + toggleName;
+        //set headers
+        HashMap<String, String> toggleHeader = new HashMap<String, String>();
+        toggleHeader.put("sessionId", sessionId);
+        toggleHeader.put("Content-Type", "application/json;charset=UTF-8");
+        //body String
+        String setToggleStr = "{ \"level\": \"Enterprise\",\"record\": {\"name\": \"" + toggleName + "\",\"defaultValue\": false,\"rules\": [{\"enterpriseName\": \"cinemark-wkdy\"},{\"enterpriseName\": \"carters\"},{\"enterpriseName\": \"op\"}]},\"valid\": true }";
+        //post
+        return HttpUtil.httpPost(toggleUrl, toggleHeader, setToggleStr);
     }
 
     public String getUserTemplate(String workerId, String sessionId) {
