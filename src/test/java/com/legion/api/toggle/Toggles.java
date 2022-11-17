@@ -16,7 +16,7 @@ public enum Toggles {
     NewAnnouncements( "NewAnnouncements"),
     CommsAnnouncements("CommsAnnouncements"),
     Announcements("Announcements"),
-    UseDemandDriverTemplateSwith("UseDemandDriverTemplateSwitch"),
+    UseDemandDriverTemplateSwitch("UseDemandDriverTemplateSwitch"),
     EnableChangeLocationGroupSetting("EnableChangeLocationGroupSetting");
 
     private final String value;
