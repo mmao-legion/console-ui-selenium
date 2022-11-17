@@ -1339,8 +1339,8 @@ public class BulkCreateTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the assign and offer workflow")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheAssignAndOfferWorkFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -1444,7 +1444,7 @@ public class BulkCreateTest extends TestBase {
             Thread.sleep(5000);
             openShiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, "Open");
             SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
-                    openShiftsOfOneDay.size()>=5, false);
+                    openShiftsOfOneDay.size()>=2, false);
             for (int i =0; i<5; i++) {
                 shiftId = openShiftsOfOneDay.get(0).getAttribute("id");
                 index = scheduleShiftTablePage.getShiftIndexById(shiftId);
