@@ -31,6 +31,7 @@ public class PrepareSettingsTest extends TestBase {
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{
         try {
+            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
             this.createDriver((String) params[0], "83", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
