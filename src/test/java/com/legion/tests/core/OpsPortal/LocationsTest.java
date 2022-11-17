@@ -2842,7 +2842,7 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Yang")
     @Enterprise(name = "opauto")
-    @TestName(description = "Verify import location group function")
+    @TestName(description = "Import locations common function")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyImportLocationCommonFunctionAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
