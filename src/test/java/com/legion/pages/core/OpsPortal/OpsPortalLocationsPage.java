@@ -16,6 +16,7 @@ import com.legion.utils.SimpleUtils;
 import io.restassured.RestAssured;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.Matchers;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -5367,11 +5368,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		params.put("isAsync", "false");
 		params.put("encrypted", "false");
 		params.put("check", "false");
-
-		RestAssured.given().log().all().
-				queryParams(params).contentType("multipart/form-data").multiPart("file", file).header("sessionId", sessionId).
-				when().post(url).
-				then().log().all().statusCode(expectedStatusCode);
+		if (isImport.equalsIgnoreCase("true")) {
+			RestAssured.given().log().all().queryParams(params).contentType("multipart/form-data").multiPart("file", file).header("sessionId", sessionId)
+					.when().post(url)
+					.then().log().all().statusCode(expectedStatusCode).body("responseStatus", Matchers.equalToIgnoringCase("SUCCESS"));
+		}
 	}
 }
 

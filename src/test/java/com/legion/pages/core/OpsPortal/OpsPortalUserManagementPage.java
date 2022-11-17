@@ -1533,7 +1533,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		}
 		assignmentRuleSaveIcon.click();
 		if (addedBadges.size() > 0) {
-			if (addedBadges.get(0).getAttribute("data-tootik").trim().contains(badgeName)) {
+			if (addedBadges.get(addedBadges.size()-1).getAttribute("data-tootik").trim().contains(badgeName)) {
 				SimpleUtils.pass("Badge is added");
 			} else {
 				SimpleUtils.fail("Badge is added failed", false);
