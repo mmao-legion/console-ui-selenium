@@ -2841,12 +2841,31 @@ public enum modelSwitchOperation{
     public void verifyEmptyChannelNameIsAllowedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddhh");
+            String currentTime = sdf.format(new Date()).trim();
+            String templateName = "TestEmptyChannelName" + currentTime;
             String channelDisplayName = "ChannelTest";
+            String channelDisplayName1 = "ChannelTest1";
             String description = "This is a test for empty channel name!";
             String verifyType = "channel";
             String channelName = "";
             String channelDisplayNameToUpdate = "ChannelToUpdate";
+            String expectedWarningMsg = "The channel source type is already exist.";
+            String addOrEdit = "Add";
 
+            HashMap<String, String> driver = new HashMap<String, String>()
+            {
+                {
+                    put("Name", "Items:ChannelTest:Enrollments");
+                    put("Type", "Items");
+                    put("Channel", channelDisplayNameToUpdate);
+                    put("Category", "Enrollments");
+                    put("Show in App", "Yes");
+                    put("Order", "1");
+                    put("Forecast Source", "Legion ML");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
             //Turn on UseDemandDriverTemplateSwitch toggle
             ToggleAPI.enableToggle(Toggles.UseDemandDriverTemplateSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
@@ -2861,7 +2880,21 @@ public enum modelSwitchOperation{
             settingsAndAssociationPage.createNewChannelOrCategory(verifyType, channelDisplayName, description, channelName);
             //Update a channel to empty channel name
             settingsAndAssociationPage.clickOnEditBtnInSettings(verifyType, channelDisplayName, channelDisplayNameToUpdate);
+            //Only one empty channel name is allowed
+            SimpleUtils.assertOnFail("There should be a warning message shows empty channel name already exist!", settingsAndAssociationPage.createNewChannelOrCategory(verifyType, channelDisplayName1, description, channelName).get(0).contains(expectedWarningMsg), false);
+            //The channel with empty name will display in the used driver
+            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver(addOrEdit);
+            configurationPage.addOrEditDemandDriverInTemplate(driver);
+            SimpleUtils.assertOnFail("Failed to add the driver!", configurationPage.searchDriverInTemplateDetailsPage(driver.get("Name")), false);
+            configurationPage.clickOnBackButton();
+            configurationPage.setLeaveThisPageButton();
+
             //Remove the channel
+            settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
             settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, channelDisplayNameToUpdate);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

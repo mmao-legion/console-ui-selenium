@@ -408,6 +408,21 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         }
     }
 
+    @FindBy(css = "span[ng-if*=\"$error.customValidation\"]")
+    private List<WebElement> warningMsgList;
+    private List<String> validateChannelName(){
+        List<String> warningInfo = new ArrayList<>();
+
+        if (areListElementVisible(warningMsgList, 3)){
+            for (WebElement msg : warningMsgList){
+                warningInfo.add(msg.getText());
+            }
+        }else{
+            SimpleUtils.report("No Warning Message show up!");
+        }
+        return  warningInfo;
+    }
+
     @FindBy(css = "div.setting-group")
     private List<WebElement> settingsTypes;
     @FindBy(css = "div.modal-dialog")
@@ -419,10 +434,12 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
     @FindBy(css = "label.use-in-reporting input")
     private WebElement useInReportCheckbox;
     @Override
-    public void createNewChannelOrCategory(String type, String displayName, String... otherInfo) throws Exception {
+    public List<String> createNewChannelOrCategory(String type, String displayName, String... otherInfo) throws Exception {
         WebElement displayNameInput;
         WebElement NameOrSourceTypeInput;
         boolean isExisting = false;
+        List<String> warningInfo = null;
+
         if (areListElementVisible(settingsTypes, 5)) {
             for (WebElement settingsType : settingsTypes) {
                 if (settingsType.findElement(By.cssSelector("lg-paged-search")).getAttribute("placeholder").contains(type)) {
@@ -436,6 +453,11 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                             if (otherInfo.length > 1){
                                 NameOrSourceTypeInput.clear();
                                 NameOrSourceTypeInput.sendKeys(otherInfo[1]);
+                            }
+                            warningInfo = validateChannelName();
+                            if (warningInfo.size() > 0){
+                                clickTheElement(cancelBtn);
+                                return warningInfo;
                             }
                             if ("Category".equalsIgnoreCase(type) && isElementLoaded(useInReportCheckbox) &&
                                     useInReportCheckbox.getAttribute("checked") == null) {
@@ -458,6 +480,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         } else{
             SimpleUtils.fail("No content in Settings page!", false);
         }
+        return warningInfo;
     }
 
     @FindBy(css = "lg-paged-search")
