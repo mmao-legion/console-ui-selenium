@@ -1,5 +1,7 @@
 package com.legion.tests.core.OpsPortal;
 
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.tests.TestBase;
@@ -539,7 +541,7 @@ public class LocationsGroupTestInOP extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to MS parent")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled =  false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled =  true)
     public void verifyChangeNoneLocationToMSParentAsInternalAdmin  (String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -554,6 +556,9 @@ public class LocationsGroupTestInOP extends TestBase {
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
+            //Turn on toggle EnableChangeLocationGroupSetting
+            ToggleAPI.enableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123");
+            refreshPage();
             //go to locations tab
             locationsPage.clickOnLocationsTab();
             //check locations item
@@ -581,7 +586,7 @@ public class LocationsGroupTestInOP extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to P2P parent")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
     public void verifyChangeNoneLocationToP2PParentAsInternalAdmin  (String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -596,6 +601,9 @@ public class LocationsGroupTestInOP extends TestBase {
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
+            //Turn on toggle EnableChangeLocationGroupSetting
+            ToggleAPI.enableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123");
+            refreshPage();
             //go to locations tab
             locationsPage.clickOnLocationsTab();
             //check locations item
@@ -623,7 +631,7 @@ public class LocationsGroupTestInOP extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to P2P child")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = true)
     public void verifyChangeNoneLocationToChildAsInternalAdmin  (String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -638,6 +646,9 @@ public class LocationsGroupTestInOP extends TestBase {
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
+            //Turn on toggle EnableChangeLocationGroupSetting
+            ToggleAPI.enableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123");
+            refreshPage();
             //go to locations tab
             locationsPage.clickOnLocationsTab();
             //check locations item
@@ -651,7 +662,7 @@ public class LocationsGroupTestInOP extends TestBase {
                 SimpleUtils.pass("Create new location successfully: "+locationName);
             }else
                 SimpleUtils.fail("Create new location failed or can't search created location",true);
-//            //change None to child
+            //change None to child
             String  locationRelationship = "Part of a location group";
             String parentLocation = "PTP";
             locationsPage.changeOneLocationToChild(locationName,locationRelationship,parentLocation);
