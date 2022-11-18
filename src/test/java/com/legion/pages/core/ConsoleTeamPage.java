@@ -5133,4 +5133,20 @@ private List<WebElement> locationColumn;
 			SimpleUtils.fail("Average Agreement text is not displayed!", true);
 		}return textOfAverage;
 	}
+
+	@FindBy(css="[label=\"Show Rate\"]>button")
+	private WebElement showRateBtn;
+	@FindBy(css="[ng-if=\"canViewHourlyRate\"] [class*=\"value\"]")
+	private WebElement hourlyRate;
+	@Override
+	public String getTextOfHourlyRate() throws Exception {
+		String textOfHourlyRate = null;
+		if (isElementLoaded(showRateBtn, 10))
+			click(showRateBtn);
+		if(isElementLoaded(hourlyRate, 10)){
+			textOfHourlyRate = hourlyRate.getText().trim();
+		}else
+			SimpleUtils.fail("Hourly Rate is not displayed!",false);
+		return textOfHourlyRate;
+	}
 }

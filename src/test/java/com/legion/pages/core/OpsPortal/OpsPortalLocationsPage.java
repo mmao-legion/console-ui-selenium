@@ -5342,5 +5342,61 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			}
 		}
 	}
+
+	@FindBy(css = "input-field[label=\"Country/Region\"]>ng-form")
+	private WebElement locationCountryRegionField;
+	@FindBy(css = "lg-search[placeholder=\"Search\"] [placeholder=\"Search\"] [class*=\"input-form\"] > input")
+	private WebElement locationCountryRegionSearchBox;
+	@FindBy(css = "[search-hint=\"Search\"] div[class=\"lg-search-options\"]>div[class=\"lg-search-options__scroller\"]")
+	private WebElement locationCountryRegionSelectBox;
+	@FindBy(css = "input-field[label=\"Province\"]>ng-form")
+	private WebElement locationStatesField;
+//	@FindBy(css = "input-field[label=\"State\"]>ng-form")
+//	private WebElement locationStatesField;
+	@FindBy(css = "div[title='England']")
+	private WebElement particularStateForEngland;
+	@FindBy(css = "div[title='Alberta']")
+	private WebElement particularStateForCanada;
+	@FindBy(css = "div[title='Ulster']")
+	private WebElement particularStateForIreland;
+	@FindBy(css = "input[aria-label=\"City\"]")
+	private WebElement locationCity;
+	@Override
+	public void modifyLocationCountry(String country, String state, String city) throws Exception {
+		if (isElementLoaded(locationCountryRegionField, 10)) {
+			click(locationCountryRegionField);
+			SimpleUtils.report("Location Details: Country/Region input field loaded successfully.");
+			if(isElementLoaded(locationCountryRegionSearchBox, 10)) {
+				locationCountryRegionSearchBox.clear();
+				locationCountryRegionSearchBox.sendKeys(country);
+				if(isElementLoaded(locationCountryRegionSelectBox, 10)){
+					SimpleUtils.report("Location Details: Country/Region select box loaded successfully.");
+					click(locationCountryRegionSelectBox);
+				}else
+					SimpleUtils.fail("Location Details: Input Country/Region is not correct!", false);
+			}else
+				SimpleUtils.fail("Location Details: Country/Region search field is not loaded!", false);
+		} else
+			SimpleUtils.fail("Location Details: Country/Region input field is not loaded!", false);
+		if (isElementLoaded(locationStatesField, 10)) {
+			click(locationStatesField);
+			SimpleUtils.report("Location Details: State input field loaded successfully.");
+			if(state.trim().equalsIgnoreCase("England") && isElementLoaded(particularStateForEngland, 10)) {
+				click(particularStateForEngland);
+			}else if(state.trim().equalsIgnoreCase("Alberta") && isElementLoaded(particularStateForCanada, 10)){
+				click(particularStateForCanada);
+			}else if(state.trim().equalsIgnoreCase("Ulster") && isElementLoaded(particularStateForIreland, 10)){
+				click(particularStateForIreland);
+			}else
+				SimpleUtils.fail("Location Details: Input State is not supported by this method yet!", false);
+		}else
+			SimpleUtils.fail("Location Details: State input field is not loaded!", false);
+		if (isElementLoaded(locationCity, 10)) {
+			SimpleUtils.report("Location Details: City input field loaded successfully.");
+			locationCity.clear();
+			locationCity.sendKeys(city);
+		}else
+			SimpleUtils.fail("Location Details: City input field is not loaded!", false);
+	}
 }
 

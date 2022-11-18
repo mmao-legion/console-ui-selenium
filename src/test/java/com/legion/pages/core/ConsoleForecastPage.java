@@ -2375,6 +2375,27 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	private WebElement budgetInputField;
 	@FindBy(css = "[class =\"ok-action-text ng-binding\"]")
 	private WebElement applyBudgetBtn;
+	@Override
+	public void goToForecastLaborDay() throws Exception {
+		if (isElementEnabled(dayViewButton)) {
+			click(dayViewButton);
+			String weekDuration[] = currentActiveWeek.getText().split("\n");
+			SimpleUtils.pass("Current active labor week is " + weekDuration[1]);
+			if (isElementEnabled(laborTab)) {
+				click(laborTab);
+				waitForSeconds(5);
+				if (forecastGraph.size() != 0 && laborSmartCardForecast.getText() != null) {
+					SimpleUtils.pass("Labor Forecast Loaded in Day View Successfully!" + " Labor Forecast is " + laborSmartCardForecast.getText());
+				} else {
+					SimpleUtils.fail("Labor Forecast Not Loaded in Day View", false);
+				}
+			} else {
+				SimpleUtils.fail("Labor tab under Forecast tab is not found", false);
+			}
+		} else {
+			SimpleUtils.fail("Day View button not found in Forecast", false);
+		}
+	}
 
 	@Override
 	public void goToForecastLaborWeek() throws Exception {
@@ -2462,5 +2483,41 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			SimpleUtils.fail("Forecast Page: Demand forecast page is not loaded",false);
 	}
 
+	@FindBy(css = "[ng-if=\"hasWages()\"")
+	private WebElement forecastWageLine;
+	@FindBy(css = "[ng-if=\"scheduleSmartCard.hasWages\"")
+	private WebElement scheduleWageLine;
+	@Override
+	public ArrayList getTextOfLaborWages() throws Exception {
+		List<String> forecastWages  = new ArrayList<>();
+		if (isElementLoaded(forecastWageLine,5)) {
+			String [] wageLine = forecastWageLine.getText().split("\n");
+			for(String wage: wageLine){
+				wage = wage.trim();
+				if(wage.toLowerCase().contains("Wages")) {
+					continue;
+				}
+				forecastWages.add(wage);
+			}
+		}else{
+			SimpleUtils.fail("Forecasts wages are not displayed!", false);
+		}return (ArrayList) forecastWages;
+	}
 
+	@Override
+	public ArrayList getTextOfScheduleWages() throws Exception {
+		List<String> scheduleWages  = new ArrayList<>();
+		if (isElementLoaded(scheduleWageLine,5)) {
+			String [] wageLine = scheduleWageLine.getText().split("\n");
+			for(String wage: wageLine){
+				wage = wage.trim();
+				if(wage.toLowerCase().contains("Wages")) {
+					continue;
+				}
+				scheduleWages.add(wage);
+			}
+		}else{
+			SimpleUtils.fail("Forecasts wages are not displayed!", false);
+		}return (ArrayList) scheduleWages;
+	}
 }
