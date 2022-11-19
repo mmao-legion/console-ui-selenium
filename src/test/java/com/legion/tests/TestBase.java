@@ -547,10 +547,11 @@ public abstract class TestBase {
         // Set shift per day
         newShiftPage.setShiftPerDayOnNewCreateShiftPage(shiftPerDay);
         // Select work day
-        newShiftPage.clearAllSelectedDays();
         if (workDays.size() == 1) {
+            newShiftPage.clearAllSelectedDays();
             newShiftPage.selectMultipleOrSpecificWorkDay(workDays.get(0), true);
         } else if (workDays.size() > 1) {
+            newShiftPage.clearAllSelectedDays();
             for (int i : workDays) {
                 newShiftPage.selectMultipleOrSpecificWorkDay(workDays.get(i), true);
             }
