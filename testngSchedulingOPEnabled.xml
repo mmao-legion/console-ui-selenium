@@ -660,6 +660,9 @@ SCH-5862-->
                     <include name="verifyAutomaticallyExpandWhenGroupByInP2PLGAsInternalAdmin" />
                     <include name="verifyTheContentOnEditSingleShiftWindowForP2PAsInternalAdmin" />
                     <include name="verifyChangingLocationForP2POnSingleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyEmployeeCanReceiveAndAcceptOffersForP2PLGAsTeamMember" />
+                    <include name="verifyEmployeesCanSwapShiftsForP2PLGAsTeamMember" />
+                    <include name="verifyEmployeesCanClaimCoverRequestForP2PLGAsTeamMember" />
                 </methods>
             </class>
         </classes>
@@ -708,6 +711,9 @@ SCH-5862-->
                     <!--<include name="verifyEmployeeCanAcknowledgeTheNotificationForLGAsStoreManager" />  https://legiontech.atlassian.net/browse/SCH-7939-->
                     <include name="verifyTheContentOnEditSingleShiftWindowForParentChildAsInternalAdmin" />
                     <include name="verifyChangingLocationForPCOnSingleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyEmployeeCanReceiveAndAcceptOffersForParentChildLGAsTeamMember" />
+                    <include name="verifyEmployeesCanSwapShiftsForParentChildLGAsTeamMember" />
+                    <include name="verifyEmployeesCanClaimCoverRequestForParentChildLGAsTeamMember" />
                 </methods>
             </class>
         </classes>

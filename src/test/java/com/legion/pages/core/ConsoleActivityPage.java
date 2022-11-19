@@ -175,7 +175,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
 			if (message != null && message.getText().contains(requestUserName) && message.getText().contains(respondUserName)
 					&& message.getText().toLowerCase().contains(expectedMessage)
-					&& isElementLoaded(activityCards.get(0).findElement(By.cssSelector(".notification-content .location"))) && activityCards.get(0).findElement(By.cssSelector(".notification-content .location")).getText().toLowerCase().contains("@"+location.toLowerCase())) {
+					&& isElementLoaded(activityCards.get(0).findElement(By.cssSelector(".notification-content .location")))
+					&& activityCards.get(0).findElement(By.cssSelector(".notification-content .location")).getText().toLowerCase().contains("@"+location.toLowerCase())) {
 				SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
 			}else {
 				SimpleUtils.fail("Failed to find the card that is new and contain: " + expectedMessage + "! Actual card is: " + message.getText(), false);
@@ -199,6 +200,9 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 				}
 				// Wait for the card to change the status message, such as approved or rejected
 				waitForSeconds(5);
+				clickTheElement(activityFilters.get(2));
+				waitForSeconds(1);
+				clickTheElement(activityFilters.get(2));
 				if (areListElementVisible(activityCards, 15)) {
 					WebElement approveOrRejectMessage = activityCards.get(0).findElement(By.cssSelector(".notification-approved"));
 					if (approveOrRejectMessage != null && approveOrRejectMessage.getText().toLowerCase().contains(action.toLowerCase())) {
@@ -726,7 +730,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
         if (areListElementVisible(activityCards, 15)) {
             for (WebElement activityCard: activityCards) {
                 message = activityCard.findElement(By.className("notification-content-message"));
-                if (message != null && message.getText().contains(requestUserName) && message.getText().contains(respondUserName)
+                if (message != null && message.getText().toLowerCase().contains(requestUserName.toLowerCase()) && message.getText().contains(respondUserName)
                         && message.getText().toLowerCase().contains(expectedMessage) && message.getText().toLowerCase().contains("@" + location.toLowerCase())) {
                     SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
                     shiftCoverCard = activityCard;
@@ -738,7 +742,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
                 SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
             else
                 SimpleUtils.fail("Failed to find the card that is new and contain: " + requestUserName + ", "
-                        + respondUserName + ", " + expectedMessage + "! Actual card is: " + message.getText(), true);
+                        + respondUserName + ", " + expectedMessage + "! Actual card is: " + message.getText(), false);
         } else {
             SimpleUtils.fail("Shift Swap Activity failed to Load", true);
         }
@@ -770,7 +774,10 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
                     }
                 }
                 // Wait for the card to change the status message, such as approved or rejected
-                waitForSeconds(30);
+				waitForSeconds(10);
+				clickTheElement(activityFilters.get(2));
+				waitForSeconds(1);
+				clickTheElement(activityFilters.get(2));
                 if (areListElementVisible(activityCards, 15)) {
                     WebElement approveOrRejectMessage = activityCards.get(0).findElement(By.className("notification-approved"));
                     if (approveOrRejectMessage != null && approveOrRejectMessage.getText().toLowerCase().contains(action.toLowerCase())) {
@@ -875,6 +882,37 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		if (areListElementVisible(activityCards, 15)) {
 			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
 			if (message != null && message.getText().equalsIgnoreCase(expectedMessage)) {
+				SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
+			}else {
+				SimpleUtils.fail("Failed to find the card that is new and contain: " + expectedMessage + "! Actual card is: " + message.getText(), false);
+			}
+		}else {
+			SimpleUtils.fail("Shift Swap Activity failed to Load!", false);
+		}
+	}
+
+
+	@Override
+	public void verifyNewShiftSwapCardWithTwoLocationsShowsOnActivity(String requestUserName, String respondUserName, String actionLabel,
+													  boolean isNewLabelShows, String location1, String location2) throws Exception {
+		String newStatus = "New";
+		String expectedMessage = actionLabel + " to swap shifts";
+		waitForSeconds(5);
+		if (areListElementVisible(activityCards, 15)) {
+			if (isNewLabelShows) {
+				WebElement newLabel = activityCards.get(0).findElement(By.className("notification-new-label"));
+				if (newLabel != null && newLabel.getText().equalsIgnoreCase(newStatus)) {
+					SimpleUtils.pass("Verified 'New' label shows correctly");
+				}else {
+					SimpleUtils.fail("Failed to find a new business profile update activity!", false);
+				}
+			}
+			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
+			if (message != null && message.getText().contains(requestUserName) && message.getText().contains(respondUserName)
+					&& message.getText().toLowerCase().contains(expectedMessage)
+					&& isElementLoaded(activityCards.get(0).findElement(By.cssSelector(".notification-content .location")))
+					&& activityCards.get(0).findElements(By.cssSelector(".notification-content .location")).get(0).getText().toLowerCase().contains("@"+location1.toLowerCase())
+					&& activityCards.get(0).findElements(By.cssSelector(".notification-content .location")).get(1).getText().toLowerCase().contains("@"+location2.toLowerCase())) {
 				SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
 			}else {
 				SimpleUtils.fail("Failed to find the card that is new and contain: " + expectedMessage + "! Actual card is: " + message.getText(), false);
