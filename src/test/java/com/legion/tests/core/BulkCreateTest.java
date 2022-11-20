@@ -678,11 +678,17 @@ public class BulkCreateTest extends TestBase {
 
             //Click the Offer button of one TMs
             resultCount = newShiftPage.getSearchAndRecommendedResult().size();
+            if (resultCount==0) {
+                SimpleUtils.fail("There is no employee display on search or recommended list! ", false);
+            }else
+                SimpleUtils.pass("Get employee count successfully! ");
             MyThreadLocal.setAssignTMStatus(false);
             String firstNameOfSelectedTM2 = newShiftPage.selectTeamMembers().split(" ")[0];
             //The TM will removed from the recommended list
-            SimpleUtils.assertOnFail("The offered TM should remove from recommended list! ",
-                    newShiftPage.getSearchAndRecommendedResult().size() == resultCount-1, false);
+            actualCount = newShiftPage.getSearchAndRecommendedResult().size();
+            SimpleUtils.assertOnFail("The assigned TM should remove from recommended list! The expected count is:"
+                            + (resultCount-1)+" The actual count is: "+actualCount,
+                    actualCount == resultCount-1, false);
             //The TMs will display on Shifts Offers sections
             SimpleUtils.assertOnFail("The offered TM should display on the Shift Offers section! ",
                     newShiftPage.getShiftOffersOnShiftAssignedSection().get(0).contains(firstNameOfSelectedTM2), false);
@@ -1888,7 +1894,7 @@ public class BulkCreateTest extends TestBase {
                 case 7: accessRole = AccessRoles.CustomerAdmin.getValue();break;
                 case 8: accessRole = AccessRoles.CustomerAdmin.getValue();break;
             }
-            System.out.println("Will login as: "+ accessRole);
+            SimpleUtils.report("Will login as: "+ accessRole);
             //Verify the shifts can be created by new UI by original SM access role
             loginAsDifferentRole(accessRole);
             createShiftsByDifferentAccessRoles(false);

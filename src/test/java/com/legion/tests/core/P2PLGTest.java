@@ -5,6 +5,7 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
+import com.legion.pages.core.ConsoleCompliancePage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -3168,7 +3169,8 @@ public class P2PLGTest extends TestBase {
             scheduleShiftTablePage.clickActionIconForSpecificGroupByChildLocation(locationName);
             scheduleShiftTablePage.clickOnSpecificButtonsGroupByActionPopup(publishScheduleButton);
             scheduleShiftTablePage.clickOnOkButtonInWarningMode();
-            Thread.sleep(5000);
+            CompliancePage compliancePage = new ConsoleCompliancePage();
+            compliancePage.displaySuccessMessage();
             //The status is changed to Published
             status = scheduleShiftTablePage.getSpecificGroupByChildLocationStatus(locationName);
             SimpleUtils.assertOnFail("The expected status is Published, the actual status is: "+status,
@@ -3197,7 +3199,7 @@ public class P2PLGTest extends TestBase {
                             && buttonsFromPopup.contains(deleteButton), false);
             scheduleShiftTablePage.clickOnSpecificButtonsGroupByActionPopup(republishButton);
             scheduleShiftTablePage.clickOnOkButtonInWarningMode();
-            Thread.sleep(5000);
+            Thread.sleep(15000);
             //The status is changed to Published
             status = scheduleShiftTablePage.getSpecificGroupByChildLocationStatus(locationName);
             SimpleUtils.assertOnFail("The expected status is Published, the actual status is: "+status,
@@ -3213,7 +3215,7 @@ public class P2PLGTest extends TestBase {
                             && buttonsFromPopup.contains(deleteButton), false);
             scheduleShiftTablePage.clickOnSpecificButtonsGroupByActionPopup(deleteButton);
             createSchedulePage.confirmDeleteSchedule();
-            Thread.sleep(5000);
+            Thread.sleep(15000);
             //The status is changed to Not Started
             status = scheduleShiftTablePage.getSpecificGroupByChildLocationStatus(locationName);
             SimpleUtils.assertOnFail("The expected status is Not Started, the actual status is: "+status,

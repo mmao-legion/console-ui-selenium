@@ -7568,7 +7568,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchTeamMemberByName(firstNameOfTM);
+			newShiftPage.searchTeamMemberByName(firstNameOfTM + " "+ lastName);
 			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -7585,7 +7585,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//https://legiontech.atlassian.net/browse/SCH-7682
 			String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
 			String expectedWaningMessage= "Minimum time between shifts";
-			SimpleUtils.assertOnFail(expectedWaningMessage+ " message fail to load!",
+			SimpleUtils.assertOnFail(expectedWaningMessage+ " message fail to load! The actual message is:"+shiftWarningMessage,
 					shiftWarningMessage.contains(expectedWaningMessage), false);
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
 			expectedWaningMessage = firstNameOfTM+ " does not have minimum time between shifts";
