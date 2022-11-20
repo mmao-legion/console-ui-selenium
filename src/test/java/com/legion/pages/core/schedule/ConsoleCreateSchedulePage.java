@@ -135,15 +135,15 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
     @Override
     public Boolean isWeekGenerated() throws Exception {
-        if (isElementEnabled(generateSheduleButton, 10) && generateSheduleButton.getText().equalsIgnoreCase("Create schedule")) {
+         if (isElementLoaded(deleteScheduleButton, 10)) {
+            return true;
+        }else if (isElementEnabled(generateSheduleButton, 10) && generateSheduleButton.getText().equalsIgnoreCase("Create schedule")) {
             return false;
         } else if (isElementEnabled(generateScheduleBtn, 10)) {
             return false;
         } else if (isElementLoaded(publishSheduleButton, 10)) {
             return true;
         } else if (isElementLoaded(reGenerateScheduleButton, 10)) {
-            return true;
-        } else if (isElementLoaded(deleteScheduleButton, 10)) {
             return true;
         }
         if (areListElementVisible(shiftsWeekView, 3) || isElementLoaded(editScheduleButton, 5)) {
