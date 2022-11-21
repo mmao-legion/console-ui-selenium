@@ -195,4 +195,5 @@ public interface TeamPage {
 	public void saveEditProfileBtn();
 	public void selectAverageAgreement(String optionValue) throws Exception;
 	public String getTextOfAverageAgreement() throws Exception;
+	public String getTextOfHourlyRate() throws Exception;
 }

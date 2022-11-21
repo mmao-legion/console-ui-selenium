@@ -236,16 +236,19 @@
                             <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" /> The code is not merged into RC yet -->
                     <include name="verifyRecommendTabHasTMsAsInternalAdmin" />
                     <include name="verifyPleaseConfirmMessageOnWarningModalAsInternalAdmin" />
-                   </methods>
-               </class>
-           </classes>
-       </test>
+                    <!--  <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
+                           <include name="verifyTheCanadaCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
+                           <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />  The code is not merged into RC yet -->
+                  </methods>
+              </class>
+          </classes>
+      </test>
 
-       <test name="Scheduling OP Enabled Test">
-           <classes>
-               <class name="com.legion.tests.core.SchedulingOPEnabledTest">
-                   <methods>
-   <!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />   Blocked by SCH-5036 -->
+      <test name="Scheduling OP Enabled Test">
+          <classes>
+              <class name="com.legion.tests.core.SchedulingOPEnabledTest">
+                  <methods>
+  <!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />   Blocked by SCH-5036 -->
 <!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />-->
                     <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin"/>
                     <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
