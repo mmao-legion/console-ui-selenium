@@ -5374,5 +5374,23 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					.then().log().all().statusCode(expectedStatusCode).body("responseStatus", Matchers.equalToIgnoringCase("SUCCESS"));
 		}
 	}
+
+	public void verifyColumnsInLocationSampleFile(String sessionId, List column) {
+
+		String url = "https://rc-enterprise.dev.legion.work/legion/integration/downloadBusiness";
+		JSONObject json = JSONObject.parseObject("{\"businessIds\":[\"c1365762-5107-49eb-9aae-10d364a1bbdf\"],\"exportType\":\"\",\"locationType\":\"Real\"}");
+
+		String str = RestAssured.given().log().all().contentType("application/json").header("sessionId", sessionId).body(json)
+				.when().post(url)
+				.then().log().all().extract().asString();
+
+		for (Object col : column) {
+			if (str.contains(col.toString())) {
+				SimpleUtils.pass("the columns exist in sample file");
+			} else {
+				SimpleUtils.fail("the columns does not exist in sample file", false);
+			}
+		}
+	}
 }
 
