@@ -446,7 +446,7 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 			if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
 				click(filterButton);
 			for (WebElement FilterElement : FilterElements) {
-				if (FilterElement.findElement(By.cssSelector("div")).getText().equalsIgnoreCase(filterType)){
+				if (FilterElement.findElement(By.cssSelector("div")).getText().trim().equalsIgnoreCase(filterType)){
 					List<WebElement> filters = FilterElement.findElements(By.cssSelector("input-field[type=\"checkbox\"]"));
 					for (WebElement filter : filters) {
 						filterLabel = filter.findElement(By.cssSelector("label"));

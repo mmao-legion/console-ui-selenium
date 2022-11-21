@@ -2861,4 +2861,149 @@ public class LocationsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify Location Type could not be changed with toggle EnableChangeLocationGroupSetting off")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationTypeNotAllowedToChangeWithToggleOffAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String regularLocation = "RegularNone-Jane";
+            String nsoLocation = "NSONone-Jane";
+            String parentLocation = "Parent-Jane";
+            String childLocation = "Child-Jane";
+            String selectedOption = "";
+            ArrayList<String> locationGroupSettings = new ArrayList<>(Arrays.asList("None", "Part of a location group", "Parent location"));
+
+            //Turn off toggle EnableChangeLocationGroupSetting
+            ToggleAPI.disableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123");
+            refreshPage();
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //Enter Regular None location edit page, check if location Type can be changed.
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(regularLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail("The selected Option should be 'None'!", selectedOption.equalsIgnoreCase("None"), false);
+            SimpleUtils.assertOnFail(selectedOption + " should not be able to change to other option with toggle EnableChangeLocationGroupSetting off",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption) == true, false);
+            locationsPage.goBack();
+
+            //Enter NSO location edit page, check if location Type can be changed.
+            locationsPage.goToLocationDetailsPage(nsoLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail("The selected Option should be 'None'!", selectedOption.equalsIgnoreCase("None"), false);
+            SimpleUtils.assertOnFail(selectedOption + " should not be able to change to other option with toggle EnableChangeLocationGroupSetting off",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption) == true, false);
+            locationsPage.goBack();
+
+            //Enter Parent location edit page, check if location Type can be changed.
+            locationsPage.goToLocationDetailsPage(parentLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail("The selected Option should be 'Parent location'!", selectedOption.equalsIgnoreCase("Parent location"), false);
+            SimpleUtils.assertOnFail(selectedOption + " should not be able to change to other option with toggle EnableChangeLocationGroupSetting off",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption) == true, false);
+            locationsPage.goBack();
+
+            //Enter Child location edit page, check if location Type can be changed.
+            locationsPage.goToLocationDetailsPage(childLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail("The selected Option should be 'Part of a location group'!", selectedOption.equalsIgnoreCase("Part of a location group"), false);
+            SimpleUtils.assertOnFail(selectedOption + " should not be able to change to other option with toggle EnableChangeLocationGroupSetting off",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption) == true, false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify Location Group Settings could be changed with toggle EnableChangeLocationGroupSetting on")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationTypeCouldBeChangedWithToggleOnAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddHH");
+            String currentDate = sdf.format(new Date()).trim();
+            String regularLocation = "RegularNone-Jane" + currentDate;
+            String p2pLocation = "P2P-Jane" + currentDate;
+            String parentLocation = "Parent-Jane" + currentDate;
+            String childLocation = "Child-Jane" + currentDate;
+            String searchCharacter = "No touch";
+            int index = 0;
+            String selectedOption = "";
+            String locationType = "Regular";
+            ArrayList<String> locationGroupSettings = new ArrayList<>(Arrays.asList("None", "Part of a location group", "Parent location"));
+            ArrayList<String> parentType = new ArrayList<>(Arrays.asList("Parent Child", "Peer to Peer"));
+
+            //Turn on toggle EnableChangeLocationGroupSetting
+            ToggleAPI.enableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            refreshPage();
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            //Add a Regular-None location
+            locationsPage.addNewRegularLocationWithDate(regularLocation, searchCharacter, index, 0);
+            //Add a Parent location
+            locationsPage.addParentLocation(locationType, parentLocation, searchCharacter, index, locationGroupSettings.get(2), parentType.get(0));
+            //Add a Child location
+            locationsPage.addChildLocation(locationType, childLocation, parentLocation, searchCharacter, index, locationGroupSettings.get(1));
+            //Add a P2P location
+            locationsPage.addParentLocation(locationType, p2pLocation, searchCharacter, index, locationGroupSettings.get(2), parentType.get(1));
+            //1.Change Child location to Regular.
+            locationsPage.goToLocationDetailsPage(childLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail(selectedOption + " should be able to change other options with toggle EnableChangeLocationGroupSetting on",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption), false);
+            locationsPage.changeLocationGroupSettings(selectedOption, locationGroupSettings.get(0));
+
+            //2.Change P2P location to Parent
+            locationsPage.goToLocationDetailsPage(p2pLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail(selectedOption + " should be able to change other options with toggle EnableChangeLocationGroupSetting on",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption), false);
+            locationsPage.changeLocationGroupSettings(selectedOption, locationGroupSettings.get(2), parentType.get(0));
+
+            //3.Change Parent location to P2P.
+            locationsPage.goToLocationDetailsPage(parentLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail(selectedOption + " should be able to change other options with toggle EnableChangeLocationGroupSetting on",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption), false);
+            locationsPage.changeLocationGroupSettings(selectedOption, locationGroupSettings.get(2), parentType.get(1));
+
+            //4.Change Regular None to Child
+            locationsPage.goToLocationDetailsPage(regularLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail(selectedOption + " should be able to change other options with toggle EnableChangeLocationGroupSetting on",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption), false);
+            locationsPage.changeLocationGroupSettings(selectedOption, locationGroupSettings.get(1), p2pLocation);
+            locationsPage.clickOnSaveButton();
+
+            //Turn off toggle EnableChangeLocationGroupSetting
+            ToggleAPI.disableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

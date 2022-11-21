@@ -345,4 +345,8 @@ public interface LocationsPage {
     public String getReadyForForecastSelectedOption() throws Exception;
     public void chooseReadyForForecastValue(String value) throws Exception;
     public void importLocations(String filePath,String sessionId,String isImport,int expectedStatusCode);
-    }
+    public String getLocationGroupSettingsSelectedOption() throws Exception;
+    public boolean verifyLocationGroupSettingEnabled(String selectedOption) throws Exception;
+    public void changeLocationGroupSettings(String selectedOption, String... newOption) throws Exception;
+    public void updateMockLocation(String locationName, String configurationType) throws Exception;
+}
