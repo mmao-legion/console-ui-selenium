@@ -1161,17 +1161,33 @@ public class ActivityTest extends TestBase {
             // For Cover Feature
             List<String> swapCoverRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
             mySchedulePage.selectSchedulFilter("Scheduled");
-            mySchedulePage.verifyClickOnAnyShift();
+            int index = mySchedulePage.verifyClickOnAnyShift();
             String request = "Request to Cover Shift";
             mySchedulePage.clickTheShiftRequestByName(request);
             // Validate the Submit button feature
             String title = "Submit Cover Request";
             SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), false);
             mySchedulePage.verifyClickOnSubmitButton();
+            Thread.sleep(20000);
+            request = "View Cover Request Status";
+            mySchedulePage.clickOnShiftByIndex(index);
+            mySchedulePage.clickTheShiftRequestByName(request);
+            List<String> coverList = mySchedulePage.getCoverTMList();
+            while (coverList.size() == 0) {
+                mySchedulePage.clickOnShiftByIndex(index);
+                coverList = mySchedulePage.getCoverTMList();
+            }
+            System.out.println(coverList.toString());
 
             loginPage.logOut();
 
-            credential = swapCoverCredentials.get(swapCoverNames.get(1));
+            for (int i = 0; i < swapCoverNames.size(); i++) {
+                if (coverList.contains(swapCoverNames.get(i))) {
+                    credential = swapCoverCredentials.get(swapCoverNames.get(i));
+                    break;
+                }
+            }
+
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);

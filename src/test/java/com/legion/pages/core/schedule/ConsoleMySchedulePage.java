@@ -64,6 +64,25 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     @FindBy (className = "period-name")
     private WebElement periodName;
 
+    @FindBy (css = ".shift-swap-modal-table-name")
+    private List<WebElement> swapCoverNames;
+
+    @FindBy (css = "[label=\"Close\"]")
+    private WebElement closeButton;
+
+
+    @Override
+    public List<String> getCoverTMList() throws Exception {
+        List<String> coverTMList = new ArrayList<>();
+        if (areListElementVisible(swapCoverNames, 10)) {
+            for (WebElement tmName : swapCoverNames) {
+                coverTMList.add(tmName.getText());
+            }
+        }
+        clickTheElement(closeButton);
+        return coverTMList;
+    }
+
     @Override
     public void validateTheDataAccordingToTheSelectedWeek() throws Exception {
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();

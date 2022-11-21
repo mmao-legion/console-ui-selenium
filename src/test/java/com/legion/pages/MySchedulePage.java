@@ -77,4 +77,5 @@ public interface MySchedulePage {
     public int getCountOfCoverOrSwapRequestsInList();
     public String getFullMonthName(String shortName);
     public void clickTheShiftRequestToClaimCoverShift(String requestName) throws Exception;
+    public List<String> getCoverTMList() throws Exception;
 }
