@@ -2822,26 +2822,27 @@ public class LocationsTest extends TestBase {
     @TestName(description = "Verify import location group function")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyImportLocationGroupAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
-        DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-        locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-        String locationName = "0325Upload3";
-        //go to locations tab
-        locationsPage.clickOnLocationsTab();
-        //Before import, existing location, get readyForForecast value in UI
-        locationsPage.goToSubLocationsInLocationsPage();
-        String filePath = "src/test/resources/uploadFile/LocationTest/0325Upload3.csv";
-        String url = "https://rc-enterprise.dev.legion.work/legion/integration/uploadBusiness?isTest=false&isImport=true&isAsync=false&encrypted=false&check=false";
-        String responseCode = importFile.importFileAPI(getSession(), filePath, url);
-        importFile.verifyResponseCode(responseCode, "200");
-        locationsPage.disableEnableLocation(locationName, "Disable");
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            String filePath = "src/test/resources/uploadFile/LocationTest/0325Upload3.csv";
+            locationsPage.importLocations(filePath, getSession(), "true", 200);
+            String locationName = "0325Upload3";
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            // disable the imported location
+            locationsPage.disableEnableLocation(locationName, "Disable");
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated = "Automated")
     @Owner(owner = "Yang")
     @Enterprise(name = "opauto")
-    @TestName(description = "Verify import location group function")
+    @TestName(description = "Import locations common function")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyImportLocationCommonFunctionAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
