@@ -8559,11 +8559,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("The Violation message on the Assign dialog is not expected!",
 					!(statusMessage.contains("Will trigger 1Hrs weekly OT")), false);
 
-			shiftOperatePage.clickAssignBtnOnCreateShiftDialog(tmPartialName);
-			String standardAssignAnyway = tmPartialName + " will incur 1 hours of weekly overtime";
-			String assignAnywayMessage = newShiftPage.getWarningMessageFromWarningModal();
-			SimpleUtils.assertOnFail("The Violation message on the AssignAnyway page is not expected!", !(assignAnywayMessage.contains(standardAssignAnyway)), false);
-			shiftOperatePage.clickOnAssignAnywayButton();
+			newShiftPage.searchTeamMemberByName(tmPartialName);
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
 
