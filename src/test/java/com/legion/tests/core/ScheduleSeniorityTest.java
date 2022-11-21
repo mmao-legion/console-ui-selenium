@@ -1141,7 +1141,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			controlsNewUIPage.updateSeniorityToggle("Yes");
 			controlsNewUIPage.selectSortOfSeniority("Descending");
 			configurationPage.publishNowTheTemplate();
-			Thread.sleep(180000);
+			Thread.sleep(200000);
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 
