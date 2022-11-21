@@ -408,6 +408,21 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         }
     }
 
+    @FindBy(css = "span[ng-if*=\"$error.customValidation\"]")
+    private List<WebElement> warningMsgList;
+    private List<String> validateChannelName(){
+        List<String> warningInfo = new ArrayList<>();
+
+        if (areListElementVisible(warningMsgList, 3)){
+            for (WebElement msg : warningMsgList){
+                warningInfo.add(msg.getText());
+            }
+        }else{
+            SimpleUtils.report("No Warning Message show up!");
+        }
+        return  warningInfo;
+    }
+
     @FindBy(css = "div.setting-group")
     private List<WebElement> settingsTypes;
     @FindBy(css = "div.modal-dialog")
@@ -419,10 +434,12 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
     @FindBy(css = "label.use-in-reporting input")
     private WebElement useInReportCheckbox;
     @Override
-    public void createNewChannelOrCategory(String type, String displayName, String... otherInfo) throws Exception {
+    public List<String> createNewChannelOrCategory(String type, String displayName, String... otherInfo) throws Exception {
         WebElement displayNameInput;
         WebElement NameOrSourceTypeInput;
         boolean isExisting = false;
+        List<String> warningInfo = null;
+
         if (areListElementVisible(settingsTypes, 5)) {
             for (WebElement settingsType : settingsTypes) {
                 if (settingsType.findElement(By.cssSelector("lg-paged-search")).getAttribute("placeholder").contains(type)) {
@@ -436,6 +453,11 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                             if (otherInfo.length > 1){
                                 NameOrSourceTypeInput.clear();
                                 NameOrSourceTypeInput.sendKeys(otherInfo[1]);
+                            }
+                            warningInfo = validateChannelName();
+                            if (warningInfo.size() > 0){
+                                clickTheElement(cancelBtn);
+                                return warningInfo;
                             }
                             if ("Category".equalsIgnoreCase(type) && isElementLoaded(useInReportCheckbox) &&
                                     useInReportCheckbox.getAttribute("checked") == null) {
@@ -458,6 +480,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         } else{
             SimpleUtils.fail("No content in Settings page!", false);
         }
+        return warningInfo;
     }
 
     @FindBy(css = "lg-paged-search")
@@ -711,7 +734,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         WebElement searchResult = searchSettingsForDemandDriver("input stream", inputStream.get("Name"));
         if(searchResult != null){
             clickTheElement(searchResult.findElement(By.cssSelector("lg-button[label=\"Edit\"] button")));
-            if (isElementLoaded(popUpWindow) && popUpWindow.findElement(By.cssSelector("modal")).getAttribute("modal-title").toLowerCase().contains("input stream")){
+            if (isElementLoaded(popUpWindow, 10) && popUpWindow.findElement(By.cssSelector("modal")).getAttribute("modal-title").toLowerCase().contains("input stream")){
                 if ("true".equalsIgnoreCase(fieldsInput.get(0).findElement(By.xpath("//input[contains(@placeholder, 'Input Stream')]")).getAttribute("disabled"))){
                     SimpleUtils.pass("Input Stream name is read only in edit mode!");
                 }else {
@@ -755,8 +778,30 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         }
     }
 
+    public int calculateBaseInputStream(){
+        int baseCount = 0;
+        int pageNum = 1;
+
+        do {
+            if(pageNum > 1){
+                clickTheElement(rightArrow);
+                waitForSeconds(3);
+            }
+            List<WebElement> inputStreamList = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"item in $ctrl.inputStreamSortedRows\"]"));
+            for (WebElement inputStreamRow : inputStreamList) {
+                if ("Base".equalsIgnoreCase(inputStreamRow.findElements(By.cssSelector("td")).get(1).getText())) {
+                    baseCount++;
+                }
+            }
+            pageNum++;
+        }while (!rightArrow.getAttribute("class").contains("disabled"));
+        return baseCount;
+    }
+
     @FindBy(css = "tr[ng-repeat=\"item in $ctrl.inputStreamSortedRows\"]")
     private List<WebElement> inputStreamRows;
+    @FindBy(css = "lg-paged-search[placeholder=\"Search by input stream name\"] div.lg-pagination__arrow--right")
+    private WebElement rightArrow;
     @FindBy(css = "input-field[placeholder*=\"input stream\"] input")
     private List<WebElement> inputStreamSearchInput;
     @Override
@@ -782,11 +827,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                 } else if ("Aggregated".equalsIgnoreCase(resultType)) {
                     if ("All".equalsIgnoreCase(inputStreamInfo.get("Streams"))) {
                         searchSettingsForDemandDriver("input stream", "");
-                        for (WebElement inputStreamRow : inputStreamRows){
-                            if("Base".equalsIgnoreCase(inputStreamRow.findElements(By.cssSelector("td")).get(1).getText())){
-                                baseCount++;
-                            }
-                        }
+                        baseCount = calculateBaseInputStream();
                         if (baseCount == Integer.parseInt(resultSource.split(" ")[0])){
                             isSame = true;
                         }

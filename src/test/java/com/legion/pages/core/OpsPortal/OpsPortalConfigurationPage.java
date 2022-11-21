@@ -722,7 +722,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private List<WebElement> columnsInDaypartsTab;
 
 	private void OHTempSetOpenAndCloseTime(String settingTab, String openTime, String closeTime) throws Exception {
-		if (isElementLoaded(OHOperateOpenCloseTimeEditDialog)) {
+		if (isElementLoaded(OHOperateOpenCloseTimeEditDialog, 10)) {
 			if (settingTab.contains("Open")) {
 				openCloseTimeInputs.get(0).clear();
 				openCloseTimeInputs.get(0).sendKeys(openTime);

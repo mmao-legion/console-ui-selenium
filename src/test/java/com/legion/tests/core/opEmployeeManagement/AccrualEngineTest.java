@@ -377,7 +377,7 @@ public class AccrualEngineTest extends TestBase {
         return isToggleOn;
     }
 
-    private String[] turnOnToggle(String sessionId, String toggleName) {//UseAbsenceMgmtConfiguration
+    public String[] turnOnToggle(String sessionId, String toggleName) {//UseAbsenceMgmtConfiguration
         //url
         String toggleUrl = Constants.toggles;
         String url = toggleUrl + "?toggle=" + toggleName;
@@ -386,9 +386,23 @@ public class AccrualEngineTest extends TestBase {
         toggleHeader.put("sessionId", sessionId);
         toggleHeader.put("Content-Type", "application/json;charset=UTF-8");
         //body String
-        String setToggleStr = "{ \"level\": \"Enterprise\",\"record\": {\"name\": \"UseAbsenceMgmtConfiguration\",\"defaultValue\": false,\"rules\": [{\"enterpriseName\": \"opauto\"},{\"enterpriseName\": \"cinemark-wkdy\"},{\"enterpriseName\": \"carters\"},{\"enterpriseName\": \"op\"}]},\"valid\": true }";
+        String setToggleStr = "{ \"level\": \"Enterprise\",\"record\": {\"name\": \"" + toggleName + "\", \"defaultValue\": false,\"rules\": [{\"enterpriseName\": \"opauto\"},{\"enterpriseName\": \"cinemark-wkdy\"},{\"enterpriseName\": \"carters\"},{\"enterpriseName\": \"op\"}]},\"valid\": true }";
         //post
-        return HttpUtil.httpPost(url, toggleHeader, setToggleStr);
+        return HttpUtil.httpPost(toggleUrl, toggleHeader, setToggleStr);
+    }
+
+    public String[] turnOffToggle(String sessionId, String toggleName) {//UseAbsenceMgmtConfiguration
+        //url
+        String toggleUrl = Constants.toggles;
+        String url = toggleUrl + "?toggle=" + toggleName;
+        //set headers
+        HashMap<String, String> toggleHeader = new HashMap<String, String>();
+        toggleHeader.put("sessionId", sessionId);
+        toggleHeader.put("Content-Type", "application/json;charset=UTF-8");
+        //body String
+        String setToggleStr = "{ \"level\": \"Enterprise\",\"record\": {\"name\": \"" + toggleName + "\",\"defaultValue\": false,\"rules\": [{\"enterpriseName\": \"cinemark-wkdy\"},{\"enterpriseName\": \"carters\"},{\"enterpriseName\": \"op\"}]},\"valid\": true }";
+        //post
+        return HttpUtil.httpPost(toggleUrl, toggleHeader, setToggleStr);
     }
 
     public String getUserTemplate(String workerId, String sessionId) {
@@ -2731,7 +2745,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAccrualEngineAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -2747,7 +2761,7 @@ public class AccrualEngineTest extends TestBase {
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        String teamMemName = "Nancy AccrualEngine01";
+        String teamMemName = "Nancy AccrualEngine";
         timeOffPage.goToTeamMemberDetail(teamMemName);
         timeOffPage.switchToTimeOffTab();
         //get session id via login
@@ -2758,7 +2772,7 @@ public class AccrualEngineTest extends TestBase {
             Assert.assertEquals(getHttpStatusCode(toggleResponse), 200, "Failed to get the user's template!");
         }
         //confirm template
-        String workerId = "6a425e51-47fa-4733-933a-33beeea89eea";
+        String workerId = "1b4fb685-ef70-4120-8be9-87b6b7dd08d1";
         String targetTemplate = "AccrualEngine";
         String tempName = getUserTemplate(workerId, sessionId);
         Assert.assertEquals(tempName, targetTemplate, "The user wasn't associated to this Template!!! ");
@@ -2793,7 +2807,7 @@ public class AccrualEngineTest extends TestBase {
         //expected accrual
         expectedTOBalance.put("Annual Leave", "0");
         expectedTOBalance.put("Annual Leave1", "0");
-        expectedTOBalance.put("Annual Leave2", "0");
+        expectedTOBalance.put("Annual Leave2", "1");
         expectedTOBalance.put("Annual Leave3", "0");
         expectedTOBalance.put("Annual Leave4", "0");
         expectedTOBalance.put("Bereavement1", "1");
@@ -2809,18 +2823,17 @@ public class AccrualEngineTest extends TestBase {
         SimpleUtils.pass("Succeeded in validating accrual correctly!");
 
         //run engine to a specified date
-        //Verify unpublished scheduled hours will not take into accrual
         String date2 = "2021-12-31";
         String[] accrualResponse2 = runAccrualJobToSimulateDate(workerId, date2, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse2), 200, "Failed to run accrual job!");
         //expected accrual
-        expectedTOBalance.put("Annual Leave", "0");
+        expectedTOBalance.put("Annual Leave", "52");
         expectedTOBalance.put("Annual Leave1", "104");
         expectedTOBalance.put("Annual Leave2", "12");
         expectedTOBalance.put("Annual Leave3", "12");
         expectedTOBalance.put("Annual Leave4", "12");
         expectedTOBalance.put("Bereavement1", "12");
-        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement2", "5");
         expectedTOBalance.put("Bereavement3", "5");
         expectedTOBalance.put("Bereavement4", "0");
         expectedTOBalance.put("Covid1", "0");
@@ -2840,13 +2853,13 @@ public class AccrualEngineTest extends TestBase {
         Assert.assertEquals(getHttpStatusCode(accrualResponse4), 200, "Failed to run accrual job!");
 
         //expected accrual
-        expectedTOBalance.put("Annual Leave", "39");
+        expectedTOBalance.put("Annual Leave", "52");
         expectedTOBalance.put("Annual Leave1", "104");
         expectedTOBalance.put("Annual Leave2", "12");
         expectedTOBalance.put("Annual Leave3", "12");
         expectedTOBalance.put("Annual Leave4", "12");
         expectedTOBalance.put("Bereavement1", "12");
-        expectedTOBalance.put("Bereavement2", "0");
+        expectedTOBalance.put("Bereavement2", "5");
         expectedTOBalance.put("Bereavement3", "5");
         expectedTOBalance.put("Bereavement4", "0");
         expectedTOBalance.put("Covid1", "0");
