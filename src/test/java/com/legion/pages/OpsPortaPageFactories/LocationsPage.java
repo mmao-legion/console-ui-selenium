@@ -345,4 +345,5 @@ public interface LocationsPage {
     public String getReadyForForecastSelectedOption() throws Exception;
     public void chooseReadyForForecastValue(String value) throws Exception;
     public void importLocations(String filePath,String sessionId,String isImport,int expectedStatusCode);
+    public void verifyColumnsInLocationSampleFile( String sessionId,  List column);
     }

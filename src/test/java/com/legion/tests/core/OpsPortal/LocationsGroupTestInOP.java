@@ -539,7 +539,7 @@ public class LocationsGroupTestInOP extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to MS parent")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled =  false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled =  true)
     public void verifyChangeNoneLocationToMSParentAsInternalAdmin  (String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -581,7 +581,7 @@ public class LocationsGroupTestInOP extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to P2P parent")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyChangeNoneLocationToP2PParentAsInternalAdmin  (String browser, String username, String password, String location) throws Exception {
 
         try{
@@ -623,7 +623,7 @@ public class LocationsGroupTestInOP extends TestBase {
     @Owner(owner = "Estelle")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Validate to change None location to P2P child")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyChangeNoneLocationToChildAsInternalAdmin  (String browser, String username, String password, String location) throws Exception {
 
         try{
