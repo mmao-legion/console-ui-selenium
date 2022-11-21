@@ -70,7 +70,7 @@ public class OvernightTest extends TestBase {
             refreshCachesAfterChangeTemplate();
             //waiting for the cache
             int j =0;
-            while (j< 2) {
+            while (j< 3) {
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 Thread.sleep(60000);
                 j++;
@@ -100,6 +100,7 @@ public class OvernightTest extends TestBase {
                 i++;
             }
             String workRole = shiftInfo.get(4);
+            String lastName = shiftInfo.get(5);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
@@ -117,7 +118,7 @@ public class OvernightTest extends TestBase {
             newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1+ " "+lastName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
 
