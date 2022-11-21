@@ -1687,7 +1687,7 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     @Override
     public void clickSpecificLocationInDMViewAnalyticTable(String location) throws Exception {
         waitForSeconds(3);
-        if (areListElementVisible(locationsInTheList,10)){
+        if (areListElementVisible(locationsInTheList,30)){
             for (WebElement element: locationsInTheList){
                 if (location.equalsIgnoreCase(element.findElement(By.cssSelector("img.analytics-new-table-location~span")).getText())){
                     click(element);

@@ -1892,7 +1892,7 @@ public class BulkCreateTest extends TestBase {
                 case 5: accessRole = AccessRoles.DistrictManager.getValue();break;
                 case 6: accessRole = AccessRoles.DistrictManager2.getValue();break;
                 case 7: accessRole = AccessRoles.CustomerAdmin.getValue();break;
-                case 8: accessRole = AccessRoles.CustomerAdmin.getValue();break;
+                case 8: accessRole = AccessRoles.CustomerAdmin2.getValue();break;
             }
             SimpleUtils.report("Will login as: "+ accessRole);
             //Verify the shifts can be created by new UI by original SM access role

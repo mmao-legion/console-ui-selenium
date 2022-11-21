@@ -630,6 +630,7 @@ public class ParentChildLGTest extends TestBase {
                 firstNameOfTM = shiftInfo.get(0);
             }
             String workRole = shiftInfo.get(4);
+            String lastNameOfTM = shiftInfo.get(5);
             scheduleMainPage.clickOnFilterBtn();
             String childLocation = scheduleMainPage.selectRandomChildLocationToFilter();
             if (scheduleShiftTablePage.getShiftsCount()>0){
@@ -668,13 +669,6 @@ public class ParentChildLGTest extends TestBase {
             SimpleUtils.assertOnFail("Auto shift time is not updated!",
                     !shiftInfoBefore.equalsIgnoreCase(shiftInfoAfter), false);
 
-            //change work role
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
-            shiftOperatePage.clickOnChangeRole();
-            shiftOperatePage.verifyChangeRoleFunctionality();
-            //check the work role by click Apply button
-            shiftOperatePage.changeWorkRoleInPrompt(true);
-
             //Edit meal break
 //            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
 //            shiftOperatePage.verifyEditMealBreakTimeFunctionalityForAShift(true, selectedShift);
@@ -696,7 +690,7 @@ public class ParentChildLGTest extends TestBase {
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
             shiftOperatePage.clickOnOfferTMOption();
-            newShiftPage.searchTeamMemberByNameNLocation(firstNameOfTM, location);
+            newShiftPage.searchTeamMemberByNameNLocation(firstNameOfTM+ " "+lastNameOfTM, location);
             newShiftPage.clickOnOfferOrAssignBtn();
             //View status
             shiftOperatePage.clickOnProfileIconOfOpenShift();
@@ -718,6 +712,13 @@ public class ParentChildLGTest extends TestBase {
             String shiftInfoAfterAssignTM= scheduleShiftTablePage.getTheShiftInfoByIndexInDayview(index);
             SimpleUtils.assertOnFail("TM is not assigned!",
                     !shiftInfoBefore.equalsIgnoreCase(shiftInfoAfterAssignTM), false);
+
+            //change work role
+            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+            shiftOperatePage.clickOnChangeRole();
+            shiftOperatePage.verifyChangeRoleFunctionality();
+            //check the work role by click Apply button
+            shiftOperatePage.changeWorkRoleInPrompt(true);
 
             //Delete open shift
             shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM);
@@ -2163,7 +2164,11 @@ public class ParentChildLGTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String teamMemberName = profileNewUIPage.getNickNameFromProfile();
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            String firstName = tmFullName.split(" ")[0];
+            String lastName = tmFullName.split(" ")[1];
             String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
@@ -2172,7 +2177,7 @@ public class ParentChildLGTest extends TestBase {
 
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             goToSchedulePageScheduleTab();
-
+            scheduleCommonPage.navigateToNextWeek();
             //to generate schedule if current week is not generated
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(!isActiveWeekGenerated){
@@ -2187,7 +2192,7 @@ public class ParentChildLGTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(teamMemberName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnFilterBtn();
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
@@ -2205,11 +2210,11 @@ public class ParentChildLGTest extends TestBase {
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
             shiftOperatePage.clickOnOfferTMOption();
-            newShiftPage.searchTeamMemberByNameNLocation(teamMemberName, location);
+            newShiftPage.searchTeamMemberByNameNLocation(firstName+ " "+lastName, location);
             newShiftPage.clickOnOfferOrAssignBtn();
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             scheduleShiftTablePage.clickViewStatusBtn();
-            shiftOperatePage.verifyTMInTheOfferList(teamMemberName, "offered");
+            shiftOperatePage.verifyTMInTheOfferList(firstName, "offered");
             shiftOperatePage.closeViewStatusContainer();
             loginPage.logOut();
 
@@ -2217,6 +2222,7 @@ public class ParentChildLGTest extends TestBase {
             loginToLegionAndVerifyIsLoginDone(username, password, location);
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             String cardName = "WANT MORE HOURS?";
             SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", smartCardPage.isSpecificSmartCardLoaded(cardName), false);
@@ -2241,8 +2247,9 @@ public class ParentChildLGTest extends TestBase {
 
             //Check the shift been scheduled
             goToSchedulePageScheduleTab();
-
-            int tmShiftCount = scheduleShiftTablePage.getShiftsNumberByName(teamMemberName);
+            scheduleCommonPage.navigateToNextWeek();
+            Thread.sleep(3000);
+            int tmShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName);
             SimpleUtils.assertOnFail("The expect shift count is 0, the actual open shift count is:"+tmShiftCount,
                     tmShiftCount >= 1, false);
         } catch (Exception e) {
@@ -4406,6 +4413,7 @@ public class ParentChildLGTest extends TestBase {
         loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
         goToSchedulePageScheduleTab();
         scheduleCommonPage.navigateToNextWeek();
+        Thread.sleep(3000);
         int tmShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName);
         SimpleUtils.assertOnFail("The expect shift count is 0, the actual open shift count is:"+tmShiftCount,
                 tmShiftCount == 0, false);
