@@ -25,9 +25,18 @@ public interface ShiftPatternPage {
     public List<String> getBreakWarnings() throws Exception;
     public void inputShiftNameDescriptionNShiftNotes(String shiftName, String description, String shiftNotes) throws Exception;
     public void verifyWorkRoleNameShows(String workRole) throws Exception;
-    public void inputStartOrEndTime(String time, boolean isStart) throws Exception;
-    public void selectWorkDays(List<String> daysNeedSelect) throws Exception;
+    public void inputStartOrEndTime(String hours, String minutes, String aOrP, boolean isStart) throws Exception;
+    public List<String> selectWorkDays(List<String> daysNeedSelect) throws Exception;
     public void clickOnAddMealOrRestBreakBtn(boolean isMeal) throws Exception;
     public void deleteTheBreakByNumber(boolean isMeal, int number) throws Exception;
     public void inputShiftOffsetAndBreakDuration(int startOffset, int breakDuration, int number, boolean isMeal) throws Exception;
+    public String getOnWeekContentDetails() throws Exception;
+    public void clickOnPencilIcon(int weekNumber) throws Exception;
+    public boolean isCreateNewShiftWindowLoaded() throws Exception;
+    public boolean verifyTheEditedValuePersist(String shiftName, String description, String startTime, String endTime,
+                                               List<String> selectedDays, int mealStartOffset, int mealDuration,
+                                               int restStartOffset, int restDuration, String shiftNote) throws Exception;
+    public String getTheNumberOfTheShifts(int weekNumber) throws Exception;
+    public void clickOnDeleteBtnToDelCreatedShifts(int weekNumber) throws Exception;
+    public void verifySaveTheShiftPatternRule() throws Exception;
 }

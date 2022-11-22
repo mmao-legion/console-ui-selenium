@@ -468,7 +468,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
 //	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]:nth-child(2) > td.one-line-overflow > div > lg-button > button > span > span")
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]> td.one-line-overflow > div > lg-button > button > span > span")
+	@FindBy(css = "tr[ng-repeat*=\"location in filteredCollection\"]> td.one-line-overflow > div > lg-button > button > span > span")
 	private List<WebElement> locationsName;
 	@FindBy(css = "select[aria-label=\"Location Type\"]")
 	private WebElement locationSourceType;
@@ -3238,7 +3238,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	// Added by Julie
-	@FindBy (css = "tr[ng-repeat=\"location in filteredCollection\"] span[ng-transclude]>span")
+	@FindBy (css = "tr[ng-repeat*=\"location in filteredCollection\"] span[ng-transclude]>span")
 	private List<WebElement> locationNamesInLocationRows;
 
 	@FindBy (xpath = "//lg-tabs//div[contains(text(),'Configuration')]")
