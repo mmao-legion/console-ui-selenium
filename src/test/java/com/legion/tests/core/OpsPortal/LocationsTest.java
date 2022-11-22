@@ -2759,15 +2759,15 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Jane")
     @Enterprise(name = "opauto")
-    @TestName(description = "Verify readyForForecast when Import existing location through UI")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
-    public void verifyReadyForForecastWhenImportExistingLocationLocationThroughUIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+    @TestName(description = "Verify readyForForecast when Import existing location")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyReadyForForecastWhenImportExistingLocationAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
             String existingLocation = "TestImportUpdateExisting";
-            String fileWithNoReadyForForecast = "UpdateLocationsWithNoReadyForForecast.csv";
-            String fileWithReadyForForecastNo = "UpdateLocationsWithReadyForForecastNo.csv";
-            String fileWithReadyForForecastYes = "UpdateLocationsWithReadyForForecastYes.csv";
+            String fileWithNoReadyForForecast = "src/test/resources/uploadFile/LocationTest/UpdateLocationsWithNoReadyForForecast.csv";
+            String fileWithReadyForForecastNo = "src/test/resources/uploadFile/LocationTest/UpdateLocationsWithReadyForForecastNo.csv";
+            String fileWithReadyForForecastYes = "src/test/resources/uploadFile/LocationTest/UpdateLocationsWithReadyForForecastYes.csv";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -2782,8 +2782,7 @@ public class LocationsTest extends TestBase {
             String beforeImportValue = locationsPage.getReadyForForecastSelectedOption();
             locationsPage.goBack();
             //Update an existing location by import file
-            locationsPage.clickOnImportBtn();
-            locationsPage.verifyImportLocationDistrict(fileWithNoReadyForForecast);
+            locationsPage.importLocations(fileWithNoReadyForForecast, getSession(), "true", 200);
 
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
@@ -2792,8 +2791,7 @@ public class LocationsTest extends TestBase {
             SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", beforeImportValue.equalsIgnoreCase(afterImportValue), false);
             locationsPage.goBack();
             //Update the existing location by import file, change  to No
-            locationsPage.clickOnImportBtn();
-            locationsPage.verifyImportLocationDistrict(fileWithReadyForForecastNo);
+            locationsPage.importLocations(fileWithReadyForForecastNo, getSession(), "true", 200);
 
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
@@ -2803,8 +2801,7 @@ public class LocationsTest extends TestBase {
             locationsPage.goBack();
 
             //Update the existing location by import file, change  to Yes
-            locationsPage.clickOnImportBtn();
-            locationsPage.verifyImportLocationDistrict(fileWithReadyForForecastYes);
+            locationsPage.importLocations(fileWithReadyForForecastYes, getSession(), "true", 200);
 
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
