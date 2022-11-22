@@ -1173,9 +1173,12 @@ public class ActivityTest extends TestBase {
             mySchedulePage.clickOnShiftByIndex(index);
             mySchedulePage.clickTheShiftRequestByName(request);
             List<String> coverList = mySchedulePage.getCoverTMList();
-            while (coverList.size() == 0) {
+            int count = 0;
+            while (coverList.size() == 0 && count < 10) {
                 mySchedulePage.clickOnShiftByIndex(index);
+                mySchedulePage.clickTheShiftRequestByName(request);
                 coverList = mySchedulePage.getCoverTMList();
+                count++;
             }
             System.out.println(coverList.toString());
 
