@@ -2873,7 +2873,7 @@ public class LocationsTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            String filePath = "D:\\New UI Auto\\console-ui-selenium\\src\\test\\resources\\uploadFile\\LocationTest\\0325Upload4.csv";
+            String filePath = "src/test/resources/uploadFile/LocationTest/0325Upload4.csv";
             locationsPage.importLocations(filePath, getSession(), "true", 200);
             String locationName = "0325Upload4";
             locationsPage.clickOnLocationsTab();
@@ -2883,7 +2883,7 @@ public class LocationsTest extends TestBase {
                 SimpleUtils.pass("New created location with today as effective day is enabled");
             else
                 SimpleUtils.report("New created location with today as effective day status is incorrect");
-            String disabledFilePath = "D:\\New UI Auto\\console-ui-selenium\\src\\test\\resources\\uploadFile\\LocationTest\\0325Upload4Disable.csv";
+            String disabledFilePath = "src/test/resources/uploadFile/LocationTest/0325Upload4Disable.csv";
             // Disable existing location via location import function
             locationsPage.importLocations(disabledFilePath, getSession(), "true", 200);
             locationsPage.clickOnLocationsTab();
