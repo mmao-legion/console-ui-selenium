@@ -273,9 +273,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "tr[ng-repeat=\"item in $ctrl.currentPageItems track by $index\"]")
 	private List<WebElement> locationRowsInSelectLocation;
 
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]")
+	@FindBy(css = "tr[ng-repeat*=\"location in filteredCollection\"]")
 	private List<WebElement> locationRows;
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"] > td:nth-child(4) > lg-eg-status")
+	@FindBy(css = "tr[ng-repeat*=\"location in filteredCollection\"] > td:nth-child(4) > lg-eg-status")
 	private List<WebElement> locationStatus;
 
 	@FindBy(css = "lg-button[label=\"OK\"]")
@@ -5470,9 +5470,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			locationId.sendKeys(locationName + "update");
 //			scrollToElement(configurationTypeDropDown);
 //			configurationTypeSelect.selectByVisibleText(configurationType);
-			WebElement saveBtn = getDriver().findElement(By.cssSelector("lg-button[label=\"Save\"]"));
-			if(isElementEnabled(saveBtn, 5)){
-				System.out.println("Hey!!!");
+			WebElement saveBtn = getDriver().findElement(By.cssSelector("lg-button[label=\"Save\"] button"));
+			scrollToBottom();
+			if(isElementEnabled(saveBtn, 8)){
 				clickTheElement(saveBtn);
 			}
 			waitForSeconds(5);
