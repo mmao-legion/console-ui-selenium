@@ -4,11 +4,13 @@ import com.legion.pages.BasePage;
 import com.legion.pages.ShiftPatternPage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -117,6 +119,12 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
     private List<WebElement> dayInputs;
     @FindBy (css = ".MuiCheckbox-root+span")
     private List<WebElement> dayLabels;
+    @FindBy (css = ".shift-info")
+    private WebElement onWeekContent;
+    @FindBy(css = "div.settings-work-rule-save-icon")
+    private WebElement checkMarkButton;
+    @FindBy(css = ".settings-work-rule-staffing-string-format")
+    private WebElement staffingRuleContent;
 
     private WebElement getSpecificSectionByName(String name) throws Exception {
         if (name.equalsIgnoreCase(sectionType.WorkRole.getType())) {
@@ -147,6 +155,52 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
     }
 
     @Override
+    public boolean verifyTheEditedValuePersist(String shiftName, String description, String startTime, String endTime,
+                                               List<String> selectedDays, int mealStartOffset, int mealDuration,
+                                               int restStartOffset, int restDuration, String shiftNote) throws Exception {
+        boolean isPersist = true;
+        if (!shiftNameInput.getAttribute("value").equalsIgnoreCase(shiftName) || !descriptionInput.getAttribute("value")
+                .equalsIgnoreCase(description) || !startTimeInput.getAttribute("value").equalsIgnoreCase(startTime) ||
+        !endTimeInput.getAttribute("value").equalsIgnoreCase(endTime) || !shiftNotesInput.getAttribute("value").equalsIgnoreCase(shiftNote)) {
+            isPersist = false;
+        }
+        for (int i = 0; i < dayLabels.size(); i++) {
+            if (selectedDays.contains(dayLabels.get(i).getText())) {
+                if (!dayInputs.get(i).getAttribute("checked").equalsIgnoreCase("true")) {
+                    isPersist = false;
+                    break;
+                }
+            } else {
+                if (dayInputs.get(i).getAttribute("checked") != null && dayInputs.get(i).getAttribute("checked").equalsIgnoreCase("true")) {
+                    isPersist = false;
+                    break;
+                }
+            }
+        }
+        WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
+        List<WebElement> mealAndRest = breakSection.findElements(By.cssSelector(".MuiGrid-grid-xs-true"));
+        WebElement mealSection = mealAndRest.get(0);
+        WebElement restSection = mealAndRest.get(1);
+        List<WebElement> mealInputs = mealSection.findElements(By.tagName("input"));
+        List<WebElement> restInputs = restSection.findElements(By.tagName("input"));
+        if (!mealInputs.get(0).getAttribute("value").equalsIgnoreCase(String.valueOf(mealStartOffset)) || !mealInputs
+                .get(1).getAttribute("value").equalsIgnoreCase(String.valueOf(mealDuration)) || !restInputs.get(0).
+                getAttribute("value").equalsIgnoreCase(String.valueOf(restStartOffset)) || !restInputs
+                .get(1).getAttribute("value").equalsIgnoreCase(String.valueOf(restDuration))) {
+            isPersist = false;
+        }
+        return isPersist;
+    }
+
+    @Override
+    public String getOnWeekContentDetails() throws Exception {
+        if (isElementLoaded(onWeekContent, 3)) {
+            return onWeekContent.getText();
+        }
+        return "";
+    }
+
+    @Override
     public void clickOnAddMealOrRestBreakBtn(boolean isMeal) throws Exception {
         WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
         WebElement addButton = null;
@@ -156,10 +210,10 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
         } else {
             index = 2;
         }
-        addButton = breakSection.findElement(By.cssSelector(".MuiGrid-container>div:nth-child(" + index + ") .add-break-button-title"));
+        addButton = getDriver().findElements(By.cssSelector(".add-break-button-title")).get(index - 1);
         clickTheElement(addButton);
-        if (areListElementVisible(breakSection.findElements(By.cssSelector(".MuiGrid-container>div:nth-child(" + index + ") input")),
-                3) && isElementLoaded(breakSection.findElement(By.cssSelector(".MuiGrid-container>div:nth-child(" + index + ") td>svg")), 3)) {
+        if (areListElementVisible(breakSection.findElements(By.cssSelector("div>div:nth-child(" + index + ") input")),
+                3) && isElementLoaded(breakSection.findElement(By.cssSelector("div>div:nth-child(" + index + ") td>svg")), 3)) {
             SimpleUtils.pass("Click on Add break button successfully!");
         } else {
             SimpleUtils.fail("Break Section: inputs and close button failed to show!", false);
@@ -169,31 +223,35 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
     @Override
     public void deleteTheBreakByNumber(boolean isMeal, int number) throws Exception {
         WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
-        int index = 0;
+        List<WebElement> mealAndRest = breakSection.findElements(By.cssSelector(".MuiGrid-grid-xs-true"));
+        WebElement section = null;
         if (isMeal) {
-            index = 1;
+            section = mealAndRest.get(0);
         } else {
-            index = 2;
+            section = mealAndRest.get(1);
         }
-        List<WebElement> deleteButtons = breakSection.findElements(By.cssSelector(".MuiGrid-container>div:nth-child(" + index + ") td>svg"));
+        List<WebElement> deleteButtons = section.findElements(By.cssSelector("td>svg"));
         if (deleteButtons.size() >= number) {
-            clickTheElement(deleteButtons.get(number - 1));
+            deleteButtons.get(number - 1).click();
         }
     }
 
     @Override
     public void inputShiftOffsetAndBreakDuration(int startOffset, int breakDuration, int number, boolean isMeal) throws Exception {
         WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
-        int index = 0;
+        List<WebElement> mealAndRest = breakSection.findElements(By.cssSelector(".MuiGrid-grid-xs-true"));
+        WebElement section = null;
         if (isMeal) {
-            index = 1;
+            section = mealAndRest.get(0);
         } else {
-            index = 2;
+            section = mealAndRest.get(1);
         }
-        List<WebElement> inputs = breakSection.findElements(By.cssSelector(".MuiGrid-container>div:nth-child(" + index + ") input"));
+        List<WebElement> inputs = section.findElements(By.tagName("input"));
         if (number == 1) {
             if (inputs.size() == 0) {
                 clickOnAddMealOrRestBreakBtn(isMeal);
+                waitForSeconds(1);
+                inputs = section.findElements(By.tagName("input"));
             }
             clearTheText(inputs.get(0));
             inputs.get(0).click();
@@ -216,18 +274,65 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
     }
 
     @Override
-    public void selectWorkDays(List<String> daysNeedSelect) throws Exception {
-        if (daysNeedSelect != null && daysNeedSelect.size() > 0 && areListElementVisible(dayInputs, 3) && areListElementVisible(dayLabels, 3)) {
-            for (int i = 0; i < dayLabels.size(); i++) {
-                if (daysNeedSelect.contains(dayLabels.get(i).getText())) {
-                    clickTheElement(dayInputs.get(i));
-                }
-            }
+    public void clickOnPencilIcon(int weekNumber) throws Exception {
+        WebElement weekPanel = getDriver().findElement(By.cssSelector(".lg-rule-details content-box:nth-child(" + (weekNumber + 1) + ")"));
+        WebElement pencilBtn = weekPanel.findElement(By.cssSelector(".fa-pencil"));
+        if (isElementLoaded(pencilBtn, 3)) {
+            clickTheElement(pencilBtn);
         }
     }
 
     @Override
-    public void inputStartOrEndTime(String time, boolean isStart) throws Exception {
+    public String getTheNumberOfTheShifts(int weekNumber) throws Exception {
+        WebElement weekPanel = getDriver().findElement(By.cssSelector(".lg-rule-details content-box:nth-child(" + (weekNumber + 1) + ")"));
+        return weekPanel.findElement(By.cssSelector(".week-shift-summary-info")).getText();
+    }
+
+    @Override
+    public void clickOnDeleteBtnToDelCreatedShifts(int weekNumber) throws Exception {
+        WebElement weekPanel = getDriver().findElement(By.cssSelector(".lg-rule-details content-box:nth-child(" + (weekNumber + 1) + ")"));
+        clickTheElement(weekPanel.findElement(By.cssSelector("[icon=\"'fa-pencil'\"]+lg-button i")));
+    }
+
+    @Override
+    public void verifySaveTheShiftPatternRule() throws Exception {
+        if (isElementEnabled(checkMarkButton, 5)) {
+            clickTheElement(checkMarkButton);
+
+        }
+    }
+
+    @Override
+    public boolean isCreateNewShiftWindowLoaded() throws Exception {
+        boolean isLoaded = false;
+        try {
+            if (isElementLoaded(createNewShiftWindow, 5)) {
+                isLoaded = true;
+            }
+        } catch (Exception e) {
+            // Do nothing
+        }
+        return isLoaded;
+    }
+
+    @Override
+    public List<String> selectWorkDays(List<String> daysNeedSelect) throws Exception {
+        List<String> selectedDays = new ArrayList<>();
+        if (daysNeedSelect != null && daysNeedSelect.size() > 0 && areListElementVisible(dayInputs, 3) && areListElementVisible(dayLabels, 3)) {
+            for (int i = 0; i < dayLabels.size(); i++) {
+                if (daysNeedSelect.contains(dayLabels.get(i).getText())) {
+                    if (dayInputs.get(i).getAttribute("checked") == null) {
+                        clickTheElement(dayInputs.get(i));
+                    }
+                    selectedDays.add(dayLabels.get(i).getText().substring(0, 3));
+                }
+            }
+        }
+        return selectedDays;
+    }
+
+    @Override
+    public void inputStartOrEndTime(String hours, String minutes, String aOrP, boolean isStart) throws Exception {
         WebElement input = null;
         if (isStart) {
             input = startTimeInput;
@@ -235,9 +340,20 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
             input = endTimeInput;
         }
         clickTheElement(input);
+        //clearTheText(input);
+        waitForSeconds(1);
         clearTheText(input);
-        input.sendKeys(time);
-        if (!input.getAttribute("value").equalsIgnoreCase(time)) {
+        input.sendKeys(hours);
+        input.sendKeys(Keys.TAB);
+        input.sendKeys(minutes);
+        input.sendKeys(Keys.TAB);
+        input.sendKeys(aOrP);
+        input.sendKeys(Keys.TAB);
+        selectWorkDays(new ArrayList<>(Arrays.asList("Sunday")));
+        selectWorkDays(new ArrayList<>(Arrays.asList("Sunday")));
+        waitForSeconds(5);
+        if (!input.getAttribute("value").contains(hours) && !input.getAttribute("value").contains(minutes) &&
+        !input.getAttribute("value").contains(aOrP)) {
             SimpleUtils.fail("Failed to input the time!", false);
         }
     }
