@@ -2863,6 +2863,39 @@ public class LocationsTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify enable/disable location via Location Integration")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyEnableDisableLocationViaIntegrationAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String filePath = "src/test/resources/uploadFile/LocationTest/0325Upload4.csv";
+            locationsPage.importLocations(filePath, getSession(), "true", 200);
+            String locationName = "0325Upload4";
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            // Enable existing location via location import function
+            if (locationsPage.searchLocationAndGetStatus(locationName).equals("ENABLED"))
+                SimpleUtils.pass("New created location with today as effective day is enabled");
+            else
+                SimpleUtils.report("New created location with today as effective day status is incorrect");
+            String disabledFilePath = "src/test/resources/uploadFile/LocationTest/0325Upload4Disable.csv";
+            // Disable existing location via location import function
+            locationsPage.importLocations(disabledFilePath, getSession(), "true", 200);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            if (locationsPage.searchLocationAndGetStatus(locationName).equals("DISABLED"))
+                SimpleUtils.pass("New created location with today as effective day is enabled");
+            else
+                SimpleUtils.report("New created location with today as effective day status is incorrect");
+            List column = new ArrayList<>();
+            column.add("Status");
+            locationsPage.verifyColumnsInLocationSampleFile( getSession(),column);
+             } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
     @Owner(owner = "Jane")
     @Enterprise(name = "opauto")
     @TestName(description = "Verify Location Type could not be changed with toggle EnableChangeLocationGroupSetting off")
@@ -2879,12 +2912,11 @@ public class LocationsTest extends TestBase {
             //Turn off toggle EnableChangeLocationGroupSetting
             ToggleAPI.disableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123");
             refreshPage();
-
+            
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-
             //go to locations tab
             locationsPage.clickOnLocationsTab();
             //Enter Regular None location edit page, check if location Type can be changed.
