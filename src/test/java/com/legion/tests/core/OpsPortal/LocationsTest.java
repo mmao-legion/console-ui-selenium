@@ -3042,4 +3042,44 @@ public class LocationsTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify Mock location can be updated")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMockLocationCanBeUpdatedAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
+            String currentTime = sdf.format(new Date()).trim();
+            String locationName = "AutoTest" + currentTime;
+            String mockName = locationName + "-MOCK";
+            int index = 0;
+            String searchCharactor = "No touch";
+            String configurationType = "Default";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            //Add a Mock
+            locationsPage.addNewRegularLocationWithAllFields(locationName, searchCharactor, index);
+            locationsPage.addNewMockLocationWithAllFields(locationName, index);
+            //Update above location
+            String status = locationsPage.searchLocationAndGetStatus(mockName);
+            System.out.println("status: " + status);
+            locationsPage.goToLocationDetailsPage(mockName);
+            if (!status.equalsIgnoreCase("enabled")){
+                locationsPage.enableLocation(mockName);
+            }
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.updateMockLocation(mockName, configurationType);
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
