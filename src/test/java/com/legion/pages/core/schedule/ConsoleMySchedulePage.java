@@ -1816,7 +1816,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         boolean isExists = false;
         if ((areListElementVisible(comparableShifts, 10) && comparableShifts.size()!=0 )
                 || (areListElementVisible(coverRequestStatus, 10) && coverRequestStatus.size() != 0)) {
-            if (areListElementVisible(comparableShifts)) {
+            if (areListElementVisible(comparableShifts, 3)) {
                 for (WebElement shift: comparableShifts) {
                     WebElement name = shift.findElement(By.cssSelector(".shift-swap-modal-table-name"));
                     if (name.getText().equalsIgnoreCase(tmName)) {
