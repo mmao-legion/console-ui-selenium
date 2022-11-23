@@ -5027,7 +5027,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheFullNamesOnShiftInDayAndWeekViewWhenEnableScheduleShowFullNamesToggleAsTeamMember(String username, String password, String browser, String location) throws Exception {
 		try {
-			ToggleAPI.enableToggle(Toggles.ScheduleShowFullNames.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+			ToggleAPI.updateToggle(Toggles.ScheduleShowFullNames.getValue(), getUserNameNPwdForCallingAPI().get(0),
+					getUserNameNPwdForCallingAPI().get(1), true);
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			profileNewUIPage.clickOnUserProfileImage();
 			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
@@ -5151,7 +5152,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember(String username, String password, String browser, String location) throws Exception {
 		try {
-			ToggleAPI.disableToggle(Toggles.ScheduleShowFullNames.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+			ToggleAPI.updateToggle(Toggles.ScheduleShowFullNames.getValue(), getUserNameNPwdForCallingAPI().get(0),
+					getUserNameNPwdForCallingAPI().get(1), false);
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			profileNewUIPage.clickOnUserProfileImage();
 			profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
@@ -6074,7 +6076,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	public void verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
 		try {
 			//Disable the ScheduleEditShiftTimeNew
-			ToggleAPI.disableToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
+					getUserNameNPwdForCallingAPI().get(1), false);
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
@@ -6109,7 +6112,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("The new edit shift time page should not display! ",
 					!shiftOperatePage.isEditShiftTimeNewUIDisplay(), false);
 			shiftOperatePage.clickOnCancelEditShiftTimeButton();
-			ToggleAPI.enableToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
+					getUserNameNPwdForCallingAPI().get(1), true);
 			loginPage.logOut();
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			//Go to one schedule page day view

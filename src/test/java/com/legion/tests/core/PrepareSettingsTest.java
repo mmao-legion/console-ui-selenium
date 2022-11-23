@@ -25,6 +25,8 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static com.legion.utils.MyThreadLocal.getEnterprise;
+
 public class PrepareSettingsTest extends TestBase {
 
     @Override
@@ -47,7 +49,8 @@ public class PrepareSettingsTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void prepareSettingsInControlsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+            ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), getUserNameNPwdForCallingAPI().get(0),
+                    getUserNameNPwdForCallingAPI().get(1), false);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -147,7 +150,8 @@ public class PrepareSettingsTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void prepareSettingsInOPTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+            ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), getUserNameNPwdForCallingAPI().get(0),
+                    getUserNameNPwdForCallingAPI().get(1), false);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -256,8 +260,10 @@ public class PrepareSettingsTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyCanPrepareDynamicEmployeeGroupsNTemplatesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
-            ToggleAPI.enableToggle(Toggles.MealAndRestTemplate.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+            ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), getUserNameNPwdForCallingAPI().get(0),
+                    getUserNameNPwdForCallingAPI().get(1), false);
+            ToggleAPI.updateToggle(Toggles.MealAndRestTemplate.getValue(), getUserNameNPwdForCallingAPI().get(0),
+                    getUserNameNPwdForCallingAPI().get(1), true);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
