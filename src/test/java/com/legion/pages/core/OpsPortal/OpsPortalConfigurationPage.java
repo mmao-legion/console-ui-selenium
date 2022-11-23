@@ -6220,7 +6220,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void setLeaveThisPageButton() throws Exception {
 		if (isElementLoaded(warningToast) && isElementLoaded(leaveThisPageButton))
 			clickTheElement(leaveThisPageButton);
-		waitForSeconds(3);
+		waitForSeconds(5);
 	}
 
 	//added by Fiona

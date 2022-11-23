@@ -114,7 +114,6 @@ public enum modelSwitchOperation{
             settingsAndAssociationPage.clickOnEditBtnInSettings(verifyType, categoryName, categoryEditName);
             //verify edited category is in Forecast page
             switchToNewWindow();
-            refreshPage();
             SimpleUtils.assertOnFail("The edited category not exist in forecast page!",
                     salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", categoryEditName), false);
 
@@ -123,7 +122,6 @@ public enum modelSwitchOperation{
             settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, categoryEditName);
             //verify the removed category not show up in forecast page.
             switchToNewWindow();
-            refreshPage();
             SimpleUtils.assertOnFail("The removed edited category should not display in forecast page!",
                     !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", "categoryEditName"), false);
         } catch (Exception e) {
@@ -519,7 +517,6 @@ public enum modelSwitchOperation{
                     put("Type", "Aggregated");
                     put("Operator", "IN");
                     put("Streams", "All");
-                    put("Tag", aggregatedInputStreamName1);
                 }
             };
             HashMap<String, String> aggregatedInputStreamInfoToAdd2 = new HashMap<String, String>(){
@@ -528,7 +525,6 @@ public enum modelSwitchOperation{
                     put("Type", "Aggregated");
                     put("Operator", "NOT IN");
                     put("Streams", baseInputStreamName1);
-                    put("Tag", aggregatedInputStreamName2);
                 }
             };
 
@@ -592,7 +588,6 @@ public enum modelSwitchOperation{
                     put("Type", "Aggregated");
                     put("Operator", "IN");
                     put("Streams", "All");
-                    put("Tag", aggregatedInputStreamName1);
                 }
             };
             HashMap<String, String> aggregatedInputStreamInfo2 = new HashMap<String, String>(){
@@ -601,7 +596,6 @@ public enum modelSwitchOperation{
                     put("Type", "Aggregated");
                     put("Operator", "NOT IN");
                     put("Streams", baseInputStreamName1);
-                    put("Tag", aggregatedInputStreamName2);
                 }
             };
 
@@ -619,7 +613,6 @@ public enum modelSwitchOperation{
                     put("Type", "Aggregated");
                     put("Operator", "NOT IN");
                     put("Streams", "Items:EDW:Verifications");
-                    put("Tag", aggregatedInputStreamName1 + "Updated");
                 }
             };
             HashMap<String, String> aggregatedInputStreamInfoUpdated2 = new HashMap<String, String>(){
@@ -628,7 +621,6 @@ public enum modelSwitchOperation{
                     put("Type", "Aggregated");
                     put("Operator", "IN");
                     put("Streams", "All");
-                    put("Tag", aggregatedInputStreamName2 + "Updated");
                 }
             };
 
@@ -655,7 +647,6 @@ public enum modelSwitchOperation{
                     put("Type", "Aggregated");
                     put("Operator", "NOT IN");
                     put("Streams", "Items:EDW:Verifications");
-                    put("Tag", aggregatedInputStreamName2 + "-to-Base-Aggregated-NotIn");
                 }
             };
 
@@ -1646,8 +1637,8 @@ public enum modelSwitchOperation{
             String derivedType = "Distributed";
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-            refreshPage();
+//            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -1660,7 +1651,7 @@ public enum modelSwitchOperation{
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.clickAddOrEditForDriver("Add");
             configurationPage.verifyForDerivedDemandDriverUI(derivedType, null);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1680,8 +1671,8 @@ public enum modelSwitchOperation{
             String parentType = "Parent Location";
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-            refreshPage();
+//            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -1697,7 +1688,7 @@ public enum modelSwitchOperation{
             configurationPage.clickOnCancelButton();
             configurationPage.clickAddOrEditForDriver("Add");
             configurationPage.verifyForDerivedDemandDriverUI(derivedType, parentType);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1715,8 +1706,8 @@ public enum modelSwitchOperation{
         String derivedType = "Aggregated";
 
         //Turn on EnableTahoeStorage toggle
-        ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-        refreshPage();
+//        ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//        refreshPage();
         //Go to Demand Driver template
         ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
         SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -1729,7 +1720,7 @@ public enum modelSwitchOperation{
         configurationPage.clickOnEditButtonOnTemplateDetailsPage();
         configurationPage.clickAddOrEditForDriver("Add");
         configurationPage.verifyForDerivedDemandDriverUI(derivedType, null);
-        ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//        ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
 //        } catch (Exception e) {
 //            SimpleUtils.fail(e.getMessage(), false);
 //        }
@@ -1788,8 +1779,8 @@ public enum modelSwitchOperation{
             };
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-            refreshPage();
+//            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -1819,7 +1810,7 @@ public enum modelSwitchOperation{
             configurationPage.clickOnTemplateDetailTab();
             configurationPage.publishNowTemplate();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1887,8 +1878,8 @@ public enum modelSwitchOperation{
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-            refreshPage();
+//            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -1932,7 +1923,7 @@ public enum modelSwitchOperation{
             configurationPage.clickOnTemplateDetailTab();
             configurationPage.publishNowTemplate();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2000,8 +1991,8 @@ public enum modelSwitchOperation{
             };
 
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-            refreshPage();
+//            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -2045,7 +2036,7 @@ public enum modelSwitchOperation{
             configurationPage.clickOnTemplateDetailTab();
             configurationPage.publishNowTemplate();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2099,8 +2090,8 @@ public enum modelSwitchOperation{
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-            refreshPage();
+//            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -2130,7 +2121,7 @@ public enum modelSwitchOperation{
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2185,8 +2176,8 @@ public enum modelSwitchOperation{
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-            refreshPage();
+//            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -2216,7 +2207,7 @@ public enum modelSwitchOperation{
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.archiveOrDeleteTemplate(templateName);
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2260,8 +2251,8 @@ public enum modelSwitchOperation{
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-            refreshPage();
+//            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -2291,7 +2282,7 @@ public enum modelSwitchOperation{
             SimpleUtils.assertOnFail("Verify remote:remote driver page failed in read only mode!", configurationPage.verifyDriverInViewMode(remoteLocationDriver), false);
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             configurationPage.archiveOrDeleteTemplate(templateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -2566,8 +2557,8 @@ public enum modelSwitchOperation{
             SimpleUtils.assertOnFail("Demand Driver card should be visible for legion internal user!", configurationPage.verifyTemplateCardExist(templateType), false);
 
             //EnableTahoeStorage is on, verify could view derived driver
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-            refreshPage();
+//            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            refreshPage();
             configurationPage.clickOnConfigurationCrad(templateType);
             configurationPage.createNewTemplate(demandDriverTemplate);
             configurationPage.clickOnTemplateName(demandDriverTemplate);
@@ -2576,7 +2567,7 @@ public enum modelSwitchOperation{
             SimpleUtils.assertOnFail("Derived forecast source type should be visible with EnableTahoeStorage turned on!", configurationPage.getAllForecastSourceType().containsAll(derivedDriverType), false);
 
             //EnableTahoeStorage is off, verify could not view derived driver
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
             refreshPage();
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.clickAddOrEditForDriver("Add");
@@ -2691,8 +2682,8 @@ public enum modelSwitchOperation{
                 }
             };
             //Turn on EnableTahoeStorage toggle
-            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-            refreshPage();
+//            ToggleAPI.enableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -2754,7 +2745,7 @@ public enum modelSwitchOperation{
             configurationPage.archiveOrDeleteTemplate(templateName);
 
             //Turn off EnableTahoeStorage toggle
-            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+//            ToggleAPI.disableToggle(Toggles.EnableTahoeStorage.getValue(), "jane.meng+006@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
