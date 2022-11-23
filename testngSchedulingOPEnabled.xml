@@ -408,7 +408,7 @@
                 <methods>
 <!--                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" Blocked by queue/>-->
 <!--                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />-->
-                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyRejectCoverRequestOfShiftSwapActivityAsTeamMember" />
                     <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
                     <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
