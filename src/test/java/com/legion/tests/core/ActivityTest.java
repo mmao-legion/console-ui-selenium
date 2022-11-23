@@ -2146,7 +2146,7 @@ public class ActivityTest extends TestBase {
             activityPage.verifyActivityBellIconLoaded();
             activityPage.verifyClickOnActivityIcon();
             activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftOffer.getValue(), indexOfActivityType.ShiftOffer.name());
-            activityPage.approveOrRejectMultipleShiftOfferRequestOnActivity(teamMemberName1, ActivityTestCope.approveRejectAction.Approve.getValue(), 1);
+            activityPage.approveOrRejectMultipleShiftOfferRequestOnActivity(teamMemberName1, ActivityTest.approveRejectAction.Approve.getValue(), 1);
 //            Thread.sleep(3000);
             String expectedTopMessage = "Error!Alert is already expired";
             activityPage.verifyApproveShiftOfferRequestAndGetErrorOnActivity(teamMemberName2, expectedTopMessage);
