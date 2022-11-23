@@ -273,9 +273,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "tr[ng-repeat=\"item in $ctrl.currentPageItems track by $index\"]")
 	private List<WebElement> locationRowsInSelectLocation;
 
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]")
+	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection track by location.businessId\"]")
 	private List<WebElement> locationRows;
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"] > td:nth-child(4) > lg-eg-status")
+	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection track by location.businessId\"] > td:nth-child(4) > lg-eg-status")
 	private List<WebElement> locationStatus;
 
 	@FindBy(css = "lg-button[label=\"OK\"]")
@@ -471,7 +471,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
 //	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]:nth-child(2) > td.one-line-overflow > div > lg-button > button > span > span")
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]> td.one-line-overflow > div > lg-button > button > span > span")
+	@FindBy(xpath = "//lg-locations-new//tr//span/span")
 	private List<WebElement> locationsName;
 	@FindBy(css = "select[aria-label=\"Location Type\"]")
 	private WebElement locationSourceType;
@@ -1565,7 +1565,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			waitForSeconds(2);
 			moveToElementAndClick(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"]:nth-child(2)>button")));
 			waitForSeconds(8);
-			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button")).getText().equals(action)) {
+			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button/span/span")).getText().contains(action)) {
 				SimpleUtils.pass(action + " " + locationName + " successfully");
 			} else
 				SimpleUtils.fail(action + " " + locationName + " successfully", true);
