@@ -207,7 +207,7 @@ public class ShiftPatternTest extends TestBase {
             shiftPatternPage.deleteTheBreakByNumber(true, 1);
             shiftPatternPage.inputShiftOffsetAndBreakDuration(1, 1, 1, true);
             warnings = shiftPatternPage.getBreakWarnings();
-            if (warnings.contains("Break Start must be in 5 minute increments") && warnings.contains("Break End must be in 5 minute increments")) {
+            if (warnings.contains("Start Offset must be in 5 minute increments") && warnings.contains("Break Duration must be in 5 minute increments")) {
                 SimpleUtils.pass("Start Offset and Break Duration warning shows!");
             } else {
                 SimpleUtils.fail("Start Offset and break duration warnings failed to show!", false);
