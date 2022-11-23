@@ -2911,7 +2911,7 @@ public class LocationsTest extends TestBase {
             ArrayList<String> locationGroupSettings = new ArrayList<>(Arrays.asList("None", "Part of a location group", "Parent location"));
 
             //Turn off toggle EnableChangeLocationGroupSetting
-            ToggleAPI.disableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123");
+            ToggleAPI.disableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+008@legion.co", "P@ssword123");
             refreshPage();
             
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -2981,7 +2981,7 @@ public class LocationsTest extends TestBase {
             ArrayList<String> parentType = new ArrayList<>(Arrays.asList("Parent Child", "Peer to Peer"));
 
             //Turn on toggle EnableChangeLocationGroupSetting
-            ToggleAPI.enableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.enableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+008@legion.co", "P@ssword123");
             refreshPage();
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -3034,7 +3034,7 @@ public class LocationsTest extends TestBase {
             locationsPage.clickOnSaveButton();
 
             //Turn off toggle EnableChangeLocationGroupSetting
-            ToggleAPI.disableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.disableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+008@legion.co", "P@ssword123");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

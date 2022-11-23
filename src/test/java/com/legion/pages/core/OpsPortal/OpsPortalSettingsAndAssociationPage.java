@@ -680,8 +680,9 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                             }
                             return;
                         }
-
-                        fieldsInput.get(3).findElement(By.cssSelector("input[aria-label=\"Data Tag\"]")).sendKeys(inputStreamSpecificInfo.get("Tag"));
+                        if (inputStreamSpecificInfo.get("Tag") != null){
+                            fieldsInput.get(3).findElement(By.cssSelector("input[aria-label=\"Data Tag\"]")).sendKeys(inputStreamSpecificInfo.get("Tag"));
+                        }
                         if (!"Base".equalsIgnoreCase(inputStreamSpecificInfo.get("Type"))){
                             clickTheElement(streamType);
                             Select typeSelect = new Select(streamType);
@@ -765,7 +766,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                     }
                     clickTheElement(streamValueInput);
                 }
-                if(!inputStream.get("Tag").equalsIgnoreCase(inputStreamUpdated.get("Tag"))){
+                if(!inputStream.get("Tag").equalsIgnoreCase(inputStreamUpdated.get("Tag")) && "Base".equalsIgnoreCase(inputStreamUpdated.get("Type"))){
                     tagInput.clear();
                     tagInput.sendKeys(inputStreamUpdated.get("Tag"));
                 }
@@ -820,8 +821,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             resultTag = searchResultElement.findElement(By.cssSelector("td:nth-child(4) span")).getText();
 
             if (inputStreamInfo.get("Name").equalsIgnoreCase(resultName)
-                    && inputStreamInfo.get("Type").equalsIgnoreCase(resultType)
-                    && inputStreamInfo.get("Tag").equalsIgnoreCase(resultTag)) {
+                    && inputStreamInfo.get("Type").equalsIgnoreCase(resultType)) {
                 if ("Base".equalsIgnoreCase(resultType) && resultSource.equals("")) {
                     isSame = true;
                 } else if ("Aggregated".equalsIgnoreCase(resultType)) {
