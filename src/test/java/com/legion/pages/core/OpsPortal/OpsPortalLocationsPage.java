@@ -272,7 +272,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement searchInputInSelectALocation;
 	@FindBy(css = "tr[ng-repeat=\"item in $ctrl.currentPageItems track by $index\"]")
 	private List<WebElement> locationRowsInSelectLocation;
-
 	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection track by location.businessId\"]")
 	private List<WebElement> locationRows;
 	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection track by location.businessId\"] > td:nth-child(4) > lg-eg-status")
@@ -5390,6 +5389,93 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			} else {
 				SimpleUtils.fail("the columns does not exist in sample file", false);
 			}
+     }
+  }
+
+	@FindBy(css="select[aria-label=\"Location Group Setting\"]")
+	private WebElement getLocationGroupSettingSelect;
+	@Override
+	public String getLocationGroupSettingsSelectedOption() throws Exception {
+		String selectedOption = "";
+		Select locationGroupSettings = null;
+
+		if (isElementLoaded(getLocationGroupSettingSelect, 3)){
+			locationGroupSettings = new Select(getLocationGroupSettingSelect);
+			selectedOption = locationGroupSettings.getFirstSelectedOption().getText();
+			SimpleUtils.pass("Load Location Group Setting Successfully!");
+		}else {
+			SimpleUtils.fail("Failed to load Location Group Setting!", false);
+		}
+		return selectedOption;
+	}
+
+	@Override
+	public boolean verifyLocationGroupSettingEnabled(String selectedOption) throws Exception {
+		boolean isEnabled = true;
+		Select locationGroupSettings = new Select(getLocationGroupSettingSelect);
+		List<WebElement> options = locationGroupSettings.getOptions();
+
+		for (WebElement option : options){
+			if (!option.getText().equalsIgnoreCase(selectedOption)){
+				continue;
+			}
+			if (selectedOption.equals("None")) {
+				if (option.getAttribute("disabled") != null && option.getAttribute("disabled").equalsIgnoreCase("true")) {
+					isEnabled = false;
+				}
+			}else{
+				if (option.getText().equals("None") && option.getAttribute("disabled") != null && option.getAttribute("disabled").equalsIgnoreCase("true")){
+					isEnabled = false;
+				}
+			}
+		}
+		return isEnabled;
+	}
+
+	@FindBy(css="modal[modal-title=\"Location Group Setting\"]")
+	private WebElement changeSettingsConfirmPopUpWindow;
+	@Override
+	public void changeLocationGroupSettings(String selectedOption, String... newOption) throws Exception {
+		Select locationGroupSettings = new Select(getLocationGroupSettingSelect);
+		String newSelectedOption = selectedOption;
+
+		if (!selectedOption.equalsIgnoreCase(newOption[0])) {
+			locationGroupSettings.selectByVisibleText(newOption[0]);
+			if (isElementLoaded(changeSettingsConfirmPopUpWindow, 5)) {
+				clickTheElement(changeSettingsConfirmPopUpWindow.findElement(By.cssSelector("lg-button[label=\"Ok\"]")));
+			}
+			newSelectedOption = getLocationGroupSettingsSelectedOption();
+			if (selectedOption.equals(newSelectedOption)){
+				SimpleUtils.fail("Failed to select new option!", false);
+			}
+		}
+		if(newSelectedOption.equals("Parent location")){
+			clickTheElement(getDriver().findElement(By.cssSelector("input[aria-label=\"" + newOption[1] + "\"] ")));
+		}else if (newSelectedOption.equals("Part of a location group")){
+			click(selectParentLocation);
+			selectLocationOrDistrict(newOption[1], 0);
+		}
+		clickOnSaveButton();
+		waitForSeconds(5);
+	}
+
+	@FindBy(css="select[aria-label=\"Configuration Type\"]")
+	private WebElement configurationTypeDropDown;
+	@Override
+	public void updateMockLocation(String locationName, String configurationType) throws Exception {
+//		Select configurationTypeSelect = new Select(configurationTypeDropDown);
+		if (!isElementEnabled(editLocationBtn, 2)) {
+			locationId.clear();
+			locationId.sendKeys(locationName + "update");
+//			scrollToElement(configurationTypeDropDown);
+//			configurationTypeSelect.selectByVisibleText(configurationType);
+			WebElement saveBtn = getDriver().findElement(By.cssSelector("lg-button[label=\"Save\"] button"));
+			scrollToBottom();
+			if(isElementEnabled(saveBtn, 8)){
+				clickTheElement(saveBtn);
+			}
+			waitForSeconds(5);
+			SimpleUtils.pass("Location update done");
 		}
 	}
 }
