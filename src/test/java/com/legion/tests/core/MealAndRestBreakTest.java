@@ -878,9 +878,9 @@ public class MealAndRestBreakTest extends TestBase {
                     || firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
                 shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
                 firstNameOfTM = shiftInfo.get(0);
-                lastNameOfTM = shiftInfo.get(5);
                 shiftCount1++;
             }
+            lastNameOfTM = shiftInfo.get(5);
             workRole = shiftInfo.get(4);
             Thread.sleep(3000);
 
