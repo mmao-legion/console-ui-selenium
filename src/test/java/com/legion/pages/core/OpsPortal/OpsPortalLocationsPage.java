@@ -3246,7 +3246,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	// Added by Julie
-	@FindBy (css = "tr[ng-repeat=\"location in filteredCollection\"] span[ng-transclude]>span")
+	@FindBy (css = "tr[ng-repeat=\"location in filteredCollection track by location.businessId\"] span[ng-transclude]>span")
 	private List<WebElement> locationNamesInLocationRows;
 
 	@FindBy (xpath = "//lg-tabs//div[contains(text(),'Configuration')]")
@@ -3735,7 +3735,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		List<WebElement> options=locationGroupSelect.findElements(By.cssSelector("option"));
 		int enabledCount=0;
 		for(WebElement op:options){
-			if(op.isEnabled())
+			if(op.getAttribute("selected").equalsIgnoreCase("selected"))
 				enabledCount++;
 		}
 		//Assert only one option is enabled
