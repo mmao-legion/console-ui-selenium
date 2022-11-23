@@ -1267,7 +1267,7 @@ public class ConfigurationTest extends TestBase {
             String locationName="MultipleTemplateE2EUsing";
             HashMap<String, String> activeDayAndOperatingHrs = new HashMap<>();
             String currentOperatingHour = "7AM-12AM";
-            String futureOperatingHour = "7AM-12AM";
+            String futureOperatingHour = "7:30 AM-12AM";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();

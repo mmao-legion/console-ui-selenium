@@ -2555,9 +2555,9 @@ public class LocationsTest extends TestBase {
             locationsPage.clickOnLocationsTab();
             locationsPage.goToGlobalConfigurationInLocations();
             if(locationsPage.isBudgetPlanSectionShowing()){
-                SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is off");
+                SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is on");
             }else {
-                SimpleUtils.fail("Budget plan section is NOT showing when EnableLongTermBudgetPlan is off",false);
+                SimpleUtils.report("Budget plan section is NOT showing when EnableLongTermBudgetPlan is off");
             }
             String computeMethod = locationsPage.getLaborBudgetPlanComputeSettings();
 
