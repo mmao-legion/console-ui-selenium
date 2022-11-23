@@ -901,6 +901,7 @@ public class SingleShiftEditTest extends TestBase {
             if (smartCardPage.isRequiredActionSmartCardLoaded()) {
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
                 scheduleMainPage.saveSchedule();
             }
             String workRole = shiftOperatePage.getRandomWorkRole();
@@ -1094,6 +1095,7 @@ public class SingleShiftEditTest extends TestBase {
             //Verify the breaks time cannot out of shift time
             editShiftPage.inputMealBreakTimes("8am", "8:20am", 0);
             editShiftPage.inputRestBreakTimes("4pm", "4:30pm", 0);
+            editShiftPage.clickOnUpdateButton();
             String expectedBreakMessage = "Break cannot go beyond the shift";
             List<String> mealBreakWarningMessages = editShiftPage.getMealBreakWarningMessage();
             List<String> restBreakWarningMessages = editShiftPage.getRestBreakWarningMessage();
