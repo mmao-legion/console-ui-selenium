@@ -498,6 +498,11 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         WebElement minsInput = timeSection.findElements(By.cssSelector("[type=number]")).get(1);
         WebElement select = timeSection.findElement(By.cssSelector(".react-select__dropdown-indicator"));
 
+        if (earlyOrLate != null && !earlyOrLate.isEmpty()) {
+            select.click();
+            selectOptionByLabel(earlyOrLate);
+        }
+
         hoursInput.click();
         for (int i = 0; i < 4; i++) {
             hoursInput.sendKeys(Keys.BACK_SPACE);
@@ -509,6 +514,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         if (hours != null && !hours.isEmpty()) {
             hoursInput.sendKeys(hours);
             if (Integer.parseInt(hours) >= 12) {
+                clickTheElement(updateButton);
                 WebElement warning = timeSection.findElement(By.cssSelector(".MuiFormHelperText-root"));
                 SimpleUtils.assertOnFail("Warning message 'Max 12 Hrs' failed to show!'", warning.getText()
                         .trim().equalsIgnoreCase("Max 12 Hrs"), false);
@@ -519,14 +525,11 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
             if (Integer.parseInt(mins) != 0 && Integer.parseInt(mins) != 15 && Integer.parseInt(mins) != 45 && Integer.parseInt(mins) != 60) {
                 hoursInput.click();
                 hoursInput.clear();
+                clickTheElement(updateButton);
                 WebElement warning = timeSection.findElement(By.cssSelector(".MuiFormHelperText-root"));
                 SimpleUtils.assertOnFail("Warning message 'Must match slots' failed to show!'", warning.getText()
                         .trim().equalsIgnoreCase("Must match slots"), false);
             }
-        }
-        if (earlyOrLate != null && !earlyOrLate.isEmpty()) {
-            clickTheElement(select);
-            selectOptionByLabel(earlyOrLate);
         }
     }
 
