@@ -1179,7 +1179,7 @@ public class ActivityTest extends TestBase {
         // TM's next week's schedule must be published before running this test case
         // Cover TM should be in the list of Cover Request Status window
         // Cover TM should be not on the schedule at the same day with requested TM and is defined in "UserCredentialsForComparableSwapShifts.json"
-        try {
+//        try {
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
@@ -1326,9 +1326,9 @@ public class ActivityTest extends TestBase {
         activityPage.verifyClickOnActivityIcon();
         activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftSwap.getValue(), indexOfActivityType.ShiftSwap.name());
         activityPage.approveOrRejectShiftCoverRequestOnActivity(firstName, firstName2, approveRejectAction.Reject.getValue(),  location);
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(),false);
-        }
+//        } catch (Exception e) {
+//            SimpleUtils.fail(e.getMessage(),false);
+//        }
     }
 
     @Automated(automated ="Automated")
@@ -1376,6 +1376,7 @@ public class ActivityTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
 
             // For Cover Feature
+            List<String> swapCoverRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
             int index = mySchedulePage.verifyClickOnAnyShift();
             String request = "Request to Cover Shift";
             mySchedulePage.clickTheShiftRequestByName(request);
