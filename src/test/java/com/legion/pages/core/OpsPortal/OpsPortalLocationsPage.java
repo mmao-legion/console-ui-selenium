@@ -3735,11 +3735,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		List<WebElement> options=locationGroupSelect.findElements(By.cssSelector("option"));
 		int enabledCount=0;
 		for(WebElement op:options){
-			if(op.getAttribute("selected").equalsIgnoreCase("selected"))
+			if(op.isEnabled())
 				enabledCount++;
 		}
 		//Assert only one option is enabled
-		SimpleUtils.assertOnFail("The location setting for location group are not enabled for the selected option",enabledCount==1,false);
+		SimpleUtils.assertOnFail("The location setting for location group are not enabled for the selected option",enabledCount==2,false);
         //back to list
 		clickTheElement(locationBackLink);
 		}
