@@ -555,7 +555,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
         if (isElementLoaded(successMsg, 5) && successMsg.getText().contains("Success!")) {
             SimpleUtils.pass("Save the Schedule with no change Successfully!");
-        } else if (isClickable(saveOnSaveConfirmationPopup, 30)) {
+        } else if (isSaveConfirmPopupLoaded()) {
             clickTheElement(saveOnSaveConfirmationPopup);
             waitForNotExists(saveOnSaveConfirmationPopup, 30);
             waitForSeconds(5);
@@ -2561,5 +2561,17 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
+    }
+
+    private boolean isSaveConfirmPopupLoaded() throws Exception {
+        waitForSeconds(5);
+        boolean isLoaded = false;
+        if (isClickable(saveOnSaveConfirmationPopup, 30)) {
+            isLoaded =true;
+            SimpleUtils.pass("Schedule save button is loaded successfully! ");
+        } else {
+            SimpleUtils.report("Schedule save button not found");
+        }
+        return isLoaded;
     }
 }
