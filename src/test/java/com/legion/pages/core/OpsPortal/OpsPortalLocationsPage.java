@@ -5356,7 +5356,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
-	public void importLocations(String filePath, String sessionId, String isImport, int expectedStatusCode) {
+	@Override
+	public void importLocations(String filePath, String sessionId, String isImport, int expectedStatusCode, String path, Object expectedResult) {
 
 		String url = "https://rc-enterprise.dev.legion.work/legion/integration/uploadBusiness";
 		File file = new File(filePath);
@@ -5370,7 +5371,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isImport.equalsIgnoreCase("true")) {
 			RestAssured.given().log().all().queryParams(params).contentType("multipart/form-data").multiPart("file", file).header("sessionId", sessionId)
 					.when().post(url)
-					.then().log().all().statusCode(expectedStatusCode).body("responseStatus", Matchers.equalToIgnoringCase("SUCCESS"));
+					.then().log().all().statusCode(expectedStatusCode).body("responseStatus", Matchers.equalToIgnoringCase("SUCCESS"))
+					.body(path, Matchers.equalTo(expectedResult));
 		}
 	}
 
