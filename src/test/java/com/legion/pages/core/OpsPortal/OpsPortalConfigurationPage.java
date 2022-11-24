@@ -892,7 +892,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	//open the specify template to edit or view details
 	@Override
 	public void clickOnSpecifyTemplateName(String templateName, String editOrViewMode) throws Exception {
-		waitForSeconds(5);
+		waitForSeconds(10);
 		if (isTemplateListPageShow()) {
 			searchTemplate(templateName);
 			for (int i = 0; i < templateNameList.size(); i++) {
