@@ -2782,7 +2782,7 @@ public class LocationsTest extends TestBase {
             String beforeImportValue = locationsPage.getReadyForForecastSelectedOption();
             locationsPage.goBack();
             //Update an existing location by import file
-            locationsPage.importLocations(fileWithNoReadyForForecast, getSession(), "true", 200);
+            locationsPage.importLocations(fileWithNoReadyForForecast, getSession(), "true", 200, "summary.failed",0);
 
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
@@ -2791,7 +2791,7 @@ public class LocationsTest extends TestBase {
             SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", beforeImportValue.equalsIgnoreCase(afterImportValue), false);
             locationsPage.goBack();
             //Update the existing location by import file, change  to No
-            locationsPage.importLocations(fileWithReadyForForecastNo, getSession(), "true", 200);
+            locationsPage.importLocations(fileWithReadyForForecastNo, getSession(), "true", 200, "summary.failed",0);
 
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
@@ -2801,7 +2801,7 @@ public class LocationsTest extends TestBase {
             locationsPage.goBack();
 
             //Update the existing location by import file, change  to Yes
-            locationsPage.importLocations(fileWithReadyForForecastYes, getSession(), "true", 200);
+            locationsPage.importLocations(fileWithReadyForForecastYes, getSession(), "true", 200, "summary.failed",0);
 
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
@@ -2825,8 +2825,9 @@ public class LocationsTest extends TestBase {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             String filePath = "src/test/resources/uploadFile/LocationTest/0325Upload3.csv";
-            locationsPage.importLocations(filePath, getSession(), "true", 200);
             String locationName = "0325Upload3";
+
+            locationsPage.importLocations(filePath, getSession(), "true", 200, "summary.failed",0);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             // disable the imported location
@@ -2848,7 +2849,7 @@ public class LocationsTest extends TestBase {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             String filePath = "src/test/resources/uploadFile/LocationTest/0325Upload3.csv";
-            locationsPage.importLocations(filePath, getSession(), "true", 200);
+            locationsPage.importLocations(filePath, getSession(), "true", 200, "summary.failed",0);
             String locationName = "0325Upload3";
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
@@ -2871,7 +2872,7 @@ public class LocationsTest extends TestBase {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             String filePath = "src/test/resources/uploadFile/LocationTest/0325Upload4.csv";
-            locationsPage.importLocations(filePath, getSession(), "true", 200);
+            locationsPage.importLocations(filePath, getSession(), "true", 200, "summary.failed",0);
             String locationName = "0325Upload4";
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
@@ -2882,7 +2883,7 @@ public class LocationsTest extends TestBase {
                 SimpleUtils.report("New created location with today as effective day status is incorrect");
             String disabledFilePath = "src/test/resources/uploadFile/LocationTest/0325Upload4Disable.csv";
             // Disable existing location via location import function
-            locationsPage.importLocations(disabledFilePath, getSession(), "true", 200);
+            locationsPage.importLocations(disabledFilePath, getSession(), "true", 200, "summary.failed",0);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             if (locationsPage.searchLocationAndGetStatus(locationName).equals("DISABLED"))
@@ -3076,6 +3077,25 @@ public class LocationsTest extends TestBase {
             locationsPage.editLocationBtnIsClickableInLocationDetails();
             locationsPage.updateMockLocation(mockName, configurationType);
         }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Ability to indicate Location Group type via Location Integration")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyImportLocationCommon1FunctionAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            String filePath = "src/test/resources/uploadFile/LocationTest/locationGroup.csv";
+            locationsPage.importLocations(filePath, getSession(), "true", 200,"summary.failed",0);
+
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
