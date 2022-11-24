@@ -239,6 +239,7 @@
                     <!--  <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
                            <include name="verifyTheCanadaCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
                            <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />  The code is not merged into RC yet -->
+                    <include name="VerifyTheScheduleVersionUnchangedWithUnmodifiedSaveAsInternalAdmin" />
                   </methods>
               </class>
           </classes>

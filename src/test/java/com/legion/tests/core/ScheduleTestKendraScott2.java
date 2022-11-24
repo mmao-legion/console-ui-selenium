@@ -9721,4 +9721,77 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the message of schedule version won't change for unmodified Save")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void VerifyTheScheduleVersionUnchangedWithUnmodifiedSaveAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			AnalyzePage analyzePage = pageFactory.createAnalyzePage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			//Go to schedule page, create a new schedule, modify the schedule and publish
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+			//Catch up on random shift for further shift creation
+			String firstNameOfTM = null;
+			if (isActiveWeekGenerated) {
+				List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+				firstNameOfTM = shiftInfo.get(0);
+				int shiftCount1 = 0;
+				while ((firstNameOfTM.equalsIgnoreCase("open")
+						|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+					shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+					firstNameOfTM = shiftInfo.get(0);
+					shiftCount1++;
+				}
+			}
+
+			//Publish the schedule
+			scheduleMainPage.publishOrRepublishSchedule();
+			Thread.sleep(3000);
+
+			//Delete all relevant shifts of particular TM
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+			scheduleMainPage.saveSchedule();
+
+			//Check the schedule version
+			String analyzeTab = "Schedule History";
+			String scheduleVersion = "1.1";
+			analyzePage.clickOnAnalyzeBtn(analyzeTab);
+			analyzePage.verifyScheduleVersion(scheduleVersion);
+			analyzePage.closeAnalyzeWindow();
+
+			//Edit the schedule again and save without any changes, check the pop up message
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleMainPage.saveScheduleWithoutChange();
+
+			//Check the schedule version
+			analyzePage.clickOnAnalyzeBtn(analyzeTab);
+			analyzePage.verifyScheduleVersion(scheduleVersion);
+			analyzePage.closeAnalyzeWindow();
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
 }

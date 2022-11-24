@@ -2541,4 +2541,25 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }
         return isManagerViewSelected;
     }
+
+    @FindBy(css = ".lg-toast [ng-if=highlightText]")
+    private WebElement successMsgOnTop;
+    @FindBy(css = ".lg-toast [class*=lg-toast__simple-text]")
+    private WebElement NoChangeMsgOnTop;
+    @Override
+    public void saveScheduleWithoutChange() throws Exception {
+        if (isElementEnabled(scheduleSaveBtn, 10) && isClickable(scheduleSaveBtn, 10)) {
+            scrollToElement(scheduleSaveBtn);
+            clickTheElement(scheduleSaveBtn);
+            if (isElementLoaded(successMsgOnTop, 5) && isElementLoaded(NoChangeMsgOnTop, 5)) {
+                if (successMsgOnTop.getText().contains("Success") && NoChangeMsgOnTop.getText().contains("No changes to be saved"))
+                    SimpleUtils.pass("Save the Schedule without modification successfully!");
+                else
+                    SimpleUtils.fail("Saved message is not correct!", false);
+            }else
+                SimpleUtils.fail("Saved successfully message is not loaded!", false);
+        }else {
+            SimpleUtils.fail("Schedule save button not found", false);
+        }
+    }
 }
