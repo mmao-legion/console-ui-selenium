@@ -208,7 +208,7 @@ public enum modelSwitchOperation{
                 {
                     put("Name", inputStreamName1);
                     put("Type", "Base");
-                    put("Tag", "Items:EDW:Enrollments");
+                    put("Tag", inputStreamName1);
                 }
             };
             HashMap<String, String> inputStreamInfoToAdd2 = new HashMap<String, String>(){
@@ -217,7 +217,7 @@ public enum modelSwitchOperation{
                     put("Type", "Aggregated");
                     put("Operator", "IN");
                     put("Streams", "All");
-                    put("Tag", "Items:EDW:Aggregated");
+                    put("Tag", inputStreamName2);
                 }
             };
             inputStreamInfoToAdd.add(inputStreamInfoToAdd1);
@@ -568,6 +568,8 @@ public enum modelSwitchOperation{
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 1)
     public void verifyEditForInputStreamInSettingsPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddHH");
+            String currentDate = sdf.format(new Date());
             String templateType = "Demand Drivers";
             String verifyType = "input stream";
             String baseInputStreamName1 = "InputStreamTest-Base01";
@@ -579,7 +581,7 @@ public enum modelSwitchOperation{
                 {
                     put("Name", baseInputStreamName1);
                     put("Type", "Base");
-                    put("Tag", "Items:EDW:Base01");
+                    put("Tag", "Items:EDW:Base01" + currentDate);
                 }
             };
             HashMap<String, String> aggregatedInputStreamInfo1 = new HashMap<String, String>(){
@@ -595,7 +597,7 @@ public enum modelSwitchOperation{
                     put("Name", aggregatedInputStreamName2);
                     put("Type", "Aggregated");
                     put("Operator", "NOT IN");
-                    put("Streams", baseInputStreamName1);
+                    put("Streams", baseInputStreamName1 + currentDate);
                 }
             };
 
@@ -604,7 +606,7 @@ public enum modelSwitchOperation{
                 {
                     put("Name", baseInputStreamName1);
                     put("Type", "Base");
-                    put("Tag", "Items:EDW:Base01-Update");
+                    put("Tag", "Items:EDW:Base01-Update" + currentDate);
                 }
             };
             HashMap<String, String> aggregatedInputStreamInfoUpdated1 = new HashMap<String, String>(){
@@ -631,7 +633,6 @@ public enum modelSwitchOperation{
                     put("Type", "Aggregated");
                     put("Operator", "IN");
                     put("Streams", "All");
-                    put("Tag", "Items:EDW:Base-to-Aggregated");
                 }
             };
             HashMap<String, String> aggregatedInputStreamToBase = new HashMap<String, String>(){
@@ -2542,7 +2543,7 @@ public enum modelSwitchOperation{
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Demand Driver is visible for Legion Internal User")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyDemandDriverIsAccessibleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
