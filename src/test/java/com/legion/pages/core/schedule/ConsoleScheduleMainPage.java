@@ -543,17 +543,19 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     @FindBy(css = ".lg-toast")
     private WebElement msgOnTop;
-
+    @FindBy(css = "div.lg-toast")
+    private WebElement successMsg;
     public void saveSchedule() throws Exception {
         if (isElementEnabled(scheduleSaveBtn, 10) && isClickable(scheduleSaveBtn, 10)) {
             scrollToElement(scheduleSaveBtn);
             clickTheElement(scheduleSaveBtn);
-            waitForSeconds(3);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        waitForSeconds(5);
-        if (isClickable(saveOnSaveConfirmationPopup, 30)) {
+
+        if (isElementLoaded(successMsg, 5) && successMsg.getText().contains("Success!")) {
+            SimpleUtils.pass("Save the Schedule with no change Successfully!");
+        } else if (isClickable(saveOnSaveConfirmationPopup, 30)) {
             clickTheElement(saveOnSaveConfirmationPopup);
             waitForNotExists(saveOnSaveConfirmationPopup, 30);
             waitForSeconds(5);
