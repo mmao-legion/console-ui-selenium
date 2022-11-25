@@ -743,7 +743,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			Thread.sleep(10000);
 			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
 			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"),false);
-			Thread.sleep(180000);
+			Thread.sleep(200000);
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 
@@ -874,7 +874,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			controlsNewUIPage.updateSeniorityToggle("Yes");
 			controlsNewUIPage.selectSortOfSeniority("Ascending");
 			configurationPage.publishNowTheTemplate();
-			Thread.sleep(18000);
+			Thread.sleep(180000);
 			switchToConsoleWindow();
 
 			//Create a schedule if there is no any

@@ -890,9 +890,7 @@ public class FTSERelevantTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
@@ -1371,7 +1369,7 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            createSchedulePage.publishActiveSchedule();
+//            createSchedulePage.publishActiveSchedule();
 
             //Verify no any Schedule Agreement Policy overtimes violation after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
