@@ -3589,6 +3589,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void deleteOneDynamicGroup(String dyname) throws Exception {
 		if (searchOneDynamicGroup(dyname)) {
 			//remove the dynamic group
+			waitForSeconds(2);
 			clickTheElement(dynamicGroupRemoveBTN);
 			waitForSeconds(2);
 			clickTheElement(dynamicGroupRemoveBTNOnDialog);
