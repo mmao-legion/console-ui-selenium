@@ -1482,13 +1482,15 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.selectWorkRole(workRole);
-            newShiftPage.moveSliderAtCertainPoint("11pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("9pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint("1pm", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(tmPartialName);
+            newShiftPage.clickClearAssignmentsLink();
             String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
             SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("will trigger split shift"), false);
+            newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
@@ -1591,8 +1593,10 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(tmPartialName);
+            newShiftPage.clickClearAssignmentsLink();
             SimpleUtils.assertOnFail("The spread of hour violation fail to display in Status column! The actual message is: " + shiftOperatePage.getTheMessageOfTMScheduledStatus(),
                     shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Will trigger spread of hours"), false);
+            newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
@@ -1681,7 +1685,7 @@ public class FTSERelevantTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
             shiftOperatePage.clickOnEditShiftTime();
-            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","11:30am",false);
+            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","11:45am",false);
             shiftOperatePage.clickOnUpdateEditShiftTimeButton();
             scheduleMainPage.saveSchedule();
             SimpleUtils.assertOnFail("The shift's info doesn't include shift length or shift duration!",

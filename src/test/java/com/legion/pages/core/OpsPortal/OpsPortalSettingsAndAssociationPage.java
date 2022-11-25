@@ -666,8 +666,9 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                 if (settingsType.findElement(By.cssSelector("lg-paged-search")).getAttribute("placeholder").contains("input stream")) {
                     isExisting = true;
                     scrollToElement(settingsType.findElement(By.cssSelector("lg-paged-search")));
+                    waitForSeconds(3);
                     clickTheElement(settingsType.findElement(By.cssSelector("div.header-add-icon button")));
-                    if (isElementLoaded(popUpWindow, 5)) {
+                    if (isElementLoaded(popUpWindow, 15)) {
                         NameInput = fieldsInput.get(0).findElement(By.xpath("//input[contains(@placeholder, 'Input Stream')]"));
                         NameInput.sendKeys(inputStreamSpecificInfo.get("Name"));
                         //Verify if the input name is existing
@@ -766,10 +767,11 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                     }
                     clickTheElement(streamValueInput);
                 }
-                if(!inputStream.get("Tag").equalsIgnoreCase(inputStreamUpdated.get("Tag")) && "Base".equalsIgnoreCase(inputStreamUpdated.get("Type"))){
+                if("Base".equalsIgnoreCase(inputStreamUpdated.get("Type"))){
                     tagInput.clear();
                     tagInput.sendKeys(inputStreamUpdated.get("Tag"));
                 }
+                waitForSeconds(5);
                 clickTheElement(okBtnToSave);
             }else {
                 SimpleUtils.fail("The edit pop up window not show up!", false);

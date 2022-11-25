@@ -107,6 +107,7 @@ public interface ScheduleMainPage {
     public void isSaveBtnLoadedOnEditOpeHoursPageForOP() throws Exception;
     public void clickCancelBtnOnEditOpeHoursPageForOP() throws Exception;
     public void clickSaveBtnOnEditOpeHoursPageForOP() throws Exception;
+    public void saveScheduleWithoutChange() throws Exception;
 
 }
 

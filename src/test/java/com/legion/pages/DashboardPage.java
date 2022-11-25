@@ -30,7 +30,7 @@ public interface DashboardPage {
     public boolean isStartingSoonLoaded() throws Exception;
     public void verifyStartingSoonNScheduledHourWhenGuidanceOrDraft(boolean isStartingSoonLoaded, String scheduledHour)
         throws Exception;
-    public HashMap<String, String> getUpComingShifts() throws Exception;
+    public Map<String, String> getUpComingShifts() throws Exception;
     public boolean isStartingTomorrow() throws Exception;
     public boolean isViewMySchedulePresentAndClickable() throws Exception;
     public void validateTMAccessibleTabs() throws Exception;

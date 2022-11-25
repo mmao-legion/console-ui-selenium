@@ -146,7 +146,7 @@ public class ConsoleAnalyzePage extends BasePage implements AnalyzePage {
             if(version.equalsIgnoreCase(versionText)){
                 SimpleUtils.pass("version info is correct!");
             }else {
-                SimpleUtils.fail("There is schedule HistoryTab!", false);
+                SimpleUtils.fail("Version info is incorrect!", false);
             }
         } else {
             SimpleUtils.fail("There is no schedule version info!", false);

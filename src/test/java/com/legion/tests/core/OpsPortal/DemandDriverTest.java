@@ -58,9 +58,9 @@ public enum modelSwitchOperation{
 
 
         this.createDriver((String)params[0],"83","Window");
-        ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-        ToggleAPI.enableToggle(Toggles.EnableDemandDriverTemplate.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-        ToggleAPI.enableToggle(Toggles.MixedModeDemandDriverSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+        ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123",false);
+        ToggleAPI.updateToggle(Toggles.EnableDemandDriverTemplate.getValue(), "jane.meng+006@legion.co", "P@ssword123",true);
+        ToggleAPI.updateToggle(Toggles.MixedModeDemandDriverSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123",true);
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -208,7 +208,7 @@ public enum modelSwitchOperation{
                 {
                     put("Name", inputStreamName1);
                     put("Type", "Base");
-                    put("Tag", "Items:EDW:Enrollments");
+                    put("Tag", inputStreamName1);
                 }
             };
             HashMap<String, String> inputStreamInfoToAdd2 = new HashMap<String, String>(){
@@ -217,7 +217,7 @@ public enum modelSwitchOperation{
                     put("Type", "Aggregated");
                     put("Operator", "IN");
                     put("Streams", "All");
-                    put("Tag", "Items:EDW:Aggregated");
+                    put("Tag", inputStreamName2);
                 }
             };
             inputStreamInfoToAdd.add(inputStreamInfoToAdd1);
@@ -568,6 +568,8 @@ public enum modelSwitchOperation{
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, priority = 1)
     public void verifyEditForInputStreamInSettingsPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddHH");
+            String currentDate = sdf.format(new Date());
             String templateType = "Demand Drivers";
             String verifyType = "input stream";
             String baseInputStreamName1 = "InputStreamTest-Base01";
@@ -579,7 +581,7 @@ public enum modelSwitchOperation{
                 {
                     put("Name", baseInputStreamName1);
                     put("Type", "Base");
-                    put("Tag", "Items:EDW:Base01");
+                    put("Tag", "Items:EDW:Base01" + currentDate);
                 }
             };
             HashMap<String, String> aggregatedInputStreamInfo1 = new HashMap<String, String>(){
@@ -595,7 +597,7 @@ public enum modelSwitchOperation{
                     put("Name", aggregatedInputStreamName2);
                     put("Type", "Aggregated");
                     put("Operator", "NOT IN");
-                    put("Streams", baseInputStreamName1);
+                    put("Streams", baseInputStreamName1 + currentDate);
                 }
             };
 
@@ -604,7 +606,7 @@ public enum modelSwitchOperation{
                 {
                     put("Name", baseInputStreamName1);
                     put("Type", "Base");
-                    put("Tag", "Items:EDW:Base01-Update");
+                    put("Tag", "Items:EDW:Base01-Update" + currentDate);
                 }
             };
             HashMap<String, String> aggregatedInputStreamInfoUpdated1 = new HashMap<String, String>(){
@@ -631,7 +633,6 @@ public enum modelSwitchOperation{
                     put("Type", "Aggregated");
                     put("Operator", "IN");
                     put("Streams", "All");
-                    put("Tag", "Items:EDW:Base-to-Aggregated");
                 }
             };
             HashMap<String, String> aggregatedInputStreamToBase = new HashMap<String, String>(){
@@ -1431,7 +1432,7 @@ public enum modelSwitchOperation{
                 }
             };
             //Turn on DynamicGroupV2 toggle
-            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123",true);
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -1511,7 +1512,7 @@ public enum modelSwitchOperation{
             //Remove the associated locations and templates
             configurationPage.archiveOrDeleteAllTemplates();
             //Turn off DynamicGroupV2 toggle
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123",false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1554,7 +1555,7 @@ public enum modelSwitchOperation{
                 }
             };
             //Turn on DynamicGroupV2 toggle
-            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123",true);
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -1609,7 +1610,7 @@ public enum modelSwitchOperation{
                     salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo.get("Category")), false);
 
             //Turn off DynamicGroupV2 toggle
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123",false);
             switchToNewWindow();
             //Remove the associated locations and templates
             configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
@@ -2542,7 +2543,7 @@ public enum modelSwitchOperation{
     @Owner(owner = "Jane")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify Demand Driver is visible for Legion Internal User")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyDemandDriverIsAccessibleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
@@ -2858,7 +2859,7 @@ public enum modelSwitchOperation{
                 }
             };
             //Turn on UseDemandDriverTemplateSwitch toggle
-            ToggleAPI.enableToggle(Toggles.UseDemandDriverTemplateSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.updateToggle(Toggles.UseDemandDriverTemplateSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123", true);
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();

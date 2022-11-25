@@ -1,0 +1,21 @@
+{
+  "UseLegionAccrual": "dgstage,op,opauto,carters",
+  "MinorRulesTemplate": "cinemark-wkdy",
+  "DynamicGroupV2": "opauto",
+  "ScheduleShowFullNames": "cinemark-wkdy",
+  "EnableDemandDriverTemplate": "op,opauto",
+  "MixedModeDemandDriverSwitch": "op,opauto",
+  "MealAndRestTemplate": "cinemark-wkdy,op",
+  "ScheduleEditShiftTimeNew": "vailqacn",
+  "EnableTahoeStorage": "opauto",
+  "EnableLongTermBudgetPlan": "opauto",
+  "UseLegionAccrual": "op,opauto,carters",
+  "EnableDayUnitTimeOffReason": "op,opauto,carters",
+  "UseAbsenceMgmtConfiguration": "op,opauto,carters",
+  "EnableAccrual": "op,opauto,carters",
+  "EnableEmployeeManagement": "op,opauto,carters",
+  "ShowAnnouncementGroupOP": "op,opauto,carters",
+  "UseDemandDriverTemplateSwitch": "op,opauto",
+  "EnableChangeLocationGroupSetting": "op,opauto",
+  "UseDemandDriverTemplateSwitch": "op,opauto"
+}

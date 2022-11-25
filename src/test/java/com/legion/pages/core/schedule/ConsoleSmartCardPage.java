@@ -181,8 +181,10 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     public String getsmartCardTextByLabel(String cardLabel) {
         if (carouselCards.size() != 0) {
             for (WebElement carouselCard : carouselCards) {
-                if (carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase()))
+                if (carouselCard.isDisplayed() && carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase())){
+                    scrollToElement(carouselCard);
                     return carouselCard.getText();
+                }
             }
         }
         return null;
@@ -583,7 +585,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     public boolean isSpecificSmartCardLoaded(String cardName) throws Exception {
         boolean isLoaded = false;
         waitForSeconds(15);
-        if (areListElementVisible(smartCards, 15)) {
+        if (areListElementVisible(smartCards, 35)) {
             for (WebElement smartCard : smartCards) {
                 WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
                 if (title != null && title.getText().trim().equalsIgnoreCase(cardName)) {
@@ -847,6 +849,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         return null;
     }
 
+
     @Override
     public String getBudgetValueFromScheduleBudgetSmartCard() throws Exception {
         if (isElementLoaded(scheduleSmartCard, 3)) {
@@ -858,5 +861,41 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         return null;
     }
 
+    @Override
+    public boolean isBudgetHoursSmartCardIsLoad() throws Exception {
+        boolean isLoaded = false;
+        if (isSpecificSmartCardLoaded("WEEKLY BUDGET")) {
+            isLoaded = true;
+        } else {
+            if (areListElementVisible(smartCards, 15)) {
+                for (WebElement smartCard : smartCards) {
+                    try {
+                        WebElement content = smartCard.findElement(By.tagName("h1"));
+                        if (content != null && content.getText().trim().equalsIgnoreCase("Budget Hours")) {
+                            isLoaded = true;
+                            break;
+                        }
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
+        }
 
+        return isLoaded;
+    }
+    @FindBy (css = "span[ng-if=\"!hasBeenAcknowledged\"]")
+    private WebElement acknowledgeButton;
+    @Override
+    public void clickOnAcknowledgeButtonOnAcknowledgeNotificationSmartCard () throws Exception {
+        if (isElementLoaded(acknowledgeButton, 3)) {
+            clickTheElement(acknowledgeButton);
+            waitForSeconds(5);
+            if(!isElementLoaded(acknowledgeButton, 3) && !isSpecificSmartCardLoaded("ACTION REQUIRED")){
+                SimpleUtils.pass("Acknowledge successfully! the acknowledge notification smart card and button has already disappear! ");
+            }else
+                SimpleUtils.fail("Acknowledge fail! the acknowledge notification smart card and button should disappear! ", false);
+        }else{
+            SimpleUtils.fail("The Acknowledge Button On Acknowledge Notification Smart Card is not loaded correctly!", false);
+        }
+    }
 }

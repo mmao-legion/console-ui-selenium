@@ -17,8 +17,7 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
 
-import static com.legion.utils.MyThreadLocal.getTimeOffEndTime;
-import static com.legion.utils.MyThreadLocal.getTimeOffStartTime;
+import static com.legion.utils.MyThreadLocal.*;
 
 public class TeamTest extends TestBase{
 	
@@ -478,5 +477,72 @@ public class TeamTest extends TestBase{
 			currentDate = SimpleUtils.getCurrentDateMonthYearWithTimeZone(timeZone, format);
 		}
 		return currentDate;
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the None option displays in Averaging Agreement")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyNoneOptionInAveragingAgreementAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			//Set split shift violation in the Compliance page
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+			String tmName = null;
+			if (isLocationUsingControlsConfiguration) {
+				//Go to Controls page
+				tmName = "Daniel Grant";
+			} else {
+				//Go to OP page
+				tmName = "Aaron Mitchell";
+			}
+
+			//Go to the Team page
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+			teamPage.goToTeam();
+			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+			teamPage.searchAndSelectTeamMemberByName(tmName);
+			teamPage.isProfilePageLoaded();
+			String workPreferencesLabel = "Work Preferences";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
+
+			//Go to My Work Preference tab, edit the tab, check the None option in the Average Agreement dropdown list
+			teamPage.clickOnEditShiftPreference();
+			teamPage.selectAverageAgreement("5 x 8");
+			teamPage.clickSaveShiftPrefBtn();
+			String averageText = "Averaging Agreement: 5 x 8";
+			SimpleUtils.assertOnFail("The Averaging Agreement is not 5 x 8!",
+					teamPage.getTextOfAverageAgreement().equalsIgnoreCase(averageText),false);
+
+			teamPage.clickOnEditShiftPreference();
+			teamPage.selectAverageAgreement("None");
+			teamPage.clickSaveShiftPrefBtn();
+			averageText = "Averaging Agreement: None";
+			SimpleUtils.assertOnFail("The Averaging Agreement is not None!",
+					teamPage.getTextOfAverageAgreement().equalsIgnoreCase(averageText),false);
+
+			//Login the TM and verify the shifts on the MySchedule page
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			Thread.sleep(3000);
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+
+			//verify the Average Agreement value is None under the My Shift Preferences section on the MyPreference page
+			profileNewUIPage.getNickNameFromProfile();
+			String myWorkPreferencesLabel = "My Work Preferences";
+			profileNewUIPage.selectProfilePageSubSectionByLabel(myWorkPreferencesLabel);
+			SimpleUtils.assertOnFail("The Averaging Agreement is not None!",
+					teamPage.getTextOfAverageAgreement().equalsIgnoreCase(averageText),false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 }

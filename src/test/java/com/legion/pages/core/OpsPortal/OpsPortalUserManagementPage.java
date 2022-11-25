@@ -36,7 +36,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 
 	@Override
 	public void clickOnUserManagementTab() throws Exception {
-		if(isElementLoaded(userMagenementTab,15)){
+		if(isElementLoaded(userMagenementTab,25)){
 			click(userMagenementTab);
 			if (isElementLoaded(workRoleTile,5)) {
 				SimpleUtils.pass("User Management tab is clickable");
