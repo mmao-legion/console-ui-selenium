@@ -2555,9 +2555,9 @@ public class LocationsTest extends TestBase {
             locationsPage.clickOnLocationsTab();
             locationsPage.goToGlobalConfigurationInLocations();
             if(locationsPage.isBudgetPlanSectionShowing()){
-                SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is off");
+                SimpleUtils.pass("Budget plan section is showing when EnableLongTermBudgetPlan is on");
             }else {
-                SimpleUtils.fail("Budget plan section is NOT showing when EnableLongTermBudgetPlan is off",false);
+                SimpleUtils.report("Budget plan section is NOT showing when EnableLongTermBudgetPlan is off");
             }
             String computeMethod = locationsPage.getLaborBudgetPlanComputeSettings();
 
@@ -2759,15 +2759,15 @@ public class LocationsTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Jane")
     @Enterprise(name = "opauto")
-    @TestName(description = "Verify readyForForecast when Import existing location through UI")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
-    public void verifyReadyForForecastWhenImportExistingLocationLocationThroughUIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+    @TestName(description = "Verify readyForForecast when Import existing location")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyReadyForForecastWhenImportExistingLocationAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
             String existingLocation = "TestImportUpdateExisting";
-            String fileWithNoReadyForForecast = "UpdateLocationsWithNoReadyForForecast.csv";
-            String fileWithReadyForForecastNo = "UpdateLocationsWithReadyForForecastNo.csv";
-            String fileWithReadyForForecastYes = "UpdateLocationsWithReadyForForecastYes.csv";
+            String fileWithNoReadyForForecast = "src/test/resources/uploadFile/LocationTest/UpdateLocationsWithNoReadyForForecast.csv";
+            String fileWithReadyForForecastNo = "src/test/resources/uploadFile/LocationTest/UpdateLocationsWithReadyForForecastNo.csv";
+            String fileWithReadyForForecastYes = "src/test/resources/uploadFile/LocationTest/UpdateLocationsWithReadyForForecastYes.csv";
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -2782,8 +2782,7 @@ public class LocationsTest extends TestBase {
             String beforeImportValue = locationsPage.getReadyForForecastSelectedOption();
             locationsPage.goBack();
             //Update an existing location by import file
-            locationsPage.clickOnImportBtn();
-            locationsPage.verifyImportLocationDistrict(fileWithNoReadyForForecast);
+            locationsPage.importLocations(fileWithNoReadyForForecast, getSession(), "true", 200, "summary.failed",0);
 
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
@@ -2792,8 +2791,7 @@ public class LocationsTest extends TestBase {
             SimpleUtils.assertOnFail("ReadyForForecast value should not be changed after import!", beforeImportValue.equalsIgnoreCase(afterImportValue), false);
             locationsPage.goBack();
             //Update the existing location by import file, change  to No
-            locationsPage.clickOnImportBtn();
-            locationsPage.verifyImportLocationDistrict(fileWithReadyForForecastNo);
+            locationsPage.importLocations(fileWithReadyForForecastNo, getSession(), "true", 200, "summary.failed",0);
 
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
@@ -2803,8 +2801,7 @@ public class LocationsTest extends TestBase {
             locationsPage.goBack();
 
             //Update the existing location by import file, change  to Yes
-            locationsPage.clickOnImportBtn();
-            locationsPage.verifyImportLocationDistrict(fileWithReadyForForecastYes);
+            locationsPage.importLocations(fileWithReadyForForecastYes, getSession(), "true", 200, "summary.failed",0);
 
             //After import, existing location, get readyForForecast value in UI
             locationsPage.goToLocationDetailsPage(existingLocation);
@@ -2828,8 +2825,9 @@ public class LocationsTest extends TestBase {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             String filePath = "src/test/resources/uploadFile/LocationTest/0325Upload3.csv";
-            locationsPage.importLocations(filePath, getSession(), "true", 200);
             String locationName = "0325Upload3";
+
+            locationsPage.importLocations(filePath, getSession(), "true", 200, "summary.failed",0);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             // disable the imported location
@@ -2851,7 +2849,7 @@ public class LocationsTest extends TestBase {
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             String filePath = "src/test/resources/uploadFile/LocationTest/0325Upload3.csv";
-            locationsPage.importLocations(filePath, getSession(), "true", 200);
+            locationsPage.importLocations(filePath, getSession(), "true", 200, "summary.failed",0);
             String locationName = "0325Upload3";
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
@@ -2873,8 +2871,8 @@ public class LocationsTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            String filePath = "D:\\New UI Auto\\console-ui-selenium\\src\\test\\resources\\uploadFile\\LocationTest\\0325Upload4.csv";
-            locationsPage.importLocations(filePath, getSession(), "true", 200);
+            String filePath = "src/test/resources/uploadFile/LocationTest/0325Upload4.csv";
+            locationsPage.importLocations(filePath, getSession(), "true", 200, "summary.failed",0);
             String locationName = "0325Upload4";
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
@@ -2883,9 +2881,9 @@ public class LocationsTest extends TestBase {
                 SimpleUtils.pass("New created location with today as effective day is enabled");
             else
                 SimpleUtils.report("New created location with today as effective day status is incorrect");
-            String disabledFilePath = "D:\\New UI Auto\\console-ui-selenium\\src\\test\\resources\\uploadFile\\LocationTest\\0325Upload4Disable.csv";
+            String disabledFilePath = "src/test/resources/uploadFile/LocationTest/0325Upload4Disable.csv";
             // Disable existing location via location import function
-            locationsPage.importLocations(disabledFilePath, getSession(), "true", 200);
+            locationsPage.importLocations(disabledFilePath, getSession(), "true", 200, "summary.failed",0);
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             if (locationsPage.searchLocationAndGetStatus(locationName).equals("DISABLED"))
@@ -2895,10 +2893,210 @@ public class LocationsTest extends TestBase {
             List column = new ArrayList<>();
             column.add("Status");
             locationsPage.verifyColumnsInLocationSampleFile( getSession(),column);
+             } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Owner(owner = "Jane")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify Location Type could not be changed with toggle EnableChangeLocationGroupSetting off")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationTypeNotAllowedToChangeWithToggleOffAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String regularLocation = "RegularNone-Jane";
+            String nsoLocation = "NSONone-Jane";
+            String parentLocation = "Parent-Jane";
+            String childLocation = "Child-Jane";
+            String selectedOption = "";
+            ArrayList<String> locationGroupSettings = new ArrayList<>(Arrays.asList("None", "Part of a location group", "Parent location"));
+
+            //Turn off toggle EnableChangeLocationGroupSetting
+            ToggleAPI.updateToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+008@legion.co", "P@ssword123",false);
+            refreshPage();
+            
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            //Enter Regular None location edit page, check if location Type can be changed.
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(regularLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail("The selected Option should be 'None'!", selectedOption.equalsIgnoreCase("None"), false);
+            SimpleUtils.assertOnFail(selectedOption + " should not be able to change to other option with toggle EnableChangeLocationGroupSetting off",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption) == true, false);
+            locationsPage.goBack();
+
+            //Enter NSO location edit page, check if location Type can be changed.
+            locationsPage.goToLocationDetailsPage(nsoLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail("The selected Option should be 'None'!", selectedOption.equalsIgnoreCase("None"), false);
+            SimpleUtils.assertOnFail(selectedOption + " should not be able to change to other option with toggle EnableChangeLocationGroupSetting off",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption) == true, false);
+            locationsPage.goBack();
+
+            //Enter Parent location edit page, check if location Type can be changed.
+            locationsPage.goToLocationDetailsPage(parentLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail("The selected Option should be 'Parent location'!", selectedOption.equalsIgnoreCase("Parent location"), false);
+            SimpleUtils.assertOnFail(selectedOption + " should not be able to change to other option with toggle EnableChangeLocationGroupSetting off",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption) == true, false);
+            locationsPage.goBack();
+
+            //Enter Child location edit page, check if location Type can be changed.
+            locationsPage.goToLocationDetailsPage(childLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail("The selected Option should be 'Part of a location group'!", selectedOption.equalsIgnoreCase("Part of a location group"), false);
+            SimpleUtils.assertOnFail(selectedOption + " should not be able to change to other option with toggle EnableChangeLocationGroupSetting off",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption) == true, false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify Location Group Settings could be changed with toggle EnableChangeLocationGroupSetting on")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyLocationTypeCouldBeChangedWithToggleOnAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddHH");
+            String currentDate = sdf.format(new Date()).trim();
+            String regularLocation = "RegularNone-Jane" + currentDate;
+            String p2pLocation = "P2P-Jane" + currentDate;
+            String parentLocation = "Parent-Jane" + currentDate;
+            String childLocation = "Child-Jane" + currentDate;
+            String searchCharacter = "No touch";
+            int index = 0;
+            String selectedOption = "";
+            String locationType = "Regular";
+            ArrayList<String> locationGroupSettings = new ArrayList<>(Arrays.asList("None", "Part of a location group", "Parent location"));
+            ArrayList<String> parentType = new ArrayList<>(Arrays.asList("Parent Child", "Peer to Peer"));
 
+            //Turn on toggle EnableChangeLocationGroupSetting
+            ToggleAPI.updateToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+008@legion.co", "P@ssword123",true);
+            refreshPage();
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            //Add a Regular-None location
+            locationsPage.addNewRegularLocationWithDate(regularLocation, searchCharacter, index, 0);
+            //Add a Parent location
+            locationsPage.addParentLocation(locationType, parentLocation, searchCharacter, index, locationGroupSettings.get(2), parentType.get(0));
+            //Add a Child location
+            locationsPage.addChildLocation(locationType, childLocation, parentLocation, searchCharacter, index, locationGroupSettings.get(1));
+            //Add a P2P location
+            locationsPage.addParentLocation(locationType, p2pLocation, searchCharacter, index, locationGroupSettings.get(2), parentType.get(1));
+            //1.Change Child location to Regular.
+            locationsPage.goToLocationDetailsPage(childLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail(selectedOption + " should be able to change other options with toggle EnableChangeLocationGroupSetting on",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption), false);
+            locationsPage.changeLocationGroupSettings(selectedOption, locationGroupSettings.get(0));
+
+            //2.Change P2P location to Parent
+            locationsPage.goToLocationDetailsPage(p2pLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail(selectedOption + " should be able to change other options with toggle EnableChangeLocationGroupSetting on",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption), false);
+            locationsPage.changeLocationGroupSettings(selectedOption, locationGroupSettings.get(2), parentType.get(0));
+
+            //3.Change Parent location to P2P.
+            locationsPage.goToLocationDetailsPage(parentLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail(selectedOption + " should be able to change other options with toggle EnableChangeLocationGroupSetting on",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption), false);
+            locationsPage.changeLocationGroupSettings(selectedOption, locationGroupSettings.get(2), parentType.get(1));
+
+            //4.Change Regular None to Child
+            locationsPage.goToLocationDetailsPage(regularLocation);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            selectedOption = locationsPage.getLocationGroupSettingsSelectedOption();
+            SimpleUtils.assertOnFail(selectedOption + " should be able to change other options with toggle EnableChangeLocationGroupSetting on",
+                    locationsPage.verifyLocationGroupSettingEnabled(selectedOption), false);
+            locationsPage.changeLocationGroupSettings(selectedOption, locationGroupSettings.get(1), p2pLocation);
+            locationsPage.clickOnSaveButton();
+
+            //Turn off toggle EnableChangeLocationGroupSetting
+            ToggleAPI.updateToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+008@legion.co", "P@ssword123",false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify Mock location can be updated")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyMockLocationCanBeUpdatedAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
+            String currentTime = sdf.format(new Date()).trim();
+            String locationName = "AutoTest" + currentTime;
+            String mockName = locationName + "-MOCK";
+            int index = 0;
+            String searchCharactor = "No touch";
+            String configurationType = "Default";
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+
+            //go to locations tab
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            //Add a Mock
+            locationsPage.addNewRegularLocationWithAllFields(locationName, searchCharactor, index);
+            locationsPage.addNewMockLocationWithAllFields(locationName, index);
+            //Update above location
+            String status = locationsPage.searchLocationAndGetStatus(mockName);
+            System.out.println("status: " + status);
+            locationsPage.goToLocationDetailsPage(mockName);
+            if (!status.equalsIgnoreCase("enabled")){
+                locationsPage.enableLocation(mockName);
+            }
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            locationsPage.updateMockLocation(mockName, configurationType);
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Ability to indicate Location Group type via Location Integration")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyImportLocationCommon1FunctionAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
+            String filePath = "src/test/resources/uploadFile/LocationTest/locationGroup.csv";
+            locationsPage.importLocations(filePath, getSession(), "true", 200,"summary.failed",0);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

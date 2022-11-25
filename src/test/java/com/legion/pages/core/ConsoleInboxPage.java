@@ -216,7 +216,7 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     @FindBy(css = ".gfe-send-to-select")
     private WebElement sendToTextBox;
 
-    @FindBy(css = "label[style=\"display: block;\"]")
+    @FindBy(css = "label[style=\"display: block\"]")
     private WebElement messageText;
 
     @FindBy(css = "[placeholder=\"Title goes here\"]")

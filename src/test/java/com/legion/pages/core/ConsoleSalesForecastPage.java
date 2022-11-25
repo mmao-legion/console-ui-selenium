@@ -1,5 +1,6 @@
 package com.legion.pages.core;
 
+import static com.legion.tests.TestBase.refreshPage;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 import java.util.HashMap;
@@ -442,11 +443,13 @@ public class ConsoleSalesForecastPage extends BasePage implements SalesForecastP
 	public boolean verifyChannelOrCategoryExistInForecastPage(String filterType, String filteryName) throws Exception {
 		WebElement filterLabel;
 		boolean isExisting = false;
+		refreshPage();
+		waitForSeconds(10);
 		if (isElementLoaded(filterButton,20)) {
 			if (filterPopup.getAttribute("class").toLowerCase().contains("ng-hide"))
 				click(filterButton);
 			for (WebElement FilterElement : FilterElements) {
-				if (FilterElement.findElement(By.cssSelector("div")).getText().equalsIgnoreCase(filterType)){
+				if (FilterElement.findElement(By.cssSelector("div")).getText().trim().equalsIgnoreCase(filterType)){
 					List<WebElement> filters = FilterElement.findElements(By.cssSelector("input-field[type=\"checkbox\"]"));
 					for (WebElement filter : filters) {
 						filterLabel = filter.findElement(By.cssSelector("label"));

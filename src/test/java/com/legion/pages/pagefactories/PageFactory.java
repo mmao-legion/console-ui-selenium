@@ -109,4 +109,6 @@ public interface PageFactory {
     MealAndRestPage createMealAndRestPage();
 
     EditShiftPage createEditShiftPage();
+
+    ShiftPatternPage createConsoleShiftPatternPage();
 }

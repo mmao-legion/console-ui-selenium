@@ -26,7 +26,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
     @FindBy(css = "[ng-click=\"openSchedule()\"]")
     private WebElement goToTodayScheduleButton;
 
-    @FindBy(css = ".sc-hgkClB.hrveTm")
+    @FindBy(css = ".MuiBox-root>div:nth-child(3) button")
 	private WebElement viewMyScheduleBtn;
 
     @FindBy(css = "[ng-class = 'subNavigationViewLinkActiveClass(view)']")
@@ -493,8 +493,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	}
 
 	@Override
-	public HashMap<String, String> getUpComingShifts() throws Exception {
-		HashMap<String, String> shifts = new HashMap<>();
+	public Map<String, String> getUpComingShifts() throws Exception {
+		Map<String, String> shifts = new IdentityHashMap<>();
 		String name = null;
 		String role = null;
 		if (areListElementVisible(upComingShifts, 15)) {
@@ -573,7 +573,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@FindBy(css = ".upcoming-shift")
 	private List<WebElement> upcomingShifts;
 
-	@FindBy(xpath = "//div[contains(@ng-click,\"goToProfile\")]")
+	@FindBy(css = ".header-user-switch-menu-secondary-item")
 	private List<WebElement> goToProfile;
 
 	@FindBy(css = ".lgn-alert-modal")
@@ -918,9 +918,16 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	//Added by Julie
 	@FindBy(css = "[ng-click=\"switchView()\"]")
 	private WebElement switchToEmployeeView;
+	@FindBy(css = ".header-user-switch-menu")
+	private WebElement headerUserSwitchMenu;
+	@FindBy(id = "legion_Profile_button")
+	private WebElement profileIcon;
 
 	@Override
 	public boolean isSwitchToEmployeeViewPresent() throws Exception {
+		if (!isElementLoaded(headerUserSwitchMenu, 3)) {
+			clickTheElement(profileIcon);
+		}
 		if (isElementLoaded(switchToEmployeeView, 10))
 			return true;
 		else
@@ -930,7 +937,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	@Override
 	public void clickOnSwitchToEmployeeView() throws Exception {
 		if (isElementLoaded(switchToEmployeeView, 10)) {
-			click(switchToEmployeeView);
+			clickTheElement(switchToEmployeeView);
 			SimpleUtils.pass("Click on Switch To Employee View Successfully!");
 		} else {
 			SimpleUtils.fail("Switch To Employee View not Loaded!", true);

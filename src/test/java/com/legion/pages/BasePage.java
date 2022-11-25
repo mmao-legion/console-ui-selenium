@@ -939,6 +939,11 @@ public class BasePage {
         waitForSeconds(2);
     }
 
+    public void clearTheText(WebElement element) {
+        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].value=\"\";", element);
+        waitForSeconds(1);
+    }
+
     public void moveElement(WebElement webElement, int yOffSet)
     {
         Actions builder = new Actions(MyThreadLocal.getDriver());

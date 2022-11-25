@@ -344,6 +344,12 @@ public interface LocationsPage {
     public boolean verifyReadyForForecastFieldExist() throws Exception;
     public String getReadyForForecastSelectedOption() throws Exception;
     public void chooseReadyForForecastValue(String value) throws Exception;
-    public void importLocations(String filePath,String sessionId,String isImport,int expectedStatusCode);
+    public void importLocations(String filePath, String sessionId, String isImport, int expectedStatusCode, String path, Object expectedResult);
     public void verifyColumnsInLocationSampleFile( String sessionId,  List column);
-    }
+    public String getLocationGroupSettingsSelectedOption() throws Exception;
+    public boolean verifyLocationGroupSettingEnabled(String selectedOption) throws Exception;
+    public void changeLocationGroupSettings(String selectedOption, String... newOption) throws Exception;
+    public void updateMockLocation(String locationName, String configurationType) throws Exception;
+    public void modifyLocationCountry(String country, String state, String city) throws Exception;
+}
+

@@ -280,7 +280,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myProfileLabel);
         while (profileNewUIPage.isMyAvailabilityLockedNewUI()){
             profileNewUIPage.clickNextWeek();
-            Thread.sleep(2);
+            Thread.sleep(2000);
         }
         profileNewUIPage.clickAvailabilityEditButton();
         profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
@@ -1114,7 +1114,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
         String requestUserName = profileNewUIPage.getNickNameFromProfile();
         String myWorkPreferencesLabel = "My Work Preferences";
-        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myWorkPreferencesLabel);
+        profileNewUIPage.selectProfilePageSubSectionByLabel(myWorkPreferencesLabel);
         //cancel all availability change requests firstly.
         profileNewUIPage.cancelAllPendingAvailabilityRequest();
         //Update Preferred Hours

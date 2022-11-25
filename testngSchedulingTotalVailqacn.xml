@@ -36,7 +36,7 @@
             <class name="com.legion.tests.core.AvailabilityApprovalRequiredTest" />
             <class name="com.legion.tests.core.SeventhConsecutiveDayTest" />
             <class name="com.legion.tests.core.ScheduleCoverageTest" />
-            <class name="com.legion.tests.core.BulkDeleteTest" />
+            <class name="com.legion.tests.core.BulkDeleteNEditTest" />
             <class name="com.legion.tests.core.OvertimeShiftOfferTest" />
             <class name="com.legion.tests.core.FTSERelevantTest" />
             <class name="com.legion.tests.core.DeleteScheduleTest" />

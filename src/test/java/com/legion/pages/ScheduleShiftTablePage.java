@@ -39,7 +39,7 @@ public interface ScheduleShiftTablePage {
     public WebElement clickOnProfileIconOfShiftInDayView(String openOrNot) throws Exception;
     public String getTheShiftInfoByIndexInDayview(int index) throws Exception;
     public void verifySearchResult (String firstNameOfTM, String lastNameOfTM, String workRole, String jobTitle, List<WebElement> searchResults) throws Exception;
-    public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception;
+    public void verifyUpComingShiftsConsistentWithSchedule(Map<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception;
     public void verifyNewShiftsAreShownOnSchedule(String name) throws Exception;
     public List<Integer> getAddedShiftIndexes(String name) throws Exception;
     public boolean areShiftsPresent() throws Exception;
@@ -85,6 +85,7 @@ public interface ScheduleShiftTablePage {
     public String getWarningMessageInDragShiftWarningMode() throws Exception;
     public void clickOnOkButtonInWarningMode() throws Exception;
     public void moveAnywayWhenChangeShift() throws Exception;
+    public void copyAnywayWhenChangeShift() throws Exception;
     public void verifyShiftIsMovedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
     public void verifyShiftIsCopiedToAnotherDay(int startIndex, String firstName, int endIndex) throws Exception;
     public WebElement getTheShiftByIndex(int index) throws Exception;
@@ -173,4 +174,6 @@ public interface ScheduleShiftTablePage {
     public void verifyConfirmBtnIsDisabledOnDragAndDropConfirmPage() throws Exception;
     public void verifySwapBtnIsEnabledOnDragAndDropConfirmPage() throws Exception;
     public void verifyAssignBtnIsEnabledOnDragAndDropConfirmPage() throws Exception;
+    public boolean isOkButtonInWarningModeLoaded() throws Exception;
+    public void bulkEditTMShiftsInWeekView(String teamMemberName) throws Exception;
 }
