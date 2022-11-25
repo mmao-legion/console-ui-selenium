@@ -583,7 +583,7 @@ SCH-5862-->
 <!--                    <include name="verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7592/>-->
                     <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
-<!--                    <include name="verifyErrorMessageOfStartAndEndTimeOnBulkEditAsInternalAdmin" />  Not merged into RC env  -->
+                    <include name="verifyErrorMessageOfStartAndEndTimeOnBulkEditAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

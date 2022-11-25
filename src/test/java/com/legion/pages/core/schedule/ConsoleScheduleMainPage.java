@@ -1701,7 +1701,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     }
 
 
-    @FindBy(css = "[class=\"modal-instance-button ng-binding ng-scope\"]")
+    @FindBy(css = "div[ng-click=\"close()\"]")
     private WebElement cancelBtnOnOpeHrsPage;
     @FindBy(css = "[class=\"modal-instance-button ng-binding\"]")
     private WebElement cancelBtnOnOpeHrsPageForOP;
