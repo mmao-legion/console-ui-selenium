@@ -1331,7 +1331,7 @@ public class UserManagementTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Announcement")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
-    public void verifyAnnouncementAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyAnnouncementAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
 //            String sessionId = getSession();
 //            AccrualEngineTest accrualEngineTest = new AccrualEngineTest();
