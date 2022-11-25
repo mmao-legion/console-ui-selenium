@@ -1276,7 +1276,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
 
     @Override
-    public void verifyUpComingShiftsConsistentWithSchedule(HashMap<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception {
+    public void verifyUpComingShiftsConsistentWithSchedule(Map<String, String> dashboardShifts, HashMap<String, String> scheduleShifts) throws Exception {
         if (scheduleShifts.entrySet().containsAll(dashboardShifts.entrySet())) {
             SimpleUtils.pass("Up coming shifts from dashboard is consistent with the shifts in schedule!");
         }else {
@@ -1700,8 +1700,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public HashMap<String, String> getTheHoursNTheCountOfTMsForEachWeekDays() throws Exception {
         HashMap<String, String> hoursNTeamMembersCount = new HashMap<>();
-        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
-            for (int i = 0; i < weekDayDimensions.size(); i++) {
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 14) {
+            for (int i = 0; i < weekDayDimensions.size()-7; i++) {
                 WebElement weekDay = weekDayDimensions.get(i).findElement(By.className("sch-calendar-day-label"));
                 WebElement hoursNCount = weekDayDimensions.get(i).findElement(By.className("sch-calendar-day-summary"));
                 List<WebElement> shiftsInSameDay = getDriver().findElements(By.cssSelector("[data-day-index=\"" + i +"\"] .week-schedule-shift-wrapper"));
@@ -1724,10 +1724,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public HashMap<String, List<String>> getTheContentOfShiftsForEachWeekDay() throws Exception {
         HashMap<String, List<String>> shiftsForEachDay = new HashMap<>();
-        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 7) {
-            for (WebElement weekDayDimension : weekDayDimensions) {
-                WebElement weekDay = weekDayDimension.findElement(By.className("sch-calendar-day-label"));
-                List<WebElement> weekShiftWrappers = weekDayDimension.findElements(By.className("week-schedule-shift-wrapper"));
+        if (areListElementVisible(weekDayDimensions, 10) && weekDayDimensions.size() == 14) {
+            for (int i=0; i< weekDayDimensions.size()-7;i++) {
+                WebElement weekDay = weekDayDimensions.get(i).findElement(By.className("sch-calendar-day-label"));
+                List<WebElement> weekShiftWrappers = weekDayDimensions.get(i).findElements(By.className("week-schedule-shift-wrapper"));
                 List<String> infos = new ArrayList<>();
                 if (weekShiftWrappers != null && weekShiftWrappers.size() > 0) {
                     for (WebElement weekShiftWrapper : weekShiftWrappers) {
@@ -2363,7 +2363,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             if (areListElementVisible(warningMessagesInSwap, 15) && warningMessagesInSwap.size() > 0) {
                 for (int i = 0; i < warningMessagesInSwap.size(); i++) {
                     SimpleUtils.pass("The warning message is : "+warningMessagesInSwap.get(i).getText().toLowerCase());
-                    if (warningMessagesInSwap.get(i).getText().toLowerCase().contains(expectedMessage.toLowerCase())) {
+                    if (warningMessagesInSwap.get(i).getText().toLowerCase().replace("\\-", "").contains(expectedMessage.toLowerCase().replace("\\-", ""))) {
                         canFindTheExpectedMessage = true;
                         SimpleUtils.pass("The expected message can be find successfully");
                         break;
@@ -2422,7 +2422,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.report("No shifts on the day for the TM: " + name);
             }
         } else {
-            SimpleUtils.fail("No shifts on the day",false);
+            SimpleUtils.fail("No shifts on the day: "+ indexOfDay,false);
         }
         return shiftsOfOneTM;
     }
@@ -2464,10 +2464,11 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0 && weekDay!=null) {
             for (WebElement start : startElements) {
                 scrollToElement(start);
+                waitForSeconds(1);
                 WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
                 SimpleUtils.report("Check the tm name: "+ startName.getText().split(" ")[0]);
                 if (startName.getText().split(" ")[0].equalsIgnoreCase(firstName)) {
-                    mouseHoverDragandDrop(start, endElements.get(0));
+                    mouseHoverDragandDrop(startName, endElements.get(0));
                     SimpleUtils.report("Drag&Drop: Drag " + firstName + " to " + weekDay.getText() + " days Successfully!");
                     //verifyConfirmStoreOpenCloseHours();
                     isDragged = true;
@@ -2502,7 +2503,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(className = "lgn-action-button-success")
     private WebElement okBtnInWarningMode;
 
-    @FindBy(className = "lgn-action-button-success")
+    @FindBy(css = ".lgn-action-button-success")
     private WebElement okBtnOnConfirm;
     @FindBy(css = ".MuiDialogContent-root p")
     private List<WebElement> warningMessagesInWarningModeOnNewCreaeShiftPage;
@@ -3185,7 +3186,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if(!areListElementVisible(weekShifts, 10)){
             shifts = dayViewAvailableShifts;
             if (areListElementVisible(shifts, 20) && index < shifts.size()) {
-                String[] nameAndWorkRole = shifts.get(index).findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ");
+                String[] nameAndWorkRole = shifts.get(index).findElement(By.className("sch-day-view-shift-worker-name"))
+                        .getText().split("\\(")[0].trim().split(" ");
                 fullName = nameAndWorkRole[0] + " " + nameAndWorkRole[1];
             } else {
                 SimpleUtils.fail("Schedule Page: day shifts not loaded successfully!", false);
@@ -3498,7 +3500,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             Actions action = new Actions(getDriver());
             action.keyDown(Keys.CONTROL).build().perform();
             for (int i : set) {
-                scrollToElement(names.get(i));
+                scrollToBottom();
                 waitForSeconds(1);
                 action.moveToElement(names.get(i)).click(names.get(i));
                 waitForSeconds(1);
@@ -3584,7 +3586,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public void verifyTheContentOnBulkActionMenu(int selectedShiftCount) throws Exception {
         if (isElementLoaded(bulkActionMenu, 5) && bulkActionMenu.getText().contains(String.valueOf(selectedShiftCount))
-        && bulkActionMenu.getText().contains("Shifts Selected") && bulkActionMenu.getText().contains("Delete")) {
+        && (bulkActionMenu.getText().contains("Shifts Selected") || bulkActionMenu.getText().contains("Shift Selected") ) && bulkActionMenu.getText().contains("Delete")) {
             SimpleUtils.pass("The content on bulk action menu is correct!");
         } else {
             SimpleUtils.fail("The content on bulk action menu is incorrect!", false);
@@ -4069,7 +4071,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         boolean shiftDurationInBoxLoaded = false;
         try {
             if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
-                WebElement shiftDuration = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[class=\"sch-day-view-shift-time pt-5 mr-10\"] [class=\"ng-binding ng-scope\"]"));
+                WebElement shiftDuration = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[class=\"sch-day-view-shift-time pt-5 mr-10\"]"));
                 if (isElementLoaded(shiftDuration)) {
                     shiftDurationInBoxLoaded = true;
                     SimpleUtils.report("The shift duration displays!");
@@ -4109,7 +4111,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         boolean profileNameAndWorkRoleLoaded = false;
         try {
             if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
-                WebElement profileNameAndWorkRole = dayViewAvailableShifts.get(index).findElement(By.cssSelector(".sch-day-view-shift-worker-name.ng-binding.ng-scope"));
+                WebElement profileNameAndWorkRole = dayViewAvailableShifts.get(index).findElement(By.cssSelector(".sch-day-view-shift-worker-name.row-fx.ng-scope"));
                 if (isElementLoaded(profileNameAndWorkRole)) {
                     profileNameAndWorkRoleLoaded = true;
                     SimpleUtils.report("The profile name and work role display!");
@@ -4418,7 +4420,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             SimpleUtils.fail("Group by Location: The action popup fail to load!! ", false);
         return buttonNames;
     }
-    
+
     @FindBy(css = "[ng-class=\"hideItem('staffing.guidance')\"]")
     private WebElement staffSmartCard;
     @Override
@@ -4483,5 +4485,51 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else {
             SimpleUtils.fail("Assign button display incorrectly!",false);
         }
+    }
+
+    @Override
+    public void bulkEditTMShiftsInWeekView(String teamMemberName) throws Exception {
+        unSelectAllBulkSelectedShifts();
+        if (areListElementVisible(shiftsWeekView, 15)) {
+            HashSet<Integer> shiftIndexes = new HashSet<>();
+            //Get all index of TM's shifts
+            for (int i=0; i< shiftsWeekView.size(); i++) {
+                WebElement workerName = shiftsWeekView.get(i).findElement(By.className("week-schedule-worker-name"));
+                if (workerName != null) {
+                    if (workerName.getText().toLowerCase().trim().contains(teamMemberName.toLowerCase().trim())) {
+                        shiftIndexes.add(i);
+                        SimpleUtils.pass("Bulk edit: Get shift index :"+i+" successfully! ");
+                    }
+                }
+            }
+            if (shiftIndexes.size()>0) {
+                //Select the shifts
+                Actions action = new Actions(getDriver());
+                for (int i : shiftIndexes) {
+                    scrollToElement(shiftsWeekView.get(i));
+                    waitForSeconds(1);
+                    action.keyDown(Keys.CONTROL).build().perform();
+                    action.click(shiftsWeekView.get(i).findElement(By.className("week-schedule-worker-name")));
+                    action.keyUp(Keys.CONTROL).build().perform();
+                }
+                int selectedShiftCount = getDriver().findElements(By.cssSelector(".shift-selected-multi")).size();
+                if (selectedShiftCount == shiftIndexes.size()){
+                    SimpleUtils.pass("Bulk edit:Select shift successfully! ");
+                }else
+                    SimpleUtils.fail("Bulk edit: Fail to select shift! the expect count is:"+shiftIndexes.size()
+                            + " the actual count is: "+selectedShiftCount, false);
+                //Right click the selected shifts
+                waitForSeconds(2);
+                rightClickOnSelectedShifts(shiftIndexes);
+                // Verify the Delete button on Bulk Action Menu is clickable
+                clickOnBtnOnBulkActionMenuByText("Edit");
+                waitForSeconds(3);
+                // Verify the shifts are marked as X after clicking on Delete button
+                ConsoleEditShiftPage consoleEditShiftPage = new ConsoleEditShiftPage();
+                consoleEditShiftPage.verifyTheContentOfOptionsSection();
+            } else
+                SimpleUtils.report("There is no shift for :"+teamMemberName+" !");
+        }else
+            SimpleUtils.report("Schedule Week View: shifts load failed or there is no shift in this week");
     }
 }

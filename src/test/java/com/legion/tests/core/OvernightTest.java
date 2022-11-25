@@ -70,7 +70,7 @@ public class OvernightTest extends TestBase {
             refreshCachesAfterChangeTemplate();
             //waiting for the cache
             int j =0;
-            while (j< 2) {
+            while (j< 3) {
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 Thread.sleep(60000);
                 j++;
@@ -100,6 +100,7 @@ public class OvernightTest extends TestBase {
                 i++;
             }
             String workRole = shiftInfo.get(4);
+            String lastName = shiftInfo.get(5);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
@@ -117,7 +118,7 @@ public class OvernightTest extends TestBase {
             newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1+ " "+lastName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
 
@@ -282,9 +283,10 @@ public class OvernightTest extends TestBase {
             Thread.sleep(3000);
             switchToConsoleWindow();
             //waiting for the cache
+            refreshCachesAfterChangeTemplate();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             int j =0;
-            while (j< 5) {
+            while (j< 3) {
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 Thread.sleep(60000);
                 j++;
@@ -342,20 +344,20 @@ public class OvernightTest extends TestBase {
             scheduleMainPage.saveSchedule();
             //Verify the overnight shift can display on next day
             scheduleCommonPage.navigateDayViewWithIndex(3);
-            i =0;
+//            i =0;
             int shiftCount = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).size();
-            while (i<5 && shiftCount> 0){
-                Thread.sleep(5000);
-                loginPage.logOut();
-                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-                goToSchedulePageScheduleTab();
-                scheduleCommonPage.navigateToNextWeek();
-                scheduleCommonPage.clickOnDayView();
-                scheduleCommonPage.navigateDayViewWithIndex(3);
-                shiftCount = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).size();
-                i++;
-            }
-            SimpleUtils.assertOnFail("The shift should not display on the next day! ",
+//            while (i<5 && shiftCount> 0){
+//                Thread.sleep(5000);
+//                loginPage.logOut();
+//                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+//                goToSchedulePageScheduleTab();
+//                scheduleCommonPage.navigateToNextWeek();
+//                scheduleCommonPage.clickOnDayView();
+//                scheduleCommonPage.navigateDayViewWithIndex(3);
+//                shiftCount = scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).size();
+//                i++;
+//            }
+            SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should not display on the next day! ",
                     shiftCount == 0, false);
 
         } catch (Exception e) {
@@ -590,9 +592,10 @@ public class OvernightTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             Thread.sleep(5000);
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isActiveWeekGenerated) {
-                createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("6:00AM", "6:00AM");
             Thread.sleep(5000);
             int i = 0;
             List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());

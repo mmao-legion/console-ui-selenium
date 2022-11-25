@@ -88,4 +88,14 @@
         </classes>
     </test>
 
+    <test name="Delete Schedule Test">
+        <classes>
+            <class name="com.legion.tests.core.DeleteScheduleTest">
+                <methods>
+                    <include name="verifyDeleteUnPublishedScheduleAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->

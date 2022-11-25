@@ -54,4 +54,5 @@ public interface CompliancePage {
     public void editWeeklyOTSetting(String optionVisibleText) throws Exception;
     public void turnOnOrTurnOffDayOTToggle(boolean action) throws Exception;
     public void editDayOTSetting(String dailyHours, String workDayType, boolean saveOrNot) throws Exception;
+    public void displaySuccessMessage() throws Exception;
 }

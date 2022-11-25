@@ -504,7 +504,7 @@ public class LiquidDashboardTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Get the current upcoming shifts
-            HashMap<String, String> upComingShifts = new HashMap<>();
+            Map<String, String> upComingShifts = new HashMap<>();
             boolean areShiftsLoaded = dashboardPage.isStartingSoonLoaded();
             if (areShiftsLoaded) {
                 upComingShifts = dashboardPage.getUpComingShifts();
@@ -1407,7 +1407,7 @@ public class LiquidDashboardTest extends TestBase {
             LiquidDashboardPage liquidDashboardPage = pageFactory.createConsoleLiquidDashboardPage();
             liquidDashboardPage.switchOnWidget(widgetType.Starting_Soon.getValue());
 
-            HashMap<String, String> upComingShifts = new HashMap<>();
+            Map<String, String> upComingShifts = new HashMap<>();
             boolean areShiftsLoaded = dashboardPage.isStartingSoonLoaded();
             if (areShiftsLoaded) {
                 upComingShifts = dashboardPage.getUpComingShifts();

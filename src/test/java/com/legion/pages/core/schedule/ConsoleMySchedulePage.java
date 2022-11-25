@@ -64,6 +64,25 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     @FindBy (className = "period-name")
     private WebElement periodName;
 
+    @FindBy (css = ".shift-swap-modal-table-name")
+    private List<WebElement> swapCoverNames;
+
+    @FindBy (css = "[label=\"Close\"]")
+    private WebElement closeButton;
+
+
+    @Override
+    public List<String> getCoverTMList() throws Exception {
+        List<String> coverTMList = new ArrayList<>();
+        if (areListElementVisible(swapCoverNames, 10)) {
+            for (WebElement tmName : swapCoverNames) {
+                coverTMList.add(tmName.getText());
+            }
+        }
+        clickTheElement(closeButton);
+        return coverTMList;
+    }
+
     @Override
     public void validateTheDataAccordingToTheSelectedWeek() throws Exception {
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
@@ -403,7 +422,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     @Override
     public boolean isPopupWindowLoaded(String title) throws Exception {
         boolean isLoaded = false;
-        if (isElementLoaded(popUpWindow, 5) && isElementLoaded(popUpWindowTitle, 5)) {
+        if (isElementLoaded(popUpWindow, 15) && isElementLoaded(popUpWindowTitle, 15)) {
             if (title.equalsIgnoreCase(popUpWindowTitle.getText())) {
                 SimpleUtils.pass(title + " window loaded Successfully!");
                 isLoaded = true;
@@ -1797,7 +1816,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         boolean isExists = false;
         if ((areListElementVisible(comparableShifts, 10) && comparableShifts.size()!=0 )
                 || (areListElementVisible(coverRequestStatus, 10) && coverRequestStatus.size() != 0)) {
-            if (areListElementVisible(comparableShifts)) {
+            if (areListElementVisible(comparableShifts, 3)) {
                 for (WebElement shift: comparableShifts) {
                     WebElement name = shift.findElement(By.cssSelector(".shift-swap-modal-table-name"));
                     if (name.getText().equalsIgnoreCase(tmName)) {
@@ -1832,5 +1851,27 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         } else
             SimpleUtils.report("Comparable shifts or cover request list are fail to load! ");
         return count;
+    }
+
+
+    @Override
+    public void clickTheShiftRequestToClaimCoverShift(String requestName) throws Exception {
+        int index = 0;
+        if (areListElementVisible(tmIcons, 15)) {
+            for (WebElement tmIcon : tmIcons) {
+                moveToElementAndClick(tmIcon);
+                if (isPopOverLayoutLoaded()) {
+                    index = 1;
+                    clickTheElement(popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")));
+                    SimpleUtils.pass("Click " + requestName + " button Successfully!");
+                } else
+                    SimpleUtils.fail("View Shift popup fail to display! ", false);
+            }
+            if (index == 0) {
+                SimpleUtils.fail("Failed to select one shift to claim", false);
+            }
+        } else {
+            SimpleUtils.fail("Team Members' Icons not loaded", false);
+        }
     }
 }

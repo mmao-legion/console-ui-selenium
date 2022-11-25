@@ -42,4 +42,6 @@ public interface SmartCardPage {
     public void clickViewTemplateLinkOnMasterTemplateSmartCard() throws Exception;
     public String getBudgetValueFromWeeklyBudgetSmartCard(String cardName) throws Exception;
     public String getBudgetValueFromScheduleBudgetSmartCard() throws Exception;
+    public boolean isBudgetHoursSmartCardIsLoad() throws Exception;
+    public void clickOnAcknowledgeButtonOnAcknowledgeNotificationSmartCard () throws Exception;
 }

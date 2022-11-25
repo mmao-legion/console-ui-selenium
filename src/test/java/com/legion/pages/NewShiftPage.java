@@ -113,4 +113,8 @@ public interface NewShiftPage {
     public void setStartTimeAndEndTimeForShift(String start, String end) throws Exception;
     public void selectWorkRoleCaseSensitive(String workRoles) throws Exception;
     public void clickCloseBtnForCreateShift() throws Exception;
+    public void clickCloseBtnForOfferShift() throws Exception;
+    public boolean isRecommendedTabHasTMs() throws Exception;
+    public void emptySearchBox() throws Exception;
+    public void clickSearchIcon() throws Exception;
 }

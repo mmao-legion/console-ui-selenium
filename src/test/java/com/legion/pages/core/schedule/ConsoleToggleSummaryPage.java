@@ -258,6 +258,11 @@ public class ConsoleToggleSummaryPage extends BasePage implements ToggleSummaryP
 
     @FindBy(css = ".schedule-summary-search-dropdown [icon*=\"search.svg'\"]")
     private WebElement searchLocationBtn;
+    @FindBy(css = "input[placeholder=\"Search Locations\"]")
+    private WebElement searchLocationInput;
+    @FindBy(css = ".assignment-shift-search-box .lg-search-options__subLabel")
+    private List<WebElement> childLocations;
+
     @Override
     public boolean isLocationGroup() {
         try {
@@ -269,6 +274,23 @@ public class ConsoleToggleSummaryPage extends BasePage implements ToggleSummaryP
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public List<String> getChildLocationList() throws Exception {
+        List<String> childLocationList = new ArrayList<>();
+        if (isLocationGroup()) {
+            clickTheElement(searchLocationBtn);
+            if (isElementLoaded(searchLocationInput, 3)) {
+                clickTheElement(searchLocationInput);
+                if (areListElementVisible(childLocations, 3)) {
+                    for (WebElement child : childLocations) {
+                        childLocationList.add(child.getText());
+                    }
+                }
+            }
+        }
+        return childLocationList;
     }
 
     //added by Haya

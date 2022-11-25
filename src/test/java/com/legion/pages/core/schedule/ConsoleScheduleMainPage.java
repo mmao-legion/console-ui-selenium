@@ -110,7 +110,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     public void clickOnCancelButtonOnEditMode() throws Exception {
         if (isElementLoaded(scheduleEditModeCancelButton)) {
-            click(scheduleEditModeCancelButton);
+            clickTheElement(scheduleEditModeCancelButton);
             SimpleUtils.pass("Schedule edit shift page cancelled successfully!");
         }
     }
@@ -543,17 +543,19 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     @FindBy(css = ".lg-toast")
     private WebElement msgOnTop;
-
+    @FindBy(css = "div.lg-toast")
+    private WebElement successMsg;
     public void saveSchedule() throws Exception {
         if (isElementEnabled(scheduleSaveBtn, 10) && isClickable(scheduleSaveBtn, 10)) {
             scrollToElement(scheduleSaveBtn);
             clickTheElement(scheduleSaveBtn);
-            waitForSeconds(3);
         } else {
             SimpleUtils.fail("Schedule save button not found", false);
         }
-        waitForSeconds(5);
-        if (isClickable(saveOnSaveConfirmationPopup, 30)) {
+
+        if (isElementLoaded(successMsg, 5) && successMsg.getText().contains("Success!")) {
+            SimpleUtils.pass("Save the Schedule with no change Successfully!");
+        } else if (isSaveConfirmPopupLoaded()) {
             clickTheElement(saveOnSaveConfirmationPopup);
             waitForNotExists(saveOnSaveConfirmationPopup, 30);
             waitForSeconds(5);
@@ -1295,7 +1297,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                 }
                 waitForSeconds(10);
                 String downloadPath = SimpleUtils.fileDownloadPath;
-                SimpleUtils.assertOnFail("Failed to download the team schedule", FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekViewSchedulePdf"), false);
+                SimpleUtils.assertOnFail("Failed to download the team schedule",
+                        FileDownloadVerify.isFileDownloaded_Ext(downloadPath, "WeekView-Parent_Child-Oct 28-Nov 3"), false);
             } else {
                 SimpleUtils.fail("Print icon not loaded Successfully on Schedule page!", false);
             }
@@ -1345,7 +1348,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                     && isElementEnabled(groupByWorkRole,3)
                     && isElementEnabled(groupByTM,3)
                     && isElementLoaded(groupByJobTitle,3)
-                    && (isLocationGroup? isElementLoaded(groupByLocation, 5):true))
+                    && (!isLocationGroup || isElementLoaded(groupByLocation, 5)))
                 if(isLocationGroup){
                     SimpleUtils.pass("In Week view: 'Group by All' filter have 5 filters:1.Group by all 2. Group by work role 3. Group by TM 4.Group by job title 5 Group by location");
                 } else
@@ -1803,7 +1806,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     @FindBy(css = ".week-schedule-right-strip")
     private WebElement tMHourAndAverageShiftLengthColumn;
 
-    @FindBy(css = "div.week-schedule-ribbon-location-toggle")
+    @FindBy(css = "div.week-schedule-ribbon-group-toggle")
     private List<WebElement> groupByLocationToggles;
     @Override
     public void validateScheduleTableWhenSelectAnyOfGroupByOptions(boolean isLocationGroup) throws Exception {
@@ -2027,7 +2030,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                     SimpleUtils.fail("Schedule Page: 'LOCATION' should not be one label when current env isn't LG", false);
             } else
                 SimpleUtils.report("Schedule Page: 'LOCATION' isn't one label currently");
-            if (availableFilters.get("shifttype").size() == 7 && availableFilters.get("jobtitle").size() > 1 && availableFilters.get("workrole").size() > 1)
+            if (availableFilters.get("shifttype").size() >= 7 && availableFilters.get("jobtitle").size() > 1 && availableFilters.get("workrole").size() > 1)
                 SimpleUtils.pass("Schedule Page: 'SHIFT TYPE'/'JOB TITLE/'WORK ROLE' display as expected");
             else
                 SimpleUtils.fail("Schedule Page: 'SHIFT TYPE'/'JOB TITLE/'WORK ROLE' display unexpectedly", false);
@@ -2038,7 +2041,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     @FindBy (css = ".lg-filter__clear")
     private WebElement clearFilterOnFilterDropdownPopup;
     public void clickOnClearFilterOnFilterDropdownPopup() throws Exception {
-        if(isElementLoaded(clearFilterOnFilterDropdownPopup, 5)){
+        if(isElementLoaded(clearFilterOnFilterDropdownPopup, 15)){
             if(clearFilterOnFilterDropdownPopup.getAttribute("class").contains("active")){
                 scrollToElement(clearFilterOnFilterDropdownPopup);
                 click(clearFilterOnFilterDropdownPopup);
@@ -2314,10 +2317,11 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                         && shiftTypeFilters.get(1).getText().contains("Assigned")
                         && shiftTypeFilters.get(2).getText().contains("Compliance Review")
                         && shiftTypeFilters.get(3).getText().contains("New or Borrowed TM")
-                        && shiftTypeFilters.get(4).getText().contains("Open")
-                        && shiftTypeFilters.get(5).getText().contains("Swap/Cover Requested")
-                        && shiftTypeFilters.get(6).getText().contains("Unavailable")
-                        && shiftTypeFilters.get(7).getText().contains("Unpublished changes")
+                        && shiftTypeFilters.get(4).getText().contains("Not Acknowledged")
+                        && shiftTypeFilters.get(5).getText().contains("Open")
+                        && shiftTypeFilters.get(6).getText().contains("Swap/Cover Requested")
+                        && shiftTypeFilters.get(7).getText().contains("Unavailable")
+                        && shiftTypeFilters.get(8).getText().contains("Unpublished changes")
 //                        && shiftTypeFilters.get(7).getText().contains("New or Borrowed TM")
 //                        && (shiftTypeFilters.size()> 7? (shiftTypeFilters.get(7).getText().contains("Minor (14-15)") ||
 //                        shiftTypeFilters.get(7).getText().contains("Minor (16-17)")): true)
@@ -2536,5 +2540,38 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             SimpleUtils.fail("Schedule Type " + scheduleTypeManager.getText() + " is disabled",false);
         }
         return isManagerViewSelected;
+    }
+
+    @FindBy(css = ".lg-toast [ng-if=highlightText]")
+    private WebElement successMsgOnTop;
+    @FindBy(css = ".lg-toast [class*=lg-toast__simple-text]")
+    private WebElement NoChangeMsgOnTop;
+    @Override
+    public void saveScheduleWithoutChange() throws Exception {
+        if (isElementEnabled(scheduleSaveBtn, 10) && isClickable(scheduleSaveBtn, 10)) {
+            scrollToElement(scheduleSaveBtn);
+            clickTheElement(scheduleSaveBtn);
+            if (isElementLoaded(successMsgOnTop, 5) && isElementLoaded(NoChangeMsgOnTop, 5)) {
+                if (successMsgOnTop.getText().contains("Success") && NoChangeMsgOnTop.getText().contains("No changes to be saved"))
+                    SimpleUtils.pass("Save the Schedule without modification successfully!");
+                else
+                    SimpleUtils.fail("Saved message is not correct!", false);
+            }else
+                SimpleUtils.fail("Saved successfully message is not loaded!", false);
+        }else {
+            SimpleUtils.fail("Schedule save button not found", false);
+        }
+    }
+
+    private boolean isSaveConfirmPopupLoaded() throws Exception {
+        waitForSeconds(5);
+        boolean isLoaded = false;
+        if (isClickable(saveOnSaveConfirmationPopup, 30)) {
+            isLoaded =true;
+            SimpleUtils.pass("Schedule save button is loaded successfully! ");
+        } else {
+            SimpleUtils.report("Schedule save button not found");
+        }
+        return isLoaded;
     }
 }

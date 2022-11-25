@@ -3948,10 +3948,10 @@ public class DragAndDropTest extends TestBase {
                 case 4: accessRole = AccessRoles.CustomerAdmin.getValue();break;
             }
             //Verify the shifts can be created by new UI by original SM access role
-            System.out.println("Will login as: "+ accessRole);
+            SimpleUtils.pass("Will login as: "+ accessRole);
             loginAsDifferentRole(accessRole);
             bulkDragAndDropByDifferentAccessRoles();
-            loginPage.logOut();
+//            loginPage.logOut();
 
 //            //Verify the shifts can be created by new UI by original TL access role
 //            loginAsDifferentRole(AccessRoles.TeamLead.getValue());
@@ -3984,8 +3984,6 @@ public class DragAndDropTest extends TestBase {
 
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-        SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
         scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                 scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);

@@ -244,7 +244,7 @@ public class ScheduleCopyTest extends TestBase {
                 newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
                 newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
                 newShiftPage.clickOnCreateOrNextBtn();
-                newShiftPage.searchTeamMemberByName(location);
+                newShiftPage.searchTeamMemberByName(location.length()>7?location.substring(0, 7):location);
                 newShiftPage.clickOnOfferOrAssignBtn();
                 scheduleMainPage.saveSchedule();
             }

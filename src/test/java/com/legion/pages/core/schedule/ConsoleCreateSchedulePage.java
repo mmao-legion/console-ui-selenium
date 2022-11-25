@@ -1,6 +1,7 @@
 package com.legion.pages.core.schedule;
 
 import com.legion.pages.*;
+import com.legion.tests.TestBase;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -134,15 +135,15 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
     @Override
     public Boolean isWeekGenerated() throws Exception {
-        if (isElementEnabled(generateSheduleButton, 10) && generateSheduleButton.getText().equalsIgnoreCase("Create schedule")) {
+         if (isElementLoaded(deleteScheduleButton, 10)) {
+            return true;
+        }else if (isElementEnabled(generateSheduleButton, 10) && generateSheduleButton.getText().equalsIgnoreCase("Create schedule")) {
             return false;
         } else if (isElementEnabled(generateScheduleBtn, 10)) {
             return false;
         } else if (isElementLoaded(publishSheduleButton, 10)) {
             return true;
         } else if (isElementLoaded(reGenerateScheduleButton, 10)) {
-            return true;
-        } else if (isElementLoaded(deleteScheduleButton, 10)) {
             return true;
         }
         if (areListElementVisible(shiftsWeekView, 3) || isElementLoaded(editScheduleButton, 5)) {
@@ -1685,7 +1686,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     }
 
 
-    @FindBy(css = "span[ng-if=\"canEditWorkingHours\"]")
+    @FindBy(css = ".edit-operating-hours-link span.ng-binding")
     private List<WebElement> editOperatingHousButtonOnUngenerateSchedulePage;
 
     public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception {

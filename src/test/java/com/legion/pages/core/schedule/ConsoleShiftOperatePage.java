@@ -426,6 +426,10 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
         WebElement clickedShift = getShiftElementByIndex(0);
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+        if (isElementLoaded(cancelButtonChangeRole, 3)){
+            click(cancelButtonChangeRole);
+            SimpleUtils.pass("Quit the change role modal!");
+        }
         clickOnChangeRole();
         if(isElementEnabled(schWorkerInfoPrompt,5)) {
             SimpleUtils.pass("Various Work Role Prompt is displayed ");
@@ -564,7 +568,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @Override
     public WebElement clickOnProfileIcon() throws Exception {
         WebElement selectedShift = null;
-        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+        if(areListElementVisible(profileIcons, 10)&& areListElementVisible(shifts, 10)) {
             int randomIndex = (new Random()).nextInt(profileIcons.size());
             int i = 0;
             while (i < 100 && profileIcons.get(randomIndex).getAttribute("src").contains("openShiftImage")){
@@ -621,7 +625,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @Override
     public WebElement getShiftElementByIndex(int index) throws Exception {
         WebElement selectedShift = null;
-        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+        if(areListElementVisible(shifts, 10)) {
             selectedShift = shifts.get(index);
         } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
             selectedShift = dayViewAvailableShifts.get(index);
@@ -631,12 +635,17 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         return selectedShift;
     }
 
+    @FindBy(css = "[ng-if = \"!hasWorker() && isOpenShift()\"]")
+    private List<WebElement> profileIconsDayViewForOpen;
     @Override
     public boolean isProfileIconsEnable() throws Exception {
         if(areListElementVisible(profileIcons,10)){
             SimpleUtils.pass("Profile Icon is present for selected Employee");
             return true;
         } else if (areListElementVisible(profileIconsDayView,10)) {
+            SimpleUtils.pass("Profile Icon is present for selected Employee");
+            return true;
+        } else if (areListElementVisible(profileIconsDayViewForOpen,10)){
             SimpleUtils.pass("Profile Icon is present for selected Employee");
             return true;
         }
@@ -1291,7 +1300,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     public WebElement clickOnProfileIconOfOpenShift() throws Exception {
         WebElement selectedShift = null;
-        if(isProfileIconsEnable()&& areListElementVisible(shifts, 10)) {
+        if(areListElementVisible(profileIcons, 10)
+                && areListElementVisible(shifts, 10)) {
             int i;
             for (i=0; i<profileIcons.size(); i++){
                 if (profileIcons.get(i).getAttribute("src").contains("openShiftImage")){
@@ -1566,7 +1576,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             breakTimes.add(mealBreakTimes.get(0).getText());
             breakTimes.add(restBreakTimes.get(0).getText());
         }else
-            SimpleUtils.fail("Edit meal break window load failed",true);
+            SimpleUtils.fail("Edit meal break window load failed",false);
         return breakTimes;
     }
 
@@ -1580,6 +1590,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 durations = restBreakDurations;
             }
             moveDayViewCards(durations.get(0), offset);
+        } else {
+            clickTheElement(addMealBreakButton);
         }
     }
 
@@ -1660,7 +1672,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                             if (shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText().equals(newSelectedWorkRoleName)) {
                                 SimpleUtils.pass("Shift role been changed successfully ");
                             } else {
-                                SimpleUtils.fail("Shift role failed to change ", true);
+                                SimpleUtils.fail("Shift role failed to change ", false);
                             }
                         } else {
                             if (shiftRole.findElement(By.cssSelector("span.sch-worker-change-role-name")).getText().equals(originSelectedWorkRoleName)) {
@@ -1802,7 +1814,12 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }else
             SimpleUtils.fail("Meal break window load failed",true);
 
-        click(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+        ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
+        if (scheduleCommonPage.isScheduleDayViewActive()) {
+            click(selectedShift.findElement(By.cssSelector(".sch-day-view-shift .sch-shift-worker-img-cursor")));
+        } else {
+            click(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+        }
         clickOnEditMeaLBreakTime();
         if (isMealBreakTimeWindowDisplayWell(true)) {
             if (isSavedChange) {
@@ -1894,7 +1911,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             isUnAssignedShift = By.cssSelector(".sch-day-view-shift-outer [class=\"allow-pointer-events \"]");
         WebElement shiftPlusBtn = shift.findElement(isUnAssignedShift);
         if (isElementLoaded(shiftPlusBtn)) {
-            click(shiftPlusBtn);
+            clickTheElement(shiftPlusBtn);
             if (isElementLoaded(shiftPopover, 10)) {
                 WebElement editShiftTimeOption = shiftPopover.findElement(By.cssSelector("[ng-if=\"canEditShiftTime && !isTmView()\"]"));
                 if (isElementLoaded(editShiftTimeOption, 20)) {
@@ -2449,6 +2466,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = ".worker-edit-availability-status")
     private WebElement messageForSelectTM;
+
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-grid-xs-3')]/div[1]/p")
+    private List<WebElement> tmScheduledStatusOnNewCreateShiftPage;
     @Override
     public void verifyMessageIsExpected(String messageExpected) throws Exception {
         if (isElementLoaded(messageForSelectTM,5)){
@@ -2456,6 +2476,13 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 SimpleUtils.pass("There is a message you want to see: "+messageExpected);
             } else {
                 SimpleUtils.fail("No message you expected! Actual message is "+ messageForSelectTM.getText(), false );
+            }
+        } else if (areListElementVisible(tmScheduledStatusOnNewCreateShiftPage, 5)){
+            if (tmScheduledStatusOnNewCreateShiftPage.get(0).getText()!=null
+                    && tmScheduledStatusOnNewCreateShiftPage.get(0).getText().toLowerCase().contains(messageExpected)){
+                SimpleUtils.pass("There is a message you want to see: "+messageExpected);
+            } else {
+                SimpleUtils.fail("No message you expected! Actual message is "+ tmScheduledStatusOnNewCreateShiftPage.get(0).getText(), false );
             }
         } else {
             SimpleUtils.fail("message for select TM is not loaded!", false);
@@ -2481,11 +2508,13 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @FindBy(css = "div.lgn-alert-message")
     private WebElement alertMessage;
 
-
+    @FindBy(css = ".MuiDialogContent-root p")
+    private List<WebElement> warningMessagesInWarningModeOnNewCreaeShiftPage;
     @Override
     public void verifyWarningModelForAssignTMOnTimeOff(String nickName) throws Exception {
         String expectedMessageOnWarningModel1 = nickName.toLowerCase()+" is approved for time off";
         String expectedMessageOnWarningModel2 = "please cancel the approved time off before assigning";
+        NewShiftPage newShiftPage = new ConsoleNewShiftPage();
         waitForSeconds(1);
         if (isElementLoaded(alertMessage,15)) {
             String s = alertMessage.getText();
@@ -2497,8 +2526,23 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 if (isElementLoaded(closeSelectTMWindowBtn,5)){
                     click(closeSelectTMWindowBtn);
                 }
+            } else
+                SimpleUtils.fail("The message on warning model is incorrectly, the expected is:"
+                        +expectedMessageOnWarningModel1+ expectedMessageOnWarningModel2
+                        + " The actual is:"+s.toLowerCase(), false);
+        } else if (areListElementVisible(warningMessagesInWarningModeOnNewCreaeShiftPage, 5)) {
+            String warningMessage = newShiftPage.getWarningMessageFromWarningModal().toLowerCase();
+            SimpleUtils.assertOnFail("The message on warning model is incorrectly, the expected is:"
+                    +expectedMessageOnWarningModel1+ expectedMessageOnWarningModel2
+                    + " The actual is:"+warningMessage.toLowerCase(), warningMessage.contains(expectedMessageOnWarningModel1)
+                    && warningMessage.contains(expectedMessageOnWarningModel2), false);
+            waitForSeconds(1);
+            newShiftPage.clickOnOkButtonOnWarningModal();
+            SimpleUtils.pass("There is a warning model with one button labeled OK! and the message is expected!");
+            if (isElementLoaded(closeSelectTMWindowBtn,5)){
+                click(closeSelectTMWindowBtn);
             }
-        } else {
+        }else {
             SimpleUtils.fail("There is no warning model and warning message!", false);
         }
     }
@@ -2579,15 +2623,18 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 textSearchOnNewCreateShiftPage.clear();
                 textSearchOnNewCreateShiftPage.sendKeys(userName);
                 if (areListElementVisible(searchResultsOnNewCreateShiftPage, 15)) {
+                    List<WebElement> allStatus =  getTMScheduledStatusElementsOnNewCreateShiftPage();
+                    String statusMessage = "";
+                    for (WebElement status: allStatus) {
+                        statusMessage = statusMessage + status.getText() + "\n";
+                    }
                     for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
                         List<WebElement> tmInfo = searchResult.findElements(By.cssSelector("p.MuiTypography-body1"));
                         String workerName = tmInfo.get(0).getText();
-                        WebElement status = searchResult.findElement(By.cssSelector(
-                                ".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(2) .MuiGrid-item:nth-child(2)"));
                         if (workerName != null && workerName.toLowerCase().trim().contains(userName.trim().toLowerCase())) {
-                            if (status.getText().contains(scheduled)
-                                    && status.getText().replace(" - ", "-").contains(shiftTime)) {
-                                SimpleUtils.pass("Assign TM Warning: " + status.getText() + " shows correctly!");
+                            if (statusMessage.contains(scheduled)
+                                    && statusMessage.replace(" - ", "-").contains(shiftTime)) {
+                                SimpleUtils.pass("Assign TM Warning: " + statusMessage + " shows correctly!");
                                 isWarningShown = true;
                                 break;
                             }
@@ -2605,7 +2652,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
                     WebElement status = searchResult.findElement(By.className("worker-edit-availability-status"));
                     if (workerName != null && optionCircle != null && workerName.getText().toLowerCase().trim().contains(userName.trim().toLowerCase())) {
-                        if (status.getText().contains(scheduled) && status.getText().contains(shiftTime)) {
+                        if (status.getText().contains(scheduled) && status.getText().replaceAll(" ", "").contains(shiftTime.replaceAll(" ", ""))) {
                             SimpleUtils.pass("Assign TM Warning: " + status.getText() + " shows correctly!");
                             isWarningShown = true;
                             break;
@@ -3506,7 +3553,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = ".table-field.this-week-field ")
     private List<WebElement> totalShiftHrsAndShiftCountThisWeek;
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[3]/div")
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-root MuiGrid-container')]/div[4]/div")
     private List<WebElement> totalShiftHrsAndShiftCountThisWeekOnNewCreateShiftPage;
     @Override
     public HashMap<String, Float> getTotalShiftHrsAndShiftCountThisWeek() throws Exception {
@@ -3546,18 +3593,152 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     @Override
     public boolean isMealBreakBlockDisplayed(int index) throws Exception {
         boolean mealBreakBlockDisplay = true;
-        if (areListElementVisible(dayViewAvailableShifts,10)){
-            try{
+        if (areListElementVisible(dayViewAvailableShifts, 10)) {
+            try {
                 WebElement mealBreakBlock = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[ng-repeat=\"break in breaks\"]"));
-                if(isElementLoaded(mealBreakBlock)){
+                if (isElementLoaded(mealBreakBlock)) {
                     SimpleUtils.report("The Meal Break is displayed in the shift box!");
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 SimpleUtils.report("The Meal Break is not displayed in the shift box!");
                 mealBreakBlockDisplay = false;
             }
         }
         return mealBreakBlockDisplay;
+    }
+
+
+    public void deleteTMShiftsInDayView(String tmName) throws Exception {
+        if (areListElementVisible(dayViewAvailableShifts,10)){
+            int count = dayViewAvailableShifts.size();
+            for (int i = 0; i < count; i++) {
+                WebElement workerName = null;
+                try{
+                    workerName = dayViewAvailableShifts.get(i).findElement(By.cssSelector(".sch-day-view-shift-worker-name"));
+                } catch (Exception e) {
+                SimpleUtils.fail("Fail to shift work name in day view! ", false);
+                }
+                if(workerName!= null && workerName.getText().contains(tmName)) {
+                    List<WebElement> tempShifts = getDriver().findElements(By.cssSelector(".sch-day-view-shift-outer .right-shift-box"));
+                    scrollToBottom();
+                    moveToElementAndClick(tempShifts.get(i));
+                    deleteShift();
+                }
+            }
+        }
+    }
+    @FindBy(css = ".header-field.seniority-field.tl.ng-binding")
+    private WebElement seniorityTitleShownForAssign;
+    @FindBy(css = ".MuiGrid-root.MuiGrid-item>span")
+    private List<WebElement> titlesOnCreationDialog;
+    @Override
+    public boolean isSeniorityColumnLoaded() throws Exception {
+        boolean seniorityColumnLoaded = true;
+        if (isElementLoaded(seniorityTitleShownForAssign,10)){
+            SimpleUtils.report("Seniority Column is displayed!");
+        }else if (areListElementVisible(titlesOnCreationDialog,10)){
+            String seniorityText = null;
+            for(WebElement seniorityTitle : titlesOnCreationDialog){
+                seniorityText = seniorityTitle.getText().trim();
+                if(seniorityText.equalsIgnoreCase("Seniority")){
+                    SimpleUtils.report("Seniority Column is displayed!");
+                    break;
+                }else
+                    continue;
+                }
+            if(!(seniorityText.equalsIgnoreCase("Seniority"))){
+                seniorityColumnLoaded = false;
+            }
+        }else{
+            seniorityColumnLoaded = false;
+        }
+        return seniorityColumnLoaded;
+    }
+
+
+    @FindBy(css = ".table-field.seniority-field")
+    private List<WebElement> seniorityValueForAssign;
+    @FindBy(css = "[class=\"MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 css-1909xa1\"] [class=\"sc-bLBzly cUEDBZ\"] [class*=\"MuiTypography-root\"]")
+    private List<WebElement> seniorityValueForOpen;
+
+    @Override
+    public ArrayList getTMSeniorityValues() throws Exception {
+        List<Integer> seniorityValues  = new ArrayList<Integer>();
+        if (areListElementVisible(seniorityValueForAssign,10)){
+            int i = 0;
+            for(WebElement element: seniorityValueForAssign){
+                String seniorityValue = element.getText().trim();
+                if(seniorityValue.equalsIgnoreCase("SENIORITY")) {
+                    continue;
+                }
+                if(seniorityValue == null || seniorityValue.equals("-")){
+                    seniorityValue = "0";
+                }
+                seniorityValues.add(i, Integer.parseInt(seniorityValue));
+                i++;
+            }
+        }else if (areListElementVisible(seniorityValueForOpen, 10)){
+            int j = 0;
+            for(WebElement element: seniorityValueForOpen){
+                String seniorityValue = element.getText().trim();
+                if(seniorityValue.equalsIgnoreCase("SENIORITY")) {
+                    continue;
+                }
+                if(seniorityValue == null || seniorityValue.equals("-")){
+                    seniorityValue = "0";
+                }
+                seniorityValues.add(j, Integer.parseInt(seniorityValue));
+                j++;
+            }
+        }else {
+            SimpleUtils.report("Seniority values are not loaded!");
+        }
+        return (ArrayList) seniorityValues;
+    }
+
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/parent::div/parent::div/parent::div/parent::div/parent::div/parent::div/parent::div/div[1]/div/div/span")
+    private List<WebElement> tmListHeaders;
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/parent::div/parent::div/parent::div/parent::div")
+    private List<WebElement> allTMsInSearchOrRecommendedList;
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/following-sibling::div/p[1]")
+    private List<WebElement> allTMNamesInSearchOrRecommendedList;
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/following-sibling::div/p[2]")
+    private List<WebElement> allTMJobTitlesInSearchOrRecommendedList;
+    @FindBy(xpath = "//*[contains(@class,'MuiAvatar-circular')]/following-sibling::div/p[3]")
+    private List<WebElement> allTMLocationsInSearchOrRecommendedList;
+
+    @Override
+    public HashMap<String, String> getTMAllInfoFromSearchOrRecommendedListOnNewCreateShiftPageByIndex(int index) throws Exception {
+        HashMap<String, String> allInfo= new HashMap<>();
+        if (areListElementVisible(allTMsInSearchOrRecommendedList, 5)
+                && areListElementVisible(allTMNamesInSearchOrRecommendedList, 5)
+                && areListElementVisible(allTMJobTitlesInSearchOrRecommendedList, 5)
+                && areListElementVisible(allTMLocationsInSearchOrRecommendedList, 5)
+                && allTMsInSearchOrRecommendedList.size() ==allTMNamesInSearchOrRecommendedList.size()
+                && allTMsInSearchOrRecommendedList.size() == allTMJobTitlesInSearchOrRecommendedList.size()
+                && allTMsInSearchOrRecommendedList.size() == allTMLocationsInSearchOrRecommendedList.size()) {
+            waitForSeconds(5);
+            for (int i =0; i< allTMsInSearchOrRecommendedList.size(); i++) {
+                //Get TM name
+                String tmFullName = allTMNamesInSearchOrRecommendedList.get(i).getText().replace("\"", "").replace("\\n", "").trim();
+                allInfo.put("tmname", tmFullName);
+                //Get TM job title
+                String tmJobTitle = allTMNamesInSearchOrRecommendedList.get(i).getText().trim();
+                allInfo.put("tmjobtitle", tmJobTitle);
+                //Get TM Location
+                String tmLocation = allTMLocationsInSearchOrRecommendedList.get(i).getText().trim();
+                allInfo.put("tmlocation", tmLocation);
+                //Get Employee ID
+                if (areListElementVisible(tmListHeaders, 5)
+                        && tmListHeaders.get(1).getText().equalsIgnoreCase("Employee ID")) {
+                    String employeeId = allTMsInSearchOrRecommendedList.get(i).findElement(By.xpath("./div[2]")).getText();
+                    allInfo.put("employeeid", employeeId);
+                }
+            }
+        }else {
+            SimpleUtils.fail("The TMs on search or recommended page fail to load! ", false);
+        }
+        return allInfo;
     }
 }
 

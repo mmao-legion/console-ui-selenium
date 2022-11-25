@@ -184,7 +184,7 @@ public class CinemarkMinorTest extends TestBase {
                     teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
             String calendarName = "Automation" + new Random().nextInt(100) + new Random().nextInt(100) + new Random().nextInt(100);
 
-            teamPage.deleteCalendarByName(calendarName);
+            teamPage.deleteCalendarByName("Automation");
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
@@ -1961,7 +1961,8 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            ToggleAPI.enableToggle(Toggles.MinorRulesTemplate.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+            ToggleAPI.updateToggle(Toggles.MinorRulesTemplate.getValue(), getUserNameNPwdForCallingAPI().get(0),
+                    getUserNameNPwdForCallingAPI().get(1), true);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -2131,7 +2132,8 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            ToggleAPI.enableToggle(Toggles.MinorRulesTemplate.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+            ToggleAPI.updateToggle(Toggles.MinorRulesTemplate.getValue(), getUserNameNPwdForCallingAPI().get(0),
+                    getUserNameNPwdForCallingAPI().get(1), true);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
