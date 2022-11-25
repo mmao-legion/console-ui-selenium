@@ -58,9 +58,9 @@ public enum modelSwitchOperation{
 
 
         this.createDriver((String)params[0],"83","Window");
-        ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-        ToggleAPI.enableToggle(Toggles.EnableDemandDriverTemplate.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-        ToggleAPI.enableToggle(Toggles.MixedModeDemandDriverSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+        ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123",false);
+        ToggleAPI.updateToggle(Toggles.EnableDemandDriverTemplate.getValue(), "jane.meng+006@legion.co", "P@ssword123",true);
+        ToggleAPI.updateToggle(Toggles.MixedModeDemandDriverSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123",true);
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1432,7 +1432,7 @@ public enum modelSwitchOperation{
                 }
             };
             //Turn on DynamicGroupV2 toggle
-            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123",true);
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -1512,7 +1512,7 @@ public enum modelSwitchOperation{
             //Remove the associated locations and templates
             configurationPage.archiveOrDeleteAllTemplates();
             //Turn off DynamicGroupV2 toggle
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123",false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1555,7 +1555,7 @@ public enum modelSwitchOperation{
                 }
             };
             //Turn on DynamicGroupV2 toggle
-            ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123",true);
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -1610,7 +1610,7 @@ public enum modelSwitchOperation{
                     salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", visibleInfo.get("Category")), false);
 
             //Turn off DynamicGroupV2 toggle
-            ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123",false);
             switchToNewWindow();
             //Remove the associated locations and templates
             configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
@@ -2859,7 +2859,7 @@ public enum modelSwitchOperation{
                 }
             };
             //Turn on UseDemandDriverTemplateSwitch toggle
-            ToggleAPI.enableToggle(Toggles.UseDemandDriverTemplateSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+            ToggleAPI.updateToggle(Toggles.UseDemandDriverTemplateSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123", true);
             refreshPage();
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
