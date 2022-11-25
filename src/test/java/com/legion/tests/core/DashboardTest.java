@@ -68,7 +68,7 @@ public class DashboardTest extends TestBase{
 	@Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass=CredentialDataProviderSource.class)
 	public void verifyDashboardFunctionality(String browser, String username, String password, String location) throws Exception {
 		try {
-			HashMap<String, String> upComingShifts = new HashMap<>();
+			Map<String, String> upComingShifts = new HashMap<>();
 			HashMap<String, String> fourShifts = new HashMap<>();
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();

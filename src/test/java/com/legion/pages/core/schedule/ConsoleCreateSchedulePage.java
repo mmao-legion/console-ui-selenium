@@ -1,6 +1,7 @@
 package com.legion.pages.core.schedule;
 
 import com.legion.pages.*;
+import com.legion.tests.TestBase;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -134,15 +135,15 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
     @Override
     public Boolean isWeekGenerated() throws Exception {
-        if (isElementEnabled(generateSheduleButton, 10) && generateSheduleButton.getText().equalsIgnoreCase("Create schedule")) {
+         if (isElementLoaded(deleteScheduleButton, 10)) {
+            return true;
+        }else if (isElementEnabled(generateSheduleButton, 10) && generateSheduleButton.getText().equalsIgnoreCase("Create schedule")) {
             return false;
         } else if (isElementEnabled(generateScheduleBtn, 10)) {
             return false;
         } else if (isElementLoaded(publishSheduleButton, 10)) {
             return true;
         } else if (isElementLoaded(reGenerateScheduleButton, 10)) {
-            return true;
-        } else if (isElementLoaded(deleteScheduleButton, 10)) {
             return true;
         }
         if (areListElementVisible(shiftsWeekView, 3) || isElementLoaded(editScheduleButton, 5)) {
@@ -243,6 +244,14 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
     @Override
     public void publishActiveSchedule() throws Exception {
+        SmartCardPage smartCardPage = new ConsoleSmartCardPage();
+        ScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
+        ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
+        if (smartCardPage.isRequiredActionSmartCardLoaded()) {
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
+            scheduleMainPage.saveSchedule();
+        }
         if (!isCurrentScheduleWeekPublished()) {
             if (isConsoleMessageError())
                 SimpleUtils.fail("Schedule Can not be publish because of Action Require for week: '" + getActiveWeekText() + "'", false);
@@ -1395,8 +1404,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
         if (isElementLoaded(deleteScheduleButton, 60)) {
             clickTheElement(deleteScheduleButton);
-            waitForSeconds(3);
-//            waitForSeconds(10);
+            waitForSeconds(5);
             if (isElementLoaded(deleteSchedulePopup, 25)
                     && isElementLoaded(deleteScheduleCheckBox, 25)
                     && isElementLoaded(deleteButtonOnDeleteSchedulePopup, 25)) {
@@ -1678,7 +1686,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     }
 
 
-    @FindBy(css = "span[ng-if=\"canEditWorkingHours\"]")
+    @FindBy(css = ".edit-operating-hours-link span.ng-binding")
     private List<WebElement> editOperatingHousButtonOnUngenerateSchedulePage;
 
     public boolean checkIfEditOperatingHoursButtonsAreShown() throws Exception {

@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.getEnterprise;
 
 public class ScheduleCopyImprovementTest extends TestBase {
 
@@ -51,7 +52,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            ToggleAPI.disableToggle(Toggles.UseLegionAccrual.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+            ToggleAPI.updateToggle(Toggles.UseLegionAccrual.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), false);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -1085,7 +1086,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate one shift which has both Unassigned and OOH violation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -1289,8 +1290,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
                     for (WebElement unassignedShift: unassignedShifts) {
                         unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();
                         oOOHShiftsCount = scheduleShiftTablePage.getAllOOOHShifts().size();
-                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText());
-                        if(unassignedShiftTimes.contains("8am - 1pm")) {
+                        unassignedShiftTimes.add(unassignedShift.findElement(By.className("week-schedule-shift-time")).getText().toLowerCase());
+                        if(unassignedShiftTimes.contains("8:00 am - 1:00 pm")) {
                             isTheShiftWithBothViolationsExist = true;
                             //To close the i icon popup
                             scheduleMainPage.clickOnOpenSearchBoxButton();

@@ -11,4 +11,10 @@ public interface AdminPage {
     public void rebuildSearchIndex() throws Exception;
 
     public void clickOnConsoleAdminMenu() throws Exception;
+
+    public void clickOnInspectorTab() throws Exception;
+
+    public void clickOnCacheTab() throws Exception;
+
+    public void refreshCacheStatus(String cacheName);
 }

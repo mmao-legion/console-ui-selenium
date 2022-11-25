@@ -187,7 +187,10 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
             if (getEnterprise().equalsIgnoreCase("vailqacn")) {
                 teamPage.searchAndSelectTeamMemberByName("Alexandra Theocharides");
-            } else {
+            } else if (getEnterprise().equalsIgnoreCase("kendrascott2")) {
+                teamPage.searchAndSelectTeamMemberByName("Charlie");
+            }
+            else {
                 teamPage.selectATeamMemberToViewProfile();
             }
 

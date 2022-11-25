@@ -40,4 +40,6 @@ public interface ActivityPage{
     public HashMap<String, String> getBalanceHrsFromActivity() throws Exception;
     public void clickDetailLinksInActivitiesByIndex(int index) throws Exception;
     public void verifyNewClaimOpenShiftCardShowsOnActivity(String requestUserName, String workRole, String shiftDateAndTime, String location) throws Exception;
+    public void verifyNewShiftSwapCardWithTwoLocationsShowsOnActivity(String requestUserName, String respondUserName, String actionLabel,
+                                                                      boolean isNewLabelShows, String location1, String location2) throws Exception;
 }

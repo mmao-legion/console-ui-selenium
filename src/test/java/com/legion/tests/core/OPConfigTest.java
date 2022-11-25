@@ -406,7 +406,6 @@ public class OPConfigTest extends TestBase {
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
                 scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-                forecastPage.clickOnLabor();
                 textOnScheduleSmartCard = smartCardPage.getsmartCardTextByLabel("Schedule V");
                 i++;
             }
@@ -430,7 +429,7 @@ public class OPConfigTest extends TestBase {
         ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
         scheduleMainPage.clickOnEditButton();
         configurationPage.updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(option);
-        Thread.sleep(3);
+        Thread.sleep(3000);
         controlsNewUIPage.clickOnSaveBtn();
 
 

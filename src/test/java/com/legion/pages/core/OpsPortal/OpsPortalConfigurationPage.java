@@ -5218,6 +5218,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css = "ul.staffing-dropdown-menu li:nth-child(1)")
 	private WebElement staffingRuleButton;
+	@FindBy(css = "ul.staffing-dropdown-menu li")
+	private List<WebElement> ruleButtons;
 	@FindBy(css = ".constraint-box")
 	private WebElement staffingRuleFields;
 
@@ -5236,6 +5238,25 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				}
 			} else {
 				SimpleUtils.pass("Advance staffing rules tab is NOT show");
+			}
+		} else {
+			SimpleUtils.fail("Work role's staffing rules list page was loaded failed", false);
+		}
+	}
+
+	@Override
+	public void checkTheEntryOfAddShiftPatternRule() throws Exception {
+		if (isElementLoaded(addIconOnRulesListPage, 5)) {
+			clickTheElement(addIconOnRulesListPage);
+			if (areListElementVisible(ruleButtons, 5)) {
+				for (WebElement rule : ruleButtons) {
+					if (rule.getText().equalsIgnoreCase("Shift Pattern")) {
+						clickTheElement(rule);
+						break;
+					}
+				}
+			} else {
+				SimpleUtils.fail("Shift Pattern option button is not loaded!", false);
 			}
 		} else {
 			SimpleUtils.fail("Work role's staffing rules list page was loaded failed", false);
@@ -7661,5 +7682,16 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				}
 			}
 		}
+	}
+
+	@Override
+	public List<String> getStaffingRules() throws Exception {
+		List<String> staffingRules = new ArrayList<>();
+		if (areListElementVisible(staffingRulesList, 5)) {
+			for (WebElement rule : staffingRulesList) {
+				staffingRules.add(rule.getText());
+			}
+		}
+		return staffingRules;
 	}
 }

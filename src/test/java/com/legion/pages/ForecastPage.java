@@ -1,5 +1,6 @@
 package com.legion.pages;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -109,4 +110,7 @@ public interface ForecastPage {
 	public String getLaborBudgetOnSummarySmartCard() throws Exception;
 	public void clearLaborBudgetOnSummarySmartCard() throws Exception;
 	public void verifyDemandForecastCanLoad() throws Exception;
+	public void goToForecastLaborDay() throws Exception;
+	public ArrayList getTextOfLaborWages() throws Exception;
+	public ArrayList getTextOfScheduleWages() throws Exception;
 }

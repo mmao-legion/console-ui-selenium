@@ -22,6 +22,8 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.legion.utils.MyThreadLocal.getEnterprise;
+
 
 public class PlanTest extends TestBase {
 
@@ -102,7 +104,7 @@ public class PlanTest extends TestBase {
         try {
             this.createDriver((String) params[0], "83", "Window");
             //Turn on EnableLongTermBudgetPlan
-            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
+            ToggleAPI.updateToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a", true);
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
         } catch (Exception e) {
@@ -602,7 +604,7 @@ public class PlanTest extends TestBase {
             locationsPage.clickOnLocationsTab();
             locationsPage.goToGlobalConfigurationInLocations();
             //Turn off EnableLongTermBudgetPlan toggle
-            ToggleAPI.disableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
+            ToggleAPI.updateToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a", false);
             refreshPage();
             if(!locationsPage.isBudgetPlanSectionShowing()){
                 SimpleUtils.pass("Budget plan section is Not showing when EnableLongTermBudgetPlan is off");
@@ -610,7 +612,7 @@ public class PlanTest extends TestBase {
                 SimpleUtils.fail("Budget plan section is showing when EnableLongTermBudgetPlan is off",false);
             }
             //Turn on EnableLongTermBudgetPlan toggle
-            ToggleAPI.enableToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a");
+            ToggleAPI.updateToggle(Toggles.EnableLongTermBudgetPlan.getValue(), "fiona+99@legion.co", "admin11.a", true);
             refreshPage();
             locationsPage.clickOnLocationsTab();
             locationsPage.goToGlobalConfigurationInLocations();

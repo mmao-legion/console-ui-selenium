@@ -816,6 +816,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
             tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
             String firstName2 = tmFullName.split(" ")[0];
+            String lastName2= tmFullName.split(" ")[1];
             loginPage.logOut();
 
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
@@ -882,7 +883,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstName2);
+            newShiftPage.searchTeamMemberByName(firstName2+ " "+ lastName2);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
@@ -1084,6 +1085,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             Thread.sleep(3000);
             tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
             String firstName2 = tmFullName.split(" ")[0];
+            String lastName2 = tmFullName.split(" ")[1];
             loginPage.logOut();
 
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
@@ -1151,7 +1153,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstName2);
+            newShiftPage.searchTeamMemberByName(firstName2+ " "+ lastName2);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();

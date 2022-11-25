@@ -596,20 +596,21 @@ public class DeleteScheduleTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+//            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+//            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+//                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             int index = 1;
             //Check the week that you have released, Observe the status of this week
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-
+            refreshPage();
             //Select one week which status is Guidance, Click on this week
             scheduleOverviewPage.clickOnGuidanceBtnOnOverview(index);
             //Create the suggested schedule for this week
             createSchedulePage.createSuggestedSchedule();
             //Go to Overview page, check the status of this week
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            Thread.sleep(5000);
             String scheduleStatusOnOverViewTable = scheduleOverviewPage.getScheduleWeeksStatus().get(index);
             //The status should be Not Started
             String expectedStatus = "Not Started";
@@ -620,6 +621,7 @@ public class DeleteScheduleTest extends TestBase {
             // Should go to schedule create page, stay on the Manager tab, Create Schedule button is loaded
             SimpleUtils.assertOnFail("The manager schedule view is not display！",
                     scheduleMainPage.isManagerViewSelected(), false);
+            Thread.sleep(5000);
             boolean isScheduleCreated = createSchedulePage.isWeekGenerated();
             SimpleUtils.assertOnFail("The Create schedule button fail to load！",
                     !isScheduleCreated, false);

@@ -184,7 +184,7 @@ public class CinemarkMinorTest extends TestBase {
                     teamPage.verifyActivatedSubTab(TeamTest.TeamPageSubTabText.SchoolCalendars.getValue()), false);
             String calendarName = "Automation" + new Random().nextInt(100) + new Random().nextInt(100) + new Random().nextInt(100);
 
-            teamPage.deleteCalendarByName(calendarName);
+            teamPage.deleteCalendarByName("Automation");
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
@@ -1343,8 +1343,10 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.searchWithOutSelectTM(firstNameOfTM1);
 
         //check the violation message in Status column
-        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! ",
-                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs "+ scheduleFromToTime.toLowerCase()), false);
+        String warningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! but actual is: "
+                        +warningMessage,
+                warningMessage.contains("Minor hrs "+ scheduleFromToTime.toLowerCase()), false);
         Thread.sleep(5000);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         Thread.sleep(5000);
@@ -1464,7 +1466,7 @@ public class CinemarkMinorTest extends TestBase {
                 !shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
+            warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
             if (!warningMessage.contains("Minor ")){
                 SimpleUtils.pass("There is no minor warning message display on the warning mode when shift is not avoid the minor setting! ");
             } else
@@ -1959,7 +1961,8 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            ToggleAPI.enableToggle(Toggles.MinorRulesTemplate.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+            ToggleAPI.updateToggle(Toggles.MinorRulesTemplate.getValue(), getUserNameNPwdForCallingAPI().get(0),
+                    getUserNameNPwdForCallingAPI().get(1), true);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
@@ -2054,6 +2057,8 @@ public class CinemarkMinorTest extends TestBase {
 //            verifyTemplateNameOnProfilePage(minor13Name, minor13TemplateName);
 //            verifyTemplateNameOnProfilePage(minor15Name, minor15TemplateName);
 //            verifyTemplateNameOnProfilePage(minor16Name, minor16TemplateName);
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            refreshCachesAfterChangeTemplate();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }
@@ -2127,7 +2132,8 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            ToggleAPI.enableToggle(Toggles.MinorRulesTemplate.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+            ToggleAPI.updateToggle(Toggles.MinorRulesTemplate.getValue(), getUserNameNPwdForCallingAPI().get(0),
+                    getUserNameNPwdForCallingAPI().get(1), true);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 

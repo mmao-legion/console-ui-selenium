@@ -350,4 +350,6 @@ public interface LocationsPage {
     public boolean verifyLocationGroupSettingEnabled(String selectedOption) throws Exception;
     public void changeLocationGroupSettings(String selectedOption, String... newOption) throws Exception;
     public void updateMockLocation(String locationName, String configurationType) throws Exception;
+    public void modifyLocationCountry(String country, String state, String city) throws Exception;
 }
+
