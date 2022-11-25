@@ -177,8 +177,8 @@ public class ActivityPage extends BasePage{
     }
 
     public void verifyApprove() throws Exception{
-        if(isElementLoaded(approveRejectText.get(1),5)) {
-            if (approveRejectText.get(1).getAttribute("innerText").contains("Approved")) {
+        if(isElementLoaded(approveRejectText.get(0),5)) {
+            if (approveRejectText.get(0).getAttribute("innerText").contains("Approved")) {
                 SimpleUtils.pass("Approved successfully");
             }else{
                 SimpleUtils.fail("Approved failed",false);

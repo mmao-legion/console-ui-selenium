@@ -722,7 +722,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	private List<WebElement> columnsInDaypartsTab;
 
 	private void OHTempSetOpenAndCloseTime(String settingTab, String openTime, String closeTime) throws Exception {
-		if (isElementLoaded(OHOperateOpenCloseTimeEditDialog)) {
+		if (isElementLoaded(OHOperateOpenCloseTimeEditDialog, 10)) {
 			if (settingTab.contains("Open")) {
 				openCloseTimeInputs.get(0).clear();
 				openCloseTimeInputs.get(0).sendKeys(openTime);
@@ -892,7 +892,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	//open the specify template to edit or view details
 	@Override
 	public void clickOnSpecifyTemplateName(String templateName, String editOrViewMode) throws Exception {
-		waitForSeconds(5);
+		waitForSeconds(10);
 		if (isTemplateListPageShow()) {
 			searchTemplate(templateName);
 			for (int i = 0; i < templateNameList.size(); i++) {
@@ -6241,7 +6241,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void setLeaveThisPageButton() throws Exception {
 		if (isElementLoaded(warningToast) && isElementLoaded(leaveThisPageButton))
 			clickTheElement(leaveThisPageButton);
-		waitForSeconds(3);
+		waitForSeconds(5);
 	}
 
 	//added by Fiona

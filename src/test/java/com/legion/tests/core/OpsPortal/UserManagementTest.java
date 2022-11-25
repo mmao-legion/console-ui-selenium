@@ -1,6 +1,9 @@
 package com.legion.tests.core.OpsPortal;
 
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
+import com.legion.pages.LoginPage;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
@@ -14,13 +17,11 @@ import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
 import com.legion.pages.core.OpCommons.RightHeaderBarPage;
 import com.legion.pages.core.opusermanagement.*;
 import com.legion.pages.core.schedule.ConsoleScheduleCommonPage;
-import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
-import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.Constants;
 import com.legion.utils.HttpUtil;
@@ -33,7 +34,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
+import com.legion.tests.core.opEmployeeManagement.AccrualEngineTest;
 
 
 public class UserManagementTest extends TestBase {
@@ -296,8 +297,9 @@ public class UserManagementTest extends TestBase {
         //employment type  Hourly/Salary - Eligible for Overtime/Salary - No Overtime
         ArrayList<String> empType = new ArrayList<String>();
         empType.add("Hourly");
-        empType.add("Salary - Eligible for Overtime");
-        empType.add("Salary - No Overtime");
+        empType.add("Salaried");
+        /*empType.add("Salary - Eligible for Overtime");
+        empType.add("Salary - No Overtime");*/
         List<String> empType1 = dynamicEmployeePage.getCriteriaValues("Employment Type");
         Assert.assertTrue(empType1.size() == empType.size() && empType1.containsAll(empType), "The Employment Type value validate failed!");
 
@@ -530,7 +532,6 @@ public class UserManagementTest extends TestBase {
             //log in with user has contorl manage job title permission
             loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield("nancy.nan+admin@legion.co", "admin11.a","verifyMock");
             RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
-            rightHeaderBarPage.switchToConsole();
             ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
             consoleNavigationPage.searchLocation("ClearDistrict");
             consoleNavigationPage.navigateTo("Controls");
@@ -1320,6 +1321,103 @@ public class UserManagementTest extends TestBase {
                     SimpleUtils.fail(jobTitle + " can't show in assignment rule",false);
                 }
             }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Announcement")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyAnnouncementAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+//            String sessionId = getSession();
+//            AccrualEngineTest accrualEngineTest = new AccrualEngineTest();
+//            if(!accrualEngineTest.isToggleEnabled(sessionId, "CommsAnnouncements")) {
+//                String[] toggleResponse = accrualEngineTest.turnOnToggle(sessionId, "CommsAnnouncements");
+//                System.out.println("Turn on toggle CommsAnnouncements");
+//            }
+//            if(!accrualEngineTest.isToggleEnabled(sessionId, "Announcements")) {
+//                String[] toggleResponse = accrualEngineTest.turnOnToggle(sessionId, "Announcements");
+//                System.out.println("Turn on toggle Announcements");
+//            }
+//            if(!accrualEngineTest.isToggleEnabled(sessionId, "NewAnnouncements")) {
+//                String[] toggleResponse = accrualEngineTest.turnOnToggle(sessionId, "NewAnnouncements");
+//                System.out.println("Turn on toggle NewAnnouncements");
+//            }
+//            if(!accrualEngineTest.isToggleEnabled(sessionId, "ShowAnnouncementGroupOP")) {
+//                String[] toggleResponse = accrualEngineTest.turnOnToggle(sessionId, "ShowAnnouncementGroupOP");
+//                System.out.println("Turn on toggle ShowAnnouncementGroupOP");
+//            }
+//            if(accrualEngineTest.isToggleEnabled(sessionId, "DynamicGroupV2")) {
+//                String[] toggleResponse = accrualEngineTest.turnOffToggle(sessionId, "DynamicGroupV2");
+//                System.out.println("Turn off toggle DynamicGroupV2");
+//            }
+//            ToggleAPI.enableToggleNew(Toggles.CommsAnnouncements.getValue());
+//            ToggleAPI.enableToggleNew(Toggles.Announcements.getValue());
+//            ToggleAPI.enableToggleNew(Toggles.NewAnnouncements.getValue());
+//
+//            ToggleAPI.disableToggleNew(Toggles.DynamicGroupV2.getValue());
+//            ToggleAPI.enableToggleNew(Toggles.ShowAnnouncementGroupOP.getValue());
+
+            BasePage.waitForSeconds(300);
+            //go to User Management Dynamic Employee Groups
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.verifyDynamicEmployeeGroupContainAnnouncement();
+            userManagementPage.goToDynamicEmployeeGroup();
+
+            userManagementPage.verifyBothEmployeeAndAnnouncementDisplay();
+            userManagementPage.verifyAnnouncementBlankInfo();
+
+            SimpleDateFormat an = new SimpleDateFormat("yyyyMMddHHmmss");
+            String announcementName = "AutoCreate" + an.format(new Date());
+
+            userManagementPage.addAnnouncement(announcementName);
+            userManagementPage.searchAccouncement(announcementName);
+            userManagementPage.updateAccouncement();
+            userManagementPage.deleteAnnouncement();
+
+            //           ToggleAPI.enableToggleNew(Toggles.DynamicGroupV2.getValue());
+//            if(!accrualEngineTest.isToggleEnabled(sessionId, "DynamicGroupV2")) {
+//                String[] toggleResponse = accrualEngineTest.turnOnToggle(sessionId, "DynamicGroupV2");
+//                System.out.println("Turn on toggle DynamicGroupV2");
+//            }
+
+            userManagementPage.verifyOnlyAnnouncementDisplay();
+
+            userManagementPage.addAnnouncementForOnlyOneDisplay(announcementName);
+            userManagementPage.searchAccouncement(announcementName);
+            userManagementPage.updateAccouncement();
+            userManagementPage.deleteAnnouncement();
+
+//            ToggleAPI.disableToggleNew(Toggles.DynamicGroupV2.getValue());
+//            ToggleAPI.disableToggleNew(Toggles.ShowAnnouncementGroupOP.getValue());
+//            if(accrualEngineTest.isToggleEnabled(sessionId, "DynamicGroupV2")) {
+//                String[] toggleResponse = accrualEngineTest.turnOffToggle(sessionId, "DynamicGroupV2");
+//                System.out.println("Turn off toggle DynamicGroupV2");
+//            }
+//            if(accrualEngineTest.isToggleEnabled(sessionId, "ShowAnnouncementGroupOP")) {
+//                String[] toggleResponse = accrualEngineTest.turnOffToggle(sessionId, "ShowAnnouncementGroupOP");
+//                System.out.println("Turn off toggle ShowAnnouncementGroupOP");
+//            }
+            userManagementPage.verifyOnlyAnnouncementDisplay();
+            //ToggleAPI.enableToggleNew(Toggles.DynamicGroupV2.getValue());
+//            if(!accrualEngineTest.isToggleEnabled(sessionId, "DynamicGroupV2")) {
+//                String[] toggleResponse = accrualEngineTest.turnOnToggle(sessionId, "DynamicGroupV2");
+//                System.out.println("Turn on toggle DynamicGroupV2");
+//            }
+
+            userManagementPage.verifyDynamicSmartCartNotDispaly();
+
+//            ToggleAPI.disableToggleNew(Toggles.DynamicGroupV2.getValue());
+//            if(accrualEngineTest.isToggleEnabled(sessionId, "DynamicGroupV2")) {
+//                String[] toggleResponse = accrualEngineTest.turnOffToggle(sessionId, "DynamicGroupV2");
+//                System.out.println("Turn off toggle DynamicGroupV2");
+//            }
+            BasePage.waitForSeconds(180);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

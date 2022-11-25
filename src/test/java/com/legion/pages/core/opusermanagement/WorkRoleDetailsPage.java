@@ -34,7 +34,7 @@ public class WorkRoleDetailsPage extends BasePage {
 
     @FindBy(css = "input-field[label='Work Role Class'] select")
     private WebElement workRoleClass;
-    @FindBy(css = "input-field[label='Hourly rate ($)']>ng-form>input")
+    @FindBy(css = "input-field[label='Hourly rate']>ng-form>input")
     private WebElement hourlyRate;
 
     //assignmentRules
@@ -62,7 +62,7 @@ public class WorkRoleDetailsPage extends BasePage {
     private WebElement typeOption;
     @FindBy(id = "intervalConstraintDropDown")
     private WebElement frequency;
-    @FindBy(css = "#intervalConstraintDropDown+ul>li>a")
+    @FindBy(css = "intervalConstraintDropDown+ul>li>a")
     private WebElement week;
     @FindBy(css = "div.settings-display-inline.ml-10.fl>div.row input")
     private WebElement priority;

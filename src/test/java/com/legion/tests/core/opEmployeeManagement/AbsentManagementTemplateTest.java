@@ -762,4 +762,18 @@ public class AbsentManagementTemplateTest extends TestBase {
         SimpleUtils.pass("Succeeded in publishing template: " + tempName + " !");
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "OPS-6030 Add pagination and search support for Time Off Reasons and Accrual Promotions in timeoff managemant template setting")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyTimeOffReasonPromotionSearchPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+        navigationPage.navigateToEmployeeManagement();
+        EmployeeManagementPanelPage panelPage = new EmployeeManagementPanelPage();
+        panelPage.goToTimeOffManagementPage();
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+
+        absentManagePage.switchToSettings();
+    }
 }

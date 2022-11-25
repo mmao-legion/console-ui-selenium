@@ -3,12 +3,12 @@ package com.legion.pages.core.opemployeemanagement;
 import com.legion.pages.BasePage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -266,7 +266,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement criteriaByEngagementStatus;
     @FindBy(css = "lg-multiple-select[label='Before'] lg-picker-input")
     private WebElement criteriaBefore;
-    @FindBy(css = "input-field[label='Before'] div.input-faked.ng-binding")
+    @FindBy(css = "input-field[label='Before'] ng-form div")
     private WebElement multiSelectPlaceHolder;
     @FindBy(css = "lg-multiple-select lg-search input")
     private WebElement criteriaBeforeSearchInput;
@@ -278,7 +278,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement jobTitleAsWAAmbassador;
     @FindBy(css = "lg-select[label='After'] lg-picker-input")
     private WebElement criteriaAfter;
-    @FindBy(css = "lg-picker-input[label='After'] div.lg-search-options__scroller>div:nth-child(1)>div")
+    @FindBy(css = "lg-picker-input[label='After'] div.lg-search-options__scroller>div:nth-child(1)")
     private WebElement jobTitleAfterPromotion;
     @FindBy(css = "inline-input+div>lg-button[label='Add More']>button")
     private WebElement criteriaAddMoreButton;
@@ -314,6 +314,12 @@ public class AbsentManagePage extends BasePage {
     private WebElement removeModalTitle;
     @FindBy(css = "modal[modal-title='Remove Accrual Promotion'] general-form p")
     private WebElement removeModalContent;
+
+    @FindBy(css = "div.time-off-reason-setting table tr>td.one-line-overflow")
+    private List<WebElement> tOffReasonsInGlobalSettingList;
+
+    @FindBy(css = "lg-picker-input[label='Balance before promotion'] div.lg-search-options__scroller div>div")
+    private List<WebElement> tOffInPromotionSelect;
 
     //home page methods
     public boolean isBackButtonDisplayed(){
@@ -841,6 +847,7 @@ public class AbsentManagePage extends BasePage {
     }
 
     public String getPromotionModalTitle() {
+        waitForSeconds(5);
         return promotionModalTitle.getText();
     }
 
@@ -886,9 +893,8 @@ public class AbsentManagePage extends BasePage {
         criteriaAfterSearchInput.sendKeys(jobTitleSelectBefore);
         try {
             jobTitleAfterPromotion.click();
-        } catch (Exception ElementNotInteractableException) {
+        } catch (ElementNotInteractableException exception ) {
             isDisabled = true;
-
         }
         return isDisabled;
     }
@@ -932,6 +938,25 @@ public class AbsentManagePage extends BasePage {
             hasPromotionRule=false;
         }
      return hasPromotionRule;
+    }
+
+    public ArrayList getTimeOffReasonsInGlobalSetting() {
+        ArrayList<String> toList = new ArrayList<>();
+        tOffReasonsInGlobalSettingList.forEach((e) -> {
+            scrollToElement(e);
+            toList.add(e.getText());
+        });
+        return toList;
+    }
+
+    public ArrayList getTimeOffOptions() {
+        balanceBeforePromotion.click();
+        ArrayList<String> optList = new ArrayList<>();
+        tOffInPromotionSelect.forEach((e) -> {
+            optList.add(e.getAttribute("title"));
+        });
+        balanceBeforePromotion.click();
+        return optList;
     }
 
     public String getTemplateListLabel() {
