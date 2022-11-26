@@ -343,6 +343,7 @@ public class SingleShiftEditTest extends TestBase {
             // Verify work role is updated
             editShiftPage.selectSpecificOptionByText(actualWorkRoleList.get(0));
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
             SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
             // Verify work role is saved
@@ -383,6 +384,7 @@ public class SingleShiftEditTest extends TestBase {
             actualWorkRoleList2.remove(workRole1);
             editShiftPage.selectSpecificOptionByText(actualWorkRoleList2.get(0));
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
             SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
             // Verify work role is saved
@@ -443,8 +445,8 @@ public class SingleShiftEditTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify the functionality of changing shift name on single edit shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -475,6 +477,7 @@ public class SingleShiftEditTest extends TestBase {
             String shiftName = "This is the shift name";
             editShiftPage.inputShiftName(shiftName);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             mySchedulePage.verifyThePopupMessageOnTop("Success");
             // Verify the shift name can show on the info popup
             List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
@@ -531,6 +534,7 @@ public class SingleShiftEditTest extends TestBase {
             String inputStartTime = "10:00 AM";
             editShiftPage.inputStartOrEndTime(inputStartTime, true);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             mySchedulePage.verifyThePopupMessageOnTop("Success");
 
             // Verify the start time of the shifts is updated
@@ -554,6 +558,7 @@ public class SingleShiftEditTest extends TestBase {
             // Verify error message will pop up when changing the start time will cause violation
             editShiftPage.inputStartOrEndTime(inputStartTime, true);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             mySchedulePage.verifyThePopupMessageOnTop("Error! Could not edit 1 shift");
 
             //Verify the start time of the shifts is not updated
@@ -577,6 +582,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.checkUseOffset(true, true);
             editShiftPage.verifyTheFunctionalityOfOffsetTime("1", null, "Early", true);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             inputStartTime = "9:00 am";
             indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             iterator = indexes.iterator();
@@ -598,6 +604,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.checkUseOffset(true, true);
             editShiftPage.verifyTheFunctionalityOfOffsetTime("6", null, "Late", true);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             inputStartTime = "3:00 pm";
             indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             iterator = indexes.iterator();
@@ -664,6 +671,7 @@ public class SingleShiftEditTest extends TestBase {
             String inputEndTime = "4:00 pm";
             editShiftPage.inputStartOrEndTime(inputEndTime, false);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
 
             indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             iterator = indexes.iterator();
@@ -699,6 +707,7 @@ public class SingleShiftEditTest extends TestBase {
             // Verify success will pop up when changing the End time will cause violation
             editShiftPage.inputStartOrEndTime(inputEndTime, false);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             mySchedulePage.verifyThePopupMessageOnTop("Success");
 
             indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
@@ -718,6 +727,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowConflicts.getOption(), true);
             editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowComplianceErrors.getOption(), true);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             mySchedulePage.verifyThePopupMessageOnTop("Success");
 
             // Verify the end time of the shifts is updated
@@ -747,6 +757,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.checkUseOffset(false, true);
             editShiftPage.verifyTheFunctionalityOfOffsetTime("3", null, "Early", false);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
 
             indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             iterator = indexes.iterator();
@@ -771,6 +782,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.checkUseOffset(false, true);
             editShiftPage.verifyTheFunctionalityOfOffsetTime("1", null, "Late", false);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
 
             indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             iterator = indexes.iterator();
@@ -846,7 +858,7 @@ public class SingleShiftEditTest extends TestBase {
             // Verify can change the date without selecting the two options
             editShiftPage.selectSpecificOptionByText(dates.get(1));
             editShiftPage.clickOnUpdateButton();
-
+            editShiftPage.clickOnUpdateAnywayButton();
             HashSet<Integer> newIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             System.out.println(scheduleShiftTablePage.getOneDayShiftByName(1, assignedNames.get(0)).size());
             SimpleUtils.assertOnFail("Shifts are not moved to the next day!", !indexes.equals(newIndexes), false);
@@ -862,8 +874,8 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.clickOnDateSelect();
             editShiftPage.selectSpecificOptionByText(dates.get(0));
             editShiftPage.clickOnUpdateButton();
-
-            mySchedulePage.verifyThePopupMessageOnTop("Error");
+            editShiftPage.clickOnUpdateAnywayButton();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
 
             // Verify the shifts are moved to the selected day
             String firstName1 = assignedNames.get(0).contains(" ") ? assignedNames.get(0).split(" ")[0] : assignedNames.get(0);
@@ -925,6 +937,7 @@ public class SingleShiftEditTest extends TestBase {
             // Verify the functionality of "Do not change assignments"
             editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.DoNotChangeAssignments.getOption());
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             mySchedulePage.verifyThePopupMessageOnTop("Success");
 
             // Verify the shifts are converted to open shifts
@@ -957,6 +970,7 @@ public class SingleShiftEditTest extends TestBase {
             // Verify Search Team Members page will show when selecting "Assign or Offer to Specific TM's
             editShiftPage.selectSpecificOptionByText(assignOrOfferOption);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
 
             // Verify can assign or offer to new team members
             newShiftPage.searchTeamMemberByNameAndAssignOrOfferShift(assignedNames.get(0), true);
@@ -1013,6 +1027,7 @@ public class SingleShiftEditTest extends TestBase {
             String note = "Test Shift Notes";
             editShiftPage.inputShiftNotes(note);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
 
             // Verify the shift notes can show on the info popup
             List<String> infoList1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
@@ -1114,6 +1129,7 @@ public class SingleShiftEditTest extends TestBase {
             //Verify the breaks time cannot have overlapping with other breaks time
             editShiftPage.inputMealBreakTimes("10:00am", "10:30am", 0);
             editShiftPage.inputRestBreakTimes("10:00am", "10:30am", 0);
+            editShiftPage.clickOnUpdateButton();
             expectedBreakMessage = "Break is overlapping with another one";
             restBreakWarningMessages = editShiftPage.getRestBreakWarningMessage();
             if (restBreakWarningMessages.size() ==0) {
@@ -1127,6 +1143,7 @@ public class SingleShiftEditTest extends TestBase {
             //Verify break start time cannot after end time
             editShiftPage.inputMealBreakTimes("11:00am", "9:30am", 0);
             editShiftPage.inputRestBreakTimes("11:00am", "10:30am", 0);
+            editShiftPage.clickOnUpdateButton();
             expectedBreakMessage = "Start time must be before end time";
             mealBreakWarningMessages = editShiftPage.getMealBreakWarningMessage();
             restBreakWarningMessages = editShiftPage.getRestBreakWarningMessage();
@@ -1188,6 +1205,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.removeAllMealBreaks();
             //Click Update button
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             //Edit the shift again and check the breaks
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
@@ -1203,8 +1221,8 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.clickOnAddRestBreakButton();
             String mealBreakStartTime = "10:00 AM";
             String mealBreakEndTime = "10:20 AM";
-            String restBreakStartTime = "01:00 PM";
-            String restBreakEndTime = "01:30 PM";
+            String restBreakStartTime = "11:00 AM";
+            String restBreakEndTime = "11:30 AM";
             editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
             editShiftPage.inputRestBreakTimes(restBreakStartTime, restBreakEndTime, 0);
             List<String> mealBreakWarningMessages = editShiftPage.getMealBreakWarningMessage();
@@ -1214,6 +1232,7 @@ public class SingleShiftEditTest extends TestBase {
                         ""+mealBreakWarningMessages.size()+ " and "+restBreakWarningMessages.size(), false);
             }
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             //Edit the shift again and check the breaks
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
@@ -1254,6 +1273,7 @@ public class SingleShiftEditTest extends TestBase {
                         ""+mealBreakWarningMessages.size()+ " and "+restBreakWarningMessages.size(), false);
             }
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             //Edit the shift again and check the breaks
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
@@ -1281,6 +1301,7 @@ public class SingleShiftEditTest extends TestBase {
                     restBreakStartTime.equals(restStartTime)
                             && restBreakEndTime.equals(restEndTime), false);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             scheduleMainPage.saveSchedule();
             scheduleCommonPage.clickOnDayView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1295,6 +1316,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.removeAllMealBreaks();
             //Click Update button
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             //Edit the shift again and check the breaks
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
@@ -1310,8 +1332,8 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.clickOnAddRestBreakButton();
             mealBreakStartTime = "10:00 AM";
             mealBreakEndTime = "10:20 AM";
-            restBreakStartTime = "01:00 PM";
-            restBreakEndTime = "01:30 PM";
+            restBreakStartTime = "11:00 AM";
+            restBreakEndTime = "11:30 AM";
             editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
             editShiftPage.inputRestBreakTimes(restBreakStartTime, restBreakEndTime, 0);
             mealBreakWarningMessages = editShiftPage.getMealBreakWarningMessage();
@@ -1321,6 +1343,7 @@ public class SingleShiftEditTest extends TestBase {
                         ""+mealBreakWarningMessages.size()+ " and "+restBreakWarningMessages.size(), false);
             }
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             //Edit the shift again and check the breaks
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
@@ -1361,6 +1384,7 @@ public class SingleShiftEditTest extends TestBase {
                         ""+mealBreakWarningMessages.size()+ " and "+restBreakWarningMessages.size(), false);
             }
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             //Edit the shift again and check the breaks
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);

@@ -835,6 +835,7 @@ public class HardStopForMinorViolation extends TestBase {
 //        }
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
+        Thread.sleep(5000);
         loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
     }

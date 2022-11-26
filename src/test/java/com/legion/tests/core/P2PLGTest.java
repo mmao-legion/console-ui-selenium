@@ -406,6 +406,7 @@ public class P2PLGTest extends TestBase {
                 firstNameOfTM = shiftInfo.get(0);
             }
             String workRole = shiftInfo.get(4);
+            String lastName = shiftInfo.get(5);
             scheduleMainPage.clickOnFilterBtn();
             String childLocation = scheduleMainPage.selectRandomChildLocationToFilter();
             if (scheduleShiftTablePage.getShiftsCount()>0){
@@ -458,7 +459,7 @@ public class P2PLGTest extends TestBase {
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
             shiftOperatePage.verifyRecommendedTableHasTM();
             shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+lastName);
             newShiftPage.clickOnOfferOrAssignBtn();
             //View status
             shiftOperatePage.clickOnProfileIconOfOpenShift();
@@ -471,7 +472,7 @@ public class P2PLGTest extends TestBase {
             scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
             shiftOperatePage.clickonAssignTM();
             newShiftPage.verifySelectTeamMembersOption();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+lastName);
             newShiftPage.clickOnOfferOrAssignBtn();
             index = scheduleShiftTablePage.getShiftIndexById(selectedShiftId);
             List<String> shiftInfoAfterAssignTM= scheduleShiftTablePage.getTheShiftInfoByIndex(index);
@@ -521,6 +522,7 @@ public class P2PLGTest extends TestBase {
             }
             System.out.println("The first name of the selected TM is:"+ firstNameOfTM);
             String workRole = shiftInfo.get(4);
+            String lastName = shiftInfo.get(5);
             scheduleMainPage.clickOnFilterBtn();
             String childLocation = scheduleMainPage.selectRandomChildLocationToFilter();
             if (scheduleShiftTablePage.getShiftsCount()>0){
@@ -591,7 +593,7 @@ public class P2PLGTest extends TestBase {
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
             shiftOperatePage.clickOnOfferTMOption();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+lastName);
             newShiftPage.clickOnOfferOrAssignBtn();
             //View status
             shiftOperatePage.clickOnProfileIconOfOpenShift();
@@ -660,7 +662,7 @@ public class P2PLGTest extends TestBase {
                 firstNameOfTM = shiftInfo.get(0);
             }
             String workRole = shiftInfo.get(4);
-
+            String lastName = shiftInfo.get(5);
             scheduleMainPage.clickOnFilterBtn();
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
 
@@ -710,7 +712,7 @@ public class P2PLGTest extends TestBase {
             shiftOperatePage.clickOnProfileIconOfOpenShift();
             shiftOperatePage.clickonAssignTM();
             newShiftPage.verifySelectTeamMembersOption();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+lastName);
             newShiftPage.clickOnOfferOrAssignBtn();
             index = scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM).get(0);
             List<String> shiftInfoAfterAssignTM= scheduleShiftTablePage.getTheShiftInfoByIndex(index);
@@ -893,7 +895,7 @@ public class P2PLGTest extends TestBase {
                 firstNameOfTM2 = shiftInfo.get(0);
             }
             String workRole2 = shiftInfo.get(4);
-
+            String lastName2 = shiftInfo.get(5);
             scheduleMainPage.clickOnFilterBtn();
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
 
@@ -943,7 +945,7 @@ public class P2PLGTest extends TestBase {
             shiftOperatePage.clickOnProfileIconByIndex(index);
             shiftOperatePage.clickonAssignTM();
             newShiftPage.verifySelectTeamMembersOption();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM2);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM2+ " "+lastName2);
             newShiftPage.clickOnOfferOrAssignBtn();
             index = scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM2).get(0);
             List<String> shiftInfoAfterAssignTM= scheduleShiftTablePage.getTheShiftInfoByIndex(index);
@@ -1177,6 +1179,7 @@ public class P2PLGTest extends TestBase {
                 shiftCount1++;
             }
             String workRole =  shiftInfo1.get(4);
+            String lastName = shiftInfo1.get(5);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
@@ -1192,7 +1195,7 @@ public class P2PLGTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+lastName);
             newShiftPage.clickOnCreateOrNextBtn();
 
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -1205,7 +1208,7 @@ public class P2PLGTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+lastName);
             newShiftPage.clickOnCreateOrNextBtn();
 
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -1219,7 +1222,7 @@ public class P2PLGTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+lastName);
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
 
@@ -1234,7 +1237,7 @@ public class P2PLGTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+lastName);
             //https://legiontech.atlassian.net/browse/SCH-7963
 //			newShiftPage.searchWithOutSelectTM(firstNameOfTM);
 //			String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
@@ -1925,7 +1928,7 @@ public class P2PLGTest extends TestBase {
             scheduleMainPage.saveSchedule();
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
+//            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
             shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.verifyDeleteShift();
 
@@ -1974,7 +1977,7 @@ public class P2PLGTest extends TestBase {
             scheduleMainPage.saveSchedule();
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
+//            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
             shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.verifyDeleteShift();
 
@@ -3961,7 +3964,7 @@ public class P2PLGTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+lastName);
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -4812,6 +4815,7 @@ public class P2PLGTest extends TestBase {
             // Verify can change the location without selecting the two options
             editShiftPage.selectSpecificOptionByText(actualLocations.get(1));
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             mySchedulePage.verifyThePopupMessageOnTop("Success");
             // Verify the shifts are moved to the selected child location
             scheduleMainPage.selectGroupByFilter(actualLocations.get(1));

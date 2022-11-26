@@ -1108,4 +1108,16 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
             SimpleUtils.fail("Rest breaks on single edit shift page display incorrectly", false);
         return count;
     }
+
+
+
+    @FindBy (css = ".MuiPaper-elevation>div>div>div>button:nth-child(2)")
+    private WebElement updateAnywayButton;
+    @Override
+    public void clickOnUpdateAnywayButton() throws Exception {
+//        waitForSeconds(2);
+        if (isElementLoaded(updateAnywayButton, 3)) {
+            clickTheElement(updateAnywayButton);
+        }
+    }
 }
