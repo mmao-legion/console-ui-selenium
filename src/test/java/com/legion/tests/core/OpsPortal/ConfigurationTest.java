@@ -2534,6 +2534,8 @@ public class ConfigurationTest extends TestBase {
             configurationPage.verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable();
             //Create dynamic group with specify criteria
             configurationPage.advanceStaffingRuleDynamicGroupCriteriaListChecking(dynamicGpName);
+            configurationPage.advanceStaffingRuleEditDeleteADynamicGroup(dynamicGpName);
+            configurationPage.advanceStaffingRuleDynamicGroupCustomFormulaDescriptionChecking();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

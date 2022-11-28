@@ -7811,5 +7811,30 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 		return staffingRules;
 	}
+
+	@FindBy(css="pre.CodeMirror-placeholder.CodeMirror-line-like")
+	private WebElement customFormulaDescription;
+	@Override
+	public void advanceStaffingRuleDynamicGroupCustomFormulaDescriptionChecking() throws Exception {
+		//click add more link
+		clickTheElement(dynamicGroupCriteriaAddMoreLink);
+		//check custom script format description
+		String criteriaOp = "Custom";
+		//select criteria option
+		clickTheElement(criteriaList.get(0));
+		waitForSeconds(2);
+		String optionType = ".lg-search-options__option[title='" + criteriaOp + "']";
+		getDriver().findElement(By.cssSelector(optionType)).click();
+		SimpleUtils.pass("The criteria " + criteriaOp + " was selected!");
+		waitForSeconds(3);
+		if(isElementEnabled(customerFormatScript,2)){
+			String str = customFormulaDescription.getText().trim();
+			if(str.equalsIgnoreCase("Enter your expression. The dynamic location group will" +
+					" only be created if the expresion evaluates to be true.")){
+				SimpleUtils.pass("The formula description is correct");
+			}else
+				SimpleUtils.fail("The formula description is incorrect",false);
+		}
+	}
 }
 

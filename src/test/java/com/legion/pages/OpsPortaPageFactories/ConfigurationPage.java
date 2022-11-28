@@ -268,5 +268,6 @@ public interface ConfigurationPage {
     public void createAdvanceStaffingRuleDynamicGroup(String name) throws Exception;
     public void advanceStaffingRuleDynamicGroupCriteriaListChecking(String name) throws Exception;
     public List<String> getStaffingRules() throws Exception;
+    public void advanceStaffingRuleDynamicGroupCustomFormulaDescriptionChecking() throws Exception;
 }
 
