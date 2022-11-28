@@ -4856,7 +4856,7 @@ public class P2PLGTest extends TestBase {
 
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             goToSchedulePageScheduleTab();
-
+            scheduleCommonPage.navigateToNextWeek();
             //to generate schedule if current week is not generated
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(!isActiveWeekGenerated){
@@ -4902,6 +4902,7 @@ public class P2PLGTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.navigateToNextWeek();
             String cardName = "WANT MORE HOURS?";
             SimpleUtils.assertOnFail("Smart Card: " + cardName + " not loaded Successfully!", smartCardPage.isSpecificSmartCardLoaded(cardName), false);
             String linkName = "View Shifts";
@@ -4925,6 +4926,7 @@ public class P2PLGTest extends TestBase {
 
             //Check the shift been scheduled
             goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
 
             int tmShiftCount = scheduleShiftTablePage.getShiftsNumberByName(teamMemberName);
             SimpleUtils.assertOnFail("The expect "+teamMemberName+"'s shift count is 1, the actual open shift count is:"+tmShiftCount,

@@ -192,6 +192,7 @@
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
+                    <include name="verifyTheFunctionalityOfDailyOTAsInternalAdmin" />
                     <include name="verifyTheBufferHoursDisplayInScheduleAsInternalAdmin"/>
                     <include name="verifySearchBarOnSchedulePageInWeekViewAsInternalAdmin" />
                     <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
@@ -219,7 +220,6 @@
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfMinTimeBetweenShiftsAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfDailyOTAsInternalAdmin" />
                     <!-- <include name="verifyTMOverTimeStatusAsInternalAdmin" /> -->
                     <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
                     <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
