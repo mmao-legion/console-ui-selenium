@@ -766,7 +766,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "OPS-6030 Add pagination and search support for Time Off Reasons and Accrual Promotions in timeoff managemant template setting")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTimeOffReasonPromotionSearchPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
@@ -775,5 +775,30 @@ public class AbsentManagementTemplateTest extends TestBase {
         AbsentManagePage absentManagePage = new AbsentManagePage();
 
         absentManagePage.switchToSettings();
+
+        absentManagePage.verifyTimeOffPage();
+        absentManagePage.verifyPromotionPage();
+
+//        Boolean timeOffReasonFlag, promotionFlag;
+//        timeOffReasonFlag = absentManagePage.searchTimeOffReason("we");
+//        if(timeOffReasonFlag == false){
+//            SimpleUtils.pass("Non exist time off reason search failed");
+//        }else
+//            SimpleUtils.fail("Non exist time off reason search successfully",false);
+//        timeOffReasonFlag = absentManagePage.searchTimeOffReason("Annual Leave");
+//        if(timeOffReasonFlag == true){
+//            SimpleUtils.pass("Exist time off reason search successfully");
+//        }else
+//            SimpleUtils.fail("Exist time off reason search failed",false);
+//        promotionFlag = absentManagePage.searchPromotion("we");
+//        if(promotionFlag == false){
+//            SimpleUtils.pass("Non exist promotion search failed");
+//        }else
+//            SimpleUtils.fail("Non exist promotion search successfully",false);
+//        promotionFlag = absentManagePage.searchPromotion("promotion");
+//        if(promotionFlag == false){
+//            SimpleUtils.pass("Exist promotion search successfully");
+//        }else
+//            SimpleUtils.fail("Exist promotion search failed",false);
     }
 }

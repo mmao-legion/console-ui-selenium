@@ -29,12 +29,14 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.legion.utils.MyThreadLocal.getEnterprise;
+
 public class DynamicGroupV2Test extends TestBase {
 
     @BeforeClass
     public void enableDynamicGroupV2Toggle() throws Exception{
         //ToggleAPI.enableToggle(Toggles.DynamicGroupV2.getValue(), "stoneman@legion.co", "admin11.a");
-        ToggleAPI.enableToggle(Toggles.MinorRulesTemplate.getValue(), "stoneman@legion.co", "admin11.a");
+        ToggleAPI.updateToggle(Toggles.MinorRulesTemplate.getValue(), "stoneman@legion.co", "admin11.a", true);
     }
 
 

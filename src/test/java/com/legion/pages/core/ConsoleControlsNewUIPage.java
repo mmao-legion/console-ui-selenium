@@ -7685,4 +7685,103 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 	}
 
+	@FindBy(css = "question-input[question-title*=\"Is Seniority taken into account for shift search and recommendation?\"]")
+	private WebElement senioritySection;
+	@FindBy(css = "[question-title*=\"search and recommendation?\"] yes-no")
+	private WebElement seniorityToggle;
+	@Override
+	public void isSenioritySectionLoaded() throws Exception {
+		if (isElementLoaded(senioritySection))
+			SimpleUtils.report("The seniority toggle is loaded!");
+		else
+			SimpleUtils.fail("The seniority toggle is not loaded!", false);
+	}
+
+	@Override
+	public String getSeniorityToggleActiveBtnLabel() throws Exception {
+		String seniorityToggleActiveBtnLabel = "";
+		if (isElementLoaded(seniorityToggle)) {
+			WebElement seniorityToggleActiveActiveBtn = seniorityToggle.findElement(
+					By.cssSelector("div.lg-button-group-selected"));
+			if (isElementLoaded(seniorityToggleActiveActiveBtn))
+				seniorityToggleActiveBtnLabel = seniorityToggleActiveActiveBtn.getText();
+			else
+				SimpleUtils.fail("Scheduling Policies: Seniority toggle active Button not loaded.", false);
+		} else
+			SimpleUtils.fail("Scheduling Policies: Seniority toggle section not loaded.", false);
+
+		return seniorityToggleActiveBtnLabel;
+	}
+
+	@Override
+	public void updateSeniorityToggle(String isSeniorityToggleOpen) throws Exception {
+		if (isElementLoaded(seniorityToggle)) {
+			WebElement applyLaborBudgetBtnGroup = seniorityToggle.findElement(
+					By.cssSelector("div.lg-button-group"));
+			if (applyLaborBudgetBtnGroup.getAttribute("class").contains("disabled")) {
+				SimpleUtils.fail("Seniority toggle is disabled.", false);
+			}
+			else{
+				List<WebElement> seniorityToggleBtns = seniorityToggle.findElements(
+						By.cssSelector("div[ng-click=\"!button.disabled && $ctrl.change(button.value)\"]"));
+				waitForSeconds(5);
+				if (seniorityToggleBtns.size() > 0) {
+					for (WebElement seniorityToggleBtn : seniorityToggleBtns) {
+						if (seniorityToggleBtn.getText().toLowerCase().contains(isSeniorityToggleOpen.toLowerCase())) {
+							scrollToElement(seniorityToggleBtn);
+							clickTheElement(seniorityToggleBtn);
+						}
+					}
+					if (getSeniorityToggleActiveBtnLabel().toLowerCase().contains(isSeniorityToggleOpen.toLowerCase()))
+						SimpleUtils.pass("Scheduling Policies: Seniority toggle is updated with value: '"
+								+ isSeniorityToggleOpen + "'.");
+					else
+						SimpleUtils.fail("Scheduling Policies: Seniority toggle is not updated with value: '"
+								+ isSeniorityToggleOpen + "'.", false);
+				} else
+					SimpleUtils.fail("Scheduling Policies: Seniority toggle buttons are not loaded!", false);
+			}
+
+		} else
+			SimpleUtils.fail("Scheduling Policies: Seniority toggle section is not loaded!", false);
+	}
+
+	@FindBy(css = "question-input[question-title*=\"Sort seniority by ascending or descending?\"]")
+	private WebElement senioritySortSection;
+	@FindBy(css = "question-input[question-title*=\"Sort seniority by ascending or descending?\"] select")
+	private WebElement senioritySortList;
+	@FindBy(css = "question-input[question-title*=\"Sort seniority by ascending or descending?\"] [class=\"select-wrapper ng-scope\"]")
+	private WebElement senioritySort;
+	@Override
+	public void isSortOfSenioritySectionLoaded() throws Exception {
+		if (isElementLoaded(senioritySortSection))
+			SimpleUtils.report("The sort of seniority section is loaded!");
+		else
+			SimpleUtils.fail("The sort of seniority section is not loaded!", false);
+	}
+	@Override
+	public void selectSortOfSeniority(String optionValue) throws Exception {
+		if (isElementLoaded(senioritySortSection, 3)){
+			if(isElementLoaded(senioritySortList, 3)){
+				Select selectedSenioritySort = new Select(senioritySortList);
+				selectedSenioritySort.selectByVisibleText(optionValue);
+				SimpleUtils.report("Select '" + optionValue + "' as the seniority's order");
+				waitForSeconds(2);
+			}else{
+				SimpleUtils.fail("Seniority sort list fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Seniority sort section fail to load!", false);
+		}
+	}
+
+	@Override
+	public String getSenioritySort() throws Exception {
+		String senioritySortContent = "";
+		if (isElementLoaded(senioritySort))
+			senioritySortContent = senioritySort.getAttribute("data-content").trim();
+		else
+			SimpleUtils.fail("Scheduling Policies: Seniority sort box is not loaded!", false);
+		return senioritySortContent;
+	}
 }

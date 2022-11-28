@@ -145,6 +145,7 @@ public interface ConfigurationPage {
     public String updateEffectiveDateOfFutureTemplate(String templateName,String button,int date) throws Exception;
     public List<String> getEffectiveDateForTemplate(String templateName) throws Exception;
     public void checkTheEntryOfAddBasicStaffingRule() throws Exception;
+    public void checkTheEntryOfAddShiftPatternRule() throws Exception;
     public boolean verifyWarningInfoForDemandDriver(String warningMsg) throws Exception;
     public void verifyStaffingRulePageShowWell() throws Exception;
     public void addOrEditDemandDriverInTemplate(HashMap<String, String> driverSpecificInfo) throws Exception;
@@ -264,5 +265,9 @@ public interface ConfigurationPage {
     public void clickOnAddButtonOfDynamicLocationGroupOfAdvancedStaffingRule() throws Exception;
     public void advanceStaffingRuleDynamicGroupDialogUICheck(String name) throws Exception;
     public void advanceStaffingRuleEditDeleteADynamicGroup(String dyname) throws Exception;
+    public void createAdvanceStaffingRuleDynamicGroup(String name) throws Exception;
+    public void advanceStaffingRuleDynamicGroupCriteriaListChecking(String name) throws Exception;
+    public List<String> getStaffingRules() throws Exception;
+    public void advanceStaffingRuleDynamicGroupCustomFormulaDescriptionChecking() throws Exception;
 }
 

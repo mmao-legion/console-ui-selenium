@@ -1198,4 +1198,100 @@ public class AbsentManagePage extends BasePage {
             SimpleUtils.fail("2 work roles selected faied",false);
         return workRoles;
     }
+
+    @FindBy(css = "input[placeholder = 'Search by time off reason name']")
+    private WebElement timeOffReasonSearchBox;
+    @FindBy(css = "input[placeholder = 'Search by promotion name']")
+    private WebElement promotionSearchBox;
+    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > ng-transclude > table > tbody > tr:nth-child(2)")
+    private WebElement firstTimeOffReason;
+    //@FindBy(css = "div:nth-child(2) > lg-paged-search > div > ng-transclude > div")
+    //@FindBy(linkText = "No matching time off reason found.")
+    @FindBy(xpath = "//div[2]/lg-paged-search/div/ng-transclude/div")
+    private WebElement noMatchTimeOffReason;
+    @FindBy(css = "tr[ng-repeat = 'item in $ctrl.timeOffReasonSortedRows']>td>lg-button[label = 'Edit']>button")
+    private WebElement timeOffReasonEdit;
+    @FindBy(css = "div:nth-child(3) > lg-paged-search > div > ng-transclude > table > tbody > tr:nth-child(2);")
+    private WebElement firstPromotion;
+    @FindBy(css = "div:nth-child(3) > lg-paged-search > div > ng-transclude > div")
+    private WebElement noMatchPromotion;
+    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > ng-transclude > table > tbody > tr[ng-repeat='item in $ctrl.timeOffReasonSortedRows']")
+    private List<WebElement> timeOffResonRows;
+    @FindBy(css = "div:nth-child(3) > lg-paged-search > div > ng-transclude > table > tbody > tr[ng-repeat='item in $ctrl.timeOffReasonSortedRows']")
+    private List<WebElement> promotionRows;
+    @FindBy(css = "tr[ng-repeat = 'item in $ctrl.promotionSortedRows']>td>lg-button[label = 'Edit']>button")
+    private WebElement promotionEdit;
+
+    public Boolean searchTimeOffReason(String timeOffReasonName) throws Exception{
+        if(isElementLoaded(timeOffReasonSearchBox,5)){
+            timeOffReasonSearchBox.clear();
+            timeOffReasonSearchBox.sendKeys(timeOffReasonName);
+            if(!noMatchTimeOffReason.getAttribute("class").contains("no-record"))
+                return true;
+            else
+                return false;
+        }else{
+            SimpleUtils.fail("Time off reason search box loaded failed",false);
+            return false;
+        }
+    }
+
+    public Boolean searchPromotion(String promotionName) throws Exception{
+        if(isElementLoaded(promotionSearchBox,5)){
+            promotionSearchBox.clear();
+            promotionSearchBox.sendKeys(promotionName);
+            if(isElementLoaded(firstPromotion,5))
+                return true;
+            else
+                return false;
+        }else{
+            SimpleUtils.fail("Promotion search box loaded failed",false);
+            return false;
+        }
+    }
+
+    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div")
+    private WebElement timeOffPage;
+    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div > div.lg-pagination__arrow.lg-pagination__arrow--right")
+    private WebElement timeOffNextPage;
+    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div > div.lg-pagination__arrow.lg-pagination__arrow--left")
+    private WebElement timeOffPreviousPage;
+    @FindBy(css = "div:nth-child(3) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div")
+    private WebElement promotionPage;
+    @FindBy(css = "div:nth-child(3) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div > div.lg-pagination__arrow.lg-pagination__arrow--left")
+    private WebElement promotionPreviousPage;
+    @FindBy(css = "div:nth-child(3) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div > div.lg-pagination__arrow.lg-pagination__arrow--right")
+    private WebElement promotionNextPage;
+
+    public void verifyTimeOffPage() throws Exception{
+        if(isElementDisplayed(timeOffPage)){
+            if(isElementLoaded(timeOffPreviousPage,5) && isElementLoaded(timeOffNextPage,5) && isElementEnabled(timeOffNextPage)) {
+                if(timeOffPreviousPage.getAttribute("class").contains("lg-pagination__arrow--disabled"))
+                    SimpleUtils.pass("Time off reason previous page is disable default");
+                else
+                    SimpleUtils.fail("Time off reason previous page is not disable default",false);
+                click(timeOffNextPage);
+                SimpleUtils.pass("Time off reason page function work well");
+            }
+            else
+                SimpleUtils.fail("Time off reason page function can't work",false);
+        }else
+            SimpleUtils.fail("Time off page doesn't display",false);
+    }
+
+    public void verifyPromotionPage() throws Exception{
+        if(isElementDisplayed(promotionPage)){
+            if(isElementDisplayed(promotionPreviousPage) && isElementDisplayed(promotionNextPage) && isElementEnabled(promotionNextPage)) {
+                if(promotionPreviousPage.getAttribute("class").contains("lg-pagination__arrow--disabled"))
+                    SimpleUtils.pass("Promotion previous page is disable default");
+                else
+                    SimpleUtils.fail("Promotion previous page is not disable default",false);
+                click(promotionNextPage);
+                SimpleUtils.pass("Promotion page function work well");
+            }
+            else
+                SimpleUtils.fail("Promotion page function can't work",false);
+        }else
+            SimpleUtils.fail("Promotion page doesn't display",false);
+    }
 }

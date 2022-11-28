@@ -46,6 +46,7 @@ import java.time.format.TextStyle;
 import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
+import static com.legion.utils.MyThreadLocal.getEnterprise;
 
 
 public class ConfigurationTest extends TestBase {
@@ -67,9 +68,9 @@ public class ConfigurationTest extends TestBase {
 
 
         this.createDriver((String)params[0],"83","Window");
-        ToggleAPI.disableToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-        ToggleAPI.enableToggle(Toggles.EnableDemandDriverTemplate.getValue(), "jane.meng+006@legion.co", "P@ssword123");
-        ToggleAPI.enableToggle(Toggles.MixedModeDemandDriverSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123");
+        ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123", false);
+        ToggleAPI.updateToggle(Toggles.EnableDemandDriverTemplate.getValue(), "jane.meng+006@legion.co", "P@ssword123", true);
+        ToggleAPI.updateToggle(Toggles.MixedModeDemandDriverSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123", true);
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1266,8 +1267,8 @@ public class ConfigurationTest extends TestBase {
             int date = 14;
             String locationName="MultipleTemplateE2EUsing";
             HashMap<String, String> activeDayAndOperatingHrs = new HashMap<>();
-            String currentOperatingHour = "6AM-12AM";
-            String futureOperatingHour = "7AM-12AM";
+            String currentOperatingHour = "7AM-12AM";
+            String futureOperatingHour = "7:30 AM-12AM";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
@@ -2471,6 +2472,70 @@ public class ConfigurationTest extends TestBase {
                 configurationPage.clickOnConfigurationCrad(type);
                 configurationPage.createTmpAndPublishAndArchive(type,templateNameVerify,dynamicGpNameTempTest);
             }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Create dynamic group with specify criteria")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateDynamicGroupWithSpecifyCriteriaAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "AutoADVDynamicGroup";
+            String workRole = "AutoUsing2";
+            String dynamicGpName = "FionaAutoTest123";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable();
+            //Create dynamic group with specify criteria
+            configurationPage.createAdvanceStaffingRuleDynamicGroup(dynamicGpName);
+            //edit delete dynamic group
+            configurationPage.advanceStaffingRuleEditDeleteADynamicGroup(dynamicGpName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Dynamic group dropdown list checking and custom formula description checking")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDynamicGroupDropdownListCheckingAndCustomFormulaDescriptionCheckingAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "AutoADVDynamicGroup";
+            String workRole = "AutoUsing2";
+            String dynamicGpName = "FionaAutoTest123";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable();
+            //Create dynamic group with specify criteria
+            configurationPage.advanceStaffingRuleDynamicGroupCriteriaListChecking(dynamicGpName);
+            configurationPage.advanceStaffingRuleEditDeleteADynamicGroup(dynamicGpName);
+            configurationPage.advanceStaffingRuleDynamicGroupCustomFormulaDescriptionChecking();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -5219,6 +5219,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css = "ul.staffing-dropdown-menu li:nth-child(1)")
 	private WebElement staffingRuleButton;
+	@FindBy(css = "ul.staffing-dropdown-menu li")
+	private List<WebElement> ruleButtons;
 	@FindBy(css = ".constraint-box")
 	private WebElement staffingRuleFields;
 
@@ -5237,6 +5239,25 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				}
 			} else {
 				SimpleUtils.pass("Advance staffing rules tab is NOT show");
+			}
+		} else {
+			SimpleUtils.fail("Work role's staffing rules list page was loaded failed", false);
+		}
+	}
+
+	@Override
+	public void checkTheEntryOfAddShiftPatternRule() throws Exception {
+		if (isElementLoaded(addIconOnRulesListPage, 5)) {
+			clickTheElement(addIconOnRulesListPage);
+			if (areListElementVisible(ruleButtons, 5)) {
+				for (WebElement rule : ruleButtons) {
+					if (rule.getText().equalsIgnoreCase("Shift Pattern")) {
+						clickTheElement(rule);
+						break;
+					}
+				}
+			} else {
+				SimpleUtils.fail("Shift Pattern option button is not loaded!", false);
 			}
 		} else {
 			SimpleUtils.fail("Work role's staffing rules list page was loaded failed", false);
@@ -7663,4 +7684,157 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}
 	}
+
+	@FindBy(css="input-field[placeholder=\"Select one\"]")
+	private List<WebElement> criteriaList;
+	@FindBy(css="div.CodeMirror textarea")
+	private WebElement customerFormatScript;
+	@FindBy(css="lg-select input-field[placeholder=\"Select...\"]")
+	private List<WebElement> dynamicGroupCriteriaInOrNotIn;
+	@FindBy(css="lg-multiple-select input-field[placeholder=\"Select...\"]")
+	private List<WebElement> dynamicGroupCriteriaResultField;
+	@Override
+	public void createAdvanceStaffingRuleDynamicGroup(String name) throws Exception {
+		if (isElementLoaded(addDynamicGroupButton, 5)) {
+			SimpleUtils.pass("The " + " icon for adding dynamic group button show as expected");
+			clickTheElement(addDynamicGroupButton);
+			if (manageDynamicGroupPopupTitle.getText().trim().equalsIgnoreCase("Manage Dynamic Location Group")) {
+				SimpleUtils.pass("Dynamic group dialog title show as expected");
+				//check the group name is required
+				if (dynamicGroupName.getAttribute("required").equals("true")) {
+					SimpleUtils.pass("Group name is required");
+					//input group name
+					dynamicGroupName.sendKeys(name);
+					waitForSeconds(2);
+					groupDescriptionInput.clear();
+					groupDescriptionInput.sendKeys("description_qaz123@_");
+					waitForSeconds(2);
+					groupDescriptionInput.clear();
+					String[] criteriaOps = {"Config Type","District","City","Custom"};
+					for (String ss : criteriaOps) {
+						//select criteria option
+						clickTheElement(criteriaList.get(criteriaList.size()-1));
+						waitForSeconds(2);
+						String optionType = ".lg-search-options__option[title='" + ss + "']";
+						List<WebElement> options = getDriver().findElements(By.cssSelector(optionType));
+						clickTheElement(options.get(options.size()-1));
+						SimpleUtils.pass("The criteria " + ss + " was selected!");
+						waitForSeconds(3);
+						//set up value
+						waitForSeconds(2);
+						if(!ss.equalsIgnoreCase("Custom")) {
+							if (isElementEnabled(dynamicGroupCriteriaResultField.get(dynamicGroupCriteriaResultField.size()-1), 5)) {
+								clickTheElement(dynamicGroupCriteriaResultsList.get(dynamicGroupCriteriaResultsList.size()-1));
+								waitForSeconds(3);
+								//click add more link
+								clickTheElement(dynamicGroupCriteriaAddMoreLink);
+								waitForSeconds(2);
+							} else
+								SimpleUtils.fail("The current selected Criteria has no options can be selected", true);
+						}else {
+							if(isElementEnabled(customerFormatScript,2)){
+								clickTheElement(customerFormatScript);
+								customerFormatScript.sendKeys(Keys.TAB);
+								customerFormatScript.sendKeys("customer");
+							}
+						}
+					}
+				} else
+					SimpleUtils.fail("Group name is not required on UI", true);
+			} else
+				SimpleUtils.fail("Dynamic group dialog title is not show as designed!", true);
+		} else
+			SimpleUtils.fail("The " + " icon for adding dynamic group missing!", false);
+		//click save
+		clickTheElement(okButtonOnManageDynamicGroupPopup);
+		waitForSeconds(3);
+	}
+
+	@FindBy(css="div.condition_line>lg-cascade-select")
+	private List<WebElement> conditionsList;
+
+	@Override
+	public void advanceStaffingRuleDynamicGroupCriteriaListChecking(String name) throws Exception {
+		if (isElementLoaded(addDynamicGroupButton, 5)) {
+			SimpleUtils.pass("The " + " icon for adding dynamic group button show as expected");
+			clickTheElement(addDynamicGroupButton);
+			if (manageDynamicGroupPopupTitle.getText().trim().equalsIgnoreCase("Manage Dynamic Location Group")) {
+				SimpleUtils.pass("Dynamic group dialog title show as expected");
+				//check the group name is required
+				if (dynamicGroupName.getAttribute("required").equals("true")) {
+					SimpleUtils.pass("Group name is required");
+					//input group name
+					dynamicGroupName.sendKeys(name);
+					waitForSeconds(2);
+					groupDescriptionInput.clear();
+					groupDescriptionInput.sendKeys("description_qaz123@_");
+					waitForSeconds(2);
+					String criteriaOp = "Config Type";
+					//select criteria option
+					clickTheElement(criteriaList.get(0));
+					waitForSeconds(2);
+					String optionType = ".lg-search-options__option[title='" + criteriaOp + "']";
+					getDriver().findElement(By.cssSelector(optionType)).click();
+					SimpleUtils.pass("The criteria " + criteriaOp + " was selected!");
+					waitForSeconds(3);
+					//click add more link
+					clickTheElement(dynamicGroupCriteriaAddMoreLink);
+					clickTheElement(criteriaList.get(criteriaList.size()-1));
+					List<WebElement> optionList = conditionsList.get(conditionsList.size()-1).findElements(By.cssSelector(" lg-select:nth-child(1) div.lg-search-options div[ng-repeat]"));
+					for(WebElement option:optionList){
+						String optionName = option.findElement(By.cssSelector("div")).getText().trim();
+						if(optionName.equalsIgnoreCase("Config Type")){
+							String classValue = option.getAttribute("class").trim();
+							if(classValue.contains("disabled")){
+								SimpleUtils.pass("The config type option is disabled after it was selected in another criteria");
+							}else {
+								SimpleUtils.fail("The config type option is NOT disabled after it was selected in another criteria",false);
+							}
+							break;
+						}
+					}
+				} else
+					SimpleUtils.fail("Group name is not required on UI", true);
+			} else
+				SimpleUtils.fail("Dynamic group dialog title is not show as designed!", true);
+		} else
+			SimpleUtils.fail("The " + " icon for adding dynamic group missing!", false);
+	}
+
+	@Override
+	public List<String> getStaffingRules() throws Exception {
+		List<String> staffingRules = new ArrayList<>();
+		if (areListElementVisible(staffingRulesList, 5)) {
+			for (WebElement rule : staffingRulesList) {
+				staffingRules.add(rule.getText());
+			}
+		}
+		return staffingRules;
+	}
+
+	@FindBy(css="pre.CodeMirror-placeholder.CodeMirror-line-like")
+	private WebElement customFormulaDescription;
+	@Override
+	public void advanceStaffingRuleDynamicGroupCustomFormulaDescriptionChecking() throws Exception {
+		//click add more link
+		clickTheElement(dynamicGroupCriteriaAddMoreLink);
+		//check custom script format description
+		String criteriaOp = "Custom";
+		//select criteria option
+		clickTheElement(criteriaList.get(0));
+		waitForSeconds(2);
+		String optionType = ".lg-search-options__option[title='" + criteriaOp + "']";
+		getDriver().findElement(By.cssSelector(optionType)).click();
+		SimpleUtils.pass("The criteria " + criteriaOp + " was selected!");
+		waitForSeconds(3);
+		if(isElementEnabled(customerFormatScript,2)){
+			String str = customFormulaDescription.getText().trim();
+			if(str.equalsIgnoreCase("Enter your expression. The dynamic location group will" +
+					" only be created if the expresion evaluates to be true.")){
+				SimpleUtils.pass("The formula description is correct");
+			}else
+				SimpleUtils.fail("The formula description is incorrect",false);
+		}
+	}
 }
+

@@ -90,7 +90,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement schedulingCollaborationContainer;
 
 	@Override
-	public void setLaborBudgetLevel(boolean isCentral,String level) {
+	public void setLaborBudgetLevel(boolean isCentral, String level) {
 		waitForSeconds(3);
 		if (isElementEnabled(laborBdgetConfigOptionText, 10)) {
 			scrollToElement(laborBdgetConfigOptionText);
@@ -111,26 +111,25 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				if (isElementEnabled(subPlanLevelConfigText, 10)) {
 					//specify the level
 					clickTheElement(subPlanLevelConfigFiled);
-					List<WebElement> levelOptions=subPlanLevelConfigFiled.findElements(By.cssSelector("option"));
-					if (areListElementVisible(levelOptions, 10)){
-						for (WebElement element: levelOptions){
-							if (element.getAttribute("label").equalsIgnoreCase(level)){
+					List<WebElement> levelOptions = subPlanLevelConfigFiled.findElements(By.cssSelector("option"));
+					if (areListElementVisible(levelOptions, 10)) {
+						for (WebElement element : levelOptions) {
+							if (element.getAttribute("label").equalsIgnoreCase(level)) {
 								clickTheElement(element);
 							}
 						}
 						scrollToBottom();
 						click(saveBtnInUpdateLocationPage);
 						waitForSeconds(5);
-						SimpleUtils.pass("The Long range labor budget set the level as:"+level+"successfully!");
+						SimpleUtils.pass("The Long range labor budget set the level as:" + level + "successfully!");
 					} else {
 						SimpleUtils.fail("Not find the sub-plan levels", false);
 					}
 				} else
 					SimpleUtils.fail("Specify the level for the subplan not loaded!", false);
 			}
-		}
-		else
-			SimpleUtils.fail("The Long range labor budget configuration section not loaded!",false);
+		} else
+			SimpleUtils.fail("The Long range labor budget configuration section not loaded!", false);
 		scrollToTop();
 	}
 
@@ -160,10 +159,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	private void verifyNewTermsOfServicePopUp() throws Exception {
-		if (isElementLoaded(newTermsOfServicePopUpWindow,3)
-				&& isElementLoaded(continueBtnInNewTermsOfServicePopUpWindow,3)) {
+		if (isElementLoaded(newTermsOfServicePopUpWindow, 3)
+				&& isElementLoaded(continueBtnInNewTermsOfServicePopUpWindow, 3)) {
 			click(continueBtnInNewTermsOfServicePopUpWindow);
-		}else
+		} else
 			SimpleUtils.report("There is no new terms of service");
 	}
 
@@ -240,7 +239,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement timeZoonSelect;
 	@FindBy(css = "input[aria-label=\"Location Address\"]")
 	private WebElement LocationAddress1;
-//	@FindBy(css = "select[aria-label=\"Country\"]")
+	//	@FindBy(css = "select[aria-label=\"Country\"]")
 	@FindBy(css = "input-field[label='Country/Region']")
 	private WebElement countrySelect;
 	@FindBy(css = "input[placeholder='Search']")
@@ -253,7 +252,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement state;
 	@FindBy(css = "div.lg-search-options__scroller")
 	private WebElement stateList;
-//	@FindBy(css = "div.lg-search-options__scroller>div:nth-child(1)")
+	//	@FindBy(css = "div.lg-search-options__scroller>div:nth-child(1)")
 	@FindBy(css = "div[title='Alabama']")
 	private WebElement firstState;
 	@FindBy(css = "input[aria-label=\"Zip Code\"]")
@@ -272,10 +271,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement searchInputInSelectALocation;
 	@FindBy(css = "tr[ng-repeat=\"item in $ctrl.currentPageItems track by $index\"]")
 	private List<WebElement> locationRowsInSelectLocation;
-
-	@FindBy(css = "tr[ng-repeat*=\"location in filteredCollection\"]")
+	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection track by location.businessId\"]")
 	private List<WebElement> locationRows;
-	@FindBy(css = "tr[ng-repeat*=\"location in filteredCollection\"] > td:nth-child(4) > lg-eg-status")
+	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection track by location.businessId\"] > td:nth-child(4) > lg-eg-status")
 	private List<WebElement> locationStatus;
 
 	@FindBy(css = "lg-button[label=\"OK\"]")
@@ -309,20 +307,19 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement locationDetailCloseBTN;
 
 
-
 	@Override
-	public void locationPageCommonFeatureCheck() throws Exception{
+	public void locationPageCommonFeatureCheck() throws Exception {
 		//check the search input field
-		if(isElementLoaded(locationSearchInput)&&locationSearchInput.getAttribute("placeholder").equals("You can search by name, id, district, country, state and city."))
+		if (isElementLoaded(locationSearchInput) && locationSearchInput.getAttribute("placeholder").equals("You can search by name, id, district, country, state and city."))
 			SimpleUtils.pass("The location search input field loaded successfully");
 		else
 			SimpleUtils.report("The location search input field not loaded or loaded with wrong place holder");
 		//check search with location name
-		if(searchOutLocation("TestLocationDSName"));
-		   SimpleUtils.pass("Search location with location name successfully!");
+		if (searchOutLocation("TestLocationDSName")) ;
+		SimpleUtils.pass("Search location with location name successfully!");
 		//check search with location City
-		if(searchOutLocation("Agua Agria"));
-		   SimpleUtils.pass("Search location with location city successfully!");
+		if (searchOutLocation("Agua Agria")) ;
+		SimpleUtils.pass("Search location with location city successfully!");
 		//blocked by https://legiontech.atlassian.net/browse/OPS-3858
 		/*
 		//check search with location state
@@ -334,15 +331,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 		 */
 		//check search with location District
-		if(searchOutLocation("ClearDistrict"));
-		   SimpleUtils.pass("Search location with location District successfully!");
+		if (searchOutLocation("ClearDistrict")) ;
+		SimpleUtils.pass("Search location with location District successfully!");
 		//Check the 10 records in a page
 		searchInput.clear();
-		int dataCount=locationRows.size();
-		if(dataCount==10)
+		int dataCount = locationRows.size();
+		if (dataCount == 10)
 			SimpleUtils.pass("There are 10 records in a page at most.");
 		else
-			SimpleUtils.fail("There are more than 10 records in a page",false);
+			SimpleUtils.fail("There are more than 10 records in a page", false);
 		//check back link
 		clickTheElement(locationBackLink);
 		waitForSeconds(2);
@@ -358,13 +355,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			waitForSeconds(2);
 			clickTheElement(locationBackLink);
 			waitForSeconds(2);
-			if(isElementLoaded(locationSearchInput))
+			if (isElementLoaded(locationSearchInput))
 				SimpleUtils.pass("Page back to location landing page after back from create location page");
 			clickTheElement(addLocationBtn);
 			waitForSeconds(2);
 			clickTheElement(cancelBtnInImportLocationPage);
 			waitForSeconds(2);
-			if(isElementLoaded(locationSearchInput))
+			if (isElementLoaded(locationSearchInput))
 				SimpleUtils.pass("Page back to location landing page after cancel from create location page");
 		}
 
@@ -401,7 +398,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	private boolean searchOutLocation(String searchInputText) throws Exception {
-		boolean res=false;
+		boolean res = false;
 		String[] searchLocationCha = searchInputText.split(",");
 		if (isElementLoaded(searchInput, 10)) {
 			for (int i = 0; i < searchLocationCha.length; i++) {
@@ -410,7 +407,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				searchInput.sendKeys(Keys.ENTER);
 				waitForSeconds(5);
 				if (locationRows.size() > 0) {
-					res=true;
+					res = true;
 					SimpleUtils.pass("Locations: " + locationRows.size() + " location(s) found  ");
 					break;
 				} else {
@@ -471,7 +468,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = ".lg-search-icon")
 	private WebElement searchBtn;
 //	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]:nth-child(2) > td.one-line-overflow > div > lg-button > button > span > span")
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"]> td.one-line-overflow > div > lg-button > button > span > span")
+
+	@FindBy(css = "tr[ng-repeat*=\"location in filteredCollection\"]> td.one-line-overflow > div > lg-button > button > span > span")
 	private List<WebElement> locationsName;
 	@FindBy(css = "select[aria-label=\"Location Type\"]")
 	private WebElement locationSourceType;
@@ -481,10 +479,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement selectSourceLocationDialog;
 
 
-
 	@Override
 	public boolean searchNewLocation(String locationName) {
-		boolean existRe=false;
+		boolean existRe = false;
 		waitForSeconds(30);
 		if (isElementEnabled(searchInput, 8)) {
 			int retryTime = 0;
@@ -501,7 +498,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					break;
 				}
 			}
-			if(existRe)
+			if (existRe)
 				SimpleUtils.pass("the location is searched");
 			else
 				SimpleUtils.fail("There are no locations that match your criteria. ", false);
@@ -528,7 +525,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void locationSourceTypeCheck() throws Exception{
+	public void locationSourceTypeCheck() throws Exception {
 		//check the source type as regular
 		if (isElementEnabled(addLocationBtn, 15)) {
 			click(addLocationBtn);
@@ -537,34 +534,34 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			Select sourceType = new Select(locationSourceType);
 			sourceType.selectByVisibleText("Regular");
 			//check the Source location with link displayed
-			if(areListElementVisible(locationsLinks)&&locationsLinks.get(0).getText().trim().equals("Select A Location")){
+			if (areListElementVisible(locationsLinks) && locationsLinks.get(0).getText().trim().equals("Select A Location")) {
 				SimpleUtils.pass("The Source Location configuration supported for regular location type!");
 				clickTheElement(locationsLinks.get(0));
-				if(isElementLoaded(selectSourceLocationDialog))
+				if (isElementLoaded(selectSourceLocationDialog))
 					clickTheElement(cancelBtnInImportLocationPage);
 			}
 			//select the source type as MOCK
 			sourceType.selectByVisibleText("Mock");
 			//check there is no source location link
-			if(areListElementVisible(locationsLinks)&&!locationsLinks.get(0).getText().trim().equals("Select A Location")){
+			if (areListElementVisible(locationsLinks) && !locationsLinks.get(0).getText().trim().equals("Select A Location")) {
 				SimpleUtils.pass("The Source Location configuration not supported for Mock location type!");
 			}
 			//select the source type as NSO
 			sourceType.selectByVisibleText("NSO");
 			//check the Source location with link displayed
-			if(areListElementVisible(locationsLinks)&&locationsLinks.get(0).getText().trim().equals("Select A Location")){
+			if (areListElementVisible(locationsLinks) && locationsLinks.get(0).getText().trim().equals("Select A Location")) {
 				SimpleUtils.pass("The Source Location configuration supported for NSO location type!");
 				clickTheElement(locationsLinks.get(0));
-				if(isElementLoaded(selectSourceLocationDialog))
+				if (isElementLoaded(selectSourceLocationDialog))
 					clickTheElement(cancelBtnInImportLocationPage);
 			}
-			}
-
 		}
 
+	}
+
 	@Override
-	public void addNewRegularLocationWithDate(String locationNameS, String searchCharactor, int index,int fromToday) throws Exception {
-		String locationName=locationNameS;
+	public void addNewRegularLocationWithDate(String locationNameS, String searchCharactor, int index, int fromToday) throws Exception {
+		String locationName = locationNameS;
 		if (isElementEnabled(addLocationBtn, 15)) {
 			click(addLocationBtn);
 			displayNameInput.sendKeys(locationName);
@@ -697,7 +694,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement leaveThisPageBtn;
 
 	@Override
-	public void addNewMockLocationWithAllFields( String searchCharactor, int index) throws Exception {
+	public void addNewMockLocationWithAllFields(String searchCharactor, int index) throws Exception {
 		if (isElementEnabled(addLocationBtn, 15)) {
 			click(addLocationBtn);
 			selectByVisibleText(locationTypeSelector, newLocationParas.get("Location_Type_Mock"));
@@ -738,7 +735,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 
 	@Override
-	public void verifyImportLocationDistrict(String fileName) throws Exception{
+	public void verifyImportLocationDistrict(String fileName) throws Exception {
 		String absolutePath = new File("").getCanonicalPath();
 		String relativePath = "/src/test/resources/uploadFile/LocationTest/";
 		String path = absolutePath + relativePath + fileName;
@@ -1023,10 +1020,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private List<WebElement> locationConfiguredTemplatesEdit;
 
 
-
-
 	@Override
-	public void checkEveryLocationTemplateConfig(String locationName) throws Exception{
+	public void checkEveryLocationTemplateConfig(String locationName) throws Exception {
 		//search a location
 		searchLocation(locationName);
 		//click to enter the firrst location details
@@ -1034,14 +1029,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			clickTheElement(locationRows.get(0).findElement(By.cssSelector("td.one-line-overflow lg-button")));
 			waitForSeconds(2);
 			//navigate to Configuration tab and view to each template detail
-			if(areListElementVisible(locationViewNavigate)&&locationViewNavigate.size()>1) {
+			if (areListElementVisible(locationViewNavigate) && locationViewNavigate.size() > 1) {
 				SimpleUtils.pass("Location detail page loaded successfully!");
 				clickTheElement(locationViewNavigate.get(1));
 				waitForSeconds(2);
 				//check the view actions
-				if(areListElementVisible(locationConfiguredTemplates)){
-					for(int ini=0;ini<locationConfiguredTemplates.size();ini++){
-						WebElement viewac=locationConfiguredTemplates.get(ini);
+				if (areListElementVisible(locationConfiguredTemplates)) {
+					for (int ini = 0; ini < locationConfiguredTemplates.size(); ini++) {
+						WebElement viewac = locationConfiguredTemplates.get(ini);
 						//check if view action is displayed
 						if (isElementLoaded(viewac.findElement(By.cssSelector("span[ng-click=\"$ctrl.getTemplateDetails(value,'view')\"]")))) {
 							//get the template name
@@ -1049,19 +1044,19 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 							clickTheElement(viewac.findElement(By.cssSelector("span[ng-click=\"$ctrl.getTemplateDetails(value,'view')\"]")));
 							waitForSeconds(2);
 							//try to get the display name of each template
-							if(isElementLoaded(locationTempDisplayName,5)&&isElementDisplayed(backBtnInDistrictListPage)){
-							   String TempDisplayname=locationTempDisplayName.getText().trim();
-							   SimpleUtils.pass("Currently viewed template display name is:"+TempDisplayname);
-							   //click back
+							if (isElementLoaded(locationTempDisplayName, 5) && isElementDisplayed(backBtnInDistrictListPage)) {
+								String TempDisplayname = locationTempDisplayName.getText().trim();
+								SimpleUtils.pass("Currently viewed template display name is:" + TempDisplayname);
+								//click back
 								clickTheElement(backBtnInDistrictListPage);
 								waitForSeconds(2);
 								SimpleUtils.pass("View the template " + currTemp + " detail successfully!");
 							}
 						}
 					}
-				//check each Configuried template that can be edited
-					for(int init=0;init<locationConfiguredTemplatesEdit.size();init++){
-						WebElement editEle=locationConfiguredTemplatesEdit.get(init);
+					//check each Configuried template that can be edited
+					for (int init = 0; init < locationConfiguredTemplatesEdit.size(); init++) {
+						WebElement editEle = locationConfiguredTemplatesEdit.get(init);
 						if (areListElementVisible(locationConfiguredTemplatesEdit)) {
 							//enter edit location mode
 							if (isElementLoaded(editLocationBtn)) {
@@ -1079,18 +1074,16 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 								}
 							}
 						}
-				}
+					}
 
-				}
-			    else
+				} else
 					SimpleUtils.fail("Location load with no templates configured!", false);
 
-		    }
-			else
-			  SimpleUtils.fail("Location detail not show Configuration tab successfully", false);
+			} else
+				SimpleUtils.fail("Location detail not show Configuration tab successfully", false);
 		}
 
-		}
+	}
 
 	private boolean verifyExportLocationsPageShow() {
 
@@ -1209,10 +1202,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public boolean verifyUpdateLocationResult(String locationName) throws Exception {
 		searchLocation(locationName);
-		boolean existLoc=false;
-		for(WebElement es:locationsName) {
+		boolean existLoc = false;
+		for (WebElement es : locationsName) {
 			if (es.getText().trim().contains(locationName)) {
-				existLoc=true;
+				existLoc = true;
 				break;
 			}
 		}
@@ -1565,7 +1558,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			waitForSeconds(2);
 			moveToElementAndClick(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"]:nth-child(2)>button")));
 			waitForSeconds(8);
-			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button")).getText().equals(action)) {
+			if (!getDriver().findElement(By.xpath("//div[1]/form-buttons/div[2]/lg-button[1]/button/span/span")).getText().contains(action)) {
 				SimpleUtils.pass(action + " " + locationName + " successfully");
 			} else
 				SimpleUtils.fail(action + " " + locationName + " successfully", true);
@@ -2099,7 +2092,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public String updateUpperfield(String upperfieldsName, String upperfieldsId, String searchChara, int index, String level) throws Exception {
 
-		String currentTime =  TestBase.getCurrentTime().substring(4);
+		String currentTime = TestBase.getCurrentTime().substring(4);
 
 		searchUpperFields(upperfieldsName);
 		if (upperfieldRows.size() > 0) {
@@ -2214,12 +2207,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
 			if (isElementEnabled(enabledDisableUpperfieldModal, 10)) {
 				click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + action + "\"] ")));
-				SimpleUtils.pass(current +" successfully");
+				SimpleUtils.pass(current + " successfully");
 			} else
-				SimpleUtils.fail(current +"Failed!", false);
+				SimpleUtils.fail(current + "Failed!", false);
 			waitForSeconds(5);
-		}
-		else if (!current.equals(action)) {
+		} else if (!current.equals(action)) {
 			click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + current + "\"] ")));
 			if (isElementEnabled(enabledDisableUpperfieldModal, 10)) {
 				click(getDriver().findElement(By.cssSelector("lg-button[label=\"" + current + "\"] ")));
@@ -2230,7 +2222,6 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 
-
 	@Override
 	public void disableEnableUpperfield(String upperfieldName, String action) throws Exception {
 		upperfieldsSearchInputBox.clear();
@@ -2239,8 +2230,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			List<WebElement> upperfieldDetailsLinks = upperfieldRows.get(0).findElements(By.cssSelector("button[type='button']"));
 			click(upperfieldDetailsLinks.get(0));
 			waitForSeconds(3);
-			String currentStustus=getDriver().findElement(By.xpath("//lg-button[@label='Edit Upperfield']/preceding-sibling::lg-button")).getText().trim();
-			doEnableOrDisable(currentStustus,action);
+			String currentStustus = getDriver().findElement(By.xpath("//lg-button[@label='Edit Upperfield']/preceding-sibling::lg-button")).getText().trim();
+			doEnableOrDisable(currentStustus, action);
 			click(backBtnInLocationDetailsPage);
 		} else
 			SimpleUtils.fail("No search result", true);
@@ -2408,7 +2399,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					click(criteriaValue);
 					clickTheElement(testBtn);
 					if (isElementLoaded(testBtnInfo, 5))
-					testInfo = testBtnInfo.getText().trim();
+						testInfo = testBtnInfo.getText().trim();
 					click(okBtnInSelectLocation);
 					waitForSeconds(3);
 					searchWFSDynamicGroup(groupName);
@@ -2417,11 +2408,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					} else
 						SimpleUtils.fail("WFS Dynamic group create failed", false);
 					return testInfo;
-				} else{
-					if(formatScript.getAttribute("innerText").contains("Enter your expression. The dynamic location group will only be created if the expresion evaluates to be true.")){
+				} else {
+					if (formatScript.getAttribute("innerText").contains("Enter your expression. The dynamic location group will only be created if the expresion evaluates to be true.")) {
 						SimpleUtils.pass("Format Script placeholder is correct");
-					}else
-						SimpleUtils.fail("Format Script placeholder is wrong",false);
+					} else
+						SimpleUtils.fail("Format Script placeholder is wrong", false);
 					formulaInputBox.sendKeys("Parent(1)");
 					scrollToElement(okBtnInSelectLocation);
 				}
@@ -2479,15 +2470,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void removedSearchedWFSDG() throws Exception{
-		if(isExist(removeBtnInRemovDGPopup)){
+	public void removedSearchedWFSDG() throws Exception {
+		if (isExist(removeBtnInRemovDGPopup)) {
 			click(removeBtnInRemovDGPopup);
 			click(removeBtnInRemovDGPopup);
-			if(isExist(removeBtnInRemovDGPopup)){
+			if (isExist(removeBtnInRemovDGPopup)) {
 				SimpleUtils.pass("Remove successfully");
-			}else
-				SimpleUtils.fail("Remove failed",false);
-		}else
+			} else
+				SimpleUtils.fail("Remove failed", false);
+		} else
 			SimpleUtils.report("There is no remove button");
 	}
 
@@ -2842,7 +2833,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.report("Upperfield creation done");
 				waitForSeconds(20);
 				searchUpperFields(levelInfo.get(i) + upperfieldsName);
-				disableEnableUpperfield(levelInfo.get(i) + upperfieldsName,"Disable");
+				disableEnableUpperfield(levelInfo.get(i) + upperfieldsName, "Disable");
 			} else
 				SimpleUtils.fail("Upperfield landing page load failed", true);
 		}
@@ -3247,40 +3238,41 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	// Added by Julie
-	@FindBy (css = "tr[ng-repeat=\"location in filteredCollection\"] span[ng-transclude]>span")
+
+	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection track by location.businessId\"] span[ng-transclude]>span")
 	private List<WebElement> locationNamesInLocationRows;
 
-	@FindBy (xpath = "//lg-tabs//div[contains(text(),'Configuration')]")
+	@FindBy(xpath = "//lg-tabs//div[contains(text(),'Configuration')]")
 	private WebElement configurationTabOfLocation;
 
 	@Override
 	public void clickOnLocationInLocationResult(String location) throws Exception {
-		if (areListElementVisible(locationNamesInLocationRows,10)) {
-			for (WebElement locationName: locationNamesInLocationRows)
+		if (areListElementVisible(locationNamesInLocationRows, 10)) {
+			for (WebElement locationName : locationNamesInLocationRows)
 				if (locationName.getText().equals(location)) {
 					click(locationName);
 					SimpleUtils.pass("Locations Page: Search out the location '" + location + "' and open it successfully");
 					break;
 				}
 		} else
-			SimpleUtils.fail("Locations Page: Cannot search out the location name '" + location + "'",false);
+			SimpleUtils.fail("Locations Page: Cannot search out the location name '" + location + "'", false);
 	}
 
 	@Override
 	public void clickOnConfigurationTabOfLocation() throws Exception {
-		if (isElementEnabled(configurationTabOfLocation,10)) {
+		if (isElementEnabled(configurationTabOfLocation, 10)) {
 			click(configurationTabOfLocation);
 			SimpleUtils.pass("Locations Page: Switch to Configuration tab successfully");
 		} else
-			SimpleUtils.fail("Locations Page: Configuration tab failed to load",false);
+			SimpleUtils.fail("Locations Page: Configuration tab failed to load", false);
 	}
 
-    @Override
-	public HashMap<String,String> getTemplateTypeAndNameFromLocation() throws Exception {
+	@Override
+	public HashMap<String, String> getTemplateTypeAndNameFromLocation() throws Exception {
 		HashMap<String, String> templateTypeAndName = new HashMap<>();
 		waitForSeconds(3);
 		if (areListElementVisible(templateRows, 30) && templateRows.size() != 0) {
-			for (WebElement templateRow: templateRows) {
+			for (WebElement templateRow : templateRows) {
 				String templateType = templateRow.findElement(By.xpath("./td[1]")).getText().trim();
 				String templateName = templateRow.findElement(By.xpath("./td[2]/span")).getText().trim();
 				templateTypeAndName.put(templateType, templateName);
@@ -3317,7 +3309,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void enableDaypart(String dayPart) throws Exception {
 		boolean isDaypartPresent = false;
-		if(isElementEnabled(editOnGlobalConfigPage,10))
+		if (isElementEnabled(editOnGlobalConfigPage, 10))
 			clickTheElement(editOnGlobalConfigPage);
 		else
 			SimpleUtils.fail("Global Configuration Page: Edit button failed to load", false);
@@ -3330,7 +3322,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				}
 			}
 		}
-		if (isElementLoaded(addDayPartsBtn,30)) {
+		if (isElementLoaded(addDayPartsBtn, 30)) {
 			if (!isDaypartPresent) {
 				click(addDayPartsBtn);
 				newDayPartName.sendKeys(dayPart);
@@ -3341,7 +3333,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Global Configuration Page: Add day part '" + dayPart + "' successfully");
 			}
 		} else
-			SimpleUtils.fail("Global Configuration Page: Day parts failed to load",false);
+			SimpleUtils.fail("Global Configuration Page: Day parts failed to load", false);
 		clickTheElement(saveButtonOnGlobalConfiguration);
 	}
 
@@ -3389,6 +3381,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "tr[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
 	private List<WebElement> workRolesInAssignmentRulesInLocationLevel;
+
 	@Override
 	public void canGoToAssignmentRoleViaTemNameInLocationLevel() {
 		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("tr[ng-repeat=\"(key,value) in $ctrl.templates\"]>td:nth-child(2)>span[ng-click=\"$ctrl.getTemplateDetails(value,'view', true)\"]"));
@@ -3528,7 +3521,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			return templateValue;
 		} else
 			SimpleUtils.fail("Go to Schedule Collaboration template failed in location level via template name link", false);
-			return null;
+		return null;
 
 	}
 
@@ -3604,7 +3597,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return null;
 	}
 
-	@FindBy(css=".workRoleContainer.row.ng-scope")
+	@FindBy(css = ".workRoleContainer.row.ng-scope")
 	private List<WebElement> workRoleList;
 
 	@Override
@@ -3612,7 +3605,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		WebElement templateNameLink = getDriver().findElement(By.xpath("//td[contains(text(),'Labor Model')]/following-sibling::*[1]/span"));
 		if (isExist(templateNameLink)) {
 			click(templateNameLink);
-			if (areListElementVisible(workRoleList, 5)){
+			if (areListElementVisible(workRoleList, 5)) {
 				SimpleUtils.pass("Go to Labor model in locations level successfully");
 			} else
 				SimpleUtils.fail("Failed go to Labor model in locations page ", false);
@@ -3650,7 +3643,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isElementEnabled(backBtnInLocationDetailsPage, 5)) {
 			click(backBtnInLocationDetailsPage);
 			waitForSeconds(8);
-			if (templateRows.size()>0) {
+			if (templateRows.size() > 0) {
 				SimpleUtils.pass("Back to location configuration page successfully");
 			} else
 				SimpleUtils.fail("Back to location configuration page failed", false);
@@ -3692,14 +3685,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public List<HashMap<String, String>> getLocationTemplateInfosInLocationLevel() {
 		List<HashMap<String, String>> templateInfo = new ArrayList<>();
 		if (areListElementVisible(templateRows, 5)) {
-			for (int i = 0; i<templateRows.size(); i++) {
+			for (int i = 0; i < templateRows.size(); i++) {
 				HashMap<String, String> templateInfoInEachRow = new HashMap<>();
 				templateInfoInEachRow.put("Template Type", templateRows.get(i).findElement(By.cssSelector("td:nth-child(1)")).getText());
 				templateInfoInEachRow.put("Template Name", templateRows.get(i).findElement(By.cssSelector("td:nth-child(2)")).getText());
 				String actions = templateRows.get(i).findElement(By.cssSelector("td:nth-child(6)")).getText();
-				if (isElementExist("tbody tr:nth-child(" + (i+2) + ") td.tc span")) {
+				if (isElementExist("tbody tr:nth-child(" + (i + 2) + ") td.tc span")) {
 					templateInfoInEachRow.put("Overridden", "Yes");
-				} else{
+				} else {
 					templateInfoInEachRow.put("Overridden", "No");
 				}
 				templateInfo.add(templateInfoInEachRow);
@@ -3713,6 +3706,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "tr[ng-repeat=\"(key,value) in $ctrl.templates\"]> td:nth-child(6) > span:nth-child(2)")
 	private List<WebElement> editBtns;
+
 	@Override
 	public void editLocationBtnIsClickableInLocationDetails() {
 		waitForSeconds(5);
@@ -3733,36 +3727,36 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		//check the Location Group Setting
 		clickTheElement(locationGroupSelect);
 		waitForSeconds(2);
-		List<WebElement> options=locationGroupSelect.findElements(By.cssSelector("option"));
-		int enabledCount=0;
-		for(WebElement op:options){
-			if(op.isEnabled())
+		List<WebElement> options = locationGroupSelect.findElements(By.cssSelector("option"));
+		int enabledCount = 0;
+		for (WebElement op : options) {
+			if (op.isEnabled())
 				enabledCount++;
 		}
 		//Assert only one option is enabled
-		SimpleUtils.assertOnFail("The location setting for location group are not enabled for the selected option",enabledCount==1,false);
-        //back to list
+		SimpleUtils.assertOnFail("The location setting for location group are not enabled for the selected option", enabledCount == 2, false);
+		//back to list
 		clickTheElement(locationBackLink);
-		}
+	}
 
 	@Override
-	public void checkLocationNavigation(String locationName) throws Exception{
+	public void checkLocationNavigation(String locationName) throws Exception {
 		goToLocationDetailsPage(locationName);
 		//get the current location and type
-		String curLocaName=locationNameText.getText();
-		if(isElementLoaded(childLocationRelationSelectLink)&&isElementLoaded(parentLocationOfChild)) {
+		String curLocaName = locationNameText.getText();
+		if (isElementLoaded(childLocationRelationSelectLink) && isElementLoaded(parentLocationOfChild)) {
 			SimpleUtils.pass("Current location is a child location of location group, it's is:" + curLocaName);
 			//get the parent location name
-			String parentAtDetail=parentLocationOfChild.getText().trim();
+			String parentAtDetail = parentLocationOfChild.getText().trim();
 			//click the link of parent
 			clickTheElement(parentLocationOfChild);
 			//check to get the navigated location
-			if(isElementLoaded(locationNameText,10)) {
-				String navigatedLocName =locationNameText.getText().trim();
-				if(!navigatedLocName.equals(curLocaName)&&navigatedLocName.equals(parentAtDetail))
-					SimpleUtils.pass("Click the link of parent location will navigate to the detail of parent location detail, it is:"+navigatedLocName);
+			if (isElementLoaded(locationNameText, 10)) {
+				String navigatedLocName = locationNameText.getText().trim();
+				if (!navigatedLocName.equals(curLocaName) && navigatedLocName.equals(parentAtDetail))
+					SimpleUtils.pass("Click the link of parent location will navigate to the detail of parent location detail, it is:" + navigatedLocName);
 				else
-					SimpleUtils.fail("The link of parent location navigate the parent location detail failed!",false);
+					SimpleUtils.fail("The link of parent location navigate the parent location detail failed!", false);
 			}
 			//click close to quit location detail
 			clickTheElement(locationDetailCloseBTN);
@@ -3777,15 +3771,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				case "Assignment Rules":
 					List<WebElement> actions = templateRows.get(0).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actions) {
-						if (s.getText().contains(action)&& action.equals("View")) {
+						if (s.getText().contains(action) && action.equals("View")) {
 							clickTheElement(s);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if (s.getText().contains(action)&& action.equals("Edit")) {
+						} else if (s.getText().contains(action) && action.equals("Edit")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action.ng-binding")));
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if(s.getText().contains(action)&& action.equals("Reset")) {
+						} else if (s.getText().contains(action) && action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
 							click(okBtnInSelectLocation);
@@ -3797,15 +3791,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				case "Operating Hours":
 					List<WebElement> actionsForOH = templateRows.get(7).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForOH) {
-						if (s.getText().contains(action)&& action.equals("View")) {
+						if (s.getText().contains(action) && action.equals("View")) {
 							clickTheElement(s);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if (s.getText().contains(action)&& action.equals("Edit")) {
+						} else if (s.getText().contains(action) && action.equals("Edit")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action.ng-binding")));
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if(s.getText().contains(action)&& action.equals("Reset")) {
+						} else if (s.getText().contains(action) && action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
 							click(okBtnInSelectLocation);
@@ -3817,15 +3811,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				case "Scheduling Rules":
 					List<WebElement> actionsForSchRules = templateRows.get(5).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForSchRules) {
-						if (s.getText().contains(action)&& action.equals("View")) {
+						if (s.getText().contains(action) && action.equals("View")) {
 							clickTheElement(s);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if (s.getText().contains(action)&& action.equals("Edit")) {
+						} else if (s.getText().contains(action) && action.equals("Edit")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action.ng-binding")));
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if(s.getText().contains(action)&& action.equals("Reset")) {
+						} else if (s.getText().contains(action) && action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
 							click(okBtnInSelectLocation);
@@ -3837,15 +3831,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				case "Schedule Collaboration":
 					List<WebElement> actionsForSchCollas = templateRows.get(3).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForSchCollas) {
-						if (s.getText().contains(action)&& action.equals("View")) {
+						if (s.getText().contains(action) && action.equals("View")) {
 							clickTheElement(s);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if (s.getText().contains(action)&& action.equals("Edit")) {
+						} else if (s.getText().contains(action) && action.equals("Edit")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action.ng-binding")));
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if(s.getText().contains(action)&& action.equals("Reset")) {
+						} else if (s.getText().contains(action) && action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
 							click(okBtnInSelectLocation);
@@ -3857,15 +3851,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				case "Time and Attendance":
 					List<WebElement> actionsForTA = templateRows.get(4).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForTA) {
-						if (s.getText().contains(action)&& action.equals("View")) {
+						if (s.getText().contains(action) && action.equals("View")) {
 							clickTheElement(s);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if (s.getText().contains(action)&& action.equals("Edit")) {
+						} else if (s.getText().contains(action) && action.equals("Edit")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action.ng-binding")));
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if(s.getText().contains(action)&& action.equals("Reset")) {
+						} else if (s.getText().contains(action) && action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
 							click(okBtnInSelectLocation);
@@ -3877,15 +3871,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				case "Scheduling Policies":
 					List<WebElement> actionsForSchPolicy = templateRows.get(1).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForSchPolicy) {
-						if (s.getText().contains(action)&& action.equals("View")) {
+						if (s.getText().contains(action) && action.equals("View")) {
 							clickTheElement(s);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if (s.getText().contains(action)&& action.equals("Edit")) {
+						} else if (s.getText().contains(action) && action.equals("Edit")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action.ng-binding")));
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if(s.getText().contains(action)&& action.equals("Reset")) {
+						} else if (s.getText().contains(action) && action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
 							click(okBtnInSelectLocation);
@@ -3897,15 +3891,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				case "Compliance":
 					List<WebElement> actionsForCompliance = templateRows.get(2).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForCompliance) {
-						if (s.getText().contains(action)&& action.equals("View")) {
+						if (s.getText().contains(action) && action.equals("View")) {
 							clickTheElement(s);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if (s.getText().contains(action)&& action.equals("Edit")) {
+						} else if (s.getText().contains(action) && action.equals("Edit")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action.ng-binding")));
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if(s.getText().contains(action)&& action.equals("Reset")) {
+						} else if (s.getText().contains(action) && action.equals("Reset")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action-reset.ng-binding")));
 							verifyResetWindowDisplay();
 							click(okBtnInSelectLocation);
@@ -3917,18 +3911,17 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				case "Labor Model":
 					List<WebElement> actionsForLaborModel = templateRows.get(6).findElements(By.cssSelector(" td:nth-child(6)>span"));
 					for (WebElement s : actionsForLaborModel) {
-						if (s.getText().contains(action)&& action.equals("View")) {
+						if (s.getText().contains(action) && action.equals("View")) {
 							clickTheElement(s);
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}else if (s.getText().contains(action)&& action.equals("Edit")) {
+						} else if (s.getText().contains(action) && action.equals("Edit")) {
 							clickTheElement(s.findElement(By.cssSelector("span.action.ng-binding")));
 							SimpleUtils.pass(template_type + " 's " + action + " is clickable!");
 							break;
-						}
-						else if(action.equals("Reset")) {
+						} else if (action.equals("Reset")) {
 							try {
-								LocationsPage locationsPage= new OpsPortalLocationsPage();
+								LocationsPage locationsPage = new OpsPortalLocationsPage();
 								clickTheElement(editButtonOfLocationLevelLaborModelTemplate);
 								waitForSeconds(3);
 								resetLocationLevelExternalAttributesInLaborModelTemplate();
@@ -3953,10 +3946,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	}
 
-// added by Fiona
-	@FindBy(css="tbody tr:nth-child(8) td:nth-child(6) span[ng-click=\"$ctrl.editing && $ctrl.getTemplateDetails(value,'edit')\"]")
+	// added by Fiona
+	@FindBy(css = "tbody tr:nth-child(8) td:nth-child(6) span[ng-click=\"$ctrl.editing && $ctrl.getTemplateDetails(value,'edit')\"]")
 	private WebElement editButtonOfLocationLevelLaborModelTemplate;
-	@FindBy(css="lg-button[label=\"Reset\"] button")
+	@FindBy(css = "lg-button[label=\"Reset\"] button")
 	private WebElement resetButton;
 	@FindBy(css = "lg-button[label=\"Cancel\"] button")
 	private WebElement cancelBTNOnLocationLevelTemplateDetailsPage;
@@ -3967,11 +3960,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		laborModelPage.selectLaborStandardRepositorySubTabByLabel("External Attributes");
 		waitForSeconds(2);
 		scrollToBottom();
-		if(isElementLoaded(resetButton,3)){
+		if (isElementLoaded(resetButton, 3)) {
 			clickTheElement(resetButton);
 			verifyResetWindowDisplay();
 			click(okBtnInSelectLocation);
-		}else {
+		} else {
 			SimpleUtils.report("Location level External Attributes is not overridden");
 			clickTheElement(cancelBTNOnLocationLevelTemplateDetailsPage);
 		}
@@ -3982,37 +3975,38 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		laborModelPage.selectLaborStandardRepositorySubTabByLabel("Work Roles");
 		waitForSeconds(2);
 		scrollToBottom();
-		if(isElementLoaded(resetButton,3)){
+		if (isElementLoaded(resetButton, 3)) {
 			clickTheElement(resetButton);
 			verifyResetWindowDisplay();
 			click(okBtnInSelectLocation);
-		}else {
+		} else {
 			SimpleUtils.report("Location level Work Roles is not overridden");
 			clickTheElement(cancelBTNOnLocationLevelTemplateDetailsPage);
 		}
 	}
 
 	private void verifyResetWindowDisplay() {
-		if (isElementEnabled(removeDGPopupDes,3)&&isElementEnabled( enableLocationAlertPage,5)
+		if (isElementEnabled(removeDGPopupDes, 3) && isElementEnabled(enableLocationAlertPage, 5)
 				&& enableLocationAlertPage.getText().contains("Reset")) {
 			SimpleUtils.pass("Reset Configuration page show well");
-		}else
-			SimpleUtils.fail("Reset Configuration load failed",false);
+		} else
+			SimpleUtils.fail("Reset Configuration load failed", false);
 	}
 
 	@Override
 	public void okBtnIsClickable() throws Exception {
 		waitForSeconds(3);
-		if (isElementLoaded(okBtnInLocationGroupConfirmPage,5)) {
+		if (isElementLoaded(okBtnInLocationGroupConfirmPage, 5)) {
 			click(okBtnInLocationGroupConfirmPage);
-		}else
-			SimpleUtils.fail("Ok button load failed",false);
+		} else
+			SimpleUtils.fail("Ok button load failed", false);
 	}
 
 	@FindBy(css = "[tab-title=\"Details\"] div.lg-pagination__arrow--right")
 	private List<WebElement> paginationRightArrow;
+
 	@Override
-	public void  goToScheduleRulesListAtLocationLevel(String workRole) throws Exception {
+	public void goToScheduleRulesListAtLocationLevel(String workRole) throws Exception {
 		if (isElementLoaded(searchByWorkRoleInput, 10)) {
 			searchByWorkRoleInput.clear();
 			searchByWorkRoleInput.sendKeys(workRole);
@@ -4027,7 +4021,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					}
 				}
 				int i = 0;
-				while (i <10 && areListElementVisible(paginationRightArrow, 5)
+				while (i < 10 && areListElementVisible(paginationRightArrow, 5)
 						&& !paginationRightArrow.get(0).getAttribute("class").contains("disabled")) {
 					clickTheElement(paginationRightArrow.get(0));
 					for (WebElement s : workRolesInSchedulingRulesInLocationLevel) {
@@ -4049,8 +4043,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "lg-button[label = 'Edit']>button")
 	private List<WebElement> editBtnsInOH;
-//	@FindBy(css = "table.lg-table.ng-scope")
-	@FindBy(css="div.modal-dialog div.modal-content")
+	//	@FindBy(css = "table.lg-table.ng-scope")
+	@FindBy(css = "div.modal-dialog div.modal-content")
 	private WebElement workingHoursModalBody;
 	@FindBy(css = ".each-day-selector>input-field>ng-form>input[type=\"checkbox\"]")
 	private List<WebElement> checkBoxOfEachDay;
@@ -4059,76 +4053,77 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void editBtnIsClickableInBusinessHours() {
 		waitForSeconds(5);
 		scrollToBottom();
-		if (editBtnsInOH.size()>0) {
+		if (editBtnsInOH.size() > 0) {
 			click(editBtnsInOH.get(0));
-			if (isElementEnabled(workingHoursModalBody,5)) {
+			if (isElementEnabled(workingHoursModalBody, 5)) {
 				SimpleUtils.pass("Edit button is clickable in business hours");
-			}else
-				SimpleUtils.fail("Working hours edit pop up window load failed",false);
-		}else
-			SimpleUtils.fail("Edit buttons load failed in operating hours template",false);
+			} else
+				SimpleUtils.fail("Working hours edit pop up window load failed", false);
+		} else
+			SimpleUtils.fail("Edit buttons load failed in operating hours template", false);
 	}
 
 	@Override
 	public void selectDayInWorkingHoursPopUpWin(int i) {
-		if (areListElementVisible(checkBoxOfEachDay,5)) {
+		if (areListElementVisible(checkBoxOfEachDay, 5)) {
 			click(checkBoxOfEachDay.get(i));
 			if (checkBoxOfEachDay.get(i).getAttribute("class").contains("not-empty")) {
 				SimpleUtils.pass("Select the checkbox successfully");
-			}else
-				SimpleUtils.fail("This checkbox was not selected",false);
-		}else
-			SimpleUtils.fail("Checkbox of each day in working hours pop up windown load failed",false);
+			} else
+				SimpleUtils.fail("This checkbox was not selected", false);
+		} else
+			SimpleUtils.fail("Checkbox of each day in working hours pop up windown load failed", false);
 	}
 
 	@Override
 	public void clickSaveBtnInWorkingHoursPopUpWin() {
 		if (isElementEnabled(saveBtnInUpdateLocationPage)) {
 			click(saveBtnInUpdateLocationPage);
-			if (areListElementVisible(editBtnsInOH,5)) {
+			if (areListElementVisible(editBtnsInOH, 5)) {
 				SimpleUtils.pass("Save button is clickable in business hours");
-			}else
-				SimpleUtils.fail("Click save button failed",false);
-		}else
-			SimpleUtils.fail("Save buttons load failed",false);
+			} else
+				SimpleUtils.fail("Click save button failed", false);
+		} else
+			SimpleUtils.fail("Save buttons load failed", false);
 	}
 
-    @FindBy(css="table.lg-table tbody.ng-scope")
-    private List<WebElement> attributesList;
+	@FindBy(css = "table.lg-table tbody.ng-scope")
+	private List<WebElement> attributesList;
 
 	@Override
-    public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtLocationLevel() throws Exception{
-        HashMap<String, List<String>> infoForEachAttribute = new HashMap<>();
-        if(areListElementVisible(attributesList,5)){
-            for (WebElement attribute : attributesList) {
-                List<String> infos = new ArrayList<>();
-                String name = attribute.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
-                String value = attribute.findElement(By.cssSelector("td:nth-child(2) div")).getAttribute("innerText").trim();
-                String des = attribute.findElement(By.cssSelector("td:nth-child(3) div")).getAttribute("innerText").trim();
-                infos.add(0,value);
-                infos.add(1,des);
-                infoForEachAttribute.put(name,infos);
-            }
-        }
-        return infoForEachAttribute;
-    }
-	@FindBy(css="lg-button[label=\"Save\"] button")
+	public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtLocationLevel() throws Exception {
+		HashMap<String, List<String>> infoForEachAttribute = new HashMap<>();
+		if (areListElementVisible(attributesList, 5)) {
+			for (WebElement attribute : attributesList) {
+				List<String> infos = new ArrayList<>();
+				String name = attribute.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
+				String value = attribute.findElement(By.cssSelector("td:nth-child(2) div")).getAttribute("innerText").trim();
+				String des = attribute.findElement(By.cssSelector("td:nth-child(3) div")).getAttribute("innerText").trim();
+				infos.add(0, value);
+				infos.add(1, des);
+				infoForEachAttribute.put(name, infos);
+			}
+		}
+		return infoForEachAttribute;
+	}
+
+	@FindBy(css = "lg-button[label=\"Save\"] button")
 	private WebElement saveButtonOnLocationLevelExternalAttributesPage;
 
 	@Override
 	public void clickOnSaveButton() throws Exception {
-		if(isElementEnabled(saveButtonOnLocationLevelExternalAttributesPage,5)){
+		if (isElementEnabled(saveButtonOnLocationLevelExternalAttributesPage, 5)) {
 			clickTheElement(saveButtonOnLocationLevelExternalAttributesPage);
 			waitForSeconds(5);
 		}
 	}
 
 	@Override
-    public void updateLocationLevelExternalAttributes(String attributeName,String attributeValue,String attributeDescription) throws Exception{
-		if(areListElementVisible(attributesList,5)){
-			for(WebElement attributeRow:attributesList){
+	public void updateLocationLevelExternalAttributes(String attributeName, String attributeValue, String attributeDescription) throws Exception {
+		if (areListElementVisible(attributesList, 5)) {
+			for (WebElement attributeRow : attributesList) {
 				String attributeNameInList = attributeRow.findElement(By.cssSelector("td:nth-child(1)")).getText().trim();
-				if(attributeNameInList.equals(attributeName)){
+				if (attributeNameInList.equals(attributeName)) {
 					WebElement valueField = attributeRow.findElement(By.cssSelector("td:nth-child(2) input"));
 					WebElement desField = attributeRow.findElement(By.cssSelector("td:nth-child(3) input"));
 					clickTheElement(valueField);
@@ -4153,20 +4148,20 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Import button is clickable and Import location pop up window show well");
 			} else
 				SimpleUtils.fail("Import button is not clickable", false);
-		}else
-			SimpleUtils.fail("Import button load failed",false);
+		} else
+			SimpleUtils.fail("Import button load failed", false);
 	}
 
 	@Override
 	public void cancelBtnOnImportExportPopUpWinsIsClickable() {
-		if (isElementEnabled(cancelBtn,5)) {
+		if (isElementEnabled(cancelBtn, 5)) {
 			click(cancelBtn);
-			if (isElementEnabled(importBtn,5)) {
+			if (isElementEnabled(importBtn, 5)) {
 				SimpleUtils.pass("Cancel button is clickable");
-			}else
-				SimpleUtils.fail("Cancel import or export location failed",false);
-		}else
-			SimpleUtils.fail("Cancel button load failed in export or import location page",false);
+			} else
+				SimpleUtils.fail("Cancel import or export location failed", false);
+		} else
+			SimpleUtils.fail("Cancel button load failed in export or import location page", false);
 
 	}
 
@@ -4178,8 +4173,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				SimpleUtils.pass("Export button is clickable and Export location page show well");
 			} else
 				SimpleUtils.fail("Export button is not clickable", true);
-		}else
-			SimpleUtils.fail("Export button load failed",false);
+		} else
+			SimpleUtils.fail("Export button load failed", false);
 	}
 
 	public void setLatitudeAndLongitude() {
@@ -4189,9 +4184,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "[form-title=\"Workforce sharing\"] lg-button[ng-click*=\"addDynamicGroup()\"]")
 	private WebElement addBtnDynamicGroup;
+
 	@Override
 	public void clickOnAddBtnForSharingDynamicLocationGroup() throws Exception {
-		if (isElementLoaded(addBtnDynamicGroup, 10)){
+		if (isElementLoaded(addBtnDynamicGroup, 10)) {
 			clickTheElement(addBtnDynamicGroup);
 		} else {
 			SimpleUtils.fail("Add button fail to load!", false);
@@ -4200,9 +4196,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = ".modal-dialog lg-button[label=\"Cancel\"]")
 	private WebElement cancelBtnDynamicGroup;
+
 	@Override
 	public void clickOnCancelBtnOnSharingDynamicLocationGroupWindow() throws Exception {
-		if (isElementLoaded(cancelBtnDynamicGroup, 10)){
+		if (isElementLoaded(cancelBtnDynamicGroup, 10)) {
 			clickTheElement(cancelBtnDynamicGroup);
 		} else {
 			SimpleUtils.fail("Cancel button fail to load!", false);
@@ -4211,10 +4208,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = ".modal-dialog .lg-modal__title-icon")
 	private WebElement titleForWorkforceSharingLocationGroup;
+
 	@Override
 	public void verifyTitleForWorkforceSharingLocationGroup() throws Exception {
-		if (isElementLoaded(titleForWorkforceSharingLocationGroup, 10)){
-			if (titleForWorkforceSharingLocationGroup.getText().contains("Manage Dynamic Location Group")){
+		if (isElementLoaded(titleForWorkforceSharingLocationGroup, 10)) {
+			if (titleForWorkforceSharingLocationGroup.getText().contains("Manage Dynamic Location Group")) {
 				SimpleUtils.pass("Title is expected!");
 			} else {
 				SimpleUtils.fail("Title is not expected! actual is: " + titleForWorkforceSharingLocationGroup.getText(), false);
@@ -4226,32 +4224,34 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "lg-button[label='Download translations'] button")
 	private WebElement downloadTranslationButton;
-	public void verifyDownloadTransaltionsButtonisClicked() throws Exception{
+
+	public void verifyDownloadTransaltionsButtonisClicked() throws Exception {
 		editOnGlobalConfigPage.click();
 		BasePage.scrollToBottom();
-		if(isElementLoaded(downloadTranslationButton,10)){
-			if(isClickable(downloadTranslationButton,10)){
+		if (isElementLoaded(downloadTranslationButton, 10)) {
+			if (isClickable(downloadTranslationButton, 10)) {
 				SimpleUtils.pass("Download translations button is clickable");
-			}else{
+			} else {
 				SimpleUtils.fail("Download Translations button is not clickable", false);
 			}
-		}else {
+		} else {
 			SimpleUtils.fail("Download Translations button loaded failed", false);
 		}
 	}
 
 	@FindBy(css = "lg-button[label='Upload translations'] button")
 	private WebElement uploadTranslationButton;
-	public void verifyUploadTransaltionsButtonisClicked() throws Exception{
+
+	public void verifyUploadTransaltionsButtonisClicked() throws Exception {
 		editOnGlobalConfigPage.click();
 		BasePage.scrollToBottom();
-		if(isElementLoaded(uploadTranslationButton,10)){
-			if(isClickable(uploadTranslationButton,10)){
+		if (isElementLoaded(uploadTranslationButton, 10)) {
+			if (isClickable(uploadTranslationButton, 10)) {
 				SimpleUtils.pass("Upload Translations button is clickable");
-			}else{
+			} else {
 				SimpleUtils.fail("Upload Translations button is not clickable", false);
 			}
-		}else {
+		} else {
 			SimpleUtils.fail("Upload Translations button loaded failed", false);
 		}
 	}
@@ -4259,13 +4259,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "lg-button[label = 'Reset']>button")
 	private WebElement resetLaborModel;
 
-	public void resetLaborModel() throws Exception{
-		if(isElementLoaded(resetLaborModel,5)){
+	public void resetLaborModel() throws Exception {
+		if (isElementLoaded(resetLaborModel, 5)) {
 			click(resetLaborModel);
 			click(okBtnInSelectLocation);
 			SimpleUtils.pass("Labor model reset button is clickable");
-		}else
-			SimpleUtils.fail("Labor model reset button loaded failed",false);
+		} else
+			SimpleUtils.fail("Labor model reset button loaded failed", false);
 	}
 
 	@FindBy(css = "lg-button[label='Upload Fiscal Calendar'] button")
@@ -4350,15 +4350,16 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
-	@FindBy(css="div.lg-tabs nav div:nth-child(2)")
+	@FindBy(css = "div.lg-tabs nav div:nth-child(2)")
 	private WebElement externalAttributesTab;
+
 	@Override
 	public void clickActionsForTemplate(String templateName, String action) {
 		scrollToBottom();
 		List<WebElement> actions = getDriver().findElements(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span/span[2]"));
 		actions.add(getDriver().findElement(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span[1]")));
 		String actionNew = action;
-		if (templateName.contains("Labor Model") && action.equalsIgnoreCase("reset")){
+		if (templateName.contains("Labor Model") && action.equalsIgnoreCase("reset")) {
 			actionNew = "Edit";
 		}
 		for (int i = 0; i < actions.size(); i++) {
@@ -4374,18 +4375,18 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					clickTheElement(resetButton);
 					verifyResetWindowDisplay();
 					click(okBtnInSelectLocation);
-				}else {
+				} else {
 					SimpleUtils.report("Location level Work Roles is not overridden");
 					clickTheElement(externalAttributesTab);
 					if (isExist(resetButton)) {
 						clickTheElement(resetButton);
 						verifyResetWindowDisplay();
 						click(okBtnInSelectLocation);
-					}else {
+					} else {
 						clickTheElement(cancelBTNOnLocationLevelTemplateDetailsPage);
 					}
 				}
-			}else{
+			} else {
 				click(okBtnInSelectLocation);
 			}
 		}
@@ -4531,13 +4532,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (flag.equalsIgnoreCase("Yes")) {
 			if (isExist(getDriver().findElement(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/span")))) {
 				SimpleUtils.pass("template is overrided");
-			}else{
+			} else {
 				SimpleUtils.fail("Template is not overrided", false);
 			}
 		} else {
 			if (getDriver().findElements(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/*")).size() == 1) {
 				SimpleUtils.fail("template is overrided", false);
-			}else{
+			} else {
 				SimpleUtils.pass("Template is reset");
 			}
 		}
@@ -4548,10 +4549,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		boolean flag = false;
 		if (getDriver().findElements(By.xpath("(//td[contains(text(),'" + templateName + "')]/following-sibling::*)[2]/*")).size() == 1) {
 			SimpleUtils.pass("template is overridden");
-			flag=true;
-		}else{
+			flag = true;
+		} else {
 			SimpleUtils.pass("Template is NOT overridden");
-			flag=false;
+			flag = false;
 		}
 		return flag;
 	}
@@ -4566,12 +4567,12 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	public Map<String, HashMap<String, String>> getLocationTemplateInfoInLocationLevelNew() {
-		Map<String, HashMap<String, String>>  templateInfo = new HashMap<>();
+		Map<String, HashMap<String, String>> templateInfo = new HashMap<>();
 		if (areListElementVisible(templateRows, 5)) {
 			for (WebElement s : templateRows) {
-				Map<String, String> li = new HashMap<String, String>() ;
+				Map<String, String> li = new HashMap<String, String>();
 				li.put("Template Type", s.findElement(By.cssSelector("td:nth-child(1)")).getText());
-				if(s.findElement(By.cssSelector("td:nth-child(1)")).getText().equalsIgnoreCase("Time and Attendance")){
+				if (s.findElement(By.cssSelector("td:nth-child(1)")).getText().equalsIgnoreCase("Time and Attendance")) {
 					li.put("Template Type", "Time & Attendance");
 				}
 				li.put("Template Name", s.findElement(By.cssSelector("td:nth-child(2)")).getText());
@@ -4590,79 +4591,79 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	//added by fiona
-	@FindBy(css="lg-dashboard-card[title=\"Enterprise Profile\"] h1")
+	@FindBy(css = "lg-dashboard-card[title=\"Enterprise Profile\"] h1")
 	private WebElement enterpriseProfileCard;
-	@FindBy(css="lg-button[label=\"Edit\"] button")
+	@FindBy(css = "lg-button[label=\"Edit\"] button")
 	private WebElement editButtonOnEnterpriseProfilePage;
-	@FindBy(css="form form-section[form-title=\"Enterprise Information\"]")
+	@FindBy(css = "form form-section[form-title=\"Enterprise Information\"]")
 	private WebElement enterpriseInformation;
-	@FindBy(css="form form-section[form-title=\"Primary Contact\"]")
+	@FindBy(css = "form form-section[form-title=\"Primary Contact\"]")
 	private WebElement primaryContactOnEnterpriseProfilePage;
-	@FindBy(css="form form-section[form-title=\"Enterprise Logo\"]")
+	@FindBy(css = "form form-section[form-title=\"Enterprise Logo\"]")
 	private WebElement enterpriseLogo;
-	@FindBy(css="form form-section[form-title=\"Default Location Picture\"]")
+	@FindBy(css = "form form-section[form-title=\"Default Location Picture\"]")
 	private WebElement enterpriseLocationPicture;
-	@FindBy(css="form form-section[form-title=\"Login Splash Image\"]")
+	@FindBy(css = "form form-section[form-title=\"Login Splash Image\"]")
 	private WebElement loginSplashImage;
-	@FindBy(css="form form-section[form-title=\"Easy Company Identifier\"]")
+	@FindBy(css = "form form-section[form-title=\"Easy Company Identifier\"]")
 	private WebElement easyCompanyIdentifier;
 
 	@Override
 	public void clickOnEnterpriseProfileCard() throws Exception {
-		if(isElementLoaded(enterpriseProfileCard,5)){
+		if (isElementLoaded(enterpriseProfileCard, 5)) {
 			clickTheElement(enterpriseProfileCard);
 			waitForSeconds(3);
-			if(isElementLoaded(editButtonOnEnterpriseProfilePage,2)){
+			if (isElementLoaded(editButtonOnEnterpriseProfilePage, 2)) {
 				SimpleUtils.pass("User click Enterprise Profile tile successfully!");
-			}else {
-				SimpleUtils.fail("User CAN'T click Enterprise Profile tile!",false);
+			} else {
+				SimpleUtils.fail("User CAN'T click Enterprise Profile tile!", false);
 			}
-		}else {
-			SimpleUtils.fail("Enterprise Profile tile is NOT showing",false);
+		} else {
+			SimpleUtils.fail("Enterprise Profile tile is NOT showing", false);
 		}
 	}
 
-	public boolean isEnterpriseProfileDetailsShowing() throws Exception{
+	public boolean isEnterpriseProfileDetailsShowing() throws Exception {
 		boolean flag = false;
-		if(isElementLoaded(editButtonOnEnterpriseProfilePage,2)&&(isElementLoaded(enterpriseInformation,2))&&(isElementLoaded(primaryContactOnEnterpriseProfilePage,2))
-				&&isElementLoaded(enterpriseLogo,2)&&isElementLoaded(enterpriseLocationPicture,2)&&isElementLoaded(loginSplashImage,2)
-				&&isElementLoaded(easyCompanyIdentifier,2)){
+		if (isElementLoaded(editButtonOnEnterpriseProfilePage, 2) && (isElementLoaded(enterpriseInformation, 2)) && (isElementLoaded(primaryContactOnEnterpriseProfilePage, 2))
+				&& isElementLoaded(enterpriseLogo, 2) && isElementLoaded(enterpriseLocationPicture, 2) && isElementLoaded(loginSplashImage, 2)
+				&& isElementLoaded(easyCompanyIdentifier, 2)) {
 			flag = true;
 			SimpleUtils.pass("Enterprise Profile details page can show well");
-		}else {
-			SimpleUtils.fail("Enterprise Profile details page can't show well",false);
+		} else {
+			SimpleUtils.fail("Enterprise Profile details page can't show well", false);
 		}
 		return flag;
 	}
 
-	public void clickOnEditButtonOnEnterpriseProfile() throws Exception{
-		if(isElementLoaded(editButtonOnEnterpriseProfilePage,2)){
+	public void clickOnEditButtonOnEnterpriseProfile() throws Exception {
+		if (isElementLoaded(editButtonOnEnterpriseProfilePage, 2)) {
 			clickTheElement(editButtonOnEnterpriseProfilePage);
 			String classValue = getDriver().findElement(By.cssSelector("input-field[label=\"Enterprise Name\"] ng-form")).getAttribute("class").trim();
-			if(!classValue.contains("input-field-disabled")){
+			if (!classValue.contains("input-field-disabled")) {
 				SimpleUtils.pass("User can click edit button successfully!");
-			}else {
-				SimpleUtils.fail("User can't click edit button",false);
+			} else {
+				SimpleUtils.fail("User can't click edit button", false);
 			}
 		}
 	}
 
-	@FindBy(css="input-field[label=\"First Name\"] input")
+	@FindBy(css = "input-field[label=\"First Name\"] input")
 	private WebElement firstName;
-	@FindBy(css="input-field[label=\"Last Name\"] input")
+	@FindBy(css = "input-field[label=\"Last Name\"] input")
 	private WebElement lastName;
-	@FindBy(css="input-field[label=\"E-mail\"] input")
+	@FindBy(css = "input-field[label=\"E-mail\"] input")
 	private WebElement email;
-	@FindBy(css="input-field[label=\"Phone\"] input")
+	@FindBy(css = "input-field[label=\"Phone\"] input")
 	private WebElement phone;
-	@FindBy(css="lg-button[label=\"Save and continue\"] button")
+	@FindBy(css = "lg-button[label=\"Save and continue\"] button")
 	private WebElement saveAndContinue;
 	@FindBy(tagName = "lg-close")
 	private WebElement successPopup;
 
 	@Override
-	public void updateEnterpriseProfileDetailInfo() throws Exception{
-		if(isEnterpriseProfileDetailsShowing()){
+	public void updateEnterpriseProfileDetailInfo() throws Exception {
+		if (isEnterpriseProfileDetailsShowing()) {
 			clickOnEditButtonOnEnterpriseProfile();
 			//update EnterpriseProfileDetailInfo
 			firstName.click();
@@ -4678,10 +4679,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			phone.clear();
 			phone.sendKeys("1587614");
 			clickTheElement(saveAndContinue);
-			if(isElementLoaded(successPopup)){
+			if (isElementLoaded(successPopup)) {
 				SimpleUtils.pass("User can update enterprise info successfully!");
-			}else {
-				SimpleUtils.fail("User can't update enterprise info successfully!",false);
+			} else {
+				SimpleUtils.fail("User can't update enterprise info successfully!", false);
 			}
 		}
 	}
@@ -4710,16 +4711,16 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
-	public void verifyDuplicatedDGErrorMessage() throws Exception{
-		if(isExist(errorMessage)){
-			if(errorMessage.getAttribute("innerText").contains("DynamicGroup duplicated with")){
+	public void verifyDuplicatedDGErrorMessage() throws Exception {
+		if (isExist(errorMessage)) {
+			if (errorMessage.getAttribute("innerText").contains("DynamicGroup duplicated with")) {
 				SimpleUtils.pass("DynamicGroup duplicated error meaasge is correct");
 				click(cancelBtn);
-			}else
-				SimpleUtils.fail("DynamicGroup duplicated error meaasge is wrong",false);
+			} else
+				SimpleUtils.fail("DynamicGroup duplicated error meaasge is wrong", false);
 
-		}else
-			SimpleUtils.fail("DynamicGroup duplicated error meaasge doesn't display",false);
+		} else
+			SimpleUtils.fail("DynamicGroup duplicated error meaasge doesn't display", false);
 	}
 
 	@FindBy(css = "h1>lg-close")
@@ -4727,7 +4728,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "div:nth-child(4) > div.condition_line > div > i")
 	private WebElement deleteIcon;
 
-	public void verifyCriteriaList() throws Exception{
+	public void verifyCriteriaList() throws Exception {
 		if (areListElementVisible(addDynamicGroupBtn)) {
 			click(addDynamicGroupBtn.get(0));
 			if (criteriaOptions.get(0).getAttribute("innerText").contains("Config Type") && criteriaOptions.get(1).getAttribute("innerText").contains("District") && criteriaOptions.get(2).getAttribute("innerText").contains("Country")
@@ -4738,29 +4739,29 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				selectTheCriteria("Config Type");
 				click(addMoreBtn);
 				click(getDriver().findElement(By.cssSelector("div:nth-child(4) > div.condition_line > lg-cascade-select > lg-select > div > lg-picker-input > div > input-field")));
-				if(getDriver().findElement(By.cssSelector("div.lg-search-options__option-wrapper.ng-scope.lg-search-options__option-wrapper--disabled > div")).getCssValue("color").equals("rgba(211, 211, 211, 1)")){
+				if (getDriver().findElement(By.cssSelector("div.lg-search-options__option-wrapper.ng-scope.lg-search-options__option-wrapper--disabled > div")).getCssValue("color").equals("rgba(211, 211, 211, 1)")) {
 					SimpleUtils.pass("Selected criteria is gray out");
 					click(closeBtn);
-				}else
-					SimpleUtils.fail("Selected criteria is not gray out",false);
+				} else
+					SimpleUtils.fail("Selected criteria is not gray out", false);
 			} else
 				SimpleUtils.fail("Criteria list is wrong", false);
-		}else
-			SimpleUtils.fail("Add dynamic group button load failed",false);
+		} else
+			SimpleUtils.fail("Add dynamic group button load failed", false);
 	}
 
-	public void eidtExistingDGP() throws Exception{
+	public void eidtExistingDGP() throws Exception {
 		click(editOnGlobalConfigPage);
 		if (isManagerDGpopShowWell()) {
 			SimpleUtils.pass("Existing dynamic group show well");
-		}else{
-			SimpleUtils.fail("Existing dynamic group show failed",false);
+		} else {
+			SimpleUtils.fail("Existing dynamic group show failed", false);
 		}
 		click(cancelBtn);
 	}
 
-	public void goToAssignmentRuleOfSearchedLocation(String locationName) throws Exception{
-		click(getDriver().findElement(By.cssSelector("lg-button[label = \""+ locationName + "\"]")));
+	public void goToAssignmentRuleOfSearchedLocation(String locationName) throws Exception {
+		click(getDriver().findElement(By.cssSelector("lg-button[label = \"" + locationName + "\"]")));
 		clickOnConfigurationTabOfLocation();
 
 		List<WebElement> templateNameLinks = getDriver().findElements(By.cssSelector("span[ng-click=\"$ctrl.canEdit && $ctrl.getTemplateDetails(value,'edit')\"]"));
@@ -4783,19 +4784,19 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@FindBy(css = "div.search-message")
 	private WebElement badgesText;
 
-	public void verifyBadgeInLocation() throws Exception{
+	public void verifyBadgeInLocation() throws Exception {
 		click(workRolesRow);
 		click(ambassador);
 		click(badgeRequired);
 
 		click(badgeSearchInput);
-		if(badgeListInAssignmentRuleTemplate.size() == 20){
-			if(badgesText.getAttribute("innerText").contains("Only 20 of the") && badgesText.getAttribute("innerText").contains("results are displayed in the list, you can use the search box to search for other badges."))
+		if (badgeListInAssignmentRuleTemplate.size() == 20) {
+			if (badgesText.getAttribute("innerText").contains("Only 20 of the") && badgesText.getAttribute("innerText").contains("results are displayed in the list, you can use the search box to search for other badges."))
 				SimpleUtils.pass("Badge list size is 20 and text is correct");
 			else
-				SimpleUtils.fail("Badge text is wrong",false);
-		}else
-			SimpleUtils.fail("Badge list size is not 20",false);
+				SimpleUtils.fail("Badge text is wrong", false);
+		} else
+			SimpleUtils.fail("Badge list size is not 20", false);
 	}
 
 	public void addWorkforceSharingDGWithMutiplyCriteria() throws Exception {
@@ -4821,7 +4822,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				formulaInputBox.sendKeys("Parent(1)");
 				scrollToElement(okBtnInSelectLocation);
 				click(okBtnInSelectLocation);
-			}else
+			} else
 				SimpleUtils.fail("Manager Dynamic Group win load failed", false);
 		} else
 			SimpleUtils.fail("Global dynamic group page load failed", false);
@@ -4829,34 +4830,35 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "select[aria-label = 'First Day of Week']")
 	private WebElement selectFirstDayOfWeek;
-	public void checkFirstDayOfWeekDisplay() throws Exception{
+
+	public void checkFirstDayOfWeekDisplay() throws Exception {
 		click(upperfieldRows.get(0).findElement(By.cssSelector("lg-button")));
-		if(isElementLoaded(selectFirstDayOfWeek,10)){
+		if (isElementLoaded(selectFirstDayOfWeek, 10)) {
 			SimpleUtils.pass("Fisrt Day Of Week dispay");
-		}else
-			SimpleUtils.fail("Fisrt Day Of Week doesn't dispay",false);
+		} else
+			SimpleUtils.fail("Fisrt Day Of Week doesn't dispay", false);
 	}
 
-	public void checkFirstDayOfWeekNotDisplay() throws Exception{
+	public void checkFirstDayOfWeekNotDisplay() throws Exception {
 		click(locationRows.get(0).findElement(By.cssSelector("lg-button")));
-		if(!isExist(selectFirstDayOfWeek)){
+		if (!isExist(selectFirstDayOfWeek)) {
 			SimpleUtils.pass("Fisrt Day Of Week doesn't dispay");
-		}else
-			SimpleUtils.fail("Fisrt Day Of Week dispay",false);
+		} else
+			SimpleUtils.fail("Fisrt Day Of Week dispay", false);
 	}
 
-	public void goBack() throws Exception{
+	public void goBack() throws Exception {
 		click(backBtnInDistrictListPage);
 	}
 
-	public void updateFirstDayOfWeek(String day) throws Exception{
+	public void updateFirstDayOfWeek(String day) throws Exception {
 		click(editUpperfieldBtn);
 		selectFirstDayOfWeek.sendKeys(day);
-		if(selectFirstDayOfWeek.getAttribute("innerText").contains(day)){
+		if (selectFirstDayOfWeek.getAttribute("innerText").contains(day)) {
 			SimpleUtils.pass("Update first day of week successfully");
 			waitForSeconds(2);
-		}else
-			SimpleUtils.fail("Update first day of week failed",false);
+		} else
+			SimpleUtils.fail("Update first day of week failed", false);
 		click(saveBtnInUpdateLocationPage);
 	}
 
@@ -4908,6 +4910,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		click(assignmentRuleSaveIcon);
 		click(saveBtn);
 	}
+
 	@FindBy(css = ".lg-dashboard-card__header--enterpriseprofiledashboard")
 	private WebElement enterpriseProfile;
 
@@ -4929,40 +4932,42 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = "form-section[form-title=\"Budget Management\"] [question-title*=\"Display labor budget in schedules?\"]")
 	private WebElement laborBudgetSection;
+
 	@Override
-	public String getLaborBudgetSettingContent() throws Exception{
-		if (isElementLoaded(laborBudgetSection, 10)){
+	public String getLaborBudgetSettingContent() throws Exception {
+		if (isElementLoaded(laborBudgetSection, 10)) {
 			return laborBudgetSection.findElement(By.cssSelector(".lg-question-input__text.ng-binding")).getText();
 		}
 		return "";
 	}
 
 	@Override
-	public void editLaborBudgetSettingContent() throws Exception{
+	public void editLaborBudgetSettingContent() throws Exception {
 		int index = 0;
-		if (isElementLoaded(editOnGlobalConfigPage, 10)){
+		if (isElementLoaded(editOnGlobalConfigPage, 10)) {
 			clickTheElement(editOnGlobalConfigPage);
-			SimpleUtils.assertOnFail("Global config page is editable!", isElementLoaded(saveButtonOnGlobalConfiguration,3), false);
+			SimpleUtils.assertOnFail("Global config page is editable!", isElementLoaded(saveButtonOnGlobalConfiguration, 3), false);
 
-		}else{
+		} else {
 			SimpleUtils.fail("Edit button on global config page load failed!", false);
 		}
 	}
 
 	@FindBy(css = "form-section[form-title=\"Budget Management\"] [question-title*=\"Display labor budget in schedules?\"] [class*=\"buttonLabel ng-binding\"]")
 	private List<WebElement> yesOrNoBtn;
+
 	@Override
 	public void turnOnOrTurnOffLaborBudgetToggle(boolean yesOrNo) throws Exception {
 		String content = getLaborBudgetSettingContent();
 		int index;
 		if (isElementLoaded(laborBudgetSection, 10)
-				&& (content.contains("Display labor budget in schedules?"))){
-			if (isElementLoaded(laborBudgetSection.findElement(By.cssSelector(".ng-scope.ng-isolate-scope")),10)){
-				if(yesOrNo){
+				&& (content.contains("Display labor budget in schedules?"))) {
+			if (isElementLoaded(laborBudgetSection.findElement(By.cssSelector(".ng-scope.ng-isolate-scope")), 10)) {
+				if (yesOrNo) {
 					index = 0;
 					clickTheElement(yesOrNoBtn.get(index));
 					SimpleUtils.pass("Toggle is turned on!");
-				}else {
+				} else {
 					index = 1;
 					clickTheElement(yesOrNoBtn.get(index));
 					SimpleUtils.pass("Toggle is turned off!");
@@ -4981,8 +4986,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement budgetGroup;
 
 	@Override
-	public String getBudgetGroupSettingContent() throws Exception{
-		if (isElementLoaded(budgetGroupSelection, 10)){
+	public String getBudgetGroupSettingContent() throws Exception {
+		if (isElementLoaded(budgetGroupSelection, 10)) {
 			return budgetGroupSelection.findElement(By.cssSelector(".lg-question-input__text.ng-binding")).getText();
 		}
 		return "";
@@ -4992,7 +4997,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public void selectBudgetGroup(String optionValue) throws Exception {
 		String content = getBudgetGroupSettingContent();
 		if (isElementLoaded(budgetGroupSelection, 10)
-				&& (content.contains("Input budget by location or break down by work role or job title?"))){
+				&& (content.contains("Input budget by location or break down by work role or job title?"))) {
 			Select selectedBudgetGroup = new Select(budgetGroup);
 			selectedBudgetGroup.selectByVisibleText(optionValue);
 			SimpleUtils.report("Select '" + optionValue + "' as the WeekOT");
@@ -5005,10 +5010,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void saveTheGlobalConfiguration() throws Exception {
 		int index = 0;
-		if(isElementLoaded(saveButtonOnGlobalConfiguration,3)){
+		if (isElementLoaded(saveButtonOnGlobalConfiguration, 3)) {
 			clickTheElement(saveButtonOnGlobalConfiguration);
-			Thread.sleep(3);
-			SimpleUtils.assertOnFail("Global Configuration page not saved successfully!", isElementLoaded(editOnGlobalConfigPage,3), false);
+			Thread.sleep(5000);
+			SimpleUtils.assertOnFail("Global Configuration page not saved successfully!", isElementLoaded(editOnGlobalConfigPage, 3), false);
 		}
 	}
 
@@ -5027,36 +5032,36 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isEleExist("//td[contains(text(),'" + templateName + "')]/following-sibling::*[2]/span")) {
 			SimpleUtils.report("Template is overridden");
 			flag = true;
-		}else{
+		} else {
 			SimpleUtils.report("Template is not overridden");
 		}
 		return flag;
 	}
 
-	@FindBy(css="general-form.enterprise-container form-section:nth-child(7)")
+	@FindBy(css = "general-form.enterprise-container form-section[form-title=\"Labor Budget Plan\"]")
 	WebElement laborBudgetPlanSection;
 
 	@Override
-	public void verifyUIOfLaborBudgetPlanSection(){
+	public void verifyUIOfLaborBudgetPlanSection() {
 		List<String> settingsString = new ArrayList<>();
-		List<String> strs = new ArrayList<>(Arrays.asList("Long range labor budget can include subplans by upperfield?","Does the Labor Budget result file use compressed format?",
+		List<String> strs = new ArrayList<>(Arrays.asList("Long range labor budget can include subplans by upperfield?", "Does the Labor Budget result file use compressed format?",
 				"How to compute budget cost?"));
 		//verify labor budget plan is a separate section or not?
-		if(laborBudgetPlanSection.findElement(By.cssSelector(" h2")).getText().trim().equalsIgnoreCase("Labor Budget Plan")){
+		if (laborBudgetPlanSection.findElement(By.cssSelector(" h2")).getText().trim().equalsIgnoreCase("Labor Budget Plan")) {
 			SimpleUtils.pass("Labor Budget Plan setting is a separate section in global configuration");
 			List<WebElement> settings = laborBudgetPlanSection.findElements(By.cssSelector(" h3"));
-			for(WebElement setting:settings){
+			for (WebElement setting : settings) {
 				String settingString = setting.getText().trim();
 				settingsString.add(settingString);
 			}
-		}else {
-			SimpleUtils.fail("Labor Budget Plan setting is NOT a separate section in global configuration",false);
+		} else {
+			SimpleUtils.fail("Labor Budget Plan setting is NOT a separate section in global configuration", false);
 		}
 		//Verify all settings of labor budget plan is showing or not?
-		for(String str:strs){
-			if(settingsString.contains(str)){
+		for (String str : strs) {
+			if (settingsString.contains(str)) {
 				SimpleUtils.pass(str + " setting is showing in global configuration - labor budget plan section");
-			}else {
+			} else {
 				SimpleUtils.fail(str + " setting is NOT showing in global configuration - labor budget plan section", false);
 			}
 		}
@@ -5064,79 +5069,79 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void clickOnEditButtonOnGlobalConfigurationPage() throws Exception{
-		if (isElementLoaded(editOnGlobalConfigPage, 10)){
+	public void clickOnEditButtonOnGlobalConfigurationPage() throws Exception {
+		if (isElementLoaded(editOnGlobalConfigPage, 10)) {
 			clickTheElement(editOnGlobalConfigPage);
-			SimpleUtils.assertOnFail("Global config page is editable!", isElementLoaded(saveButtonOnGlobalConfiguration,3), false);
+			SimpleUtils.assertOnFail("Global config page is editable!", isElementLoaded(saveButtonOnGlobalConfiguration, 3), false);
 
-		}else{
+		} else {
 			SimpleUtils.fail("Edit button on global config page load failed!", false);
 		}
 	}
 
 	@Override
-	public void updateLaborBudgetPlanSettings(boolean subPlans,String subPlansLevel,boolean compressed,String computeBudgetCost){
+	public void updateLaborBudgetPlanSettings(boolean subPlans, String subPlansLevel, boolean compressed, String computeBudgetCost) {
 		List<WebElement> subPlansYesNo = laborBudgetPlanSection.findElements(By.cssSelector(" question-input[question-title*=\"upperfield?\"] yes-no div.ng-scope"));
 		List<WebElement> compressedYesNo = laborBudgetPlanSection.findElements(By.cssSelector(" question-input[question-title*=\"format?\"] yes-no div.ng-scope"));
 		//update setting of subPlans
-		if(subPlans){
+		if (subPlans) {
 			clickTheElement(subPlansYesNo.get(0));
 			waitForSeconds(3);
-			if(subPlansYesNo.get(0).getAttribute("class").contains("selected")){
+			if (subPlansYesNo.get(0).getAttribute("class").contains("selected")) {
 				SimpleUtils.pass("User can select Yes option successfully for labor budget plan - sub plans setting");
-			}else {
-				SimpleUtils.fail("User failed to select Yes option successfully for labor budget plan - sub plans setting",false);
+			} else {
+				SimpleUtils.fail("User failed to select Yes option successfully for labor budget plan - sub plans setting", false);
 			}
 			WebElement levelSelect = laborBudgetPlanSection.findElement(By.cssSelector("question-input[question-title*=\"subplan\"] select"));
 			Select select = new Select(levelSelect);
 			select.selectByVisibleText(subPlansLevel);
-		}else {
+		} else {
 			clickTheElement(subPlansYesNo.get(1));
 			waitForSeconds(3);
-			if(subPlansYesNo.get(1).getAttribute("class").contains("selected")){
+			if (subPlansYesNo.get(1).getAttribute("class").contains("selected")) {
 				SimpleUtils.pass("User can select No option successfully for labor budget plan - sub plans setting");
-			}else {
-				SimpleUtils.fail("User failed to select No option successfully for labor budget plan - sub plans setting",false);
+			} else {
+				SimpleUtils.fail("User failed to select No option successfully for labor budget plan - sub plans setting", false);
 			}
 		}
 
 		//update setting of compressed
-		if(compressed){
+		if (compressed) {
 			clickTheElement(compressedYesNo.get(0));
 			waitForSeconds(3);
-			if(compressedYesNo.get(0).getAttribute("class").contains("selected")){
+			if (compressedYesNo.get(0).getAttribute("class").contains("selected")) {
 				SimpleUtils.pass("User can select Yes option successfully for labor budget plan - compressed setting");
-			}else {
-				SimpleUtils.fail("User failed to select Yes option successfully for labor budget plan - compressed setting",false);
+			} else {
+				SimpleUtils.fail("User failed to select Yes option successfully for labor budget plan - compressed setting", false);
 			}
-		}else {
+		} else {
 			clickTheElement(compressedYesNo.get(1));
 			waitForSeconds(3);
-			if(compressedYesNo.get(1).getAttribute("class").contains("selected")){
+			if (compressedYesNo.get(1).getAttribute("class").contains("selected")) {
 				SimpleUtils.pass("User can select No option successfully for labor budget plan - compressed setting");
-			}else {
-				SimpleUtils.fail("User failed to select No option successfully for labor budget plan - compressed setting",false);
+			} else {
+				SimpleUtils.fail("User failed to select No option successfully for labor budget plan - compressed setting", false);
 			}
 		}
 
 		//update setting of computeBudgetCost
 		WebElement computeBudget = laborBudgetPlanSection.findElement(By.cssSelector("question-input[question-title*=\"cost?\"] select"));
 		Select select = new Select(computeBudget);
-		if(computeBudgetCost.contains("Work Role")){
+		if (computeBudgetCost.contains("Work Role")) {
 			select.selectByVisibleText("By Work Role Hourly Rate");
-		}else {
+		} else {
 			select.selectByVisibleText("By Job Title Group Hourly Rate");
 		}
 	}
 
 	@Override
-	public boolean isBudgetPlanSectionShowing(){
-		String locator = "general-form.enterprise-container form-section:nth-child(7)  question-input[question-title*=\"upperfield?\"]";
+	public boolean isBudgetPlanSectionShowing() {
+		String locator = "general-form.enterprise-container form-section[form-title=\"Labor Budget Plan\"]";
 		boolean flag;
-		if(isElementExist(locator)){
+		if (isElementExist(locator)) {
 			flag = true;
 			SimpleUtils.pass("Labor Budget plan is showing");
-		}else {
+		} else {
 			flag = false;
 			SimpleUtils.pass("Labor Budget plan is NOT showing");
 		}
@@ -5144,8 +5149,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void inputGroupNameForDynamicGroupOnWorkforceSharingPage(String groupName) throws Exception{
-		if (isElementLoaded(groupNameInput, 5)){
+	public void inputGroupNameForDynamicGroupOnWorkforceSharingPage(String groupName) throws Exception {
+		if (isElementLoaded(groupNameInput, 5)) {
 			groupNameInput.clear();
 			groupNameInput.sendKeys(groupName);
 			SimpleUtils.pass("group name input successfully!");
@@ -5156,20 +5161,21 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	@FindBy(css = ".condition_line")
 	private List<WebElement> criteriaOnTheWorkforceSharingPage;
+
 	@Override
 	public void selectAnOptionForCriteria(String criteria, String operator, String option) throws Exception {
 		boolean flag1 = false;
 		boolean flag2 = false;
 
 		//Select one Criteria
-		if (areListElementVisible(criteriaOnTheWorkforceSharingPage, 10)){
-			for (WebElement criteriaLine: criteriaOnTheWorkforceSharingPage){
-				if (criteriaLine.findElement(By.cssSelector("div[ng-disabled=\"$ctrl.disabled\"]")).getAttribute("innerText").replace("\n", "").trim().equalsIgnoreCase("Select one")){
+		if (areListElementVisible(criteriaOnTheWorkforceSharingPage, 10)) {
+			for (WebElement criteriaLine : criteriaOnTheWorkforceSharingPage) {
+				if (criteriaLine.findElement(By.cssSelector("div[ng-disabled=\"$ctrl.disabled\"]")).getAttribute("innerText").replace("\n", "").trim().equalsIgnoreCase("Select one")) {
 					click(criteriaLine.findElement(By.cssSelector("lg-select[ng-if=\"!$ctrl.multiple\"]")));
 					List<WebElement> criteriaOptions = criteriaLine.findElements(By.cssSelector("div.lg-search-options div.lg-search-options__scroller div.lg-search-options__option-wrapper.ng-scope"));
 					System.out.println("jane-: " + criteriaOptions.size());
-					for (WebElement criteriaOption : criteriaOptions){
-						if(criteriaOption.getText().replace("\n", "").trim().equalsIgnoreCase(criteria)){
+					for (WebElement criteriaOption : criteriaOptions) {
+						if (criteriaOption.getText().replace("\n", "").trim().equalsIgnoreCase(criteria)) {
 							System.out.println("jane1: " + criteriaOption.getText());
 							click(criteriaOption);
 						}
@@ -5177,8 +5183,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					//Select one operator
 					click(criteriaLine.findElement(By.cssSelector("lg-cascade-select[required=\"true\"] lg-select[ng-if*=\"operatorSelect\"] div.lg-select")));
 					List<WebElement> operators = criteriaLine.findElements(By.cssSelector("lg-cascade-select[required=\"true\"] lg-select[ng-if*=\"operatorSelect\"] div.lg-search-options__option"));
-					for (WebElement optionValue: operators){
-						if (operator.equalsIgnoreCase(optionValue.getAttribute("innerText").replace("\n", "").trim())){
+					for (WebElement optionValue : operators) {
+						if (operator.equalsIgnoreCase(optionValue.getAttribute("innerText").replace("\n", "").trim())) {
 							scrollToElement(optionValue);
 							click(optionValue);
 							flag1 = true;
@@ -5190,14 +5196,14 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					WebElement criteriaOptionsField = criteriaLine.findElement(By.cssSelector("lg-cascade-select[required=\"true\"] lg-cascade-select lg-multiple-select"));
 					click(criteriaOptionsField);
 
-					if ("Country".equalsIgnoreCase(criteria) || "State".equalsIgnoreCase(criteria)){
+					if ("Country".equalsIgnoreCase(criteria) || "State".equalsIgnoreCase(criteria)) {
 						criteriaOptionsField.findElement(By.cssSelector("lg-search[value=\"$ctrl.searchText\"] input")).sendKeys(option);
 					}
 
 					List<WebElement> options = criteriaLine.findElements(By.cssSelector("lg-cascade-select[required=\"true\"] div.select-list-item"));
-					for (WebElement optionValue: options){
+					for (WebElement optionValue : options) {
 						waitForSeconds(2);
-						if (option.equalsIgnoreCase(optionValue.getAttribute("innerText").replace("\n", "").trim())){
+						if (option.equalsIgnoreCase(optionValue.getAttribute("innerText").replace("\n", "").trim())) {
 							scrollToElement(optionValue.findElement(By.cssSelector("input-field")));
 							click(optionValue.findElement(By.cssSelector("input-field")));
 							flag2 = true;
@@ -5206,7 +5212,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					}
 				}
 			}
-			if (!flag1 && !flag2){
+			if (!flag1 && !flag2) {
 				SimpleUtils.fail("Didn't find the criteria and option you want!", false);
 			}
 		} else {
@@ -5215,8 +5221,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public void clickAddMoreBtnOnWFSharing() throws Exception{
-		if (isElementLoaded(addMoreBtn, 10)){
+	public void clickAddMoreBtnOnWFSharing() throws Exception {
+		if (isElementLoaded(addMoreBtn, 10)) {
 			clickTheElement(addMoreBtn);
 		} else {
 			SimpleUtils.fail("Add More button fail to load!", false);
@@ -5224,11 +5230,11 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public String clickOnTestBtnAndGetResultString() throws Exception{
-		if (isElementLoaded(testBtn, 10)){
+	public String clickOnTestBtnAndGetResultString() throws Exception {
+		if (isElementLoaded(testBtn, 10)) {
 			clickTheElement(testBtn);
 			SimpleUtils.pass("Clicked on test button!");
-			if (isElementLoaded(testBtnInfo, 10)){
+			if (isElementLoaded(testBtnInfo, 10)) {
 				return testBtnInfo.getText();
 			}
 		} else {
@@ -5238,35 +5244,35 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	}
 
 	@Override
-	public String getLaborBudgetPlanComputeSettings(){
+	public String getLaborBudgetPlanComputeSettings() {
 		String computeSettings = null;
 		//get setting of computeBudgetCost
 		WebElement computeBudget = laborBudgetPlanSection.findElement(By.cssSelector("question-input[question-title*=\"cost?\"] select"));
-	    Select select = new Select(computeBudget);
+		Select select = new Select(computeBudget);
 		computeSettings = select.getFirstSelectedOption().getText().trim();
 		return computeSettings;
 	}
 
 	@Override
-	public void UpdateOptionOfComputeBudgetCost(){
+	public void UpdateOptionOfComputeBudgetCost() {
 		WebElement computeBudget = laborBudgetPlanSection.findElement(By.cssSelector("question-input[question-title*=\"cost?\"] select"));
 		Select select = new Select(computeBudget);
 		String computeSettings = select.getFirstSelectedOption().getText().trim();
-		if(computeSettings.contains("Work Role")){
+		if (computeSettings.contains("Work Role")) {
 			select.selectByVisibleText("By Job Title Group Hourly Rate");
-		}else {
+		} else {
 			select.selectByVisibleText("By Work Role Hourly Rate");
 		}
 	}
 
-	@FindBy(css="lg-new-time-input[label=\"Open\"] input")
+	@FindBy(css = "lg-new-time-input[label=\"Open\"] input")
 	private WebElement openHour;
-	@FindBy(css="lg-new-time-input[label=\"Close\"] input")
+	@FindBy(css = "lg-new-time-input[label=\"Close\"] input")
 	private WebElement closeHour;
 
 	@Override
-	public void updateOpenCloseHourForOHTemplate(String openString,String closeString){
-		if(isElementEnabled(openHour,2) && isElementEnabled(closeHour,2)){
+	public void updateOpenCloseHourForOHTemplate(String openString, String closeString) {
+		if (isElementEnabled(openHour, 2) && isElementEnabled(closeHour, 2)) {
 //			openHour.sendKeys(Keys.TAB);
 			openHour.clear();
 			clickTheElement(openHour);
@@ -5276,15 +5282,15 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			openHour.sendKeys(Keys.TAB);
 			closeHour.sendKeys(closeString);
 			waitForSeconds(2);
-			String openStr=getDriver().findElement(By.cssSelector("lg-new-time-input[label=\"Open\"] div.input-faked")).getAttribute("innerText").trim();
-			String closeStr=getDriver().findElement(By.cssSelector("lg-new-time-input[label=\"Close\"] div.input-faked")).getAttribute("innerText").trim();
-			if(openStr.equalsIgnoreCase(openString)&&closeStr.equalsIgnoreCase(closeString)){
+			String openStr = getDriver().findElement(By.cssSelector("lg-new-time-input[label=\"Open\"] div.input-faked")).getAttribute("innerText").trim();
+			String closeStr = getDriver().findElement(By.cssSelector("lg-new-time-input[label=\"Close\"] div.input-faked")).getAttribute("innerText").trim();
+			if (openStr.equalsIgnoreCase(openString) && closeStr.equalsIgnoreCase(closeString)) {
 				SimpleUtils.pass("user can update open and close hour successfully in OH template");
-			}else {
-				SimpleUtils.fail("user can NOT update open and close hour successfully in OH template",false);
+			} else {
+				SimpleUtils.fail("user can NOT update open and close hour successfully in OH template", false);
 			}
-		}else {
-			SimpleUtils.fail("open hours and close hours fields are not showing",false);
+		} else {
+			SimpleUtils.fail("open hours and close hours fields are not showing", false);
 		}
 	}
 
@@ -5293,20 +5299,21 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	public List<String> actionsForTemplateInLocationLevel(String templateName) {
 		scrollToBottom();
 		List<WebElement> actions = getDriver().findElements(By.xpath("//td[contains(text(),'" + templateName + "')]/following-sibling::*[5]/span"));
-		List<String> actionsName=new ArrayList<>();
+		List<String> actionsName = new ArrayList<>();
 		for (int i = 0; i < actions.size(); i++) {
 			actionsName.add(actions.get(i).getText().trim());
 		}
 		return actionsName;
 	}
 
-	@FindBy(css="yes-no[value*=\"readyForForecast\"] lg-button-group")
+	@FindBy(css = "yes-no[value*=\"readyForForecast\"] lg-button-group")
 	private WebElement readyForForecastOption;
+
 	@Override
 	public boolean verifyReadyForForecastFieldExist() throws Exception {
 		boolean isExisting = false;
 		scrollToBottom();
-		if (isElementLoaded(readyForForecastOption, 3)){
+		if (isElementLoaded(readyForForecastOption, 3)) {
 			isExisting = true;
 		}
 		return isExisting;
@@ -5327,8 +5334,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return selectedOption;
 	}
 
-	@FindBy(css="lg-button[label=\"Save\"] span")
+	@FindBy(css = "lg-button[label=\"Save\"] span")
 	private WebElement saveBtnNew;
+
 	@Override
 	public void chooseReadyForForecastValue(String value) throws Exception {
 		List<WebElement> yesOrNoOptions = readyForForecastOption.findElements(By.cssSelector("div[ng-repeat=\"button in $ctrl.buttons\"]"));
@@ -5357,7 +5365,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		}
 	}
 
-	public void importLocations(String filePath, String sessionId, String isImport, int expectedStatusCode) {
+	@Override
+	public void importLocations(String filePath, String sessionId, String isImport, int expectedStatusCode, String path, Object expectedResult) {
 
 		String url = "https://rc-enterprise.dev.legion.work/legion/integration/uploadBusiness";
 		File file = new File(filePath);
@@ -5371,7 +5380,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		if (isImport.equalsIgnoreCase("true")) {
 			RestAssured.given().log().all().queryParams(params).contentType("multipart/form-data").multiPart("file", file).header("sessionId", sessionId)
 					.when().post(url)
-					.then().log().all().statusCode(expectedStatusCode).body("responseStatus", Matchers.equalToIgnoringCase("SUCCESS"));
+					.then().log().all().statusCode(expectedStatusCode).body("responseStatus", Matchers.equalToIgnoringCase("SUCCESS"))
+					.body(path, Matchers.equalTo(expectedResult));
 		}
 	}
 
@@ -5390,21 +5400,22 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			} else {
 				SimpleUtils.fail("the columns does not exist in sample file", false);
 			}
-     }
-  }
+		}
+	}
 
-	@FindBy(css="select[aria-label=\"Location Group Setting\"]")
+	@FindBy(css = "select[aria-label=\"Location Group Setting\"]")
 	private WebElement getLocationGroupSettingSelect;
+
 	@Override
 	public String getLocationGroupSettingsSelectedOption() throws Exception {
 		String selectedOption = "";
 		Select locationGroupSettings = null;
 
-		if (isElementLoaded(getLocationGroupSettingSelect, 3)){
+		if (isElementLoaded(getLocationGroupSettingSelect, 3)) {
 			locationGroupSettings = new Select(getLocationGroupSettingSelect);
 			selectedOption = locationGroupSettings.getFirstSelectedOption().getText();
 			SimpleUtils.pass("Load Location Group Setting Successfully!");
-		}else {
+		} else {
 			SimpleUtils.fail("Failed to load Location Group Setting!", false);
 		}
 		return selectedOption;
@@ -5416,16 +5427,16 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		Select locationGroupSettings = new Select(getLocationGroupSettingSelect);
 		List<WebElement> options = locationGroupSettings.getOptions();
 
-		for (WebElement option : options){
-			if (!option.getText().equalsIgnoreCase(selectedOption)){
+		for (WebElement option : options) {
+			if (!option.getText().equalsIgnoreCase(selectedOption)) {
 				continue;
 			}
 			if (selectedOption.equals("None")) {
 				if (option.getAttribute("disabled") != null && option.getAttribute("disabled").equalsIgnoreCase("true")) {
 					isEnabled = false;
 				}
-			}else{
-				if (option.getText().equals("None") && option.getAttribute("disabled") != null && option.getAttribute("disabled").equalsIgnoreCase("true")){
+			} else {
+				if (option.getText().equals("None") && option.getAttribute("disabled") != null && option.getAttribute("disabled").equalsIgnoreCase("true")) {
 					isEnabled = false;
 				}
 			}
@@ -5433,8 +5444,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		return isEnabled;
 	}
 
-	@FindBy(css="modal[modal-title=\"Location Group Setting\"]")
+	@FindBy(css = "modal[modal-title=\"Location Group Setting\"]")
 	private WebElement changeSettingsConfirmPopUpWindow;
+
 	@Override
 	public void changeLocationGroupSettings(String selectedOption, String... newOption) throws Exception {
 		Select locationGroupSettings = new Select(getLocationGroupSettingSelect);
@@ -5446,13 +5458,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				clickTheElement(changeSettingsConfirmPopUpWindow.findElement(By.cssSelector("lg-button[label=\"Ok\"]")));
 			}
 			newSelectedOption = getLocationGroupSettingsSelectedOption();
-			if (selectedOption.equals(newSelectedOption)){
+			if (selectedOption.equals(newSelectedOption)) {
 				SimpleUtils.fail("Failed to select new option!", false);
 			}
 		}
-		if(newSelectedOption.equals("Parent location")){
+		if (newSelectedOption.equals("Parent location")) {
 			clickTheElement(getDriver().findElement(By.cssSelector("input[aria-label=\"" + newOption[1] + "\"] ")));
-		}else if (newSelectedOption.equals("Part of a location group")){
+		} else if (newSelectedOption.equals("Part of a location group")) {
 			click(selectParentLocation);
 			selectLocationOrDistrict(newOption[1], 0);
 		}
@@ -5460,8 +5472,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		waitForSeconds(5);
 	}
 
-	@FindBy(css="select[aria-label=\"Configuration Type\"]")
+	@FindBy(css = "select[aria-label=\"Configuration Type\"]")
 	private WebElement configurationTypeDropDown;
+
 	@Override
 	public void updateMockLocation(String locationName, String configurationType) throws Exception {
 //		Select configurationTypeSelect = new Select(configurationTypeDropDown);
@@ -5472,12 +5485,67 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 //			configurationTypeSelect.selectByVisibleText(configurationType);
 			WebElement saveBtn = getDriver().findElement(By.cssSelector("lg-button[label=\"Save\"] button"));
 			scrollToBottom();
-			if(isElementEnabled(saveBtn, 8)){
+			if (isElementEnabled(saveBtn, 8)) {
 				clickTheElement(saveBtn);
 			}
 			waitForSeconds(5);
 			SimpleUtils.pass("Location update done");
 		}
 	}
-}
+		@FindBy(css = "input-field[label=\"Country/Region\"]>ng-form")
+		private WebElement locationCountryRegionField;
+		@FindBy(css = "lg-search[placeholder=\"Search\"] [placeholder=\"Search\"] [class*=\"input-form\"] > input")
+		private WebElement locationCountryRegionSearchBox;
+		@FindBy(css = "[search-hint=\"Search\"] div[class=\"lg-search-options\"]>div[class=\"lg-search-options__scroller\"]")
+		private WebElement locationCountryRegionSelectBox;
+		@FindBy(css = "input-field[label=\"Province\"]>ng-form")
+		private WebElement locationStatesField;
+//	@FindBy(css = "input-field[label=\"State\"]>ng-form")
+//	private WebElement locationStatesField;
+		@FindBy(css = "div[title='England']")
+		private WebElement particularStateForEngland;
+		@FindBy(css = "div[title='Alberta']")
+		private WebElement particularStateForCanada;
+		@FindBy(css = "div[title='Ulster']")
+		private WebElement particularStateForIreland;
+		@FindBy(css = "input[aria-label=\"City\"]")
+		private WebElement locationCity;
+		@Override
+		public void modifyLocationCountry (String country, String state, String city) throws Exception {
+			if (isElementLoaded(locationCountryRegionField, 10)) {
+				click(locationCountryRegionField);
+				SimpleUtils.report("Location Details: Country/Region input field loaded successfully.");
+				if (isElementLoaded(locationCountryRegionSearchBox, 10)) {
+					locationCountryRegionSearchBox.clear();
+					locationCountryRegionSearchBox.sendKeys(country);
+					if (isElementLoaded(locationCountryRegionSelectBox, 10)) {
+						SimpleUtils.report("Location Details: Country/Region select box loaded successfully.");
+						click(locationCountryRegionSelectBox);
+					} else
+						SimpleUtils.fail("Location Details: Input Country/Region is not correct!", false);
+				} else
+					SimpleUtils.fail("Location Details: Country/Region search field is not loaded!", false);
+			} else
+				SimpleUtils.fail("Location Details: Country/Region input field is not loaded!", false);
+			if (isElementLoaded(locationStatesField, 10)) {
+				click(locationStatesField);
+				SimpleUtils.report("Location Details: State input field loaded successfully.");
+				if (state.trim().equalsIgnoreCase("England") && isElementLoaded(particularStateForEngland, 10)) {
+					click(particularStateForEngland);
+				} else if (state.trim().equalsIgnoreCase("Alberta") && isElementLoaded(particularStateForCanada, 10)) {
+					click(particularStateForCanada);
+				} else if (state.trim().equalsIgnoreCase("Ulster") && isElementLoaded(particularStateForIreland, 10)) {
+					click(particularStateForIreland);
+				} else
+					SimpleUtils.fail("Location Details: Input State is not supported by this method yet!", false);
+			} else
+				SimpleUtils.fail("Location Details: State input field is not loaded!", false);
+			if (isElementLoaded(locationCity, 10)) {
+				SimpleUtils.report("Location Details: City input field loaded successfully.");
+				locationCity.clear();
+				locationCity.sendKeys(city);
+			} else
+				SimpleUtils.fail("Location Details: City input field is not loaded!", false);
+		}
+	}
 

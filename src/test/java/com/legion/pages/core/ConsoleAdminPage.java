@@ -20,6 +20,43 @@ public class ConsoleAdminPage extends BasePage implements AdminPage {
 		PageFactory.initElements(getDriver(), this);
 	}
 
+	public enum CacheNames {
+		ABSwitch("ABSwitch"),
+		AssignmentRule("AssignmentRule"),
+		DifferentialPay("DifferentialPay"),
+		DynamicGroup("DynamicGroup"),
+		Employee("Employee"),
+		Engagement("Engagement"),
+		Enterprise("Enterprise"),
+		EnterpriseQueueConfig("EnterpriseQueueConfig"),
+		HazardPayType("HazardPayType"),
+		Holiday("Holiday"),
+		LocationBrokerContainer("LocationBrokerContainer"),
+		LocationGroup("LocationGroup"),
+		LocationSubscription("LocationSubscription"),
+		LoginAlias("LoginAlias"),
+		NearByLocation("NearByLocation"),
+		TAConfig("TAConfig"),
+		TACorporateEmployeeLocations("TACorporateEmployeeLocations"),
+		TAOTParams("TAOTParams"),
+		Template("Template"),
+		TemplateAssociation("TemplateAssociation"),
+		TemplateUserAssociation("TemplateUserAssociation"),
+		Translation("Translation"),
+		WorkerBadge("WorkerBadge"),
+		WorkerPreference("WorkerPreference"),
+		WorkforceSharingGroup("WorkforceSharingGroup");
+		private final String value;
+
+		CacheNames(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
 		// added by Estelle
 
 	@FindBy(css="div.console-navigation-item-label.Admin")
@@ -70,5 +107,61 @@ public class ConsoleAdminPage extends BasePage implements AdminPage {
 				SimpleUtils.fail("Admin Page: It doesn't navigate to Admin console menu after clicking", false);
 		} else
 			SimpleUtils.fail("Admin Console Menu not loaded Successfully!", false);
+	}
+
+	@FindBy(css = "[data-testid=\"console.legionadmin.inspector\"]")
+	private WebElement inspectorTab;
+
+	@FindBy(css = ".lg-button-group-last")
+	private WebElement cacheTab;
+
+	@FindBy(css = "[ng-repeat=\"cache in filteredCaches\"]")
+	private List<WebElement> cachesInCacheList;
+
+	@Override
+	public void clickOnInspectorTab() throws Exception {
+		if(isElementLoaded(inspectorTab,20)) {
+			click(inspectorTab);
+			SimpleUtils.pass("Admin Page: Click on Inspector tab successfully");
+		} else
+			SimpleUtils.fail("Admin: Inspector tab not loaded Successfully!", false);
+	}
+
+	@Override
+	public void clickOnCacheTab() throws Exception {
+		if(isElementLoaded(cacheTab,20)) {
+			click(cacheTab);
+			SimpleUtils.pass("Admin Page: Click on Cache tab successfully");
+		} else
+			SimpleUtils.fail("Admin: Cache tab not loaded Successfully!", false);
+	}
+
+	@Override
+	public void refreshCacheStatus(String cacheName) {
+		if(areListElementVisible(cachesInCacheList,20) && cachesInCacheList.size()>0) {
+			boolean isTemplateExist = false;
+			for (WebElement cache: cachesInCacheList) {
+				String cacheNameInList = cache.findElement(By.cssSelector(":nth-child(2)")).getText();
+				System.out.println("The cache name in list is:"+cacheNameInList);
+				if (cacheNameInList.equalsIgnoreCase(cacheName)) {
+					isTemplateExist = true;
+					click(cache.findElement(By.tagName("button")));
+					SimpleUtils.pass("Click the Refresh button successfully! ");
+					try{
+						WebElement requestSendTime = cache.findElement(By.cssSelector("div[ng-if=\"hasPendingRequest(cache)\"]"));
+						if (isElementLoaded(requestSendTime, 5)){
+							SimpleUtils.pass("The cache been refresh successfully! ");
+						}
+					} catch (Exception e){
+						SimpleUtils.fail("The cache fail to refresh! ", false);
+					}
+					break;
+				}
+			}
+			if (!isTemplateExist) {
+				SimpleUtils.fail("Admin: The cache "+cacheName+" is not exists! ", false);
+			}
+		} else
+			SimpleUtils.fail("Admin: Caches in cache list not loaded Successfully!", false);
 	}
 }

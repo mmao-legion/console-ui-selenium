@@ -1330,7 +1330,7 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Announcement")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyAnnouncementAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
 //            String sessionId = getSession();
@@ -1355,12 +1355,12 @@ public class UserManagementTest extends TestBase {
 //                String[] toggleResponse = accrualEngineTest.turnOffToggle(sessionId, "DynamicGroupV2");
 //                System.out.println("Turn off toggle DynamicGroupV2");
 //            }
-            ToggleAPI.enableToggleNew(Toggles.CommsAnnouncements.getValue());
-            ToggleAPI.enableToggleNew(Toggles.Announcements.getValue());
-            ToggleAPI.enableToggleNew(Toggles.NewAnnouncements.getValue());
-
-            ToggleAPI.disableToggleNew(Toggles.DynamicGroupV2.getValue());
-            ToggleAPI.enableToggleNew(Toggles.ShowAnnouncementGroupOP.getValue());
+//            ToggleAPI.enableToggleNew(Toggles.CommsAnnouncements.getValue());
+//            ToggleAPI.enableToggleNew(Toggles.Announcements.getValue());
+//            ToggleAPI.enableToggleNew(Toggles.NewAnnouncements.getValue());
+//
+//            ToggleAPI.disableToggleNew(Toggles.DynamicGroupV2.getValue());
+//            ToggleAPI.enableToggleNew(Toggles.ShowAnnouncementGroupOP.getValue());
 
             BasePage.waitForSeconds(300);
             //go to User Management Dynamic Employee Groups
@@ -1380,7 +1380,7 @@ public class UserManagementTest extends TestBase {
             userManagementPage.updateAccouncement();
             userManagementPage.deleteAnnouncement();
 
-            ToggleAPI.enableToggleNew(Toggles.DynamicGroupV2.getValue());
+            //           ToggleAPI.enableToggleNew(Toggles.DynamicGroupV2.getValue());
 //            if(!accrualEngineTest.isToggleEnabled(sessionId, "DynamicGroupV2")) {
 //                String[] toggleResponse = accrualEngineTest.turnOnToggle(sessionId, "DynamicGroupV2");
 //                System.out.println("Turn on toggle DynamicGroupV2");
@@ -1393,8 +1393,8 @@ public class UserManagementTest extends TestBase {
             userManagementPage.updateAccouncement();
             userManagementPage.deleteAnnouncement();
 
-            ToggleAPI.disableToggleNew(Toggles.DynamicGroupV2.getValue());
-            ToggleAPI.disableToggleNew(Toggles.ShowAnnouncementGroupOP.getValue());
+//            ToggleAPI.disableToggleNew(Toggles.DynamicGroupV2.getValue());
+//            ToggleAPI.disableToggleNew(Toggles.ShowAnnouncementGroupOP.getValue());
 //            if(accrualEngineTest.isToggleEnabled(sessionId, "DynamicGroupV2")) {
 //                String[] toggleResponse = accrualEngineTest.turnOffToggle(sessionId, "DynamicGroupV2");
 //                System.out.println("Turn off toggle DynamicGroupV2");
@@ -1404,8 +1404,7 @@ public class UserManagementTest extends TestBase {
 //                System.out.println("Turn off toggle ShowAnnouncementGroupOP");
 //            }
             userManagementPage.verifyOnlyAnnouncementDisplay();
-
-            ToggleAPI.enableToggleNew(Toggles.DynamicGroupV2.getValue());
+            //ToggleAPI.enableToggleNew(Toggles.DynamicGroupV2.getValue());
 //            if(!accrualEngineTest.isToggleEnabled(sessionId, "DynamicGroupV2")) {
 //                String[] toggleResponse = accrualEngineTest.turnOnToggle(sessionId, "DynamicGroupV2");
 //                System.out.println("Turn on toggle DynamicGroupV2");
@@ -1413,7 +1412,7 @@ public class UserManagementTest extends TestBase {
 
             userManagementPage.verifyDynamicSmartCartNotDispaly();
 
-            ToggleAPI.disableToggleNew(Toggles.DynamicGroupV2.getValue());
+//            ToggleAPI.disableToggleNew(Toggles.DynamicGroupV2.getValue());
 //            if(accrualEngineTest.isToggleEnabled(sessionId, "DynamicGroupV2")) {
 //                String[] toggleResponse = accrualEngineTest.turnOffToggle(sessionId, "DynamicGroupV2");
 //                System.out.println("Turn off toggle DynamicGroupV2");

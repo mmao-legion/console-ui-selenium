@@ -557,7 +557,8 @@ public class LocationsGroupTestInOP extends TestBase {
             SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //Turn on toggle EnableChangeLocationGroupSetting
-            ToggleAPI.enableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123");
+            //
+             ToggleAPI.updateToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123",true);
             refreshPage();
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -602,7 +603,7 @@ public class LocationsGroupTestInOP extends TestBase {
             SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //Turn on toggle EnableChangeLocationGroupSetting
-            ToggleAPI.enableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123");
+            ToggleAPI.updateToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123",true);
             refreshPage();
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -647,7 +648,7 @@ public class LocationsGroupTestInOP extends TestBase {
             SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //Turn on toggle EnableChangeLocationGroupSetting
-            ToggleAPI.enableToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123");
+            ToggleAPI.updateToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123",true);
             refreshPage();
             //go to locations tab
             locationsPage.clickOnLocationsTab();
