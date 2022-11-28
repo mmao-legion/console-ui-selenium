@@ -5,8 +5,10 @@ import com.jayway.restassured.response.Response;
 import com.legion.api.login.LoginAPI;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import com.legion.tests.TestBase;
 
 import java.util.*;
+
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.legion.utils.MyThreadLocal.getEnterprise;

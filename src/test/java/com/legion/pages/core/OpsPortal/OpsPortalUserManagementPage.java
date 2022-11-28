@@ -2,9 +2,11 @@ package com.legion.pages.core.OpsPortal;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
+import com.legion.tests.TestBase;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
 import org.openqa.selenium.*;
+import org.openqa.selenium.internal.FindsByCssSelector;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
@@ -410,6 +412,8 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	private  WebElement groupNameInput;
 	@FindBy(css = "input-field[value=\"$ctrl.dynamicGroup.description\"] >ng-form>input")
 	private  WebElement groupDescriptionInput;
+	@FindBy(css = "input-field[placeholder = 'Select one']>ng-form")
+	private  WebElement criteria;
 	@FindBy(css = "div.fl-left.groupField > input-field > ng-form > div.select-wrapper.ng-scope>select")
 	private  List<WebElement> criteriaSelect;
 	@FindBy(css = "div.fl-left.groupField > input-field > ng-form > div.select-wrapper.ng-scope>select>option")
@@ -1529,7 +1533,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		}
 		assignmentRuleSaveIcon.click();
 		if (addedBadges.size() > 0) {
-			if (addedBadges.get(0).getAttribute("data-tootik").trim().contains(badgeName)) {
+			if (addedBadges.get(addedBadges.size()-1).getAttribute("data-tootik").trim().contains(badgeName)) {
 				SimpleUtils.pass("Badge is added");
 			} else {
 				SimpleUtils.fail("Badge is added failed", false);
@@ -1954,6 +1958,191 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	public ArrayList<String> workRole(){
 		ArrayList<String> workRoles = getWebElementsText(workRoleItems);
 		return workRoles;
+	}
+
+	@FindBy(css = "th:nth-child(2) > div > span")
+	private WebElement displayOrder;
+	@FindBy(css = " lg-paged-search > div > ng-transclude > table > tbody > tr:nth-child(2) > td:nth-child(2)")
+	private WebElement workRoleNum;
+
+	public String getWorkRoleNum() throws Exception{
+		click(displayOrder);
+		String num = workRoleNum.getAttribute("innerText");
+		return num;
+	}
+
+	@FindBy(css = "lg-dashboard-card:nth-child(3) > div > div.lg-dashboard-card__body > ul > li:nth-child(2)")
+	private WebElement Announcement;
+	@FindBy(css = "lg-dashboard-card[title=\"Dynamic Employee Groups\"]")
+	private WebElement dynamicGroupCardAccouncement;
+
+	public void verifyDynamicEmployeeGroupContainAnnouncement() throws Exception{
+		if(isElementLoaded(dynamicGroupCardAccouncement)){
+			highlightElement(Announcement);
+			if(isElementLoaded(Announcement))
+				SimpleUtils.pass("Announcement display");
+			else
+				SimpleUtils.fail("Announcement doesn't display",false);
+		}else
+			SimpleUtils.fail("Dynamic Group Card doesn't display",false);
+	}
+
+	@FindBy(css = "lg-dashboard-card[title=\"Dynamic Employee Groups\"]")
+	private  WebElement dynamicEmployeeGroupCard;
+	@FindBy(css = "div.center.ng-scope")
+	private WebElement dynamicEmployeeGroupTable;
+
+	public void goToDynamicEmployeeGroup() throws Exception{
+		if(isElementLoaded(dynamicEmployeeGroupCard)){
+			click(dynamicEmployeeGroupCard);
+			if (isElementEnabled(dynamicEmployeeGroupTable,5)) {
+				SimpleUtils.pass("Can go to dynamic employee group page successfully");
+			}else
+				SimpleUtils.fail("Go to dynamic employee group page failed",false);
+		}
+		else
+			SimpleUtils.fail("Dynamic employee group card load successfully",false);
+	}
+
+	@FindBy(css = "form-section:nth-child(1) > div > h2")
+	private WebElement dynamicEmployee;
+	@FindBy(css = "form-section:nth-child(2) > div > h2")
+	private WebElement announcement;
+
+	public void verifyBothEmployeeAndAnnouncementDisplay() throws Exception{
+		waitForSeconds(300);
+		TestBase.refreshPage();
+		if(isElementLoaded(dynamicEmployee) && isElementLoaded(announcement))
+			SimpleUtils.pass("Employee and announcement both display");
+		else
+			SimpleUtils.fail("Employee and announcement doesn't display",false);
+	}
+
+	public void verifyOnlyAnnouncementDisplay() throws Exception{
+		waitForSeconds(300);
+		TestBase.refreshPage();
+		if(isElementLoaded(dynamicEmployee))
+			SimpleUtils.pass("Only announcement display");
+		else
+			SimpleUtils.fail("Announcement doesn't display only",false);
+	}
+
+	@FindBy(css = "form-section:nth-child(2) > ng-transclude > content-box > ng-transclude > lg-global-dynamic-group-table > lg-paged-search-new > div > ng-transclude > div")
+	private WebElement annoncementBlankInfo;
+
+	public void verifyAnnouncementBlankInfo() throws Exception{
+		if(isElementLoaded(annoncementBlankInfo))
+			if(annoncementBlankInfo.getAttribute("innerText").contains("There is no dynamic announcement group created yet"))
+				SimpleUtils.pass("Accouncement blank information is correct");
+			else
+				SimpleUtils.fail("Accouncement blank information is wrong",false);
+		else
+			SimpleUtils.fail("Accouncement blank info doesn't display",false);
+	}
+
+	@FindBy(css = "form-section:nth-child(2) > ng-transclude > content-box > ng-transclude > lg-global-dynamic-group-table > div > div.col-sm-2.templateAssociation_action.gray > lg-button > button > img")
+	private WebElement addAnnouncement;
+	@FindBy(css = "form-section:nth-child(1) > ng-transclude > content-box > ng-transclude > lg-global-dynamic-group-table > div > div.col-sm-2.templateAssociation_action.gray > lg-button > button > img")
+	private WebElement addAnnouncementForOnlyOneDisplay;
+	@FindBy(css = "input[aria-label='Group Name']")
+	private WebElement announcementGroupName;
+	@FindBy(css = "div.lg-modal__title-icon.ng-binding")
+	private WebElement addAnnouncementPopUpTitle;
+	@FindBy(css = "div.lg-multiple-select")
+	private WebElement select;
+	@FindBy(css = "input[type = 'checkbox']")
+	private WebElement checkBox;
+	@FindBy(css = "form-section[form-title='Announcement']>ng-transclude>content-box>ng-transclude>lg-global-dynamic-group-table>lg-paged-search-new>div>ng-transclude>table>tbody>tr>td>div>div>lg-button[icon=\"'fa-times'\"]")
+	private WebElement deleteAccouncementIcon;
+	@FindBy(css = "form-section[form-title='Announcement']>ng-transclude>content-box>ng-transclude>lg-global-dynamic-group-table>lg-paged-search-new>div>ng-transclude>table>tbody>tr>td>div>div>lg-button")
+	private WebElement updateAccouncementIcon;
+
+	public void addAnnouncement(String accouncementName) throws Exception{
+		click(addAnnouncement);
+
+		if(addAnnouncementPopUpTitle.getAttribute("innerText").contains("Manage Dynamic Announcement Group"))
+			SimpleUtils.pass("Add announcement pop up title is correct");
+
+		else
+			SimpleUtils.fail("Add announcement pop up title is wrong",false);
+
+		announcementGroupName.sendKeys(accouncementName);
+		click(criteria);
+		click(getDriver().findElement(By.cssSelector("div[title = 'Work Role']")));
+		click(select);
+		click(checkBox);
+		click(okBtnInCreateNewsFeedGroupPage);
+	}
+
+	public void addAnnouncementForOnlyOneDisplay(String accouncementName) throws Exception{
+		click(addAnnouncementForOnlyOneDisplay);
+
+		if(addAnnouncementPopUpTitle.getAttribute("innerText").contains("Manage Dynamic Announcement Group"))
+			SimpleUtils.pass("Add announcement pop up title is correct");
+
+		else
+			SimpleUtils.fail("Add announcement pop up title is wrong",false);
+
+		announcementGroupName.sendKeys(accouncementName);
+		click(criteria);
+		click(getDriver().findElement(By.cssSelector("div[title = 'Work Role']")));
+		click(select);
+		click(checkBox);
+		click(okBtnInCreateNewsFeedGroupPage);
+	}
+
+	public void updateAccouncement() throws Exception{
+		click(updateAccouncementIcon);
+
+		if(addAnnouncementPopUpTitle.getAttribute("innerText").contains("Manage Dynamic Announcement Group"))
+			SimpleUtils.pass("Update announcement pop up title is correct");
+
+		else
+			SimpleUtils.fail("Update announcement pop up title is wrong",false);
+
+		announcementGroupName.sendKeys("Update");
+		click(okBtnInCreateNewsFeedGroupPage);
+	}
+
+	public void deleteAnnouncement() throws Exception{
+		click(deleteAccouncementIcon);
+
+		if(addAnnouncementPopUpTitle.getAttribute("innerText").contains("Remove Dynamic Announcement Group"))
+			SimpleUtils.pass("Delete announcement pop up title is correct");
+
+		else
+			SimpleUtils.fail("Delete announcement pop up title is wrong",false);
+
+		click(removeJobTitleButton);
+	}
+
+	@FindBy(css = "form-section[form-title='Announcement']>ng-transclude>content-box>ng-transclude>lg-global-dynamic-group-table>lg-paged-search-new>div>lg-tab-toolbar>div>div>lg-search>input-field>ng-form>input")
+	private WebElement searchAccouncement;
+
+	public void searchAccouncement(String accouncementName) throws Exception{
+		if(isElementLoaded(searchAccouncement,5)){
+			scrollToBottom();
+			searchAccouncement.sendKeys(accouncementName);
+			searchAccouncement.sendKeys(Keys.ENTER);
+			if(isElementLoaded(getDriver().findElement(By.cssSelector("form-section[form-title='Announcement']>ng-transclude>content-box>ng-transclude>lg-global-dynamic-group-table>lg-paged-search-new>div>ng-transclude>table>tbody>tr>td[title=\"" + accouncementName + "\"]")))){
+				SimpleUtils.pass("Search accouncement successfully");
+			}else
+				SimpleUtils.fail("Search accouncement failed",false);
+		}else
+			SimpleUtils.fail("Search accouncement input field doesn't display",false);
+	}
+
+	@FindBy(css = "div.lg-page-heading__breadcrumbs>a")
+	private WebElement back;
+
+	public void verifyDynamicSmartCartNotDispaly() throws Exception{
+		click(back);
+		waitForSeconds(300);
+		TestBase.refreshPage();
+		if(isElementLoaded(dynamicGroupCardAccouncement))
+			SimpleUtils.fail("Dynamic smart card display",false);
+		else
+			SimpleUtils.pass("Dynamic smart card doesn't display");
 	}
 }
 
