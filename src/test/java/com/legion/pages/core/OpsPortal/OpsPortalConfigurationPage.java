@@ -7800,7 +7800,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		} else
 			SimpleUtils.fail("The " + " icon for adding dynamic group missing!", false);
 	}
-}
+
 	@Override
 	public List<String> getStaffingRules() throws Exception {
 		List<String> staffingRules = new ArrayList<>();
