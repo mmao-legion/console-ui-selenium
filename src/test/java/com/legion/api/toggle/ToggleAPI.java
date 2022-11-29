@@ -17,7 +17,7 @@ public class ToggleAPI {
 
     public static void updateToggle(String toggleName, String username, String password, boolean isTurnOn) {
         try {
-            String enterpriseName = getEnterprise();
+            String enterpriseName = System.getProperty("enterprise");
             String sessionId = LoginAPI.getSessionIdFromLoginAPI(username, password);
 
             List<HashMap> rules = new ArrayList<>();
@@ -30,8 +30,13 @@ public class ToggleAPI {
             } else {
                 if (enterpriseNames.contains(enterpriseName.toLowerCase())) {
                     for (int i = 0; i < enterpriseNames.size(); i++) {
-                        if (enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
+                        if (enterpriseNames.size() > 1 && enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
                             enterpriseNames.remove(i);
+                            break;
+                        }
+                        if (enterpriseNames.size() == 1 && enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
+                            enterpriseNames = new ArrayList<>();
+                            break;
                         }
                     }
                 }
