@@ -28,16 +28,14 @@ public class ToggleAPI {
                 }
             } else {
                 if (enterpriseNames.contains(enterpriseName.toLowerCase())) {
-                    if (enterpriseNames.contains(enterpriseName.toLowerCase())) {
-                        for (int i = 0; i < enterpriseNames.size(); i++) {
-                            if (enterpriseNames.size() > 1 && enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
-                                enterpriseNames.remove(i);
-                                break;
-                            }
-                            if (enterpriseNames.size() == 1 && enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
-                                enterpriseNames = new ArrayList<>();
-                                break;
-                            }
+                    for (int i = 0; i < enterpriseNames.size(); i++) {
+                        if (enterpriseNames.size() > 1 && enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
+                            enterpriseNames.remove(i);
+                            break;
+                        }
+                        if (enterpriseNames.size() == 1 && enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
+                            enterpriseNames = new ArrayList<>();
+                            break;
                         }
                     }
                 }
@@ -48,7 +46,7 @@ public class ToggleAPI {
                     rulesValue.put("enterpriseName", name);
                     rules.add(rulesValue);
                 }
-            }else{
+            } else {
                 rules = new ArrayList<>();
             }
 
