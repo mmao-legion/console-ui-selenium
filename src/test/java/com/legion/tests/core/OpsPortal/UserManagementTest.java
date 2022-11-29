@@ -492,7 +492,7 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Work Role - Assignment Rule - Job Title")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false) // is blocked by https://legiontech.atlassian.net/browse/OPS-6251
     public void verifyManageJobTitleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
             //go to User Management tab
