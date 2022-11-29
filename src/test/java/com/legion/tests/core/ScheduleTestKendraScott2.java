@@ -5641,7 +5641,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			selectedShift = shiftOperatePage.clickOnProfileIcon();
 			tmFirstName = selectedShift.findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ")[0];
 			i = 0;
-			while (i<10 && (tmFirstName.equalsIgnoreCase("open")||tmFirstName.equalsIgnoreCase("unassigned"))) {
+			while (i<20 && (tmFirstName.equalsIgnoreCase("open")||tmFirstName.equalsIgnoreCase("unassigned"))) {
 				selectedShift = shiftOperatePage.clickOnProfileIcon();
 				tmFirstName = selectedShift.findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ")[0];
 				i++;
@@ -9314,10 +9314,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			goToSchedulePageScheduleTab();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if(!isActiveWeekGenerated){
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
-
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
 			List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 			String firstNameOfTM = shiftInfo1.get(0);
 			int shiftCount1 = 0;
