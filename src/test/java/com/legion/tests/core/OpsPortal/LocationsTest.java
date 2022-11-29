@@ -173,7 +173,6 @@ public class LocationsTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -3094,7 +3093,9 @@ public class LocationsTest extends TestBase {
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             String filePath = "src/test/resources/uploadFile/LocationTest/locationGroup.csv";
             locationsPage.importLocations(filePath, getSession(), "true", 200,"summary.failed",0);
-
+            List column = new ArrayList<>();
+            column.add("LocationGroupType");
+            locationsPage.verifyColumnsInLocationSampleFile( getSession(),column);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
