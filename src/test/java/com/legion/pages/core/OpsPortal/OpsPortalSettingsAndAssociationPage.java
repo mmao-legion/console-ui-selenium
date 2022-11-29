@@ -444,7 +444,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             for (WebElement settingsType : settingsTypes) {
                 if (settingsType.findElement(By.cssSelector("lg-paged-search")).getAttribute("placeholder").contains(type)) {
                     clickTheElement(settingsType.findElement(By.cssSelector("div.header-add-icon button")));
-                    if (isElementLoaded(popUpWindow, 3)) {
+                    if (isElementLoaded(popUpWindow, 5)) {
                         displayNameInput = fieldsInput.get(0).findElement(By.cssSelector("input[aria-label=\"Display Name\"]"));
                         NameOrSourceTypeInput = fieldsInput.get(1).findElement(By.cssSelector("input"));
                         displayNameInput.sendKeys(displayName);
@@ -597,7 +597,10 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             SimpleUtils.fail("verifyType is not correct!", false);
         }
 
-        totalNumber = settingRows.size();
+        if (verifyType.equalsIgnoreCase("input stream"))
+            totalNumber =  calculateBaseInputStream();
+        else
+            totalNumber = settingRows.size();
         return  totalNumber;
     }
 

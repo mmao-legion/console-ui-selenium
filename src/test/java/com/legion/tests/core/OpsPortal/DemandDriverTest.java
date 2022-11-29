@@ -1027,8 +1027,8 @@ public enum modelSwitchOperation{
             channelNameList = settingsAndAssociationPage.getAllChannelsOrCategories("Channel");
             categoryNameList = settingsAndAssociationPage.getAllChannelsOrCategories("Category");
             //Verify channel/category visibility in Forecast page
-            refreshCache("Template");
             switchToNewWindow();
+            refreshPage();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationToTest);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
