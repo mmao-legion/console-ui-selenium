@@ -917,7 +917,7 @@ public class FTSERelevantTest extends TestBase {
 
             //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE T.");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
             scheduleMainPage.saveSchedule();
 
             //Create one shift and assign it to the FTSE employee
@@ -934,7 +934,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            createSchedulePage.publishActiveSchedule();
 
             //Verify role violation displays after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
@@ -2168,14 +2167,20 @@ public class FTSERelevantTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
-            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
 
-            //Switch to the DayView and delete all existed shifts.
-            scheduleCommonPage.clickOnDayView();
+            //Editing the operating day and save all actions.
+            List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
+            scheduleMainPage.goToEditOperatingHoursView();
+            scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "12:00AM","12:00AM");
+            scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            //Delete all existed shifts, then switch to the Day View.
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteAllShiftsInDayView();
+            shiftOperatePage.deleteAllShiftsInWeekView();
             scheduleMainPage.saveSchedule();
+            scheduleCommonPage.clickOnDayView();
 
             //Create the particular shift and verify relevant info is displayed in the shift box
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();

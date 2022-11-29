@@ -1884,11 +1884,16 @@ public class BulkCreateTest extends TestBase {
             loginPage.logOut();
             int count = (int)(Math.random()*8+1);
             String accessRole = "";
+            boolean isTL = false;
             switch(count) {
                 case 1: accessRole = AccessRoles.StoreManager.getValue(); break;
                 case 2: accessRole = AccessRoles.StoreManager2.getValue(); break;
-                case 3: accessRole = AccessRoles.TeamLead.getValue();break;
-                case 4: accessRole = AccessRoles.TeamLead2.getValue();break;
+                case 3: accessRole = AccessRoles.TeamLead.getValue();
+                        isTL = true;
+                        break;
+                case 4: accessRole = AccessRoles.TeamLead2.getValue();
+                        isTL = true;
+                        break;
                 case 5: accessRole = AccessRoles.DistrictManager.getValue();break;
                 case 6: accessRole = AccessRoles.DistrictManager2.getValue();break;
                 case 7: accessRole = AccessRoles.CustomerAdmin.getValue();break;
@@ -1897,7 +1902,7 @@ public class BulkCreateTest extends TestBase {
             SimpleUtils.report("Will login as: "+ accessRole);
             //Verify the shifts can be created by new UI by original SM access role
             loginAsDifferentRole(accessRole);
-            createShiftsByDifferentAccessRoles(false);
+            createShiftsByDifferentAccessRoles(isTL);
 //            loginPage.logOut();
 
 //            //Verify the shifts can be created by new UI by custom SM access role

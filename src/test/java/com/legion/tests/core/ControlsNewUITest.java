@@ -2050,7 +2050,7 @@ public class ControlsNewUITest extends TestBase{
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.clickCreateScheduleBtn();
-            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.clickNextButtonOnCreateScheduleWindow();
             createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
             if (createSchedulePage.isCopyScheduleWindow()) {
                 isFullCopyEnabled = true;
@@ -2100,7 +2100,7 @@ public class ControlsNewUITest extends TestBase{
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.clickCreateScheduleBtn();
-            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.clickNextButtonOnCreateScheduleWindow();
             createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
             if (isFullCopyEnabled) {
                 SimpleUtils.assertOnFail("Full copy page should load!", createSchedulePage.isCopyScheduleWindow(), false);
@@ -2144,7 +2144,7 @@ public class ControlsNewUITest extends TestBase{
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.clickCreateScheduleBtn();
-            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.clickNextButtonOnCreateScheduleWindow();
             createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
             if (isFullCopyEnabled) {
                 SimpleUtils.assertOnFail("Full copy page should load!", createSchedulePage.isCopyScheduleWindow(), false);
@@ -2189,7 +2189,7 @@ public class ControlsNewUITest extends TestBase{
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.clickCreateScheduleBtn();
-            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.clickNextButtonOnCreateScheduleWindow();
             createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
             if (isFullCopyEnabled) {
                 SimpleUtils.assertOnFail("Full copy page should load!", createSchedulePage.isCopyScheduleWindow(), false);
@@ -2234,7 +2234,7 @@ public class ControlsNewUITest extends TestBase{
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.clickCreateScheduleBtn();
-            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.clickNextButtonOnCreateScheduleWindow();
             createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
             if (isFullCopyEnabled) {
                 SimpleUtils.assertOnFail("Full copy page should load!", createSchedulePage.isCopyScheduleWindow(), false);

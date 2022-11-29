@@ -8137,7 +8137,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -9222,19 +9221,16 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			String firstNameOfTM = null;
 			String workRole = null;
-			if (isActiveWeekGenerated) {
-				List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			firstNameOfTM = shiftInfo.get(0);
+			int shiftCount1 = 0;
+			while ((firstNameOfTM.equalsIgnoreCase("open")
+					|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+				shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 				firstNameOfTM = shiftInfo.get(0);
-				int shiftCount1 = 0;
-				while ((firstNameOfTM.equalsIgnoreCase("open")
-						|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
-					shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-					firstNameOfTM = shiftInfo.get(0);
-					shiftCount1++;
+				shiftCount1++;
 				}
-				workRole = shiftInfo.get(4);
-
-			}
+			workRole = shiftInfo.get(4);
 
 			//Create an open shift, then offer it to the TMs
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
@@ -9753,16 +9749,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			//Catch up on random shift for further shift creation
 			String firstNameOfTM = null;
-			if (isActiveWeekGenerated) {
-				List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			firstNameOfTM = shiftInfo.get(0);
+			int shiftCount1 = 0;
+			while ((firstNameOfTM.equalsIgnoreCase("open")
+					|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+				shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 				firstNameOfTM = shiftInfo.get(0);
-				int shiftCount1 = 0;
-				while ((firstNameOfTM.equalsIgnoreCase("open")
-						|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
-					shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-					firstNameOfTM = shiftInfo.get(0);
-					shiftCount1++;
-				}
+				shiftCount1++;
 			}
 
 			//Publish the schedule

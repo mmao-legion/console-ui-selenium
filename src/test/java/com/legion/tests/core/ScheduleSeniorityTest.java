@@ -220,18 +220,16 @@ public class ScheduleSeniorityTest extends TestBase {
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			String firstNameOfTM = null;
 			String workRole = null;
-			if (isActiveWeekGenerated) {
-				List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			firstNameOfTM = shiftInfo.get(0);
+			int shiftCount1 = 0;
+			while ((firstNameOfTM.equalsIgnoreCase("open")
+					|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+				shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 				firstNameOfTM = shiftInfo.get(0);
-				int shiftCount1 = 0;
-				while ((firstNameOfTM.equalsIgnoreCase("open")
-						|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
-					shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-					firstNameOfTM = shiftInfo.get(0);
-					shiftCount1++;
-				}
-				workRole = shiftInfo.get(4);
+				shiftCount1++;
 			}
+			workRole = shiftInfo.get(4);
 
 			//Create an open shift, then offer it to the TMs
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
@@ -766,18 +764,16 @@ public class ScheduleSeniorityTest extends TestBase {
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			String firstNameOfTM = null;
 			String workRole = null;
-			if (isActiveWeekGenerated) {
-				List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			firstNameOfTM = shiftInfo.get(0);
+			int shiftCount1 = 0;
+			while ((firstNameOfTM.equalsIgnoreCase("open")
+					|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+				shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 				firstNameOfTM = shiftInfo.get(0);
-				int shiftCount1 = 0;
-				while ((firstNameOfTM.equalsIgnoreCase("open")
-						|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
-					shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-					firstNameOfTM = shiftInfo.get(0);
-					shiftCount1++;
-				}
-				workRole = shiftInfo.get(4);
+				shiftCount1++;
 			}
+			workRole = shiftInfo.get(4);
 
 			//Create an open shift, then offer it to the TMs
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
@@ -1164,18 +1160,16 @@ public class ScheduleSeniorityTest extends TestBase {
 			//Catch up on random shift for further shift creation
 			String firstNameOfTM = null;
 			String workRole = null;
-			if (isActiveWeekGenerated) {
-				List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+			firstNameOfTM = shiftInfo.get(0);
+			int shiftCount1 = 0;
+			while ((firstNameOfTM.equalsIgnoreCase("open")
+					|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+				shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 				firstNameOfTM = shiftInfo.get(0);
-				int shiftCount1 = 0;
-				while ((firstNameOfTM.equalsIgnoreCase("open")
-						|| firstNameOfTM.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
-					shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-					firstNameOfTM = shiftInfo.get(0);
-					shiftCount1++;
-				}
-				workRole = shiftInfo.get(4);
+				shiftCount1++;
 			}
+			workRole = shiftInfo.get(4);
 
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);

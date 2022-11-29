@@ -1503,7 +1503,9 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     public void clickBackBtnAndExitCreateScheduleWindow() throws Exception {
         if (isElementEnabled(backBtnOnCreateScheduleWindow, 10)) {
             click(backBtnOnCreateScheduleWindow);
-            click(backBtnOnCreateScheduleWindow);
+            if (isElementEnabled(backBtnOnCreateScheduleWindow, 3)) {
+                click(backBtnOnCreateScheduleWindow);
+            }
             if (isElementEnabled(backBtnOnCreateScheduleWindow, 10)) {
                 click(backBtnOnCreateScheduleWindow);
             }
@@ -2183,7 +2185,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         if (isElementLoaded(nextButtonOnCreateSchedule, 15)) {
             clickTheElement(nextButtonOnCreateSchedule);
         } else {
-            SimpleUtils.fail("There is not next button!", false);
+            SimpleUtils.report("There is not next button!");
         }
     }
 

@@ -821,7 +821,9 @@ public class HardStopForMinorViolation extends TestBase {
         configurationPage.publishNowTheTemplate();
         locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
         refreshCachesAfterChangeTemplate();
+        Thread.sleep(5000);
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //        if (statusAfterEdit != statusBeforeEdit) {
 //            int i = 0;
