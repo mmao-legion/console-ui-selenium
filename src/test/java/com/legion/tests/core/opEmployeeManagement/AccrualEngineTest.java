@@ -2871,4 +2871,26 @@ public class AccrualEngineTest extends TestBase {
         SimpleUtils.pass("Succeeded in validating accrual correctly!");
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "OPS-3733 Usability updates to employee accrual history.")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAccrualHistoryFilterAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception {
+        //go to console
+        RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
+        rightHeaderBarPage.switchToConsole();
+        //go to AccrualEngine location
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("AccrualEngine");
+        //go to team member details and switch to the time off tab.
+        consoleNavigationPage.navigateTo("Team");
+        TimeOffPage timeOffPage = new TimeOffPage();
+        String teamMemName = "Nancy AccrualEngine01";
+        timeOffPage.goToTeamMemberDetail(teamMemName);
+        timeOffPage.switchToTimeOffTab();
+        timeOffPage.verifyHistoryType();
+        timeOffPage.verifyHistoryTypeDefaultValue();
+    }
+
 }
