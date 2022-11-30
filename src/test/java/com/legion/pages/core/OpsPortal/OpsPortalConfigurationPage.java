@@ -7136,7 +7136,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	public void verifyAllTemplateTypeHasAuditLog() throws Exception {
 		List<WebElement> allTemplateTypes = getDriver().findElements(By.cssSelector("h1.lg-dashboard-card__title"));
 		if (areListElementVisible(allTemplateTypes, 5)) {
-			for (int i = 0; i < allTemplateTypes.size(); i++) {
+			for (int i = 0; i < 7; i++) {
 				//go to each template type
 				clickTheElement(allTemplateTypes.get(i));
 				waitForSeconds(3);
@@ -7834,6 +7834,24 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 				SimpleUtils.pass("The formula description is correct");
 			}else
 				SimpleUtils.fail("The formula description is incorrect",false);
+		}
+	}
+
+	@Override
+	public void verifyDynamicGroupOfAdvanceStaffingRuleIsOptional(String workRole, List<String> days) throws Exception {
+		//get the staffing rules count before add one new rule
+		int countBeforeSaving = Integer.valueOf(getCountOfStaffingRules(workRole));
+		selectWorkRoleToEdit(workRole);
+		checkTheEntryOfAddAdvancedStaffingRule();
+		verifyAdvancedStaffingRulePageShowWell();
+		selectDaysForDaysOfWeekSection(days);
+		waitForSeconds(2);
+		//get the status of mark button
+		String classValue = checkMarkButton.getAttribute("class").trim();
+		if(classValue.contains("enabled")){
+			SimpleUtils.pass("Dynamic Group Of Advance Staffing Rule Is Optional");
+		}else {
+			SimpleUtils.fail("Dynamic Group Of Advance Staffing Rule Is NOT Optional",false);
 		}
 	}
 }
