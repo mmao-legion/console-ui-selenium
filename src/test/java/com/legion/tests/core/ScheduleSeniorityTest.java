@@ -868,8 +868,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			controlsNewUIPage.updateSeniorityToggle("Yes");
 			controlsNewUIPage.selectSortOfSeniority("Ascending");
 			configurationPage.publishNowTheTemplate();
-			Thread.sleep(180000);
 			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(180000);
 
 			//Create a schedule if there is no any
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -1133,9 +1134,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			controlsNewUIPage.updateSeniorityToggle("Yes");
 			controlsNewUIPage.selectSortOfSeniority("Descending");
 			configurationPage.publishNowTheTemplate();
-			Thread.sleep(200000);
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
+			Thread.sleep(200000);
 
 			//Create a schedule if there is no any
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
