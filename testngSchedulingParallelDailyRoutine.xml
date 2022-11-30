@@ -160,6 +160,8 @@
                     <include name="verifyRecommendTabHasTMsAsInternalAdmin" />
                     <include name="verifyPleaseConfirmMessageOnWarningModalAsInternalAdmin" />
                     <include name="VerifyTheScheduleVersionUnchangedWithUnmodifiedSaveAsInternalAdmin" />
+                    <!-- <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOnAsInternalAdmin" />
+                    <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOffAsInternalAdmin" />   The effective time is too long to run, no any useful method now -->
                                    </methods>
                                </class>
                            </classes>

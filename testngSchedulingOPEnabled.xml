@@ -240,6 +240,8 @@
                            <include name="verifyTheCanadaCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
                            <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />  The code is not merged into RC yet -->
                     <include name="VerifyTheScheduleVersionUnchangedWithUnmodifiedSaveAsInternalAdmin" />
+                    <!-- <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOnAsInternalAdmin" />
+                <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOffAsInternalAdmin" />   The effective time is too long to run, no any useful method now -->
                   </methods>
               </class>
           </classes>
