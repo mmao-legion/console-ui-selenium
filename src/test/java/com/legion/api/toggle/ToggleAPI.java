@@ -10,14 +10,16 @@ import java.util.*;
 
 
 import static com.jayway.restassured.RestAssured.given;
+import static com.legion.tests.TestBase.getSession;
 import static com.legion.utils.MyThreadLocal.getEnterprise;
+import static com.legion.utils.MyThreadLocal.getSessionID;
 
 public class ToggleAPI {
 
     public static void updateToggle(String toggleName, String username, String password, boolean isTurnOn) {
         try {
             String enterpriseName = System.getProperty("enterprise");
-            String sessionId = LoginAPI.getSessionIdFromLoginAPI(username, password);
+            String sessionId =  getSession();
 
             List<HashMap> rules = new ArrayList<>();
             // Get the current enterprise names which have specific toggle turned on
