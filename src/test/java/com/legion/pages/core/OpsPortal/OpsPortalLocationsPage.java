@@ -273,7 +273,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private List<WebElement> locationRowsInSelectLocation;
 	@FindBy(xpath = "//tr[@ng-repeat=\"location in filteredCollection track by location.businessId\" or (@ng-repeat=\"location in filteredCollection\")]")
 	private List<WebElement> locationRows;
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection track by location.businessId\"] > td:nth-child(4) > lg-eg-status")
+	@FindBy(xpath = "//tr[@ng-repeat=\"location in filteredCollection track by location.businessId\" or (@ng-repeat=\"location in filteredCollection\")]/td[4]/lg-eg-status")
 	private List<WebElement> locationStatus;
 
 	@FindBy(css = "lg-button[label=\"OK\"]")
