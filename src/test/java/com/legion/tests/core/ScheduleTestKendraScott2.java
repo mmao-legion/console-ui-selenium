@@ -7827,6 +7827,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
+			scheduleMainPage.clickOnOpenSearchBoxButton();
+			scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM+ " "+lastNameOfTM);
 			List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
 			String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(1)).toString();
 			expectedMessage = "hrs daily overtime";

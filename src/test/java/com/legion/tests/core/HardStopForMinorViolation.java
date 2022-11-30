@@ -835,11 +835,11 @@ public class HardStopForMinorViolation extends TestBase {
 //                i++;
 //            }
 //        }
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.logOut();
-        Thread.sleep(5000);
-        loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+//        loginPage.logOut();
+//        Thread.sleep(5000);
+//        loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+//        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
     }
 
     public void getAndSetDefaultTemplate(String currentLocation) throws Exception{
