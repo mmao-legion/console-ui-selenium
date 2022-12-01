@@ -8520,11 +8520,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 				Thread.sleep(3000);
 				compliancePage.turnOnOrTurnOffWeeklyOTToggle(false);
-//				compliancePage.editWeeklyOTSetting("40");
 				configurationPage.publishNowTheTemplate();
-				Thread.sleep(60000);
 				switchToConsoleWindow();
 			}
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(60000);
 
 			//Go to the schedule view table
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();

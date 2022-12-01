@@ -7704,10 +7704,10 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public String getSeniorityToggleActiveBtnLabel() throws Exception {
 		String seniorityToggleActiveBtnLabel = "";
-		if (isElementLoaded(seniorityToggle)) {
+		if (isElementLoaded(seniorityToggle,10)) {
 			WebElement seniorityToggleActiveActiveBtn = seniorityToggle.findElement(
 					By.cssSelector("div.lg-button-group-selected"));
-			if (isElementLoaded(seniorityToggleActiveActiveBtn))
+			if (isElementLoaded(seniorityToggleActiveActiveBtn,10))
 				seniorityToggleActiveBtnLabel = seniorityToggleActiveActiveBtn.getText();
 			else
 				SimpleUtils.fail("Scheduling Policies: Seniority toggle active Button not loaded.", false);
