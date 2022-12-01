@@ -422,7 +422,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     @Override
     public boolean isPopupWindowLoaded(String title) throws Exception {
         boolean isLoaded = false;
-        if (isElementLoaded(popUpWindow, 15) && isElementLoaded(popUpWindowTitle, 15)) {
+        if (isElementLoaded(popUpWindow, 20) && isElementLoaded(popUpWindowTitle, 20)) {
             if (title.equalsIgnoreCase(popUpWindowTitle.getText())) {
                 SimpleUtils.pass(title + " window loaded Successfully!");
                 isLoaded = true;

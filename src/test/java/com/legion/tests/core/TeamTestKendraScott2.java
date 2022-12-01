@@ -1933,7 +1933,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
 			String scheduleHoursValue = availabilityData.get("scheduleHoursValue").toString();
 			SimpleUtils.assertOnFail("The scheduled hrs should be 44.5 in availability table, but actual is: "+scheduleHoursValue,
-					(scheduleHoursValue.equals("44.5") || (scheduleHoursValue.equals("45")) || scheduleHoursValue.equals("48.0")), false);
+					(scheduleHoursValue.equals("44.5") || (scheduleHoursValue.equals("45.0")) || scheduleHoursValue.equals("48.0")), false);
 
 			//Login as TM1
 			loginPage.logOut();
@@ -1949,7 +1949,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
 			scheduleHoursValue = availabilityData.get("scheduleHoursValue").toString();
 			SimpleUtils.assertOnFail("The scheduled hrs should be 44.5 in availability table, but actual is: "+scheduleHoursValue,
-					(scheduleHoursValue.equals("44.5") || (scheduleHoursValue.equals("45")) || scheduleHoursValue.equals("48.0")), false);
+					(scheduleHoursValue.equals("44.5") || (scheduleHoursValue.equals("45.0")) || scheduleHoursValue.equals("48.0")), false);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
