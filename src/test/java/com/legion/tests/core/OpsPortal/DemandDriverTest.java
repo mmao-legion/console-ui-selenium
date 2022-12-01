@@ -86,6 +86,7 @@ public enum modelSwitchOperation{
             String locationName = "AutoCreate20220227202919";
 
             //Go to Demand Driver template
+            ToggleAPI.updateToggle(Toggles.UseDemandDriverTemplateSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123",false);
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
             configurationPage.goToConfigurationPage();
@@ -107,7 +108,7 @@ public enum modelSwitchOperation{
             forecastPage.clickForecast();
             salesForecastPage.navigateToSalesForecastTab();
             SimpleUtils.assertOnFail("The newly added category not exist in forecast page!",
-                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", categoryName), false);
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryName), false);
 
             //edit the category in settings
             switchToNewWindow();
@@ -115,7 +116,7 @@ public enum modelSwitchOperation{
             //verify edited category is in Forecast page
             switchToNewWindow();
             SimpleUtils.assertOnFail("The edited category not exist in forecast page!",
-                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", categoryEditName), false);
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryEditName), false);
 
             //remove the category in settings
             switchToNewWindow();
@@ -123,7 +124,7 @@ public enum modelSwitchOperation{
             //verify the removed category not show up in forecast page.
             switchToNewWindow();
             SimpleUtils.assertOnFail("The removed edited category should not display in forecast page!",
-                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", "categoryEditName"), false);
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", "categoryEditName"), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -144,6 +145,7 @@ public enum modelSwitchOperation{
             String locationName = "AutoCreate20220227202919";
 
             //Go to Demand Driver template
+            ToggleAPI.updateToggle(Toggles.UseDemandDriverTemplateSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123",false);
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
             configurationPage.goToConfigurationPage();
@@ -261,8 +263,8 @@ public enum modelSwitchOperation{
             settingsAndAssociationPage.clickOnEditBtnForInputStream(inputStreamInfoToAdd2, inputStreamInfoToEdit2);
 
             //remove the category in settings
-            settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, inputStreamName1);
             settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, inputStreamName2);
+            settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, inputStreamName1);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -881,7 +883,8 @@ public enum modelSwitchOperation{
     public void verifyTheDefaultInputStreamsWhenEnterANewEnterpriseAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
-            List<String> allStreamNames = new ArrayList<>();
+            List<String> baseStreamNames = new ArrayList<>();
+            List<String> aggregatedStreamNames = new ArrayList<>();
             String verifyType = "input stream";
             int streamsCount = 0;
             int channelsCount = 0;
@@ -894,9 +897,15 @@ public enum modelSwitchOperation{
             configurationPage.clickOnConfigurationCrad(templateType);
             //Go to Settings tab
             settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
-            allStreamNames = settingsAndAssociationPage.getStreamNamesInList("All");
-            if (allStreamNames.size() != 0){
-                for (String streamName : allStreamNames){
+            baseStreamNames = settingsAndAssociationPage.getStreamNamesInList("Base");
+            aggregatedStreamNames = settingsAndAssociationPage.getStreamNamesInList("Aggregated");
+            if (aggregatedStreamNames.size() != 0){
+                for (String streamName : aggregatedStreamNames){
+                    settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, streamName);
+                }
+            }
+            if (baseStreamNames.size() != 0){
+                for (String streamName : baseStreamNames){
                     settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, streamName);
                 }
             }
@@ -1046,7 +1055,7 @@ public enum modelSwitchOperation{
             }
             for (int i = 0; i < categoryNameList.size(); i++){
                 SimpleUtils.assertOnFail("The category " + categoryNameList.get(i) + " should show up in forecast page!",
-                        salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", categoryNameList.get(i)), false);
+                        salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryNameList.get(i)), false);
             }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
