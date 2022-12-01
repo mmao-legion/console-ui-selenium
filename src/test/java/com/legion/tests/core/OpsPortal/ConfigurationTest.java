@@ -775,12 +775,12 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
-
+//https://legiontech.atlassian.net/browse/SCH-8338
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "E2E Verify number of shift function in advance staffing rule")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
     public void numberOfShiftsInADVRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
@@ -2405,7 +2405,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "AutoADVDynamicGroup";
-            String workRole = "AutoUsing2";
+            String workRole = "AMBASSADOR";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
@@ -2432,7 +2432,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "AutoADVDynamicGroup";
-            String workRole = "AutoUsing2";
+            String workRole = "AMBASSADOR";
             String dynamicGpName = "FionaAutoTest";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -2488,7 +2488,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "AutoADVDynamicGroup";
-            String workRole = "AutoUsing2";
+            String workRole = "AMBASSADOR";
             String dynamicGpName = "FionaAutoTest123";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -2520,7 +2520,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "AutoADVDynamicGroup";
-            String workRole = "AutoUsing2";
+            String workRole = "AMBASSADOR";
             String dynamicGpName = "FionaAutoTest123";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -2536,6 +2536,127 @@ public class ConfigurationTest extends TestBase {
             configurationPage.advanceStaffingRuleDynamicGroupCriteriaListChecking(dynamicGpName);
             configurationPage.advanceStaffingRuleEditDeleteADynamicGroup(dynamicGpName);
             configurationPage.advanceStaffingRuleDynamicGroupCustomFormulaDescriptionChecking();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify dynamic group item in advanced staffing rules is optional")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDynamicGroupOfAdvanceStaffingRulesIsOptionalAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "AutoADVDynamicGroup";
+            String workRole = "AMBASSADOR";
+            List<String> days = new ArrayList<String>(){{
+                add("Sunday");
+                add("Friday");
+            }};
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.verifyDynamicGroupOfAdvanceStaffingRuleIsOptional(workRole,days);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    //https://legiontech.atlassian.net/browse/OPS-5643; https://legiontech.atlassian.net/browse/OPS-6254
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Advance staffing rule dynamic group E2E flow")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifyAdvanceStaffingRulesDynamicGroupE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String locationName1 = "AutoADVDynamicGroup02";
+            String locationName2 = "AutoADVDynamicGroup03";
+            List<String> days1 = new ArrayList<String>(){{
+                add("Sunday");
+                add("Friday");
+            }};
+            List<String> days2 = new ArrayList<String>(){{
+                add("Monday");
+                add("Tuesday");
+                add("Wednesday");
+            }};
+            List<String> daysAbbr1 = new ArrayList<String>();
+            List<String> daysHasShifts1 = new ArrayList<String>();
+            List<String> daysAbbr2 = new ArrayList<String>();
+            List<String> daysHasShifts2 = new ArrayList<String>();
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            //Back to console
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName1);
+            //go to schedule function
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            // Navigate to a week
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule if not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdateOH();
+            daysHasShifts1 = scheduleShiftTablePage.verifyDaysHasShifts();
+
+            for(String day:days1){
+                String dayAbbr = day.substring(0,3);
+                daysAbbr1.add(dayAbbr);
+            }
+            Collections.sort(daysHasShifts1);
+            Collections.sort(daysAbbr1);
+            if(days1.size()==daysHasShifts1.size()){
+                if(ListUtils.isEqualList(daysAbbr1,daysHasShifts1)){
+                    SimpleUtils.pass("User can create shifts correctly according to AVD staffing rule");
+                }else {
+                    SimpleUtils.fail("User can't create correct shifts according to AVD staffing rule",false);
+                }
+            }
+            //switch to another location to check the shifts
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName2);
+            //go to schedule function
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            // Navigate to a week
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule if not created
+            boolean isWeekGenerated1 = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated1){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdateOH();
+            daysHasShifts2 = scheduleShiftTablePage.verifyDaysHasShifts();
+
+            for(String day:days2){
+                String dayAbbr = day.substring(0,3);
+                daysAbbr2.add(dayAbbr);
+            }
+            Collections.sort(daysHasShifts2);
+            Collections.sort(daysAbbr2);
+            if(days2.size()==daysHasShifts2.size()){
+                if(ListUtils.isEqualList(daysAbbr2,daysHasShifts2)){
+                    SimpleUtils.pass("User can create shifts correctly according to AVD staffing rule");
+                }else {
+                    SimpleUtils.fail("User can't create correct shifts according to AVD staffing rule",false);
+                }
+            }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

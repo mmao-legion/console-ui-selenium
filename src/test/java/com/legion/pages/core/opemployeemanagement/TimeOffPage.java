@@ -476,5 +476,43 @@ public class TimeOffPage extends BasePage {
         }else
             SimpleUtils.fail("user history loaded failed",false);
     }
+
+    @FindBy(css = "input-field[label = 'Time Off Type']")
+    private WebElement timeOffType;
+    @FindBy(css = "input-field[label = 'History Type']")
+    private WebElement historyType;
+    @FindBy(css = "input-field[label = 'Action']")
+    private WebElement action;
+    @FindBy(css = "input-field[label = 'Time Off Type']>ng-form>input")
+    private WebElement timeOffTypeSelect;
+    @FindBy(css = "input-field[label = 'History Type']>ng-form>input")
+    private WebElement historyTypeSelect;
+    @FindBy(css = "input-field[label = 'Action']>ng-form>input")
+    private WebElement actionSelect;
+
+    public void verifyHistoryType() throws Exception{
+        click(history);
+        if(isElementLoaded(timeOffType,5) && isElementLoaded(historyType,5) && isElementLoaded(action)){
+            if(timeOffType.getAttribute("innerText").contains("Time Off Type") && historyType.getAttribute("innerText").contains("History Type") && action.getAttribute("innerText").contains("Action"))
+                SimpleUtils.pass("History filter text is correct");
+            else
+                SimpleUtils.fail("History filter text is wrong",false);
+        }else
+            SimpleUtils.fail("Time Off Type or History Type or Action doesn't dispaly",false);
+    }
+
+    public void verifyHistoryTypeDefaultValue() throws Exception{
+        if(isElementLoaded(timeOffTypeSelect,5) && isElementLoaded(historyTypeSelect,5) && isElementLoaded(actionSelect,5)){
+            if(timeOffTypeSelect.getAttribute("placeholder").contains("All") && historyTypeSelect.getAttribute("placeholder").contains("All") && actionSelect.getAttribute("placeholder").contains("All")){
+                System.out.println(timeOffTypeSelect.getAttribute("innerText"));
+                System.out.println(historyTypeSelect.getAttribute("innerText"));
+                System.out.println(actionSelect.getAttribute("innerText"));
+                SimpleUtils.pass("History filter default value is All");
+            }
+            else
+                SimpleUtils.fail("History filter default value is not All",false);
+        }else
+            SimpleUtils.fail("Select field loaded failed",false);
+    }
 }
 

@@ -2843,7 +2843,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
 
 
-    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[2]/div/div/div")
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[2]/div/div")
     private List<WebElement> assignedShiftsOnShiftAssignedSections;
     public List<String> getAssignedShiftOnShiftAssignedSection() {
         List<String> assignedShifts = new ArrayList<>();
@@ -2858,7 +2858,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return assignedShifts;
     }
 
-    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[4]/div/div/div")
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[4]/div")
     private List<WebElement> shiftOffersOnShiftAssignedSections;
     @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[4]/button")
     private WebElement clearOffersLink;

@@ -10,7 +10,6 @@ import java.util.*;
 
 
 import static com.jayway.restassured.RestAssured.given;
-import static com.legion.utils.MyThreadLocal.getEnterprise;
 
 public class ToggleAPI {
 
@@ -21,23 +20,21 @@ public class ToggleAPI {
 
             List<HashMap> rules = new ArrayList<>();
             // Get the current enterprise names which have specific toggle turned on
-            List<String> enterpriseNames = getCurrentEnabledEnterprises(toggleName);
+            List<String> enterpriseNames = new ArrayList<>(getCurrentEnabledEnterprises(toggleName));
             if (isTurnOn) {
                 if (!enterpriseNames.contains(enterpriseName.toLowerCase())) {
                     enterpriseNames.add(enterpriseName);
                 }
             } else {
                 if (enterpriseNames.contains(enterpriseName.toLowerCase())) {
-                    if (enterpriseNames.contains(enterpriseName.toLowerCase())) {
-                        for (int i = 0; i < enterpriseNames.size(); i++) {
-                            if (enterpriseNames.size() > 1 && enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
-                                enterpriseNames.remove(i);
-                                break;
-                            }
-                            if (enterpriseNames.size() == 1 && enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
-                                enterpriseNames = new ArrayList<>();
-                                break;
-                            }
+                    for (int i = 0; i < enterpriseNames.size(); i++) {
+                        if (enterpriseNames.size() > 1 && enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
+                            enterpriseNames.remove(i);
+                            break;
+                        }
+                        if (enterpriseNames.size() == 1 && enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
+                            enterpriseNames = new ArrayList<>();
+                            break;
                         }
                     }
                 }
@@ -48,7 +45,7 @@ public class ToggleAPI {
                     rulesValue.put("enterpriseName", name);
                     rules.add(rulesValue);
                 }
-            }else{
+            } else {
                 rules = new ArrayList<>();
             }
 

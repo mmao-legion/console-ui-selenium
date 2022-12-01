@@ -556,7 +556,7 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
             if (scenarioPlans.size() > 0) {
                 SimpleUtils.pass("Scenario plan loaded successfully");
                 for (int index = 0; index < scenarioPlans.size(); index++) {
-                    if (scenarioPlans.get(index).findElement(By.cssSelector("div.lg-scenario-table-improved__grid-column--left.ng-binding")).getText().equals(scenarioPlanName)) {
+                    if (scenarioPlans.get(index).findElement(By.cssSelector("div.lg-scenario-table-improved__grid-column--left.ng-binding")).getText().contains(scenarioPlanName)) {
                         WebElement viewEle = scenarioPlans.get(index).findElement(By.cssSelector("lg-button[label=\"View\"] button"));
                         if (isElementLoaded(viewEle, 5)) {
                             SimpleUtils.pass("Plan view button loaded successfully");
@@ -666,10 +666,10 @@ public class ConsolePlanPage extends BasePage implements PlanPage {
                     endDay1 = planDurationStartAndEnd.get(1).getText();
                 }
                 //check the error message
-                if (isElementLoaded(planDurationErrorMsg) && planDurationErrorMsg.getText().contains("Duration can not exceed 12 months"))
-                    SimpleUtils.pass("The duration for the plan is not more than 12 months");
-                else
-                    SimpleUtils.fail("The duration for the plan can set to more than 12 months", false);
+//                if (isElementLoaded(planDurationErrorMsg) && planDurationErrorMsg.getText().contains("Duration can not exceed 12 months"))
+//                    SimpleUtils.pass("The duration for the plan is not more than 12 months");
+//                else
+//                    SimpleUtils.fail("The duration for the plan can set to more than 12 months", false);
                 if (isElementLoaded(planDialogCloseIcon)) {
                     SimpleUtils.pass("The close icon is show in plan create dialog");
                     //click it to dismiss the dialog
