@@ -8384,13 +8384,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				configurationPage.clickOnConfigurationCrad("Compliance");
 				configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
 				configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-				Thread.sleep(3000);
+				Thread.sleep(10000);
 				compliancePage.turnOnOrTurnOffWeeklyOTToggle(true);
 				compliancePage.editWeeklyOTSetting("40");
 				configurationPage.publishNowTheTemplate();
-				Thread.sleep(60000);
 				switchToConsoleWindow();
 			}
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(60000);
 
 			//Go to the schedule view table
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -8885,11 +8886,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				switchToConsoleWindow();
 			}
 			refreshCachesAfterChangeTemplate();
+			Thread.sleep(100000);
+			refreshCachesAfterChangeTemplate();
 
 			///Log in as store manager, check the Team Schedule sub tab
 			String subTab = "Team Schedule";
 			loginPage.logOut();
-			Thread.sleep(300000);
+			Thread.sleep(200000);
 			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			Thread.sleep(3000);
