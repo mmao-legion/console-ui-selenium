@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="10" name="LegionTest" parallel="tests">
+<suite verbose ="0" thread-count="5" name="LegionTest" parallel="tests">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Ephemeral - Automation OP"/>
@@ -86,6 +86,26 @@
                  </methods>
              </class>
          </classes>
-     </test>-->
+     </test>
+
+    <test name="TimeOffRequest Test">
+        <classes>
+            <class name="com.legion.tests.core.opEmployeeManagement.TimeOffRequestTest">
+                <methods>
+
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Job Test">
+        <classes>
+            <class name="com.legion.tests.core.opEmployeeManagement.AccrualEngineTest">
+                <methods>
+
+                </methods>
+            </class>
+        </classes>
+    </test>-->
 
  </suite> <!-- Suite -->
