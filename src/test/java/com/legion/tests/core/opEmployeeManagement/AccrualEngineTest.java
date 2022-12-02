@@ -2891,6 +2891,12 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.switchToTimeOffTab();
         timeOffPage.verifyHistoryType();
         timeOffPage.verifyHistoryTypeDefaultValue();
+        timeOffPage.historyTypeAllFilter();
+        timeOffPage.timeOffRequestFilter();
+        timeOffPage.accrualLedgerFilter();
+        timeOffPage.actionAllFilter();
+//        timeOffPage.actionAccrualFilter();
+//        timeOffPage.actionAccrualCapFilter();
     }
 
 }
