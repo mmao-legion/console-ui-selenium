@@ -3,6 +3,7 @@ package com.legion.pages.core.opemployeemanagement;
 import com.legion.pages.BasePage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -484,11 +485,11 @@ public class TimeOffPage extends BasePage {
     @FindBy(css = "input-field[label = 'Action']")
     private WebElement action;
     @FindBy(css = "input-field[label = 'Time Off Type']>ng-form>input")
-    private WebElement timeOffTypeSelect;
+    private WebElement timeOffTypeInput;
     @FindBy(css = "input-field[label = 'History Type']>ng-form>input")
-    private WebElement historyTypeSelect;
+    private WebElement historyTypeInput;
     @FindBy(css = "input-field[label = 'Action']>ng-form>input")
-    private WebElement actionSelect;
+    private WebElement actionInput;
 
     public void verifyHistoryType() throws Exception{
         click(history);
@@ -502,17 +503,137 @@ public class TimeOffPage extends BasePage {
     }
 
     public void verifyHistoryTypeDefaultValue() throws Exception{
-        if(isElementLoaded(timeOffTypeSelect,5) && isElementLoaded(historyTypeSelect,5) && isElementLoaded(actionSelect,5)){
-            if(timeOffTypeSelect.getAttribute("placeholder").contains("All") && historyTypeSelect.getAttribute("placeholder").contains("All") && actionSelect.getAttribute("placeholder").contains("All")){
-                System.out.println(timeOffTypeSelect.getAttribute("innerText"));
-                System.out.println(historyTypeSelect.getAttribute("innerText"));
-                System.out.println(actionSelect.getAttribute("innerText"));
+        if(isElementLoaded(timeOffTypeInput,5) && isElementLoaded(historyTypeInput,5) && isElementLoaded(actionInput,5)){
+            if(timeOffTypeInput.getAttribute("placeholder").contains("All") && historyTypeInput.getAttribute("placeholder").contains("All") && actionInput.getAttribute("placeholder").contains("All"))
                 SimpleUtils.pass("History filter default value is All");
-            }
             else
                 SimpleUtils.fail("History filter default value is not All",false);
         }else
             SimpleUtils.fail("Select field loaded failed",false);
+    }
+
+    @FindBy(css = "div.show-more")
+    private WebElement showMoreButton;
+    @FindBy(css = "div[title = 'Time Off Request']")
+    private WebElement timeOffRequest;
+    @FindBy(css = "input-field[label = 'Time Off Type']>ng-form")
+    private WebElement timeOffTypeSelect;
+    @FindBy(css = "input-field[label = 'History Type']>ng-form")
+    private WebElement historyTypeSelect;
+    @FindBy(css = "input-field[label = 'Action']>ng-form")
+    private WebElement actionSelect;
+
+    public void timeOffRequestFilter() throws Exception{
+        click(historyTypeSelect);
+        click(timeOffRequest);
+
+        if(isElementLoaded(showMoreButton)) {
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        for(int i = 0; i < historyItems.size(); i++){
+            if(historyItems.get(i).getAttribute("innerText").contains("taken"))
+                SimpleUtils.pass("Time Off Request filter successfully");
+            else
+                SimpleUtils.fail("Time Off Request filter failed",false);
+        }
+    }
+
+    @FindBy(css = "div[title = 'Accrual Ledger']")
+    private WebElement accrualLedger;
+    @FindBy(css = "div[title = 'All']")
+    private WebElement historyTypeAll;
+    public void accrualLedgerFilter() throws Exception{
+        click(historyTypeSelect);
+        click(accrualLedger);
+
+        if(isElementLoaded(showMoreButton)) {
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        for(int i = 0; i < historyItems.size(); i++){
+            if(!historyItems.get(i).getAttribute("innerText").contains("taken"))
+                SimpleUtils.pass("Accrual Ledger filter successfully");
+            else
+                SimpleUtils.fail("Accrual Ledger filter failed",false);
+        }
+
+        click(historyTypeSelect);
+        click(historyTypeAll);
+    }
+
+    public void historyTypeAllFilter() throws Exception{
+        Boolean accrualLedgerFlag = false, timeOffRequestFlag = false;
+        for(int i = 0; i < historyItems.size(); i++){
+            if(!historyItems.get(i).getAttribute("innerText").contains("taken"))
+                accrualLedgerFlag = true;
+            if(historyItems.get(i).getAttribute("innerText").contains("taken"))
+                timeOffRequestFlag = true;
+        }
+
+        if(accrualLedgerFlag == true && timeOffRequestFlag == true)
+            SimpleUtils.pass("History type all filter successfully");
+        else
+            SimpleUtils.fail("History type all filter failed",false);
+    }
+
+    public void actionAllFilter() throws Exception{
+        Boolean accrualFlag = false, accrualCapFlag = false;
+        for(int i = 0; i < historyItems.size(); i++){
+            if(historyItems.get(i).getAttribute("innerText").contains("Accrued"))
+                accrualFlag = true;
+            if(historyItems.get(i).getAttribute("innerText").contains("Deducted"))
+                accrualCapFlag = true;
+        }
+
+        if(accrualFlag == true && accrualCapFlag == true)
+            SimpleUtils.pass("Action all filter successfully");
+        else
+            SimpleUtils.fail("Action all filter failed",false);
+    }
+
+    @FindBy(css = "input[aria-label = 'Accrual']")
+    private WebElement accrual;
+    public void actionAccrualFilter() throws Exception{
+        click(actionSelect);
+        accrualLedger.sendKeys(Keys.ENTER);
+
+        Boolean accrualFlag = false, accrualCapFlag = false;
+        for(int i = 0; i < historyItems.size(); i++){
+            if(historyItems.get(i).getAttribute("innerText").contains("Accrued"))
+                accrualFlag = true;
+            if(historyItems.get(i).getAttribute("innerText").contains("Deducted"))
+                accrualCapFlag = true;
+        }
+
+        if(accrualFlag == true && accrualCapFlag == false)
+            SimpleUtils.pass("Action accrual filter successfully");
+        else
+            SimpleUtils.fail("Action accrual all filter failed",false);
+
+        click(accrualLedger);
+    }
+
+    @FindBy(css = "input-field[label = 'Accrual Cap']")
+    private WebElement accrualCap;
+    public void actionAccrualCapFilter() throws Exception{
+        click(actionSelect);
+        click(accrualCap);
+
+        Boolean accrualFlag = false, accrualCapFlag = false;
+        for(int i = 0; i < historyItems.size(); i++){
+            if(historyItems.get(i).getAttribute("innerText").contains("Accrued"))
+                accrualFlag = true;
+            if(historyItems.get(i).getAttribute("innerText").contains("Deducted"))
+                accrualCapFlag = true;
+        }
+
+        if(accrualFlag == true && accrualCapFlag == false)
+            SimpleUtils.pass("Action accrual filter successfully");
+        else
+            SimpleUtils.fail("Action accrual all filter failed",false);
+
+        click(accrualCap);
     }
 }
 
