@@ -74,6 +74,10 @@
                     <include name="verifyEmployeeCanReceiveAndAcceptOffersForP2PLGAsTeamMember" />
                     <include name="verifyEmployeesCanSwapShiftsForP2PLGAsTeamMember" />
                     <include name="verifyEmployeesCanClaimCoverRequestForP2PLGAsTeamMember" />
+                    <include name="verifyDragAndDropShiftToSameLocationForP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropShiftToDifferentLocationForP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropEmployeeToSameLocationForP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropEmployeeToDifferentLocationForP2PLGScheduleAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -125,6 +129,10 @@
                     <include name="verifyEmployeeCanReceiveAndAcceptOffersForParentChildLGAsTeamMember" />
                     <include name="verifyEmployeesCanSwapShiftsForParentChildLGAsTeamMember" />
                     <include name="verifyEmployeesCanClaimCoverRequestForParentChildLGAsTeamMember" />
+                    <include name="verifyDragAndDropShiftToSameLocationForParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropShiftToDifferentLocationForParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropEmployeeToSameLocationForParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropEmployeeToDifferentLocationForParentChildLGScheduleAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

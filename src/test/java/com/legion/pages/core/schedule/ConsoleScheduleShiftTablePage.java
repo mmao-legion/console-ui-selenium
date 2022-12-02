@@ -508,7 +508,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @FindBy(className = "week-schedule-shift-wrapper")
     private List<WebElement> shiftsWeekView;
-    @FindBy(css = ".week-schedule-worker-name")
+    @FindBy(css = "[id=\"schedule-grid-react-wrapper\"] .week-schedule-worker-name")
     private List<WebElement> namesWeekView;
     @FindBy(css = ".sch-day-view-shift-worker-name")
     private List<WebElement> namesDayView;
@@ -2621,7 +2621,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement start : startElements) {
                 WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
                 if (startName != null) {
-                    if (startName.getText().equalsIgnoreCase(firstName)) {
+                    if (startName.getText().contains(firstName)) {
                         SimpleUtils.pass("Can find the TM:" + firstName + " on " + startIndex);
                         isCopied = true;
                         break;
@@ -2633,7 +2633,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement end : endElements) {
                 WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
                 if (endName != null) {
-                    if (endName.getText().equalsIgnoreCase(firstName)) {
+                    if (endName.getText().contains(firstName)) {
                         isCopied = true;
                         break;
                     }
