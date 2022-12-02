@@ -271,9 +271,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement searchInputInSelectALocation;
 	@FindBy(css = "tr[ng-repeat=\"item in $ctrl.currentPageItems track by $index\"]")
 	private List<WebElement> locationRowsInSelectLocation;
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection track by location.businessId\"]")
+	@FindBy(xpath = "//tr[@ng-repeat=\"location in filteredCollection track by location.businessId\" or (@ng-repeat=\"location in filteredCollection\")]")
 	private List<WebElement> locationRows;
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection track by location.businessId\"] > td:nth-child(4) > lg-eg-status")
+	@FindBy(xpath = "//tr[@ng-repeat=\"location in filteredCollection track by location.businessId\" or (@ng-repeat=\"location in filteredCollection\")]/td[4]/lg-eg-status")
 	private List<WebElement> locationStatus;
 
 	@FindBy(css = "lg-button[label=\"OK\"]")
@@ -5382,6 +5382,16 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					.when().post(url)
 					.then().log().all().statusCode(expectedStatusCode).body("responseStatus", Matchers.equalToIgnoringCase("SUCCESS"))
 					.body(path, Matchers.equalTo(expectedResult));
+		} else {
+			String str = RestAssured.given().log().all().queryParams(params).contentType("multipart/form-data").multiPart("file", file).header("sessionId", sessionId)
+					.when().post(url)
+					.then().log().all().statusCode(expectedStatusCode).extract().path(path).toString();
+			System.out.println("-----" +str);
+			if (str.contains(String.valueOf(expectedResult))) {
+				SimpleUtils.pass("error message is showing");
+			} else {
+				SimpleUtils.fail("error message is not showing", false);
+			}
 		}
 	}
 

@@ -10,7 +10,6 @@ import java.util.*;
 
 
 import static com.jayway.restassured.RestAssured.given;
-import static com.legion.utils.MyThreadLocal.getEnterprise;
 
 public class ToggleAPI {
 
@@ -21,7 +20,7 @@ public class ToggleAPI {
 
             List<HashMap> rules = new ArrayList<>();
             // Get the current enterprise names which have specific toggle turned on
-            List<String> enterpriseNames = getCurrentEnabledEnterprises(toggleName);
+            List<String> enterpriseNames = new ArrayList<>(getCurrentEnabledEnterprises(toggleName));
             if (isTurnOn) {
                 if (!enterpriseNames.contains(enterpriseName.toLowerCase())) {
                     enterpriseNames.add(enterpriseName);

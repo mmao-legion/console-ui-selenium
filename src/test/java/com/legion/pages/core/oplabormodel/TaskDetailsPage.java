@@ -1,11 +1,14 @@
 package com.legion.pages.core.oplabormodel;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -52,12 +55,26 @@ public class TaskDetailsPage extends BasePage {
     //add rule
     @FindBy(css = "lg-button[label='Add Rule']>button")
     private WebElement addRuleButton;
+    @FindBy(css = "lg-button[ng-click=\"$ctrl.addTeamRule($event)\"]>button")
+    private WebElement addTeamMemberRuleButton;
     @FindBy(css = "h1.lg-modal__title")//When should the task be done?
     private WebElement modalTitle;
     @FindBy(css = "div.lg-button-group>div:nth-child(1)>span")
     private WebElement standardTab;
     @FindBy(css = "div.lg-button-group>div:nth-child(2)>span")
     private WebElement customTab;
+    @FindBy(css = "input-field[options=\"$ctrl.demandDriverTypeChoices\"] select")
+    private WebElement driverType;
+    @FindBy(css = "input-field[options=\"$ctrl.sourceTypeChoices\"] select")
+    private WebElement sourceType;
+    @FindBy(css = "input-field[options=\"$ctrl.categoryChoices\"] select")
+    private WebElement categoryType;
+    @FindBy(css = "input-field[value=\"$ctrl.capacity\"] input")
+    private WebElement capacityInput;
+    @FindBy(css = "div.lg-toast--error>p")
+    private WebElement warnigPopUp;
+    @FindBy(css = "tr[ng-repeat=\"tr in $ctrl.task.teamMemberRules\"]")
+    private List<WebElement> teamMemberRules;
     //
     @FindBy(css = "div.mt-20>span.dib.ml- select")
     private WebElement startEnd;
@@ -162,4 +179,40 @@ public class TaskDetailsPage extends BasePage {
         }
     }
 
+    public void addRulesForDemandTask(HashMap<String, String> rulesInformation) {
+        addTeamMemberRuleButton.click();
+        standardTab.click();
+        capacityInput.clear();
+        capacityInput.sendKeys(rulesInformation.get("capacity"));
+
+        Select driverTypeSelect = new Select(driverType);
+        Select sourceTypeSelect = new Select(sourceType);
+        Select categoryTypeSelect = new Select(categoryType);
+        driverTypeSelect.selectByVisibleText(rulesInformation.get("driverType"));
+        sourceTypeSelect.selectByVisibleText(rulesInformation.get("sourceType"));
+        categoryTypeSelect.selectByVisibleText(rulesInformation.get("categoryType"));
+    }
+
+    public String getWarningMessage() throws Exception {
+        String messageInfo = "";
+
+        if (isElementLoaded(warnigPopUp, 5)){
+            messageInfo = warnigPopUp.getAttribute("innerText");
+        }else{
+            SimpleUtils.report("No warning message pop up!");
+        }
+        return messageInfo;
+    }
+
+    public void removeRule(int index) {
+        if(areListElementVisible(teamMemberRules, 2)){
+            WebElement removeBtn = teamMemberRules.get(index).findElement(By.cssSelector("td lg-button[label=\"Remove\"]"));
+            if(removeBtn != null)
+                removeBtn.click();
+            else
+                SimpleUtils.fail("No remove button found!", false);
+        }else{
+            SimpleUtils.fail("No team member rules found!", false);
+        }
+    }
 }

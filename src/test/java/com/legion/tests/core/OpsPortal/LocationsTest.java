@@ -3085,7 +3085,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "opauto")
     @TestName(description = "Ability to indicate Location Group type via Location Integration")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyImportLocationCommon1FunctionAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+    public void verifyIndicateLocationGroupTypeViaLocationIntegrationAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -3096,6 +3096,24 @@ public class LocationsTest extends TestBase {
             List column = new ArrayList<>();
             column.add("LocationGroupType");
             locationsPage.verifyColumnsInLocationSampleFile( getSession(),column);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify import function by API")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyImportFunctionByAPIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            String filePath = "src/test/resources/uploadFile/LocationTest/emptyLocationType.csv";
+            locationsPage.importLocations(filePath, getSession(), "false", 200, "validationResults[2]", "Location Type cannot be empty");
+//            String filePath1 = "D:\\New UI Auto\\console-ui-selenium\\src\\test\\resources\\uploadFile\\LocationTest\\emptyConfigType.csv";
+//            locationsPage.importLocations(filePath1, getSession(), "false", 200,"validationResults[2]","Location Type cannot be empty");
+
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
