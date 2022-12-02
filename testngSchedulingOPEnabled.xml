@@ -238,8 +238,8 @@
                     <include name="verifyTurnOnWeekOTViolationAsInternalAdmin" />
                             <include name="verifyTurnOffWeekOTViolationAsInternalAdmin" />
                             <include name="VerifyTheViewTeamSchedulePermissionDisplayAsInternalAdmin" />
-                            <include name="VerifyTheViewTeamSchedulePermissionTurnOffAsInternalAdmin" />
-                            <include name="VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin" />
+                    <!--         <include name="VerifyTheViewTeamSchedulePermissionTurnOffAsInternalAdmin" />
+                            <include name="VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin" />   The effective time is too long to run, no any useful method now -->
                     <!--          <include name="VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin" />
                             <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" /> The code is not merged into RC yet -->
                     <include name="verifyRecommendTabHasTMsAsInternalAdmin" />

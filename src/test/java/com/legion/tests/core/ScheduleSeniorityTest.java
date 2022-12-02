@@ -871,6 +871,8 @@ public class ScheduleSeniorityTest extends TestBase {
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(180000);
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(20000);
 
 			//Create a schedule if there is no any
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
