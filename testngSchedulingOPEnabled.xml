@@ -742,6 +742,7 @@ SCH-5862-->
                 <methods>
                     <include name="verifyFunctionalityOfDisplayOrderAsInternalAdmin" />
                     <include name="verifyWorkRoleDisplayOrderInConsoleAsInternalAdmin" />
+                    <include name="verifyTheColorOfTheShiftInTMViewConsistentWithManagerViewAsTeamMember" />
                 </methods>
             </class>
         </classes>
