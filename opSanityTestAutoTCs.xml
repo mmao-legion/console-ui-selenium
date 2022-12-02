@@ -86,6 +86,26 @@
                  </methods>
              </class>
          </classes>
-     </test>-->
+     </test>
+
+    <test name="TimeOffRequest Test">
+        <classes>
+            <class name="com.legion.tests.core.opEmployeeManagement.TimeOffRequestTest">
+                <methods>
+
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Job Test">
+        <classes>
+            <class name="com.legion.tests.core.opEmployeeManagement.AccrualEngineTest">
+                <methods>
+
+                </methods>
+            </class>
+        </classes>
+    </test>-->
 
  </suite> <!-- Suite -->
