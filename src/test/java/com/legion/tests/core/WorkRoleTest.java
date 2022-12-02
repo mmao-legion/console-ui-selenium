@@ -18,9 +18,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class WorkRoleTest extends TestBase {
 
@@ -31,6 +29,9 @@ public class WorkRoleTest extends TestBase {
     private ScheduleCommonPage scheduleCommonPage;
     private LocationsPage locationsPage;
     private NewShiftPage newShiftPage;
+    private ProfileNewUIPage profileNewUIPage;
+    private LoginPage loginPage;
+    private MySchedulePage mySchedulePage;
 
     @Override
     @BeforeMethod()
@@ -46,6 +47,9 @@ public class WorkRoleTest extends TestBase {
             scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationsPage = pageFactory.createOpsPortalLocationsPage();
             newShiftPage = pageFactory.createNewShiftPage();
+            profileNewUIPage = pageFactory.createProfileNewUIPage();
+            loginPage = pageFactory.createConsoleLoginPage();
+            mySchedulePage = pageFactory.createMySchedulePage();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -195,6 +199,66 @@ public class WorkRoleTest extends TestBase {
             // Verify the display order on labor forecast work role dropdown list in day view
             SimpleUtils.assertOnFail("Work role display order is incorrect on Forecast week view page!",
                     forecastPage.areWorkRoleDisplayOrderCorrectOnLaborForecast(workRoleNOrders), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify the color of the shift in TM view should be consistent with manager view")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheColorOfTheShiftInTMViewConsistentWithManagerViewAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        try {
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            String firstName = tmFullName.split(" ")[0];
+            String lastName = tmFullName.split(" ")[1];
+            String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (!isWeekGenerated) {
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = new ArrayList<>();
+            String workRoleName = "";
+            String workRoleColor = "";
+            if (scheduleShiftTablePage.getShiftsNumberByName(firstName)>0) {
+                scheduleMainPage.clickOnOpenSearchBoxButton();
+                scheduleMainPage.searchShiftOnSchedulePage(firstName+" "+lastName);
+                workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+                int index = (new Random()).nextInt(workRoles.size());
+                workRoleName = workRoles.get(index).get("optionName");
+                workRoleColor = workRoles.get(index).get("optionStyle");
+            } else {
+                workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+                int index = (new Random()).nextInt(workRoles.size());
+                workRoleName = workRoles.get(index).get("optionName");
+                workRoleColor = workRoles.get(index).get("optionStyle");
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                createShiftsWithSpecificValues(workRoleName, "", "", "9:00am", "04:00pm",
+                        1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", firstName+ " "+lastName);
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.clickOnCloseSearchBoxButton();
+            createSchedulePage.publishActiveSchedule();
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            String styleOnTMView = mySchedulePage.getStyleOfShiftByIndex(0);
+
+            SimpleUtils.assertOnFail("The work role color in Manager view is: "+workRoleColor
+                            +" The work rol color is TM view is:"+styleOnTMView,
+                    styleOnTMView.contains(workRoleColor), false);
+
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -1874,4 +1874,20 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
             SimpleUtils.fail("Team Members' Icons not loaded", false);
         }
     }
+
+
+    @Override
+    public String getStyleOfShiftByIndex(int index) throws Exception {
+        String style = "";
+        if (areListElementVisible(shiftsWeekView, 5)){
+            if (index> shiftsWeekView.size()-1){
+                SimpleUtils.fail("The index is more than shift count! ", false);
+            } else {
+                style = shiftsWeekView.get(index).getAttribute("style");
+                SimpleUtils.pass("Get shift style successfully! The style is:"+style);
+            }
+        } else
+            SimpleUtils.fail("The shifts on My Schedule page fail to load! ", false);
+        return style;
+    }
 }
