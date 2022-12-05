@@ -1853,7 +1853,7 @@ public class AccrualEngineTest extends TestBase {
         //get session id via login
         String sessionId = getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
-        ToggleAPI.updateToggle("UseAbsenceMgmtConfiguration","nancy.nan+toggle@legion.co","admin11.a",true);
+        ToggleAPI.updateToggle("UseAbsenceMgmtConfiguration",getUserNameNPwdForCallingAPI().get(0),getUserNameNPwdForCallingAPI().get(1),true);
         //confirm template
         String workerId = "18f7c695-3a40-4701-86e2-cc7c51281194";
         String targetTemplate = "AccrualAutoTest(Don't touch!!!)";
