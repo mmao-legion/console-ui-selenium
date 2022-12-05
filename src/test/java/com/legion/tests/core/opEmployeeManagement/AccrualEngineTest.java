@@ -610,7 +610,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Look Back")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//https://legiontech.atlassian.net/browse/OPS-5634
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)//https://legiontech.atlassian.net/browse/OPS-5634
     public void verifyAccrualEngineLookBackAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //worked hours look back function
         //verify that the target template is here.
@@ -2459,6 +2459,7 @@ public class AccrualEngineTest extends TestBase {
         hoursType.add("Holiday");
         hoursType.add("Other Pay Type");
         hoursType.add("Compliance");
+        hoursType.add("Differential");
         return hoursType;
     }
 
