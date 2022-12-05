@@ -181,7 +181,7 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify add and update work role")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false) //is blocked by OPS-6284
     public void verifyAddEditSearchAndDisableWorkRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
             OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
