@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
+
 public class AccrualEngineTest extends TestBase {
     @Override
     @BeforeMethod()
@@ -2771,7 +2773,8 @@ public class AccrualEngineTest extends TestBase {
             Assert.assertEquals(getHttpStatusCode(toggleResponse), 200, "Failed to get the user's template!");
         }
         //confirm template
-        String workerId = "1b4fb685-ef70-4120-8be9-87b6b7dd08d1";
+
+        String workerId = getDriver().getCurrentUrl().substring(getDriver().getCurrentUrl().length()-36, getDriver().getCurrentUrl().length());
         String targetTemplate = "AccrualEngine";
         String tempName = getUserTemplate(workerId, sessionId);
         Assert.assertEquals(tempName, targetTemplate, "The user wasn't associated to this Template!!! ");

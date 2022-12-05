@@ -106,6 +106,17 @@
             </class>
         </classes>
     </test>
+
+    <test name="Accrual Engine Test">
+        <classes>
+            <class name="com.legion.tests.core.opEmployeeManagement.AccrualEngineTest">
+                <methods>
+                    <include name="verifyAccrualEngineAsInternalAdminOfAccrualEngineTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    
     <!--
     <test name="TimeOffRequest Test">
         <classes>
