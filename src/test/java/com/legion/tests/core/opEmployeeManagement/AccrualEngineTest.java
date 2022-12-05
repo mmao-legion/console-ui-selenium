@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.legion.api.login.LoginAPI;
+import com.legion.api.toggle.ToggleAPI;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.TeamPage;
@@ -1850,10 +1851,7 @@ public class AccrualEngineTest extends TestBase {
         //get session id via login
         String sessionId = getSession();
         //set UseAbsenceMgmtConfiguration Toggle On
-        if (!isToggleEnabled(sessionId, "UseAbsenceMgmtConfiguration")) {
-            String[] toggleResponse = turnOnToggle(sessionId, "UseAbsenceMgmtConfiguration");
-            Assert.assertEquals(getHttpStatusCode(toggleResponse), 200, "Failed to get the user's template!");
-        }
+        ToggleAPI.updateToggle("UseAbsenceMgmtConfiguration","nancy.nan+toggle@legion.co","admin11.a",true);
         //confirm template
         String workerId = "18f7c695-3a40-4701-86e2-cc7c51281194";
         String targetTemplate = "AccrualAutoTest(Don't touch!!!)";
