@@ -106,22 +106,32 @@
             </class>
         </classes>
     </test>
-    <!--
-    <test name="TimeOffRequest Test">
-        <classes>
-            <class name="com.legion.tests.core.opEmployeeManagement.TimeOffRequestTest">
-                <methods>
 
+    <test name="AbsentManagementTemplateTest Test">
+        <classes>
+            <class name="com.legion.tests.core.opEmployeeManagement.AbsentManagementTemplateTest">
+                <methods>
+                    <include name="verifyTimeOffRequestRulesAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
     </test>
 
-    <test name="Job Test">
+    <test name="Accrual Engine Test">
         <classes>
             <class name="com.legion.tests.core.opEmployeeManagement.AccrualEngineTest">
                 <methods>
-
+                    <include name="verifyAccrualGMHolidayUIAsInternalAdminOfAccrualEngineTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <!--
+    <test name="TimeOffRequest Test">
+        <classes>
+            <class name="com.legion.tests.core.opEmployeeManagement.TimeOffRequestTest">
+                <methods>
+                 <include name="verifyTimeOffRequestRulesAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
