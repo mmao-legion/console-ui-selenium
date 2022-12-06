@@ -7335,10 +7335,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				Thread.sleep(10000);
 				controlsNewUIPage.enableOverRideAssignmentRuleAsNoForOP();
 				configurationPage.publishNowTheTemplate();
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				switchToConsoleWindow();
 			}
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(180000);

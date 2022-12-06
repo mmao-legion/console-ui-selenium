@@ -5237,4 +5237,85 @@ public class P2PLGTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Cosimo")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate the parent location disable the budget edit button")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void VerifyParentLocationDisabledLaborBudgetEditBtnAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ForecastPage forecastPage = pageFactory.createForecastPage();
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToGlobalConfigurationInLocations();
+            locationsPage.editLaborBudgetSettingContent();
+            locationsPage.turnOnOrTurnOffLaborBudgetToggle(true);
+            locationsPage.selectBudgetGroup("By Location");
+            locationsPage.saveTheGlobalConfiguration();
+            switchToConsoleWindow();
+            refreshCachesAfterChangeTemplate();
+            Thread.sleep(120000);
+
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            List <String> locationNames = scheduleMainPage.getSpecificFilterNames("location");
+            String childLocation1 = locationNames.get(0);
+            String childLocation2 = locationNames.get(1);
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(childLocation1);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+
+            forecastPage.goToForecastLaborWeek();
+            SimpleUtils.assertOnFail("Child location disabled the labor budget edit button on week view!",
+                    forecastPage.isLaborBudgetEditBtnLoaded(),false);
+            forecastPage.editLaborBudgetOnSummarySmartCard();
+            forecastPage.goToForecastLaborDay();
+            SimpleUtils.assertOnFail("Child location disabled the labor budget edit button on day view!",
+                    forecastPage.isLaborBudgetEditBtnLoaded(),false);
+            forecastPage.editLaborBudgetOnSummarySmartCard();
+
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(childLocation2);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()), false);
+            forecastPage.goToForecastLaborWeek();
+            SimpleUtils.assertOnFail("Child location disabled the labor budget edit button on week view!",
+                    forecastPage.isLaborBudgetEditBtnLoaded(),false);
+            forecastPage.editLaborBudgetOnSummarySmartCard();
+            forecastPage.goToForecastLaborDay();
+            SimpleUtils.assertOnFail("Child location disabled the labor budget edit button on day view!",
+                    forecastPage.isLaborBudgetEditBtnLoaded(),false);
+            forecastPage.editLaborBudgetOnSummarySmartCard();
+
+            //Go to the parent schedule, check the labor edit budget button
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()), false);
+            forecastPage.goToForecastLaborWeek();
+            SimpleUtils.assertOnFail("Parent location shows the labor budget edit button on week view!",
+                    !(forecastPage.isLaborBudgetEditBtnLoaded()),false);
+            forecastPage.goToForecastLaborDay();
+            SimpleUtils.assertOnFail("Parent location shows the labor budget edit button on day view!",
+                    !(forecastPage.isLaborBudgetEditBtnLoaded()),false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

@@ -74,6 +74,7 @@
                     <include name="verifyEmployeeCanReceiveAndAcceptOffersForP2PLGAsTeamMember" />
                     <include name="verifyEmployeesCanSwapShiftsForP2PLGAsTeamMember" />
                     <include name="verifyEmployeesCanClaimCoverRequestForP2PLGAsTeamMember" />
+                    <!-- <include name="VerifyParentLocationDisabledLaborBudgetEditBtnAsInternalAdmin" />   Issue is not fixed yet-->
                 </methods>
             </class>
         </classes>
