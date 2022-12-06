@@ -712,9 +712,7 @@ public class FTSERelevantTest extends TestBase {
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
@@ -2162,14 +2160,14 @@ public class FTSERelevantTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
-            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
+//            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
 
             //Editing the operating day and save all actions.
-//            List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
-//            scheduleMainPage.goToEditOperatingHoursView();
-//            scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "12:00AM","12:00AM");
-//            scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
-//            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
+            scheduleMainPage.goToEditOperatingHoursView();
+            scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "12:00AM","12:00AM");
+            scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
 
             //Delete all existed shifts, then switch to the Day View.
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();

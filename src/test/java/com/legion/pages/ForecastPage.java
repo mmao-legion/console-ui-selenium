@@ -113,4 +113,5 @@ public interface ForecastPage {
 	public void goToForecastLaborDay() throws Exception;
 	public ArrayList getTextOfLaborWages() throws Exception;
 	public ArrayList getTextOfScheduleWages() throws Exception;
+	public boolean isLaborBudgetEditBtnLoaded() throws Exception;
 }

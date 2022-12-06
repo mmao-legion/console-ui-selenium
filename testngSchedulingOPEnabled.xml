@@ -78,6 +78,7 @@
                     <include name="verifyDragAndDropShiftToDifferentLocationForP2PLGScheduleAsInternalAdmin" />
                     <include name="verifyDragAndDropEmployeeToSameLocationForP2PLGScheduleAsInternalAdmin" />
                     <include name="verifyDragAndDropEmployeeToDifferentLocationForP2PLGScheduleAsInternalAdmin" />
+                    <!-- <include name="VerifyParentLocationDisabledLaborBudgetEditBtnAsInternalAdmin" />   Issue is not fixed yet -->
                 </methods>
             </class>
         </classes>

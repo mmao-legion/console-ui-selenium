@@ -2144,7 +2144,6 @@ public class TeamTestKendraScott2 extends TestBase{
 				role = "Area Manager";
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
 				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-				Thread.sleep(240000);
 
 			}else {
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -2158,7 +2157,6 @@ public class TeamTestKendraScott2 extends TestBase{
 				locationsPage.saveTheGlobalConfiguration();
 
 				//Go to Users and Roles page and switch to the Access Roles sub tab
-				ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
 				userManagementPage.clickOnUserManagementTab();
 				SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
 				userManagementPage.goToUserAndRoles();
@@ -2171,13 +2169,10 @@ public class TeamTestKendraScott2 extends TestBase{
 				role = "CinemarkDistrictManager";
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
 				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-				Thread.sleep(240000);
-
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				switchToConsoleWindow();
 			}
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(240000);
 
 			//Go to schedule page and re-generate the schedule for current & past weeks
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
