@@ -48,4 +48,7 @@ public class Constants {
 
     //refreshCache
     public static final String refreshCache = System.getProperty("env")+"legion/cache/refreshCache";
+
+    //import location
+    public static final String uploadBusiness = System.getProperty("env")+"legion/integration/uploadBusiness";
 }
