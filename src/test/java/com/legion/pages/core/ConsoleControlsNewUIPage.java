@@ -6228,6 +6228,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				if (item.findElement(By.tagName("h3")).getText().contains(toggleName)){
 					if (onOrOff){
 						if (isElementLoaded(item.findElement(By.cssSelector(".lg-button-group-first")),10)){
+							scrollToElement(item.findElement(By.cssSelector(".lg-button-group-first")));
+							waitForSeconds(2);
 							click(item.findElement(By.cssSelector(".lg-button-group-first")));
 							displaySuccessMessage();
 							SimpleUtils.pass("Turned on "+ toggleName +"!");
@@ -6237,6 +6239,8 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 						}
 					} else {
 						if (isElementLoaded(item.findElement(By.cssSelector(".lg-button-group-last")),10)){
+							scrollToElement(item.findElement(By.cssSelector(".lg-button-group-first")));
+							waitForSeconds(2);
 							click(item.findElement(By.cssSelector(".lg-button-group-last")));
 							displaySuccessMessage();
 							SimpleUtils.pass("Turned off "+ toggleName +"!");

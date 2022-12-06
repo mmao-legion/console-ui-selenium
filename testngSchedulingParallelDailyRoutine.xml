@@ -780,4 +780,14 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
             </class>
         </classes>
     </test>   Not merged into RC yet. -->
+
+    <test name="Work Role Test">
+        <classes>
+            <class name="com.legion.tests.core.WorkRoleTest">
+                <methods>
+                    <include name="verifyTheColorOfTheShiftInTMViewConsistentWithManagerViewAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

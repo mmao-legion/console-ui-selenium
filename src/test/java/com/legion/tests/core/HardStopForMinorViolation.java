@@ -152,6 +152,7 @@ public class HardStopForMinorViolation extends TestBase {
             SimpleUtils.assertOnFail("The minor shift fail to created! ", minorShifts.size()>0, false);
             shiftOperatePage.editTheShiftTimeForSpecificShift(minorShifts.get(0),
                     "8am", "8pm");
+            Thread.sleep(5000);
             scheduleMainPage.saveSchedule();
             //ACTION REQUIRED smart card will show
             SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
@@ -762,7 +763,7 @@ public class HardStopForMinorViolation extends TestBase {
             int i = 0;
             while (i<10 && !smartCardPage.isRequiredActionSmartCardLoaded()) {
                 loginPage.logOut();
-                Thread.sleep(3000);
+                Thread.sleep(10000);
                 loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -821,7 +822,9 @@ public class HardStopForMinorViolation extends TestBase {
         configurationPage.publishNowTheTemplate();
         locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
         refreshCachesAfterChangeTemplate();
+        Thread.sleep(5000);
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //        if (statusAfterEdit != statusBeforeEdit) {
 //            int i = 0;
@@ -833,11 +836,11 @@ public class HardStopForMinorViolation extends TestBase {
 //                i++;
 //            }
 //        }
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.logOut();
-        Thread.sleep(5000);
-        loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+//        loginPage.logOut();
+//        Thread.sleep(5000);
+//        loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+//        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
     }
 
     public void getAndSetDefaultTemplate(String currentLocation) throws Exception{

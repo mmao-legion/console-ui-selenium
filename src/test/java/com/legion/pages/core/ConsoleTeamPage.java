@@ -2406,7 +2406,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		return isLoaded;
 	}
 
-	@FindBy (xpath = "//button[text()=\"CONFIRM\"]")
+	@FindBy (css = "[label=\"okLabel()\"] button")
 	private WebElement confirmBtn;
 	@Override
 	public void manualOnBoardTeamMember() throws Exception {

@@ -422,7 +422,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     @Override
     public boolean isPopupWindowLoaded(String title) throws Exception {
         boolean isLoaded = false;
-        if (isElementLoaded(popUpWindow, 15) && isElementLoaded(popUpWindowTitle, 15)) {
+        if (isElementLoaded(popUpWindow, 20) && isElementLoaded(popUpWindowTitle, 20)) {
             if (title.equalsIgnoreCase(popUpWindowTitle.getText())) {
                 SimpleUtils.pass(title + " window loaded Successfully!");
                 isLoaded = true;
@@ -1873,5 +1873,21 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         } else {
             SimpleUtils.fail("Team Members' Icons not loaded", false);
         }
+    }
+
+
+    @Override
+    public String getStyleOfShiftByIndex(int index) throws Exception {
+        String style = "";
+        if (areListElementVisible(shiftsWeekView, 5)){
+            if (index> shiftsWeekView.size()-1){
+                SimpleUtils.fail("The index is more than shift count! ", false);
+            } else {
+                style = shiftsWeekView.get(index).getAttribute("style");
+                SimpleUtils.pass("Get shift style successfully! The style is:"+style);
+            }
+        } else
+            SimpleUtils.fail("The shifts on My Schedule page fail to load! ", false);
+        return style;
     }
 }

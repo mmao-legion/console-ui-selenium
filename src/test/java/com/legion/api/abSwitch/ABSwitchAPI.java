@@ -35,7 +35,7 @@ public class ABSwitchAPI {
                 jsonAsMap.put("record",recordContext);
 
                 Response responseAfterDisable= given().log().all().headers("sessionId",sessionId).contentType(ContentType.JSON).body(jsonAsMap)
-                        .when().post("https://rc-enterprise.dev.legion.work/legion/business/updateABSwitch").then().log().all().extract().response();
+                        .when().post(System.getProperty("env") + "legion/business/updateABSwitch").then().log().all().extract().response();
                 responseAfterDisable.then().statusCode(200);
 
             }

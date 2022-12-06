@@ -78,4 +78,5 @@ public interface MySchedulePage {
     public String getFullMonthName(String shortName);
     public void clickTheShiftRequestToClaimCoverShift(String requestName) throws Exception;
     public List<String> getCoverTMList() throws Exception;
+    public String getStyleOfShiftByIndex(int index) throws Exception;
 }

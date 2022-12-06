@@ -546,6 +546,10 @@ public class ScheduleAcknowledgementTest extends TestBase {
                 smartCardPage.clickOnAcknowledgeButtonOnAcknowledgeNotificationSmartCard();
                 refreshPage();
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                scheduleCommonPage.navigateToNextWeek();
+                scheduleCommonPage.navigateToNextWeek();
+                scheduleCommonPage.navigateToNextWeek();
+                scheduleCommonPage.navigateToNextWeek();
                 SimpleUtils.assertOnFail("The SCHEDULE ACKNOWLEDGEMENT smart card should display before publish schedule! ",
                         !smartCardPage.isSpecificSmartCardLoaded("ACTION REQUIRED"), false);
             }
@@ -673,6 +677,10 @@ public class ScheduleAcknowledgementTest extends TestBase {
                 smartCardPage.clickOnAcknowledgeButtonOnAcknowledgeNotificationSmartCard();
                 refreshPage();
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+                scheduleCommonPage.navigateToNextWeek();
+                scheduleCommonPage.navigateToNextWeek();
+                scheduleCommonPage.navigateToNextWeek();
+                scheduleCommonPage.navigateToNextWeek();
                 SimpleUtils.assertOnFail("The SCHEDULE ACKNOWLEDGEMENT smart card should display before publish schedule! ",
                         !smartCardPage.isSpecificSmartCardLoaded("ACTION REQUIRED"), false);
             }
