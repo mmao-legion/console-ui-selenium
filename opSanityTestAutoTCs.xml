@@ -112,6 +112,21 @@
             <class name="com.legion.tests.core.opEmployeeManagement.AccrualEngineTest">
                 <methods>
                     <include name="verifyAccrualEngineAsInternalAdminOfAccrualEngineTest"/>
+                    <include name="verifyTimeOffRequestImportAsInternalAdminOfAccrualEngineTest"/>
+                    <include name="verifyAccrualGMHolidayUIAsInternalAdminOfAccrualEngineTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Absent Management Template Test">
+        <classes>
+            <class name="com.legion.tests.core.opEmployeeManagement.AbsentManagementTemplateTest">
+                <methods>
+                    <include name="verifyTimeOffRequestRulesAsInternalAdmin"/>
+                    <include name="verifyAddEditSearchAndDisableTemplateAsInternalAdmin"/>
+                    <include name="verifyTemplateDetailsAsInternalAdmin"/>
+                    <include name="verifyTimeOffConfigurationAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
