@@ -74,6 +74,11 @@
                     <include name="verifyEmployeeCanReceiveAndAcceptOffersForP2PLGAsTeamMember" />
                     <include name="verifyEmployeesCanSwapShiftsForP2PLGAsTeamMember" />
                     <include name="verifyEmployeesCanClaimCoverRequestForP2PLGAsTeamMember" />
+                    <include name="verifyDragAndDropShiftToSameLocationForP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropShiftToDifferentLocationForP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropEmployeeToSameLocationForP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropEmployeeToDifferentLocationForP2PLGScheduleAsInternalAdmin" />
+                    <!-- <include name="VerifyParentLocationDisabledLaborBudgetEditBtnAsInternalAdmin" />   Issue is not fixed yet -->
                 </methods>
             </class>
         </classes>
@@ -125,6 +130,10 @@
                     <include name="verifyEmployeeCanReceiveAndAcceptOffersForParentChildLGAsTeamMember" />
                     <include name="verifyEmployeesCanSwapShiftsForParentChildLGAsTeamMember" />
                     <include name="verifyEmployeesCanClaimCoverRequestForParentChildLGAsTeamMember" />
+                    <include name="verifyDragAndDropShiftToSameLocationForParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropShiftToDifferentLocationForParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropEmployeeToSameLocationForParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropEmployeeToDifferentLocationForParentChildLGScheduleAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -230,8 +239,8 @@
                     <include name="verifyTurnOnWeekOTViolationAsInternalAdmin" />
                             <include name="verifyTurnOffWeekOTViolationAsInternalAdmin" />
                             <include name="VerifyTheViewTeamSchedulePermissionDisplayAsInternalAdmin" />
-                            <include name="VerifyTheViewTeamSchedulePermissionTurnOffAsInternalAdmin" />
-                            <include name="VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin" />
+                    <!--         <include name="VerifyTheViewTeamSchedulePermissionTurnOffAsInternalAdmin" />
+                            <include name="VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin" />   The effective time is too long to run, no any useful method now -->
                     <!--          <include name="VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin" />
                             <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" /> The code is not merged into RC yet -->
                     <include name="verifyRecommendTabHasTMsAsInternalAdmin" />
@@ -734,6 +743,7 @@ SCH-5862-->
                 <methods>
                     <include name="verifyFunctionalityOfDisplayOrderAsInternalAdmin" />
                     <include name="verifyWorkRoleDisplayOrderInConsoleAsInternalAdmin" />
+                    <include name="verifyTheColorOfTheShiftInTMViewConsistentWithManagerViewAsTeamMember" />
                 </methods>
             </class>
         </classes>

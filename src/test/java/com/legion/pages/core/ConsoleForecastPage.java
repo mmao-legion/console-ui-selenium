@@ -2432,6 +2432,18 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	}
 
 	@Override
+	public boolean isLaborBudgetEditBtnLoaded() throws Exception {
+		boolean isBtnLoaded = true;
+		if (isElementLoaded(laborBudgetEditBtn, 5))
+			SimpleUtils.report("Labor budget edit button is loaded!");
+		else {
+			isBtnLoaded = false;
+			SimpleUtils.report("Labor budget edit button is not loaded!");
+		}
+		return  isBtnLoaded;
+	}
+
+	@Override
 	public void editLaborBudgetOnSummarySmartCard() throws Exception {
 		String forecast = laborSmartCardForecast.getText();
 		if (isElementLoaded(laborBudgetEditBtn)) {

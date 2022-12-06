@@ -366,7 +366,8 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	public void verifyLegionTermsOfService() throws Exception {
 		if (isElementLoaded(legionTermsOfService,5)
 				&& isElementLoaded(legionTermsOfServiceAgreeButton, 5)) {
-			getDriver().executeScript("arguments[0].scrollIntoView()", legionTermsOfService.findElement(By.xpath("./p[68]")));
+			int paragraphSize = legionTermsOfService.findElements(By.xpath("./p")).size();
+			getDriver().executeScript("arguments[0].scrollIntoView()", legionTermsOfService.findElement(By.xpath("./p["+paragraphSize+"]")));
 			waitForSeconds(3);
 			clickTheElement(legionTermsOfServiceAgreeButton);
 		}else
