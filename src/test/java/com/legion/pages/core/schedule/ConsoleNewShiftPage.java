@@ -602,6 +602,36 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     }
 
     @Override
+    public List<String> getWorkRoleList() throws Exception {
+        List<String> workRoles = new ArrayList<>();
+        waitForSeconds(3);
+        if (isElementLoaded(btnWorkRole, 5)) {
+            clickTheElement(btnWorkRole);
+            SimpleUtils.pass("Work Role button clicked Successfully");
+            if (listWorkRoles.size() > 0) {
+                for (WebElement listWorkRole : listWorkRoles) {
+                    workRoles.add(listWorkRole.getText().toLowerCase());
+                }
+            } else {
+                SimpleUtils.fail("Work Roles size are empty", false);
+            }
+        } else if (isElementLoaded(workRoleOnNewShiftPage, 25)) {
+            click(workRoleOnNewShiftPage);
+            SimpleUtils.pass("Work Role button clicked Successfully");
+            if (dropDownListOnNewCreateShiftPage.size() > 0) {
+                for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
+                    workRoles.add(listWorkRole.getText().toLowerCase());
+                }
+            } else {
+                SimpleUtils.fail("Work Roles size are empty", false);
+            }
+        } else {
+            SimpleUtils.fail("Work Role button is not clickable", false);
+        }
+        return workRoles;
+    }
+
+    @Override
     public void selectWorkRoleCaseSensitive(String workRole) throws Exception {
         if (isElementLoaded(btnWorkRole, 5)) {
             clickTheElement(btnWorkRole);
