@@ -9,10 +9,7 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.utils.HttpUtil;
-import com.legion.utils.JsonUtil;
-import com.legion.utils.MyThreadLocal;
-import com.legion.utils.SimpleUtils;
+import com.legion.utils.*;
 import io.restassured.RestAssured;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -5368,7 +5365,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void importLocations(String filePath, String sessionId, String isImport, int expectedStatusCode, String path, Object expectedResult) {
 
-		String url = "https://rc-enterprise.dev.legion.work/legion/integration/uploadBusiness";
+		String url = Constants.uploadBusiness;
 		File file = new File(filePath);
 
 		Map<String, String> params = new HashMap<>();
