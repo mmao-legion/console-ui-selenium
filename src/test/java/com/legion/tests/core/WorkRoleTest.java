@@ -297,7 +297,7 @@ public class WorkRoleTest extends TestBase {
             // Verify the disabled work role should not be copied
             createSchedulePage.clickCreateScheduleBtn();
             createSchedulePage.clickNextBtnOnCreateScheduleWindow();
-            createSchedulePage.selectWhichWeekToCopyFrom(firstWeekInfo.split("\n")[1].trim());
+            createSchedulePage.selectWhichWeekToCopyFrom(firstWeekInfo.substring(10));
             createSchedulePage.clickOnFinishButtonOnCreateSchedulePage();
             scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
             workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
