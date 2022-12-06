@@ -1,6 +1,7 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.LaborModelPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
@@ -29,6 +30,9 @@ public class WorkRoleTest extends TestBase {
     private ScheduleCommonPage scheduleCommonPage;
     private LocationsPage locationsPage;
     private NewShiftPage newShiftPage;
+    private LaborModelPage laborModelPage;
+    private ForecastPage forecastPage;
+    private ScheduleOverviewPage scheduleOverviewPage;
     private ProfileNewUIPage profileNewUIPage;
     private LoginPage loginPage;
     private MySchedulePage mySchedulePage;
@@ -47,6 +51,9 @@ public class WorkRoleTest extends TestBase {
             scheduleCommonPage = pageFactory.createScheduleCommonPage();
             locationsPage = pageFactory.createOpsPortalLocationsPage();
             newShiftPage = pageFactory.createNewShiftPage();
+            laborModelPage = pageFactory.createOpsPortalLaborModelPage();
+            forecastPage  = pageFactory.createForecastPage();
+            scheduleOverviewPage = pageFactory.createScheduleOverviewPage();
             profileNewUIPage = pageFactory.createProfileNewUIPage();
             loginPage = pageFactory.createConsoleLoginPage();
             mySchedulePage = pageFactory.createMySchedulePage();
@@ -204,6 +211,135 @@ public class WorkRoleTest extends TestBase {
         }
     }
 
+    @Automated(automated ="Automated")
+    @Owner(owner = "Nora")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the work roles removed from labor model should not be copied")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheRemovedWorkRoleShouldNotBeCopiedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassgined");
+            scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
+
+            // Verify creating the schedule with 3 work roles
+            scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            List<String> currentWorkRoleNames = new ArrayList<>();
+            for (HashMap<String, String> role : workRoles) {
+                currentWorkRoleNames.add(role.get("optionName"));
+            }
+
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            String workRole = currentWorkRoleNames.get(0);
+
+            // Verify can disable the work role from location level labor model template
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+            laborModelPage.disableOrEnableWorkRoleInLocationLevel(workRole, false);
+            locationsPage.clickOnSaveButton();
+
+            switchToConsoleWindow();
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+
+            // Refresh cache
+            refreshCachesAfterChangeTemplate();
+
+            scheduleOverviewPage.loadScheduleOverview();
+            forecastPage.clickForecast();
+            forecastPage.clickOnLabor();
+            scheduleCommonPage.navigateToNextWeek();
+            forecastPage.clickOnRefreshButton();
+
+            // Verify the disabled work role doesn't show in labor forecast
+            List<String> laborWorkRoles = forecastPage.getLaborWorkRoles();
+            if (laborWorkRoles.contains(workRole)) {
+                SimpleUtils.fail(workRole + " is disabled, should not show in labor forecast!", false);
+            }
+
+            // Verify the disabled work role will not be created when creating the schedule
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            List<String> newWorkRoleNames = new ArrayList<>();
+            for (HashMap<String, String> role : workRoles) {
+                newWorkRoleNames.add(role.get("optionName"));
+            }
+            if (newWorkRoleNames.contains(workRole)) {
+                SimpleUtils.fail(workRole + " is disabled, should not be created!", false);
+            }
+            createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+
+            // Verify the disabled work role should not be copied
+            createSchedulePage.clickCreateScheduleBtn();
+            createSchedulePage.clickNextBtnOnCreateScheduleWindow();
+            createSchedulePage.selectWhichWeekToCopyFrom(firstWeekInfo.substring(10));
+            createSchedulePage.clickOnFinishButtonOnCreateSchedulePage();
+            scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            List<String> copyWorkRoleNames = new ArrayList<>();
+            for (HashMap<String, String> role : workRoles) {
+                copyWorkRoleNames.add(role.get("optionName"));
+            }
+            if (copyWorkRoleNames.contains(workRole)) {
+                SimpleUtils.fail(workRole + " is disabled, should be disabled!", false);
+            }
+
+            // Verify the disabled work role will not show in the work role list on create New shift window
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            SimpleUtils.assertOnFail("New create shift page is not display! ",
+                    newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
+            List<String> workRolesOnNewShift = newShiftPage.getWorkRoleList();
+            if (workRolesOnNewShift.contains(workRole)) {
+                SimpleUtils.fail(workRole + " is disabled, should not be created!", false);
+            }
+            newShiftPage.clickCloseBtnForCreateShift();
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
+
+            // Enable the work role after testing
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+
+            // Verify can disable the work role from location level labor model template
+            locationsPage.clickActionsForTemplate("Labor Model", "Edit");
+            laborModelPage.disableOrEnableWorkRoleInLocationLevel(workRole, true);
+            locationsPage.clickOnSaveButton();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")

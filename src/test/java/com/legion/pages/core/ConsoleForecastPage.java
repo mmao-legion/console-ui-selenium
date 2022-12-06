@@ -756,6 +756,17 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	}
 
 	@Override
+	public List<String> getLaborWorkRoles() throws Exception {
+		List<String> laborWorkRoles = new ArrayList<>();
+		if (areListElementVisible(hoursOfWorkRole,5)) {
+			for (WebElement e : hoursOfWorkRole) {
+				laborWorkRoles.add(e.getText().split(":")[0].trim().toLowerCase());
+			}
+		}
+		return laborWorkRoles;
+	}
+
+	@Override
 	public HashMap<String, Float> getInsightDataInShopperWeekView() throws Exception {
 		HashMap<String, Float> insightData = new HashMap<String, Float>();
 		SmartCardPage smartCardPage = new ConsoleSmartCardPage();
