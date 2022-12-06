@@ -152,6 +152,7 @@ public class HardStopForMinorViolation extends TestBase {
             SimpleUtils.assertOnFail("The minor shift fail to created! ", minorShifts.size()>0, false);
             shiftOperatePage.editTheShiftTimeForSpecificShift(minorShifts.get(0),
                     "8am", "8pm");
+            Thread.sleep(5000);
             scheduleMainPage.saveSchedule();
             //ACTION REQUIRED smart card will show
             SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",

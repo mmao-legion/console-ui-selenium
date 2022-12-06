@@ -2616,7 +2616,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchTeamMemberByName(firstName);
+			newShiftPage.searchWithOutSelectTM(firstName);
 			String scheduleStatus = shiftOperatePage.getTheMessageOfTMScheduledStatus();
 			SimpleUtils.assertOnFail("TM scheduled status message display failed",
 					scheduleStatus.contains("Schedule not published") ||
