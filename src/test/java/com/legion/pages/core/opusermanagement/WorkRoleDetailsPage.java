@@ -62,7 +62,7 @@ public class WorkRoleDetailsPage extends BasePage {
     private WebElement typeOption;
     @FindBy(id = "intervalConstraintDropDown")
     private WebElement frequency;
-    @FindBy(css = "intervalConstraintDropDown+ul>li>a")
+    @FindBy(xpath = "//ul[@aria-labelledby ='intervalConstraintDropDown']/li")
     private WebElement week;
     @FindBy(css = "div.settings-display-inline.ml-10.fl>div.row input")
     private WebElement priority;
