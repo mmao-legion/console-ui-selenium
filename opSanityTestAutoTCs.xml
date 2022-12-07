@@ -112,6 +112,9 @@
             <class name="com.legion.tests.core.opEmployeeManagement.AbsentManagementTemplateTest">
                 <methods>
                     <include name="verifyTimeOffRequestRulesAsInternalAdmin"/>
+                    <include name="verifyAddEditSearchAndDisableTemplateAsInternalAdmin"/>
+                    <include name="verifyTemplateDetailsAsInternalAdmin"/>
+                    <include name="verifyTimeOffConfigurationAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
