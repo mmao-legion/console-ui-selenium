@@ -114,6 +114,8 @@
                     <include name="verifyAccrualEngineAsInternalAdminOfAccrualEngineTest"/>
                     <include name="verifyTimeOffRequestImportAsInternalAdminOfAccrualEngineTest"/>
                     <include name="verifyAccrualGMHolidayUIAsInternalAdminOfAccrualEngineTest"/>
+                    <include name="verifyScheduledHoursUIConfigurationAsInternalAdminOfAccrualEngineTest"/>
+                    <include name="verifyScheduledHoursWorksWellAsInternalAdminOfAccrualEngineTest"/>
                 </methods>
             </class>
         </classes>
@@ -131,6 +133,17 @@
             </class>
         </classes>
     </test>
+
+    <test name="Time Off Request Test">
+        <classes>
+            <class name="com.legion.tests.core.opEmployeeManagement.TimeOffRequestTest">
+                <methods>
+                    <include name="verifyTimeOffActivityAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
     
     <!--
     <test name="TimeOffRequest Test">
