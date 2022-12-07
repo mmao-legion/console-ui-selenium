@@ -524,6 +524,7 @@ public abstract class TestBase {
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 
         newShiftPage.clickOnDayViewAddNewShiftButton();
+        Thread.sleep(5000);
         SimpleUtils.assertOnFail("New create shift page is not display! ",
                 newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
         // Select work role

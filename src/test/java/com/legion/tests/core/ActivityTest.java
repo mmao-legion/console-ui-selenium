@@ -1229,7 +1229,7 @@ public class ActivityTest extends TestBase {
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         createShiftsWithSpecificValues(workRole, null, null,
-                "8am", "2pm", 1, Arrays.asList(0),
+                "8am", "2pm", 1, Arrays.asList(),
                 ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(),
                 null, firstName+ " "+ lastName);
 //            createShiftsWithSpecificValues(workRole, null, childLocationNames.get(1),
