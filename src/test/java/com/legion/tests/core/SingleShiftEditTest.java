@@ -1206,6 +1206,8 @@ public class SingleShiftEditTest extends TestBase {
             //Click Update button
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //Edit the shift again and check the breaks
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);

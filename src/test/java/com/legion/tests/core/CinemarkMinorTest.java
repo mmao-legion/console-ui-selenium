@@ -1389,6 +1389,7 @@ public class CinemarkMinorTest extends TestBase {
         //Create new shift with shift hours is more than minor setting for TM1
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1.split(" ")[0]);
+        Thread.sleep(3000);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1719,6 +1720,7 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.clickOnCreateOrNextBtn();
         newShiftPage.searchTeamMemberByName(firstNameOfTM1);
         newShiftPage.clickOnOfferOrAssignBtn();
+        Thread.sleep(3000);
         scheduleMainPage.saveSchedule();
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
