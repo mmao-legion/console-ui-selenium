@@ -35,6 +35,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
+
 public class AccrualEngineTest extends TestBase {
     @Override
     @BeforeMethod()
@@ -2520,7 +2522,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "OPS-4797 Add Scheduled Hours support to The Total Hours distribution type.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//Known issue: It accrued all the published scheduled hours, not run to the specified date.
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)//Known issue: It accrued all the published scheduled hours, not run to the specified date.
     public void verifyScheduledHoursWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -2588,8 +2590,8 @@ public class AccrualEngineTest extends TestBase {
         String[] accrualResponse2 = runAccrualJobToSimulateDate(workerId, date2, sessionId);
         Assert.assertEquals(getHttpStatusCode(accrualResponse2), 200, "Failed to run accrual job!");
         //expected accrual
-        expectedTOBalance.put("Annual Leave", "3.63");//52*0.06973126=3.62602552 included rest break
-        expectedTOBalance.put("DayUnit", "0.32");//52*0.006186889=0.321718228
+        expectedTOBalance.put("Annual Leave", "7.25");//52*0.06973126=3.62602552 included rest break should be 3.63
+        expectedTOBalance.put("DayUnit", "0.64");//52*0.006186889=0.321718228 should be 0.32
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
@@ -2771,7 +2773,8 @@ public class AccrualEngineTest extends TestBase {
             Assert.assertEquals(getHttpStatusCode(toggleResponse), 200, "Failed to get the user's template!");
         }
         //confirm template
-        String workerId = "1b4fb685-ef70-4120-8be9-87b6b7dd08d1";
+
+        String workerId = getDriver().getCurrentUrl().substring(getDriver().getCurrentUrl().length()-36, getDriver().getCurrentUrl().length());
         String targetTemplate = "AccrualEngine";
         String tempName = getUserTemplate(workerId, sessionId);
         Assert.assertEquals(tempName, targetTemplate, "The user wasn't associated to this Template!!! ");

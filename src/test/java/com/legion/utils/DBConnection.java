@@ -9,6 +9,10 @@ public class DBConnection {
         String url = "jdbc:mysql://dev-eks-shared-rc-mysql8.cijomzi1o1vu.us-west-2.rds.amazonaws.com:3306";
         String user = "legion";
         String password = "legionwork";
+        if(System.getProperty("env").contains("ephemeral-ops")){
+            driver = "com.mysql.cj.jdbc.Driver";
+            url = "jdbc:mysql://rds.ephemeral.legion.local:3306";
+        }
         try {
             Class.forName(driver);
             con = DriverManager.getConnection(url, user, password);
@@ -46,6 +50,10 @@ public class DBConnection {
         String user = "legion";
         String password = "legionwork";
         String value = null;
+        if(System.getProperty("env").contains("ephemeral-ops")){
+            driver = "com.mysql.cj.jdbc.Driver";
+            url = "jdbc:mysql://rds.ephemeral.legion.local:3306";
+        }
         try {
             Class.forName(driver);
             con = DriverManager.getConnection(url, user, password);
