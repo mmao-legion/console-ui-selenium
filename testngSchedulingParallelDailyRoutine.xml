@@ -85,7 +85,7 @@
                     <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" />
                     <include name="verifyComplianceSmartCardFunctionalityAsInternalAdmin" />
 <!--                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/> https://legiontech.atlassian.net/browse/SCH-5994 -->
-                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
+<!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/> SCH-8177 -->
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsInternalAdmin"/>
@@ -118,7 +118,7 @@
                     <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
                     <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
                     <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" />
-                    <include name="verifyAssignTMInDayViewAsInternalAdmin" />
+<!--                    <include name="verifyAssignTMInDayViewAsInternalAdmin" /> SCH-8177-->
                     <include name="verifyConvertToOpenShiftInDayViewAsInternalAdmin" />
                     <include name="verifyEditShiftNotesInDayViewAsInternalAdmin" />
 <!--                    <include name="verifyEditShiftTimeInDayViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5700-->
@@ -366,7 +366,7 @@
                     <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
                     <include name="verifyMoveShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
                     <include name="verifyCopyShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
-                    <include name="verifyShiftsCannotBeMovedOrCopiedToCloseDayAsInternalAdmin" />
+<!--                    <include name="verifyShiftsCannotBeMovedOrCopiedToCloseDayAsInternalAdmin" /> SCH-8338-->
                     <include name="verifyMoveMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
                     <include name="verifyCopyMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
                     <include name="verifyTheShiftsWithSameTMsAndOverlappingShiftTimeCannotBulkDragAndDropAsInternalAdmin" />
@@ -589,10 +589,10 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                     <include name="validateCreateAvailabilityRequestWithoutApprovalAsInternalAdmin" />
 
                     <!-- set AvailabilityApprovalRequired to RequiredForAllChanged -->
-                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
+<!--                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsInternalAdmin" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndRejectAsInternalAdmin" />
-                    <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" />
+                    <include name="verifyTheDottedLinesWillDisappearForTMAndSMAfterTMCancelAvailabilityAsTeamMember" /> SCH-8342-->
 <!--                    <include name="verifyNotificationForUpdateAvailability4SpecificWeekWithConfYesAsInternalAdmin" />
                     <include name="verifyNotificationForUpdateAvailabilityRepeatForwardWithConfYesAsTeamMember" /> SCH-6008-->
 <!--                    <include name="validateCreateChangeAvailabilityRequestAsStoreManager" />
@@ -636,7 +636,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
             </class>
         </classes>
     </test>
-
+<!--
     <test name="Schedule Coverage Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleCoverageTest">
@@ -652,7 +652,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                 </methods>
             </class>
         </classes>
-    </test>
+    </test> SCH-8338-->
 
     <test name="Bulk Delete and Edit Test">
         <classes>

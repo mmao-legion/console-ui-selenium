@@ -7808,6 +7808,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.clickOnCreateOrNextBtn();
 			newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+ lastNameOfTM);
 			newShiftPage.clickOnCreateOrNextBtn();
+			Thread.sleep(3000);
 			scheduleMainPage.saveSchedule();
 
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

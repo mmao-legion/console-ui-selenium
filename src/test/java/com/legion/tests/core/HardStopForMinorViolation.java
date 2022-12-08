@@ -133,6 +133,7 @@ public class HardStopForMinorViolation extends TestBase {
             createSchedulePage.publishActiveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
+            Thread.sleep(5000);
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(1);

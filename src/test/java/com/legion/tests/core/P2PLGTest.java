@@ -2786,8 +2786,8 @@ public class P2PLGTest extends TestBase {
                     publishStatus.equalsIgnoreCase("Published"), false);
 
             //Verify the Published status when the peer location schedule has been updated after the publish can be republished
-            Thread.sleep(3000);
             scheduleDMViewPage.clickOnLocationNameInDMView(peerLocation);
+            Thread.sleep(3000);
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();

@@ -118,7 +118,7 @@
                     <include name="validateAssignTMWhenTMHasOverlappingViolationForParentChildAsInternalAdmin" />
                     <include name="validateTheGroupByDropdownListForParentChildAsInternalAdmin" />
                     <include name="validateTheFilterOnSchedulePageForParentChildAsInternalAdmin" />
-                    <include name="verifyTheFunctionOfCopyScheduleForParentChildAsInternalAdmin" />
+<!--                    <include name="verifyTheFunctionOfCopyScheduleForParentChildAsInternalAdmin" /> SCH-8338 -->
                     <!--         <include name="validatePrintScheduleForParentChildAsInternalAdmin" /> cannot run on jenkins-->
                     <!--        <include name="validateUIPerformanceForLargeRosterAsInternalAdminPC" />This no envs to run the performance case-->
                     <include name="validateOperateParentChildLGScheduleByDifferentUserAsInternalAdmin" />
@@ -211,7 +211,7 @@
                     <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
                     <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
                     <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" />
-                    <include name="verifyAssignTMInDayViewAsInternalAdmin" />
+<!--                    <include name="verifyAssignTMInDayViewAsInternalAdmin" /> SCH-8177-->
                     <include name="verifyConvertToOpenShiftInDayViewAsInternalAdmin" />
                     <include name="verifyEditShiftNotesInDayViewAsInternalAdmin" />
                     <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
@@ -805,7 +805,7 @@ SCH-5862-->
                 <methods>
                     <include name="verifyTMCanAcknowledgeTheNotificationAfterPublishTheScheduleAsTeamMember" />
                     <include name="verifySMCanAcknowledgeTheNotificationAfterPublishTheScheduleAsStoreManager" />
-                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterEditShiftsAsTeamMember" />
+<!--                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterEditShiftsAsTeamMember" /> SCH-8334-->
                     <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterDragAndDropShiftsAsTeamMember" />
                     <include name="verifyEmployeeCanAcknowledgeTheNotificationFromNonHomeLocationWhenHomeScheduleIsPublishedAsTeamMemberOtherLocation1" />
                     <include name="verifyEmployeeCanAcknowledgeTheNotificationFromNonHomeLocationWhenHomeScheduleIsNotPublishedAsTeamMemberOtherLocation1" />
