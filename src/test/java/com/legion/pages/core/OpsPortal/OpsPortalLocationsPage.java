@@ -3731,7 +3731,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				enabledCount++;
 		}
 		//Assert only one option is enabled
-		SimpleUtils.assertOnFail("The location setting for location group are not enabled for the selected option", enabledCount == 2, false);
+		SimpleUtils.assertOnFail("The location setting for location group are not enabled for the selected option", enabledCount == 1, false);
 		//back to list
 		clickTheElement(locationBackLink);
 	}
@@ -5394,7 +5394,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	public void verifyColumnsInLocationSampleFile(String sessionId, List column) {
 
-		String url = "https://rc-enterprise.dev.legion.work/legion/integration/downloadBusiness";
+		String url = Constants.downloadBusiness;
 		JSONObject json = JSONObject.parseObject("{\"businessIds\":[\"c1365762-5107-49eb-9aae-10d364a1bbdf\"],\"exportType\":\"\",\"locationType\":\"Real\"}");
 
 		String str = RestAssured.given().log().all().contentType("application/json").header("sessionId", sessionId).body(json)
