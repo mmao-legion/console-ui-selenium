@@ -3500,7 +3500,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             Actions action = new Actions(getDriver());
             action.keyDown(Keys.CONTROL).build().perform();
             for (int i : set) {
-                scrollToElement(getDriver().findElement(By.cssSelector(".walkme-title")));
+                scrollToBottom();
                 waitForSeconds(1);
                 action.moveToElement(names.get(i)).click(names.get(i));
                 waitForSeconds(1);
