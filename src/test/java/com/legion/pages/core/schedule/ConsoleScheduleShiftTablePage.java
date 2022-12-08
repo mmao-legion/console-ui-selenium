@@ -2500,7 +2500,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(css = "span.lgn-alert-message")
     private List<WebElement> warningMessagesInWarningMode;
 
-    @FindBy(className = "lgn-action-button-success")
+    @FindBy(css = ".lgn-action-button-success")
     private WebElement okBtnInWarningMode;
 
     @FindBy(css = ".lgn-action-button-success")
@@ -2528,7 +2528,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public void clickOnOkButtonInWarningMode() throws Exception {
         if(isElementLoaded(okBtnInWarningMode, 5)) {
-            click(okBtnOnConfirm);
+            click(okBtnInWarningMode);
             SimpleUtils.pass("Click on Ok button on warning successfully");
         } else {
             SimpleUtils.report("Ok button fail to load");

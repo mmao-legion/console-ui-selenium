@@ -2160,14 +2160,14 @@ public class FTSERelevantTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
-//            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
 
             //Editing the operating day and save all actions.
-            List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
-            scheduleMainPage.goToEditOperatingHoursView();
-            scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "12:00AM","12:00AM");
-            scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+//            List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
+//            scheduleMainPage.goToEditOperatingHoursView();
+//            scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "12:00AM","12:00AM");
+//            scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
+//            createSchedulePage.createScheduleForNonDGFlowNewUI();
 
             //Delete all existed shifts, then switch to the Day View.
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
@@ -2183,9 +2183,9 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.selectWorkRole(workRole);
-            newShiftPage.moveSliderAtCertainPoint("12am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("9pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
-            newShiftPage.moveSliderAtCertainPoint("12am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(tmPartialName);

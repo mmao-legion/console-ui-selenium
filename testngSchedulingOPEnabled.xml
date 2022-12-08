@@ -78,7 +78,7 @@
                     <include name="verifyDragAndDropShiftToDifferentLocationForP2PLGScheduleAsInternalAdmin" />
                     <include name="verifyDragAndDropEmployeeToSameLocationForP2PLGScheduleAsInternalAdmin" />
                     <include name="verifyDragAndDropEmployeeToDifferentLocationForP2PLGScheduleAsInternalAdmin" />
-                    <!-- <include name="VerifyParentLocationDisabledLaborBudgetEditBtnAsInternalAdmin" />   Issue is not fixed yet -->
+                    <!-- <include name="VerifyParentLocationDisabledLaborBudgetEditBtnAsInternalAdmin" />   Fix is not merged into rc yet -->
                 </methods>
             </class>
         </classes>
@@ -247,7 +247,8 @@
                     <include name="verifyPleaseConfirmMessageOnWarningModalAsInternalAdmin" />
                     <!--  <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
                            <include name="verifyTheCanadaCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
-                           <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />  The code is not merged into RC yet -->
+                           <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
+                           <include name="verifyTheSouthAfricaCurrencySignDisplayAlignWithCountryAsInternalAdmin" />  The effective time of the configuration is not fixed -->
                     <include name="VerifyTheScheduleVersionUnchangedWithUnmodifiedSaveAsInternalAdmin" />
                     <!-- <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOnAsInternalAdmin" />
                 <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOffAsInternalAdmin" />   The effective time is too long to run, no any useful method now -->

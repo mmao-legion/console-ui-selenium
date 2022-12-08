@@ -2551,7 +2551,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @Override
     public void clickOnCloseBtnOfAssignDialog() throws Exception{
-        if(isElementLoaded(closeSelectTMWindowBtn)) {
+        if(isElementLoaded(closeSelectTMWindowBtn, 5)) {
             clickTheElement(closeSelectTMWindowBtn);
             SimpleUtils.pass("Clicked the close button successfully! ");
         }

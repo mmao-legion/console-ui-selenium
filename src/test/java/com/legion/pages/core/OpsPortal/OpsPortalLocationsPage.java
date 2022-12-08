@@ -5498,16 +5498,18 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 		private WebElement locationCountryRegionSearchBox;
 		@FindBy(css = "[search-hint=\"Search\"] div[class=\"lg-search-options\"]>div[class=\"lg-search-options__scroller\"]")
 		private WebElement locationCountryRegionSelectBox;
-		@FindBy(css = "input-field[label=\"Province\"]>ng-form")
+//		@FindBy(css = "input-field[label=\"Province\"]>ng-form")
+//		private WebElement locationStatesField;
+		@FindBy(css = "input-field[label=\"State\"]>ng-form")
 		private WebElement locationStatesField;
-//	@FindBy(css = "input-field[label=\"State\"]>ng-form")
-//	private WebElement locationStatesField;
 		@FindBy(css = "div[title='England']")
 		private WebElement particularStateForEngland;
 		@FindBy(css = "div[title='Alberta']")
 		private WebElement particularStateForCanada;
 		@FindBy(css = "div[title='Ulster']")
 		private WebElement particularStateForIreland;
+		@FindBy(css = "div[title='Eastern Cape']")
+		private WebElement particularStateForSouthAfrica;
 		@FindBy(css = "input[aria-label=\"City\"]")
 		private WebElement locationCity;
 		@Override
@@ -5536,6 +5538,8 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					click(particularStateForCanada);
 				} else if (state.trim().equalsIgnoreCase("Ulster") && isElementLoaded(particularStateForIreland, 10)) {
 					click(particularStateForIreland);
+				} else if (state.trim().equalsIgnoreCase("Eastern Cape") && isElementLoaded(particularStateForSouthAfrica, 10)) {
+					click(particularStateForSouthAfrica);
 				} else
 					SimpleUtils.fail("Location Details: Input State is not supported by this method yet!", false);
 			} else

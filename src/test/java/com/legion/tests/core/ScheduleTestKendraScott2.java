@@ -7433,30 +7433,30 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			boolean isCorrect = realAlertMessage.contains(alertMessage1) && realAlertMessage.contains(alertMessage2);
 			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", isCorrect, false);
 			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
-			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(nameOfTM2);
-			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", isCorrect, false);
-			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
-			boolean okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
-			int count1 = 0;
-			while(okBtnLoad && count1 < 3){
-				scheduleShiftTablePage.clickOnOkButtonInWarningMode();
-				Thread.sleep(3000);
-				okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
-				count1++;
-				continue;
-			}
-			Thread.sleep(3000);
+//			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(nameOfTM2);
+//			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", isCorrect, false);
+//			scheduleShiftTablePage.clickOnOkButtonInWarningMode();
+//			boolean okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
+//			int count1 = 0;
+//			while(okBtnLoad && count1 < 3){
+//				scheduleShiftTablePage.clickOnOkButtonInWarningMode();
+//				Thread.sleep(3000);
+//				okBtnLoad = scheduleShiftTablePage.isOkButtonInWarningModeLoaded();
+//				count1++;
+//				continue;
+//			}
+//			Thread.sleep(3000);
 			shiftOperatePage.clickOnCloseBtnOfAssignDialog();
-
-			boolean closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
-			int count2 = 0;
-			while(closeBtnLoad && count2 < 3){
-				shiftOperatePage.clickOnCloseBtnOfAssignDialog();
-				Thread.sleep(3000);
-				closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
-				count2++;
-				continue;
-			}
+//
+//			boolean closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
+//			int count2 = 0;
+//			while(closeBtnLoad && count2 < 3){
+//				shiftOperatePage.clickOnCloseBtnOfAssignDialog();
+//				Thread.sleep(3000);
+//				closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
+//				count2++;
+//				continue;
+//			}
 
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
@@ -9424,7 +9424,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(180000);
-			refreshPage();
 
 			//Go to schedule and un-generate the schedule
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -9445,6 +9444,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Forecast.getValue()), false);
 
 			//Edit the budget, check the currency signs
+			refreshPage();
 			forecastPage.goToForecastLaborWeek();
 			forecastPage.editLaborBudgetOnSummarySmartCard();
 			ArrayList <String> wages = forecastPage.getTextOfLaborWages();
@@ -9540,7 +9540,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(180000);
-			refreshPage();
 
 			//Go to schedule and un-generate the schedule
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -9561,6 +9560,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Forecast.getValue()), false);
 
 			//Edit the budget, check the currency signs
+			refreshPage();
 			forecastPage.goToForecastLaborWeek();
 			forecastPage.editLaborBudgetOnSummarySmartCard();
 			ArrayList <String> wages = forecastPage.getTextOfLaborWages();
@@ -9657,11 +9657,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(180000);
-			refreshPage();
 
 			//Go to schedule and un-generate the schedule
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			goToSchedulePageScheduleTab();
 			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), false);
@@ -9678,6 +9680,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Forecast.getValue()), false);
 
 			//Edit the budget, check the currency signs
+			refreshPage();
 			forecastPage.goToForecastLaborWeek();
 			forecastPage.editLaborBudgetOnSummarySmartCard();
 			ArrayList <String> wages = forecastPage.getTextOfLaborWages();
@@ -9731,6 +9734,122 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String hourlyRate = teamPage.getTextOfHourlyRate();
 			SimpleUtils.assertOnFail("Hourly Rate doesn't include currency sign €!",hourlyRate.contains("€"),false);
 
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate the currency signs align with country South Africa")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheSouthAfricaCurrencySignDisplayAlignWithCountryAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			ForecastPage forecastPage = pageFactory.createForecastPage();
+			String option = "Wages";
+			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+			SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+			locationsPage.clickOnLocationsTab();
+			locationsPage.goToGlobalConfigurationInLocations();
+			scheduleMainPage.clickOnEditButton();
+			configurationPage.updateLaborPreferencesForForecastSummarySmartcardSettingDropdownOption(option);
+			Thread.sleep(3000);
+			controlsNewUIPage.clickOnSaveBtn();
+
+			locationsPage.clickOnLocationsTab();
+			locationsPage.goToSubLocationsInLocationsPage();
+			locationsPage.goToLocationDetailsPage(location);
+			controlsNewUIPage.clickOnLocationProfileEditLocationBtn();
+
+			//Change location's country to England
+			locationsPage.modifyLocationCountry("South Africa","Eastern Cape","Eastern Cape");
+			locationsPage.clickOnSaveButton();
+			Thread.sleep(5000);
+			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(180000);
+
+			//Go to schedule and un-generate the schedule
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			goToSchedulePageScheduleTab();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Schedule.getValue()), false);
+			scheduleCommonPage.clickOnWeekView();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+
+			//Go to the forecast labor tab
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Forecast.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Forecast.getValue()), false);
+
+			//Edit the budget, check the currency signs
+			refreshPage();
+			forecastPage.goToForecastLaborWeek();
+			forecastPage.editLaborBudgetOnSummarySmartCard();
+			ArrayList <String> wages = forecastPage.getTextOfLaborWages();
+			for (int i = 0; i < wages.size(); i++){
+				if (wages.get(i).contains("R")){
+					SimpleUtils.report("The currency sign of wage is R!");
+				}else{
+					SimpleUtils.fail("The currency sign of wage is not R!",false);
+				}
+			}
+
+			//Check the currency sign under day tab of Forecast
+			forecastPage.goToForecastLaborDay();
+			wages = forecastPage.getTextOfLaborWages();
+			for (int i = 0; i < wages.size(); i++){
+				if (wages.get(i).contains("R")){
+					SimpleUtils.report("The currency sign of wage is R!");
+				}else{
+					SimpleUtils.fail("The currency sign of wage is not R!",false);
+				}
+			}
+
+			//Go to schedule page, check the wages
+			goToSchedulePageScheduleTab();
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
+			wages = forecastPage.getTextOfScheduleWages();
+			for (int i = 0; i < wages.size(); i++){
+				if (wages.get(i).contains("R")){
+					SimpleUtils.report("The currency sign of wage is R!");
+				}else{
+					SimpleUtils.fail("The currency sign of wage is not R!",false);
+				}
+			}
+
+			scheduleCommonPage.clickOnDayView();
+			wages = forecastPage.getTextOfScheduleWages();
+			for (int i = 0; i < wages.size(); i++){
+				if (wages.get(i).contains("R")){
+					SimpleUtils.report("The currency sign of wage is R!");
+				}else{
+					SimpleUtils.fail("The currency sign of wage is not R!",false);
+				}
+			}
+
+			//Go to Team profile page, check the currency sign of Hourly Rate
+			TeamPage teamPage = pageFactory.createConsoleTeamPage();
+			teamPage.goToTeam();
+			teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();
+			teamPage.searchAndSelectTeamMemberByName("Brandon Tackett");
+			teamPage.isProfilePageLoaded();
+			String hourlyRate = teamPage.getTextOfHourlyRate();
+			SimpleUtils.assertOnFail("Hourly Rate doesn't include currency sign R!",hourlyRate.contains("R"),false);
 
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
