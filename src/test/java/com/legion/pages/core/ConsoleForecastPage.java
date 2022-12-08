@@ -2416,8 +2416,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			SimpleUtils.pass("Current active labor week is " + weekDuration[1]);
 			if (isElementEnabled(laborTab)) {
 				click(laborTab);
-				waitForSeconds(5);
-				if (forecastGraph.size() != 0 && laborSmartCardForecast.getText() != null) {
+				waitForSeconds(20);
+				if (forecastGraph.size() != 0 && isElementLoaded(laborSmartCardForecast, 10) && laborSmartCardForecast.getText() != null) {
 					SimpleUtils.pass("Labor Forecast Loaded in Week View Successfully!" + " Labor Forecast is " + laborSmartCardForecast.getText());
 				} else {
 					SimpleUtils.fail("Labor Forecast Not Loaded in Week View", false);
@@ -2445,7 +2445,10 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 
 	@Override
 	public void editLaborBudgetOnSummarySmartCard() throws Exception {
-		String forecast = laborSmartCardForecast.getText();
+		String forecast = "";
+		if (isElementLoaded(laborSmartCardForecast, 20)) {
+			forecast = laborSmartCardForecast.getText();
+		}
 		if (isElementLoaded(laborBudgetEditBtn)) {
 			click(laborBudgetEditBtn);
 			if (isElementLoaded(guidanceBudget)&&isElementLoaded(budgetInputField)) {
@@ -2487,7 +2490,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public String getLaborBudgetOnSummarySmartCard() throws Exception {
 		String BudgetValue = null;
-		if (isElementLoaded(laborSmartCardBudget)) {
+		waitForSeconds(3);
+		if (isElementLoaded(laborSmartCardBudget, 30)) {
 			BudgetValue = laborSmartCardBudget.getText().trim();
 			return BudgetValue;
 		} else {
