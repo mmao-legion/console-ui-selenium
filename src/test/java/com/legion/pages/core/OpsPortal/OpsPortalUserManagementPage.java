@@ -120,7 +120,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	private WebElement workNameInputBox;
 	@FindBy(css = "select[aria-label=\"Work Role Class\"]")
 	private WebElement workRoleClassSelector;
-	@FindBy(css = "input[aria-label=\"Hourly rate ($)\"]")
+	@FindBy(css = "input[aria-label=\"Hourly rate\"]")
 	private WebElement hourRateInputBox;
 	@FindBy(css = "span[ng-click=\"showAddDropdownMenu($event)\"]")
 	private WebElement plusBtnInAddWorkRolePage;
@@ -2143,6 +2143,31 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			SimpleUtils.fail("Dynamic smart card display",false);
 		else
 			SimpleUtils.pass("Dynamic smart card doesn't display");
+	}
+
+	@Override
+	public void updateWorkRoleHourlyRate(String hourlyRate){
+		if (workRolesRows.size()>0) {
+			List<WebElement> workRoleDetailsLinks = workRolesRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			click(editBtnInWorkRole);
+			click(workRoleDetailsLinks.get(0));
+			hourRateInputBox.clear();
+			hourRateInputBox.sendKeys(hourlyRate);
+			click(saveBtn);
+			click(saveBtn);
+			waitForSeconds(10);
+		}
+	}
+
+	@Override
+	public void verifyLocationLevelHourlyRateIsReadOnly(){
+		if(isElementEnabled(hourRateInputBox,3)){
+			String disable = hourRateInputBox.getAttribute("disabled").trim();
+			if(disable.equalsIgnoreCase("disabled")){
+				SimpleUtils.pass("Location level hourly rate is read only");
+			}else
+				SimpleUtils.fail("Location level hourly rate is editable",false);
+		}
 	}
 }
 

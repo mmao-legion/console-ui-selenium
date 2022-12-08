@@ -16,5 +16,6 @@
   "EnableEmployeeManagement": "op,opauto,carters",
   "ShowAnnouncementGroupOP": "op,opauto,carters",
   "UseDemandDriverTemplateSwitch": "op,opauto",
-  "EnableChangeLocationGroupSetting": "op,opauto"
+  "EnableChangeLocationGroupSetting": "op,opauto",
+  "WorkRoleSettingsTemplateOP": "opauto"
 }

@@ -199,4 +199,8 @@ public interface UserManagementPage {
     public void searchAccouncement(String accouncementName) throws Exception;
 
     public void verifyDynamicSmartCartNotDispaly() throws Exception;
+
+    public void updateWorkRoleHourlyRate(String hourlyRate);
+
+    public void verifyLocationLevelHourlyRateIsReadOnly();
 }
