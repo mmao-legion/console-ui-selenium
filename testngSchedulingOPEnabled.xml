@@ -54,9 +54,9 @@
                     <include name="validateTheButtonsOnP2PLGSchedulePageAsInternalAdmin" />
                     <!--                    <include name="validateTheFunctionOfAutoOpenShiftForP2PLGAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-7919-->
                     <include name="validateTheFunctionOfAutoOpenShiftInDayViewForP2PLGAsInternalAdmin" />
-                    <include name="validateTheFunctionOfManualOpenShiftForP2PLGAsInternalAdmin" />
+<!--                    <include name="validateTheFunctionOfManualOpenShiftForP2PLGAsInternalAdmin" SCH-8334 />-->
                     <include name="validateTheFunctionOfManualOpenShiftInDayViewFoP2PLGAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAssignTMShiftForP2PLGAsInternalAdmin" />
+<!--                    <include name="validateTheFunctionOfAssignTMShiftForP2PLGAsInternalAdmin" SCH-8334 />-->
                     <!--                    <include name="verifyAssignTMWhenTMHasTimeOffThatDayForP2PLGAsStoreManager" /> -->
                     <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForP2PAsInternalAdmin" />
                     <include name="validateAssignTMWhenTMHasMaxNoOfShiftsScheduledForP2PAsInternalAdmin" />
@@ -108,11 +108,11 @@
                     <!--                   <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateParentChildScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8208-->
                     <include name="validateTheButtonsOnParentChildLGSchedulePageAsInternalAdmin" />
                     <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForParentChildLGAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForParentChildLGAsInternalAdmin" />
+<!--                    <include name="validateTheFunctionOfAutoOpenShiftForParentChildLGAsInternalAdmin" SCH-8334 >-->
                     <include name="validateTheFunctionOfAutoOpenShiftInDayViewForParentChildLGAsInternalAdmin" />
-                    <include name="validateTheFunctionOfManualOpenShiftForParentChildLGAsInternalAdmin" />
+<!--                    <include name="validateTheFunctionOfManualOpenShiftForParentChildLGAsInternalAdmin" SCH-8334 />-->
                     <include name="validateTheFunctionOfManualOpenShiftInDayViewForParentChildLGAsInternalAdminPC" />
-                    <include name="validateTheFunctionOfAssignTMShiftForParentChildLGAsInternalAdmin" />
+<!--                    <include name="validateTheFunctionOfAssignTMShiftForParentChildLGAsInternalAdmin" SCH-8334 />-->
                     <!--                    <include name="verifyAssignTMWhenTMHasTimeOffThatDayForParentChildLGAsStoreManager" /> -->
                     <include name="validateAssignTMWhenTMHasMaxNoOfShiftsScheduledForParentChildAsInternalAdmin" />
                     <include name="validateAssignTMWhenTMHasOverlappingViolationForParentChildAsInternalAdmin" />
