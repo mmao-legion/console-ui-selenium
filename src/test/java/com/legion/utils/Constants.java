@@ -51,4 +51,7 @@ public class Constants {
 
     //import location
     public static final String uploadBusiness = System.getProperty("env")+"legion/integration/uploadBusiness";
+
+    //download location
+    public static final String downloadBusiness = System.getProperty("env")+"legion/integration/downloadBusiness";
 }
