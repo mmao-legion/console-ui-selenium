@@ -2169,5 +2169,14 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 				SimpleUtils.fail("Location level hourly rate is editable",false);
 		}
 	}
+
+	@Override
+	public void hourlyRateFieldIsNotShowing(){
+		String hourlyRateField = "input[aria-label=\"Hourly rate\"]";
+		if(!isElementExist(hourlyRateField)){
+			SimpleUtils.pass("When \'WorkRoleSettingsTemplateOP\' is on, the hourly rate field is not showing on work role details page");
+		}else
+			SimpleUtils.fail("When \'WorkRoleSettingsTemplateOP\' is on, the hourly rate field is still showing on work role details page",false);
+	}
 }
 

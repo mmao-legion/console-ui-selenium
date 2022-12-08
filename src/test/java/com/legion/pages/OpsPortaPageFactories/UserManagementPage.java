@@ -203,4 +203,6 @@ public interface UserManagementPage {
     public void updateWorkRoleHourlyRate(String hourlyRate);
 
     public void verifyLocationLevelHourlyRateIsReadOnly();
+
+    public void hourlyRateFieldIsNotShowing();
 }

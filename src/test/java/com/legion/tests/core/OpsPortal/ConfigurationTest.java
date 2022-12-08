@@ -2674,7 +2674,7 @@ public class ConfigurationTest extends TestBase {
             String locationName="AutoADVDynamicGroup02";
             String workRoleName="AMBASSADOR";
             //Turn off WorkRoleSettingsTemplateOP toggle
-//            ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", false);
+            ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", false);
 //            refreshPage();
             //Verify user can update hourly rate in work role details page
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
@@ -2691,6 +2691,39 @@ public class ConfigurationTest extends TestBase {
             userManagementPage.verifySearchWorkRole(workRoleName);
             userManagementPage.goToWorkRolesDetails(workRoleName);
             userManagementPage.verifyLocationLevelHourlyRateIsReadOnly();
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Work role hourly rate is NOT showing on work role details page when toggle is on")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void workRolesHourlyRateIsNOTShowingWhenToggleIsOnAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String locationName="AutoADVDynamicGroup02";
+            String workRoleName="AMBASSADOR";
+            //Turn on WorkRoleSettingsTemplateOP toggle
+            ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
+            //Verify user can update hourly rate in work role details page
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+            userManagementPage.goToWorkRolesDetails(workRoleName);
+            userManagementPage.hourlyRateFieldIsNotShowing();
+
+            //Verify location level hourly rate is read only
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
+            userManagementPage.verifySearchWorkRole(workRoleName);
+            userManagementPage.goToWorkRolesDetails(workRoleName);
+            userManagementPage.hourlyRateFieldIsNotShowing();
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
