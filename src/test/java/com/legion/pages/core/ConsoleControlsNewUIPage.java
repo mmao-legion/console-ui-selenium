@@ -7695,7 +7695,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private WebElement seniorityToggle;
 	@Override
 	public void isSenioritySectionLoaded() throws Exception {
-		if (isElementLoaded(senioritySection))
+		if (isElementLoaded(senioritySection,10))
 			SimpleUtils.report("The seniority toggle is loaded!");
 		else
 			SimpleUtils.fail("The seniority toggle is not loaded!", false);
@@ -7719,7 +7719,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void updateSeniorityToggle(String isSeniorityToggleOpen) throws Exception {
-		if (isElementLoaded(seniorityToggle)) {
+		if (isElementLoaded(seniorityToggle,20)) {
 			WebElement applyLaborBudgetBtnGroup = seniorityToggle.findElement(
 					By.cssSelector("div.lg-button-group"));
 			if (applyLaborBudgetBtnGroup.getAttribute("class").contains("disabled")) {
