@@ -5,13 +5,10 @@ import com.jayway.restassured.response.Response;
 import com.legion.api.login.LoginAPI;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-import com.legion.tests.TestBase;
 
 import java.util.*;
 
-
 import static com.jayway.restassured.RestAssured.given;
-import static com.legion.utils.MyThreadLocal.getEnterprise;
 
 public class ToggleAPI {
 
@@ -79,8 +76,14 @@ public class ToggleAPI {
                 }
                 HashMap<String, String> toggleNEnterprises = JsonUtil.getPropertiesFromJsonFile("src/test/java/com/legion/api/" + fileName);
                 String enterprises = toggleNEnterprises.get(toggleName);
-                String[] nameList = enterprises.split(",");
-                Collections.addAll(enterpriseNames, nameList);
+                if (enterprises != null && !enterprises.isEmpty()) {
+                    if (enterprises.contains(",")) {
+                        String[] nameList = enterprises.split(",");
+                        Collections.addAll(enterpriseNames, nameList);
+                    } else {
+                        enterpriseNames.add(enterprises);
+                    }
+                }
             }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
