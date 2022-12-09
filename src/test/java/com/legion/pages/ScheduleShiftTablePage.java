@@ -176,4 +176,5 @@ public interface ScheduleShiftTablePage {
     public void verifyAssignBtnIsEnabledOnDragAndDropConfirmPage() throws Exception;
     public boolean isOkButtonInWarningModeLoaded() throws Exception;
     public void bulkEditTMShiftsInWeekView(String teamMemberName) throws Exception;
+    public List<WebElement> selectMultipleSameAssignmentShiftsOnOneDay(int shiftCount, String tmName, int dayIndex) throws Exception;
 }

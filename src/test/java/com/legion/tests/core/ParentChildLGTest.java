@@ -4495,7 +4495,7 @@ public class ParentChildLGTest extends TestBase {
             goToSchedulePageScheduleTab();
             //Verify shift can be copied to different day and same location by drag and drop
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            selectedShifts = scheduleShiftTablePage.selectMultipleSameAssignmentShifts(1, firstNameOfTM);
+            selectedShifts = scheduleShiftTablePage.selectMultipleSameAssignmentShiftsOnOneDay(1, firstNameOfTM, 0);
             scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 1, true);
             scheduleShiftTablePage.selectCopyOrMoveByOptionName("copy");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
@@ -4504,7 +4504,7 @@ public class ParentChildLGTest extends TestBase {
             goToSchedulePageScheduleTab();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //Verify shift can be moved to different day and same location by drag and drop
-            selectedShifts = scheduleShiftTablePage.selectMultipleSameAssignmentShifts(1, firstNameOfTM);
+            selectedShifts = scheduleShiftTablePage.selectMultipleSameAssignmentShiftsOnOneDay(1, firstNameOfTM, 0);
             scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 2, true);
             scheduleShiftTablePage.selectCopyOrMoveByOptionName("move");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();

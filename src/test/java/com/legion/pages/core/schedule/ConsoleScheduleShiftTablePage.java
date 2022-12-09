@@ -4532,4 +4532,44 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }else
             SimpleUtils.report("Schedule Week View: shifts load failed or there is no shift in this week");
     }
+
+
+    @Override
+    public List<WebElement> selectMultipleSameAssignmentShiftsOnOneDay(int shiftCount, String tmName, int dayIndex) throws Exception {
+        List<WebElement> selectedShifts = new ArrayList<>();
+//        List<String> selectedShiftTMNames = new ArrayList<>();
+//        List<WebElement> names = new ArrayList<>();
+//        if (areListElementVisible(namesWeekView, 10)) {
+//            names = namesWeekView;
+//        } else if (areListElementVisible(namesDayView, 10)) {
+//            names = namesDayView;
+//        }
+        List<WebElement> names = getDriver().findElements(By.cssSelector("[id=\"schedule-grid-react-wrapper\"] [data-day-index=\"" + dayIndex + "\"] .week-schedule-worker-name"));
+        scrollToBottom();
+        waitForSeconds(2);
+        if (names.size() >= shiftCount) {
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (WebElement name : names) {
+                if (name.getText().toLowerCase().contains(tmName.toLowerCase())) {
+                    action.click(name);
+                    selectedShifts.add(name);
+                    SimpleUtils.pass("Bulk action: Click " + tmName + "'s shift successfully! ");
+                }
+                if (selectedShifts.size() == shiftCount) {
+                    break;
+                }
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
+                SimpleUtils.pass("Selected " + shiftCount + " shifts successfully");
+            } else {
+                SimpleUtils.fail("Expected to select " + shiftCount + " shifts, but actually selected " +
+                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+            }
+        } else {
+            SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+        }
+        return selectedShifts;
+    }
 }
