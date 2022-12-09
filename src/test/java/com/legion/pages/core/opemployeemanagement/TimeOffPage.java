@@ -539,6 +539,48 @@ public class TimeOffPage extends BasePage {
         }
     }
 
+    @FindBy(css = "input[aria-label = 'Annual Leave']")
+    private WebElement annualLeaveTimeOffReason;
+    @FindBy(css = "input[aria-label = 'Annual Leave1']")
+    private WebElement annualLeave1TimeOffReason;
+    @FindBy(css = "input[aria-label = 'Annual Leave2']")
+    private WebElement annualLeave2TimeOffReason;
+
+    public void timeOffTypeSingleFilter() throws Exception{
+        //click(timeOffTypeSelect);
+        click(annualLeaveTimeOffReason);
+        click(annualLeave1TimeOffReason);
+        click(annualLeave2TimeOffReason);
+
+        if(isElementLoaded(showMoreButton)) {
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        for(int i = 0; i < historyItems.size(); i++){
+            if(historyItems.get(i).getAttribute("innerText").contains("Annual Leave") && !historyItems.get(i).getAttribute("innerText").contains("Annual Leave1") && !historyItems.get(i).getAttribute("innerText").contains("Annual Leave2"))
+                SimpleUtils.pass("Accrual Ledger filter successfully");
+            else
+                SimpleUtils.fail("Accrual Ledger filter failed",false);
+        }
+    }
+
+    public void timeOffTypeMutiplyFilter() throws Exception{
+        click(timeOffTypeSelect);
+        click(annualLeave1TimeOffReason);
+        click(annualLeave2TimeOffReason);
+
+        if(isElementLoaded(showMoreButton)) {
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        for(int i = 0; i < historyItems.size(); i++){
+            if(historyItems.get(i).getAttribute("innerText").contains("Annual Leave") || historyItems.get(i).getAttribute("innerText").contains("Annual Leave1") || historyItems.get(i).getAttribute("innerText").contains("Annual Leave2"))
+                SimpleUtils.pass("Accrual Ledger filter successfully");
+            else
+                SimpleUtils.fail("Accrual Ledger filter failed",false);
+        }
+    }
+
     @FindBy(css = "div[title = 'Accrual Ledger']")
     private WebElement accrualLedger;
     @FindBy(css = "div[title = 'All']")
@@ -596,7 +638,8 @@ public class TimeOffPage extends BasePage {
     private WebElement accrual;
     public void actionAccrualFilter() throws Exception{
         click(actionSelect);
-        accrualLedger.sendKeys(Keys.ENTER);
+        //accrualLedger.sendKeys(Keys.ENTER);
+        click(accrual);
 
         Boolean accrualFlag = false, accrualCapFlag = false;
         for(int i = 0; i < historyItems.size(); i++){
@@ -611,13 +654,12 @@ public class TimeOffPage extends BasePage {
         else
             SimpleUtils.fail("Action accrual all filter failed",false);
 
-        click(accrualLedger);
+        click(accrual);
     }
 
     @FindBy(css = "input-field[label = 'Accrual Cap']")
     private WebElement accrualCap;
     public void actionAccrualCapFilter() throws Exception{
-        click(actionSelect);
         click(accrualCap);
 
         Boolean accrualFlag = false, accrualCapFlag = false;
@@ -628,12 +670,13 @@ public class TimeOffPage extends BasePage {
                 accrualCapFlag = true;
         }
 
-        if(accrualFlag == true && accrualCapFlag == false)
-            SimpleUtils.pass("Action accrual filter successfully");
+        if(accrualFlag == false && accrualCapFlag == true)
+            SimpleUtils.pass("Action accrual cap filter successfully");
         else
-            SimpleUtils.fail("Action accrual all filter failed",false);
+            SimpleUtils.fail("Action accrual cap filter failed",false);
 
         click(accrualCap);
+        click(actionSelect);
     }
 }
 

@@ -2897,8 +2897,10 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.timeOffRequestFilter();
         timeOffPage.accrualLedgerFilter();
         timeOffPage.actionAllFilter();
-//        timeOffPage.actionAccrualFilter();
-//        timeOffPage.actionAccrualCapFilter();
+        timeOffPage.actionAccrualFilter();
+        timeOffPage.actionAccrualCapFilter();
+        timeOffPage.timeOffTypeMutiplyFilter();
+        timeOffPage.timeOffTypeSingleFilter();
     }
 
 }
