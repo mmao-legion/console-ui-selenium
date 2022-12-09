@@ -69,7 +69,6 @@ public class ToggleAPI {
     private static List<String> getCurrentEnabledEnterprises(String toggleName) {
         List<String> enterpriseNames = new ArrayList<>();
         String fileName = "Toggles.json";
-        String[] nameList = new String[0];
         try {
             String env = System.getProperty("env");
             if (env != null && !env.isEmpty()) {
@@ -80,12 +79,18 @@ public class ToggleAPI {
                 }
                 HashMap<String, String> toggleNEnterprises = JsonUtil.getPropertiesFromJsonFile("src/test/java/com/legion/api/" + fileName);
                 String enterprises = toggleNEnterprises.get(toggleName);
-                nameList = enterprises.split(",");
-                Collections.addAll(enterpriseNames, nameList);
+                if (enterprises != null && !enterprises.isEmpty()) {
+                    if (enterprises.contains(",")) {
+                        String[] nameList = enterprises.split(",");
+                        Collections.addAll(enterpriseNames, nameList);
+                    } else {
+                        enterpriseNames.add(enterprises);
+                    }
+                }
             }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
-        return Arrays.asList(nameList);
+        return enterpriseNames;
     }
 }
