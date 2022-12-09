@@ -2728,4 +2728,24 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Work role template common checking")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void workRolesTemplateCommonCheckingAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String templateName ="Default";
+            String mode = "view";
+            //Turn on WorkRoleSettingsTemplateOP toggle
+//            ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.goToWorkRoleSettingsTile();
+            configurationPage.verifyWorkRoleSettingsTemplateListUIAndDetailsUI(templateName,mode);
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }

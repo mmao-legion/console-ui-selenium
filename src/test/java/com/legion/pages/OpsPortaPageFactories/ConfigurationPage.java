@@ -270,5 +270,7 @@ public interface ConfigurationPage {
     public List<String> getStaffingRules() throws Exception;
     public void advanceStaffingRuleDynamicGroupCustomFormulaDescriptionChecking() throws Exception;
     public void verifyDynamicGroupOfAdvanceStaffingRuleIsOptional(String workRole, List<String> days) throws Exception;
+    public void goToWorkRoleSettingsTile();
+    public void verifyWorkRoleSettingsTemplateListUIAndDetailsUI(String templateName,String mode) throws Exception;
 }
 
