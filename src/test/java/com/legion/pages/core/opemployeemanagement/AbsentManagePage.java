@@ -90,9 +90,6 @@ public class AbsentManagePage extends BasePage {
     private WebElement deleteButton;
     @FindBy(css = "lg-search[placeholder='You can search by time off reason name']>input-field input")
     private WebElement timeOffSearchBox;
-    @FindBy(css = "lg-paged-search[placeholder=\"Search by time off reason name\"]>div>div>lg-pagination>div>div:nth-child(3)")
-    private WebElement TimeOffReasonRightArrow;
-
 
     //delete modal
     @FindBy(css = "modal div.model-content")
@@ -226,7 +223,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement lookBackDays;
     @FindBy(css = "lg-switch>label.switch span")
     private WebElement toggleSlide;
-    @FindBy(css = "lg-button[ng-click=\"$ctrl.createTimeOffReason('create')\"]>button")
+    @FindBy(css = "div.col-sm-2.addTimeOffReason>lg-button>button")
     private WebElement addTimeOffButton;
     @FindBy(css = "div.lg-modal>h1")
     private WebElement CreateNewTimeOffModalTitle;
@@ -245,9 +242,9 @@ public class AbsentManagePage extends BasePage {
     private List<WebElement> timeOffReasonNames;
     @FindBy(css = "div.time-off-reason-setting table tr:last-child>td:first-child")
     private WebElement timeOffReasonAdded;
-    @FindBy(css = "[ng-repeat=\"item in $ctrl.timeOffReasonSortedRows\"]>td:nth-child(3) > lg-button:nth-child(1)")
+    @FindBy(css = "div.time-off-reason-setting table tr:last-child>td:last-child>lg-button[label='Edit']>button")
     private WebElement editTimeOff;
-    @FindBy(css = "[ng-repeat=\"item in $ctrl.timeOffReasonSortedRows\"]>td:nth-child(3) > lg-button:nth-child(2)")
+    @FindBy(css = "div.time-off-reason-setting table tr:last-child>td:last-child>lg-button[label='Remove']>button")
     private WebElement removeButton;
     @FindBy(css = "modal form p.lg-modal__content.lg-modal__text")
     private WebElement removeConfirmMes;
@@ -767,11 +764,6 @@ public class AbsentManagePage extends BasePage {
         cancelCreating.click();
     }
 
-    public void nxetTimeOffReasonPage() {
-        scrollToElement(TimeOffReasonRightArrow);
-        TimeOffReasonRightArrow.click();
-    }
-
     public String getErrorMessage() {
         return errorMes.getText();
     }
@@ -1213,9 +1205,9 @@ public class AbsentManagePage extends BasePage {
     private WebElement promotionSearchBox;
     @FindBy(css = "div:nth-child(2) > lg-paged-search > div > ng-transclude > table > tbody > tr:nth-child(2)")
     private WebElement firstTimeOffReason;
-    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > ng-transclude > div")
+    //@FindBy(css = "div:nth-child(2) > lg-paged-search > div > ng-transclude > div")
     //@FindBy(linkText = "No matching time off reason found.")
-    //@FindBy(xpath = "//div[2]/lg-paged-search/div/ng-transclude/div")
+    @FindBy(xpath = "//div[2]/lg-paged-search/div/ng-transclude/div")
     private WebElement noMatchTimeOffReason;
     @FindBy(css = "tr[ng-repeat = 'item in $ctrl.timeOffReasonSortedRows']>td>lg-button[label = 'Edit']>button")
     private WebElement timeOffReasonEdit;
@@ -1234,7 +1226,6 @@ public class AbsentManagePage extends BasePage {
         if(isElementLoaded(timeOffReasonSearchBox,5)){
             timeOffReasonSearchBox.clear();
             timeOffReasonSearchBox.sendKeys(timeOffReasonName);
-            waitForSeconds(3);
             if(!noMatchTimeOffReason.getAttribute("class").contains("no-record"))
                 return true;
             else

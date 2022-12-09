@@ -2233,16 +2233,7 @@ public class AccrualEngineTest extends TestBase {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         absentManagePage.switchToSettings();
-        //Get all time off reasons.
-        ArrayList<String> timeOffConfiguredInGlobalSettings = new ArrayList<>();
-        for(int i=0;i<4;i++){
-            ArrayList<String> timeOffConfiguredInGlobalSettings1=absentManagePage.getAllTheTimeOffReasons();
-            int n = timeOffConfiguredInGlobalSettings1.size()-10;
-            List<String> TimeOffConfigs = timeOffConfiguredInGlobalSettings1.subList(0,n);
-            timeOffConfiguredInGlobalSettings.addAll(TimeOffConfigs);
-            absentManagePage.nxetTimeOffReasonPage();
-        }
-        System.out.println(timeOffConfiguredInGlobalSettings);
+        ArrayList<String> timeOffConfiguredInGlobalSettings=absentManagePage.getAllTheTimeOffReasons();
         absentManagePage.switchToTemplates();
         String templateName = "AccrualAuto-PayableHours(Don't touch!!!)";
         absentManagePage.search(templateName);
