@@ -253,9 +253,9 @@ public class AbsentManagePage extends BasePage {
     private WebElement removeConfirmMes;
 
     //Promotion part
-    @FindBy(css = "div.promotion-setting h1")
+    @FindBy(css = "lg-accrual-setting>div:nth-child(3) h1")
     private WebElement promotionTitle;
-    @FindBy(css = "div.promotion-setting lg-button>button")
+    @FindBy(css = "lg-button[ng-click=\"$ctrl.openPromotionModal('create')\"]>button")
     private WebElement promotionRuleAddButton;
     @FindBy(css = "modal[modal-title='Create New Accrual Promotion'] h1")
     private WebElement promotionModalTitle;
@@ -307,11 +307,11 @@ public class AbsentManagePage extends BasePage {
     private WebElement balanceSearchInputA;
     @FindBy(css = "lg-select[label='Balance after promotion'] div.lg-search-options__scroller>div>div")
     private WebElement balanceSearchResultA;
-    @FindBy(css = "div.promotion-setting table.lg-table tr>td:nth-child(1)")
+    @FindBy(css = "lg-paged-search[placeholder=\"Search by promotion name\"] table tr>td:nth-child(1)")
     private List<WebElement> promotionRuleNames;
-    @FindBy(css = "div.promotion-setting table tr:nth-child(2)>td:nth-child(2)>lg-button[label='Edit']")
+    @FindBy(css = "lg-paged-search[placeholder=\"Search by promotion name\"] table>tbody>tr:nth-child(2) lg-button[label='Edit']")
     private WebElement promotionEditButton;
-    @FindBy(css = "div.promotion-setting table tr:nth-child(2)>td:nth-child(2)>lg-button[label='Remove']")
+    @FindBy(css = "lg-paged-search[placeholder=\"Search by promotion name\"] table>tbody>tr:nth-child(2) lg-button[label='Remove']")
     private WebElement promotionRemoveButton;
     @FindBy(css = "modal[modal-title='Remove Accrual Promotion'] h1.lg-modal__title")
     private WebElement removeModalTitle;
@@ -949,12 +949,21 @@ public class AbsentManagePage extends BasePage {
     }
 
     public ArrayList getTimeOffReasonsInGlobalSetting() {
-        ArrayList<String> toList = new ArrayList<>();
-        tOffReasonsInGlobalSettingList.forEach((e) -> {
-            scrollToElement(e);
-            toList.add(e.getText());
-        });
-        return toList;
+//        ArrayList<String> toList = new ArrayList<>();
+//        tOffReasonsInGlobalSettingList.forEach((e) -> {
+//            scrollToElement(e);
+//            toList.add(e.getText());
+//        });
+//        return toList;
+        ArrayList<String> timeOffConfiguredInGlobalSettings = new ArrayList<>();
+        for(int i=0;i<4;i++){
+            ArrayList<String> timeOffConfiguredInGlobalSettings1=getAllTheTimeOffReasons();
+            int n = timeOffConfiguredInGlobalSettings1.size()-10;
+            List<String> TimeOffConfigs = timeOffConfiguredInGlobalSettings1.subList(0,n);
+            timeOffConfiguredInGlobalSettings.addAll(TimeOffConfigs);
+            nxetTimeOffReasonPage();
+        }
+        return timeOffConfiguredInGlobalSettings;
     }
 
     public ArrayList getTimeOffOptions() {
