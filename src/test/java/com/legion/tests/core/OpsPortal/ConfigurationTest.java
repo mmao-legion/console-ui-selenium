@@ -2675,7 +2675,7 @@ public class ConfigurationTest extends TestBase {
             String workRoleName="AMBASSADOR";
             //Turn off WorkRoleSettingsTemplateOP toggle
             ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", false);
-//            refreshPage();
+            getDriver().navigate().refresh();
             //Verify user can update hourly rate in work role details page
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
             userManagementPage.clickOnUserManagementTab();
@@ -2707,6 +2707,7 @@ public class ConfigurationTest extends TestBase {
             String workRoleName="AMBASSADOR";
             //Turn on WorkRoleSettingsTemplateOP toggle
             ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
+            getDriver().navigate().refresh();
             //Verify user can update hourly rate in work role details page
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
             userManagementPage.clickOnUserManagementTab();
@@ -2739,7 +2740,8 @@ public class ConfigurationTest extends TestBase {
             String templateName ="Default";
             String mode = "view";
             //Turn on WorkRoleSettingsTemplateOP toggle
-//            ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
+            ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
+            getDriver().navigate().refresh();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.goToWorkRoleSettingsTile();
