@@ -232,7 +232,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
 
     public boolean isPopOverLayoutLoaded() throws Exception {
         boolean isLoaded = false;
-        if (isElementLoaded(popOverLayout, 15)) {
+        if (isElementLoaded(popOverLayout, 20)) {
             isLoaded = true;
             SimpleUtils.pass("Pop over layout loaded Successfully!");
         }

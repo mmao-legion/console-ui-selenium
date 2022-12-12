@@ -763,9 +763,9 @@ public class HardStopForMinorViolation extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             int i = 0;
             while (i<10 && !smartCardPage.isRequiredActionSmartCardLoaded()) {
-                loginPage.logOut();
+//                loginPage.logOut();
                 Thread.sleep(10000);
-                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+//                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);

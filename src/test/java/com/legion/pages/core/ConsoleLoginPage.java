@@ -98,6 +98,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 			}
 			clickTheElement(newSignInBtn);
 		}
+		verifyLegionTermsOfService();
 		waitForSeconds(4);
     }
 
