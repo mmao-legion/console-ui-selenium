@@ -567,8 +567,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(className = "react-select__option")
     private List<WebElement> dropDownListOnNewCreateShiftPage;
     public void selectWorkRole(String workRoles) throws Exception {
-        waitForSeconds(3);
-        if (isElementLoaded(btnWorkRole, 5)) {
+        waitForSeconds(5);
+        if (isElementLoaded(btnWorkRole, 15)) {
             clickTheElement(btnWorkRole);
             SimpleUtils.pass("Work Role button clicked Successfully");
             if (listWorkRoles.size() > 0) {
