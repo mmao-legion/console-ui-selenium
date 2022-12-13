@@ -4572,4 +4572,39 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
         return selectedShifts;
     }
+
+
+    @Override
+    public HashSet<Integer> verifyCanSelectMultipleShiftsOnOneDay(int shiftCount, int dayIndex) throws Exception {
+        skipTheNewFeatureDialog();
+        HashSet<Integer> set = new HashSet<>();
+//        List<WebElement> names = null;
+//        if (areListElementVisible(namesWeekView, 10)) {
+//            names = namesWeekView;
+//        } else if (areListElementVisible(shiftOuterInDayView, 10)) {
+//            names = shiftOuterInDayView;
+//        }
+        List<WebElement> names = getDriver().findElements(By.cssSelector("[id=\"schedule-grid-react-wrapper\"] [data-day-index=\"" + dayIndex + "\"] .week-schedule-worker-name"));
+        if (names.size() >= shiftCount) {
+            SimpleUtils.randomSet(0, names.size() - 1, shiftCount, set);
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (int i : set) {
+                scrollToBottom();
+                waitForSeconds(1);
+                action.moveToElement(names.get(i)).click(names.get(i));
+                waitForSeconds(1);
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
+                SimpleUtils.pass("Selected " + shiftCount + " shifts successfully");
+            } else {
+                SimpleUtils.fail("Expected to select " + shiftCount + " shifts, but actually selected " +
+                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+            }
+        } else {
+            SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+        }
+        return set;
+    }
 }
