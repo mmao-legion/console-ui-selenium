@@ -2776,6 +2776,10 @@ public class P2PLGTest extends TestBase {
                 scheduleMainPage.saveSchedule();
             }
             createSchedulePage.publishActiveSchedule();
+            if (createSchedulePage.isCurrentScheduleWeekPublished()){
+                SimpleUtils.pass("The schedule has been published successfully! ");
+            }else
+                SimpleUtils.fail("The schedule fail to publish! ", false);
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             Thread.sleep(3000);
@@ -5593,6 +5597,7 @@ public class P2PLGTest extends TestBase {
             //Verify the assignment can be covered when drag&drop employee avatar to another one in same day and same location
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM2,0,firstNameOfTM);
+            Thread.sleep(3000);
             scheduleShiftTablePage.selectSwapOrAssignOption("assign");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
             if (scheduleShiftTablePage.verifyDayHasShiftByName(0,firstNameOfTM2)==2

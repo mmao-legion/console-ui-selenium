@@ -110,6 +110,7 @@ public class HardStopForMinorViolation extends TestBase {
 
             //Go to schedule and make one minor shift has violation
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
@@ -121,6 +122,7 @@ public class HardStopForMinorViolation extends TestBase {
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             if (smartCardPage.isRequiredActionSmartCardLoaded()) {
                 shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
@@ -232,9 +234,10 @@ public class HardStopForMinorViolation extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
 
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isWeekGenerated){
-                createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
 
             if (smartCardPage.isRequiredActionSmartCardLoaded()) {
                 shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
