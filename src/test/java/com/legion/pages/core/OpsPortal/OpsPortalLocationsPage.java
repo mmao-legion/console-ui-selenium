@@ -5384,10 +5384,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					.when().post(url)
 					.then().log().all().statusCode(expectedStatusCode).extract().path(path).toString();
 			System.out.println("-----" +str);
-			if (str.contains(String.valueOf(expectedResult))) {
-				SimpleUtils.pass("error message is showing");
-			} else {
-				SimpleUtils.fail("error message is not showing", false);
+			String[] result = expectedResult.toString().split(",");
+			for (String res : result) {
+				if (str.contains(String.valueOf(res))) {
+					SimpleUtils.pass("error message is showing");
+				} else {
+					SimpleUtils.fail("error message is not showing", false);
+				}
 			}
 		}
 	}
