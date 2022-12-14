@@ -5142,23 +5142,23 @@ public class P2PLGTest extends TestBase {
         }
         createSchedulePage.createScheduleForNonDGFlowNewUI();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName2);
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
         scheduleMainPage.saveSchedule();
-        int tmShiftCountBeforeCover = scheduleShiftTablePage.getShiftsNumberByName(firstName);
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectJobTitleFilterByText(jobTitle);
         String workRole = shiftOperatePage.getRandomWorkRole();
         scheduleMainPage.clickOnFilterBtn();
         List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
-        if (tmShiftCountBeforeCover == 0){
+//        if (tmShiftCountBeforeCover == 0){
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             createShiftsWithSpecificValues(workRole, null, childLocationNames.get(0),
                     "8am", "2pm", 1, Arrays.asList(),
                     ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(),
                     null, firstName+ " "+ lastName);
             scheduleMainPage.saveSchedule();
-        }
+//        }
 
         Thread.sleep(3000);
         createSchedulePage.publishActiveSchedule();
@@ -5238,7 +5238,7 @@ public class P2PLGTest extends TestBase {
         Thread.sleep(5000);
         int tmShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName);
         SimpleUtils.assertOnFail("The expect shift count is 0, the actual shift count is:"+tmShiftCount,
-                tmShiftCount == tmShiftCountBeforeCover-1, false);
+                tmShiftCount == 0, false);
         tmShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName2);
         SimpleUtils.assertOnFail("The expect shift count is 1, the actual shift count is:"+tmShiftCount,
                 tmShiftCount == 1, false);
