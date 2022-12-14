@@ -96,8 +96,8 @@ public class WorkRoleDetailsPage extends BasePage {
         colors.get(colorIndex).click();
         Select select = new Select(workRoleClass);
         select.selectByVisibleText(roleClass);
-        hourlyRate.clear();
-        hourlyRate.sendKeys(hRate);
+//        hourlyRate.clear();
+//        hourlyRate.sendKeys(hRate);
     }
 
     public void addAssignmentRule(String num, String pri, String badgeText) {
