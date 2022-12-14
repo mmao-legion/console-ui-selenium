@@ -3956,6 +3956,7 @@ public class ParentChildLGTest extends TestBase {
                 firstNameOfTM = shiftInfo.get(0);
             }
             String workRole = shiftInfo.get(4);
+            String lastName = shiftInfo.get(5);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
@@ -3971,7 +3972,7 @@ public class ParentChildLGTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM+" "+lastName);
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -3986,7 +3987,7 @@ public class ParentChildLGTest extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
 
-            newShiftPage.searchWithOutSelectTM(firstNameOfTM);
+            newShiftPage.searchWithOutSelectTM(firstNameOfTM+" "+lastName);
             String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
             String expectedWaningMessage= "Minimum time between shifts";
             SimpleUtils.assertOnFail(expectedWaningMessage+ " message fail to load!",
@@ -3999,7 +4000,7 @@ public class ParentChildLGTest extends TestBase {
                 if (warningMessage.toLowerCase().contains(expectedWaningMessage.toLowerCase())){
                     SimpleUtils.pass(expectedWaningMessage+" message displays");
                 } else {
-                    SimpleUtils.fail("There is no "+expectedWaningMessage+" warning message displaying", false);
+                    SimpleUtils.fail("There is no "+expectedWaningMessage+" warning message displaying。 The actual is:"+warningMessage, false);
                 }
                 shiftOperatePage.clickOnAssignAnywayButton();
             } else {
@@ -4606,6 +4607,7 @@ public class ParentChildLGTest extends TestBase {
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), "8am", "11am", 1,
                     Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(),
                     null, firstNameOfTM+ " "+ lastName);
+            Thread.sleep(3000);
             createShiftsWithSpecificValues(workRole2, "", childLocationNames.get(0), "8am", "11am", 1,
                     Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(),
                     null, firstNameOfTM2+ " "+ lastName2);
@@ -4796,6 +4798,7 @@ public class ParentChildLGTest extends TestBase {
             //Verify the assignment can be covered when drag&drop employee avatar to another one in different day and same location
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM2,1,firstNameOfTM);
+            Thread.sleep(3000);
             scheduleShiftTablePage.selectSwapOrAssignOption("swap");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
             if (scheduleShiftTablePage.verifyDayHasShiftByName(0,firstNameOfTM)==1
