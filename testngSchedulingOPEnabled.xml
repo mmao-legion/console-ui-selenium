@@ -211,7 +211,7 @@
                     <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
                     <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
                     <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" />
-<!--                    <include name="verifyAssignTMInDayViewAsInternalAdmin" /> SCH-8177-->
+                    <include name="verifyAssignTMInDayViewAsInternalAdmin" />
                     <include name="verifyConvertToOpenShiftInDayViewAsInternalAdmin" />
                     <include name="verifyEditShiftNotesInDayViewAsInternalAdmin" />
                     <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
@@ -243,7 +243,7 @@
                             <include name="VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin" />   The effective time is too long to run, no any useful method now -->
                     <!--          <include name="VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin" />
                             <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" /> The code is not merged into RC yet -->
-                    <!-- <include name="verifyRecommendTabHasTMsAsInternalAdmin" />  Blocked by SCH-8177  -->
+                     <include name="verifyRecommendTabHasTMsAsInternalAdmin" />
                     <include name="verifyPleaseConfirmMessageOnWarningModalAsInternalAdmin" />
                     <!--  <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
                            <include name="verifyTheCanadaCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
@@ -352,10 +352,10 @@
                     <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />
                     <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" />
                     <include name="verifySeniorityNotDisplayWhenToggleTurnOffForSearchingAsInternalAdmin" />
-                    <!--  <include name="verifySeniorityNotDisplayWhenToggleTurnOffForRecommendAsInternalAdmin" />  Blocked by SCH-8177  -->
+                      <include name="verifySeniorityNotDisplayWhenToggleTurnOffForRecommendAsInternalAdmin" />
                     <include name="verifySeniorityDisplayWhenToggleTurnOnForSearchingAsInternalAdmin" />
                     <include name="verifySeniorityAlwaysDisplayOnSearchingDialogAsInternalAdmin" />
-                    <!--  <include name="verifySeniorityDisplayWhenToggleTurnOnForRecommendAsInternalAdmin" />  Blocked by SCH-8177  -->
+                      <include name="verifySeniorityDisplayWhenToggleTurnOnForRecommendAsInternalAdmin" />
                     <include name="verifyAscendingOfSeniorityForSearchingAsInternalAdmin" />
                     <include name="verifyAscendingOfSeniorityForRecommendAsInternalAdmin" />
                     <include name="verifyDescendingOfSeniorityForSearchingAsInternalAdmin" />

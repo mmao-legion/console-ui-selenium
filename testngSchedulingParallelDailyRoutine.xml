@@ -85,7 +85,7 @@
                     <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" />
                     <include name="verifyComplianceSmartCardFunctionalityAsInternalAdmin" />
 <!--                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/> https://legiontech.atlassian.net/browse/SCH-5994 -->
-<!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/> SCH-8177 -->
+                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsInternalAdmin"/>
@@ -118,7 +118,7 @@
                     <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
                     <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
                     <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" />
-<!--                    <include name="verifyAssignTMInDayViewAsInternalAdmin" /> SCH-8177-->
+                    <include name="verifyAssignTMInDayViewAsInternalAdmin" />
                     <include name="verifyConvertToOpenShiftInDayViewAsInternalAdmin" />
                     <include name="verifyEditShiftNotesInDayViewAsInternalAdmin" />
 <!--                    <include name="verifyEditShiftTimeInDayViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5700-->
@@ -157,7 +157,7 @@
                            <include name="VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin" />    The effective time is too long to run, no any useful method now -->
                     <!--        <include name="VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin" />
                            <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" /> The code is not merged into RC yet -->
-                    <!--   <include name="verifyRecommendTabHasTMsAsInternalAdmin" /> Blocked by SCH-8177   -->
+                       <include name="verifyRecommendTabHasTMsAsInternalAdmin" />
                     <include name="verifyPleaseConfirmMessageOnWarningModalAsInternalAdmin" />
                     <include name="VerifyTheScheduleVersionUnchangedWithUnmodifiedSaveAsInternalAdmin" />
                     <!-- <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOnAsInternalAdmin" />
@@ -403,12 +403,12 @@
             <class name="com.legion.tests.core.OfferTMTest">
                 <methods>
                     <include name="verifyOfferTMOptionAvailableForOpenShiftsAsInternalAdmin" />
-<!--                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInNonEditModeAsTeamMember" SCH-8177 />-->
-<!--                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInEditModeAsTeamMember" SCH-8177 />-->
-<!--                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInNonEditModeAsTeamMember" SCH-8177 />-->
-<!--                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" SCH-8177 />-->
+                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForAutoOpenShiftsInEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInNonEditModeAsTeamMember" />
+                    <include name="verifyFunctionalityOfOfferTMForManualOpenShiftsInEditModeAsTeamMember" />
                     <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInNonEditModeAsTeamMember" />
-<!--                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" SCH-8177 />-->
+                    <include name="verifyFunctionalityOfOfferTMForConvertToOpenShiftsInEditModeAsTeamMember" />
                <!--SCH-4171, SCH-3620     <include name="verifyTheOpenShiftIsAssignedSuccessfullyAsTeamMember" />
                     SCH-4171, SCH-3620  <include name="verifyTheOpenShiftIsNotAssignedIfSMRejectedAsTeamMember" />
                     SCH-4171, SCH-3620  <include name="verifySecondTMCannotClaimTheOpenShiftAsTeamMember" />
