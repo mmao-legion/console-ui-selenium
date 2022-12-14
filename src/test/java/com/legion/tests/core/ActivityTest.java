@@ -1214,6 +1214,7 @@ public class ActivityTest extends TestBase {
         if (isWeekGenerated) {
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
+        Thread.sleep(5000);
         createSchedulePage.createScheduleForNonDGFlowNewUI();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
