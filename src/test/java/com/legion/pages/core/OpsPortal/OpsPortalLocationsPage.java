@@ -1520,10 +1520,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("No search result", true);
 		waitForSeconds(10);
 		searchLocation(locationName);
-		if (verifyIsThisLocationGroup()) {
-			SimpleUtils.pass("Change None location to child successfully");
-		} else
-			SimpleUtils.fail("Change location to child Location failed", true);
+//		if (verifyIsThisLocationGroup()) {
+//			SimpleUtils.pass("Change None location to child successfully");
+//		} else
+//			SimpleUtils.fail("Change location to child Location failed", true);
 	}
 
 	@Override
@@ -5384,10 +5384,13 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					.when().post(url)
 					.then().log().all().statusCode(expectedStatusCode).extract().path(path).toString();
 			System.out.println("-----" +str);
-			if (str.contains(String.valueOf(expectedResult))) {
-				SimpleUtils.pass("error message is showing");
-			} else {
-				SimpleUtils.fail("error message is not showing", false);
+			String[] result = expectedResult.toString().split(",");
+			for (String res : result) {
+				if (str.contains(String.valueOf(res))) {
+					SimpleUtils.pass("error message is showing");
+				} else {
+					SimpleUtils.fail("error message is not showing", false);
+				}
 			}
 		}
 	}
