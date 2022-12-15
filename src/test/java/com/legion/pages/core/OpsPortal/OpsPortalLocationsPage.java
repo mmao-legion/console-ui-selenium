@@ -9,10 +9,7 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.utils.HttpUtil;
-import com.legion.utils.JsonUtil;
-import com.legion.utils.MyThreadLocal;
-import com.legion.utils.SimpleUtils;
+import com.legion.utils.*;
 import io.restassured.RestAssured;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -1523,10 +1520,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("No search result", true);
 		waitForSeconds(10);
 		searchLocation(locationName);
-		if (verifyIsThisLocationGroup()) {
-			SimpleUtils.pass("Change None location to child successfully");
-		} else
-			SimpleUtils.fail("Change location to child Location failed", true);
+//		if (verifyIsThisLocationGroup()) {
+//			SimpleUtils.pass("Change None location to child successfully");
+//		} else
+//			SimpleUtils.fail("Change location to child Location failed", true);
 	}
 
 	@Override
@@ -5368,7 +5365,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void importLocations(String filePath, String sessionId, String isImport, int expectedStatusCode, String path, Object expectedResult) {
 
-		String url = "https://rc-enterprise.dev.legion.work/legion/integration/uploadBusiness";
+		String url = Constants.uploadBusiness;
 		File file = new File(filePath);
 
 		Map<String, String> params = new HashMap<>();
@@ -5387,17 +5384,20 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					.when().post(url)
 					.then().log().all().statusCode(expectedStatusCode).extract().path(path).toString();
 			System.out.println("-----" +str);
-			if (str.contains(String.valueOf(expectedResult))) {
-				SimpleUtils.pass("error message is showing");
-			} else {
-				SimpleUtils.fail("error message is not showing", false);
+			String[] result = expectedResult.toString().split(",");
+			for (String res : result) {
+				if (str.contains(String.valueOf(res))) {
+					SimpleUtils.pass("error message is showing");
+				} else {
+					SimpleUtils.fail("error message is not showing", false);
+				}
 			}
 		}
 	}
 
 	public void verifyColumnsInLocationSampleFile(String sessionId, List column) {
 
-		String url = "https://rc-enterprise.dev.legion.work/legion/integration/downloadBusiness";
+		String url = Constants.downloadBusiness;
 		JSONObject json = JSONObject.parseObject("{\"businessIds\":[\"c1365762-5107-49eb-9aae-10d364a1bbdf\"],\"exportType\":\"\",\"locationType\":\"Real\"}");
 
 		String str = RestAssured.given().log().all().contentType("application/json").header("sessionId", sessionId).body(json)

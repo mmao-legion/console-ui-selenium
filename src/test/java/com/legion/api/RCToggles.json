@@ -1,7 +1,7 @@
 {
   "UseLegionAccrual": "dgstage,op,opauto,carters",
   "MinorRulesTemplate": "cinemark-wkdy",
-  "DynamicGroupV2": "opauto",
+  "DynamicGroupV2": "",
   "ScheduleShowFullNames": "cinemark-wkdy",
   "EnableDemandDriverTemplate": "op,opauto",
   "MixedModeDemandDriverSwitch": "op,opauto",
@@ -16,5 +16,6 @@
   "EnableEmployeeManagement": "op,opauto,carters",
   "ShowAnnouncementGroupOP": "op,opauto,carters",
   "UseDemandDriverTemplateSwitch": "op,opauto",
-  "EnableChangeLocationGroupSetting": "op,opauto"
+  "EnableChangeLocationGroupSetting": "op,opauto",
+  "WorkRoleSettingsTemplateOP": "opauto"
 }

@@ -62,7 +62,7 @@ public class WorkRoleDetailsPage extends BasePage {
     private WebElement typeOption;
     @FindBy(id = "intervalConstraintDropDown")
     private WebElement frequency;
-    @FindBy(css = "intervalConstraintDropDown+ul>li>a")
+    @FindBy(xpath = "//ul[@aria-labelledby ='intervalConstraintDropDown']/li")
     private WebElement week;
     @FindBy(css = "div.settings-display-inline.ml-10.fl>div.row input")
     private WebElement priority;
@@ -96,8 +96,8 @@ public class WorkRoleDetailsPage extends BasePage {
         colors.get(colorIndex).click();
         Select select = new Select(workRoleClass);
         select.selectByVisibleText(roleClass);
-        hourlyRate.clear();
-        hourlyRate.sendKeys(hRate);
+//        hourlyRate.clear();
+//        hourlyRate.sendKeys(hRate);
     }
 
     public void addAssignmentRule(String num, String pri, String badgeText) {

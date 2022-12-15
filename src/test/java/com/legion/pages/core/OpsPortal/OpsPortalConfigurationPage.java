@@ -7870,5 +7870,51 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 		}
 		return granularityValue;
 	}
+	
+	@FindBy(css="div.card-carousel-card-title")
+	private List<WebElement> smartCards;
+	@FindBy(css="input[placeholder=\"Search by Work Role\"]")
+	private WebElement searchWorkRoleField;
+	@FindBy(css="table tbody[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
+	private List<WebElement> workRoleListOnWorkRoleSettingTemplateDetailsPage;
+
+	@Override
+	public void verifyWorkRoleSettingsTemplateListUIAndDetailsUI(String templateName,String mode) throws Exception {
+		if(isElementEnabled(newTemplateBTN,2) && areListElementVisible(smartCards,2) && isElementEnabled(searchField,2)
+				&& areListElementVisible(templatesList,2)){
+			SimpleUtils.pass("Work role settings template list can show well");
+			clickOnSpecifyTemplateName(templateName,mode);
+			if(isElementEnabled(historyButton,2)&&isElementEnabled(editButton,2)
+					&& isElementEnabled(templateDetailsTab,2)&&isElementEnabled(templateAssociationTab)&&isElementEnabled(searchWorkRoleField,2)
+					&&areListElementVisible(workRoleListOnWorkRoleSettingTemplateDetailsPage,2)){
+				SimpleUtils.pass("The work role setting template details page can show well");
+			}else {
+				SimpleUtils.fail("The work role setting template details page can NOT show well",false);
+			}
+		}else {
+			SimpleUtils.fail("Work role settings template list page is not showing well",false);
+		}
+	}
+
+	@FindBy(css="lg-dashboard-card[title=\"Work Role Settings\"]")
+	private WebElement workRoleSettingsTile;
+	@FindBy(css="lg-dashboard-card[title=\"Work Role Settings\"] h1")
+	private WebElement workRoleSettingsButton;
+
+	@Override
+	public void goToWorkRoleSettingsTile(){
+		if(isElementEnabled(workRoleSettingsTile,2)){
+			SimpleUtils.pass("The work role settings tile is showing");
+			clickTheElement(workRoleSettingsButton);
+			waitForSeconds(3);
+			if(isElementEnabled(newTemplateBTN,2)){
+				SimpleUtils.pass("User can go to work role settings template successfully");
+			}else {
+				SimpleUtils.fail("User can't go to work role settings template successfully",false);
+			}
+		}else {
+			SimpleUtils.fail("There is no work role settings tile",false);
+		}
+	}
 }
 
