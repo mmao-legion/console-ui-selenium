@@ -1023,7 +1023,7 @@ public class AccrualEngineTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine Distribution Types")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    //The case is now blocked by https://legiontech.atlassian.net/browse/OPS-6358
+    //The case is blocked by https://legiontech.atlassian.net/browse/OPS-6358
     public void verifyAccrualPromotionWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //go to setting page
         AbsentManagePage absentManagePage = new AbsentManagePage();
