@@ -765,8 +765,8 @@ public abstract class TestBase {
         adminPage.clickOnConsoleAdminMenu();
         adminPage.clickOnInspectorTab();
         adminPage.clickOnCacheTab();
-        adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.Template.getValue());
         adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.TemplateAssociation.getValue());
+        adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.Template.getValue());
         adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.LocationBrokerContainer.getValue());
     }
 
