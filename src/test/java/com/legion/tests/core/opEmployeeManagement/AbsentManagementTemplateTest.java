@@ -173,7 +173,19 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.cancelCreatingTimeOff();
         //cancel adding new time off
         String timeOffName = "ZZ-vacation";
-        absentManagePage.removeTimeOffReasons(timeOffName);
+        //absentManagePage.removeTimeOffReasons(timeOffName);
+
+        //Remove timeOffReason
+        Boolean timeOffReasonFlag;
+        timeOffReasonFlag = absentManagePage.searchTimeOffReason(timeOffName);
+
+        if(timeOffReasonFlag == true){
+            SimpleUtils.fail("Non exist time off reason search successfully", false);
+            Assert.assertEquals(absentManagePage.removeTimeOffInSettings(), "Are you sure you want to remove this time off reason?", "Failed to get confirm message in remove modal!");
+            absentManagePage.okToActionInModal(true);
+        }else
+            SimpleUtils.pass("Non exist time off reason search failed");
+
         absentManagePage.addTimeOff(timeOffName);
         absentManagePage.cancelCreatingTimeOff();
         Assert.assertFalse(absentManagePage.isTimeOffReasonDisplayed(timeOffName), "Failed to cancel adding!");
