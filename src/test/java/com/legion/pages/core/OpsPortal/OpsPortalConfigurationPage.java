@@ -7854,5 +7854,21 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Dynamic Group Of Advance Staffing Rule Is NOT Optional",false);
 		}
 	}
+
+	@FindBy(css = "question-input[question-title=\"Granularity\"] select")
+	private WebElement granularityOption;
+	@Override
+	public String getGranularityForCertainDriver() throws Exception {
+		String granularityValue = "";
+		Select granularitySelect = new Select(granularityOption);
+		granularityValue = granularitySelect.getFirstSelectedOption().getText();
+		clickTheElement(cancelButton);
+		searchDriverInTemplateDetailsPage( "");
+		waitForSeconds(25);
+		if (granularityValue.isEmpty()){
+			SimpleUtils.fail("Failed to get granularity value!", false);
+		}
+		return granularityValue;
+	}
 }
 

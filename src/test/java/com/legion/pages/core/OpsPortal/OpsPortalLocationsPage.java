@@ -3734,7 +3734,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				enabledCount++;
 		}
 		//Assert only one option is enabled
-		SimpleUtils.assertOnFail("The location setting for location group are not enabled for the selected option", enabledCount == 2, false);
+		SimpleUtils.assertOnFail("The location setting for location group are not enabled for the selected option", enabledCount == 1, false);
 		//back to list
 		clickTheElement(locationBackLink);
 	}
