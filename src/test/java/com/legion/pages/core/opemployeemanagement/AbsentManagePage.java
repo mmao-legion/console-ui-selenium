@@ -956,9 +956,9 @@ public class AbsentManagePage extends BasePage {
 //        });
 //        return toList;
         ArrayList<String> timeOffConfiguredInGlobalSettings = new ArrayList<>();
-        ArrayList<String> PromotionNames= getPromotionRuleName();
+        ArrayList<String> PromotionNames = getPromotionRuleName();
         for(int i=0;i<4;i++){
-            ArrayList<String> timeOffConfiguredInGlobalSettings1=getAllTheTimeOffReasons();
+            ArrayList<String> timeOffConfiguredInGlobalSettings1 = getAllTheTimeOffReasons();
             int n = timeOffConfiguredInGlobalSettings1.size()-PromotionNames.size();
             List<String> TimeOffConfigs = timeOffConfiguredInGlobalSettings1.subList(0,n);
             timeOffConfiguredInGlobalSettings.addAll(TimeOffConfigs);
