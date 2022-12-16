@@ -732,5 +732,24 @@ public class TimeOffPage extends BasePage {
         else
             SimpleUtils.fail("Filter text is wrong",false);
     }
+
+    public void verifyMmutiplyAction() throws Exception{
+        click(actionSelect);
+        click(accrualCap);
+        click(accrual);
+
+        if(isElementLoaded(showMoreButton,5)){
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        if(isElementLoaded(showMoreButton,5)){
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        if(historyItems.size() == 26)
+            SimpleUtils.pass("");
+        else
+            SimpleUtils.fail("",false);
+    }
 }
 

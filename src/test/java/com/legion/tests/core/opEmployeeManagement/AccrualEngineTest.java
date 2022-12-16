@@ -2920,6 +2920,7 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.timeOffTypeMutiplyFilter();
         timeOffPage.timeOffTypeSingleFilter();
         timeOffPage.timeOffTypeAllFilter();
+        timeOffPage.verifyMmutiplyAction();
         timeOffPage.verifyHistoryFilterUIText();
         timeOffPage.closeHistory();
     }
