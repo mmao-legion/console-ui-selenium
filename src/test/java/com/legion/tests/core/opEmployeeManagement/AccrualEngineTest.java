@@ -680,13 +680,13 @@ public class AccrualEngineTest extends TestBase {
 
         //clocks  rate:0.0577
         //look back period: 5days
-        //Jan-9 to Jan-13  60.2hours Approved.  1/3.47354
+        //Jan-9 to Jan-13  60.2hours Approved.  1~20.2/3.47354
         //Jan-30 14.5 Pending
-        //Jan-31 14 Approved  0.8078
+        //Jan-31 14 Approved  0~34.2/0.8078
         //Feb-1st 9 Pending  0.5193
         //Feb-2nd null
-        //Feb-3 14.7 Approved  0.84819
-        //Feb-4 13 Approved    0.7501
+        //Feb-3 14.7 Approved  1~8.9(34.2+14.7-40)/0.84819
+        //Feb-4 13 Approved    0~21.9/0.7501
         //Feb-5 14.33 Approved 0.826841
         //Feb-6 14 Approved   0.8078
         //run engine to a specified date and verify that accrued based on the editing balance.
@@ -725,14 +725,14 @@ public class AccrualEngineTest extends TestBase {
         //expected:
         //Jan-9 to Jan-13  60.2hours Approved.  1~20.2/3.47354 --no change
         //Jan-30 14.5 --approved but out of look back window
-        //Jan-31 14 Approved  0.8078---minus 4 hours: 10 hours 0~34.2/0.577
-        //Feb-1st 9 Pending  ---Approved   0~39.2/0.5193
+        //Jan-31 14 Approved  ---minus 4 hours: now--> 10 hours approved 0~30.2/0.577
+        //Feb-1st 9 Pending  --- now-->9 Approved   0~39.2/0.5193
         //Feb-2nd null
-        //Feb-3 14.7 Approved  0.84819 --no change  1~13.9/0.84819
-        //Feb-4 13 Approved    0.7501--add 5hrs: 18hours  0~31.9/1.0386
-        //Feb-5 14.33 Approved 0.826841----current date: 1~ 6.23/0.826841
+        //Feb-3 14.7 Approved  0.84819 --no change  1~13.9(39.2+14.7-40)/0.84819
+        //Feb-4 13 Approved    0.7501--add 5hrs: now--> 18hours approved  0~31.9(13.9+18)/1.0386
+        //Feb-5 14.33 Approved 0.826841----current date: 1~ 6.23(31.9+14.33-40)/0.826841
         expectedTOBalance.put("PTO", "3");//~6.23
-        expectedTOBalance.put("Sick", "7.28");//7.283471
+        expectedTOBalance.put("Sick", "7.28");//7.283471  3.47354+0.577+0.5193+0.84819+1.0386+0.826841
         //and verify the result in UI
         refreshPage();
         timeOffPage.switchToTimeOffTab();
