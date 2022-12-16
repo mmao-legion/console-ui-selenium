@@ -195,20 +195,23 @@ public class BulkCreateTest extends TestBase {
             newShiftPage.moveSliderAtCertainPoint("11pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
             newShiftPage.selectSpecificWorkDay(7);
-            String expectMessage = "Hours on Friday: 6:00am - 12:00am. Hours on Saturday: 6:00am - 12:00am. Hours on Monday: 6:00am - 12:00am. Hours on Tuesday: 6:00am - 12:00am. Hours on Wednesday: 6:00am - 12:00am. Hours on Thursday: 6:00am - 12:00am";
+            String expectMessage1 = "Hours on Friday: 6:00am - 12:00am. Hours on Saturday: 6:00am - 12:00am. Hours on Monday: 6:00am - 12:00am. Hours on Tuesday: 6:00am - 12:00am. Hours on Wednesday: 6:00am - 12:00am. Hours on Thursday: 6:00am - 12:00am";
+            String expectMessage2 = "Hours on Friday: 6:00 am - 12:00 am. Hours on Saturday: 6:00 am - 12:00 am. " +
+                    "Hours on Monday: 6:00 am - 12:00 am. Hours on Tuesday: 6:00 am - 12:00 am. Hours on Wednesday: 6:00 am - 12:00 am. " +
+                    "Hours on Thursday: 6:00 am - 12:00 am";
             String actualMessage = newShiftPage.getShiftStartWarningMessage();
-            SimpleUtils.assertOnFail("The shift start warning message display incorrectly. The expect is: "+ expectMessage
+            SimpleUtils.assertOnFail("The shift start warning message display incorrectly. The expect is: "+ expectMessage1
                             + " the actual is "+ actualMessage,
-                    expectMessage.equalsIgnoreCase(actualMessage), false);
+                    (expectMessage1.equalsIgnoreCase(actualMessage) || expectMessage2.equalsIgnoreCase(actualMessage)), false);
             actualMessage = newShiftPage.getShiftEndWarningMessage();
-            SimpleUtils.assertOnFail("The shift end warning message display incorrectly. The expect is: "+ expectMessage
+            SimpleUtils.assertOnFail("The shift end warning message display incorrectly. The expect is: "+ expectMessage1
                             + " the actual is "+ actualMessage,
-                    expectMessage.equalsIgnoreCase(actualMessage), false);
+                    (expectMessage1.equalsIgnoreCase(actualMessage) || expectMessage2.equalsIgnoreCase(actualMessage)), false);
 
             newShiftPage.moveSliderAtCertainPoint("2pm", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(false);
-            expectMessage = "Start time should be before End time";
+            String expectMessage = "Start time should be before End time";
             actualMessage = newShiftPage.getShiftEndWarningMessage();
             SimpleUtils.assertOnFail("The shift end warning message display incorrectly. The expect is: "+ expectMessage
                             + " the actual is "+ actualMessage,
