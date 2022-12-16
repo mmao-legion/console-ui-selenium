@@ -2500,7 +2500,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		return null;
 	}
 
-	@FindBy(css = "[id=\"legion_cons_schedule_forecast_Chart_area\"]")
+	@FindBy(css = "[id*=\"Chart_area\"]")
 	private WebElement demandForecastChart;
 	@Override
 	public void verifyDemandForecastCanLoad() throws Exception {
