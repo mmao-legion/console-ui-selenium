@@ -197,8 +197,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			Thread.sleep(10000);
 			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
 			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("No"),false);
-			Thread.sleep(180000);
 			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(180000);
 			refreshCachesAfterChangeTemplate();
 
 			//Back to Schedule page
@@ -600,9 +601,12 @@ public class ScheduleSeniorityTest extends TestBase {
 			Thread.sleep(10000);
 			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
 			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"), false);
-			Thread.sleep(180000);
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
+			Thread.sleep(180000);
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(20000);
+			refreshPage();
 
 			//Back to Schedule page
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -675,7 +679,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchText(firstNameOfTM);
+			newShiftPage.searchTeamMemberByName(firstNameOfTM);
 			newShiftPage.clickClearAssignmentsLink();
 			SimpleUtils.assertOnFail("The Seniority Column is not displayed on searching dialog!", shiftOperatePage.isSeniorityColumnLoaded(), false);
 			newShiftPage.emptySearchBox();
@@ -870,7 +874,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			configurationPage.publishNowTheTemplate();
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
-			Thread.sleep(180000);
+			Thread.sleep(200000);
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(20000);
 
@@ -1269,6 +1273,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			controlsNewUIPage.selectSortOfSeniority("Descending");
 			configurationPage.publishNowTheTemplate();
 			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(200000);
+			refreshCachesAfterChangeTemplate();
 
 			//Create a schedule if there is no any
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();

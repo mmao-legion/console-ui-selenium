@@ -7173,17 +7173,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				Thread.sleep(3000);
 				controlsNewUIPage.enableOverRideAssignmentRuleAsYesForOP();
 				configurationPage.publishNowTheTemplate();
-				Thread.sleep(240000);
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
+				switchToConsoleWindow();
 				}
-			}
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(200000);
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(20000);
+			refreshPage();
 
 			//Go to the schedule view table
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-			Thread.sleep(60000);
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -7340,6 +7340,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(180000);
 			refreshCachesAfterChangeTemplate();
+			Thread.sleep(20000);
 
 			//Go to the schedule view table
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -8201,7 +8202,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
 			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-			scheduleCommonPage.clickOnWeekView();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if (isActiveWeekGenerated) {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -8231,9 +8231,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			//Check the time duration on the day view
 			scheduleMainPage.goToToggleSummaryView();
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdate();
 			scheduleCommonPage.clickOnDayView();
-			ArrayList<String> rimeDurations = scheduleShiftTablePage.getScheduleDayViewGridTimeDuration();
-			String timeDuration = rimeDurations.get(0) + "-" + rimeDurations.get(rimeDurations.size()-1);
+			ArrayList<String> timeDurations = scheduleShiftTablePage.getScheduleDayViewGridTimeDuration();
+			String timeDuration = timeDurations.get(0) + "-" + timeDurations.get(timeDurations.size()-1);
 			SimpleUtils.assertOnFail("The time duration is not matched between day view and toggle summary view!", timeDuration.equalsIgnoreCase("8 AM-12 AM"), false);
 
 			//Close operating days, regenerate the schedule.
