@@ -2921,15 +2921,23 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.goToTeamMemberDetail(teamMemName);
         timeOffPage.switchToTimeOffTab();
         timeOffPage.verifyHistoryType();
+        timeOffPage.verifyHistorySize();
         timeOffPage.verifyHistoryTypeDefaultValue();
         timeOffPage.historyTypeAllFilter();
+        timeOffPage.verifyHistorySize();
         timeOffPage.timeOffRequestFilter();
+        timeOffPage.verifyActionisDisable();
         timeOffPage.accrualLedgerFilter();
         timeOffPage.actionAllFilter();
+        timeOffPage.verifyHistorySize();
         timeOffPage.actionAccrualFilter();
         timeOffPage.actionAccrualCapFilter();
         timeOffPage.timeOffTypeMutiplyFilter();
         timeOffPage.timeOffTypeSingleFilter();
+        timeOffPage.timeOffTypeAllFilter();
+        timeOffPage.verifyMmutiplyAction();
+        timeOffPage.verifyHistoryFilterUIText();
+        timeOffPage.closeHistory();
     }
 
 }
