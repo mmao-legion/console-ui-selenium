@@ -4810,6 +4810,7 @@ public class ParentChildLGTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //Verify the assignment can be swapped when drag&drop employee avatar to another one in different day and same location
             scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM,1,firstNameOfTM2);
+            Thread.sleep(3000);
             scheduleShiftTablePage.selectSwapOrAssignOption("assign");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
             if (scheduleShiftTablePage.verifyDayHasShiftByName(0,firstNameOfTM)==1

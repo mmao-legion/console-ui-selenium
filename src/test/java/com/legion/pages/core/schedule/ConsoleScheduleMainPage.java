@@ -1997,10 +1997,10 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             if (!isElementEnabled(searchBox, 5)) {
                 SimpleUtils.pass("Search box is closed successfully");
             } else {
-                SimpleUtils.fail("Search box is not closed successfully", true);
+                SimpleUtils.fail("Search box is not closed successfully", false);
             }
         }else {
-            SimpleUtils.fail("There is no Close search box button!",true);
+            SimpleUtils.report("There is no Close search box button!");
         }
     }
 

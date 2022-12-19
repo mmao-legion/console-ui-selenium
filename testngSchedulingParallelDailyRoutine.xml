@@ -85,7 +85,7 @@
                     <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" />
                     <include name="verifyComplianceSmartCardFunctionalityAsInternalAdmin" />
 <!--                    <include name="verifyScheduleFunctionalityScheduleSmartCard"/> https://legiontech.atlassian.net/browse/SCH-5994 -->
-                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
+<!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/> https://legiontech.atlassian.net/browse/SCH-8334-->
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleInDayViewAsInternalAdmin"/>
                     <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsInternalAdmin"/>

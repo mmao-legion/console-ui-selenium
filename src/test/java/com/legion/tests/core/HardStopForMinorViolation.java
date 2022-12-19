@@ -133,6 +133,7 @@ public class HardStopForMinorViolation extends TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
+            Thread.sleep(5000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             Thread.sleep(5000);

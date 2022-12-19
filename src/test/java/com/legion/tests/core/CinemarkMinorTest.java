@@ -188,8 +188,12 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))) +" Jan 1",
+            //First half of the year
+            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))) +" Aug 1",
                     (Integer.parseInt(dayInfo.get("year"))) +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
+            //second half
+//            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))) +" Jan 1",
+//                    (Integer.parseInt(dayInfo.get("year"))) +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
 
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
             teamPage.setNonSchoolDaysForNonSchoolWeek();
@@ -1389,11 +1393,11 @@ public class CinemarkMinorTest extends TestBase {
         //Create new shift with shift hours is more than minor setting for TM1
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1.split(" ")[0]);
-        Thread.sleep(3000);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
-        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         Thread.sleep(3000);
+        scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        Thread.sleep(6000);
         newShiftPage.clickOnDayViewAddNewShiftButton();
         newShiftPage.customizeNewShiftPage();
 

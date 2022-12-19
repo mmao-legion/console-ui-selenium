@@ -203,7 +203,7 @@ public class SingleShiftEditTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             // Create 2 shifts with all different
             createShiftsWithSpecificValues(workRole, shiftName, "", shiftStartTime, shiftEndTime,
-                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNotes, "a");
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNotes, "");
 
             int index = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon().iterator().next();
             mySchedulePage.clickOnShiftByIndex(index);

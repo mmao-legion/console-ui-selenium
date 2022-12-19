@@ -2795,6 +2795,7 @@ public class P2PLGTest extends TestBase {
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
+            Thread.sleep(8000);
             newShiftPage.selectWorkRole(workRole);
             String shiftStartTime = "9:00am";
             String shiftEndTime = "2:00pm";
@@ -4386,6 +4387,7 @@ public class P2PLGTest extends TestBase {
             for (String childLocation: locationNames) {
                 locationSelectorPage.changeUpperFieldDirect(Location, childLocation);
                 dashboardPage.clickOnDashboardConsoleMenu();
+                dashboardPage.clickOnRefreshButtonOnSMDashboard();
                 Thread.sleep(5000);
                 upcomingShiftCountOnChildSMDashboard = upcomingShiftCountOnParentSMDashboard+ dashboardPage.getUpComingShifts().size();
 
@@ -4414,6 +4416,7 @@ public class P2PLGTest extends TestBase {
                 tmName = teamPage.selectATeamMemberToViewProfile();
 
                 dashboardPage.clickOnDashboardConsoleMenu();
+                dashboardPage.clickOnRefreshButtonOnSMDashboard();
                 upcomingShiftCountOnParentSMDashboard = upcomingShiftCountOnParentSMDashboard
                         + dashboardPage.getUpComingShifts().size();
 
