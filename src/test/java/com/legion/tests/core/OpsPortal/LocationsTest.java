@@ -2176,7 +2176,7 @@ public class LocationsTest extends TestBase {
 
         try {
             String locationName = "locationAutoCreateForYang";
-            String workRoleName = "AMBASSADOR";
+            String workRoleName = "AutoUsedForYang";
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -2191,7 +2191,7 @@ public class LocationsTest extends TestBase {
             locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
             //Validate location level assignment rules template should be aligned with global level by default.
             locationsPage.searchWorkRoleInAssignmentRuleTemplate(workRoleName);
-            String assignmentRule = "Ambassador";
+            String assignmentRule = "MGR";
             locationsPage.verifyAssignmentRulesFromLocationLevel(assignmentRule);
             //Validate user can enable location level assignment rules template.
             //Validate user can disable location level assignment rules template.
@@ -2219,7 +2219,7 @@ public class LocationsTest extends TestBase {
     public void verifyAssignmentRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try {
-            String workRoleName = "AMBASSADOR";
+            String workRoleName = "AutoUsedForYang";
             String locationName = "locationAutoCreateForYang";
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
@@ -2239,7 +2239,7 @@ public class LocationsTest extends TestBase {
             List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
             //Validate the new added assignment rules at global level should be enabled at location level by default.
             locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
-            locationsPage.searchWorkRoleInAssignmentRuleTemplate("AMBASSADOR");
+            locationsPage.searchWorkRoleInAssignmentRuleTemplate(workRoleName);
             String assignmentRuleTitle = "Manager";
             locationsPage.verifyAssignmentRulesFromLocationLevel(assignmentRuleTitle);
             //Validate the location level assignment rule's badge info should not be changed after updating global assignment rules when
@@ -2261,7 +2261,7 @@ public class LocationsTest extends TestBase {
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-            scheduleCommonPage.VerifyStaffListInSchedule("AMBASSADOR");
+            scheduleCommonPage.VerifyStaffListInSchedule(workRoleName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
