@@ -4401,7 +4401,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				for (WebElement s : workRoleListInAssignmentRuleTemplate) {
 					String workRoleName = s.getText().trim();
 					if (workRoleName.contains(workRole)) {
-						clickTheElement(s);
+						s.click();
 						waitForSeconds(2);
 						break;
 					}
