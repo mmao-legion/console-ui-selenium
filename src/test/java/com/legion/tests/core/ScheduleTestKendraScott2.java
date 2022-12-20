@@ -7674,6 +7674,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				shiftCount1++;
 			}
 			String workRole =  shiftInfo1.get(4);
+			String lastNameOfTM = shiftInfo1.get(5);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
 			scheduleMainPage.saveSchedule();
@@ -7688,7 +7689,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchTeamMemberByName(firstNameOfTM);
+			newShiftPage.searchTeamMemberByName(firstNameOfTM+" "+lastNameOfTM);
 			newShiftPage.clickOnCreateOrNextBtn();
 
 			newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -7700,7 +7701,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchTeamMemberByName(firstNameOfTM);
+			newShiftPage.searchTeamMemberByName(firstNameOfTM+" "+lastNameOfTM);
 			newShiftPage.clickOnCreateOrNextBtn();
 
 			newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -7712,7 +7713,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchTeamMemberByName(firstNameOfTM);
+			newShiftPage.searchTeamMemberByName(firstNameOfTM+" "+lastNameOfTM);
 			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();
 
@@ -7726,7 +7727,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchTeamMemberByName(firstNameOfTM);
+			newShiftPage.searchTeamMemberByName(firstNameOfTM+" "+lastNameOfTM);
 			//https://legiontech.atlassian.net/browse/SCH-7963
 //			newShiftPage.searchWithOutSelectTM(firstNameOfTM);
 //			String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();

@@ -366,7 +366,7 @@
                     <include name="verifyBulkDragAndDropShiftsToSameDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
                     <include name="verifyMoveShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
                     <include name="verifyCopyShiftsToAnotherDayAndSameLocationOnNonLGScheduleAsInternalAdmin" />
-<!--                    <include name="verifyShiftsCannotBeMovedOrCopiedToCloseDayAsInternalAdmin" /> SCH-8338-->
+                    <include name="verifyShiftsCannotBeMovedOrCopiedToCloseDayAsInternalAdmin" />
                     <include name="verifyMoveMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
                     <include name="verifyCopyMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
                     <include name="verifyTheShiftsWithSameTMsAndOverlappingShiftTimeCannotBulkDragAndDropAsInternalAdmin" />
@@ -636,7 +636,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
             </class>
         </classes>
     </test>
-<!--
+
     <test name="Schedule Coverage Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleCoverageTest">
@@ -652,7 +652,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                 </methods>
             </class>
         </classes>
-    </test> SCH-8338-->
+    </test>
 
     <test name="Bulk Delete and Edit Test">
         <classes>

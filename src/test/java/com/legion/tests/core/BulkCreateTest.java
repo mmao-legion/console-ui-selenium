@@ -22,8 +22,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static com.legion.utils.MyThreadLocal.getDriver;
-import static com.legion.utils.MyThreadLocal.workerRole;
+import static com.legion.utils.MyThreadLocal.*;
 
 public class BulkCreateTest extends TestBase {
     @Override
@@ -67,7 +66,7 @@ public class BulkCreateTest extends TestBase {
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-            scheduleMainPage.clickOnFilterBtn();
+
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -274,7 +273,7 @@ public class BulkCreateTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
-            scheduleMainPage.clickOnFilterBtn();
+
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -801,6 +800,7 @@ public class BulkCreateTest extends TestBase {
                 firstNameOfTM = shiftInfo.get(0);
             }
             String workRole = shiftInfo.get(4);
+            String lastNameOfTM = shiftInfo.get(5);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
@@ -825,7 +825,7 @@ public class BulkCreateTest extends TestBase {
             newShiftPage.openOrCloseAssignShiftsForEachDaySwitch(true);
             for (int i =0; i< 7; i++) {
                 newShiftPage.selectAssignShiftDaysByIndex(i);
-                newShiftPage.searchWithOutSelectTM(firstNameOfTM);
+                newShiftPage.searchWithOutSelectTM(firstNameOfTM+" "+lastNameOfTM);
                 MyThreadLocal.setAssignTMStatus(true);
                 newShiftPage.selectTeamMembers();
             }
@@ -848,6 +848,7 @@ public class BulkCreateTest extends TestBase {
                 firstNameOfTM = shiftInfo.get(0);
             }
             workRole = shiftInfo.get(4);
+            lastNameOfTM = shiftInfo.get(5);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
@@ -871,7 +872,7 @@ public class BulkCreateTest extends TestBase {
             for (int i =0; i< 7; i++) {
                 if (i== 0 || i ==1 || i==2) {
                     newShiftPage.selectAssignShiftDaysByIndex(i);
-                    newShiftPage.searchWithOutSelectTM(firstNameOfTM);
+                    newShiftPage.searchWithOutSelectTM(firstNameOfTM+" "+lastNameOfTM);
                     MyThreadLocal.setAssignTMStatus(true);
                     newShiftPage.selectTeamMembers();
                 }
@@ -932,7 +933,7 @@ public class BulkCreateTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
-//            scheduleMainPage.clickOnFilterBtn();
+
             String workRole = shiftOperatePage.getRandomWorkRole();
 
             //Verify the auto assignment workflow with one shift for one days
@@ -1077,7 +1078,7 @@ public class BulkCreateTest extends TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
             scheduleMainPage.saveSchedule();
-            scheduleMainPage.clickOnFilterBtn();
+
             String workRole = shiftOperatePage.getRandomWorkRole();
 
             //Verify the auto offer workflow with one shift for one days
@@ -1247,7 +1248,7 @@ public class BulkCreateTest extends TestBase {
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-            scheduleMainPage.clickOnFilterBtn();
+
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
@@ -1374,7 +1375,7 @@ public class BulkCreateTest extends TestBase {
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
-            scheduleMainPage.clickOnFilterBtn();
+
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
@@ -1541,16 +1542,16 @@ public class BulkCreateTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             List<WebElement> shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
             SimpleUtils.assertOnFail("The "+selectedTM1+ "shift is not exist on the first day! ",
-                    shiftsOfOneDay.size()==1, false);
+                    shiftsOfOneDay.size()>=1, false);
             scheduleMainPage.saveSchedule();
             Thread.sleep(5000);
             shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
             SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
-                    shiftsOfOneDay.size()==1, false);
+                    shiftsOfOneDay.size()>=1, false);
             createSchedulePage.publishActiveSchedule();
             shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
             SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
-                    shiftsOfOneDay.size()==1, false);
+                    shiftsOfOneDay.size()>=1, false);
 
             String shiftId = shiftsOfOneDay.get(0).getAttribute("id").toString();
             int index = scheduleShiftTablePage.getShiftIndexById(shiftId);
