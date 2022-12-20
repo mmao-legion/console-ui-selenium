@@ -982,7 +982,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = "[ng-show=\"hasSearchResults()\"] [ng-repeat=\"worker in searchResults\"]")
     private List<WebElement> searchResults;
 
-    @FindBy(css = "#create-new-shift-react button.MuiButtonBase-root")
+    @FindBy(css = ".swap-modal>div:nth-child(2) button.MuiButtonBase-root")
     private List<WebElement> searchAndRecommendedTMTabs;
 
     @FindBy(css = "[placeholder=\"Search by Team Member, Role, Location or any combination.\"]")
