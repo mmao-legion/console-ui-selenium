@@ -48,7 +48,7 @@ public class TimeZoneTest extends TestBase {
                 controlsNewUIPage.clickOnControlsLocationProfileSection();
                 SimpleUtils.assertOnFail("Scheduling Location Profile page not loaded successfully!", controlsNewUIPage.isControlsLocationProfileLoaded(), false);
                 controlsNewUIPage.clickOnLocationProfileEditLocationBtn();
-                controlsNewUIPage.checkTimeZoneDropdownOptions(601, "UTC");
+                controlsNewUIPage.checkTimeZoneDropdownOptions(593, "UTC");
             } else if (enterprise.equalsIgnoreCase("cinemark-wkdy")) {
                 // Check UTC time format in Control Center-->Locations-->Enterprise Configuration-->Edit
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -56,7 +56,7 @@ public class TimeZoneTest extends TestBase {
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
                 locationsPage.clickOnLocationsTab();
                 locationsPage.clickEditEnterpriseProfile();
-                controlsNewUIPage.checkTimeZoneDropdownOptions(601, "UTC");
+                controlsNewUIPage.checkTimeZoneDropdownOptions(593, "UTC");
 
                 // Check UTC time format in Control Center-->Locations-->Location Configuration-->Edit
                 locationsPage.clickOnLocationsTab();

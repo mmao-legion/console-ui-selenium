@@ -1411,8 +1411,8 @@ public class BulkDeleteNEditTest extends TestBase {
                 indexList.add(iterator.next());
             }
             bulkEditShiftsByIndexes(indexes);
-            editShiftPage.inputStartOrEndTime("", true);
-            editShiftPage.inputStartOrEndTime("", false);
+            //editShiftPage.inputStartOrEndTime("", true);
+            //editShiftPage.inputStartOrEndTime("", false);
             editShiftPage.clickOnUpdateButton();
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
             shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
@@ -1444,11 +1444,6 @@ public class BulkDeleteNEditTest extends TestBase {
 
             //Bulk edit the shifts, change start time to occur the error message
             indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
-            iterator = indexes.iterator();
-            indexList = new ArrayList<>();
-            while(iterator.hasNext()){
-                indexList.add(iterator.next());
-            }
             bulkEditShiftsByIndexes(indexes);
             inputEndTime = "7:00 am";
             editShiftPage.inputStartOrEndTime(inputEndTime, false);

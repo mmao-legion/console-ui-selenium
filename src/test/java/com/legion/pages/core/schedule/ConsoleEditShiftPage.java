@@ -929,25 +929,39 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
             SimpleUtils.report("There is no rest break buttons! ");
     }
     
-    @FindBy(css = "#shiftStart-helper-text")
-    private WebElement startTimeErrorMessage;
-    @FindBy(css = "#shiftEnd-helper-text")
-    private WebElement endTimeErrorMessage;
+//    @FindBy(css = "#shiftStart-helper-text")
+//    private WebElement startTimeErrorMessage;
+//    @FindBy(css = "#shiftEnd-helper-text")
+//    private WebElement endTimeErrorMessage;
     @Override
     public List<String> getErrorMessageOfTime() throws Exception {
         List<String> errorMessages = new ArrayList<>();
-        if (isElementLoaded(startTimeErrorMessage, 5) && !(isElementLoaded(endTimeErrorMessage, 5))) {
+        WebElement startTimeErrorMessage = null;
+        WebElement endTimeErrorMessage = null;
+        try {
+            startTimeErrorMessage = getSpecificElementByTypeAndColumn(sectionType.StartTime.getType(), "Edited")
+                    .findElement(By.cssSelector(".MuiTextField-root+div"));
+        } catch (Exception e) {
+            // Do nothing
+        }
+        try {
+            endTimeErrorMessage = getSpecificElementByTypeAndColumn(sectionType.EndTime.getType(), "Edited")
+                    .findElement(By.cssSelector(".MuiTextField-root+div"));
+        } catch (Exception e) {
+            // Do nothing
+        }
+        if (startTimeErrorMessage != null && endTimeErrorMessage == null) {
             waitForSeconds(1);
-            errorMessages.add(0, startTimeErrorMessage.getText().trim());
+            errorMessages.add(startTimeErrorMessage.getText().trim());
             SimpleUtils.report("Catch the error message of Start Time!");
-        } else if (isElementLoaded(endTimeErrorMessage, 5) && !(isElementLoaded(startTimeErrorMessage, 5))) {
+        } else if (startTimeErrorMessage == null && endTimeErrorMessage != null) {
             waitForSeconds(1);
-            errorMessages.add(0, endTimeErrorMessage.getText().trim());
+            errorMessages.add(endTimeErrorMessage.getText().trim());
             SimpleUtils.report("Catch the error message of End Time!");
-        } else if (isElementLoaded(startTimeErrorMessage, 5) && isElementLoaded(endTimeErrorMessage, 5)) {
+        } else if (startTimeErrorMessage != null && endTimeErrorMessage != null) {
             waitForSeconds(1);
-            errorMessages.add(0, startTimeErrorMessage.getText().trim());
-            errorMessages.add(1, endTimeErrorMessage.getText().trim());
+            errorMessages.add(startTimeErrorMessage.getText().trim());
+            errorMessages.add(endTimeErrorMessage.getText().trim());
             SimpleUtils.report("Catch the error message of Start Time & End Time!");
         }
         return errorMessages;
