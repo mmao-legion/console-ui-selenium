@@ -4755,7 +4755,7 @@ public class ParentChildLGTest extends TestBase {
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), "8am", "11am", 1,
                     Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(),
                     null, firstNameOfTM+ " "+ lastName);
-            createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), "2am", "6am", 1,
+            createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), "2pm", "6pm", 1,
                     Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(),
                     null, firstNameOfTM+ " "+ lastName);
             createShiftsWithSpecificValues(workRole2, "", childLocationNames.get(0), "5pm", "9pm", 1,
@@ -4889,7 +4889,7 @@ public class ParentChildLGTest extends TestBase {
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), "8am", "11am", 1,
                     Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(),
                     null, firstNameOfTM+ " "+ lastName);
-            createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), "2am", "6am", 1,
+            createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), "2pm", "6pm", 1,
                     Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(),
                     null, firstNameOfTM+ " "+ lastName);
             createShiftsWithSpecificValues(workRole2, "", childLocationNames.get(1), "5pm", "9pm", 1,

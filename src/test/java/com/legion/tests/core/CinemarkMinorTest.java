@@ -1903,9 +1903,6 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheMainCalendarInfoOnThePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
             teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();

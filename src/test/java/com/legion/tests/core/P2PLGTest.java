@@ -2747,6 +2747,7 @@ public class P2PLGTest extends TestBase {
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             Thread.sleep(3000);
             scheduleDMViewPage.clickOnRefreshButton();
+            Thread.sleep(3000);
             String publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(peerLocation)
                     .get("publishedStatus");
             SimpleUtils.assertOnFail("The schedule status should be Not Started, but actual is:"+publishStatus,
@@ -2784,6 +2785,7 @@ public class P2PLGTest extends TestBase {
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             Thread.sleep(3000);
             scheduleDMViewPage.clickOnRefreshButton();
+            Thread.sleep(3000);
             publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(peerLocation)
                     .get("publishedStatus");
             SimpleUtils.assertOnFail("The schedule status should be Published, but actual is:"+publishStatus,
@@ -2811,6 +2813,7 @@ public class P2PLGTest extends TestBase {
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             Thread.sleep(3000);
             scheduleDMViewPage.clickOnRefreshButton();
+            Thread.sleep(3000);
             publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(peerLocation)
                     .get("publishedStatus");
             SimpleUtils.assertOnFail("The schedule status should be Published, but actual is:"+publishStatus,
