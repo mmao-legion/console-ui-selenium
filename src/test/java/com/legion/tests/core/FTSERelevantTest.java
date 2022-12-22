@@ -356,7 +356,6 @@ public class FTSERelevantTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-            scheduleCommonPage.clickOnWeekView();
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isActiveWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -658,7 +657,6 @@ public class FTSERelevantTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-            scheduleCommonPage.clickOnWeekView();
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isActiveWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();

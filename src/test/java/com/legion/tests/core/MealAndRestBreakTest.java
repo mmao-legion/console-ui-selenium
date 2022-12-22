@@ -859,7 +859,6 @@ public class MealAndRestBreakTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-            scheduleCommonPage.clickOnWeekView();
             scheduleCommonPage.navigateToNextWeek();
             String firstNameOfTM = null;
             String lastNameOfTM = null;
