@@ -7174,7 +7174,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				controlsNewUIPage.enableOverRideAssignmentRuleAsYesForOP();
 				configurationPage.publishNowTheTemplate();
 				switchToConsoleWindow();
-				}
+			}
+			Thread.sleep(3000);
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(200000);
 			refreshCachesAfterChangeTemplate();

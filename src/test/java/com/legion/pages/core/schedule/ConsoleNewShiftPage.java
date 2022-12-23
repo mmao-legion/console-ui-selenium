@@ -1543,7 +1543,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return newSelectedTMs;
     }
 
-    @FindBy(css = "[class=\"MuiAvatar-img\"]")
+    @FindBy(css = "[class*=\"MuiAvatar-img\"]")
     List<WebElement> recommendedTMsOnCreation;
     @Override
     public boolean isRecommendedTabHasTMs() throws Exception {
