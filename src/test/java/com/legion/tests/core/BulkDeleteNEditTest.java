@@ -1442,7 +1442,7 @@ public class BulkDeleteNEditTest extends TestBase {
             SimpleUtils.assertOnFail("Error message of start time is not loaded correctly!", startErrorMessage.get(0).contains(errorMessage), false);
             shiftOperatePage.closeViewStatusContainer();
 
-            //Bulk edit the shifts, change start time to occur the error message
+            //Bulk edit the shifts, change end time to occur the error message
             indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             bulkEditShiftsByIndexes(indexes);
             inputEndTime = "7:00 am";
