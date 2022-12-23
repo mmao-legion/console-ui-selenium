@@ -172,8 +172,8 @@ public class SingleShiftEditTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the functionality of Current and Edit column when selecting single shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheCurrentColumnOnSingleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -198,8 +198,8 @@ public class SingleShiftEditTest extends TestBase {
             String startOfWeekDate = activeWeek.split(" ")[3] + " " + activeWeek.split(" ")[4];
             String shiftName = "Shift Name 1";
             String shiftNotes = "Shift Notes 1";
-            String shiftStartTime = "9:00am";
-            String shiftEndTime = "12:00pm";
+            String shiftStartTime = "9:00 AM";
+            String shiftEndTime = "12:00 PM";
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             // Create 2 shifts with all different
             createShiftsWithSpecificValues(workRole, shiftName, "", shiftStartTime, shiftEndTime,
@@ -210,8 +210,8 @@ public class SingleShiftEditTest extends TestBase {
             shiftOperatePage.clickOnEditMeaLBreakTime();
             List<String> breakTimes = shiftOperatePage.verifyEditBreaks();
             shiftOperatePage.clickOnUpdateEditShiftTimeButton();
-            String mealBreakTime = breakTimes.get(0).replace(" am", "am").replace(" pm", "pm");
-            String restBreakTime = breakTimes.get(1).replace(" am", "am").replace(" pm", "pm");
+            String mealBreakTime = breakTimes.get(0).replace("am", "AM").replace("pm", "PM");
+            String restBreakTime = breakTimes.get(1).replace("am", "AM").replace("pm", "PM");
             HashSet<Integer> set = new HashSet<>();
             set.add(index);
             List<String> shiftInfo= scheduleShiftTablePage.getTheShiftInfoByIndex(index);
