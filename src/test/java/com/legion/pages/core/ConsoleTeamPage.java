@@ -9,6 +9,7 @@ import java.util.*;
 import com.legion.pages.ProfileNewUIPage;
 import com.legion.tests.core.TeamTest;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.FindBy;
@@ -122,7 +123,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	 @FindBy(css=".count.ng-binding")
 	 private WebElement teamTabSize;	
 	 
-	 @FindBy(css="input.search-input-box")
+	 @FindBy(css="input[id=\"legion_cons_Team_Roster_Search_field\"]")
     private WebElement teamMemberSearchBox;
 
     @FindBy(css="span.name")
@@ -336,13 +337,17 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		public String searchAndSelectTeamMemberByName(String username) throws Exception {
 	 		String selectedName = "";
 			boolean isTeamMemberFound = false;
+			//https://legiontech.atlassian.net/browse/ELM-2224
+			username = username.split(" ")[0];
 			if(isElementLoaded(teamMemberSearchBox, 10)) {
-				teamMemberSearchBox.clear();
+				teamMemberSearchBox.sendKeys(Keys.CONTROL, "a");
+				teamMemberSearchBox.sendKeys(Keys.DELETE);
 				teamMemberSearchBox.sendKeys(username);
 				waitForSeconds(3);
 				int i = 0;
 				while(teamMembers.size() == 0 && i< 5){
-					teamMemberSearchBox.clear();
+					teamMemberSearchBox.sendKeys(Keys.CONTROL, "a");
+					teamMemberSearchBox.sendKeys(Keys.DELETE);
 					teamMemberSearchBox.sendKeys(username);
 					SimpleUtils.report("Input the TM name in search box and waiting for the result! ");
 					waitForSeconds(5);
@@ -350,11 +355,11 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				}
 				if (teamMembers.size() > 0){
 					for (WebElement teamMember : teamMembers){
-						WebElement tr = teamMember.findElement(By.className("tr"));
-						if (tr != null) {
-							WebElement name = tr.findElement(By.cssSelector("span.name"));
-							List<WebElement> titles = tr.findElements(By.cssSelector("span.title"));
-							WebElement status = tr.findElement(By.cssSelector("span.status"));
+//						WebElement tr = teamMember.findElement(By.className("tr"));
+						if (teamMember != null) {
+							WebElement name = teamMember.findElement(By.cssSelector("[data-testid=\"lg-table-name\"] span"));
+							List<WebElement> titles = teamMember.findElements(By.cssSelector("[data-testid=\"lg-table-job-title\"] span"));
+							WebElement status = teamMember.findElement(By.cssSelector("[data-testid=\"lg-table-legion-onboarding\"] span"));
 							String title = "";
 							if (name != null && titles != null && status != null && titles.size() > 0) {
 								for (WebElement titleElement : titles) {
@@ -508,7 +513,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	//Added by Nora
 	@FindBy (className = "loading-icon")
 	private WebElement teamTabLoadingIcon;
-	@FindBy(css="div.row-container div.row.ng-scope")
+	@FindBy(css="div[id=\"legion_cons_Team_Roster_Table\"] div[role=\"row\"]")
 	private List<WebElement> teamMembers;
 	@FindBy (className = "lgnToggleIconButton")
 	private WebElement addNewMemberButton;
@@ -532,7 +537,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement temporaryTransferButton;
 	@FindBy (className = "check-image")
 	private WebElement checkImage;
-	@FindBy (css="div.row-container span.name")
+	@FindBy (css="[data-testid=\"lg-table-name\"] span")
 	private List<WebElement> teamMemberNames;
 	@FindBy (css = "#legion_cons_Team_Roster_Table [role=\"row\"] [data-testid=\"lg-table-name\"] span")
 	private List<WebElement> newTeamMemberNames;
@@ -2174,9 +2179,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	public void verifyTheStatusOfTeamMember(String expectedStatus) throws Exception {
 		if (teamMembers.size() > 0){
 			for (WebElement teamMember : teamMembers){
-				WebElement tr = teamMember.findElement(By.className("tr"));
-				if (tr != null) {
-					WebElement status = tr.findElement(By.cssSelector("span.status"));
+				if (teamMember != null) {
+					WebElement status = teamMember.findElement(By.cssSelector("[data-testid=\"lg-table-legion-onboarding\"] span"));
 					if (status != null) {
 						if (expectedStatus.equals(status.getText())) {
 							SimpleUtils.pass("Team member's status is correct!");
@@ -4616,24 +4620,27 @@ private List<WebElement> locationColumn;
 
 	public boolean checkIfTMExists(String tmName) throws Exception {
 		boolean isTMExists = false;
+		//https://legiontech.atlassian.net/browse/ELM-2224
+		tmName = tmName.split(" ")[0];
 		if(isElementLoaded(teamMemberSearchBox, 20) && areListElementVisible(teamMembers, 20)) {
-			teamMemberSearchBox.clear();
+			teamMemberSearchBox.sendKeys(Keys.CONTROL, "a");
+			teamMemberSearchBox.sendKeys(Keys.DELETE);
 			teamMemberSearchBox.sendKeys(tmName);
 			waitForSeconds(4);
 			int i = 0;
 			while(teamMembers.size() == 0 && i< 3){
-				teamMemberSearchBox.clear();
+				teamMemberSearchBox.sendKeys(Keys.CONTROL, "a");
+				teamMemberSearchBox.sendKeys(Keys.DELETE);
 				teamMemberSearchBox.sendKeys(tmName);
 				waitForSeconds(3);
 				i++;
 			}
 			if (teamMembers.size() > 0){
 				for (WebElement teamMember : teamMembers){
-					WebElement tr = teamMember.findElement(By.className("tr"));
-					if (tr != null) {
-						WebElement name = tr.findElement(By.cssSelector("span.name"));
-						List<WebElement> titles = tr.findElements(By.cssSelector("span.title"));
-						WebElement status = tr.findElement(By.cssSelector("span.status"));
+					if (teamMember != null) {
+						WebElement name = teamMember.findElement(By.cssSelector("[data-testid=\"lg-table-name\"] span"));
+						List<WebElement> titles = teamMember.findElements(By.cssSelector("[data-testid=\"lg-table-job-title\"] span"));
+						WebElement status = teamMember.findElement(By.cssSelector("[data-testid=\"lg-table-legion-onboarding\"] span"));
 						String title = "";
 						if (name != null && titles != null && status != null && titles.size() > 0) {
 							for (WebElement titleElement : titles) {

@@ -283,7 +283,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public void clickOnCreateTimeOffBtn() throws Exception {
 		if(isElementLoaded(newTimeOffBtn, 10)) {
-			click(newTimeOffBtn);
+			clickTheElement(newTimeOffBtn);
 			SimpleUtils.pass("Controls Page: 'Create Time Off' button Clicked.");
 		}
 		else

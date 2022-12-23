@@ -46,7 +46,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Day')]")
 	private WebElement dayViewButton;
 
-	@FindBy(css = "[id=\"legion_cons_schedule_forecast_Demand_button\"] span")
+	@FindBy(css = "[id=\"legion_cons_Schedule_Forecast_Demand_button\"] span")
 	private WebElement shoppersTab;
 
 	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Labor')]")
