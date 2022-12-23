@@ -3239,7 +3239,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 	// Added by Julie
 
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection\"] span[ng-transclude]>span")
+	@FindBy(css = "tr[ng-repeat*=\"location in filteredCollection\"] span[ng-transclude]>span")
 	private List<WebElement> locationNamesInLocationRows;
 
 	@FindBy(xpath = "//lg-tabs//div[contains(text(),'Configuration')]")

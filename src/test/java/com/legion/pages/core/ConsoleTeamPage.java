@@ -534,6 +534,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement checkImage;
 	@FindBy (css="div.row-container span.name")
 	private List<WebElement> teamMemberNames;
+	@FindBy (css = "#legion_cons_Team_Roster_Table [role=\"row\"] [data-testid=\"lg-table-name\"] span")
+	private List<WebElement> newTeamMemberNames;
 	@FindBy (className = "transfer-heading")
 	private List<WebElement> transferTitles;
 	@FindBy (className = "lgncalendar")
@@ -623,6 +625,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement contactErrorMsg;
 	@FindBy (className = "count")
 	private WebElement tmCount;
+	@FindBy (css = "[data-testid=\"table-filter-wrapper\"] span:nth-child(2)")
+	private WebElement newTMCount;
 	@FindBy (className = "pull-left")
 	private WebElement cancelButtonAddTM;
 	@FindBy (css = "span.invitationStatus")
@@ -993,6 +997,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 
 	@FindBy(className="roster-header")
 	private WebElement rosterHeaderElement;
+	@FindBy(css = "[data-testid=\"table-filter-wrapper\"]")
+	private WebElement teamTableFilter;
+
 	@Override
 	public void verifyTeamPageLoadedProperlyWithNoLoadingIcon() throws Exception {
 		waitUntilElementIsInVisible(teamTabLoadingIcon);
@@ -1001,7 +1008,9 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				&& isElementLoaded(rosterHeaderElement, 60)
 				&& isElementLoaded(rosterBodyElement, 60)){
 			SimpleUtils.pass("Team Page is Loaded Successfully!");
-		}else{
+		}else if (isElementLoaded(teamTableFilter, 5)) {
+			SimpleUtils.pass("Team Page is Loaded Successfully!");
+		} else{
 			SimpleUtils.fail("Team Page isn't Loaded Successfully", false);
 		}
 	}
@@ -1882,7 +1891,14 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}catch (Exception e){
 				SimpleUtils.fail("Parse String to Integer failed!", false);
 			}
-		}else {
+		} else if (areListElementVisible(newTeamMemberNames, 5) && isElementLoaded(newTMCount, 5)) {
+			String countOnRoster = newTMCount.getText().substring(newTMCount.getText().indexOf("(") + 1, newTMCount.getText().indexOf(")")).trim();
+			try {
+				count = Integer.parseInt(countOnRoster);
+			}catch (Exception e){
+				SimpleUtils.fail("Parse String to Integer failed!", false);
+			}
+		} else {
 			SimpleUtils.fail("Team Members and team count failed to load!", true);
 		}
 		return count;
@@ -2435,11 +2451,17 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public String selectATeamMemberToViewProfile() throws Exception {
 		String teamMember = null;
+		List<WebElement> names = null;
 		if (areListElementVisible(teamMemberNames, 15)) {
+			names = teamMemberNames;
+		} else if (areListElementVisible(newTeamMemberNames, 15)) {
+			names = newTeamMemberNames;
+		}
+		if (names.size() > 0) {
 			Random random = new Random();
-			int randomIndex = random.nextInt(teamMemberNames.size());
-			teamMember = teamMemberNames.get(randomIndex).getText();
-			clickTheElement(teamMemberNames.get(randomIndex));
+			int randomIndex = random.nextInt(names.size());
+			teamMember = names.get(randomIndex).getText();
+			clickTheElement(names.get(randomIndex));
 		} else {
 			SimpleUtils.fail("Team Members are failed to load!", false);
 		}
