@@ -2178,5 +2178,20 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		}else
 			SimpleUtils.fail("When \'WorkRoleSettingsTemplateOP\' is on, the hourly rate field is still showing on work role details page",false);
 	}
+
+	@FindBy(css="card-carousel-card tbody td.number")
+	private List<WebElement> workRoleCountList;
+
+	@Override
+	public int getTotalWorkRoleCount(){
+		int count = 0;
+		if(isElementEnabled(workRoleSmartCard,2)){
+			for(WebElement workRoleCount:workRoleCountList){
+				int num = Integer.parseInt(workRoleCount.getText().trim());
+				count = count + num;
+			}
+		}
+		return count;
+	}
 }
 
