@@ -2739,7 +2739,7 @@ public class ConfigurationTest extends TestBase {
     public void workRolesTemplateCommonCheckingAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             String templateName ="Default";
-            String mode = "view";
+            String mode = "edit";
             //Turn on WorkRoleSettingsTemplateOP toggle
             ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
             getDriver().navigate().refresh();
@@ -2757,7 +2757,7 @@ public class ConfigurationTest extends TestBase {
     @Enterprise(name = "opauto")
     @TestName(description = "Create work role setting template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void createWorkRolesTemplateAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+    public void createWorkRolesSettingTemplateAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             String templateName ="Default";
             String mode = "Edit";
