@@ -968,7 +968,7 @@ public class LocationsTest extends TestBase {
 
         try {
             List<String> hierarchyNames = new ArrayList<String>() {{
-                add("AutoDistrcit");
+                add("AutoDistrict");
                 add("AutoRegion");
                 add("AutoBU");
             }};
