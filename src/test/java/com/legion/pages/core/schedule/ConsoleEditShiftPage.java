@@ -463,7 +463,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
             timeSection = getSpecificElementByTypeAndColumn(sectionType.EndTime.getType(), "Edited");
         }
         WebElement checkbox = timeSection.findElement(By.cssSelector("[type=checkbox]"));
-        WebElement parent = checkbox.findElement(By.xpath("./../.."));
+        WebElement parent = checkbox.findElement(By.xpath("./.."));
         if (check) {
             if (!parent.getAttribute("class").contains("Mui-checked")) {
                 clickTheElement(checkbox);
@@ -573,7 +573,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         } else {
             option = allowComplianceOption;
         }
-        WebElement parent = option.findElement(By.xpath("./../.."));
+        WebElement parent = option.findElement(By.xpath("./.."));
         if (isCheck) {
             if (parent != null) {
                 if (!parent.getAttribute("class").contains("Mui-checked")) {
