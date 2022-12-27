@@ -2847,14 +2847,16 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 		if (areListElementVisible(hierarchyRows, 10)) {
 			if (hierarchyRows.size() > 0) {
-				for (WebElement row : hierarchyRows) {
-					HashMap<String, String> hierarchyInfoEachRow = new HashMap<>();
-					hierarchyInfoEachRow.put("Level", row.findElement(By.cssSelector("td:nth-child(1)")).getText());
-					hierarchyInfoEachRow.put("Level Name", row.findElement(By.cssSelector("td:nth-child(2)")).getText());
-					hierarchyInfoEachRow.put("Display Name", row.findElement(By.cssSelector("td:nth-child(3)")).getText());
-					hierarchyInfoEachRow.put("Enable Upperfield View", row.findElement(By.cssSelector("td:nth-child(4)>input-field>ng-form")).getAttribute("class"));
+				for (int i = 0; i <= 1; i++) {
 
-					hierarchyInfo.add(hierarchyInfoEachRow);
+						HashMap<String, String> hierarchyInfoEachRow = new HashMap<>();
+						hierarchyInfoEachRow.put("Level", hierarchyRows.get(i).findElement(By.cssSelector("td:nth-child(1)")).getText());
+						hierarchyInfoEachRow.put("Level Name", hierarchyRows.get(i).findElement(By.cssSelector("td:nth-child(2)")).getText());
+						hierarchyInfoEachRow.put("Display Name", hierarchyRows.get(i).findElement(By.cssSelector("td:nth-child(3)")).getText());
+						hierarchyInfoEachRow.put("Enable Upperfield View", hierarchyRows.get(i).findElement(By.cssSelector("td:nth-child(4)>input-field>ng-form")).getAttribute("class"));
+
+						hierarchyInfo.add(hierarchyInfoEachRow);
+
 				}
 				return hierarchyInfo;
 			} else
