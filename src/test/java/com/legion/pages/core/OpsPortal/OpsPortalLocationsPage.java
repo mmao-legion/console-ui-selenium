@@ -3090,7 +3090,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				for (WebElement hierarchy : hierarchyList) {
 					String hierarchyNameInUI = hierarchy.findElement(By.cssSelector("td:nth-child(3)")).getText().trim();
 					if (hierarchyName.equals(hierarchyNameInUI)) {
-						WebElement hierarchyDeleteRowButton = hierarchy.findElement(By.cssSelector("td:nth-child(5) i[ng-click=\"$ctrl.deleteRowClick($index)\"]"));
+						WebElement hierarchyDeleteRowButton = getDriver().findElement(By.cssSelector("td:nth-child(5) i.fa-times"));
 						if (isElementEnabled(hierarchyDeleteRowButton)) {
 							clickTheElement(hierarchyDeleteRowButton);
 							waitForSeconds(1);
