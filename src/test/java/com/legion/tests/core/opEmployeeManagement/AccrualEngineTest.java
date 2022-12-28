@@ -1862,7 +1862,7 @@ public class AccrualEngineTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "OPS-4059 Ability to deduct accrual balance from imported approved time off.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOffRequestImportAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+    public void verifyTimeOffRequestImportAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String templateName = "AccrualAutoTest(Don't touch!!!)";
@@ -1878,8 +1878,10 @@ public class AccrualEngineTest extends TestBase {
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        String teamMemName = "Elody Bauch";
-        timeOffPage.goToTeamMemberDetail(teamMemName);
+        //String teamMemName = "Elody Bauch";
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMember("Elody");
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
@@ -2375,7 +2377,7 @@ public class AccrualEngineTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Payable hour types included in calculation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyPayableHoursWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+    public void verifyPayableHoursWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String templateName = "AccrualAuto-PayableHours(Don't touch!!!)";
@@ -2390,8 +2392,10 @@ public class AccrualEngineTest extends TestBase {
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        String teamMemName = "Lily Hong";
-        timeOffPage.goToTeamMemberDetail(teamMemName);
+        //String teamMemName = "Lily Hong";
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMember("Hong");
         timeOffPage.switchToTimeOffTab();
         //get session id via localStorage
         String sessionId = getSession();
@@ -2571,8 +2575,11 @@ public class AccrualEngineTest extends TestBase {
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        String teamMemName = "Ada Wang";
-        timeOffPage.goToTeamMemberDetail(teamMemName);
+        //String teamMemName = "Ada Wang";
+        //timeOffPage.goToTeamMemberDetail(teamMemName);
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMember("Ada");
         timeOffPage.switchToTimeOffTab();
         //get session id via login
         String sessionId = getSession();
