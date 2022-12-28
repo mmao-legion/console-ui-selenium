@@ -940,13 +940,13 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         WebElement endTimeErrorMessage = null;
         try {
             startTimeErrorMessage = getSpecificElementByTypeAndColumn(sectionType.StartTime.getType(), "Edited")
-                    .findElement(By.cssSelector(".MuiTextField-root+div"));
+                    .findElement(By.cssSelector("#legion_cons_Schedule_Schedule_EditShifts_StartTime-helper-text"));
         } catch (Exception e) {
             // Do nothing
         }
         try {
             endTimeErrorMessage = getSpecificElementByTypeAndColumn(sectionType.EndTime.getType(), "Edited")
-                    .findElement(By.cssSelector(".MuiTextField-root+div"));
+                    .findElement(By.cssSelector("#legion_cons_Schedule_Schedule_EditShifts_EndTime-helper-text"));
         } catch (Exception e) {
             // Do nothing
         }

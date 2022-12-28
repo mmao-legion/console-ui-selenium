@@ -761,7 +761,7 @@ public class FTSERelevantTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00AM", "11:00PM");
 
             //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -950,9 +950,7 @@ public class FTSERelevantTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
@@ -1024,7 +1022,6 @@ public class FTSERelevantTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester2";
             String workRole;
@@ -1096,7 +1093,6 @@ public class FTSERelevantTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester3";
             String workRole;
@@ -1168,7 +1164,6 @@ public class FTSERelevantTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester4";
             String workRole;
@@ -1240,7 +1235,6 @@ public class FTSERelevantTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester5";
             String workRole;
