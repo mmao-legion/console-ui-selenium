@@ -883,6 +883,46 @@ public class AccrualEngineTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Lynn")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Export employee time off balance")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportEmployeeTimeOffBalanceAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+        //verify that the target template is here.
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        //switch to console
+        RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        modelSwitchPage.switchToNewTab();
+        //search and go to the target location
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("JFK Enrollment");
+        //go to team member details and switch to the time off tab.
+        consoleNavigationPage.navigateTo("Team");
+
+        //Verify specified user and specified time off reason
+        String employeeIds = "31e27e29-0827-4ee6-b855-3854edcfca40";
+        String reasonCodes = "49110b87-cfb2-4d62-91fb-0669e224a366";
+        String accessToken = "23bc37c77b18721d22d41e4c8e0644149efefce5";
+        String[] accrualResponse1 = exportTimeOffBalance(employeeIds, reasonCodes, accessToken);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse1), 200, "Failed to export time off balance!");
+        //Verify specified user and all time off reason
+        String[] accrualResponse2 = exportTimeOffBalanceAllReason(employeeIds, accessToken);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse2), 200, "Failed to export time off balance!");
+        //Verify user and specified reason
+        String[] accrualResponse3 = exportAllTimeOffBalanceReason(reasonCodes, accessToken);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse3), 200, "Failed to export time off balance!");
+
+        //Verify user and reason
+        String[] accrualResponse4 = exportAllTimeOffBalanceAllReason(accessToken);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse4), 200, "Failed to export time off balance!");
+        //Verify some users and some time off reasons
+        String employeeIds2 = "31e27e29-0827-4ee6-b855-3854edcfca40,872c7a0d-de8d-435f-84dc-5238454776c6";
+        String reasonCodes2 = "49110b87-cfb2-4d62-91fb-0669e224a366,725977ad-89e9-472c-8f50-c4957203e184";
+        String[] accrualResponse5 = exportSomeTimeOffBalanceSomeReason(employeeIds2, reasonCodes2, accessToken);
+        Assert.assertEquals(getHttpStatusCode(accrualResponse5), 200, "Failed to export time off balance!");
+    }
+
+    @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Import employee time off balance")
@@ -1792,6 +1832,42 @@ public class AccrualEngineTest extends TestBase {
         SimpleUtils.pass("Succeeded in validating max carryover works well with fixed days(Hire date to hire date)!");
 
         //Max available hours works well with fixed days
+    }
+
+    public String[] exportTimeOffBalance(String employeeIds, String reasonCodes, String accessToken) {
+        String getTimeOffBalanceUrl = Constants.getTimeOffBalance;
+        Map<String, String> TimeOffBalance = new HashMap<>();
+        TimeOffBalance.put("employeeIds", employeeIds);
+        TimeOffBalance.put("reasonCodes", reasonCodes);
+        return HttpUtil.httpGetAccessToken(getTimeOffBalanceUrl,accessToken,TimeOffBalance);
+    }
+
+    public String[] exportTimeOffBalanceAllReason(String employeeIds,String accessToken) {
+        String getTimeOffBalanceUrl = Constants.getTimeOffBalance;
+        Map<String, String> TimeOffBalance = new HashMap<>();
+        TimeOffBalance.put("employeeIds", employeeIds);
+        return HttpUtil.httpGetAccessToken(getTimeOffBalanceUrl,accessToken,TimeOffBalance);
+    }
+
+    public String[] exportAllTimeOffBalanceReason(String reasonCodes, String accessToken) {
+        String getTimeOffBalanceUrl = Constants.getTimeOffBalance;
+        Map<String, String> TimeOffBalance = new HashMap<>();
+        TimeOffBalance.put("reasonCodes", reasonCodes);
+        return HttpUtil.httpGetAccessToken(getTimeOffBalanceUrl,accessToken,TimeOffBalance);
+    }
+
+    public String[] exportAllTimeOffBalanceAllReason(String accessToken) {
+        String getTimeOffBalanceUrl = Constants.getTimeOffBalance;
+        Map<String, String> TimeOffBalance = new HashMap<>();
+        return HttpUtil.httpGetAccessToken(getTimeOffBalanceUrl,accessToken,TimeOffBalance);
+    }
+
+    public String[] exportSomeTimeOffBalanceSomeReason(String employeeIds, String reasonCodes, String accessToken) {
+        String getTimeOffBalanceUrl = Constants.getTimeOffBalance;
+        Map<String, String> TimeOffBalance = new HashMap<>();
+        TimeOffBalance.put("employeeIds", employeeIds);
+        TimeOffBalance.put("reasonCodes", reasonCodes);
+        return HttpUtil.httpGetAccessToken(getTimeOffBalanceUrl,accessToken,TimeOffBalance);
     }
 
 
