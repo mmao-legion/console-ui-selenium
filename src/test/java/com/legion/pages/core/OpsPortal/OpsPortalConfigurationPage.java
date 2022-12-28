@@ -2277,6 +2277,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 //			click(publishTemplateButton);
 			clickTheElement(publishBTN);
+			if(isElementEnabled(replacingExistingPublishedStatusPopup,2)){
+				clickTheElement(okButton);
+			}
 		} else {
 			SimpleUtils.fail("Publish template dropdown button load failed", false);
 		}
@@ -7914,6 +7917,116 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 		}else {
 			SimpleUtils.fail("There is no work role settings tile",false);
+		}
+	}
+
+	@FindBy(css="table tbody[ng-repeat=\"workRole in $ctrl.sortedRows\"]")
+	private List<WebElement> workRoles;
+	@FindBy(css="div.lg-pagination div.lg-pagination__arrow--right")
+	private WebElement rightPaginationBTN;
+	@FindBy(css="div.lg-pagination div.lg-pagination__pages")
+	private WebElement workRolePageNumber;
+
+	@Override
+	public void checkWorkRoleListShowingWell(int workRoleCount){
+		int totalWorkRoles = 0;
+
+		String classValue=rightPaginationBTN.getAttribute("class").trim();
+		while(!classValue.contains("disabled")){
+			clickTheElement(rightPaginationBTN);
+			classValue=rightPaginationBTN.getAttribute("class").trim();
+		}
+		int totalPages = Integer.parseInt(workRolePageNumber.getText().trim().split(" ")[1]);
+		if(totalPages>=2){
+			totalWorkRoles = (totalPages-1)*15+workRoles.size();
+		}else {
+			totalWorkRoles = workRoles.size();
+		}
+		if(workRoleCount==totalWorkRoles){
+			SimpleUtils.pass("Work role list can show well in WRS template");
+		}else {
+			SimpleUtils.fail("Work role list can NOT show well in WRS template",false);
+		}
+	}
+
+	public void searchWorkRoleInWRSTemplateDetails(String workRole){
+		if(isElementEnabled(searchWorkRoleField,2)){
+			clickTheElement(searchWorkRoleField);
+			searchWorkRoleField.clear();
+			searchWorkRoleField.sendKeys(workRole);
+			waitForSeconds(2);
+			if(workRoleList.size()>0){
+				SimpleUtils.pass("User can search out this work role");
+			}else {
+				SimpleUtils.report("There is no this work role");
+			}
+		}
+	}
+
+	@Override
+	public HashMap<String,String> getDefaultHourlyRate(List<String> workRoles){
+		HashMap<String,String> workRolesAndValues = new HashMap<String,String>();
+		for(String workRole:workRoles){
+			searchWorkRoleInWRSTemplateDetails(workRole);
+			String hourlyRate = workRoleList.get(0).findElement(By.cssSelector("td[ng-if=\"$ctrl.mode === 'view'\"].ng-scope")).getText().trim().substring(1);
+			if(hourlyRate == null || hourlyRate.isEmpty()){
+				hourlyRate = "0";
+			}
+			workRolesAndValues.put(workRole,hourlyRate);
+		}
+		waitForSeconds(3);
+		return workRolesAndValues;
+	}
+
+	@FindBy(css="td[ng-if=\"$ctrl.mode === 'edit'\"] input")
+	private WebElement hourlyRateInputField;
+	@Override
+	public void updateWorkRoleHourlyRate(String workRole,String updateValue){
+		searchWorkRoleInWRSTemplateDetails(workRole);
+		if(isElementEnabled(hourlyRateInputField,2)){
+			clickTheElement(hourlyRateInputField);
+			hourlyRateInputField.clear();
+			hourlyRateInputField.sendKeys(updateValue);
+			waitForSeconds(3);
+			if(getDriver().findElement(By.cssSelector("td[ng-if=\"$ctrl.mode === 'edit'\"] div")).getAttribute("innerText").trim().equalsIgnoreCase(updateValue)){
+				SimpleUtils.pass("User can update hourly rate successfully");
+			}else {
+				SimpleUtils.fail("User can NOT update hourly rate successfully",false);
+			}
+		}
+	}
+
+	@Override
+	public void createFutureWRSTemplateBasedOnExistingTemplate(String templateName, String button, int date, String editOrViewMode) throws Exception {
+		int beforeCount = 0;
+		int afterCount = 0;
+		waitForSeconds(2);
+		//create future published version template
+		if (areListElementVisible(templateNameList, 3)) {
+			expandMultipleVersionTemplate(templateName);
+			beforeCount = publishedTemplateStatus.size();
+			clickOnSpecifyTemplateName(templateName, editOrViewMode);
+			clickOnEditButtonOnTemplateDetailsPage();
+			scrollToBottom();
+			chooseSaveOrPublishBtnAndClickOnTheBtn(button);
+			if (isElementLoaded(dateOfPublishPopup, 2)) {
+				clickTheElement(effectiveDate);
+				setEffectiveDate(date);
+				clickTheElement(okButtonOnFuturePublishConfirmDialog);
+			} else {
+				SimpleUtils.fail("The future publish template confirm dialog is not displayed.", false);
+			}
+		} else {
+			SimpleUtils.fail("Template list is not displayed!", false);
+		}
+		//Check whether the future template is created successfully or not?
+		expandMultipleVersionTemplate(templateName);
+		afterCount = publishedTemplateStatus.size();
+
+		if (afterCount - beforeCount == 1) {
+			SimpleUtils.pass("User create new future template successfully!");
+		} else {
+			SimpleUtils.fail("User failed to create new future template!", false);
 		}
 	}
 }

@@ -581,6 +581,14 @@ public class TimeOffPage extends BasePage {
         }
     }
 
+    @FindBy(css = "input[aria-label = 'All']")
+    private WebElement timeOffTypeAll;
+
+    public void timeOffTypeAllFilter() throws Exception{
+        click(timeOffTypeAll);
+        verifyHistorySize();
+    }
+
     @FindBy(css = "div[title = 'Accrual Ledger']")
     private WebElement accrualLedger;
     @FindBy(css = "div[title = 'All']")
@@ -677,6 +685,71 @@ public class TimeOffPage extends BasePage {
 
         click(accrualCap);
         click(actionSelect);
+    }
+
+    public void verifyActionisDisable() throws Exception{
+        if(actionSelect.getAttribute("class").contains("input-field-disable"))
+            SimpleUtils.pass("Action select is disable");
+        else
+            SimpleUtils.fail("Action select is enable",false);
+    }
+
+    public void verifyHistorySize() throws Exception{
+        if(isElementLoaded(showMoreButton,5)){
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        if(isElementLoaded(showMoreButton,5)){
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        System.out.println(historyItems.size());
+        if(historyItems.size() == 27)
+            SimpleUtils.pass("All accrual display successfully");
+        else
+            SimpleUtils.fail("All accrual display failed",false);
+    }
+
+    @FindBy(css = "div.lg-slider-pop")
+    private WebElement historyTab;
+
+    public void closeHistory() throws Exception{
+        click(historyCloseButton);
+        if(isElementLoaded(historyTab))
+            SimpleUtils.fail("Close history failed",false);
+    }
+
+    @FindBy(css = "input-field[label = 'Time Off Type']>label")
+    private WebElement timeOffTypeText;
+    @FindBy(css = "input-field[label = 'History Type']>label")
+    private WebElement historyTypeText;
+    @FindBy(css = "input-field[label = 'Action']>label")
+    private WebElement actionText;
+
+    public void verifyHistoryFilterUIText() throws Exception{
+        if(timeOffTypeText.getAttribute("innerText").equals("Time Off Type") && historyTypeText.getAttribute("innerText").equals("History Type") && actionText.getAttribute("innerText").equals("Action"))
+            SimpleUtils.pass("Filter text is correct");
+        else
+            SimpleUtils.fail("Filter text is wrong",false);
+    }
+
+    public void verifyMmutiplyAction() throws Exception{
+        click(actionSelect);
+        click(accrualCap);
+        click(accrual);
+
+        if(isElementLoaded(showMoreButton,5)){
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        if(isElementLoaded(showMoreButton,5)){
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        if(historyItems.size() == 26)
+            SimpleUtils.pass("");
+        else
+            SimpleUtils.fail("",false);
     }
 }
 

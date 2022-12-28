@@ -273,5 +273,9 @@ public interface ConfigurationPage {
     public String getGranularityForCertainDriver() throws Exception;
     public void goToWorkRoleSettingsTile();
     public void verifyWorkRoleSettingsTemplateListUIAndDetailsUI(String templateName,String mode) throws Exception;
+    public void checkWorkRoleListShowingWell(int workRoleCount);
+    public HashMap<String,String> getDefaultHourlyRate(List<String> workRoles);
+    public void updateWorkRoleHourlyRate(String workRole,String updateValue);
+    public void createFutureWRSTemplateBasedOnExistingTemplate(String templateName, String button, int date, String editOrViewMode) throws Exception;
 }
 
