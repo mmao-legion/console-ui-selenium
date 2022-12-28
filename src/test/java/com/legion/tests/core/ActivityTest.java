@@ -244,7 +244,7 @@ public class ActivityTest extends TestBase {
         mySchedulePage.clickTheShiftRequestByName(request);
         SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
         mySchedulePage.verifyComparableShiftsAreLoaded();
-        mySchedulePage.verifySelectMultipleSwapShifts();
+        List<String> selectedTMs = mySchedulePage.verifySelectMultipleSwapShifts();
         // Validate the Submit button feature
         mySchedulePage.verifyClickOnNextButtonOnSwap();
         title = "Submit Swap Request";
@@ -259,7 +259,12 @@ public class ActivityTest extends TestBase {
         }
 
         loginPage.logOut();
-        credential = swapCoverCredentials.get(swapCoverNames.get(1));
+        for (String tm : selectedTMs) {
+            if (swapCoverCredentials.containsKey(tm)) {
+                credential = swapCoverCredentials.get(tm);
+                break;
+            }
+        }
         loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                 , String.valueOf(credential[0][2]));
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -455,7 +460,7 @@ public class ActivityTest extends TestBase {
             mySchedulePage.clickTheShiftRequestByName(request);
             SimpleUtils.assertOnFail(title + " page not loaded Successfully!", mySchedulePage.isPopupWindowLoaded(title), true);
             mySchedulePage.verifyComparableShiftsAreLoaded();
-            mySchedulePage.verifySelectMultipleSwapShifts();
+            List<String> selectedTMs = mySchedulePage.verifySelectMultipleSwapShifts();
             // Validate the Submit button feature
             mySchedulePage.verifyClickOnNextButtonOnSwap();
             title = "Submit Swap Request";
@@ -471,7 +476,12 @@ public class ActivityTest extends TestBase {
 
             loginPage.logOut();
 
-            credential = swapCoverCredentials.get(swapCoverNames.get(1));
+            for (String tm : selectedTMs) {
+                if (swapCoverCredentials.containsKey(tm)) {
+                    credential = swapCoverCredentials.get(tm);
+                    break;
+                }
+            }
             loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
                     , String.valueOf(credential[0][2]));
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);

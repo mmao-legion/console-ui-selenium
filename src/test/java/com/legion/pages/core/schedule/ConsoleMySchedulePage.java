@@ -1142,9 +1142,10 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     }
 
     @Override
-    public void verifySelectMultipleSwapShifts() throws Exception {
+    public List<String> verifySelectMultipleSwapShifts() throws Exception {
+        List<String> selectedTMs = new ArrayList<>();
         String selected = "selected";
-        if (areListElementVisible(selectBtns, 5) && selectBtns.size() > 0) {
+        if (areListElementVisible(selectBtns, 5) && selectBtns.size() > 0 && areListElementVisible(swapCoverNames, 5)) {
             for (WebElement selectBtn : selectBtns) {
                 String className = selectBtn.getAttribute("class");
                 if (className.isEmpty()) {
@@ -1157,9 +1158,13 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
                     }
                 }
             }
+            for (WebElement name : swapCoverNames) {
+                selectedTMs.add(name.getText());
+            }
         }else {
             SimpleUtils.fail("Select Buttons not loaded Successfully!", false);
         }
+        return selectedTMs;
     }
 
     @Override

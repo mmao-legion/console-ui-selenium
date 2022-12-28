@@ -43,7 +43,7 @@ public interface MySchedulePage {
     public void verifyTheSumOfSwapShifts() throws Exception;
     public void verifyNextButtonIsLoadedAndDisabledByDefault() throws Exception;
     public void verifySelectOneShiftNVerifyNextButtonEnabled() throws Exception;
-    public void verifySelectMultipleSwapShifts() throws Exception;
+    public List<String> verifySelectMultipleSwapShifts() throws Exception;
     public void verifyClickOnNextButtonOnSwap() throws Exception;
     public void verifySwapRequestShiftsLoaded() throws Exception;
     public void verifyTheContentOfMessageOnSubmitCover() throws Exception;
