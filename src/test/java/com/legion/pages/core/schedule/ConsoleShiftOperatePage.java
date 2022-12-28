@@ -341,7 +341,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     private WebElement closeViewStatusBtn;
     @Override
     public void closeViewStatusContainer() throws Exception{
-        if(isElementLoaded(closeViewStatusBtn,5)){
+        if(isElementLoaded(closeViewStatusBtn,10)){
             clickTheElement(closeViewStatusBtn);
             SimpleUtils.pass("Close button is available and clicked");
         }
