@@ -205,4 +205,6 @@ public interface UserManagementPage {
     public void verifyLocationLevelHourlyRateIsReadOnly();
 
     public void hourlyRateFieldIsNotShowing();
+
+    public int getTotalWorkRoleCount();
 }

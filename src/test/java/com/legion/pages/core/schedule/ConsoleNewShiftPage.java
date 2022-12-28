@@ -560,7 +560,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
 
 
-    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_WorkRole_menu\"]/div/div[2]/div")
+    @FindBy(xpath = "//*[@id=\"legion_cons_Schedule_Schedule_SreateShift_WorkRole_menu\"]/div/div[2]/div")
     private WebElement workRoleOnNewShiftPage;
 
     @FindBy(className = "react-select__option")
@@ -3073,9 +3073,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         }
     }
     
-    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_ShiftStart_field\"]")
+    @FindBy(xpath = "//*[@id=\"legion_cons_Schedule_Schedule_CreateShift_ShiftStart_field\"]")
     private WebElement startTimeInput;
-    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_ShiftEnd_field\"]")
+    @FindBy(xpath = "//*[@id=\"legion_cons_Schedule_Schedule_CreateShift_ShiftEnd_field\"]")
     private WebElement endTimeInput;
 
     @Override

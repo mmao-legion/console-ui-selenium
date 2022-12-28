@@ -45,6 +45,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.MyThreadLocal.getEnterprise;
@@ -2738,7 +2739,7 @@ public class ConfigurationTest extends TestBase {
     public void workRolesTemplateCommonCheckingAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             String templateName ="Default";
-            String mode = "view";
+            String mode = "edit";
             //Turn on WorkRoleSettingsTemplateOP toggle
             ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
             getDriver().navigate().refresh();
@@ -2746,6 +2747,72 @@ public class ConfigurationTest extends TestBase {
             configurationPage.goToConfigurationPage();
             configurationPage.goToWorkRoleSettingsTile();
             configurationPage.verifyWorkRoleSettingsTemplateListUIAndDetailsUI(templateName,mode);
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Create work role setting template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void createWorkRolesSettingTemplateAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String templateName ="Default";
+            String mode = "Edit";
+            SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime=dfs.format(new Date()).trim();
+            String templateName1="AutoCreate"+currentTime;
+            String dynamicGpName = "AutoCreateDynamicGp"+currentTime;
+            HashMap<String,String> workRoleHourlyRate= new HashMap<String,String>();
+            workRoleHourlyRate.put("WRSAuto1","12");
+            workRoleHourlyRate.put("WRSAuto2","15");
+            workRoleHourlyRate.put("WRSAuto3","16");
+            HashMap<String,String> workRoleHourlyRateInTemplate= new HashMap<String,String>();
+            String workRole ="WRSAuto3";
+            String updateValue="22";
+            int date = 14;
+
+            //Turn on WorkRoleSettingsTemplateOP toggle
+            ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
+            getDriver().navigate().refresh();
+
+            //go to user management -> work roles page to check the count of the work roles
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+            int workRoleCount = userManagementPage.getTotalWorkRoleCount();
+
+//            //go to WRS template details page to check the count is equal with above count or not
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.goToWorkRoleSettingsTile();
+            configurationPage.verifyWorkRoleSettingsTemplateListUIAndDetailsUI(templateName,mode);
+            configurationPage.checkWorkRoleListShowingWell(workRoleCount);
+
+            //Create new WRS template
+            configurationPage.goToConfigurationPage();
+            configurationPage.goToWorkRoleSettingsTile();
+            configurationPage.publishNewTemplate(templateName1,dynamicGpName,"Custom","AutoCreatedDynamic---Format Script"+currentTime);
+
+            //Go to the new created template to check the default hourly rate
+            configurationPage.clickOnSpecifyTemplateName(templateName1,mode);
+            List<String> workRoles = workRoleHourlyRate.keySet().stream().collect(Collectors.toList());
+            workRoleHourlyRateInTemplate = configurationPage.getDefaultHourlyRate(workRoles);
+            if(workRoleHourlyRateInTemplate.equals(workRoleHourlyRate)){
+                SimpleUtils.pass("The default value is correct");
+            }else {
+                SimpleUtils.fail("The default value is NOT correct",false);
+            }
+
+            //update the hourly rate
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.updateWorkRoleHourlyRate(workRole,updateValue);
+            configurationPage.chooseSaveOrPublishBtnAndClickOnTheBtn("publish now");
+
+            //create Operating Hour template and publish at different time
+            configurationPage.createFutureWRSTemplateBasedOnExistingTemplate(templateName1,"publish at different time",date,"edit");
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

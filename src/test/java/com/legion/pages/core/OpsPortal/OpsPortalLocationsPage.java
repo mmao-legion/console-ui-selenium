@@ -2847,14 +2847,16 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 		if (areListElementVisible(hierarchyRows, 10)) {
 			if (hierarchyRows.size() > 0) {
-				for (WebElement row : hierarchyRows) {
-					HashMap<String, String> hierarchyInfoEachRow = new HashMap<>();
-					hierarchyInfoEachRow.put("Level", row.findElement(By.cssSelector("td:nth-child(1)")).getText());
-					hierarchyInfoEachRow.put("Level Name", row.findElement(By.cssSelector("td:nth-child(2)")).getText());
-					hierarchyInfoEachRow.put("Display Name", row.findElement(By.cssSelector("td:nth-child(3)")).getText());
-					hierarchyInfoEachRow.put("Enable Upperfield View", row.findElement(By.cssSelector("td:nth-child(4)>input-field>ng-form")).getAttribute("class"));
+				for (int i = 0; i <= 1; i++) {
 
-					hierarchyInfo.add(hierarchyInfoEachRow);
+						HashMap<String, String> hierarchyInfoEachRow = new HashMap<>();
+						hierarchyInfoEachRow.put("Level", hierarchyRows.get(i).findElement(By.cssSelector("td:nth-child(1)")).getText());
+						hierarchyInfoEachRow.put("Level Name", hierarchyRows.get(i).findElement(By.cssSelector("td:nth-child(2)")).getText());
+						hierarchyInfoEachRow.put("Display Name", hierarchyRows.get(i).findElement(By.cssSelector("td:nth-child(3)")).getText());
+						hierarchyInfoEachRow.put("Enable Upperfield View", hierarchyRows.get(i).findElement(By.cssSelector("td:nth-child(4)>input-field>ng-form")).getAttribute("class"));
+
+						hierarchyInfo.add(hierarchyInfoEachRow);
+
 				}
 				return hierarchyInfo;
 			} else
@@ -3090,7 +3092,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				for (WebElement hierarchy : hierarchyList) {
 					String hierarchyNameInUI = hierarchy.findElement(By.cssSelector("td:nth-child(3)")).getText().trim();
 					if (hierarchyName.equals(hierarchyNameInUI)) {
-						WebElement hierarchyDeleteRowButton = hierarchy.findElement(By.cssSelector("td:nth-child(5) i[ng-click=\"$ctrl.deleteRowClick($index)\"]"));
+						WebElement hierarchyDeleteRowButton = getDriver().findElement(By.cssSelector("td:nth-child(5) i.fa-times"));
 						if (isElementEnabled(hierarchyDeleteRowButton)) {
 							clickTheElement(hierarchyDeleteRowButton);
 							waitForSeconds(1);
@@ -4401,7 +4403,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				for (WebElement s : workRoleListInAssignmentRuleTemplate) {
 					String workRoleName = s.getText().trim();
 					if (workRoleName.contains(workRole)) {
-						clickTheElement(s);
+						s.click();
 						waitForSeconds(2);
 						break;
 					}

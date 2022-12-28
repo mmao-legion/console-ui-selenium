@@ -526,7 +526,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement teamTabLoadingIcon;
 	@FindBy(css="div.row-container div.row.ng-scope")
 	private List<WebElement> teamMembers;
-	@FindBy (className = "lgnToggleIconButton")
+	@FindBy (id = "legion_cons_Team_Roster_AddTeamMember_button")
 	private WebElement addNewMemberButton;
 	@FindBy (className = "col-sm-6")
 	private List<WebElement> sectionsOnAddNewTeamMemberTab;

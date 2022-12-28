@@ -599,7 +599,6 @@ public class LocationsGroupTestInOP extends TestBase {
 
             //Turn on toggle EnableChangeLocationGroupSetting
             ToggleAPI.updateToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123",true);
-            refreshPage();
             //go to locations tab
             locationsPage.clickOnLocationsTab();
             //check locations item
