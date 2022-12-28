@@ -196,4 +196,6 @@ public interface TeamPage {
 	public void selectAverageAgreement(String optionValue) throws Exception;
 	public String getTextOfAverageAgreement() throws Exception;
 	public String getTextOfHourlyRate() throws Exception;
+
+	public void searchAndSelectTeamMember(String username) throws Exception;
 }

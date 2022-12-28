@@ -122,7 +122,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	 @FindBy(css=".count.ng-binding")
 	 private WebElement teamTabSize;	
 	 
-	 @FindBy(css="input.search-input-box")
+	// @FindBy(css="input.search-input-box")
+	@FindBy(css = "input.MuiInputBase-input")
     private WebElement teamMemberSearchBox;
 
     @FindBy(css="span.name")
@@ -380,6 +381,21 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			if(!isTeamMemberFound)
 				SimpleUtils.report("Team Page: Team Member '"+username+"' not found.");
 			return selectedName;
+		}
+
+		@FindBy(css = "span.sc-kbuhQt.gaksUh")
+		private WebElement firstTeamMemberName;
+		public void searchAndSelectTeamMember(String username) throws Exception {
+			if(isElementLoaded(teamMemberSearchBox, 10)) {
+				teamMemberSearchBox.clear();
+				teamMemberSearchBox.sendKeys(username);
+				if(isElementLoaded(firstTeamMemberName,10))
+					click(firstTeamMemberName);
+				else
+					SimpleUtils.fail("There is no " + username,false);
+			}else
+				SimpleUtils.fail("TM search box load failed",false);
+
 		}
 
 		@Override

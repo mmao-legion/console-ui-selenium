@@ -661,7 +661,7 @@ public class UserManagementTest extends TestBase {
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
-            teamPage.searchAndSelectTeamMemberByName("Nancy TM");
+            teamPage.searchAndSelectTeamMember("TM");
 
             if(userManagementPage.getHourlyRateValue().contains("***")){
                 SimpleUtils.pass("Hourly rate initial value is hide");
@@ -710,7 +710,7 @@ public class UserManagementTest extends TestBase {
             consoleNavigationPage.navigateTo("Team");
 
             teamPage.goToTeam();
-            teamPage.searchAndSelectTeamMemberByName("Nancy TM");
+            teamPage.searchAndSelectTeamMember("TM");
 
             boolean isHourlyRateDisplay;
             isHourlyRateDisplay = userManagementPage.isHourlyRateExist();

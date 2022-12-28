@@ -1108,6 +1108,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			click(timeOffTab);
 			if(isElementEnabled(history,5)){
 				highlightElement(history);
+				scrollToElement(history);
 				click(history);
 				if(isElementEnabled(historyDetail,5)){
 					highlightElement(historyDetail);

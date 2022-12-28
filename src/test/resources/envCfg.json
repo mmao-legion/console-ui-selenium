@@ -2,7 +2,7 @@
  "CHROME_DRIVER_PATH": "D:\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
  "DEVURL": "https://mobilestage.legion.work/",
- "QAURL": "https://rc-enterprise.dev.legion.work/",
+ "QAURL": "https://ephemeral-ops.dev.legion.work/",
  "Screenshot_Path": "C:\\DevelopZorang15March\\console-ui-selenium",
  "ENTERPRISE" : "LegionCoffee2",
  "Coffee_Enterprise" : "LegionCoffee",
