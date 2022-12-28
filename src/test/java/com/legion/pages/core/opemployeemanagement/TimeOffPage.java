@@ -547,10 +547,10 @@ public class TimeOffPage extends BasePage {
     private WebElement annualLeave2TimeOffReason;
 
     public void timeOffTypeSingleFilter() throws Exception{
-        //click(timeOffTypeSelect);
-        click(annualLeaveTimeOffReason);
+        click(timeOffTypeSelect);
         click(annualLeave1TimeOffReason);
         click(annualLeave2TimeOffReason);
+        click(annualLeaveTimeOffReason);
 
         if(isElementLoaded(showMoreButton)) {
             scrollToElement(showMoreButton);
@@ -704,7 +704,7 @@ public class TimeOffPage extends BasePage {
             click(showMoreButton);
         }
         System.out.println(historyItems.size());
-        if(historyItems.size() == 27)
+        if(historyItems.size() == 30)
             SimpleUtils.pass("All accrual display successfully");
         else
             SimpleUtils.fail("All accrual display failed",false);
@@ -746,10 +746,10 @@ public class TimeOffPage extends BasePage {
             scrollToElement(showMoreButton);
             click(showMoreButton);
         }
-        if(historyItems.size() == 26)
-            SimpleUtils.pass("");
+        if(historyItems.size() == 29)
+            SimpleUtils.pass("Mutiply action filter correct");
         else
-            SimpleUtils.fail("",false);
+            SimpleUtils.fail("Mutiply action filter wrong",false);
     }
 }
 

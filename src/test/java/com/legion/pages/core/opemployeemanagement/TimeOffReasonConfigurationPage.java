@@ -533,7 +533,18 @@ public class TimeOffReasonConfigurationPage extends BasePage {
         serviceLeverInput.get(3).sendKeys(maxAvailableHours);
     }
 
+    @FindBy(css = "option[label = 'Hire Date']")
+    private WebElement hireDate;
+    @FindBy(css = "option[label = 'Specified Date']")
+    private WebElement specifyDate;
+    @FindBy(css = "div:nth-child(2) > lg-property-meta-field > div > div > question-input > div > div.lg-question-input__wrapper > ng-transclude > input-field")
+    private WebElement endDate;
+
     public void addSpecifiedServiceLever(int serviceLever, String annualEarn, String maxCarryover, String maxAvailableHours) {
+        scrollToElement(endDate);
+        highlightElement(endDate);
+        click(endDate);
+        click(hireDate);
         scrollToElement(addButtonForServiceLever);
         addButtonForServiceLever.click();
         List<WebElement> serviceLeverInput = null;

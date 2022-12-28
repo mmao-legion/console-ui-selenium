@@ -1275,7 +1275,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement timeOffNextPage;
     @FindBy(css = "div:nth-child(2) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div > div.lg-pagination__arrow.lg-pagination__arrow--left")
     private WebElement timeOffPreviousPage;
-    @FindBy(css = "div:nth-child(3) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div")
+    @FindBy(css = "div:nth-child(3)")
     private WebElement promotionPage;
     @FindBy(css = "div:nth-child(3) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div > div.lg-pagination__arrow.lg-pagination__arrow--left")
     private WebElement promotionPreviousPage;
@@ -1299,7 +1299,8 @@ public class AbsentManagePage extends BasePage {
     }
 
     public void verifyPromotionPage() throws Exception{
-        if(isElementDisplayed(promotionPage)){
+        scrollToBottom();
+        if(isElementLoaded(promotionPage,5)){
             if(isElementDisplayed(promotionPreviousPage) && isElementDisplayed(promotionNextPage) && isElementEnabled(promotionNextPage)) {
                 if(promotionPreviousPage.getAttribute("class").contains("lg-pagination__arrow--disabled"))
                     SimpleUtils.pass("Promotion previous page is disable default");

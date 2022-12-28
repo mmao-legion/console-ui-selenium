@@ -534,7 +534,7 @@ public class TimeOffRequestTest extends TestBase {
         consoleNavigationPage.searchLocation("verifyMock");
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
-        teamPage.searchAndSelectTeamMemberByName("Nancy Activity");
+        teamPage.searchAndSelectTeamMember("Activity");
         TimeOffPage timeOffPage = new TimeOffPage();
         timeOffPage.switchToTimeOffTab();
         OpsCommonComponents commonComponents = new OpsCommonComponents();
@@ -551,7 +551,7 @@ public class TimeOffRequestTest extends TestBase {
         consoleNavigationPage.searchLocation("verifyMock");
 
         teamPage.goToTeam();
-        teamPage.searchAndSelectTeamMemberByName("Nancy Activity");
+        teamPage.searchAndSelectTeamMember("Activity");
 
         timeOffPage.switchToTimeOffTab();
         timeOffPage.createTimeOff("Annual Leave",false,28,28);
