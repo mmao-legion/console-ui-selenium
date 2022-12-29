@@ -357,9 +357,9 @@ public class BulkDeleteNEditTest extends TestBase {
             // Verify shift name will show when selecting same shift name
             editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.ShiftName.getType(), shiftName1);
             // Verify shift start time will show when selecting the shifts with same start time
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.StartTime.getType(), "9:00am");
+            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.StartTime.getType(), "9:00 AM");
             // Verify shift end time will show when selecting the shifts with same start time
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.EndTime.getType(), "12:00pm");
+            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.EndTime.getType(), "12:00 PM");
             // Verify date will show when selecting the shifts on the same day
             editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.Date.getType(), selectedDate);
         } catch (Exception e) {

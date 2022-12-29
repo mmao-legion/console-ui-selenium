@@ -46,7 +46,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Day')]")
 	private WebElement dayViewButton;
 
-	@FindBy(css = "[id=\"legion_cons_Schedule_Forecast_Demand_button\"] span")
+	@FindBy(css = ".schedule-search-options .lg-button-group>div:nth-child(1)")
 	private WebElement shoppersTab;
 
 	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Labor')]")
@@ -1352,8 +1352,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	public boolean verifyIsShopperTypeSelectedByDefaultAndLaborTabIsClickable() throws Exception {
 		boolean flag=false;
 		if (isElementLoaded(shoppersTab,5)) {
-			if (shoppersTab.getText().toLowerCase().contains("shopper") || shoppersTab.getText().toLowerCase().contains("demand")){
-				if (shoppersTab.findElement(By.xpath("./..")).getAttribute("class").contains("selected")) {
+			if (shoppersTab.getText().toLowerCase().contains("shopper") || shoppersTab.getText().toLowerCase().contains("demand")
+			|| shoppersTab.getText().toLowerCase().contains("items")){
+				if (shoppersTab.getAttribute("class").contains("selected")) {
 					SimpleUtils.pass("Shopper/Demand forecast is selected by default");
 					clickOnLabor();
 					flag = true;

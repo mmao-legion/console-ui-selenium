@@ -78,17 +78,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 				break;
 			}
 		}
-		if (isElementLoaded(loginButton, 5)) {
-			getActiveConsoleName(loginButton);
-			userNameField.clear();
-			passwordField.clear();
-			if (userName.contains("@" + getEnterprise())) {
-				userName = userName.replace("@" + getEnterprise(), "");
-			}
-			userNameField.sendKeys(userName);
-			passwordField.sendKeys(Password);
-			clickTheElement(loginButton);
-		} else if (isElementLoaded(newSignInBtn, 5)) {
+		if (isElementLoaded(newSignInBtn, 5)) {
 			newUserNameField.clear();
 			newUserNameField.sendKeys(userName);
 			newUserNameField.sendKeys(Keys.ENTER);
@@ -96,6 +86,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 				newPasswordInput.clear();
 				newPasswordInput.sendKeys(Password);
 			}
+			waitForSeconds(1);
 			clickTheElement(newSignInBtn);
 		}
 		verifyLegionTermsOfService();

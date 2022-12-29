@@ -2635,7 +2635,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                         String workerName = tmInfo.get(0).getText();
                         if (workerName != null && workerName.toLowerCase().trim().contains(userName.trim().toLowerCase())) {
                             if (statusMessage.contains(scheduled)
-                                    && statusMessage.replace(" - ", "-").contains(shiftTime)) {
+                                    && statusMessage.replaceAll(" ", "").toLowerCase().contains(shiftTime.toLowerCase())) {
                                 SimpleUtils.pass("Assign TM Warning: " + statusMessage + " shows correctly!");
                                 isWarningShown = true;
                                 break;
@@ -2654,7 +2654,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-display-name"));
                     WebElement status = searchResult.findElement(By.className("worker-edit-availability-status"));
                     if (workerName != null && optionCircle != null && workerName.getText().toLowerCase().trim().contains(userName.trim().toLowerCase())) {
-                        if (status.getText().contains(scheduled) && status.getText().replaceAll(" ", "").contains(shiftTime.replaceAll(" ", ""))) {
+                        if (status.getText().contains(scheduled) && status.getText().replaceAll(" ", "")
+                                .toLowerCase().contains(shiftTime.replaceAll(" ", "").toLowerCase())) {
                             SimpleUtils.pass("Assign TM Warning: " + status.getText() + " shows correctly!");
                             isWarningShown = true;
                             break;
