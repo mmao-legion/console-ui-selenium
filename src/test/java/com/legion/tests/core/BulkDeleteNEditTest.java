@@ -569,12 +569,13 @@ public class BulkDeleteNEditTest extends TestBase {
             // Verify work role is updated
             editShiftPage.selectSpecificOptionByText(actualWorkRoleList.get(0));
             editShiftPage.clickOnUpdateButton();
+            scheduleMainPage.saveSchedule();
             List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
             List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[1].toString()));
             SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4))
                     && actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo2.get(4)), false);
             // Verify work role is saved
-            scheduleMainPage.saveSchedule();
+            //scheduleMainPage.saveSchedule();
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
             shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[1].toString()));
             SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4))
@@ -619,29 +620,30 @@ public class BulkDeleteNEditTest extends TestBase {
             } else {
                 SimpleUtils.fail("Work role list is incorrect when override assignment rule is set to Yes!", false);
             }
-            // Verify work role is upated
+            // Verify work role is updated
             actualWorkRoleList2.remove(workRole1);
             editShiftPage.selectSpecificOptionByText(actualWorkRoleList2.get(0));
             editShiftPage.clickOnUpdateButton();
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[1].toString()));
-            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4))
-                    && actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo2.get(4)), false);
-            // Verify work role is saved
             scheduleMainPage.saveSchedule();
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
             shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[1].toString()));
             SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4))
                     && actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo2.get(4)), false);
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        } finally {
+            // Verify work role is saved
+            //scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[1].toString()));
+            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4))
+                    && actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo2.get(4)), false);
+
             controlsPage.gotoControlsPage();
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.clickOnGlobalLocationButton();
             controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
             controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
