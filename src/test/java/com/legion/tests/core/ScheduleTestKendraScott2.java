@@ -7206,37 +7206,40 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 
-			List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-			String firstNameOfTM1 = shiftInfo1.get(0);
-			String lastNameOfTM1 = shiftInfo1.get(5);
-			int shiftCount1 = 0;
-			while ((firstNameOfTM1.equalsIgnoreCase("open")
-					|| firstNameOfTM1.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
-				shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-				firstNameOfTM1  = shiftInfo1.get(0);
-				lastNameOfTM1  = shiftInfo1.get(5);
-				shiftCount1++;
-			}
-			String workRole1 =  shiftInfo1.get(4);
+//			List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+//			String firstNameOfTM1 = shiftInfo1.get(0);
+//			String lastNameOfTM1 = shiftInfo1.get(5);
+//			int shiftCount1 = 0;
+//			while ((firstNameOfTM1.equalsIgnoreCase("open")
+//					|| firstNameOfTM1.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+//				shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+//				firstNameOfTM1  = shiftInfo1.get(0);
+//				lastNameOfTM1  = shiftInfo1.get(5);
+//				shiftCount1++;
+//			}
+//			String workRole1 =  shiftInfo1.get(4);
+//
+//			List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+//			int shiftCount2 = 0;
+//			String firstNameOfTM2 = shiftInfo2.get(0);
+//			String lastNameOfTM2 = shiftInfo2.get(5);
+//			String workRole2 = shiftInfo2.get(4);
+//			while ((firstNameOfTM2.equalsIgnoreCase("open")
+//					|| firstNameOfTM2.equalsIgnoreCase("unassigned")
+//					|| firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1) || workRole1.equalsIgnoreCase(workRole2))
+//					&& shiftCount2 < 150) {
+//				shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+//				firstNameOfTM2  = shiftInfo2.get(0);
+//				lastNameOfTM2  = shiftInfo2.get(5);
+//				workRole2 = shiftInfo2.get(4);
+//				shiftCount2++;
+//			}
 
-			List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-			int shiftCount2 = 0;
-			String firstNameOfTM2 = shiftInfo2.get(0);
-			String lastNameOfTM2 = shiftInfo2.get(5);
-			String workRole2 = shiftInfo2.get(4);
-			while ((firstNameOfTM2.equalsIgnoreCase("open")
-					|| firstNameOfTM2.equalsIgnoreCase("unassigned")
-					|| firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1) || workRole1.equalsIgnoreCase(workRole2))
-					&& shiftCount2 < 150) {
-				shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-				firstNameOfTM2  = shiftInfo2.get(0);
-				lastNameOfTM2  = shiftInfo2.get(5);
-				workRole2 = shiftInfo2.get(4);
-				shiftCount2++;
-			}
-
-			String nameOfTM1= firstNameOfTM1 + " " + lastNameOfTM1;
-			String nameOfTM2= firstNameOfTM2 + " " + lastNameOfTM2;
+			String nameOfTM1= "Taylor Tang";
+			String nameOfTM2= "Ava Kautzer";
+			String firstNameOfTM1= "Taylor";
+			String firstNameOfTM2= "Ava";
+			String workRole = "MOD";
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
@@ -7248,7 +7251,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
-			newShiftPage.selectWorkRole(workRole1);
+			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
 			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
@@ -7366,36 +7369,39 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Delete all specific shifts
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-			List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-			String firstNameOfTM1 = shiftInfo1.get(0);
-			String lastNameOfTM1 = shiftInfo1.get(5);
-			int shiftCount1 = 0;
-			while ((firstNameOfTM1.equalsIgnoreCase("open")
-					|| firstNameOfTM1.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
-				shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-				firstNameOfTM1 = shiftInfo1.get(0);
-				lastNameOfTM1 = shiftInfo1.get(5);
-				shiftCount1++;
-			}
-			String workRole1 = shiftInfo1.get(4);
-
-			int shiftCount2 = 0;
-			List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-			String firstNameOfTM2 = shiftInfo2.get(0);
-			String lastNameOfTM2 = shiftInfo2.get(5);
-			String workRole2 = shiftInfo2.get(4);
-			while ((firstNameOfTM2.equalsIgnoreCase("open")
-					|| firstNameOfTM2.equalsIgnoreCase("unassigned")
-					|| firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1) || workRole1.equalsIgnoreCase(workRole2)) && shiftCount2 < 150) {
-				shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
-				firstNameOfTM2 = shiftInfo2.get(0);
-				lastNameOfTM2 = shiftInfo2.get(5);
-				workRole2 = shiftInfo2.get(4);
-				shiftCount2++;
-			}
-
-			String nameOfTM1= firstNameOfTM1 + " " + lastNameOfTM1;
-			String nameOfTM2= firstNameOfTM2 + " " + lastNameOfTM2;
+//			List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+//			String firstNameOfTM1 = shiftInfo1.get(0);
+//			String lastNameOfTM1 = shiftInfo1.get(5);
+//			int shiftCount1 = 0;
+//			while ((firstNameOfTM1.equalsIgnoreCase("open")
+//					|| firstNameOfTM1.equalsIgnoreCase("unassigned")) && shiftCount1 < 100) {
+//				shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+//				firstNameOfTM1 = shiftInfo1.get(0);
+//				lastNameOfTM1 = shiftInfo1.get(5);
+//				shiftCount1++;
+//			}
+//			String workRole1 = shiftInfo1.get(4);
+//
+//			int shiftCount2 = 0;
+//			List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+//			String firstNameOfTM2 = shiftInfo2.get(0);
+//			String lastNameOfTM2 = shiftInfo2.get(5);
+//			String workRole2 = shiftInfo2.get(4);
+//			while ((firstNameOfTM2.equalsIgnoreCase("open")
+//					|| firstNameOfTM2.equalsIgnoreCase("unassigned")
+//					|| firstNameOfTM2.equalsIgnoreCase(firstNameOfTM1) || workRole1.equalsIgnoreCase(workRole2)) && shiftCount2 < 150) {
+//				shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+//				firstNameOfTM2 = shiftInfo2.get(0);
+//				lastNameOfTM2 = shiftInfo2.get(5);
+//				workRole2 = shiftInfo2.get(4);
+//				shiftCount2++;
+//			}
+//
+			String nameOfTM1= "Taylor Tang";
+			String nameOfTM2= "Ava Kautzer";
+			String firstNameOfTM1= "Taylor";
+			String firstNameOfTM2= "Ava";
+			String workRole = "MOD";
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM1);
 			shiftOperatePage.deleteTMShiftInWeekView(firstNameOfTM2);
@@ -7407,7 +7413,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
-			newShiftPage.selectWorkRoleCaseSensitive(workRole1);
+			newShiftPage.selectWorkRoleCaseSensitive(workRole);
 			newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
 			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
@@ -7430,7 +7436,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("The Role Violation message on the Assign page is not expected!", realRoleVioMessage.contains(roleVioMessage), false);
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(nameOfTM2);
 			String alertMessage1 = "This assignment will trigger a role violation";
-			String alertMessage2 = " can not take a " + workRole1 + " shift";
+			String alertMessage2 = " can not take a " + workRole + " shift";
 			String realAlertMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
 			boolean isCorrect = realAlertMessage.contains(alertMessage1) && realAlertMessage.contains(alertMessage2);
 			SimpleUtils.assertOnFail("The Pop up Role Violation message is not expected!", isCorrect, false);
@@ -7450,15 +7456,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 //			Thread.sleep(3000);
 			shiftOperatePage.clickOnCloseBtnOfAssignDialog();
 //
-//			boolean closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
-//			int count2 = 0;
-//			while(closeBtnLoad && count2 < 3){
-//				shiftOperatePage.clickOnCloseBtnOfAssignDialog();
-//				Thread.sleep(3000);
-//				closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
-//				count2++;
-//				continue;
-//			}
+			boolean closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
+			int count2 = 0;
+			while(closeBtnLoad && count2 < 3){
+				shiftOperatePage.clickOnCloseBtnOfAssignDialog();
+				Thread.sleep(3000);
+				closeBtnLoad = shiftOperatePage.isCloseBtnOfAssignDialogLoaded();
+				count2++;
+			}
 
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);

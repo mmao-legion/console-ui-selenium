@@ -26,7 +26,7 @@
                     <include name="verifyFTSEEmployeesIgnoreTheWeekOTAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnoreThe7thConsecutiveOTAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnoreThe24HrsOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeeSupportClopeningViolationAsInternalAdmin"/>
+                    <!--  <include name="verifyFTSEEmployeeSupportClopeningViolationAsInternalAdmin"/> Blocked by SCH-8605  -->
                     <include name="verifyFTSEEmployeeSupportMaxShiftViolationAsInternalAdmin"/>
                     <!--  <include name="verifyFTSEEmployeeSupportRoleViolationAsInternalAdmin"/>  Blocked by SCH-8334  -->
                     <include name="verifyFTSEEmployeesIgnore4X10AgreementAsInternalAdmin"/>
@@ -669,7 +669,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                     <include name="verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
-                    <include name="verifyErrorMessageOfStartAndEndTimeOnBulkEditAsInternalAdmin" />
+                    <!-- <include name="verifyErrorMessageOfStartAndEndTimeOnBulkEditAsInternalAdmin" />  Blocked by bug: SCH-8623 -->
                 </methods>
             </class>
         </classes>
