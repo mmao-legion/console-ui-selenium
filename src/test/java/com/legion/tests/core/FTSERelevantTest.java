@@ -683,7 +683,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            createSchedulePage.publishActiveSchedule();
 
             //Verify no any WeekOT violation after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
@@ -784,7 +783,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            createSchedulePage.publishActiveSchedule();
 
             //Verify no any dayOT violation after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
@@ -855,7 +853,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            createSchedulePage.publishActiveSchedule();
 
             //Verify Max Shifts violation displays after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
@@ -995,7 +992,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            createSchedulePage.publishActiveSchedule();
 
             //Verify no any Schedule Agreement Policy overtimes violation after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
@@ -1066,7 +1062,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            createSchedulePage.publishActiveSchedule();
 
             //Verify no any Schedule Agreement Policy overtimes violation after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
@@ -1137,7 +1132,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            createSchedulePage.publishActiveSchedule();
 
             //Verify no any Schedule Agreement Policy overtimes violation after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
@@ -1208,7 +1202,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            createSchedulePage.publishActiveSchedule();
 
             //Verify no any Schedule Agreement Policy overtimes violation after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
@@ -1281,7 +1274,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            createSchedulePage.publishActiveSchedule();
 
             //Verify no any Schedule Agreement Policy overtimes violation after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
@@ -1308,7 +1300,6 @@ public class FTSERelevantTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester6";
             String workRole;
@@ -1353,7 +1344,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-//            createSchedulePage.publishActiveSchedule();
 
             //Verify no any Schedule Agreement Policy overtimes violation after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
