@@ -337,8 +337,6 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 		public String searchAndSelectTeamMemberByName(String username) throws Exception {
 	 		String selectedName = "";
 			boolean isTeamMemberFound = false;
-			//https://legiontech.atlassian.net/browse/ELM-2224
-			username = username.split(" ")[0];
 			if(isElementLoaded(teamMemberSearchBox, 10)) {
 				teamMemberSearchBox.sendKeys(Keys.CONTROL, "a");
 				teamMemberSearchBox.sendKeys(Keys.DELETE);
@@ -4620,8 +4618,6 @@ private List<WebElement> locationColumn;
 
 	public boolean checkIfTMExists(String tmName) throws Exception {
 		boolean isTMExists = false;
-		//https://legiontech.atlassian.net/browse/ELM-2224
-		tmName = tmName.split(" ")[0];
 		if(isElementLoaded(teamMemberSearchBox, 20) && areListElementVisible(teamMembers, 20)) {
 			teamMemberSearchBox.sendKeys(Keys.CONTROL, "a");
 			teamMemberSearchBox.sendKeys(Keys.DELETE);

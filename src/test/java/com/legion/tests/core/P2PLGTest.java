@@ -5443,7 +5443,7 @@ public class P2PLGTest extends TestBase {
             }
             if (scheduleShiftTablePage.verifyDayHasShiftByName(0,firstNameOfTM2)==1
                     && scheduleShiftTablePage.verifyDayHasShiftByName(0,"Open")==0){
-                SimpleUtils.pass("Drag and drop successfully!");
+                SimpleUtils.pass(firstNameOfTM2+ " drag and drop successfully!");
             } else
                 SimpleUtils.fail("Fail to drag and drop! ", false);
             scheduleMainPage.saveSchedule();
