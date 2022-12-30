@@ -6136,6 +6136,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					shiftOperatePage.isEditShiftTimeNewUIDisplay(), false);
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
+		} finally{
+			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
+					getUserNameNPwdForCallingAPI().get(1), true);
 		}
 	}
 

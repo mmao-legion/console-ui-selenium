@@ -137,12 +137,6 @@ public class SingleShiftEditTest extends TestBase {
             String fullWeekDay = SimpleUtils.getFullWeekDayName(weekDay.split(" ")[0].trim());
             selectedDays = new ArrayList<>();
             selectedDays.add(fullWeekDay);
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            newShiftPage.clickOnDayViewAddNewShiftButton();
-            newShiftPage.selectWorkRole(workRole);
-            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
-            newShiftPage.clickOnCreateOrNextBtn();
-            scheduleMainPage.saveSchedule();
             shiftInfo = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(index);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.rightClickOnSelectedShifts(set);
