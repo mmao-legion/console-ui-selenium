@@ -5274,7 +5274,8 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@Override
 	public boolean verifyWarningInfoForDemandDriver(String warningMsg) throws Exception {
 		boolean isWarningMsgExisting = false;
-		if (isElementLoaded(warningMsgToast, 3)) {
+		clickTheElement(publishBTN);
+		if (isElementLoaded(warningMsgToast, 10)) {
 			if (warningMsgToast.getText().toLowerCase().contains(warningMsg.toLowerCase())) {
 				isWarningMsgExisting = true;
 			}
