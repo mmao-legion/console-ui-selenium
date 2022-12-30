@@ -7784,4 +7784,217 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Scheduling Policies: Seniority sort box is not loaded!", false);
 		return senioritySortContent;
 	}
+
+	@FindBy(css = "question-input[question-title*=\"Can manager override the accrual limit?\"]")
+	private WebElement accrualTimeOverrideSection;
+	@FindBy(css = "[question-title*=\"Can manager override the accrual limit?\"] yes-no")
+	private WebElement accrualTimeOverrideToggle;
+	@Override
+	public void isAccrualTimeOverrideLoaded() throws Exception {
+		if (isElementLoaded(accrualTimeOverrideSection,10))
+			SimpleUtils.report("The accrual time override section is loaded!");
+		else
+			SimpleUtils.fail("The accrual time override section is not loaded!", false);
+	}
+
+	@Override
+	public String getAccrualTimeOverrideToggleActiveBtnLabel() throws Exception {
+		String seniorityToggleActiveBtnLabel = "";
+		if (isElementLoaded(accrualTimeOverrideToggle,10)) {
+			WebElement seniorityToggleActiveActiveBtn = accrualTimeOverrideToggle.findElement(
+					By.cssSelector("div.lg-button-group-selected"));
+			if (isElementLoaded(seniorityToggleActiveActiveBtn,10))
+				seniorityToggleActiveBtnLabel = seniorityToggleActiveActiveBtn.getText();
+			else
+				SimpleUtils.fail("Scheduling Policies: Seniority toggle active Button not loaded.", false);
+		} else
+			SimpleUtils.fail("Scheduling Policies: Seniority toggle section not loaded.", false);
+
+		return seniorityToggleActiveBtnLabel;
+	}
+
+	@Override
+	public void updateAccrualTimeOverrideToggle(String isToggleOpen) throws Exception {
+		if (isElementLoaded(accrualTimeOverrideToggle,20)) {
+			WebElement applyLaborBudgetBtnGroup = accrualTimeOverrideToggle.findElement(
+					By.cssSelector("div.lg-button-group"));
+			if (applyLaborBudgetBtnGroup.getAttribute("class").contains("disabled")) {
+				SimpleUtils.fail("accrual time override toggle is disabled.", false);
+			}
+			else{
+				List<WebElement> accrualTimeOverrideBtns = accrualTimeOverrideToggle.findElements(
+						By.cssSelector("div[ng-click=\"!button.disabled && $ctrl.change(button.value)\"]"));
+				waitForSeconds(5);
+				if (accrualTimeOverrideBtns.size() > 0) {
+					for (WebElement seniorityToggleBtn : accrualTimeOverrideBtns) {
+						if (seniorityToggleBtn.getText().toLowerCase().contains(isToggleOpen.toLowerCase())) {
+							scrollToElement(seniorityToggleBtn);
+							clickTheElement(seniorityToggleBtn);
+						}
+					}
+					if (getAccrualTimeOverrideToggleActiveBtnLabel().toLowerCase().contains(isToggleOpen.toLowerCase()))
+						SimpleUtils.pass("Scheduling Policies: Accrual time override toggle is updated with value: '"
+								+ isToggleOpen + "'.");
+					else
+						SimpleUtils.fail("Scheduling Policies: Accrual time override is not updated with value: '"
+								+ isToggleOpen + "'.", false);
+				} else
+					SimpleUtils.fail("Scheduling Policies: Accrual time override buttons are not loaded!", false);
+			}
+
+		} else
+			SimpleUtils.fail("Scheduling Policies: Accrual time override section is not loaded!", false);
+	}
+
+	@FindBy(css = "[ng-if*=\"ScheduleRestriction\"]")
+	private WebElement scheduleRestriction;
+	@FindBy(css = "[class*=\"delete-action\"]")
+	private WebElement deleteTimeOffBtn;
+	@FindBy(css = "[ng-if*=\"ScheduleRestriction\"] button")
+	private WebElement addTimeOffBtn;
+	@Override
+	public boolean isScheduleRestrictionLoaded() throws Exception {
+		boolean isLoaded = true;
+		if (isElementLoaded(scheduleRestriction,20))
+			SimpleUtils.report("The Schedule Restriction is loaded!");
+		else{
+			isLoaded = false;
+			SimpleUtils.report("The Schedule Restriction is not loaded!");
+		}return isLoaded;
+	}
+
+	@Override
+	public boolean isDeleteTimeOffBtnLoaded() throws Exception {
+		boolean isLoaded = true;
+		if (isElementLoaded(deleteTimeOffBtn,10))
+			SimpleUtils.report("Delete button is loaded!");
+		else{
+			SimpleUtils.report("Delete button is not loaded!");
+			isLoaded = false;
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void clickDeleteTimeOffBtn() throws Exception {
+		if (isElementLoaded(deleteTimeOffBtn,15)) {
+			clickTheElement(deleteTimeOffBtn);
+			if(!isElementLoaded(deleteTimeOffBtn,15)){
+				SimpleUtils.report("Delete button is clicked!");
+			}else
+				SimpleUtils.fail("Delete button is not clicked correctly!", false);
+		}else
+			SimpleUtils.fail("Delete button is not loaded!", false);
+	}
+
+	@Override
+	public boolean isAddTimeOffBtnLoaded() throws Exception {
+		boolean isAddTimeOffBtnLoaded = true;
+		if (isElementLoaded(addTimeOffBtn,10))
+			SimpleUtils.report("Add button is loaded!");
+		else {
+			SimpleUtils.report("Add button is not loaded!");
+			isAddTimeOffBtnLoaded = false;
+		}return isAddTimeOffBtnLoaded;
+	}
+
+	@Override
+	public boolean isAddTimeOffBtnClickable() throws Exception {
+		boolean isAddTimeOffBtnClickable = true;
+		if (isElementLoaded(addTimeOffBtn,15)) {
+			if(addTimeOffBtn.getAttribute("disabled") == null){
+				SimpleUtils.report("Time off add button is clickable!");
+			}else if(addTimeOffBtn.getAttribute("disabled").contains("true")) {
+				SimpleUtils.report("Time off add button is not clickable!");
+				isAddTimeOffBtnClickable = false;
+			}else
+				SimpleUtils.fail("Time off add button status is not correct!", false);
+		}else
+			SimpleUtils.fail("Add button is not loaded!", false);
+		return isAddTimeOffBtnClickable;
+	}
+
+	@Override
+	public void clickAddTimeOffBtn() throws Exception {
+		if (isElementLoaded(addTimeOffBtn,15)) {
+			if(addTimeOffBtn.getAttribute("disabled") == null){
+				clickTheElement(addTimeOffBtn);
+				SimpleUtils.report("Time off add button is clickable!");
+			}else
+				SimpleUtils.fail("Time off add button is not clickable!!", false);
+		}else
+			SimpleUtils.fail("Add button is not loaded!", false);
+	}
+
+	@FindBy(css = "input-field[placeholder=\"Select...\"]")
+	private WebElement timeOffReasonInputBox;
+	@FindBy(css = "div [class*=\"lg-search-options__subLabel\"]")
+	private List<WebElement> timeOffReasonList;
+	@FindBy(css = "[ng-if*=\"ScheduleRestriction\"] input[placeholder=\"#\"]")
+	private WebElement maximumLimit;
+	@Override
+	public List<String> getTimeOffReasonsOnSchedulingPolicy() throws Exception {
+		List<String> timeOffReason = null;
+		timeOffReason = new ArrayList<>();
+		if(isElementLoaded(timeOffReasonInputBox, 10)){
+			clickTheElement(timeOffReasonInputBox);
+			for (WebElement timeOff : timeOffReasonList) {
+				timeOffReason.add(timeOff.getText().trim());
+			}
+		}else{
+			SimpleUtils.fail("Time off input box is not loaded!", false);
+		}
+		return timeOffReason;
+	}
+
+	@Override
+	public void addTimeOffReasonOnSchedulingPolicy(String timeOffReason, String maximum) throws Exception {
+		if(isElementLoaded(addTimeOffBtn, 10))
+			clickTheElement(addTimeOffBtn);
+		else
+			SimpleUtils.fail("Add button is not loaded!", false);
+		if(isElementLoaded(timeOffReasonInputBox, 10)){
+			clickTheElement(timeOffReasonInputBox);
+			for (WebElement timeOff : timeOffReasonList) {
+				if (timeOff.getText().trim().equalsIgnoreCase(timeOffReason)) {
+					scrollToElement(timeOff);
+					clickTheElement(timeOff);
+					SimpleUtils.report("Time off reason is selected!");
+					break;
+				}
+			}
+		}else{
+			SimpleUtils.fail("Time off input box is not loaded!", false);
+		}
+
+		if(isElementLoaded(maximumLimit,10)){
+			maximumLimit.clear();
+			maximumLimit.sendKeys(maximum);
+		}else
+			SimpleUtils.fail("Maximum input field is not loaded!", false);
+	}
+
+	@Override
+	public void modifyTimeOffReasonOnSchedulingPolicy(String timeOffReason, String maximum) throws Exception {
+		if(isElementLoaded(timeOffReasonInputBox, 10)){
+			clickTheElement(timeOffReasonInputBox);
+			for (WebElement timeOff : timeOffReasonList) {
+				if (timeOff.getText().trim().equalsIgnoreCase(timeOffReason)) {
+					scrollToElement(timeOff);
+					clickTheElement(timeOff);
+					SimpleUtils.report("Time off reason is updated!");
+				}
+			}
+		}else{
+			SimpleUtils.fail("Time off input box is not loaded!", false);
+		}
+
+		if(isElementLoaded(maximumLimit,10)){
+			maximumLimit.clear();
+			maximumLimit.sendKeys(maximum);
+			SimpleUtils.report("Maximum is updated!");
+		}else
+			SimpleUtils.fail("Maximum input field is not loaded!", false);
+	}
+
 }

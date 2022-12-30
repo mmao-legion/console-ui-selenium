@@ -821,4 +821,17 @@ SCH-5862-->
             </class>
         </classes>
     </test>   Not merged into RC yet. -->
+
+    <test name="Accrual Time Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleAccrualTimeTest">
+                <methods>
+                    <include name="verifyAccrualLimitOverrideConfigsAsInternalAdmin"/>
+                    <include name="verifyAccrualLimitTimeOffReasonConfigsAsInternalAdmin"/>
+                    <include name="verifyTimeOffReasonListSyncAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->
