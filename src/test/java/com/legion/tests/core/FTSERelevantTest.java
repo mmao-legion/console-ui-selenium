@@ -1550,7 +1550,7 @@ public class FTSERelevantTest extends TestBase {
             //Delete all auto-generated shifts for the FTSE employee
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE T.");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
             scheduleMainPage.saveSchedule();
 
             //Create one shift and assign it to the FTSE employee
@@ -1571,7 +1571,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            createSchedulePage.publishActiveSchedule();
 
             //Verify the split shift violation after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
