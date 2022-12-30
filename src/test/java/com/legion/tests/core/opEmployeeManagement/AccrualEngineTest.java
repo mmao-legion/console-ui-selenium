@@ -1067,7 +1067,6 @@ public class AccrualEngineTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine Distribution Types")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    //The case is blocked by https://legiontech.atlassian.net/browse/OPS-6358
     public void verifyAccrualPromotionWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //go to setting page
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -1141,6 +1140,12 @@ public class AccrualEngineTest extends TestBase {
         commonComponents.okToActionInModal(true);
         //Verify remove action successfully
         Assert.assertTrue(absentManagePage.getPromotionRuleName().get(0).equals("PartTimeToFullTime"), "Failed to remove promotion!");
+        SimpleUtils.pass("Succeeded in removing promotion rule!");
+        //Remove
+        absentManagePage.removePromotionRule();
+        commonComponents.okToActionInModal(true);
+        //Verify remove action successfully
+        Assert.assertFalse(absentManagePage.getPromotionRuleName().get(0).equals("PartTimeToFullTime"), "Failed to remove promotion!");
         SimpleUtils.pass("Succeeded in removing promotion rule!");
 
 
