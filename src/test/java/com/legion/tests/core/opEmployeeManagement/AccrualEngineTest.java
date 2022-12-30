@@ -883,6 +883,55 @@ public class AccrualEngineTest extends TestBase {
     }
 
     @Automated(automated = "Automated")
+    @Owner(owner = "Lynn")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Export employee time off balance")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyExportEmployeeTimeOffBalanceAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+        //verify that the target template is here.
+        AbsentManagePage absentManagePage = new AbsentManagePage();
+        //switch to console
+        RightHeaderBarPage modelSwitchPage = new RightHeaderBarPage();
+        modelSwitchPage.switchToNewTab();
+        //search and go to the target location
+        ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+        consoleNavigationPage.searchLocation("JFK Enrollment");
+        //go to team member details and switch to the time off tab.
+        consoleNavigationPage.navigateTo("Team");
+
+        //Verify specified user and specified time off reason
+        String employeeIds = "31e27e29-0827-4ee6-b855-3854edcfca40";
+        String reasonCodes = "49110b87-cfb2-4d62-91fb-0669e224a366";
+        String accessToken = "23bc37c77b18721d22d41e4c8e0644149efefce5";
+        Map<String, String> TimeOffBalance = new HashMap<>();
+        TimeOffBalance.put("employeeIds", employeeIds);
+        TimeOffBalance.put("reasonCodes", reasonCodes);
+        AbsentManagePage.exportTimeOffBalance(TimeOffBalance,accessToken,1);
+
+        //Verify specified user and all time off reason
+        Map<String, String> TimeOffBalance1 = new HashMap<>();
+        TimeOffBalance1.put("employeeIds", employeeIds);
+        AbsentManagePage.exportTimeOffBalance(TimeOffBalance1,accessToken,1);
+
+        //Verify user and specified reason
+        Map<String, String> TimeOffBalance2 = new HashMap<>();
+        TimeOffBalance2.put("reasonCodes", reasonCodes);
+        AbsentManagePage.exportTimeOffBalance(TimeOffBalance2,accessToken,168);
+
+        //Verify some users and some time off reasons
+        String employeeIds2 = "31e27e29-0827-4ee6-b855-3854edcfca40,872c7a0d-de8d-435f-84dc-5238454776c6";
+        String reasonCodes2 = "49110b87-cfb2-4d62-91fb-0669e224a366,725977ad-89e9-472c-8f50-c4957203e184";
+        Map<String, String> TimeOffBalance3 = new HashMap<>();
+        TimeOffBalance3.put("employeeIds", employeeIds2);
+        TimeOffBalance3.put("reasonCodes", reasonCodes2);
+        AbsentManagePage.exportTimeOffBalance(TimeOffBalance3,accessToken,1);
+
+        //Verify all user and all time off reason
+        Map<String, String> TimeOffBalance4 = new HashMap<>();
+        AbsentManagePage.exportTimeOffBalance(TimeOffBalance4,accessToken,168);
+    }
+
+    @Automated(automated = "Automated")
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Import employee time off balance")
@@ -1027,7 +1076,6 @@ public class AccrualEngineTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine Distribution Types")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    //The case is blocked by https://legiontech.atlassian.net/browse/OPS-6358
     public void verifyAccrualPromotionWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //go to setting page
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -1101,6 +1149,12 @@ public class AccrualEngineTest extends TestBase {
         commonComponents.okToActionInModal(true);
         //Verify remove action successfully
         Assert.assertTrue(absentManagePage.getPromotionRuleName().get(0).equals("PartTimeToFullTime"), "Failed to remove promotion!");
+        SimpleUtils.pass("Succeeded in removing promotion rule!");
+        //Remove
+        absentManagePage.removePromotionRule();
+        commonComponents.okToActionInModal(true);
+        //Verify remove action successfully
+        Assert.assertFalse(absentManagePage.getPromotionRuleName().get(0).equals("PartTimeToFullTime"), "Failed to remove promotion!");
         SimpleUtils.pass("Succeeded in removing promotion rule!");
 
 
@@ -1793,7 +1847,6 @@ public class AccrualEngineTest extends TestBase {
 
         //Max available hours works well with fixed days
     }
-
 
     public void importAccrualBalance(String sessionId) {
         String filePath = "src/test/resources/uploadFile/AccrualLedger_auto.csv";

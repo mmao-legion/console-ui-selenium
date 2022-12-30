@@ -30,6 +30,7 @@ public class Constants {
     public static final String runAccrualJobWithSimulateDateAndWorkerId=System.getProperty("env")+"legion/accrual/runAccrualJobWithSimulateDateAndWorkerId";
     public static final String toggles =System.getProperty("env")+"legion/toggles";
     public static final String getHoliday = System.getProperty("env")+"legion/metadata/getHolidays";
+    public static final String getTimeOffBalance = System.getProperty("env")+"legion/api/accruals";
 
     //downloadTranslation
     public static final String downloadTransation1 =System.getProperty("env")+"legion/translation/downloadTranslations";
