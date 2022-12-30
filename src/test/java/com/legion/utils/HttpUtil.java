@@ -106,66 +106,6 @@ public class HttpUtil {
     }
 
     /**
-     * GET request
-     *
-     * @param url
-     * @param accessToken    header
-     * @param parameters
-     * @return
-     */
-    public static String[] httpGetAccessToken(String url, String accessToken, Map<String, String> parameters) {
-        //拼接url
-        Set<String> keys = parameters.keySet();
-        int mark = 1;
-        for (String para : keys) {
-            if (mark == 1) {
-                url = url + "?" + para + "=" + parameters.get(para);
-            } else {
-                url = url + "&" + para + "=" + parameters.get(para);
-            }
-            mark++;
-        }
-
-        System.out.println("url： " + url);
-
-        CloseableHttpClient httpClient = HttpClients.createDefault();
-        CloseableHttpResponse httpResponse = null;
-        String[] res = new String[2];
-        try {
-            HttpGet httpGet = new HttpGet(url);
-            httpGet.setHeader("accessToken", accessToken);
-            httpResponse = httpClient.execute(httpGet);
-            int responseCode = httpResponse.getStatusLine().getStatusCode();
-            String responseStr = null;
-            if (responseCode == HttpStatus.SC_OK) {
-                System.out.println("The Get request executed successfully!!!");
-                responseStr = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
-
-                JSONObject responseJson = JSON.parseObject(responseStr);
-                System.out.println("Response Json from API： " + responseJson);
-
-                Header[] headers = httpResponse.getAllHeaders();
-                HashMap<String, String> headerMap = new HashMap<>();
-                for (Header hd : headers
-                ) {
-                    headerMap.put(hd.getName(), hd.getValue());
-                }
-                System.out.println("Response Headers： " + headerMap);
-
-            } else {
-                System.out.println("The Get request Failed!!!");
-                System.out.println("Status code: " + responseCode);
-            }
-            res = new String[]{Integer.toString(responseCode), responseStr};
-            httpResponse.close();
-            httpClient.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return res;
-    }
-
-    /**
      * POST request
      *
      * @param url     request url

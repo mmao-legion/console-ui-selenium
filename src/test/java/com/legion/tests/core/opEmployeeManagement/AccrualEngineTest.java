@@ -903,23 +903,32 @@ public class AccrualEngineTest extends TestBase {
         String employeeIds = "31e27e29-0827-4ee6-b855-3854edcfca40";
         String reasonCodes = "49110b87-cfb2-4d62-91fb-0669e224a366";
         String accessToken = "23bc37c77b18721d22d41e4c8e0644149efefce5";
-        String[] accrualResponse1 = exportTimeOffBalance(employeeIds, reasonCodes, accessToken);
-        Assert.assertEquals(getHttpStatusCode(accrualResponse1), 200, "Failed to export time off balance!");
-        //Verify specified user and all time off reason
-        String[] accrualResponse2 = exportTimeOffBalanceAllReason(employeeIds, accessToken);
-        Assert.assertEquals(getHttpStatusCode(accrualResponse2), 200, "Failed to export time off balance!");
-        //Verify user and specified reason
-        String[] accrualResponse3 = exportAllTimeOffBalanceReason(reasonCodes, accessToken);
-        Assert.assertEquals(getHttpStatusCode(accrualResponse3), 200, "Failed to export time off balance!");
+        Map<String, String> TimeOffBalance = new HashMap<>();
+        TimeOffBalance.put("employeeIds", employeeIds);
+        TimeOffBalance.put("reasonCodes", reasonCodes);
+        AbsentManagePage.exportTimeOffBalance(TimeOffBalance,accessToken,1);
 
-        //Verify user and reason
-        String[] accrualResponse4 = exportAllTimeOffBalanceAllReason(accessToken);
-        Assert.assertEquals(getHttpStatusCode(accrualResponse4), 200, "Failed to export time off balance!");
+        //Verify specified user and all time off reason
+        Map<String, String> TimeOffBalance1 = new HashMap<>();
+        TimeOffBalance1.put("employeeIds", employeeIds);
+        AbsentManagePage.exportTimeOffBalance(TimeOffBalance1,accessToken,1);
+
+        //Verify user and specified reason
+        Map<String, String> TimeOffBalance2 = new HashMap<>();
+        TimeOffBalance2.put("reasonCodes", reasonCodes);
+        AbsentManagePage.exportTimeOffBalance(TimeOffBalance2,accessToken,168);
+
         //Verify some users and some time off reasons
         String employeeIds2 = "31e27e29-0827-4ee6-b855-3854edcfca40,872c7a0d-de8d-435f-84dc-5238454776c6";
         String reasonCodes2 = "49110b87-cfb2-4d62-91fb-0669e224a366,725977ad-89e9-472c-8f50-c4957203e184";
-        String[] accrualResponse5 = exportSomeTimeOffBalanceSomeReason(employeeIds2, reasonCodes2, accessToken);
-        Assert.assertEquals(getHttpStatusCode(accrualResponse5), 200, "Failed to export time off balance!");
+        Map<String, String> TimeOffBalance3 = new HashMap<>();
+        TimeOffBalance3.put("employeeIds", employeeIds2);
+        TimeOffBalance3.put("reasonCodes", reasonCodes2);
+        AbsentManagePage.exportTimeOffBalance(TimeOffBalance3,accessToken,1);
+
+        //Verify all user and all time off reason
+        Map<String, String> TimeOffBalance4 = new HashMap<>();
+        AbsentManagePage.exportTimeOffBalance(TimeOffBalance4,accessToken,168);
     }
 
     @Automated(automated = "Automated")
@@ -1838,43 +1847,6 @@ public class AccrualEngineTest extends TestBase {
 
         //Max available hours works well with fixed days
     }
-
-    public String[] exportTimeOffBalance(String employeeIds, String reasonCodes, String accessToken) {
-        String getTimeOffBalanceUrl = Constants.getTimeOffBalance;
-        Map<String, String> TimeOffBalance = new HashMap<>();
-        TimeOffBalance.put("employeeIds", employeeIds);
-        TimeOffBalance.put("reasonCodes", reasonCodes);
-        return HttpUtil.httpGetAccessToken(getTimeOffBalanceUrl,accessToken,TimeOffBalance);
-    }
-
-    public String[] exportTimeOffBalanceAllReason(String employeeIds,String accessToken) {
-        String getTimeOffBalanceUrl = Constants.getTimeOffBalance;
-        Map<String, String> TimeOffBalance = new HashMap<>();
-        TimeOffBalance.put("employeeIds", employeeIds);
-        return HttpUtil.httpGetAccessToken(getTimeOffBalanceUrl,accessToken,TimeOffBalance);
-    }
-
-    public String[] exportAllTimeOffBalanceReason(String reasonCodes, String accessToken) {
-        String getTimeOffBalanceUrl = Constants.getTimeOffBalance;
-        Map<String, String> TimeOffBalance = new HashMap<>();
-        TimeOffBalance.put("reasonCodes", reasonCodes);
-        return HttpUtil.httpGetAccessToken(getTimeOffBalanceUrl,accessToken,TimeOffBalance);
-    }
-
-    public String[] exportAllTimeOffBalanceAllReason(String accessToken) {
-        String getTimeOffBalanceUrl = Constants.getTimeOffBalance;
-        Map<String, String> TimeOffBalance = new HashMap<>();
-        return HttpUtil.httpGetAccessToken(getTimeOffBalanceUrl,accessToken,TimeOffBalance);
-    }
-
-    public String[] exportSomeTimeOffBalanceSomeReason(String employeeIds, String reasonCodes, String accessToken) {
-        String getTimeOffBalanceUrl = Constants.getTimeOffBalance;
-        Map<String, String> TimeOffBalance = new HashMap<>();
-        TimeOffBalance.put("employeeIds", employeeIds);
-        TimeOffBalance.put("reasonCodes", reasonCodes);
-        return HttpUtil.httpGetAccessToken(getTimeOffBalanceUrl,accessToken,TimeOffBalance);
-    }
-
 
     public void importAccrualBalance(String sessionId) {
         String filePath = "src/test/resources/uploadFile/AccrualLedger_auto.csv";
