@@ -486,7 +486,7 @@ public class AccrualEngineTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine Distribution Types")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAccrualEngineWorksWellAfterEditingAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+    public void verifyAccrualEngineWorksWellAfterEditingAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String templateName = "AccrualAutoTest(Don't touch!!!)";
@@ -502,8 +502,10 @@ public class AccrualEngineTest extends TestBase {
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        String teamMemName = "Olaf Kuhic";
-        timeOffPage.goToTeamMemberDetail(teamMemName);
+//        String teamMemName = "Olaf Kuhic";
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMember("Kuhic");
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
@@ -628,7 +630,7 @@ public class AccrualEngineTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Look Back")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)//https://legiontech.atlassian.net/browse/OPS-5634
-    public void verifyAccrualEngineLookBackAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+    public void verifyAccrualEngineLookBackAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
         //worked hours look back function
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -645,8 +647,10 @@ public class AccrualEngineTest extends TestBase {
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        String teamMemName = "Ona Morar";
-        timeOffPage.goToTeamMemberDetail(teamMemName);
+        //String teamMemName = "Ona Morar";
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMember("Morar");
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
@@ -1858,7 +1862,7 @@ public class AccrualEngineTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "OPS-4059 Ability to deduct accrual balance from imported approved time off.")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyTimeOffRequestImportAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+    public void verifyTimeOffRequestImportAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String templateName = "AccrualAutoTest(Don't touch!!!)";
@@ -1874,8 +1878,10 @@ public class AccrualEngineTest extends TestBase {
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        String teamMemName = "Elody Bauch";
-        timeOffPage.goToTeamMemberDetail(teamMemName);
+        //String teamMemName = "Elody Bauch";
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMember("Elody");
         timeOffPage.switchToTimeOffTab();
 
         //get session id via login
@@ -1979,7 +1985,7 @@ public class AccrualEngineTest extends TestBase {
 
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
-        teamPage.searchAndSelectTeamMemberByName("Nancy Unit");
+        teamPage.searchAndSelectTeamMember("Unit");
         teamPage.navigateToTimeOffPage();
 
         TimeOffPage timeOffPage = new TimeOffPage();
@@ -2371,7 +2377,7 @@ public class AccrualEngineTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Payable hour types included in calculation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyPayableHoursWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+    public void verifyPayableHoursWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception{
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String templateName = "AccrualAuto-PayableHours(Don't touch!!!)";
@@ -2386,8 +2392,10 @@ public class AccrualEngineTest extends TestBase {
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        String teamMemName = "Lily Hong";
-        timeOffPage.goToTeamMemberDetail(teamMemName);
+        //String teamMemName = "Lily Hong";
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMember("Hong");
         timeOffPage.switchToTimeOffTab();
         //get session id via localStorage
         String sessionId = getSession();
@@ -2567,8 +2575,11 @@ public class AccrualEngineTest extends TestBase {
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        String teamMemName = "Ada Wang";
-        timeOffPage.goToTeamMemberDetail(teamMemName);
+        //String teamMemName = "Ada Wang";
+        //timeOffPage.goToTeamMemberDetail(teamMemName);
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMember("Ada");
         timeOffPage.switchToTimeOffTab();
         //get session id via login
         String sessionId = getSession();
@@ -2791,8 +2802,9 @@ public class AccrualEngineTest extends TestBase {
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        String teamMemName = "Nancy AccrualEngine";
-        timeOffPage.goToTeamMemberDetail(teamMemName);
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMember("AccrualEngine");
         timeOffPage.switchToTimeOffTab();
         //get session id via login
         String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
@@ -2917,8 +2929,10 @@ public class AccrualEngineTest extends TestBase {
         //go to team member details and switch to the time off tab.
         consoleNavigationPage.navigateTo("Team");
         TimeOffPage timeOffPage = new TimeOffPage();
-        String teamMemName = "Nancy AccrualEngine01";
-        timeOffPage.goToTeamMemberDetail(teamMemName);
+        TeamPage teamPage = pageFactory.createConsoleTeamPage();
+        teamPage.goToTeam();
+        teamPage.searchAndSelectTeamMember("AccrualEngine01");
+
         timeOffPage.switchToTimeOffTab();
         timeOffPage.verifyHistoryType();
         timeOffPage.verifyHistorySize();
