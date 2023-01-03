@@ -6,7 +6,7 @@
   "EnableDemandDriverTemplate": "op,opauto",
   "MixedModeDemandDriverSwitch": "op,opauto",
   "MealAndRestTemplate": "cinemark-wkdy,op",
-  "ScheduleEditShiftTimeNew": "vailqacn",
+  "ScheduleEditShiftTimeNew": "vailqacn,cinemark-wkdy",
   "EnableTahoeStorage": "opauto",
   "EnableLongTermBudgetPlan": "opauto",
   "UseLegionAccrual": "op,opauto,carters",
