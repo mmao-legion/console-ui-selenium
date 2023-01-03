@@ -383,7 +383,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			return selectedName;
 		}
 
-		@FindBy(css = "span.sc-kbuhQt.gaksUh")
+		@FindBy(xpath = "(//span[contains(@class,\"sc-kbuhQt\")])[1]")
 		private WebElement firstTeamMemberName;
 		public void searchAndSelectTeamMember(String username) throws Exception {
 			if(isElementLoaded(teamMemberSearchBox, 10)) {
