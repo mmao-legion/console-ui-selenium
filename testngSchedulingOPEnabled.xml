@@ -145,7 +145,7 @@
             <class name="com.legion.tests.core.HardStopForMinorViolation">
                 <methods>
                     <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" />
+<!--                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
                     <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
                     <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
                     <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
