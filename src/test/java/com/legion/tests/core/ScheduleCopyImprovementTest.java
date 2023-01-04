@@ -365,6 +365,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             newShiftPage.clickOnOfferOrAssignBtn();
 
             scheduleMainPage.saveSchedule();
+            Thread.sleep(5000);
             createSchedulePage.publishActiveSchedule();
 
             //Get the info of this week for copy schedule
