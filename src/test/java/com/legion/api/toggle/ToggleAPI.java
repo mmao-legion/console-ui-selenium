@@ -5,24 +5,22 @@ import com.jayway.restassured.response.Response;
 import com.legion.api.login.LoginAPI;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
-import com.legion.tests.TestBase;
 
 import java.util.*;
 
 
 import static com.jayway.restassured.RestAssured.given;
-import static com.legion.utils.MyThreadLocal.getEnterprise;
 
 public class ToggleAPI {
 
     public static void updateToggle(String toggleName, String username, String password, boolean isTurnOn) {
         try {
-            String enterpriseName = getEnterprise();
+            String enterpriseName = System.getProperty("enterprise");
             String sessionId = LoginAPI.getSessionIdFromLoginAPI(username, password);
 
             List<HashMap> rules = new ArrayList<>();
             // Get the current enterprise names which have specific toggle turned on
-            List<String> enterpriseNames = getCurrentEnabledEnterprises(toggleName);
+            List<String> enterpriseNames = new ArrayList<>(getCurrentEnabledEnterprises(toggleName));
             if (isTurnOn) {
                 if (!enterpriseNames.contains(enterpriseName.toLowerCase())) {
                     enterpriseNames.add(enterpriseName);
@@ -30,8 +28,13 @@ public class ToggleAPI {
             } else {
                 if (enterpriseNames.contains(enterpriseName.toLowerCase())) {
                     for (int i = 0; i < enterpriseNames.size(); i++) {
-                        if (enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
+                        if (enterpriseNames.size() > 1 && enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
                             enterpriseNames.remove(i);
+                            break;
+                        }
+                        if (enterpriseNames.size() == 1 && enterpriseNames.get(i).equalsIgnoreCase(enterpriseName)) {
+                            enterpriseNames = new ArrayList<>();
+                            break;
                         }
                     }
                 }
@@ -42,6 +45,8 @@ public class ToggleAPI {
                     rulesValue.put("enterpriseName", name);
                     rules.add(rulesValue);
                 }
+            } else {
+                rules = new ArrayList<>();
             }
 
             HashMap<String, Object> recordContext = new HashMap<>();
@@ -74,8 +79,14 @@ public class ToggleAPI {
                 }
                 HashMap<String, String> toggleNEnterprises = JsonUtil.getPropertiesFromJsonFile("src/test/java/com/legion/api/" + fileName);
                 String enterprises = toggleNEnterprises.get(toggleName);
-                String[] nameList = enterprises.split(",");
-                Collections.addAll(enterpriseNames, nameList);
+                if (enterprises != null && !enterprises.isEmpty()) {
+                    if (enterprises.contains(",")) {
+                        String[] nameList = enterprises.split(",");
+                        Collections.addAll(enterpriseNames, nameList);
+                    } else {
+                        enterpriseNames.add(enterprises);
+                    }
+                }
             }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

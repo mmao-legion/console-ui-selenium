@@ -8,6 +8,7 @@ import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.SettingsAndAssociationPage;
+import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleLocationSelectorPage;
 import com.legion.pages.core.OpCommons.OpsCommonComponents;
 import com.legion.pages.core.OpCommons.OpsPortalNavigationPage;
@@ -44,6 +45,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 import static com.legion.utils.MyThreadLocal.getEnterprise;
@@ -68,9 +70,9 @@ public class ConfigurationTest extends TestBase {
 
 
         this.createDriver((String)params[0],"83","Window");
-        ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123", false);
-        ToggleAPI.updateToggle(Toggles.EnableDemandDriverTemplate.getValue(), "jane.meng+006@legion.co", "P@ssword123", true);
-        ToggleAPI.updateToggle(Toggles.MixedModeDemandDriverSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123", true);
+//        ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), "jane.meng+006@legion.co", "P@ssword123", false);
+//        ToggleAPI.updateToggle(Toggles.EnableDemandDriverTemplate.getValue(), "jane.meng+006@legion.co", "P@ssword123", true);
+//        ToggleAPI.updateToggle(Toggles.MixedModeDemandDriverSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123", true);
         visitPage(testMethod);
         loginToLegionAndVerifyIsLoginDoneWithoutUpdateUpperfield((String)params[1], (String)params[2],(String)params[3]);
         LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -775,12 +777,12 @@ public class ConfigurationTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
-
+//https://legiontech.atlassian.net/browse/SCH-8338
     @Automated(automated = "Automated")
     @Owner(owner = "Fiona")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "E2E Verify number of shift function in advance staffing rule")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
     public void numberOfShiftsInADVRuleE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try{
             String locationName = "AutoUsingByFiona1";
@@ -2405,7 +2407,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "AutoADVDynamicGroup";
-            String workRole = "AutoUsing2";
+            String workRole = "AMBASSADOR";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
@@ -2432,7 +2434,7 @@ public class ConfigurationTest extends TestBase {
             String templateType = "Scheduling Rules";
             String mode = "edit";
             String templateName = "AutoADVDynamicGroup";
-            String workRole = "AutoUsing2";
+            String workRole = "AMBASSADOR";
             String dynamicGpName = "FionaAutoTest";
 
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
@@ -2473,6 +2475,379 @@ public class ConfigurationTest extends TestBase {
                 configurationPage.createTmpAndPublishAndArchive(type,templateNameVerify,dynamicGpNameTempTest);
             }
         } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Create dynamic group with specify criteria")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyCreateDynamicGroupWithSpecifyCriteriaAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "AutoADVDynamicGroup";
+            String workRole = "AMBASSADOR";
+            String dynamicGpName = "FionaAutoTest123";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable();
+            //Create dynamic group with specify criteria
+            configurationPage.createAdvanceStaffingRuleDynamicGroup(dynamicGpName);
+            //edit delete dynamic group
+            configurationPage.advanceStaffingRuleEditDeleteADynamicGroup(dynamicGpName);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Dynamic group dropdown list checking and custom formula description checking")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDynamicGroupDropdownListCheckingAndCustomFormulaDescriptionCheckingAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "AutoADVDynamicGroup";
+            String workRole = "AMBASSADOR";
+            String dynamicGpName = "FionaAutoTest123";
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectWorkRoleToEdit(workRole);
+            configurationPage.checkTheEntryOfAddAdvancedStaffingRule();
+            configurationPage.verifyAdvancedStaffingRulePageShowWell();
+            configurationPage.verifyAddButtonOfDynamicLocationGroupOfAdvancedStaffingRuleIsClickable();
+            //Create dynamic group with specify criteria
+            configurationPage.advanceStaffingRuleDynamicGroupCriteriaListChecking(dynamicGpName);
+            configurationPage.advanceStaffingRuleEditDeleteADynamicGroup(dynamicGpName);
+            configurationPage.advanceStaffingRuleDynamicGroupCustomFormulaDescriptionChecking();
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify dynamic group item in advanced staffing rules is optional")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyDynamicGroupOfAdvanceStaffingRulesIsOptionalAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String templateType = "Scheduling Rules";
+            String mode = "edit";
+            String templateName = "AutoADVDynamicGroup";
+            String workRole = "AMBASSADOR";
+            List<String> days = new ArrayList<String>(){{
+                add("Sunday");
+                add("Friday");
+            }};
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            configurationPage.clickOnSpecifyTemplateName(templateName,mode);
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.verifyDynamicGroupOfAdvanceStaffingRuleIsOptional(workRole,days);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    //https://legiontech.atlassian.net/browse/OPS-5643; https://legiontech.atlassian.net/browse/OPS-6254
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Advance staffing rule dynamic group E2E flow")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class,enabled = false)
+    public void verifyAdvanceStaffingRulesDynamicGroupE2EAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try{
+            String locationName1 = "AutoADVDynamicGroup02";
+            String locationName2 = "AutoADVDynamicGroup03";
+            List<String> days1 = new ArrayList<String>(){{
+                add("Sunday");
+                add("Friday");
+            }};
+            List<String> days2 = new ArrayList<String>(){{
+                add("Monday");
+                add("Tuesday");
+                add("Wednesday");
+            }};
+            List<String> daysAbbr1 = new ArrayList<String>();
+            List<String> daysHasShifts1 = new ArrayList<String>();
+            List<String> daysAbbr2 = new ArrayList<String>();
+            List<String> daysHasShifts2 = new ArrayList<String>();
+
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            //Back to console
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.Console.getValue());
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName1);
+            //go to schedule function
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            // Navigate to a week
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule if not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdateOH();
+            daysHasShifts1 = scheduleShiftTablePage.verifyDaysHasShifts();
+
+            for(String day:days1){
+                String dayAbbr = day.substring(0,3);
+                daysAbbr1.add(dayAbbr);
+            }
+            Collections.sort(daysHasShifts1);
+            Collections.sort(daysAbbr1);
+            if(days1.size()==daysHasShifts1.size()){
+                if(ListUtils.isEqualList(daysAbbr1,daysHasShifts1)){
+                    SimpleUtils.pass("User can create shifts correctly according to AVD staffing rule");
+                }else {
+                    SimpleUtils.fail("User can't create correct shifts according to AVD staffing rule",false);
+                }
+            }
+            //switch to another location to check the shifts
+            locationSelectorPage.changeUpperFieldsByMagnifyGlassIcon(locationName2);
+            //go to schedule function
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            // Navigate to a week
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            // create the schedule if not created
+            boolean isWeekGenerated1 = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated1){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdateOH();
+            daysHasShifts2 = scheduleShiftTablePage.verifyDaysHasShifts();
+
+            for(String day:days2){
+                String dayAbbr = day.substring(0,3);
+                daysAbbr2.add(dayAbbr);
+            }
+            Collections.sort(daysHasShifts2);
+            Collections.sort(daysAbbr2);
+            if(days2.size()==daysHasShifts2.size()){
+                if(ListUtils.isEqualList(daysAbbr2,daysHasShifts2)){
+                    SimpleUtils.pass("User can create shifts correctly according to AVD staffing rule");
+                }else {
+                    SimpleUtils.fail("User can't create correct shifts according to AVD staffing rule",false);
+                }
+            }
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Work Roles hourly rate regression test")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void workRolesHourlyRateRegressionTestAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String hourlyRate = "15";
+            String locationName="AutoADVDynamicGroup02";
+            String workRoleName="AMBASSADOR";
+            //Turn off WorkRoleSettingsTemplateOP toggle
+            ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", false);
+            getDriver().navigate().refresh();
+            //Verify user can update hourly rate in work role details page
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+            userManagementPage.updateWorkRoleHourlyRate(hourlyRate);
+            //Verify location level hourly rate is read only
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
+            userManagementPage.verifySearchWorkRole(workRoleName);
+            userManagementPage.goToWorkRolesDetails(workRoleName);
+            userManagementPage.verifyLocationLevelHourlyRateIsReadOnly();
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Work role hourly rate is NOT showing on work role details page when toggle is on")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void workRolesHourlyRateIsNOTShowingWhenToggleIsOnAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String locationName="AutoADVDynamicGroup02";
+            String workRoleName="AMBASSADOR";
+            //Turn on WorkRoleSettingsTemplateOP toggle
+            ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
+            getDriver().navigate().refresh();
+            //Verify user can update hourly rate in work role details page
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+            userManagementPage.goToWorkRolesDetails(workRoleName);
+            userManagementPage.hourlyRateFieldIsNotShowing();
+
+            //Verify location level hourly rate is read only
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
+            userManagementPage.verifySearchWorkRole(workRoleName);
+            userManagementPage.goToWorkRolesDetails(workRoleName);
+            userManagementPage.hourlyRateFieldIsNotShowing();
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Work role template common checking")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void workRolesTemplateCommonCheckingAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String templateName ="Default";
+            String mode = "edit";
+            //Turn on WorkRoleSettingsTemplateOP toggle
+            ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
+            getDriver().navigate().refresh();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.goToWorkRoleSettingsTile();
+            configurationPage.verifyWorkRoleSettingsTemplateListUIAndDetailsUI(templateName,mode);
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Create work role setting template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void createWorkRolesSettingTemplateAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            String templateName ="Default";
+            String mode = "Edit";
+            SimpleDateFormat dfs=new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime=dfs.format(new Date()).trim();
+            String templateName1="AutoCreate"+currentTime;
+            String dynamicGpName = "AutoCreateDynamicGp"+currentTime;
+            HashMap<String,String> workRoleHourlyRate= new HashMap<String,String>();
+            workRoleHourlyRate.put("WRSAuto1","12");
+            workRoleHourlyRate.put("WRSAuto2","15");
+            workRoleHourlyRate.put("WRSAuto3","16");
+            HashMap<String,String> workRoleHourlyRateInTemplate= new HashMap<String,String>();
+            String workRole ="WRSAuto3";
+            String updateValue="22";
+            int date = 14;
+
+            //Turn on WorkRoleSettingsTemplateOP toggle
+            ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
+            getDriver().navigate().refresh();
+
+            //go to user management -> work roles page to check the count of the work roles
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
+            int workRoleCount = userManagementPage.getTotalWorkRoleCount();
+
+//            //go to WRS template details page to check the count is equal with above count or not
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.goToWorkRoleSettingsTile();
+            configurationPage.verifyWorkRoleSettingsTemplateListUIAndDetailsUI(templateName,mode);
+            configurationPage.checkWorkRoleListShowingWell(workRoleCount);
+
+            //Create new WRS template
+            configurationPage.goToConfigurationPage();
+            configurationPage.goToWorkRoleSettingsTile();
+            configurationPage.publishNewTemplate(templateName1,dynamicGpName,"Custom","AutoCreatedDynamic---Format Script"+currentTime);
+
+            //Go to the new created template to check the default hourly rate
+            configurationPage.clickOnSpecifyTemplateName(templateName1,mode);
+            List<String> workRoles = workRoleHourlyRate.keySet().stream().collect(Collectors.toList());
+            workRoleHourlyRateInTemplate = configurationPage.getDefaultHourlyRate(workRoles);
+            if(workRoleHourlyRateInTemplate.equals(workRoleHourlyRate)){
+                SimpleUtils.pass("The default value is correct");
+            }else {
+                SimpleUtils.fail("The default value is NOT correct",false);
+            }
+
+            //update the hourly rate
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.updateWorkRoleHourlyRate(workRole,updateValue);
+            configurationPage.chooseSaveOrPublishBtnAndClickOnTheBtn("publish now");
+
+            //create work role settings template and publish at different time
+            configurationPage.createFutureWRSTemplateBasedOnExistingTemplate(templateName1,"publish at different time",date,"edit");
+        }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "update and reset location level work role settings template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOverriddenLocationLevelWorkRoleSettingsAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+            String locationName = "WorkRoleSettings";
+            String workRole ="WRSAuto3";
+            Random random=new Random();
+            int number=random.nextInt(90)+10;
+            String updateValue=String.valueOf(number);
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Work Role Settings", "View");
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Work Role Settings", "Edit");
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.updateWorkRoleHourlyRate(workRole,updateValue);
+            configurationPage.saveBtnIsClickable();
+            locationsPage.verifyOverrideStatusAtLocationLevel("Work Role Settings", "Yes");
+            locationsPage.clickActionsForTemplate("Work Role Settings", "Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Work Role Settings", "No");
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }

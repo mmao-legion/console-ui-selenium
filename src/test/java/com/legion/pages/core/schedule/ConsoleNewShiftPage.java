@@ -560,7 +560,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
 
 
-    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_WorkRole_menu\"]/div/div[2]/div")
+    @FindBy(xpath = "//*[@id=\"legion_cons_Schedule_Schedule_SreateShift_WorkRole_menu\"]/div/div[2]/div")
     private WebElement workRoleOnNewShiftPage;
 
     @FindBy(className = "react-select__option")
@@ -2843,7 +2843,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
 
 
-    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[2]/div/div/div")
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[2]/div/div")
     private List<WebElement> assignedShiftsOnShiftAssignedSections;
     public List<String> getAssignedShiftOnShiftAssignedSection() {
         List<String> assignedShifts = new ArrayList<>();
@@ -2858,7 +2858,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return assignedShifts;
     }
 
-    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[4]/div/div/div")
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[4]/div")
     private List<WebElement> shiftOffersOnShiftAssignedSections;
     @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[4]/button")
     private WebElement clearOffersLink;
@@ -3073,9 +3073,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         }
     }
     
-    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_ShiftStart_field\"]")
+    @FindBy(xpath = "//*[@id=\"legion_cons_Schedule_Schedule_CreateShift_ShiftStart_field\"]")
     private WebElement startTimeInput;
-    @FindBy(xpath = "//*[@id=\"legion_cons_schedule_schedule_createshift_ShiftEnd_field\"]")
+    @FindBy(xpath = "//*[@id=\"legion_cons_Schedule_Schedule_CreateShift_ShiftEnd_field\"]")
     private WebElement endTimeInput;
 
     @Override

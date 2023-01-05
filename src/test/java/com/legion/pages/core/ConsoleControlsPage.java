@@ -96,7 +96,7 @@ public class ConsoleControlsPage extends BasePage implements ControlsPage{
 			click(firstWorkRole);
 			SimpleUtils.pass("Add work role button is clickable");
 		}else
-			SimpleUtils.fail("Add wWork role button loaded failed",false);
+			SimpleUtils.fail("Add Work role button loaded failed",false);
 	}
 
 	@FindBy(xpath = "//rule-container[3]/div/div/div[1]/div[2]/span[1]/img")
