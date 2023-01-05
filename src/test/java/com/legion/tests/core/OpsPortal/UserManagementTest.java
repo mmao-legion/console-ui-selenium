@@ -181,7 +181,7 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Verify add and update work role")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false) //is blocked by OPS-6284
     public void verifyAddEditSearchAndDisableWorkRoleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
             OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
@@ -492,7 +492,7 @@ public class UserManagementTest extends TestBase {
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Work Role - Assignment Rule - Job Title")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false) // is blocked by https://legiontech.atlassian.net/browse/OPS-6251
     public void verifyManageJobTitleAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
             //go to User Management tab
@@ -661,7 +661,7 @@ public class UserManagementTest extends TestBase {
 
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
-            teamPage.searchAndSelectTeamMemberByName("Nancy TM");
+            teamPage.searchAndSelectTeamMember("TM");
 
             if(userManagementPage.getHourlyRateValue().contains("***")){
                 SimpleUtils.pass("Hourly rate initial value is hide");
@@ -710,7 +710,7 @@ public class UserManagementTest extends TestBase {
             consoleNavigationPage.navigateTo("Team");
 
             teamPage.goToTeam();
-            teamPage.searchAndSelectTeamMemberByName("Nancy TM");
+            teamPage.searchAndSelectTeamMember("TM");
 
             boolean isHourlyRateDisplay;
             isHourlyRateDisplay = userManagementPage.isHourlyRateExist();
@@ -1331,7 +1331,7 @@ public class UserManagementTest extends TestBase {
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Announcement")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
-    public void verifyAnnouncementAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyAnnouncementAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
         try {
 //            String sessionId = getSession();
 //            AccrualEngineTest accrualEngineTest = new AccrualEngineTest();

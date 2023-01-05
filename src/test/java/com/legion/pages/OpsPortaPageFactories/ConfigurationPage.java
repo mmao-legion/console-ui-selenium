@@ -265,6 +265,17 @@ public interface ConfigurationPage {
     public void clickOnAddButtonOfDynamicLocationGroupOfAdvancedStaffingRule() throws Exception;
     public void advanceStaffingRuleDynamicGroupDialogUICheck(String name) throws Exception;
     public void advanceStaffingRuleEditDeleteADynamicGroup(String dyname) throws Exception;
+    public void createAdvanceStaffingRuleDynamicGroup(String name) throws Exception;
+    public void advanceStaffingRuleDynamicGroupCriteriaListChecking(String name) throws Exception;
     public List<String> getStaffingRules() throws Exception;
+    public void advanceStaffingRuleDynamicGroupCustomFormulaDescriptionChecking() throws Exception;
+    public void verifyDynamicGroupOfAdvanceStaffingRuleIsOptional(String workRole, List<String> days) throws Exception;
+    public String getGranularityForCertainDriver() throws Exception;
+    public void goToWorkRoleSettingsTile();
+    public void verifyWorkRoleSettingsTemplateListUIAndDetailsUI(String templateName,String mode) throws Exception;
+    public void checkWorkRoleListShowingWell(int workRoleCount);
+    public HashMap<String,String> getDefaultHourlyRate(List<String> workRoles);
+    public void updateWorkRoleHourlyRate(String workRole,String updateValue);
+    public void createFutureWRSTemplateBasedOnExistingTemplate(String templateName, String button, int date, String editOrViewMode) throws Exception;
 }
 

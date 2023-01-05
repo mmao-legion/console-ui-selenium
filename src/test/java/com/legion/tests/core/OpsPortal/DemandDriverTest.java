@@ -86,6 +86,7 @@ public enum modelSwitchOperation{
             String locationName = "AutoCreate20220227202919";
 
             //Go to Demand Driver template
+            ToggleAPI.updateToggle(Toggles.UseDemandDriverTemplateSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123",false);
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
             configurationPage.goToConfigurationPage();
@@ -107,7 +108,7 @@ public enum modelSwitchOperation{
             forecastPage.clickForecast();
             salesForecastPage.navigateToSalesForecastTab();
             SimpleUtils.assertOnFail("The newly added category not exist in forecast page!",
-                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", categoryName), false);
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryName), false);
 
             //edit the category in settings
             switchToNewWindow();
@@ -115,7 +116,7 @@ public enum modelSwitchOperation{
             //verify edited category is in Forecast page
             switchToNewWindow();
             SimpleUtils.assertOnFail("The edited category not exist in forecast page!",
-                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", categoryEditName), false);
+                    salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryEditName), false);
 
             //remove the category in settings
             switchToNewWindow();
@@ -123,7 +124,7 @@ public enum modelSwitchOperation{
             //verify the removed category not show up in forecast page.
             switchToNewWindow();
             SimpleUtils.assertOnFail("The removed edited category should not display in forecast page!",
-                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", "categoryEditName"), false);
+                    !salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", "categoryEditName"), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -144,6 +145,7 @@ public enum modelSwitchOperation{
             String locationName = "AutoCreate20220227202919";
 
             //Go to Demand Driver template
+            ToggleAPI.updateToggle(Toggles.UseDemandDriverTemplateSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123",false);
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
             configurationPage.goToConfigurationPage();
@@ -261,8 +263,8 @@ public enum modelSwitchOperation{
             settingsAndAssociationPage.clickOnEditBtnForInputStream(inputStreamInfoToAdd2, inputStreamInfoToEdit2);
 
             //remove the category in settings
-            settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, inputStreamName1);
             settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, inputStreamName2);
+            settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, inputStreamName1);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -881,7 +883,8 @@ public enum modelSwitchOperation{
     public void verifyTheDefaultInputStreamsWhenEnterANewEnterpriseAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             String templateType = "Demand Drivers";
-            List<String> allStreamNames = new ArrayList<>();
+            List<String> baseStreamNames = new ArrayList<>();
+            List<String> aggregatedStreamNames = new ArrayList<>();
             String verifyType = "input stream";
             int streamsCount = 0;
             int channelsCount = 0;
@@ -894,9 +897,15 @@ public enum modelSwitchOperation{
             configurationPage.clickOnConfigurationCrad(templateType);
             //Go to Settings tab
             settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
-            allStreamNames = settingsAndAssociationPage.getStreamNamesInList("All");
-            if (allStreamNames.size() != 0){
-                for (String streamName : allStreamNames){
+            baseStreamNames = settingsAndAssociationPage.getStreamNamesInList("Base");
+            aggregatedStreamNames = settingsAndAssociationPage.getStreamNamesInList("Aggregated");
+            if (aggregatedStreamNames.size() != 0){
+                for (String streamName : aggregatedStreamNames){
+                    settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, streamName);
+                }
+            }
+            if (baseStreamNames.size() != 0){
+                for (String streamName : baseStreamNames){
                     settingsAndAssociationPage.clickOnRemoveBtnInSettings(verifyType, streamName);
                 }
             }
@@ -1008,6 +1017,9 @@ public enum modelSwitchOperation{
             List<String> categoryNameList = new ArrayList<>();
             String locationToTest = "Boston";
 
+
+            //Turn off UseDemandDriverTemplateSwitch toggle
+            ToggleAPI.updateToggle(Toggles.UseDemandDriverTemplateSwitch.getValue(), "jane.meng+006@legion.co", "P@ssword123", false);
             //Go to Demand Driver template
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
@@ -1027,8 +1039,8 @@ public enum modelSwitchOperation{
             channelNameList = settingsAndAssociationPage.getAllChannelsOrCategories("Channel");
             categoryNameList = settingsAndAssociationPage.getAllChannelsOrCategories("Category");
             //Verify channel/category visibility in Forecast page
-            refreshCache("Template");
             switchToNewWindow();
+            refreshPage();
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(locationToTest);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
@@ -1046,7 +1058,7 @@ public enum modelSwitchOperation{
             }
             for (int i = 0; i < categoryNameList.size(); i++){
                 SimpleUtils.assertOnFail("The category " + categoryNameList.get(i) + " should show up in forecast page!",
-                        salesForecastPage.verifyChannelOrCategoryExistInForecastPage("category", categoryNameList.get(i)), false);
+                        salesForecastPage.verifyChannelOrCategoryExistInForecastPage("demand", categoryNameList.get(i)), false);
             }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -2892,4 +2904,143 @@ public enum modelSwitchOperation{
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Granularity to Input Stream ")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyGranularityToInputStreamAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String templateType = "Demand Drivers";
+            Random random = new Random();
+            String templateName = "TestGranularity" + random.nextInt(1000);
+            String baseInputStreamName = "TestBase" + random.nextInt(1000);
+            String baseInputStreamName1 = "TestBase" + random.nextInt(1000);
+            String aggregatedInputStreamName = "TestAggregated" + random.nextInt(1000);
+            List<String> granularityOptions = new ArrayList<>(Arrays.asList("Slot (15 min)", "Slot (30 min)", "Slot (60 min)", "Day", "Week"));
+            String expectedWarningMsg = "This base input stream is used in aggregated input stream";
+
+            HashMap<String, String> baseInputStream = new HashMap<String, String>(){
+                {
+                    put("Name", baseInputStreamName);
+                    put("Type", "Base");
+                    put("Tag", baseInputStreamName);
+                }
+            };
+            HashMap<String, String> baseInputStream1 = new HashMap<String, String>(){
+                {
+                    put("Name", baseInputStreamName1);
+                    put("Type", "Base");
+                    put("Tag", baseInputStreamName1);
+                }
+            };
+            HashMap<String, String> aggregatedInputStream = new HashMap<String, String>(){
+                {
+                    put("Name", aggregatedInputStreamName);
+                    put("Type", "Aggregated");
+                    put("Operator", "NOT IN");
+                    put("Streams", baseInputStream1.get("Name"));
+                }
+            };
+            HashMap<String, String> driver = new HashMap<String, String>()
+            {
+                {
+                    put("Name", "DriverToTestGranularity");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Enrollments");
+                    put("Show in App", "Yes");
+                    put("Order", "1");
+                    put("Forecast Source", "Legion ML");
+                    put("Input Stream", "Items:EDW:Enrollments");
+                }
+            };
+            HashMap<String, String> driver1 = new HashMap<String, String>()
+            {
+                {
+                    put("Name", "DriverToTestGranularity_Week");
+                    put("Type", "Items");
+                    put("Channel", "EDW");
+                    put("Category", "Verifications");
+                    put("Show in App", "No");
+                    put("Order", "1");
+                    put("Forecast Source", "Legion ML");
+                    put("Granularity", "Week");
+                    put("Input Stream", baseInputStreamName);
+                }
+            };
+
+            //Go to Demand Driver template
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            SettingsAndAssociationPage settingsAndAssociationPage = pageFactory.createSettingsAndAssociationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad(templateType);
+            //Go to Settings tab
+            settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+
+            //Check Granularity for a new base input stream.
+            settingsAndAssociationPage.createInputStream(baseInputStream);
+            settingsAndAssociationPage.createInputStream(baseInputStream1);
+            settingsAndAssociationPage.clickEditBtn(baseInputStream.get("Name"));
+            String baseValue = settingsAndAssociationPage.getGranularityForCertainInputStream();
+            System.out.println("value: " + baseValue);
+            SimpleUtils.assertOnFail("The default granularity for base is not correct!", baseValue.equalsIgnoreCase(granularityOptions.get(1)), false);
+
+            //Check Granularity for a new aggregated input stream.
+            settingsAndAssociationPage.createInputStream(aggregatedInputStream);
+            settingsAndAssociationPage.clickEditBtn(aggregatedInputStream.get("Name"));
+            String aggregatedValue = settingsAndAssociationPage.getGranularityForCertainInputStream();
+            System.out.println("value: " + aggregatedValue);
+            SimpleUtils.assertOnFail("The default granularity for aggregated is not correct!", aggregatedValue.equalsIgnoreCase(granularityOptions.get(1)), false);
+
+            //Update the granularity to other options
+            for (String option : granularityOptions){
+                if (!option.equals(baseValue)){
+                    settingsAndAssociationPage.clickEditBtn(baseInputStream.get("Name"));
+                    settingsAndAssociationPage.updateGranularityForCertainInputStream(option);
+                }
+            }
+
+            //Update granularity for base stream which is used in aggregated is not allowed
+            settingsAndAssociationPage.clickEditBtn(baseInputStream1.get("Name"));
+            settingsAndAssociationPage.updateGranularityForCertainInputStream(granularityOptions.get(0));
+            String warningMsgToVerify = expectedWarningMsg + " [" + aggregatedInputStream.get("Name") + "]";
+            settingsAndAssociationPage.validateWarningMessage(warningMsgToVerify);
+
+            //Remove base stream which is used in aggregated is not allowed
+            settingsAndAssociationPage.removeInputStream(baseInputStream1.get("Name"));
+            settingsAndAssociationPage.validateWarningMessage(warningMsgToVerify);
+
+            //Verify default granularity for newly created demand driver
+            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+            configurationPage.createNewTemplate(templateName);
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(driver);
+            configurationPage.searchDriverInTemplateDetailsPage(driver.get("Name"));
+            configurationPage.clickAddOrEditForDriver("Edit");
+            String granularityValue = configurationPage.getGranularityForCertainDriver();
+            System.out.println("granularityValue: " + granularityValue);
+            SimpleUtils.assertOnFail("The default granularity for driver is not correct!", granularityValue.equalsIgnoreCase(granularityOptions.get(1)), false);
+            configurationPage.clickAddOrEditForDriver("Add");
+            configurationPage.addOrEditDemandDriverInTemplate(driver1);
+            settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
+            //Add association and save
+            configurationPage.createDynamicGroup(templateName, "Location Name", location);
+            configurationPage.selectOneDynamicGroup(templateName);
+            //Could publish normally
+            configurationPage.clickOnTemplateDetailTab();
+            configurationPage.publishNowTemplate();
+            settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
+            settingsAndAssociationPage.removeInputStream(baseInputStreamName);
+            String inputStreamUsedInDriverWarning = "This input stream is used in the template " + "[" + templateName + "]";
+            settingsAndAssociationPage.validateWarningMessage(inputStreamUsedInDriverWarning);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }

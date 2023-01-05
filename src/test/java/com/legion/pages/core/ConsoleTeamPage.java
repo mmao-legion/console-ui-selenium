@@ -385,6 +385,21 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			return selectedName;
 		}
 
+		@FindBy(xpath = "(//span[contains(@class,\"sc-kbuhQt\")])[1]")
+		private WebElement firstTeamMemberName;
+		public void searchAndSelectTeamMember(String username) throws Exception {
+			if(isElementLoaded(teamMemberSearchBox, 10)) {
+				teamMemberSearchBox.clear();
+				teamMemberSearchBox.sendKeys(username);
+				if(isElementLoaded(firstTeamMemberName,10))
+					click(firstTeamMemberName);
+				else
+					SimpleUtils.fail("There is no " + username,false);
+			}else
+				SimpleUtils.fail("TM search box load failed",false);
+
+		}
+
 		@Override
 		public void approvePendingTimeOffRequest() throws Exception {
 			String pendingStatusLabel = "PENDING";
@@ -513,7 +528,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement teamTabLoadingIcon;
 	@FindBy(css="div[id=\"legion_cons_Team_Roster_Table\"] div[role=\"row\"]")
 	private List<WebElement> teamMembers;
-	@FindBy (className = "lgnToggleIconButton")
+	@FindBy (id = "legion_cons_Team_Roster_AddTeamMember_button")
 	private WebElement addNewMemberButton;
 	@FindBy (className = "col-sm-6")
 	private List<WebElement> sectionsOnAddNewTeamMemberTab;

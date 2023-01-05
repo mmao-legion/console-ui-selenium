@@ -49,4 +49,10 @@ public interface SettingsAndAssociationPage {
     public void clearUpSelectedLocationAttributes() throws Exception;
     public void fillInValuesForLocationAttributes(HashMap<String, List<String>> locationAttributes) throws Exception;
     public boolean verifyAttributeValuesInAssociationPage() throws Exception;
+    public void clickEditBtn(String inputStreamName) throws Exception;
+    public String getGranularityForCertainInputStream() throws Exception;
+    public void updateGranularityForCertainInputStream(String granularityValue) throws Exception;
+    public void validateWarningMessage(String warningMsgToVerify) throws Exception;
+    public void clickCancelBtn() throws Exception;
+    public void removeInputStream(String name) throws Exception;
 }

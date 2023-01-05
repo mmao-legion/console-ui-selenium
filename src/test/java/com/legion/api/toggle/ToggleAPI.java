@@ -19,7 +19,7 @@ public class ToggleAPI {
 
             List<HashMap> rules = new ArrayList<>();
             // Get the current enterprise names which have specific toggle turned on
-            List<String> enterpriseNames = getCurrentEnabledEnterprises(toggleName);
+            List<String> enterpriseNames = new ArrayList<>(getCurrentEnabledEnterprises(toggleName));
             if (isTurnOn) {
                 if (!enterpriseNames.contains(enterpriseName.toLowerCase())) {
                     enterpriseNames.add(enterpriseName);
@@ -44,6 +44,8 @@ public class ToggleAPI {
                     rulesValue.put("enterpriseName", name);
                     rules.add(rulesValue);
                 }
+            } else {
+                rules = new ArrayList<>();
             }
 
             HashMap<String, Object> recordContext = new HashMap<>();

@@ -3,6 +3,7 @@ package com.legion.pages.core.opemployeemanagement;
 import com.legion.pages.BasePage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -475,6 +476,280 @@ public class TimeOffPage extends BasePage {
                 SimpleUtils.fail("user history detail loaded failed",false);
         }else
             SimpleUtils.fail("user history loaded failed",false);
+    }
+
+    @FindBy(css = "input-field[label = 'Time Off Type']")
+    private WebElement timeOffType;
+    @FindBy(css = "input-field[label = 'History Type']")
+    private WebElement historyType;
+    @FindBy(css = "input-field[label = 'Action']")
+    private WebElement action;
+    @FindBy(css = "input-field[label = 'Time Off Type']>ng-form>input")
+    private WebElement timeOffTypeInput;
+    @FindBy(css = "input-field[label = 'History Type']>ng-form>input")
+    private WebElement historyTypeInput;
+    @FindBy(css = "input-field[label = 'Action']>ng-form>input")
+    private WebElement actionInput;
+
+    public void verifyHistoryType() throws Exception{
+        click(history);
+        if(isElementLoaded(timeOffType,5) && isElementLoaded(historyType,5) && isElementLoaded(action)){
+            if(timeOffType.getAttribute("innerText").contains("Time Off Type") && historyType.getAttribute("innerText").contains("History Type") && action.getAttribute("innerText").contains("Action"))
+                SimpleUtils.pass("History filter text is correct");
+            else
+                SimpleUtils.fail("History filter text is wrong",false);
+        }else
+            SimpleUtils.fail("Time Off Type or History Type or Action doesn't dispaly",false);
+    }
+
+    public void verifyHistoryTypeDefaultValue() throws Exception{
+        if(isElementLoaded(timeOffTypeInput,5) && isElementLoaded(historyTypeInput,5) && isElementLoaded(actionInput,5)){
+            if(timeOffTypeInput.getAttribute("placeholder").contains("All") && historyTypeInput.getAttribute("placeholder").contains("All") && actionInput.getAttribute("placeholder").contains("All"))
+                SimpleUtils.pass("History filter default value is All");
+            else
+                SimpleUtils.fail("History filter default value is not All",false);
+        }else
+            SimpleUtils.fail("Select field loaded failed",false);
+    }
+
+    @FindBy(css = "div.show-more")
+    private WebElement showMoreButton;
+    @FindBy(css = "div[title = 'Time Off Request']")
+    private WebElement timeOffRequest;
+    @FindBy(css = "input-field[label = 'Time Off Type']>ng-form")
+    private WebElement timeOffTypeSelect;
+    @FindBy(css = "input-field[label = 'History Type']>ng-form")
+    private WebElement historyTypeSelect;
+    @FindBy(css = "input-field[label = 'Action']>ng-form")
+    private WebElement actionSelect;
+
+    public void timeOffRequestFilter() throws Exception{
+        click(historyTypeSelect);
+        click(timeOffRequest);
+
+        if(isElementLoaded(showMoreButton)) {
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        for(int i = 0; i < historyItems.size(); i++){
+            if(historyItems.get(i).getAttribute("innerText").contains("taken"))
+                SimpleUtils.pass("Time Off Request filter successfully");
+            else
+                SimpleUtils.fail("Time Off Request filter failed",false);
+        }
+    }
+
+    @FindBy(css = "input[aria-label = 'Annual Leave']")
+    private WebElement annualLeaveTimeOffReason;
+    @FindBy(css = "input[aria-label = 'Annual Leave1']")
+    private WebElement annualLeave1TimeOffReason;
+    @FindBy(css = "input[aria-label = 'Annual Leave2']")
+    private WebElement annualLeave2TimeOffReason;
+
+    public void timeOffTypeSingleFilter() throws Exception{
+        click(timeOffTypeSelect);
+        click(annualLeave1TimeOffReason);
+        click(annualLeave2TimeOffReason);
+        click(annualLeaveTimeOffReason);
+
+        if(isElementLoaded(showMoreButton)) {
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        for(int i = 0; i < historyItems.size(); i++){
+            if(historyItems.get(i).getAttribute("innerText").contains("Annual Leave") && !historyItems.get(i).getAttribute("innerText").contains("Annual Leave1") && !historyItems.get(i).getAttribute("innerText").contains("Annual Leave2"))
+                SimpleUtils.pass("Accrual Ledger filter successfully");
+            else
+                SimpleUtils.fail("Accrual Ledger filter failed",false);
+        }
+    }
+
+    public void timeOffTypeMutiplyFilter() throws Exception{
+        click(timeOffTypeSelect);
+        click(annualLeave1TimeOffReason);
+        click(annualLeave2TimeOffReason);
+
+        if(isElementLoaded(showMoreButton)) {
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        for(int i = 0; i < historyItems.size(); i++){
+            if(historyItems.get(i).getAttribute("innerText").contains("Annual Leave") || historyItems.get(i).getAttribute("innerText").contains("Annual Leave1") || historyItems.get(i).getAttribute("innerText").contains("Annual Leave2"))
+                SimpleUtils.pass("Accrual Ledger filter successfully");
+            else
+                SimpleUtils.fail("Accrual Ledger filter failed",false);
+        }
+    }
+
+    @FindBy(css = "input[aria-label = 'All']")
+    private WebElement timeOffTypeAll;
+
+    public void timeOffTypeAllFilter() throws Exception{
+        click(timeOffTypeAll);
+        verifyHistorySize();
+    }
+
+    @FindBy(css = "div[title = 'Accrual Ledger']")
+    private WebElement accrualLedger;
+    @FindBy(css = "div[title = 'All']")
+    private WebElement historyTypeAll;
+    public void accrualLedgerFilter() throws Exception{
+        click(historyTypeSelect);
+        click(accrualLedger);
+
+        if(isElementLoaded(showMoreButton)) {
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        for(int i = 0; i < historyItems.size(); i++){
+            if(!historyItems.get(i).getAttribute("innerText").contains("taken"))
+                SimpleUtils.pass("Accrual Ledger filter successfully");
+            else
+                SimpleUtils.fail("Accrual Ledger filter failed",false);
+        }
+
+        click(historyTypeSelect);
+        click(historyTypeAll);
+    }
+
+    public void historyTypeAllFilter() throws Exception{
+        Boolean accrualLedgerFlag = false, timeOffRequestFlag = false;
+        for(int i = 0; i < historyItems.size(); i++){
+            if(!historyItems.get(i).getAttribute("innerText").contains("taken"))
+                accrualLedgerFlag = true;
+            if(historyItems.get(i).getAttribute("innerText").contains("taken"))
+                timeOffRequestFlag = true;
+        }
+
+        if(accrualLedgerFlag == true && timeOffRequestFlag == true)
+            SimpleUtils.pass("History type all filter successfully");
+        else
+            SimpleUtils.fail("History type all filter failed",false);
+    }
+
+    public void actionAllFilter() throws Exception{
+        Boolean accrualFlag = false, accrualCapFlag = false;
+        for(int i = 0; i < historyItems.size(); i++){
+            if(historyItems.get(i).getAttribute("innerText").contains("Accrued"))
+                accrualFlag = true;
+            if(historyItems.get(i).getAttribute("innerText").contains("Deducted"))
+                accrualCapFlag = true;
+        }
+
+        if(accrualFlag == true && accrualCapFlag == true)
+            SimpleUtils.pass("Action all filter successfully");
+        else
+            SimpleUtils.fail("Action all filter failed",false);
+    }
+
+    @FindBy(css = "input[aria-label = 'Accrual']")
+    private WebElement accrual;
+    public void actionAccrualFilter() throws Exception{
+        click(actionSelect);
+        //accrualLedger.sendKeys(Keys.ENTER);
+        click(accrual);
+
+        Boolean accrualFlag = false, accrualCapFlag = false;
+        for(int i = 0; i < historyItems.size(); i++){
+            if(historyItems.get(i).getAttribute("innerText").contains("Accrued"))
+                accrualFlag = true;
+            if(historyItems.get(i).getAttribute("innerText").contains("Deducted"))
+                accrualCapFlag = true;
+        }
+
+        if(accrualFlag == true && accrualCapFlag == false)
+            SimpleUtils.pass("Action accrual filter successfully");
+        else
+            SimpleUtils.fail("Action accrual all filter failed",false);
+
+        click(accrual);
+    }
+
+    @FindBy(css = "input-field[label = 'Accrual Cap']")
+    private WebElement accrualCap;
+    public void actionAccrualCapFilter() throws Exception{
+        click(accrualCap);
+
+        Boolean accrualFlag = false, accrualCapFlag = false;
+        for(int i = 0; i < historyItems.size(); i++){
+            if(historyItems.get(i).getAttribute("innerText").contains("Accrued"))
+                accrualFlag = true;
+            if(historyItems.get(i).getAttribute("innerText").contains("Deducted"))
+                accrualCapFlag = true;
+        }
+
+        if(accrualFlag == false && accrualCapFlag == true)
+            SimpleUtils.pass("Action accrual cap filter successfully");
+        else
+            SimpleUtils.fail("Action accrual cap filter failed",false);
+
+        click(accrualCap);
+        click(actionSelect);
+    }
+
+    public void verifyActionisDisable() throws Exception{
+        if(actionSelect.getAttribute("class").contains("input-field-disable"))
+            SimpleUtils.pass("Action select is disable");
+        else
+            SimpleUtils.fail("Action select is enable",false);
+    }
+
+    public void verifyHistorySize() throws Exception{
+        if(isElementLoaded(showMoreButton,5)){
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        if(isElementLoaded(showMoreButton,5)){
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        System.out.println(historyItems.size());
+        if(historyItems.size() == 30)
+            SimpleUtils.pass("All accrual display successfully");
+        else
+            SimpleUtils.fail("All accrual display failed",false);
+    }
+
+    @FindBy(css = "div.lg-slider-pop")
+    private WebElement historyTab;
+
+    public void closeHistory() throws Exception{
+        click(historyCloseButton);
+        if(isElementLoaded(historyTab))
+            SimpleUtils.fail("Close history failed",false);
+    }
+
+    @FindBy(css = "input-field[label = 'Time Off Type']>label")
+    private WebElement timeOffTypeText;
+    @FindBy(css = "input-field[label = 'History Type']>label")
+    private WebElement historyTypeText;
+    @FindBy(css = "input-field[label = 'Action']>label")
+    private WebElement actionText;
+
+    public void verifyHistoryFilterUIText() throws Exception{
+        if(timeOffTypeText.getAttribute("innerText").equals("Time Off Type") && historyTypeText.getAttribute("innerText").equals("History Type") && actionText.getAttribute("innerText").equals("Action"))
+            SimpleUtils.pass("Filter text is correct");
+        else
+            SimpleUtils.fail("Filter text is wrong",false);
+    }
+
+    public void verifyMmutiplyAction() throws Exception{
+        click(actionSelect);
+        click(accrualCap);
+        click(accrual);
+
+        if(isElementLoaded(showMoreButton,5)){
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        if(isElementLoaded(showMoreButton,5)){
+            scrollToElement(showMoreButton);
+            click(showMoreButton);
+        }
+        if(historyItems.size() == 29)
+            SimpleUtils.pass("Mutiply action filter correct");
+        else
+            SimpleUtils.fail("Mutiply action filter wrong",false);
     }
 }
 
