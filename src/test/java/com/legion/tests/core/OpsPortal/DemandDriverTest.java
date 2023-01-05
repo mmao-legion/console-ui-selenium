@@ -970,6 +970,7 @@ public enum modelSwitchOperation{
             String templateType = "Demand Drivers";
             String templateName = "Default";
             List<String> streamNameList = new ArrayList<>();
+            List<String> streamNameListForCertainGranularity = new ArrayList<>();
             List<String> streamNamesInDriverPage = new ArrayList<>();
 
             //Go to Demand Driver template
@@ -981,17 +982,24 @@ public enum modelSwitchOperation{
             //Go to settings page, get all the input streams
             settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
             streamNameList = settingsAndAssociationPage.getStreamNamesInList("All");
+            for (String streamName : streamNameList){
+                settingsAndAssociationPage.clickEditBtn(streamName);
+                String granularityValue = settingsAndAssociationPage.getGranularityForCertainInputStream();
+                if (granularityValue.equals("Slot (30 min)"))
+                    streamNameListForCertainGranularity.add(streamName);
+            }
+
             //Go to driver details page, get all the input streams
             settingsAndAssociationPage.goToTemplateListOrSettings("Template");
-            configurationPage.clickOnSpecifyTemplateName("Default", "edit");
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.clickAddOrEditForDriver("Add");
             streamNamesInDriverPage = configurationPage.getInputStreamInDrivers();
 
-            Collections.sort(streamNameList);
+            Collections.sort(streamNameListForCertainGranularity);
             Collections.sort(streamNamesInDriverPage);
-            if(streamNameList.size()==streamNamesInDriverPage.size()){
-                if(ListUtils.isEqualList(streamNameList, streamNamesInDriverPage)){
+            if(streamNameListForCertainGranularity.size()==streamNamesInDriverPage.size()){
+                if(ListUtils.isEqualList(streamNameListForCertainGranularity, streamNamesInDriverPage)){
                     SimpleUtils.pass("Input Streams in driver details page and Settings page are totally the same!");
                 }else {
                     SimpleUtils.fail("Input Streams in driver details page and Settings page are NOT the same!",false);
