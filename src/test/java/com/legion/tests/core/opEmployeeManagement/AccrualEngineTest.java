@@ -2986,6 +2986,19 @@ public class AccrualEngineTest extends TestBase {
         teamPage.goToTeam();
         teamPage.searchAndSelectTeamMember("AccrualEngine01");
 
+        String workerId = "6a425e51-47fa-4733-933a-33beeea89eea";
+        //get session id via login
+        String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+
+        //Delete the worker's accrual balance
+        String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
+        Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
+
+        runAccrualJobToSimulateDate(workerId, "2020-12-30", sessionId);
+        runAccrualJobToSimulateDate(workerId, "2021-12-15", sessionId);
+
+        refreshPage();
+
         timeOffPage.switchToTimeOffTab();
         timeOffPage.verifyHistoryType();
         timeOffPage.verifyHistorySize();

@@ -1282,7 +1282,7 @@ public class AbsentManagePage extends BasePage {
         }
     }
 
-    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div")
+    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > ng-transclude > table")
     private WebElement timeOffPage;
     @FindBy(css = "div:nth-child(2) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div > div.lg-pagination__arrow.lg-pagination__arrow--right")
     private WebElement timeOffNextPage;
