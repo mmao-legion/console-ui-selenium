@@ -383,7 +383,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			return selectedName;
 		}
 
-		@FindBy(css = "span.sc-kbuhQt.gaksUh")
+		@FindBy(css = "div[data-testid = 'lg-table-name']>span")
 		private WebElement firstTeamMemberName;
 		public void searchAndSelectTeamMember(String username) throws Exception {
 			if(isElementLoaded(teamMemberSearchBox, 10)) {
