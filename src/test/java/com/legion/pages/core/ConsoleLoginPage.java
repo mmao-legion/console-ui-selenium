@@ -92,9 +92,11 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 			waitForSeconds(1);
 			clickTheElement(newSignInBtn);
 			try {
-				if (isElementLoaded(helperText, 5) && helperText.getText().contains("Invalid login credentials")) {
-					waitForSeconds(3);
-					clickTheElement(newSignInBtn);
+				if (System.getProperty("enterprise").equalsIgnoreCase("vailqacn")) {
+					waitForSeconds(5);
+					if (isElementLoaded(newSignInBtn, 5) && isClickable(newSignInBtn, 5)) {
+						clickTheElement(newSignInBtn);
+					}
 				}
 			} catch (Exception e) {
 				// Do nothing
