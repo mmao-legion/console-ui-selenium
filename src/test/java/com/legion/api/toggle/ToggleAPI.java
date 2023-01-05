@@ -8,7 +8,6 @@ import com.legion.utils.SimpleUtils;
 
 import java.util.*;
 
-
 import static com.jayway.restassured.RestAssured.given;
 
 public class ToggleAPI {

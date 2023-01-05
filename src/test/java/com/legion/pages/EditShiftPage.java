@@ -52,4 +52,5 @@ public interface EditShiftPage {
     public List<String> getRestBreakWarningMessage();
     public int getMealBreakCount () throws Exception;
     public int getRestBreakCount () throws Exception;
+    public void clickOnUpdateAnywayButton() throws Exception;
 }

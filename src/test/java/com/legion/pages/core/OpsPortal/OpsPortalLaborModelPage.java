@@ -295,6 +295,10 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 
 	@FindBy(css="label.switch> ng-form>span")
 	private List<WebElement> checkBoxForEachWorkRolesInLocationLevel2;
+
+	@FindBy(css = ".workRole")
+	private List<WebElement> locationLevelWorkRoles;
+
 	@Override
 	public void overriddenLaborModelRuleInLocationLevel(int index) {
 		waitForSeconds(5);
@@ -339,6 +343,40 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 			}
 		}else
 			SimpleUtils.report("There is no work role");
+	}
+
+	@Override
+	public void disableOrEnableWorkRoleInLocationLevel(String roleName, boolean isEnable) throws Exception {
+		if (areListElementVisible(locationLevelWorkRoles, 5)) {
+			for (int i = 0; i < locationLevelWorkRoles.size(); i++) {
+				if (locationLevelWorkRoles.get(i).getText().trim().toLowerCase().contains(roleName.toLowerCase())) {
+					if (isEnable) {
+						if (checkBoxForEachWorkRolesInLocationLevel.size()>0) {
+							if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("ng-empty")) {
+								clickTheElement(checkBoxForEachWorkRolesInLocationLevel2.get(i));
+								if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("ng-not-empty")) {
+									SimpleUtils.pass("Enable work role successfully");
+								}else
+									SimpleUtils.fail("Enable work role failed",false);
+							}
+						}else
+							SimpleUtils.report("There is no work role");
+					} else {
+						if (checkBoxForEachWorkRolesInLocationLevel.size()>0) {
+							if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("ng-not-empty")) {
+								clickTheElement(checkBoxForEachWorkRolesInLocationLevel2.get(i));
+								if (checkBoxForEachWorkRolesInLocationLevel.get(i).getAttribute("class").contains("ng-empty")) {
+									SimpleUtils.pass("Disable work role successfully");
+								}else
+									SimpleUtils.fail("Disable work role failed",false);
+							}
+						}else
+							SimpleUtils.report("There is no work role");
+					}
+					break;
+				}
+			}
+		}
 	}
 
 	@FindBy(css="lg-button[label=\"Edit\"] button")

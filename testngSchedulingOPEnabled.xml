@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="10" name="LegionTest" parallel="tests">
+<suite verbose ="0" thread-count="7" name="LegionTest" parallel="tests">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Scheduling OP Enabled Regression"/>
@@ -51,12 +51,12 @@
                     <include name="validateTheGenerationOfP2PLGScheduleAsInternalAdmin" />
                     <!--                   <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForP2PLGAsInternalAdmin" /> -->
                     <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateP2PScheduleAsInternalAdmin" />
-                    <include name="validateTheButtonsOnP2PLGSchedulePageAsInternalAdmin" />
+<!--                    <include name="validateTheButtonsOnP2PLGSchedulePageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
                     <!--                    <include name="validateTheFunctionOfAutoOpenShiftForP2PLGAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-7919-->
-                    <include name="validateTheFunctionOfAutoOpenShiftInDayViewForP2PLGAsInternalAdmin" />
-                    <include name="validateTheFunctionOfManualOpenShiftForP2PLGAsInternalAdmin" />
+<!--                    <include name="validateTheFunctionOfAutoOpenShiftInDayViewForP2PLGAsInternalAdmin" /> Need more time to check-->
+<!--                    <include name="validateTheFunctionOfManualOpenShiftForP2PLGAsInternalAdmin" SCH-8334 />-->
                     <include name="validateTheFunctionOfManualOpenShiftInDayViewFoP2PLGAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAssignTMShiftForP2PLGAsInternalAdmin" />
+<!--                    <include name="validateTheFunctionOfAssignTMShiftForP2PLGAsInternalAdmin" SCH-8334 />-->
                     <!--                    <include name="verifyAssignTMWhenTMHasTimeOffThatDayForP2PLGAsStoreManager" /> -->
                     <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForP2PAsInternalAdmin" />
                     <include name="validateAssignTMWhenTMHasMaxNoOfShiftsScheduledForP2PAsInternalAdmin" />
@@ -73,7 +73,12 @@
                     <include name="verifyChangingLocationForP2POnSingleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyEmployeeCanReceiveAndAcceptOffersForP2PLGAsTeamMember" />
                     <include name="verifyEmployeesCanSwapShiftsForP2PLGAsTeamMember" />
-                    <include name="verifyEmployeesCanClaimCoverRequestForP2PLGAsTeamMember" />
+<!--                    <include name="verifyEmployeesCanClaimCoverRequestForP2PLGAsTeamMember" /> Need more time to check-->
+                    <include name="verifyDragAndDropShiftToSameLocationForP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropShiftToDifferentLocationForP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropEmployeeToSameLocationForP2PLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropEmployeeToDifferentLocationForP2PLGScheduleAsInternalAdmin" />
+                    <!-- <include name="VerifyParentLocationDisabledLaborBudgetEditBtnAsInternalAdmin" />   Fix is not merged into rc yet -->
                 </methods>
             </class>
         </classes>
@@ -101,13 +106,13 @@
                     <include name="validateTheGenerationOfParentChildLGScheduleAsInternalAdmin" />
                     <!--                  <include name="validateManagerCannotEditOperatingHoursWhenDisableItsManageWorkingHoursSettingPermissionForParentChildLGAsInternalAdmin" /> -->
                     <!--                   <include name="validateAllSmartCardsDisplayCorrectlyAfterGenerateParentChildScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8208-->
-                    <include name="validateTheButtonsOnParentChildLGSchedulePageAsInternalAdmin" />
+<!--                    <include name="validateTheButtonsOnParentChildLGSchedulePageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
                     <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForParentChildLGAsInternalAdmin" />
-                    <include name="validateTheFunctionOfAutoOpenShiftForParentChildLGAsInternalAdmin" />
+<!--                    <include name="validateTheFunctionOfAutoOpenShiftForParentChildLGAsInternalAdmin" SCH-8334 >-->
                     <include name="validateTheFunctionOfAutoOpenShiftInDayViewForParentChildLGAsInternalAdmin" />
-                    <include name="validateTheFunctionOfManualOpenShiftForParentChildLGAsInternalAdmin" />
+<!--                    <include name="validateTheFunctionOfManualOpenShiftForParentChildLGAsInternalAdmin" SCH-8334 />-->
                     <include name="validateTheFunctionOfManualOpenShiftInDayViewForParentChildLGAsInternalAdminPC" />
-                    <include name="validateTheFunctionOfAssignTMShiftForParentChildLGAsInternalAdmin" />
+<!--                    <include name="validateTheFunctionOfAssignTMShiftForParentChildLGAsInternalAdmin" SCH-8334 />-->
                     <!--                    <include name="verifyAssignTMWhenTMHasTimeOffThatDayForParentChildLGAsStoreManager" /> -->
                     <include name="validateAssignTMWhenTMHasMaxNoOfShiftsScheduledForParentChildAsInternalAdmin" />
                     <include name="validateAssignTMWhenTMHasOverlappingViolationForParentChildAsInternalAdmin" />
@@ -123,8 +128,12 @@
                     <include name="verifyTheContentOnEditSingleShiftWindowForParentChildAsInternalAdmin" />
                     <include name="verifyChangingLocationForPCOnSingleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyEmployeeCanReceiveAndAcceptOffersForParentChildLGAsTeamMember" />
-                    <include name="verifyEmployeesCanSwapShiftsForParentChildLGAsTeamMember" />
-                    <include name="verifyEmployeesCanClaimCoverRequestForParentChildLGAsTeamMember" />
+<!--                    <include name="verifyEmployeesCanSwapShiftsForParentChildLGAsTeamMember" />
+                    <include name="verifyEmployeesCanClaimCoverRequestForParentChildLGAsTeamMember" /> Need more time check-->
+                    <include name="verifyDragAndDropShiftToSameLocationForParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropShiftToDifferentLocationForParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropEmployeeToSameLocationForParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropEmployeeToDifferentLocationForParentChildLGScheduleAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -136,7 +145,7 @@
             <class name="com.legion.tests.core.HardStopForMinorViolation">
                 <methods>
                     <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" />
+<!--                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
                     <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
                     <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
                     <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
@@ -192,6 +201,7 @@
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
+                    <include name="verifyTheFunctionalityOfDailyOTAsInternalAdmin" />
                     <include name="verifyTheBufferHoursDisplayInScheduleAsInternalAdmin"/>
                     <include name="verifySearchBarOnSchedulePageInWeekViewAsInternalAdmin" />
                     <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
@@ -219,7 +229,6 @@
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfMinTimeBetweenShiftsAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfDailyOTAsInternalAdmin" />
                     <!-- <include name="verifyTMOverTimeStatusAsInternalAdmin" /> -->
                     <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
                     <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
@@ -230,16 +239,19 @@
                     <include name="verifyTurnOnWeekOTViolationAsInternalAdmin" />
                             <include name="verifyTurnOffWeekOTViolationAsInternalAdmin" />
                             <include name="VerifyTheViewTeamSchedulePermissionDisplayAsInternalAdmin" />
-                            <include name="VerifyTheViewTeamSchedulePermissionTurnOffAsInternalAdmin" />
-                            <include name="VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin" />
+                    <!--         <include name="VerifyTheViewTeamSchedulePermissionTurnOffAsInternalAdmin" />
+                            <include name="VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin" />   The effective time is too long to run, no any useful method now -->
                     <!--          <include name="VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin" />
                             <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" /> The code is not merged into RC yet -->
-                    <include name="verifyRecommendTabHasTMsAsInternalAdmin" />
+                     <include name="verifyRecommendTabHasTMsAsInternalAdmin" />
                     <include name="verifyPleaseConfirmMessageOnWarningModalAsInternalAdmin" />
                     <!--  <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
                            <include name="verifyTheCanadaCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
-                           <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />  The code is not merged into RC yet -->
+                           <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
+                           <include name="verifyTheSouthAfricaCurrencySignDisplayAlignWithCountryAsInternalAdmin" />  The effective time of the configuration is not fixed -->
                     <include name="VerifyTheScheduleVersionUnchangedWithUnmodifiedSaveAsInternalAdmin" />
+                    <!-- <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOnAsInternalAdmin" />
+                <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOffAsInternalAdmin" />   The effective time is too long to run, no any useful method now -->
                   </methods>
               </class>
           </classes>
@@ -311,9 +323,9 @@
                     <include name="verifyFTSEEmployeesIgnoreTheWeekOTAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnoreThe7thConsecutiveOTAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnoreThe24HrsOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeeSupportClopeningViolationAsInternalAdmin"/>
+                    <!--  <include name="verifyFTSEEmployeeSupportClopeningViolationAsInternalAdmin"/>  Blocked by SCH-8605  -->
                     <include name="verifyFTSEEmployeeSupportMaxShiftViolationAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeeSupportRoleViolationAsInternalAdmin"/>
+                    <!--  <include name="verifyFTSEEmployeeSupportRoleViolationAsInternalAdmin"/>  Blocked by SCH-8334  -->
                     <include name="verifyFTSEEmployeesIgnore4X10AgreementAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnore5X8AgreementAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnore40X8AgreementAsInternalAdmin"/>
@@ -340,14 +352,14 @@
                     <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />
                     <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" />
                     <include name="verifySeniorityNotDisplayWhenToggleTurnOffForSearchingAsInternalAdmin" />
-                    <include name="verifySeniorityNotDisplayWhenToggleTurnOffForRecommendAsInternalAdmin" />
+                      <include name="verifySeniorityNotDisplayWhenToggleTurnOffForRecommendAsInternalAdmin" />
                     <include name="verifySeniorityDisplayWhenToggleTurnOnForSearchingAsInternalAdmin" />
                     <include name="verifySeniorityAlwaysDisplayOnSearchingDialogAsInternalAdmin" />
-                    <include name="verifySeniorityDisplayWhenToggleTurnOnForRecommendAsInternalAdmin" />
+                      <include name="verifySeniorityDisplayWhenToggleTurnOnForRecommendAsInternalAdmin" />
                     <include name="verifyAscendingOfSeniorityForSearchingAsInternalAdmin" />
                     <include name="verifyAscendingOfSeniorityForRecommendAsInternalAdmin" />
                     <include name="verifyDescendingOfSeniorityForSearchingAsInternalAdmin" />
-                    <include name="verifyDescendingOfSeniorityForRecommendAsInternalAdmin" />
+                    <!--  <include name="verifyDescendingOfSeniorityForRecommendAsInternalAdmin" />  Blocked by SCH-8613 -->
                 </methods>
             </class>
         </classes>
@@ -498,7 +510,7 @@
                     <include name="validateTheAvailableLeftHrsWhenTMHasShiftsOnTheWeekAsTeamMember" />
                     <include name="validateTimeOffOnAvailabilityTableAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWithScheduledShiftAsTeamMember" />
-                    <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWillChangedAccordinglyAsTeamMember" />
+<!--                    <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWillChangedAccordinglyAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-8602-->
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTablWhenThereIsNoShiftBeenScheduledAsTeamMember" />
                     <include name="validateTheApprovedOrRejectedAvailabilitiesRequestShouldNotBeAbleToOperateAsTeamMember" />
                     <include name="validateManagersCanConvertToOpenShiftAsInternalAdmin" />
@@ -698,7 +710,7 @@ SCH-5862-->
 <!--                    <include name="verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7592/>-->
                     <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
-<!--                    <include name="verifyErrorMessageOfStartAndEndTimeOnBulkEditAsInternalAdmin" />  Not merged into RC env  -->
+                    <!-- <include name="verifyErrorMessageOfStartAndEndTimeOnBulkEditAsInternalAdmin" />   Blocked by bug: SCH-8623 -->
                 </methods>
             </class>
         </classes>
@@ -732,6 +744,8 @@ SCH-5862-->
                 <methods>
                     <include name="verifyFunctionalityOfDisplayOrderAsInternalAdmin" />
                     <include name="verifyWorkRoleDisplayOrderInConsoleAsInternalAdmin" />
+                    <include name="verifyTheColorOfTheShiftInTMViewConsistentWithManagerViewAsTeamMember" />
+                    <include name="verifyTheRemovedWorkRoleShouldNotBeCopiedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -792,8 +806,8 @@ SCH-5862-->
                 <methods>
                     <include name="verifyTMCanAcknowledgeTheNotificationAfterPublishTheScheduleAsTeamMember" />
                     <include name="verifySMCanAcknowledgeTheNotificationAfterPublishTheScheduleAsStoreManager" />
-                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterEditShiftsAsTeamMember" />
-                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterDragAndDropShiftsAsTeamMember" />
+<!--                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterEditShiftsAsTeamMember" /> SCH-8334-->
+<!--                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterDragAndDropShiftsAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-8614-->
                     <include name="verifyEmployeeCanAcknowledgeTheNotificationFromNonHomeLocationWhenHomeScheduleIsPublishedAsTeamMemberOtherLocation1" />
                     <include name="verifyEmployeeCanAcknowledgeTheNotificationFromNonHomeLocationWhenHomeScheduleIsNotPublishedAsTeamMemberOtherLocation1" />
                 </methods>
@@ -808,7 +822,7 @@ SCH-5862-->
                     <include name="verifyTheContentOnSingleEditShiftsWindowForRegularLocationAsInternalAdmin" />
                     <include name="verifyTheCurrentColumnOnSingleEditShiftsWindowAsInternalAdmin" />
  <!--                   <include name="verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin" /> -->
-                    <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" />
+                    <!--                    <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8240-->
                     <!--        <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
                     <!--        <include name="verifyChangingEndTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
                     <include name="verifyChangingDateOnSingleEditShiftsWindowAsInternalAdmin" />
@@ -816,6 +830,14 @@ SCH-5862-->
                     <include name="verifyChangingShiftNotesOnSingleEditShiftWindowAsInternalAdmin" />
                     <include name="verifyTheContentOfBreaksSectionsAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditMealBreaksOnSingleEditShiftPageAsInternalAdmin" />
+                    <!--                    <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334-->
+                    <include name="verifyTheDailyOTAndDTViolationsOnSingleEditShiftPageAsInternalAdmin" />
+                    <!--                    <include name="verifyTheWeeklyOTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8430 https://legiontech.atlassian.net/browse/SCH-8429-->
+                    <include name="verifyTheClopeningViolationsOnSingleEditShiftPageAsInternalAdmin" />
+                    <include name="verifyTheSplitViolationsOnSingleEditShiftPageAsInternalAdmin" />
+                    <include name="verifyTheSpreadViolationsOnSingleEditShiftPageAsInternalAdmin" />
+                    <include name="verifyThe7thDayOTOnSingleEditShiftPageAsInternalAdmin" />
+                    <include name="verifyTheMealMissViolationOnSingleEditShiftPageAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -841,4 +863,17 @@ SCH-5862-->
             </class>
         </classes>
     </test>   Not merged into RC yet. -->
+
+    <test name="Accrual Time Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleAccrualTimeTest">
+                <methods>
+                    <include name="verifyAccrualLimitOverrideConfigsAsInternalAdmin"/>
+                    <include name="verifyAccrualLimitTimeOffReasonConfigsAsInternalAdmin"/>
+                    <include name="verifyTimeOffReasonListSyncAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->

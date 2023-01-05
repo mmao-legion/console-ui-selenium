@@ -4345,7 +4345,7 @@ public class DragAndDropTest extends TestBase {
                 i++;
                 Thread.sleep(2000);
             }
-
+            Thread.sleep(3000);
             //The Confirm button is display and disabled
             scheduleShiftTablePage.verifyConfirmBtnIsDisabledOnDragAndDropConfirmPage();
             //The Confirm button will change to Swap button and clickable

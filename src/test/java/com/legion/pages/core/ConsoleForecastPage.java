@@ -46,7 +46,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Day')]")
 	private WebElement dayViewButton;
 
-	@FindBy(css = "[id=\"legion_cons_schedule_forecast_Demand_button\"] span")
+	@FindBy(css = ".schedule-search-options .lg-button-group>div:nth-child(1)")
 	private WebElement shoppersTab;
 
 	@FindBy(xpath = "//span[contains(@class,'buttonLabel')][contains(text(),'Labor')]")
@@ -756,6 +756,17 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	}
 
 	@Override
+	public List<String> getLaborWorkRoles() throws Exception {
+		List<String> laborWorkRoles = new ArrayList<>();
+		if (areListElementVisible(hoursOfWorkRole,5)) {
+			for (WebElement e : hoursOfWorkRole) {
+				laborWorkRoles.add(e.getText().split(":")[0].trim().toLowerCase());
+			}
+		}
+		return laborWorkRoles;
+	}
+
+	@Override
 	public HashMap<String, Float> getInsightDataInShopperWeekView() throws Exception {
 		HashMap<String, Float> insightData = new HashMap<String, Float>();
 		SmartCardPage smartCardPage = new ConsoleSmartCardPage();
@@ -1341,8 +1352,9 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	public boolean verifyIsShopperTypeSelectedByDefaultAndLaborTabIsClickable() throws Exception {
 		boolean flag=false;
 		if (isElementLoaded(shoppersTab,5)) {
-			if (shoppersTab.getText().toLowerCase().contains("shopper") || shoppersTab.getText().toLowerCase().contains("demand")){
-				if (shoppersTab.findElement(By.xpath("./..")).getAttribute("class").contains("selected")) {
+			if (shoppersTab.getText().toLowerCase().contains("shopper") || shoppersTab.getText().toLowerCase().contains("demand")
+			|| shoppersTab.getText().toLowerCase().contains("items")){
+				if (shoppersTab.getAttribute("class").contains("selected")) {
 					SimpleUtils.pass("Shopper/Demand forecast is selected by default");
 					clickOnLabor();
 					flag = true;
@@ -2405,8 +2417,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			SimpleUtils.pass("Current active labor week is " + weekDuration[1]);
 			if (isElementEnabled(laborTab)) {
 				click(laborTab);
-				waitForSeconds(5);
-				if (forecastGraph.size() != 0 && laborSmartCardForecast.getText() != null) {
+				waitForSeconds(20);
+				if (forecastGraph.size() != 0 && isElementLoaded(laborSmartCardForecast, 10) && laborSmartCardForecast.getText() != null) {
 					SimpleUtils.pass("Labor Forecast Loaded in Week View Successfully!" + " Labor Forecast is " + laborSmartCardForecast.getText());
 				} else {
 					SimpleUtils.fail("Labor Forecast Not Loaded in Week View", false);
@@ -2421,8 +2433,23 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	}
 
 	@Override
+	public boolean isLaborBudgetEditBtnLoaded() throws Exception {
+		boolean isBtnLoaded = true;
+		if (isElementLoaded(laborBudgetEditBtn, 5))
+			SimpleUtils.report("Labor budget edit button is loaded!");
+		else {
+			isBtnLoaded = false;
+			SimpleUtils.report("Labor budget edit button is not loaded!");
+		}
+		return  isBtnLoaded;
+	}
+
+	@Override
 	public void editLaborBudgetOnSummarySmartCard() throws Exception {
-		String forecast = laborSmartCardForecast.getText();
+		String forecast = "";
+		if (isElementLoaded(laborSmartCardForecast, 20)) {
+			forecast = laborSmartCardForecast.getText();
+		}
 		if (isElementLoaded(laborBudgetEditBtn)) {
 			click(laborBudgetEditBtn);
 			if (isElementLoaded(guidanceBudget)&&isElementLoaded(budgetInputField)) {
@@ -2464,7 +2491,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public String getLaborBudgetOnSummarySmartCard() throws Exception {
 		String BudgetValue = null;
-		if (isElementLoaded(laborSmartCardBudget)) {
+		waitForSeconds(3);
+		if (isElementLoaded(laborSmartCardBudget, 30)) {
 			BudgetValue = laborSmartCardBudget.getText().trim();
 			return BudgetValue;
 		} else {
@@ -2473,7 +2501,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		return null;
 	}
 
-	@FindBy(css = "[id=\"legion_cons_schedule_forecast_Chart_area\"]")
+	@FindBy(css = "[id*=\"Chart_area\"]")
 	private WebElement demandForecastChart;
 	@Override
 	public void verifyDemandForecastCanLoad() throws Exception {

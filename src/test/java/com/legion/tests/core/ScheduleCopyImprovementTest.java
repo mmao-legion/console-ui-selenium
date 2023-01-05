@@ -168,7 +168,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the unassigned shifts convert to open shifts when copying schedule setting set as No, keep as unassigned")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -231,7 +231,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "KendraScott2_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
 //    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the schedule with both Uassigned and OOH shifts")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
@@ -365,6 +365,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             newShiftPage.clickOnOfferOrAssignBtn();
 
             scheduleMainPage.saveSchedule();
+            Thread.sleep(5000);
             createSchedulePage.publishActiveSchedule();
 
             //Get the info of this week for copy schedule
@@ -395,6 +396,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             userName = firstNameOfTM.trim() + " " + lastNameOfTM.trim();
             String timeOffReasonLabel = "VACATION";
             String timeOffExplanationText = "Sample Explanation Text";
+            Thread.sleep(5000);
             profileNewUIPage.createTimeOffOnSpecificDays(timeOffReasonLabel, timeOffExplanationText, fromDate, 6);
 
             //Go to schedule page and create new schedule by copy last week schedule

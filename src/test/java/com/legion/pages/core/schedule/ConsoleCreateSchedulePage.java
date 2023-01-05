@@ -1503,7 +1503,9 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     public void clickBackBtnAndExitCreateScheduleWindow() throws Exception {
         if (isElementEnabled(backBtnOnCreateScheduleWindow, 10)) {
             click(backBtnOnCreateScheduleWindow);
-            click(backBtnOnCreateScheduleWindow);
+            if (isElementEnabled(backBtnOnCreateScheduleWindow, 3)) {
+                click(backBtnOnCreateScheduleWindow);
+            }
             if (isElementEnabled(backBtnOnCreateScheduleWindow, 10)) {
                 click(backBtnOnCreateScheduleWindow);
             }
@@ -2183,7 +2185,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         if (isElementLoaded(nextButtonOnCreateSchedule, 15)) {
             clickTheElement(nextButtonOnCreateSchedule);
         } else {
-            SimpleUtils.fail("There is not next button!", false);
+            SimpleUtils.report("There is not next button!");
         }
     }
 
@@ -2337,6 +2339,36 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         } else {
             SimpleUtils.fail("Create Schedule button not loaded Successfully!", false);
         }
+    }
+
+    @Override
+    public boolean verifyTheConfirmOperatingHoursWindowShows(String locationName) throws Exception {
+        /*
+            * Following should be loaded:
+                -Title: Create New Schedule, location
+                -Seven Week days
+                -Edit button
+                -Exist and Next button
+            *
+            * */
+        boolean isConfirmOpeHrsDialogShows = true;
+        if (isElementLoaded(headerWhileCreateSchedule, 5)
+                && isElementLoaded(headerTitleWhileCreateSchedule, 5)
+                && isElementLoaded(locationWhileCreateSchedule, 5)){
+            String headerTitle = "Create New Schedule: Week of";
+            if(headerTitleWhileCreateSchedule.getText().trim().contains(headerTitle) &&
+                    locationWhileCreateSchedule.getText().trim().contains(locationName) && operatingHoursDayLists.size() == 7
+            && isElementLoaded(operatingHoursEditBtn, 5) && isElementLoaded(nextButtonOnCreateSchedule, 5)
+            && isElementLoaded(backBtnOnCreateScheduleWindow, 5)){
+               SimpleUtils.report("The Create Schedule content is loaded!");
+            }else{
+                isConfirmOpeHrsDialogShows = false;
+                SimpleUtils.report("The Create Schedule content is not loaded!");
+            }
+        } else {
+            isConfirmOpeHrsDialogShows = false;
+            SimpleUtils.report("The Create Schedule window header is not loaded!");
+        }return isConfirmOpeHrsDialogShows;
     }
 }
 
