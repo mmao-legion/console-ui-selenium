@@ -2811,9 +2811,43 @@ public class ConfigurationTest extends TestBase {
             configurationPage.updateWorkRoleHourlyRate(workRole,updateValue);
             configurationPage.chooseSaveOrPublishBtnAndClickOnTheBtn("publish now");
 
-            //create Operating Hour template and publish at different time
+            //create work role settings template and publish at different time
             configurationPage.createFutureWRSTemplateBasedOnExistingTemplate(templateName1,"publish at different time",date,"edit");
         }catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Fiona")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "update and reset location level work role settings template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOverriddenLocationLevelWorkRoleSettingsAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+
+        try {
+            String locationName = "WorkRoleSettings";
+            String workRole ="WRSAuto3";
+            Random random=new Random();
+            int number=random.nextInt(90)+10;
+            String updateValue=String.valueOf(number);
+
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.goToLocationDetailsPage(locationName);
+            locationsPage.goToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Work Role Settings", "View");
+            locationsPage.backToConfigurationTabInLocationLevel();
+            locationsPage.clickActionsForTemplate("Work Role Settings", "Edit");
+
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.updateWorkRoleHourlyRate(workRole,updateValue);
+            configurationPage.saveBtnIsClickable();
+            locationsPage.verifyOverrideStatusAtLocationLevel("Work Role Settings", "Yes");
+            locationsPage.clickActionsForTemplate("Work Role Settings", "Reset");
+            locationsPage.verifyOverrideStatusAtLocationLevel("Work Role Settings", "No");
+        } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
