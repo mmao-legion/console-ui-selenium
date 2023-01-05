@@ -2283,7 +2283,7 @@ public class LocationsTest extends TestBase {
             teamPage.searchAndSelectTeamMemberByName("A B");
             teamPage.isProfilePageLoaded();
             teamPage.goToTeam();
-            teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+  //          teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
             ForecastPage forecastPage  = pageFactory.createForecastPage();

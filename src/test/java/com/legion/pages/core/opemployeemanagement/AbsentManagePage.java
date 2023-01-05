@@ -1,7 +1,11 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.Constants;
+import com.legion.utils.HttpUtil;
 import com.legion.utils.SimpleUtils;
+import io.restassured.RestAssured;
+import org.hamcrest.Matchers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.WebElement;
@@ -9,7 +13,9 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -1009,6 +1015,13 @@ public class AbsentManagePage extends BasePage {
     public void viewEmployeeGroup() {
         viewBtnInAssociate.click();
         waitForSeconds(3);
+    }
+
+    public static void exportTimeOffBalance(Map TimeOffBalance, String accessToken, Object expectedPageNum) {
+        String getTimeOffBalanceUrl = Constants.getTimeOffBalance;
+        RestAssured.given().log().all().queryParams(TimeOffBalance).header("accessToken", accessToken).when().get(getTimeOffBalanceUrl)
+                .then().log().all().statusCode(200).body("numberOfPages", Matchers.equalTo(expectedPageNum));
+        SimpleUtils.pass("Succeeded in exporting time off balance!");
     }
 
     public String getViewModalTitle() {

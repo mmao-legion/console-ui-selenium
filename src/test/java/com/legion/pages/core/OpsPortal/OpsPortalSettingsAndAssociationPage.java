@@ -762,8 +762,11 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                     }
                     clickTheElement(streamValueInput);
                     for (WebElement streamOption : streamOptions) {
-                        if (streamOption.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-not-empty"))
+                        if (streamOption.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-not-empty")){
+                            scrollToElement(streamOption);
                             streamOption.click();
+                            waitForSeconds(2);
+                        }
                     }
                     for (WebElement streamOption : streamOptions){
                         if ("All".equalsIgnoreCase(inputStreamUpdated.get("Streams"))){
