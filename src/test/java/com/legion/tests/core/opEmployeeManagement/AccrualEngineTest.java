@@ -2349,6 +2349,8 @@ public class AccrualEngineTest extends TestBase {
         SimpleUtils.pass("Succeeded in confirming that the add more button was displayed!");
         configurationPage.addMore();
         //5.get all options
+        System.out.println(configurationPage.getHoursTypeOptions());
+        System.out.println(payableHoursType());
         Assert.assertEquals(configurationPage.getHoursTypeOptions(), payableHoursType(), "Failed to get all the Payable Hour Types!!!");
         SimpleUtils.pass("Succeeded in validating all the Payable Hour Types!");
         //6.Remove the existing hour types
@@ -2549,7 +2551,7 @@ public class AccrualEngineTest extends TestBase {
         hoursType.add("Holiday");
         hoursType.add("Other Pay Type");
         hoursType.add("Compliance");
-        hoursType.add("Differential");
+        //hoursType.add("Differential");  // rc env doesn't have this value
         return hoursType;
     }
 
@@ -3020,4 +3022,44 @@ public class AccrualEngineTest extends TestBase {
         timeOffPage.closeHistory();
     }
 
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "OPS-3980 Show Accrual history for Limit type with Max Carryover/ Annual Earn/Max Available type")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyHistoryDeductTypeAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            //go to console
+            RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
+            rightHeaderBarPage.switchToConsole();
+            //go to AccrualEngine location
+            ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+            consoleNavigationPage.searchLocation("Carters");
+            //go to team member details and switch to the time off tab.
+            consoleNavigationPage.navigateTo("Team");
+            TimeOffPage timeOffPage = new TimeOffPage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMember("History");
+
+            String workerId = "79348263-b57d-4512-a231-85ad2ade4bb4";
+            //get session id via login
+            String sessionId = LoginAPI.getSessionIdFromLoginAPI(getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+
+            //Delete the worker's accrual balance
+            String[] deleteResponse = deleteAccrualByWorkerId(workerId, sessionId);
+            Assert.assertEquals(getHttpStatusCode(deleteResponse), 200, "Failed to delete the user's accrual!");
+
+            runAccrualJobToSimulateDate(workerId, "2022-12-31", sessionId);
+
+            refreshPage();
+
+            timeOffPage.switchToTimeOffTab();
+
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.verifyHistoryDeductType();
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
