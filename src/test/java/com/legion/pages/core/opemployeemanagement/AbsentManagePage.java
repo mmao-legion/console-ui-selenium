@@ -1,7 +1,11 @@
 package com.legion.pages.core.opemployeemanagement;
 
 import com.legion.pages.BasePage;
+import com.legion.utils.Constants;
+import com.legion.utils.HttpUtil;
 import com.legion.utils.SimpleUtils;
+import io.restassured.RestAssured;
+import org.hamcrest.Matchers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.WebElement;
@@ -9,7 +13,9 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -90,6 +96,9 @@ public class AbsentManagePage extends BasePage {
     private WebElement deleteButton;
     @FindBy(css = "lg-search[placeholder='You can search by time off reason name']>input-field input")
     private WebElement timeOffSearchBox;
+    @FindBy(css = "lg-paged-search[placeholder=\"Search by time off reason name\"]>div>div>lg-pagination>div>div:nth-child(3)")
+    private WebElement TimeOffReasonRightArrow;
+
 
     //delete modal
     @FindBy(css = "modal div.model-content")
@@ -223,7 +232,7 @@ public class AbsentManagePage extends BasePage {
     private WebElement lookBackDays;
     @FindBy(css = "lg-switch>label.switch span")
     private WebElement toggleSlide;
-    @FindBy(css = "div.col-sm-2.addTimeOffReason>lg-button>button")
+    @FindBy(css = "lg-button[ng-click=\"$ctrl.createTimeOffReason('create')\"]>button")
     private WebElement addTimeOffButton;
     @FindBy(css = "div.lg-modal>h1")
     private WebElement CreateNewTimeOffModalTitle;
@@ -242,17 +251,17 @@ public class AbsentManagePage extends BasePage {
     private List<WebElement> timeOffReasonNames;
     @FindBy(css = "div.time-off-reason-setting table tr:last-child>td:first-child")
     private WebElement timeOffReasonAdded;
-    @FindBy(css = "div.time-off-reason-setting table tr:last-child>td:last-child>lg-button[label='Edit']>button")
+    @FindBy(css = "[ng-repeat=\"item in $ctrl.timeOffReasonSortedRows\"]>td:nth-child(3) > lg-button:nth-child(1)")
     private WebElement editTimeOff;
-    @FindBy(css = "div.time-off-reason-setting table tr:last-child>td:last-child>lg-button[label='Remove']>button")
+    @FindBy(css = "[ng-repeat=\"item in $ctrl.timeOffReasonSortedRows\"]>td:nth-child(3) > lg-button:nth-child(2)")
     private WebElement removeButton;
     @FindBy(css = "modal form p.lg-modal__content.lg-modal__text")
     private WebElement removeConfirmMes;
 
     //Promotion part
-    @FindBy(css = "div.promotion-setting h1")
+    @FindBy(css = "lg-accrual-setting>div:nth-child(3) h1")
     private WebElement promotionTitle;
-    @FindBy(css = "div.promotion-setting lg-button>button")
+    @FindBy(css = "lg-button[ng-click=\"$ctrl.openPromotionModal('create')\"]>button")
     private WebElement promotionRuleAddButton;
     @FindBy(css = "modal[modal-title='Create New Accrual Promotion'] h1")
     private WebElement promotionModalTitle;
@@ -304,11 +313,11 @@ public class AbsentManagePage extends BasePage {
     private WebElement balanceSearchInputA;
     @FindBy(css = "lg-select[label='Balance after promotion'] div.lg-search-options__scroller>div>div")
     private WebElement balanceSearchResultA;
-    @FindBy(css = "div.promotion-setting table.lg-table tr>td:nth-child(1)")
+    @FindBy(css = "lg-paged-search[placeholder=\"Search by promotion name\"] table tr>td:nth-child(1)")
     private List<WebElement> promotionRuleNames;
-    @FindBy(css = "div.promotion-setting table tr:nth-child(2)>td:nth-child(2)>lg-button[label='Edit']")
+    @FindBy(css = "lg-paged-search[placeholder=\"Search by promotion name\"] table>tbody>tr:nth-child(2) lg-button[label='Edit']")
     private WebElement promotionEditButton;
-    @FindBy(css = "div.promotion-setting table tr:nth-child(2)>td:nth-child(2)>lg-button[label='Remove']")
+    @FindBy(css = "lg-paged-search[placeholder=\"Search by promotion name\"] table>tbody>tr:nth-child(2) lg-button[label='Remove']")
     private WebElement promotionRemoveButton;
     @FindBy(css = "modal[modal-title='Remove Accrual Promotion'] h1.lg-modal__title")
     private WebElement removeModalTitle;
@@ -764,6 +773,11 @@ public class AbsentManagePage extends BasePage {
         cancelCreating.click();
     }
 
+    public void nxetTimeOffReasonPage() {
+        scrollToElement(TimeOffReasonRightArrow);
+        TimeOffReasonRightArrow.click();
+    }
+
     public String getErrorMessage() {
         return errorMes.getText();
     }
@@ -941,12 +955,22 @@ public class AbsentManagePage extends BasePage {
     }
 
     public ArrayList getTimeOffReasonsInGlobalSetting() {
-        ArrayList<String> toList = new ArrayList<>();
-        tOffReasonsInGlobalSettingList.forEach((e) -> {
-            scrollToElement(e);
-            toList.add(e.getText());
-        });
-        return toList;
+//        ArrayList<String> toList = new ArrayList<>();
+//        tOffReasonsInGlobalSettingList.forEach((e) -> {
+//            scrollToElement(e);
+//            toList.add(e.getText());
+//        });
+//        return toList;
+        ArrayList<String> timeOffConfiguredInGlobalSettings = new ArrayList<>();
+        ArrayList<String> PromotionNames = getPromotionRuleName();
+        for(int i=0;i<4;i++){
+            ArrayList<String> timeOffConfiguredInGlobalSettings1 = getAllTheTimeOffReasons();
+            int n = timeOffConfiguredInGlobalSettings1.size()-PromotionNames.size();
+            List<String> TimeOffConfigs = timeOffConfiguredInGlobalSettings1.subList(0,n);
+            timeOffConfiguredInGlobalSettings.addAll(TimeOffConfigs);
+            nxetTimeOffReasonPage();
+        }
+        return timeOffConfiguredInGlobalSettings;
     }
 
     public ArrayList getTimeOffOptions() {
@@ -991,6 +1015,13 @@ public class AbsentManagePage extends BasePage {
     public void viewEmployeeGroup() {
         viewBtnInAssociate.click();
         waitForSeconds(3);
+    }
+
+    public static void exportTimeOffBalance(Map TimeOffBalance, String accessToken, Object expectedPageNum) {
+        String getTimeOffBalanceUrl = Constants.getTimeOffBalance;
+        RestAssured.given().log().all().queryParams(TimeOffBalance).header("accessToken", accessToken).when().get(getTimeOffBalanceUrl)
+                .then().log().all().statusCode(200).body("numberOfPages", Matchers.equalTo(expectedPageNum));
+        SimpleUtils.pass("Succeeded in exporting time off balance!");
     }
 
     public String getViewModalTitle() {
@@ -1197,5 +1228,103 @@ public class AbsentManagePage extends BasePage {
         }else
             SimpleUtils.fail("2 work roles selected faied",false);
         return workRoles;
+    }
+
+    @FindBy(css = "input[placeholder = 'Search by time off reason name']")
+    private WebElement timeOffReasonSearchBox;
+    @FindBy(css = "input[placeholder = 'Search by promotion name']")
+    private WebElement promotionSearchBox;
+    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > ng-transclude > table > tbody > tr:nth-child(2)")
+    private WebElement firstTimeOffReason;
+    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > ng-transclude > div")
+    //@FindBy(linkText = "No matching time off reason found.")
+    //@FindBy(xpath = "//div[2]/lg-paged-search/div/ng-transclude/div")
+    private WebElement noMatchTimeOffReason;
+    @FindBy(css = "tr[ng-repeat = 'item in $ctrl.timeOffReasonSortedRows']>td>lg-button[label = 'Edit']>button")
+    private WebElement timeOffReasonEdit;
+    @FindBy(css = "div:nth-child(3) > lg-paged-search > div > ng-transclude > table > tbody > tr:nth-child(2);")
+    private WebElement firstPromotion;
+    @FindBy(css = "div:nth-child(3) > lg-paged-search > div > ng-transclude > div")
+    private WebElement noMatchPromotion;
+    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > ng-transclude > table > tbody > tr[ng-repeat='item in $ctrl.timeOffReasonSortedRows']")
+    private List<WebElement> timeOffResonRows;
+    @FindBy(css = "div:nth-child(3) > lg-paged-search > div > ng-transclude > table > tbody > tr[ng-repeat='item in $ctrl.timeOffReasonSortedRows']")
+    private List<WebElement> promotionRows;
+    @FindBy(css = "tr[ng-repeat = 'item in $ctrl.promotionSortedRows']>td>lg-button[label = 'Edit']>button")
+    private WebElement promotionEdit;
+
+    public Boolean searchTimeOffReason(String timeOffReasonName) throws Exception{
+        if(isElementLoaded(timeOffReasonSearchBox,5)){
+            timeOffReasonSearchBox.clear();
+            timeOffReasonSearchBox.sendKeys(timeOffReasonName);
+            waitForSeconds(3);
+            if(!noMatchTimeOffReason.getAttribute("class").contains("no-record"))
+                return true;
+            else
+                return false;
+        }else{
+            SimpleUtils.fail("Time off reason search box loaded failed",false);
+            return false;
+        }
+    }
+
+    public Boolean searchPromotion(String promotionName) throws Exception{
+        if(isElementLoaded(promotionSearchBox,5)){
+            promotionSearchBox.clear();
+            promotionSearchBox.sendKeys(promotionName);
+            if(isElementLoaded(firstPromotion,5))
+                return true;
+            else
+                return false;
+        }else{
+            SimpleUtils.fail("Promotion search box loaded failed",false);
+            return false;
+        }
+    }
+
+    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div")
+    private WebElement timeOffPage;
+    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div > div.lg-pagination__arrow.lg-pagination__arrow--right")
+    private WebElement timeOffNextPage;
+    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div > div.lg-pagination__arrow.lg-pagination__arrow--left")
+    private WebElement timeOffPreviousPage;
+    @FindBy(css = "div:nth-child(3)")
+    private WebElement promotionPage;
+    @FindBy(css = "div:nth-child(3) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div > div.lg-pagination__arrow.lg-pagination__arrow--left")
+    private WebElement promotionPreviousPage;
+    @FindBy(css = "div:nth-child(3) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div > div.lg-pagination__arrow.lg-pagination__arrow--right")
+    private WebElement promotionNextPage;
+
+    public void verifyTimeOffPage() throws Exception{
+        if(isElementDisplayed(timeOffPage)){
+            if(isElementLoaded(timeOffPreviousPage,5) && isElementLoaded(timeOffNextPage,5) && isElementEnabled(timeOffNextPage)) {
+                if(timeOffPreviousPage.getAttribute("class").contains("lg-pagination__arrow--disabled"))
+                    SimpleUtils.pass("Time off reason previous page is disable default");
+                else
+                    SimpleUtils.fail("Time off reason previous page is not disable default",false);
+                click(timeOffNextPage);
+                SimpleUtils.pass("Time off reason page function work well");
+            }
+            else
+                SimpleUtils.fail("Time off reason page function can't work",false);
+        }else
+            SimpleUtils.fail("Time off page doesn't display",false);
+    }
+
+    public void verifyPromotionPage() throws Exception{
+        scrollToBottom();
+        if(isElementLoaded(promotionPage,5)){
+            if(isElementDisplayed(promotionPreviousPage) && isElementDisplayed(promotionNextPage) && isElementEnabled(promotionNextPage)) {
+                if(promotionPreviousPage.getAttribute("class").contains("lg-pagination__arrow--disabled"))
+                    SimpleUtils.pass("Promotion previous page is disable default");
+                else
+                    SimpleUtils.fail("Promotion previous page is not disable default",false);
+                click(promotionNextPage);
+                SimpleUtils.pass("Promotion page function work well");
+            }
+            else
+                SimpleUtils.fail("Promotion page function can't work",false);
+        }else
+            SimpleUtils.fail("Promotion page doesn't display",false);
     }
 }

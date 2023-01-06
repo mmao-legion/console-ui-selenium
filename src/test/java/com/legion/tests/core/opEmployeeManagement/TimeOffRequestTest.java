@@ -400,25 +400,28 @@ public class TimeOffRequestTest extends TestBase {
     //Delete the time off request just created before each test.
     public void deleteRequestedTimeOffDateByWorkerId(String workerId) {
         String enterpriseId = "aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95";
-        String sql1 = "delete from legionrc.TimeOffRequest where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        String DBName = "legionrc";
+        if(System.getProperty("env").contains("ephemeral-ops"))
+            DBName = "legiondb_ephemeral_ops";
+        String sql1 = "delete from " + DBName + ".TimeOffRequest where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
         System.out.println("sql1： " + sql1);
-        String sql2 = "delete from legionrc.TimeOffRequestHistory where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        String sql2 = "delete from " + DBName + ".TimeOffRequestHistory where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
         System.out.println("sql2： " + sql2);
-        String sql3 = "delete from legionrc.WorkerAccrualHistory where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        String sql3 = "delete from " + DBName + ".WorkerAccrualHistory where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
         System.out.println("sql3： " + sql3);
-        String sql4 ="delete from legionrc.TAWorkerPTO where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
+        String sql4 ="delete from " + DBName + ".TAWorkerPTO where workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'";
         System.out.println("sql4： " + sql4);
         DBConnection.updateDB(sql1);
         DBConnection.updateDB(sql2);
         DBConnection.updateDB(sql3);
         DBConnection.updateDB(sql4);
-        String queryResult1 = DBConnection.queryDB("legionrc.TimeOffRequest", "objectId", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
+        String queryResult1 = DBConnection.queryDB(DBName + ".TimeOffRequest", "objectId", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
         Assert.assertEquals(queryResult1, "No item returned!", "Failed to clear the data just generated in DB!");
-        String queryResult2 = DBConnection.queryDB("legionrc.TimeOffRequestHistory", "objectId", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
+        String queryResult2 = DBConnection.queryDB(DBName + ".TimeOffRequestHistory", "objectId", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
         Assert.assertEquals(queryResult2, "No item returned!", "Failed to clear the data just generated in DB!");
-        String queryResult3 = DBConnection.queryDB("legionrc.WorkerAccrualHistory", "objectId", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
+        String queryResult3 = DBConnection.queryDB(DBName + ".WorkerAccrualHistory", "objectId", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
         Assert.assertEquals(queryResult3, "No item returned!", "Failed to clear the data just generated in DB!");
-        String queryResult4 = DBConnection.queryDB("legionrc.TAWorkerPTO", "id", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
+        String queryResult4 = DBConnection.queryDB(DBName + ".TAWorkerPTO", "id", "workerId='" + workerId + "' and enterpriseId='" + enterpriseId + "'");
         Assert.assertEquals(queryResult4, "No item returned!", "Failed to clear the data just generated in DB!");
     }
 
@@ -505,11 +508,19 @@ public class TimeOffRequestTest extends TestBase {
         // delete created time off
         deleteRequestedTimeOffDateByWorkerId("223e6893-07a4-4df0-96d2-d5e008a413e8");
 
+        String createdBy = "7b856e05-dfcd-4911-81e0-f4c109840ef0";
+        String DBName = "legionrc";
+
+        if(System.getProperty("env").contains("ephemeral-ops")) {
+            createdBy = "7b856e05-dfcd-4911-81e0-f4c109840ef0";
+            DBName = "legiondb_ephemeral_ops";
+        }
+
         // delete activity
-        String sql = "delete from legionrc.Activity where createdBy = '7b856e05-dfcd-4911-81e0-f4c109840ef0' and enterpriseId = 'aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
+        String sql = "delete from " + DBName + ".Activity where createdBy = '" + createdBy + "' and enterpriseId = 'aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'";
         DBConnection.updateDB(sql);
 
-        String queryResult = DBConnection.queryDB("legionrc.Activity", "objectId", "createdBy = 'e335a98b-c0fb-42b0-ba2f-d9b24ea346d3' and enterpriseId = 'aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'");
+        String queryResult = DBConnection.queryDB(DBName + ".Activity", "objectId", "createdBy = '" + createdBy + "' and enterpriseId = 'aee2dfb5-387d-4b8b-b3f5-62e86d1a9d95'");
         Assert.assertEquals(queryResult, "No item returned!", "Failed to clear the data just generated in DB!");
 
         // Verify activity doesn't display for admin
@@ -523,7 +534,7 @@ public class TimeOffRequestTest extends TestBase {
         consoleNavigationPage.searchLocation("verifyMock");
         TeamPage teamPage = pageFactory.createConsoleTeamPage();
         teamPage.goToTeam();
-        teamPage.searchAndSelectTeamMemberByName("Nancy Activity");
+        teamPage.searchAndSelectTeamMember("Activity");
         TimeOffPage timeOffPage = new TimeOffPage();
         timeOffPage.switchToTimeOffTab();
         OpsCommonComponents commonComponents = new OpsCommonComponents();
@@ -540,7 +551,7 @@ public class TimeOffRequestTest extends TestBase {
         consoleNavigationPage.searchLocation("verifyMock");
 
         teamPage.goToTeam();
-        teamPage.searchAndSelectTeamMemberByName("Nancy Activity");
+        teamPage.searchAndSelectTeamMember("Activity");
 
         timeOffPage.switchToTimeOffTab();
         timeOffPage.createTimeOff("Annual Leave",false,28,28);

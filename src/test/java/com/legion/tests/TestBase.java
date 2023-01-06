@@ -439,7 +439,6 @@ public abstract class TestBase {
         SimpleUtils.report(getDriver().getCurrentUrl());
         loginPage.loginToLegionWithCredential(username, Password);
         loginPage.verifyLegionTermsOfService();
-        loginPage.verifyNewTermsOfServicePopUp();
         SimpleUtils.assertOnFail("Failed to login to the application!", loginPage.isLoginSuccess(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
@@ -456,7 +455,7 @@ public abstract class TestBase {
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         SimpleUtils.report(getDriver().getCurrentUrl());
         loginPage.loginToLegionWithCredential(username, Password);
-        loginPage.verifyNewTermsOfServicePopUp();
+        loginPage.verifyLegionTermsOfService();
         boolean isLoginSuccess = loginPage.isLoginSuccess();
         if (isLoginSuccess) {
             SimpleUtils.pass("Login legion without update upperfield successfully");

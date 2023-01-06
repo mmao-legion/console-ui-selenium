@@ -648,4 +648,80 @@ public class LaborModelTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
-}
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Jane")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Verify Only one driver type is allowed under task's team member rules")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyOnlyOneDriverTypeAllowedUnderTaskTeamMemberRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            String warningMsgToVerify = "Only allowing 1 single demand driver type under task's team member rules";
+            int index  = 2;
+            HashMap<String, String> firstRules = new HashMap<String, String>(){
+                {
+                    put("capacity", "1");
+                    put("driverType", "Items");
+                    put("sourceType", "EDW");
+                    put("categoryType", "Enrollments");
+                }
+            };
+            HashMap<String, String> secondRules = new HashMap<String, String>(){
+                {
+                    put("capacity", "3");
+                    put("driverType", "Items");
+                    put("sourceType", "Channel01");
+                    put("categoryType", "Verifications");
+                }
+            };
+            HashMap<String, String> thirdRules = new HashMap<String, String>(){
+                {
+                    put("capacity", "4");
+                    put("driverType", "Transactions");
+                    put("sourceType", "EDW");
+                    put("categoryType", "Verifications");
+                }
+            };
+            OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
+            navigationPage.navigateToLaborModelPage();
+            LaborModelPanelPage panelPage = new LaborModelPanelPage();
+            panelPage.goToLaborModelRepositoryPage();
+
+            //add a new task
+            LaborModelRepositoryPage repositoryPage = new LaborModelRepositoryPage();
+            //Add two rules with same driver type
+            Assert.assertTrue(repositoryPage.getEditButton().equals("Edit"), "The edit button does not display!");
+            repositoryPage.edit();
+            repositoryPage.addNewTask();
+            TaskDetailsPage taskDetailsPage = new TaskDetailsPage();
+            Random random=new Random();
+            String taskName="autoTask"+random.nextInt(1000);
+            taskDetailsPage.editTask(taskName, "auto", "Labor", "cart", 3);
+            taskDetailsPage.addRulesForDemandTask(firstRules);
+            taskDetailsPage.saveRule();
+            taskDetailsPage.addRulesForDemandTask(secondRules);
+            taskDetailsPage.saveRule();
+            taskDetailsPage.saveAdding();
+            SimpleUtils.assertOnFail("Should have no warning message", !taskDetailsPage.getWarningMessage().contains(warningMsgToVerify), false);
+            //Add a rule with different driver type
+            repositoryPage.clickInToDetails();
+            taskDetailsPage.addRulesForDemandTask(thirdRules);
+            taskDetailsPage.saveRule();
+            taskDetailsPage.saveEditing();
+            if (!taskDetailsPage.getWarningMessage().contains(warningMsgToVerify))
+                SimpleUtils.fail("Warning Message is not as expected!", false);
+            else
+                SimpleUtils.pass("Correct Warning message" + taskDetailsPage.getWarningMessage());
+
+            //Remove the rule with different driver type
+            taskDetailsPage.removeRule(index);
+            taskDetailsPage.saveEditing();
+            repositoryPage.save();
+            SimpleUtils.assertOnFail("Should have no warning message", !taskDetailsPage.getWarningMessage().contains(warningMsgToVerify), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+        }

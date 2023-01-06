@@ -185,7 +185,7 @@ public class ConsoleNavigationPage extends BasePage {
             SimpleUtils.fail("TimeSheet page is not normal",false);
     }
 
-    @FindBy(css = "div.col-xs-12.roster-body")
+    @FindBy(css = "div.sc-gJDHPX")
     private WebElement teamTable;
 
     public void verifyTeamPageIsNormal(){

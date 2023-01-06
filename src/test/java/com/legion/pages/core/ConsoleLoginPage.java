@@ -38,6 +38,9 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 
     @FindBy(css = "[type=submit]")
 	private WebElement newSignInBtn;
+
+    @FindBy(css = ".MuiFormHelperText-root")
+	private WebElement helperText;
     
     @FindBy(className="fa-sign-out")
     private WebElement logoutButton;
@@ -88,6 +91,16 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 			}
 			waitForSeconds(1);
 			clickTheElement(newSignInBtn);
+			try {
+				if (System.getProperty("enterprise").equalsIgnoreCase("vailqacn")) {
+					waitForSeconds(5);
+					if (isElementLoaded(newSignInBtn, 5) && isClickable(newSignInBtn, 5)) {
+						clickTheElement(newSignInBtn);
+					}
+				}
+			} catch (Exception e) {
+				// Do nothing
+			}
 		}
 		verifyLegionTermsOfService();
 		waitForSeconds(4);

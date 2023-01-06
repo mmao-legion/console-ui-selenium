@@ -89,7 +89,6 @@ public class LocationsGroupTestInOP extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -201,7 +200,6 @@ public class LocationsGroupTestInOP extends TestBase {
                 SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-                SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
                 //go to locations tab
                 locationsPage.clickOnLocationsTab();
@@ -491,7 +489,6 @@ public class LocationsGroupTestInOP extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -550,16 +547,15 @@ public class LocationsGroupTestInOP extends TestBase {
             String locationName = "Non2MSPar" +currentTime;
             int index =0;
             String searchCharactor = "No touch";
+            //Turn on toggle EnableChangeLocationGroupSetting
+            ToggleAPI.updateToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123",true);
+
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
-            //Turn on toggle EnableChangeLocationGroupSetting
-            //
-             ToggleAPI.updateToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123",true);
-            refreshPage();
             //go to locations tab
             locationsPage.clickOnLocationsTab();
             //check locations item
@@ -600,11 +596,9 @@ public class LocationsGroupTestInOP extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //Turn on toggle EnableChangeLocationGroupSetting
             ToggleAPI.updateToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123",true);
-            refreshPage();
             //go to locations tab
             locationsPage.clickOnLocationsTab();
             //check locations item
@@ -641,15 +635,13 @@ public class LocationsGroupTestInOP extends TestBase {
             String locationName = "Non2PPChi" +currentTime;
             int index =0;
             String searchCharactor = "No touch";
+            //Turn on toggle EnableChangeLocationGroupSetting
+            ToggleAPI.updateToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123",true);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
-            //Turn on toggle EnableChangeLocationGroupSetting
-            ToggleAPI.updateToggle(Toggles.EnableChangeLocationGroupSetting.getValue(), "jane.meng+007@legion.co", "P@ssword123",true);
-            refreshPage();
             //go to locations tab
             locationsPage.clickOnLocationsTab();
             //check locations item

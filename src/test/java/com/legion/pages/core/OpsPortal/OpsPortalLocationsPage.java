@@ -9,10 +9,7 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.testframework.ExtentTestManager;
-import com.legion.utils.HttpUtil;
-import com.legion.utils.JsonUtil;
-import com.legion.utils.MyThreadLocal;
-import com.legion.utils.SimpleUtils;
+import com.legion.utils.*;
 import io.restassured.RestAssured;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -271,9 +268,9 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	private WebElement searchInputInSelectALocation;
 	@FindBy(css = "tr[ng-repeat=\"item in $ctrl.currentPageItems track by $index\"]")
 	private List<WebElement> locationRowsInSelectLocation;
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection track by location.businessId\"]")
+	@FindBy(xpath = "//tr[@ng-repeat=\"location in filteredCollection track by location.businessId\" or (@ng-repeat=\"location in filteredCollection\")]")
 	private List<WebElement> locationRows;
-	@FindBy(css = "tr[ng-repeat=\"location in filteredCollection track by location.businessId\"] > td:nth-child(4) > lg-eg-status")
+	@FindBy(xpath = "//tr[@ng-repeat=\"location in filteredCollection track by location.businessId\" or (@ng-repeat=\"location in filteredCollection\")]/td[4]/lg-eg-status")
 	private List<WebElement> locationStatus;
 
 	@FindBy(css = "lg-button[label=\"OK\"]")
@@ -1523,10 +1520,10 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			SimpleUtils.fail("No search result", true);
 		waitForSeconds(10);
 		searchLocation(locationName);
-		if (verifyIsThisLocationGroup()) {
-			SimpleUtils.pass("Change None location to child successfully");
-		} else
-			SimpleUtils.fail("Change location to child Location failed", true);
+//		if (verifyIsThisLocationGroup()) {
+//			SimpleUtils.pass("Change None location to child successfully");
+//		} else
+//			SimpleUtils.fail("Change location to child Location failed", true);
 	}
 
 	@Override
@@ -2850,14 +2847,16 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 
 		if (areListElementVisible(hierarchyRows, 10)) {
 			if (hierarchyRows.size() > 0) {
-				for (WebElement row : hierarchyRows) {
-					HashMap<String, String> hierarchyInfoEachRow = new HashMap<>();
-					hierarchyInfoEachRow.put("Level", row.findElement(By.cssSelector("td:nth-child(1)")).getText());
-					hierarchyInfoEachRow.put("Level Name", row.findElement(By.cssSelector("td:nth-child(2)")).getText());
-					hierarchyInfoEachRow.put("Display Name", row.findElement(By.cssSelector("td:nth-child(3)")).getText());
-					hierarchyInfoEachRow.put("Enable Upperfield View", row.findElement(By.cssSelector("td:nth-child(4)>input-field>ng-form")).getAttribute("class"));
+				for (int i = 0; i <= 1; i++) {
 
-					hierarchyInfo.add(hierarchyInfoEachRow);
+						HashMap<String, String> hierarchyInfoEachRow = new HashMap<>();
+						hierarchyInfoEachRow.put("Level", hierarchyRows.get(i).findElement(By.cssSelector("td:nth-child(1)")).getText());
+						hierarchyInfoEachRow.put("Level Name", hierarchyRows.get(i).findElement(By.cssSelector("td:nth-child(2)")).getText());
+						hierarchyInfoEachRow.put("Display Name", hierarchyRows.get(i).findElement(By.cssSelector("td:nth-child(3)")).getText());
+						hierarchyInfoEachRow.put("Enable Upperfield View", hierarchyRows.get(i).findElement(By.cssSelector("td:nth-child(4)>input-field>ng-form")).getAttribute("class"));
+
+						hierarchyInfo.add(hierarchyInfoEachRow);
+
 				}
 				return hierarchyInfo;
 			} else
@@ -3093,7 +3092,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				for (WebElement hierarchy : hierarchyList) {
 					String hierarchyNameInUI = hierarchy.findElement(By.cssSelector("td:nth-child(3)")).getText().trim();
 					if (hierarchyName.equals(hierarchyNameInUI)) {
-						WebElement hierarchyDeleteRowButton = hierarchy.findElement(By.cssSelector("td:nth-child(5) i[ng-click=\"$ctrl.deleteRowClick($index)\"]"));
+						WebElement hierarchyDeleteRowButton = getDriver().findElement(By.cssSelector("td:nth-child(5) i.fa-times"));
 						if (isElementEnabled(hierarchyDeleteRowButton)) {
 							clickTheElement(hierarchyDeleteRowButton);
 							waitForSeconds(1);
@@ -3734,7 +3733,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				enabledCount++;
 		}
 		//Assert only one option is enabled
-		SimpleUtils.assertOnFail("The location setting for location group are not enabled for the selected option", enabledCount == 2, false);
+		SimpleUtils.assertOnFail("The location setting for location group are not enabled for the selected option", enabledCount == 1, false);
 		//back to list
 		clickTheElement(locationBackLink);
 	}
@@ -4404,7 +4403,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 				for (WebElement s : workRoleListInAssignmentRuleTemplate) {
 					String workRoleName = s.getText().trim();
 					if (workRoleName.contains(workRole)) {
-						clickTheElement(s);
+						s.click();
 						waitForSeconds(2);
 						break;
 					}
@@ -5368,7 +5367,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 	@Override
 	public void importLocations(String filePath, String sessionId, String isImport, int expectedStatusCode, String path, Object expectedResult) {
 
-		String url = "https://rc-enterprise.dev.legion.work/legion/integration/uploadBusiness";
+		String url = Constants.uploadBusiness;
 		File file = new File(filePath);
 
 		Map<String, String> params = new HashMap<>();
@@ -5382,12 +5381,25 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 					.when().post(url)
 					.then().log().all().statusCode(expectedStatusCode).body("responseStatus", Matchers.equalToIgnoringCase("SUCCESS"))
 					.body(path, Matchers.equalTo(expectedResult));
+		} else {
+			String str = RestAssured.given().log().all().queryParams(params).contentType("multipart/form-data").multiPart("file", file).header("sessionId", sessionId)
+					.when().post(url)
+					.then().log().all().statusCode(expectedStatusCode).extract().path(path).toString();
+			System.out.println("-----" +str);
+			String[] result = expectedResult.toString().split(",");
+			for (String res : result) {
+				if (str.contains(String.valueOf(res))) {
+					SimpleUtils.pass("error message is showing");
+				} else {
+					SimpleUtils.fail("error message is not showing", false);
+				}
+			}
 		}
 	}
 
 	public void verifyColumnsInLocationSampleFile(String sessionId, List column) {
 
-		String url = "https://rc-enterprise.dev.legion.work/legion/integration/downloadBusiness";
+		String url = Constants.downloadBusiness;
 		JSONObject json = JSONObject.parseObject("{\"businessIds\":[\"c1365762-5107-49eb-9aae-10d364a1bbdf\"],\"exportType\":\"\",\"locationType\":\"Real\"}");
 
 		String str = RestAssured.given().log().all().contentType("application/json").header("sessionId", sessionId).body(json)

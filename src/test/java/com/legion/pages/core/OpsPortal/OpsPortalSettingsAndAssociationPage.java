@@ -15,6 +15,7 @@ import org.openqa.selenium.support.ui.Select;
 
 import java.util.*;
 
+import static com.legion.tests.TestBase.refreshPage;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class OpsPortalSettingsAndAssociationPage extends BasePage implements SettingsAndAssociationPage {
@@ -444,7 +445,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             for (WebElement settingsType : settingsTypes) {
                 if (settingsType.findElement(By.cssSelector("lg-paged-search")).getAttribute("placeholder").contains(type)) {
                     clickTheElement(settingsType.findElement(By.cssSelector("div.header-add-icon button")));
-                    if (isElementLoaded(popUpWindow, 3)) {
+                    if (isElementLoaded(popUpWindow, 5)) {
                         displayNameInput = fieldsInput.get(0).findElement(By.cssSelector("input[aria-label=\"Display Name\"]"));
                         NameOrSourceTypeInput = fieldsInput.get(1).findElement(By.cssSelector("input"));
                         displayNameInput.sendKeys(displayName);
@@ -597,7 +598,10 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             SimpleUtils.fail("verifyType is not correct!", false);
         }
 
-        totalNumber = settingRows.size();
+        if (verifyType.equalsIgnoreCase("input stream"))
+            totalNumber =  calculateBaseInputStream();
+        else
+            totalNumber = settingRows.size();
         return  totalNumber;
     }
 
@@ -702,13 +706,16 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                                     }
 
                                     for (WebElement streamOption : streamOptions) {
-                                        if ("All".equalsIgnoreCase(inputStreamSpecificInfo.get("Streams")))
-                                            streamOption.click();
+                                        if ("All".equalsIgnoreCase(inputStreamSpecificInfo.get("Streams"))) {
+                                            clickTheElement(streamOption.findElement(By.cssSelector("input")));
+                                            waitForSeconds(5);
+                                        }
                                         else {
                                             streamsToSet = inputStreamSpecificInfo.get("Streams").split(",");
                                             for (String streamToSet : streamsToSet){
                                                 if(streamToSet.equalsIgnoreCase(streamOption.getAttribute("innerText").trim()))
-                                                    streamOption.click();
+                                                    clickTheElement(streamOption.findElement(By.cssSelector("input")));
+                                                waitForSeconds(5);
                                             }
                                         }
                                     }
@@ -755,8 +762,11 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                     }
                     clickTheElement(streamValueInput);
                     for (WebElement streamOption : streamOptions) {
-                        if (streamOption.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-not-empty"))
+                        if (streamOption.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-not-empty")){
+                            scrollToElement(streamOption);
                             streamOption.click();
+                            waitForSeconds(2);
+                        }
                     }
                     for (WebElement streamOption : streamOptions){
                         if ("All".equalsIgnoreCase(inputStreamUpdated.get("Streams"))){
@@ -1102,5 +1112,91 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             SimpleUtils.fail("No location attributes on the page!", false);
         }
         return flag2;
+    }
+
+    @FindBy(css = "input-field[label=\"Granularity\"] select")
+    private WebElement granularityOption;
+    @Override
+    public void clickEditBtn(String inputStreamName) throws Exception {
+        WebElement searchResult = searchSettingsForDemandDriver("input stream", inputStreamName);
+        if(searchResult != null){
+            clickTheElement(searchResult.findElement(By.cssSelector("lg-button[label=\"Edit\"] button")));
+            if (isElementLoaded(popUpWindow, 5))
+                SimpleUtils.pass("Enter the input stream edit page successfully.");
+            else
+                SimpleUtils.fail("Enter the input stream edit page failed!", false);
+        }else {
+            SimpleUtils.fail("No input stream found after search!", false);
+        }
+    }
+
+    @Override
+    public String getGranularityForCertainInputStream() throws Exception {
+        String granularityValue = "";
+        Select granularitySelect = new Select(granularityOption);
+        granularityValue = granularitySelect.getFirstSelectedOption().getText();
+        clickTheElement(cancelBtn);
+        searchSettingsForDemandDriver("input stream", "");
+        waitForSeconds(25);
+        if (granularityValue.isEmpty()){
+            SimpleUtils.fail("Failed to get granularity value!", false);
+        }
+        return granularityValue;
+    }
+
+
+    @Override
+    public void updateGranularityForCertainInputStream(String granularityValue) throws Exception{
+        Select granularitySelect = new Select(granularityOption);
+        granularitySelect.selectByVisibleText(granularityValue);
+        if (!granularitySelect.getFirstSelectedOption().getText().equals(granularityValue))
+            SimpleUtils.fail("Failed to select the granularity option: " + granularityValue, false);
+        else
+            SimpleUtils.pass("The granularity value is selected correctly.");
+        clickTheElement(okBtnToSave);
+    }
+
+    @FindBy(css = "div.lg-toast--error>p")
+    private WebElement warningPopUp;
+    @Override
+    public void validateWarningMessage(String warningMsgToVerify) throws Exception {
+        String warningMessage = "";
+        if (isElementLoaded(warningPopUp, 8)){
+            warningMessage = warningPopUp.getAttribute("innerText").trim();
+        }
+
+        if (warningMessage.contains(warningMsgToVerify)){
+            if (isElementLoaded(popUpWindow))
+                clickCancelBtn();
+            SimpleUtils.pass("The warning message is " + ".");
+        }else {
+            SimpleUtils.fail("The warning message is not correct!", false);
+        }
+    }
+
+    @Override
+    public void clickCancelBtn() throws Exception {
+        if (isElementLoaded(cancelBtn,10)){
+            click(cancelBtn);
+            SimpleUtils.pass("cancel edit input stream button is clicked!");
+        } else {
+            SimpleUtils.fail("cancel edit input stream button is not loaded!", false);
+        }
+    }
+
+    @Override
+    public void removeInputStream(String name) throws Exception {
+        String type = "input stream";
+        WebElement searchResult = searchSettingsForDemandDriver(type, name);
+        if(searchResult != null){
+            clickTheElement(searchResult.findElement(By.cssSelector("lg-button[label=\"Remove\"] button")));
+            if (isElementLoaded(popUpWindow.findElement(By.cssSelector("modal[modal-title*=\"Remove\"]")))){
+                clickTheElement(popUpWindow.findElement(By.cssSelector("lg-button[label=\"OK\"] button")));
+            }else{
+                SimpleUtils.fail("There should pop up a confirmation window!", false);
+            }
+        }else {
+            SimpleUtils.fail("The item you want to remove does not exist in the result list!", false);
+        }
     }
 }

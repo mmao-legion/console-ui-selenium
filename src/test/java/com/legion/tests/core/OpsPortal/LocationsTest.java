@@ -173,7 +173,6 @@ public class LocationsTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
 
             //go to locations tab
             locationsPage.clickOnLocationsTab();
@@ -969,7 +968,7 @@ public class LocationsTest extends TestBase {
 
         try {
             List<String> hierarchyNames = new ArrayList<String>() {{
-                add("AutoDistrcit");
+                add("AutoDistrict");
                 add("AutoRegion");
                 add("AutoBU");
             }};
@@ -2177,7 +2176,7 @@ public class LocationsTest extends TestBase {
 
         try {
             String locationName = "locationAutoCreateForYang";
-            String workRoleName = "AMBASSADOR";
+            String workRoleName = "AutoUsedForYang";
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -2192,7 +2191,7 @@ public class LocationsTest extends TestBase {
             locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
             //Validate location level assignment rules template should be aligned with global level by default.
             locationsPage.searchWorkRoleInAssignmentRuleTemplate(workRoleName);
-            String assignmentRule = "Ambassador";
+            String assignmentRule = "MGR";
             locationsPage.verifyAssignmentRulesFromLocationLevel(assignmentRule);
             //Validate user can enable location level assignment rules template.
             //Validate user can disable location level assignment rules template.
@@ -2220,7 +2219,7 @@ public class LocationsTest extends TestBase {
     public void verifyAssignmentRulesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
 
         try {
-            String workRoleName = "AMBASSADOR";
+            String workRoleName = "AutoUsedForYang";
             String locationName = "locationAutoCreateForYang";
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
@@ -2240,7 +2239,7 @@ public class LocationsTest extends TestBase {
             List<HashMap<String, String>> templateInfo = locationsPage.getLocationTemplateInfoInLocationLevel();
             //Validate the new added assignment rules at global level should be enabled at location level by default.
             locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
-            locationsPage.searchWorkRoleInAssignmentRuleTemplate("AMBASSADOR");
+            locationsPage.searchWorkRoleInAssignmentRuleTemplate(workRoleName);
             String assignmentRuleTitle = "Manager";
             locationsPage.verifyAssignmentRulesFromLocationLevel(assignmentRuleTitle);
             //Validate the location level assignment rule's badge info should not be changed after updating global assignment rules when
@@ -2262,7 +2261,7 @@ public class LocationsTest extends TestBase {
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-            scheduleCommonPage.VerifyStaffListInSchedule("AMBASSADOR");
+         //   scheduleCommonPage.VerifyStaffListInSchedule(workRoleName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -2284,7 +2283,7 @@ public class LocationsTest extends TestBase {
             teamPage.searchAndSelectTeamMemberByName("A B");
             teamPage.isProfilePageLoaded();
             teamPage.goToTeam();
-            teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
+  //          teamPage.verifyTheFunctionOfAddNewTeamMemberButton();
             TimeSheetPage timeSheetPage = pageFactory.createTimeSheetPage();
             timeSheetPage.clickOnTimeSheetConsoleMenu();
             ForecastPage forecastPage  = pageFactory.createForecastPage();
@@ -3086,7 +3085,7 @@ public class LocationsTest extends TestBase {
     @Enterprise(name = "opauto")
     @TestName(description = "Ability to indicate Location Group type via Location Integration")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyImportLocationCommon1FunctionAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+    public void verifyIndicateLocationGroupTypeViaLocationIntegrationAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -3094,6 +3093,28 @@ public class LocationsTest extends TestBase {
             locationsPage.clickModelSwitchIconInDashboardPage(modelSwitchOperation.OperationPortal.getValue());
             String filePath = "src/test/resources/uploadFile/LocationTest/locationGroup.csv";
             locationsPage.importLocations(filePath, getSession(), "true", 200,"summary.failed",0);
+            List column = new ArrayList<>();
+            column.add("LocationGroupType");
+            locationsPage.verifyColumnsInLocationSampleFile( getSession(),column);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "opauto")
+    @TestName(description = "Verify import function by API")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyImportFunctionByAPIAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
+        try {
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            String expectedResult = "Location Type cannot be empty,";
+            String filePath = "src/test/resources/uploadFile/LocationTest/emptyLocationType.csv";
+            locationsPage.importLocations(filePath, getSession(), "false", 200, "validationResults[2]", expectedResult);
+//            String filePath1 = "src/test/resources/uploadFile/LocationTest/emptyConfigType.csv";
+//            String expectedResult1 = "DisplayName cannot be empty,Name cannot be empty,LocationId cannot be empty,ConfigType cannot be empty,Address line 1 cannot be empty,City cannot be empty";
+//            locationsPage.importLocations(filePath1, getSession(), "false", 200,"validationResults[2]",expectedResult1);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

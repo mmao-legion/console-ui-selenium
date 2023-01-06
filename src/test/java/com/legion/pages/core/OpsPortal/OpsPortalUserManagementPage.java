@@ -120,7 +120,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 	private WebElement workNameInputBox;
 	@FindBy(css = "select[aria-label=\"Work Role Class\"]")
 	private WebElement workRoleClassSelector;
-	@FindBy(css = "input[aria-label=\"Hourly rate ($)\"]")
+	@FindBy(css = "input[aria-label=\"Hourly rate\"]")
 	private WebElement hourRateInputBox;
 	@FindBy(css = "span[ng-click=\"showAddDropdownMenu($event)\"]")
 	private WebElement plusBtnInAddWorkRolePage;
@@ -1108,6 +1108,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			click(timeOffTab);
 			if(isElementEnabled(history,5)){
 				highlightElement(history);
+				scrollToElement(history);
 				click(history);
 				if(isElementEnabled(historyDetail,5)){
 					highlightElement(historyDetail);
@@ -2143,6 +2144,55 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			SimpleUtils.fail("Dynamic smart card display",false);
 		else
 			SimpleUtils.pass("Dynamic smart card doesn't display");
+	}
+
+	@Override
+	public void updateWorkRoleHourlyRate(String hourlyRate){
+		if (workRolesRows.size()>0) {
+			List<WebElement> workRoleDetailsLinks = workRolesRows.get(0).findElements(By.cssSelector("button[type='button']"));
+			click(editBtnInWorkRole);
+			click(workRoleDetailsLinks.get(0));
+			hourRateInputBox.clear();
+			hourRateInputBox.sendKeys(hourlyRate);
+			click(saveBtn);
+			click(saveBtn);
+			waitForSeconds(10);
+		}
+	}
+
+	@Override
+	public void verifyLocationLevelHourlyRateIsReadOnly(){
+		if(isElementEnabled(hourRateInputBox,3)){
+			String disable = hourRateInputBox.getAttribute("disabled").trim();
+			if(disable.equalsIgnoreCase("disabled")){
+				SimpleUtils.pass("Location level hourly rate is read only");
+			}else
+				SimpleUtils.fail("Location level hourly rate is editable",false);
+		}
+	}
+
+	@Override
+	public void hourlyRateFieldIsNotShowing(){
+		String hourlyRateField = "input[aria-label=\"Hourly rate\"]";
+		if(!isElementExist(hourlyRateField)){
+			SimpleUtils.pass("When \'WorkRoleSettingsTemplateOP\' is on, the hourly rate field is not showing on work role details page");
+		}else
+			SimpleUtils.fail("When \'WorkRoleSettingsTemplateOP\' is on, the hourly rate field is still showing on work role details page",false);
+	}
+
+	@FindBy(css="card-carousel-card tbody td.number")
+	private List<WebElement> workRoleCountList;
+
+	@Override
+	public int getTotalWorkRoleCount(){
+		int count = 0;
+		if(isElementEnabled(workRoleSmartCard,2)){
+			for(WebElement workRoleCount:workRoleCountList){
+				int num = Integer.parseInt(workRoleCount.getText().trim());
+				count = count + num;
+			}
+		}
+		return count;
 	}
 }
 
