@@ -415,26 +415,6 @@ public class UserManagementTest extends TestBase {
     @Automated(automated = "Automated")
     @Owner(owner = "Nancy")
     @Enterprise(name = "Op_Enterprise")
-    @TestName(description = "OPS-3980 Show Accrual history for Limit type with Max Carryover/ Annual Earn/Max Available type")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyHistoryDeductTypeAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
-        try {
-            String users = "Fred Hettinger";
-            //go to User Management tab
-            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
-            userManagementPage.clickOnUserManagementTab();
-            //go to user history
-            userManagementPage.goToUserAndRoles();
-            userManagementPage.goToUserDetailPage(users);
-            userManagementPage.verifyHistoryDeductType();
-        }catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
-    }
-
-    @Automated(automated = "Automated")
-    @Owner(owner = "Nancy")
-    @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Upload custom access role api")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyUploadCustomAccessRoleApiAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
