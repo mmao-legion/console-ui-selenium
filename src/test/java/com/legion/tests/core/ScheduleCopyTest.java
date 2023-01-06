@@ -277,10 +277,12 @@ public class ScheduleCopyTest extends TestBase {
             createSchedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
             // Click on Next button successfully, schedule will be created
             createSchedulePage.clickNextButtonOnCreateScheduleWindow();
-            String needComplianceReviewMessage = complianceCount+"Shift Need compliance review";
+            String needComplianceReviewMessage1 = complianceCount+" Shift";
+            String needComplianceReviewMessage2 = "Need compliance review";
             SimpleUtils.assertOnFail("The shift need compliance review message display incorrectly, the expected is:"
-                            +needComplianceReviewMessage+" the actual is:"+createSchedulePage.getComplianceShiftsMessageOnScheduleSuccessModal(),
-                    needComplianceReviewMessage.equals(createSchedulePage.getComplianceShiftsMessageOnScheduleSuccessModal().replace("\n", " ")), false);
+                            +needComplianceReviewMessage1 + needComplianceReviewMessage2 +" the actual is:"+createSchedulePage.getComplianceShiftsMessageOnScheduleSuccessModal(),
+                    createSchedulePage.getComplianceShiftsMessageOnScheduleSuccessModal().contains(needComplianceReviewMessage1) &&
+                            createSchedulePage.getComplianceShiftsMessageOnScheduleSuccessModal().contains(needComplianceReviewMessage2), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }

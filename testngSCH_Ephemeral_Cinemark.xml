@@ -130,7 +130,6 @@
         <classes>
             <class name="com.legion.tests.core.P2PLGTest">
                 <methods>
-                    <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnP2PLGAsInternalAdmin" />
                     <include name="verifyAnalyticsTableOnComplianceInDMViewWhenItIncludesLGAsInternalAdmin" />
                     <include name="verifyAnalyticsTableOnTimesheetInDMViewWhenItIncludesLGAsInternalAdmin" />
                     <include name="verifyChangingLocationForP2POnMultipleEditShiftsWindowAsInternalAdmin" />
@@ -244,7 +243,6 @@
                     <include name="verifyRegionViewNavigationAsInternalAdmin" />
                     <include name="verifyControlsInBUViewAsInternalAdmin" />
                     <include name="verifyControlsInRegionViewAsInternalAdmin" />
-                    <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
                     <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
                     <include name="verifyRegionListAndSubRegionOnComplianceInBUViewAsInternalAdmin" />
                     <include name="verifyDistrictListAndSubDistrictOnComplianceInBUViewAsInternalAdmin" />

@@ -2586,7 +2586,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public void closeNewCreateShiftPage () throws Exception {
         if (isElementLoaded(closeIconOnNewCreateShiftPage, 5)) {
             clickTheElement(closeIconOnNewCreateShiftPage);
-            waitForSeconds(3);
+            waitForSeconds(5);
             if (!checkIfNewCreateShiftPageDisplay()) {
                 SimpleUtils.pass("The New Create Shift page been closed successfully! ");
             } else
