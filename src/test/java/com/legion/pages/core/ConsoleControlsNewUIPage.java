@@ -8001,4 +8001,40 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Maximum input field is not loaded!", false);
 	}
 
+
+	@Override
+	public boolean getStatusOfSpecificPermissionForSpecificRoles(String section, String roles, String permission) throws Exception {
+		boolean status = false;
+		if (areListElementVisible(accessSections,10)){
+			for (WebElement accessSection : accessSections){
+				if (accessSection.findElement(By.tagName("span")).getText().equalsIgnoreCase(section)){
+					if (!accessSection.findElement(By.cssSelector("div")).getAttribute("class").contains("expand")){
+						clickTheElement(accessSection.findElement(By.tagName("span")));
+					}
+					int index = getTheIndexByAccessRolesName(roles, accessSection);
+					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".table-row"));
+					for (WebElement permissionTemp : permissions){
+						String s = permissionTemp.getText();
+						if (s!=null && s.toLowerCase().contains(permission.toLowerCase())){
+							SimpleUtils.pass("Found permission: "+ permission);
+							List<WebElement> permissionInputs = permissionTemp.findElements(By.tagName("input"));
+							if (permissionInputs.size()>index) {
+								if (permissionInputs.get(index).getAttribute("class").contains("ng-not-empty")) {
+									status = true;
+								}
+								break;
+							}
+						}
+					}
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("No access item loaded!", false);
+		}
+		return status;
+	}
+
+
+
 }

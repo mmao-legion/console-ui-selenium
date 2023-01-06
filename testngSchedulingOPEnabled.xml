@@ -876,4 +876,13 @@ SCH-5862-->
         </classes>
     </test>
 
+    <test name="Forecast Test">
+        <classes>
+            <class name="com.legion.tests.core.ForecastTest">
+                <methods>
+                    <include name="verifyTheManagePastDemandForecastPermissionForDifferentAccessRolesAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->
