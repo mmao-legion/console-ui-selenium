@@ -2548,4 +2548,21 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 			SimpleUtils.fail("Forecasts wages are not displayed!", false);
 		}return (ArrayList) scheduleWages;
 	}
+
+
+	@Override
+	public boolean isDemandForecastEditButtonEnabled() throws Exception {
+		boolean isEnabled = true;
+		if (isElementLoaded(editForecastBtn, 10)) {
+			String tooltip = editForecastBtn.getAttribute("data-tootik");
+			String status = editForecastBtn.findElement(By.cssSelector("button")).getAttribute("disabled");
+			if (status!= null && !tooltip.equalsIgnoreCase("")
+					&& tooltip.equalsIgnoreCase("Can not edit past demand forecast")) {
+				isEnabled = false;
+			} else
+				SimpleUtils.report("Forecast Page: The demand forecast edit button is not enabled!");
+		} else
+			SimpleUtils.fail("Forecast Page: The demand forecast edit button is not loaded!", false);
+		return isEnabled;
+	}
 }

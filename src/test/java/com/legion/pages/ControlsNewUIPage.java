@@ -392,4 +392,5 @@ public interface ControlsNewUIPage {
 	public void modifyTimeOffReasonOnSchedulingPolicy(String timeOffReason, String maximum) throws Exception;
 	public List<String> getTimeOffReasonsOnSchedulingPolicy() throws Exception;
 	public void clickAddTimeOffBtn() throws Exception;
+	public boolean getStatusOfSpecificPermissionForSpecificRoles(String section, String roles, String permission) throws Exception;
 }
