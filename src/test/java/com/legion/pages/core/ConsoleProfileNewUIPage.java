@@ -2368,6 +2368,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public String getNickNameFromProfile() throws Exception {
 		String nickName = "";
 		try{
+			waitForSeconds(3);
 			if(isElementLoaded(userProfileImage, 5)){
 				clickTheElement(userProfileImage);
 				clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));

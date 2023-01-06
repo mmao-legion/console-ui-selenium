@@ -739,6 +739,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                             }
                         }
                         clickTheElement(operatingHoursSaveBtn);
+                        waitForSeconds(1);
                         if (isElementEnabled(operatingHoursEditBtn, 15)) {
                             SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
                         } else {
@@ -1028,6 +1029,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                         }
                     }
                     clickTheElement(operatingHoursSaveBtn);
+                    waitForSeconds(1);
                     if (isElementEnabled(operatingHoursEditBtn, 10)) {
                         SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
                     } else {
@@ -1071,6 +1073,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                         }
                     }
                     clickTheElement(operatingHoursSaveBtn);
+                    waitForSeconds(1);
                     if (isElementEnabled(operatingHoursEditBtn, 10)) {
                         SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
                     } else {
@@ -1230,6 +1233,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                         }
                     }
                     clickTheElement(operatingHoursSaveBtn);
+                    waitForSeconds(1);
                     if (isElementEnabled(operatingHoursEditBtn, 15)) {
                         SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
                     } else {

@@ -1757,6 +1757,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                         }
                     }
                     clickTheElement(editOperatingHourSaveButton);
+                    waitForSeconds(1);
                     if (isElementEnabled(editOperatingHoursBtn, 15)) {
                         SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
                     } else {
