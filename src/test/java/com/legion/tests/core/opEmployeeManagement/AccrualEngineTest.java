@@ -3032,7 +3032,7 @@ public class AccrualEngineTest extends TestBase {
             //go to console
             RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
             rightHeaderBarPage.switchToConsole();
-            //go to AccrualEngine location
+            //go to Carters location
             ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
             consoleNavigationPage.searchLocation("Carters");
             //go to team member details and switch to the time off tab.
