@@ -236,6 +236,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+        Thread.sleep(3000);
         newShiftPage.clickOnDayViewAddNewShiftButton();
         newShiftPage.customizeNewShiftPage();
         newShiftPage.clearAllSelectedDays();

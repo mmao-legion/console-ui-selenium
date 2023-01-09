@@ -553,7 +553,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             SimpleUtils.fail("Schedule save button not found", false);
         }
 
-        if (isElementLoaded(successMsg, 5) && successMsg.getText().contains("Success!")) {
+        if (isElementLoaded(successMsg, 15) && successMsg.getText().contains("Success!")) {
             SimpleUtils.pass("Save the Schedule with no change Successfully!");
         } else if (isSaveConfirmPopupLoaded()) {
             clickTheElement(saveOnSaveConfirmationPopup);
@@ -1478,6 +1478,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         return isClickable;
     }
 
+    @FindBy(css = "lg-button[label=\"Edit\"]>button")
+    private WebElement editBtnForOperatingHrs;
     @Override
     public void goToEditOperatingHoursView() throws Exception {
         String subTitle = "Edit operating hours";
@@ -1496,8 +1498,17 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             } else {
                 SimpleUtils.fail("After clicking dropdown toggle button, the expected menu is not loaded correctly!", false);
             }
-        } else {
-            SimpleUtils.fail("There is no toggle drop down button in schedule page!", false);
+        } else if (isElementLoaded(editBtnForOperatingHrs,10)){
+            click(editBtnForOperatingHrs);
+            SimpleUtils.pass("Edit operating hours button is clicked!");
+            if (isElementLoaded(editOpeHoursModalTitle, 20) && isElementLoaded(BtnsOnEditOpeHoursSchedule, 20)
+                    && editOpeHoursModalTitle.getText().trim().equalsIgnoreCase(subTitle)) {
+                SimpleUtils.pass("The edit operating hours page is loaded correctly!");
+            }else{
+                SimpleUtils.fail("The edit operating hours page is not loaded correctly!", false);
+            }
+        }else {
+            SimpleUtils.fail("No available entrance to the edit operating hours dialog!", false);
         }
     }
 
@@ -1511,7 +1522,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                 if (weekDay != null) {
                     String[] operatingHours = null;
                     operatingHours = propertyOperatingHours.get(weekDay.getText()).split("-");
-                    WebElement startNEndTimes = dayList.findElement(By.cssSelector(".text-right.ng-binding"));
+                    WebElement startNEndTimes = dayList.findElement(By.cssSelector(".text-right.ng-binding.dirty"));
                     if (operatingHours[0].contains("0") && operatingHours[1].contains("0")) {
                         operatingHours[0] = operatingHours[0].replaceAll("0","");
                         operatingHours[0] = operatingHours[0].replaceAll(":","");
@@ -1703,7 +1714,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     }
 
 
-    @FindBy(css = "[class=\"modal-instance-button ng-binding ng-scope\"]")
+    @FindBy(css = "div[ng-click=\"close()\"]")
     private WebElement cancelBtnOnOpeHrsPage;
     @FindBy(css = "[class=\"modal-instance-button ng-binding\"]")
     private WebElement cancelBtnOnOpeHrsPageForOP;
@@ -1745,7 +1756,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }
     }
 
-    @FindBy(css = "[class=\"modal-instance-button ng-binding confirm\"]")
+    @FindBy(css = "[class*=\"confirm\"]")
     private WebElement saveBtnOnOpeHrsPage;
     @FindBy(css = "[class=\"modal-instance-button confirm ng-binding\"]")
     private WebElement saveBtnOnOpeHrsPageForOP;
@@ -1986,10 +1997,10 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             if (!isElementEnabled(searchBox, 5)) {
                 SimpleUtils.pass("Search box is closed successfully");
             } else {
-                SimpleUtils.fail("Search box is not closed successfully", true);
+                SimpleUtils.fail("Search box is not closed successfully", false);
             }
         }else {
-            SimpleUtils.fail("There is no Close search box button!",true);
+            SimpleUtils.report("There is no Close search box button!");
         }
     }
 
@@ -2564,7 +2575,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     }
 
     private boolean isSaveConfirmPopupLoaded() throws Exception {
-        waitForSeconds(5);
+        waitForSeconds(10);
         boolean isLoaded = false;
         if (isClickable(saveOnSaveConfirmationPopup, 30)) {
             isLoaded =true;

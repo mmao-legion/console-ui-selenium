@@ -678,7 +678,8 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
     @Override
     public boolean isComplianceUpperFieldView() throws Exception {
         boolean result = false;
-        if (isElementLoaded(analyticsTableInComplianceDMViewPage, 10)) {
+        waitForSeconds(5);
+        if (isElementLoaded(analyticsTableInComplianceDMViewPage, 20)) {
             result = true;
         }
         return result;

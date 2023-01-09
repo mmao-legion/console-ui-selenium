@@ -117,4 +117,5 @@ public interface NewShiftPage {
     public boolean isRecommendedTabHasTMs() throws Exception;
     public void emptySearchBox() throws Exception;
     public void clickSearchIcon() throws Exception;
+    public List<String> getWorkRoleList() throws Exception;
 }

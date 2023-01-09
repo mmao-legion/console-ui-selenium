@@ -63,6 +63,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     public void customizeNewShiftPage() throws Exception
     {
+        Thread.sleep(5000);
         if(isElementLoaded(customizeNewShift,35))
         {
             SimpleUtils.pass("Customize New Shift Page loaded Successfully!");
@@ -560,14 +561,14 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
 
 
-    @FindBy(xpath = "//*[@id=\"legion_cons_Schedule_Schedule_SreateShift_WorkRole_menu\"]/div/div[2]/div")
+    @FindBy(xpath = "//*[contains(@id,\"WorkRole_menu\")]/div/div[2]/div")
     private WebElement workRoleOnNewShiftPage;
 
     @FindBy(className = "react-select__option")
     private List<WebElement> dropDownListOnNewCreateShiftPage;
     public void selectWorkRole(String workRoles) throws Exception {
-        waitForSeconds(3);
-        if (isElementLoaded(btnWorkRole, 5)) {
+        waitForSeconds(5);
+        if (isElementLoaded(btnWorkRole, 15)) {
             clickTheElement(btnWorkRole);
             SimpleUtils.pass("Work Role button clicked Successfully");
             if (listWorkRoles.size() > 0) {
@@ -582,7 +583,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 SimpleUtils.fail("Work Roles size are empty", false);
             }
         } else if (isElementLoaded(workRoleOnNewShiftPage, 25)) {
-            click(workRoleOnNewShiftPage);
+            if (dropDownListOnNewCreateShiftPage.size() == 0) {
+                click(workRoleOnNewShiftPage);
+            }
             SimpleUtils.pass("Work Role button clicked Successfully");
             if (dropDownListOnNewCreateShiftPage.size() > 0) {
                 for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
@@ -599,6 +602,36 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.fail("Work Role button is not clickable", false);
         }
 
+    }
+
+    @Override
+    public List<String> getWorkRoleList() throws Exception {
+        List<String> workRoles = new ArrayList<>();
+        waitForSeconds(3);
+        if (isElementLoaded(btnWorkRole, 5)) {
+            clickTheElement(btnWorkRole);
+            SimpleUtils.pass("Work Role button clicked Successfully");
+            if (listWorkRoles.size() > 0) {
+                for (WebElement listWorkRole : listWorkRoles) {
+                    workRoles.add(listWorkRole.getText().toLowerCase());
+                }
+            } else {
+                SimpleUtils.fail("Work Roles size are empty", false);
+            }
+        } else if (isElementLoaded(workRoleOnNewShiftPage, 25)) {
+            click(workRoleOnNewShiftPage);
+            SimpleUtils.pass("Work Role button clicked Successfully");
+            if (dropDownListOnNewCreateShiftPage.size() > 0) {
+                for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
+                    workRoles.add(listWorkRole.getText().toLowerCase());
+                }
+            } else {
+                SimpleUtils.fail("Work Roles size are empty", false);
+            }
+        } else {
+            SimpleUtils.fail("Work Role button is not clickable", false);
+        }
+        return workRoles;
     }
 
     @Override
@@ -822,9 +855,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private List<WebElement> scheduleOperatingHrsOnEditPage;
     @FindBy(className = "tma-time-slider")
     private WebElement scheduleOperatingHrsSlider;
-    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_ShiftStart_field\"]")
+    @FindBy(css = "[id*=\"ShiftStart_field\"]")
     private WebElement shiftStartInputOnNewCreateShiftPage;
-    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_ShiftEnd_field\"]")
+    @FindBy(css = "[id*=\"ShiftEnd_field\"]")
     private WebElement shiftEndInputOnNewCreateShiftPage;
 
     public void moveSliderAtCertainPoint(String shiftTime, String startingPoint) throws Exception {
@@ -949,7 +982,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = "[ng-show=\"hasSearchResults()\"] [ng-repeat=\"worker in searchResults\"]")
     private List<WebElement> searchResults;
 
-    @FindBy(css = "button.MuiButtonBase-root")
+    @FindBy(css = ".swap-modal>div:nth-child(2) button.MuiButtonBase-root")
     private List<WebElement> searchAndRecommendedTMTabs;
 
     @FindBy(css = "[placeholder=\"Search by Team Member, Role, Location or any combination.\"]")
@@ -1541,7 +1574,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return newSelectedTMs;
     }
 
-    @FindBy(css = "[class=\"MuiAvatar-img\"]")
+    @FindBy(css = "[class*=\"MuiAvatar-img\"]")
     List<WebElement> recommendedTMsOnCreation;
     @Override
     public boolean isRecommendedTabHasTMs() throws Exception {
@@ -1990,7 +2023,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.report("Day count is "+dayCountInOneWeek);
             for (int i = 0; i < dayCountInOneWeek; i++) {
                 if (!weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("class").contains("checked")
-                        && weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("aria-disabled").contains("false")) {
+                        && (weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("aria-disabled") == null ||
+                        (weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("aria-disabled") != null && weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")).getAttribute("aria-disabled").contains("false")))) {
                     click(weekDaysInNewCreateShiftPage.get(i).findElement(By.cssSelector(".MuiButtonBase-root")));
                     SimpleUtils.pass("Click week day "+i+" successfully! ");
                 }
@@ -2398,7 +2432,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         if (isElementLoaded(workRoleOnNewShiftPage, 5)) {
             click(workRoleOnNewShiftPage);
             SimpleUtils.pass("Work Role button clicked Successfully");
-            getDriver().findElement(By.cssSelector("[id=\"legion_cons_schedule_schedule_createshift_WorkRole_menu\"] input")).sendKeys(workRole);
+            getDriver().findElement(By.cssSelector("[id*=\"WorkRole_menu\"] input")).sendKeys(workRole);
             if (dropDownListOnNewCreateShiftPage.size() > 0) {
                 for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
                     searchResult.add(listWorkRole.getText());
@@ -2411,7 +2445,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return searchResult;
     }
 
-    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_ShiftName_field\"]")
+    @FindBy(css = "[id*=\"ShiftName_field\"]")
     private WebElement shiftNameOnNewCreateShiftPage;
     public boolean checkIfShiftNameInputIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
@@ -2479,7 +2513,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return isLoaded;
     }
 
-    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_ShiftsPerDay_field\"]")
+    @FindBy(css = "[id*=\"ShiftsPerDay_field\"]")
     private WebElement shiftPerDayInputOnNewCreateShiftPage;
     public boolean checkIfShiftPerDayInputIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
@@ -2560,7 +2594,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.report("The Close icon is not loaded on New Create Shift page! ");
     }
 
-    @FindBy(xpath = "//div[contains(@id,'legion_cons_schedule_schedule_createshift_WorkRole_menu')]/following-sibling::p")
+    @FindBy(xpath = "//div[contains(@id,'WorkRole_menu')]/following-sibling::p")
     private WebElement workRoleWarningMessageOnNewShiftPage;
     public boolean checkIfWorkRoleWarningMessageIsLoaded() throws Exception {
         boolean isLoaded = false;
@@ -2600,7 +2634,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     }
 
 
-    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_ShiftStart_field-helper-text\"]")
+    @FindBy(css = "[id*=\"ShiftStart_field-helper-text\"]")
     private WebElement shiftStartWarningMessageOnNewShiftPage;
     public String getShiftStartWarningMessage() throws Exception {
         String warningMessage = "";
@@ -2612,7 +2646,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return warningMessage;
     }
 
-    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_ShiftEnd_field-helper-text\"]")
+    @FindBy(css = "[id*=\"ShiftEnd_field-helper-text\"]")
     private WebElement shiftEndWarningMessageOnNewShiftPage;
     public String getShiftEndWarningMessage() throws Exception {
         String warningMessage = "";
@@ -2624,7 +2658,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return warningMessage;
     }
 
-    @FindBy(css = "[id=\"legion_cons_schedule_schedule_createshift_ShiftsPerDay_field-helper-text\"]")
+    @FindBy(css = "[id*=\"ShiftsPerDay_field-helper-text\"]")
     private WebElement shiftPerDayWarningMessageOnNewShiftPage;
     public String getShiftPerDayWarningMessage() throws Exception {
         String warningMessage = "";
@@ -3056,7 +3090,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return isRecommendedTabSelected;
     }
 
-    @FindBy(id = "legion_cons_schedule_schedule_createshift_Close_button")
+    @FindBy(css = "[id*='Close_button']")
     private WebElement closeBtnForCreateShift;
     @FindBy(className = "modal-instance-header-title ng-binding")
     private WebElement createShiftTitle;
@@ -3073,9 +3107,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         }
     }
     
-    @FindBy(xpath = "//*[@id=\"legion_cons_Schedule_Schedule_CreateShift_ShiftStart_field\"]")
+    @FindBy(css = "[id*=\"ShiftStart_field\"]")
     private WebElement startTimeInput;
-    @FindBy(xpath = "//*[@id=\"legion_cons_Schedule_Schedule_CreateShift_ShiftEnd_field\"]")
+    @FindBy(css = "[id*=\"ShiftEnd_field\"]")
     private WebElement endTimeInput;
 
     @Override

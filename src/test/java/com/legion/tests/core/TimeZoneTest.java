@@ -65,7 +65,7 @@ public class TimeZoneTest extends TestBase {
                 SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
                 locationsPage.clickOnLocationInLocationResult(location);
                 locationsPage.editLocationBtnIsClickableInLocationDetails();
-                controlsNewUIPage.checkTimeZoneDropdownOptions(593, "UTC");
+                controlsNewUIPage.checkTimeZoneDropdownOptions(601, "UTC");
             }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

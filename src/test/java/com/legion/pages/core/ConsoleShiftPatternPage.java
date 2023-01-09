@@ -105,15 +105,15 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
     private List<WebElement> breakWarnings;
     @FindBy (css = "h6+div>.MuiGrid-container>div:nth-child(2)")
     private List<WebElement> sections;
-    @FindBy (id = "legion_cons_schedule_schedule_createshift_ShiftName_field")
+    @FindBy (id = "legion_cons_Schedule_Schedule_CreateShift_ShiftName_field")
     private WebElement shiftNameInput;
     @FindBy (id = "shiftDescription")
     private WebElement descriptionInputOnNewShfit;
-    @FindBy (id = "legion_cons_schedule_schedule_createshift_ShiftNotes_field")
+    @FindBy (id = "legion_cons_Schedule_Schedule_CreateChift_ShiftNotes_field")
     private WebElement shiftNotesInput;
-    @FindBy (id = "legion_cons_schedule_schedule_createshift_ShiftStart_field")
+    @FindBy (id = "legion_cons_Schedule_Schedule_CreateShift_ShiftStart_field")
     private WebElement startTimeInput;
-    @FindBy (id = "legion_cons_schedule_schedule_createshift_ShiftEnd_field")
+    @FindBy (id = "legion_cons_Schedule_Schedule_CreateShift_ShiftEnd_field")
     private WebElement endTimeInput;
     @FindBy (css = "[name*=\"selectedDays\"]")
     private List<WebElement> dayInputs;

@@ -361,7 +361,9 @@ public class ConsoleToggleSummaryPage extends BasePage implements ToggleSummaryP
 
     public void verifyTheContentInStaffSection() throws Exception {
         String title = "STAFF";
-        String hoursHeader = "Forecast Hours Budget Hours";
+        String hoursHeader1 = "Forecast Hours Budget Hours";
+        String hoursHeader2 = "Forecast Hours";
+        String hoursHeader = "";
         WebElement titleElement =
                 staffSection.findElement(By.tagName("h3"));
         List<WebElement> hoursHeaderElements =
@@ -376,8 +378,16 @@ public class ConsoleToggleSummaryPage extends BasePage implements ToggleSummaryP
             SimpleUtils.assertOnFail("The expected is:"+title
                     +" the actual is: "+titleElement.getText(),
                     titleElement.getText().equalsIgnoreCase(title), false);
-            String actualHoursHeader = (hoursHeaderElements.get(0).getText()
-                    +" "+ hoursHeaderElements.get(1).getText()).replace("\n"," ");
+            String actualHoursHeader = "";
+            if (hoursHeaderElements.size()==1){
+                actualHoursHeader = (hoursHeaderElements.get(0).getText()).replace("\n"," ");
+                hoursHeader = hoursHeader2;
+            } else{
+                actualHoursHeader = (hoursHeaderElements.get(0).getText()
+                        +" "+ hoursHeaderElements.get(1).getText()).replace("\n"," ");
+                hoursHeader = hoursHeader1;
+            }
+
             SimpleUtils.assertOnFail("The expected is:"+hoursHeader
                     +" the actual is: "+actualHoursHeader,
                     actualHoursHeader.equalsIgnoreCase(hoursHeader), false);

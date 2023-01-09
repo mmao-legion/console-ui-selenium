@@ -221,7 +221,7 @@
                     <include name="verifySplitShiftCanBeConfiguredAsInternalAdmin" />
                     <include name="verifySplitShiftViolationWhenSearchTMAsInternalAdmin" />
                     <include name="verifySplitShiftViolationWillShowOnTheSecondShiftAsInternalAdmin" />
-                    <include name="verifySplitShiftViolationWhenDragDropToAnotherDayAsInternalAdmin" />
+<!--                    <include name="verifySplitShiftViolationWhenDragDropToAnotherDayAsInternalAdmin" SCH-8428/>-->
                 </methods>
             </class>
         </classes>

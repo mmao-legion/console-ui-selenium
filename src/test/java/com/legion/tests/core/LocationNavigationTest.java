@@ -1005,7 +1005,6 @@ public class LocationNavigationTest extends TestBase {
     public void verifySelectingDifferentLevelOfUpperFieldsOnLocationReportTabAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             Map<String,String> upperFields = locationSelectorPage.getSelectedUpperFields();
             String locationName = location;

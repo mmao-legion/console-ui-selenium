@@ -15,7 +15,7 @@ public class CacheAPI {
     public static void refreshTemplateCache(String username, String password) {
         try {
             String sessionId = LoginAPI.getSessionIdFromLoginAPI(username, password);
-            Response cacheResponse = given().log().all().header("sessionId", sessionId).param("cacheType", "Template").when().get("https://rc-enterprise.dev.legion.work/legion/cache/refreshCache").then().log().all().extract().response();
+            Response cacheResponse = given().log().all().header("sessionId", sessionId).param("cacheType", "Template").when().get(System.getProperty("env") + "legion/cache/refreshCache").then().log().all().extract().response();
             cacheResponse.then().statusCode(204);
         } catch (Exception e) {
             SimpleUtils.report("Failed to refresh the cache!");
