@@ -2462,6 +2462,7 @@ public class P2PLGTest extends TestBase {
                     locations.size() ==1, false);
             SimpleUtils.assertOnFail("It should has "+count+1+" shifts display, but actual is has :"+scheduleShiftTablePage.getShiftsCount(),
                     shiftCount == scheduleShiftTablePage.getShiftsCount() -1, false);
+            Thread.sleep(3000);
             scheduleMainPage.saveSchedule();
             locations = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
             SimpleUtils.assertOnFail("It should has one location display, but actual is has :"+locations.size(),

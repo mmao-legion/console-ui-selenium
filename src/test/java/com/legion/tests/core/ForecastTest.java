@@ -715,6 +715,7 @@ public class ForecastTest extends TestBase{
 			}
 			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
 			SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+			Thread.sleep(3000);
 			userManagementPage.clickOnUserManagementTab();
 			SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
 			userManagementPage.goToUserAndRoles();

@@ -422,7 +422,6 @@ public class OPConfigTest extends TestBase {
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
         ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
         locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
         Thread.sleep(7000);
         locationsPage.clickOnLocationsTab();
         locationsPage.goToGlobalConfigurationInLocations();

@@ -223,7 +223,7 @@ public class HardStopForMinorViolation extends TestBase {
             //Publish the template
             configurationPage.publishNowTheTemplate();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-
+            Thread.sleep(3000);
             //Go to schedule and make one minor shift has violation
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
