@@ -718,7 +718,6 @@ public class NewNavigationFlowTest extends TestBase {
                 SimpleUtils.pass("The " + (i+1) + " location is " + finalDistrictsList.get(i));
             }else{
                 SimpleUtils.fail("The order of districts list is NOT correct",false);
-
             }
         }
         }else {
