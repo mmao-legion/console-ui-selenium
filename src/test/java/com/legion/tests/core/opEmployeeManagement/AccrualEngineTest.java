@@ -902,7 +902,8 @@ public class AccrualEngineTest extends TestBase {
         //Verify specified user and specified time off reason
         String employeeIds = "31e27e29-0827-4ee6-b855-3854edcfca40";
         String reasonCodes = "49110b87-cfb2-4d62-91fb-0669e224a366";
-        String accessToken = "23bc37c77b18721d22d41e4c8e0644149efefce5";
+        //String accessToken = "23bc37c77b18721d22d41e4c8e0644149efefce5";
+        String accessToken = "bb023ebd1c0b491b0a43b4d5cb0b6bd0e25a777b";
         Map<String, String> TimeOffBalance = new HashMap<>();
         TimeOffBalance.put("employeeIds", employeeIds);
         TimeOffBalance.put("reasonCodes", reasonCodes);
@@ -2614,7 +2615,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "OPS-4797 Add Scheduled Hours support to The Total Hours distribution type.")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)//Known issue: It accrued all the published scheduled hours, not run to the specified date.
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)//blocked by https://legiontech.atlassian.net/browse/OPS-6552 Known issue: It accrued all the published scheduled hours, not run to the specified date.
     public void verifyScheduledHoursWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) throws Exception {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
