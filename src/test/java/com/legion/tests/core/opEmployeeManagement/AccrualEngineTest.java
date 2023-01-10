@@ -2350,9 +2350,10 @@ public class AccrualEngineTest extends TestBase {
         SimpleUtils.pass("Succeeded in confirming that the add more button was displayed!");
         configurationPage.addMore();
         //5.get all options
-        System.out.println(configurationPage.getHoursTypeOptions());
+        ArrayList HoursTypeOptions = configurationPage.getHoursTypeOptions();
+        System.out.println(HoursTypeOptions);
         System.out.println(payableHoursType());
-        Assert.assertEquals(configurationPage.getHoursTypeOptions(), payableHoursType(), "Failed to get all the Payable Hour Types!!!");
+        Assert.assertEquals(HoursTypeOptions, payableHoursType(), "Failed to get all the Payable Hour Types!!!");
         SimpleUtils.pass("Succeeded in validating all the Payable Hour Types!");
         //6.Remove the existing hour types
         configurationPage.removeTheExistingHourType();

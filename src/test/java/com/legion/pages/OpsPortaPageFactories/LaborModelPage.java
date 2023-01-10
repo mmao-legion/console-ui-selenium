@@ -86,4 +86,6 @@ public interface LaborModelPage {
     public void selectWorkRoles(String workRole) throws Exception;
 
     public HashMap<String, List<String>> getValueAndDescriptionForEachAttributeAtTemplateLevelInLocations() throws Exception;
+
+    public void disableOrEnableWorkRoleInLocationLevel(String roleName, boolean isEnable) throws Exception;
 }

@@ -282,8 +282,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void clickOnCreateTimeOffBtn() throws Exception {
-		if(isElementLoaded(newTimeOffBtn, 10)) {
-			click(newTimeOffBtn);
+		if(isElementLoaded(newTimeOffBtn, 15)) {
+			clickTheElement(newTimeOffBtn);
 			SimpleUtils.pass("Controls Page: 'Create Time Off' button Clicked.");
 		}
 		else
@@ -3249,6 +3249,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@FindBy(css = "[label=\"Activate\"] button")
 	private WebElement activateBtn;
+	@FindBy(css = ".timeclock__container.value.ng-binding")
+	private WebElement onboardingStatusValue;
+	@FindBy(css = "[label=\"Suspend Access\"] button")
+	private WebElement suspendAccessButton;
 	public void verifyContentsInActionsSection() throws Exception {
 		if (isElementLoaded(inviteToLegionButton, 5)){
 			String inviteButtonMessage = inviteToLegionButton.getText();
@@ -3275,12 +3279,20 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			} else{
 				SimpleUtils.fail("User Profile page: The activate button in Action section failed to display! ", false);
 			}
-		}else{
+		}else if (isElementLoaded(onboardingStatusValue, 5)
+				&& onboardingStatusValue.getText().equalsIgnoreCase("Ready To Onboard")){
 			scrollToBottom();
 			if (isElementLoaded(sendUsernameInActionsSection, 5) && isElementLoaded(resetPasswordInActionsSection, 5)){
 				SimpleUtils.pass("User Profile page: The Send Username and Reset Password buttons in Actions section display correctly! ");
 			} else {
 				SimpleUtils.fail("User Profile page: The Send Username and Reset Password buttons in Actions section failed to display !", false);
+			}
+		} else{
+			scrollToBottom();
+			if (isElementLoaded(suspendAccessButton, 5)){
+				SimpleUtils.pass("User Profile page: The Suspend Access buttons in Actions section display correctly! ");
+			} else {
+				SimpleUtils.fail("User Profile page: The Suspend Access buttons in Actions section failed to display !", false);
 			}
 		}
 	}

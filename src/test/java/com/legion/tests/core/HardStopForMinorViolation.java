@@ -110,6 +110,7 @@ public class HardStopForMinorViolation extends TestBase {
 
             //Go to schedule and make one minor shift has violation
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
@@ -121,6 +122,7 @@ public class HardStopForMinorViolation extends TestBase {
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             if (smartCardPage.isRequiredActionSmartCardLoaded()) {
                 shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
@@ -131,8 +133,10 @@ public class HardStopForMinorViolation extends TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
+            Thread.sleep(5000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
+            Thread.sleep(5000);
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectSpecificWorkDay(1);
@@ -152,6 +156,7 @@ public class HardStopForMinorViolation extends TestBase {
             SimpleUtils.assertOnFail("The minor shift fail to created! ", minorShifts.size()>0, false);
             shiftOperatePage.editTheShiftTimeForSpecificShift(minorShifts.get(0),
                     "8am", "8pm");
+            Thread.sleep(5000);
             scheduleMainPage.saveSchedule();
             //ACTION REQUIRED smart card will show
             SimpleUtils.assertOnFail("Action Required smart card should be loaded! ",
@@ -230,9 +235,10 @@ public class HardStopForMinorViolation extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
 
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isWeekGenerated){
-                createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
 
             if (smartCardPage.isRequiredActionSmartCardLoaded()) {
                 shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
@@ -761,9 +767,9 @@ public class HardStopForMinorViolation extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             int i = 0;
             while (i<10 && !smartCardPage.isRequiredActionSmartCardLoaded()) {
-                loginPage.logOut();
-                Thread.sleep(3000);
-                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+//                loginPage.logOut();
+                Thread.sleep(10000);
+//                loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
@@ -821,7 +827,9 @@ public class HardStopForMinorViolation extends TestBase {
         configurationPage.publishNowTheTemplate();
         locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
         refreshCachesAfterChangeTemplate();
+        Thread.sleep(5000);
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 //        if (statusAfterEdit != statusBeforeEdit) {
 //            int i = 0;
@@ -833,10 +841,11 @@ public class HardStopForMinorViolation extends TestBase {
 //                i++;
 //            }
 //        }
-        LoginPage loginPage = pageFactory.createConsoleLoginPage();
-        loginPage.logOut();
-        loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+//        LoginPage loginPage = pageFactory.createConsoleLoginPage();
+//        loginPage.logOut();
+//        Thread.sleep(5000);
+//        loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+//        scheduleCommonPage.clickOnScheduleConsoleMenuItem();
     }
 
     public void getAndSetDefaultTemplate(String currentLocation) throws Exception{

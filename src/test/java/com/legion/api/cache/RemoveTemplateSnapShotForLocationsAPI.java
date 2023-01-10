@@ -43,7 +43,7 @@ public class RemoveTemplateSnapShotForLocationsAPI {
                             .param("year", currentYear)
                             .param("weekStartDayOfTheYear",weekStartDayOfTheYear)
                             .param("businessId",businessId)
-                            .when().get("https://rc-enterprise.dev.legion.work/legion/configTemplate/removeTemplateSnapShotForLocations")
+                            .when().get(System.getProperty("env") + "legion/configTemplate/removeTemplateSnapShotForLocations")
                             .then().log().all().extract().response();
                     cacheResponse.then().statusCode(200);
                 }

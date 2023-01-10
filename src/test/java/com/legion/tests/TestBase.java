@@ -523,6 +523,7 @@ public abstract class TestBase {
         ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 
         newShiftPage.clickOnDayViewAddNewShiftButton();
+        Thread.sleep(5000);
         SimpleUtils.assertOnFail("New create shift page is not display! ",
                 newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
         // Select work role
@@ -763,8 +764,8 @@ public abstract class TestBase {
         adminPage.clickOnConsoleAdminMenu();
         adminPage.clickOnInspectorTab();
         adminPage.clickOnCacheTab();
-        adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.Template.getValue());
         adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.TemplateAssociation.getValue());
+        adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.Template.getValue());
         adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.LocationBrokerContainer.getValue());
     }
 

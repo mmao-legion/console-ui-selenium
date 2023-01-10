@@ -2845,8 +2845,9 @@ public class ConfigurationTest extends TestBase {
             configurationPage.updateWorkRoleHourlyRate(workRole,updateValue);
             configurationPage.saveBtnIsClickable();
             locationsPage.verifyOverrideStatusAtLocationLevel("Work Role Settings", "Yes");
-            locationsPage.clickActionsForTemplate("Work Role Settings", "Reset");
-            locationsPage.verifyOverrideStatusAtLocationLevel("Work Role Settings", "No");
+            // there is no reset button for location level work role setting template
+//            locationsPage.clickActionsForTemplate("Work Role Settings", "Reset");
+//            locationsPage.verifyOverrideStatusAtLocationLevel("Work Role Settings", "No");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

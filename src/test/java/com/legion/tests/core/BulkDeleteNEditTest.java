@@ -357,9 +357,9 @@ public class BulkDeleteNEditTest extends TestBase {
             // Verify shift name will show when selecting same shift name
             editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.ShiftName.getType(), shiftName1);
             // Verify shift start time will show when selecting the shifts with same start time
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.StartTime.getType(), "9:00am");
+            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.StartTime.getType(), "9:00 AM");
             // Verify shift end time will show when selecting the shifts with same start time
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.EndTime.getType(), "12:00pm");
+            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.EndTime.getType(), "12:00 PM");
             // Verify date will show when selecting the shifts on the same day
             editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.Date.getType(), selectedDate);
         } catch (Exception e) {
@@ -569,12 +569,13 @@ public class BulkDeleteNEditTest extends TestBase {
             // Verify work role is updated
             editShiftPage.selectSpecificOptionByText(actualWorkRoleList.get(0));
             editShiftPage.clickOnUpdateButton();
+            scheduleMainPage.saveSchedule();
             List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
             List<String> shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[1].toString()));
             SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4))
                     && actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo2.get(4)), false);
             // Verify work role is saved
-            scheduleMainPage.saveSchedule();
+            //scheduleMainPage.saveSchedule();
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
             shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[1].toString()));
             SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4))
@@ -619,29 +620,30 @@ public class BulkDeleteNEditTest extends TestBase {
             } else {
                 SimpleUtils.fail("Work role list is incorrect when override assignment rule is set to Yes!", false);
             }
-            // Verify work role is upated
+            // Verify work role is updated
             actualWorkRoleList2.remove(workRole1);
             editShiftPage.selectSpecificOptionByText(actualWorkRoleList2.get(0));
             editShiftPage.clickOnUpdateButton();
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
-            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[1].toString()));
-            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4))
-                    && actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo2.get(4)), false);
-            // Verify work role is saved
             scheduleMainPage.saveSchedule();
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
             shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[1].toString()));
             SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4))
                     && actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo2.get(4)), false);
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        } finally {
+            // Verify work role is saved
+            //scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
+            shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[1].toString()));
+            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4))
+                    && actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo2.get(4)), false);
+
             controlsPage.gotoControlsPage();
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
             controlsNewUIPage.clickOnGlobalLocationButton();
             controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
             controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
         }
     }
 
@@ -1411,8 +1413,8 @@ public class BulkDeleteNEditTest extends TestBase {
                 indexList.add(iterator.next());
             }
             bulkEditShiftsByIndexes(indexes);
-            editShiftPage.inputStartOrEndTime("", true);
-            editShiftPage.inputStartOrEndTime("", false);
+            //editShiftPage.inputStartOrEndTime("", true);
+            //editShiftPage.inputStartOrEndTime("", false);
             editShiftPage.clickOnUpdateButton();
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
             shiftInfo2 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(1));
@@ -1442,13 +1444,8 @@ public class BulkDeleteNEditTest extends TestBase {
             SimpleUtils.assertOnFail("Error message of start time is not loaded correctly!", startErrorMessage.get(0).contains(errorMessage), false);
             shiftOperatePage.closeViewStatusContainer();
 
-            //Bulk edit the shifts, change start time to occur the error message
+            //Bulk edit the shifts, change end time to occur the error message
             indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
-            iterator = indexes.iterator();
-            indexList = new ArrayList<>();
-            while(iterator.hasNext()){
-                indexList.add(iterator.next());
-            }
             bulkEditShiftsByIndexes(indexes);
             inputEndTime = "7:00 am";
             editShiftPage.inputStartOrEndTime(inputEndTime, false);

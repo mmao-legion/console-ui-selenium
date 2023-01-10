@@ -19,6 +19,7 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -104,6 +105,11 @@ public class PrepareSettingsTest extends TestBase {
             controlsNewUIPage.clickOnGlobalLocationButton();
             controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
             controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+
+            controlsNewUIPage.clickOnSchedulingPoliciesSchedulesAdvanceBtn();
+            List<WebElement> CentralizedScheduleReleaseSelector = controlsNewUIPage.getAvailableSelector();
+            WebElement noItem = CentralizedScheduleReleaseSelector.get(1);
+            controlsNewUIPage.updateCentralizedScheduleRelease(noItem);
 
             controlsPage.gotoControlsPage();
             controlsPage.clickGlobalSettings();
