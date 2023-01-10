@@ -3023,7 +3023,7 @@ public class P2PLGTest extends TestBase {
             for (String name : locationNames) {
                 scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(name);
                 scheduleDMViewPage.clickOnRefreshButton();
-                scheduleDMViewPage.clickOnRefreshButton();
+//                scheduleDMViewPage.clickOnRefreshButton();
                 String publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(name)
                         .get("publishedStatus");
                 SimpleUtils.assertOnFail("The "+name+" schedule status should be Published, but actual is:"+publishStatus,

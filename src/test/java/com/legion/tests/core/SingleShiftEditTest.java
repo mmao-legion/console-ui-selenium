@@ -1831,6 +1831,8 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.inputStartOrEndTime(inputStartTime, true);
             String inputEndTime = "9:00 PM";
             editShiftPage.inputStartOrEndTime(inputEndTime, false);
+            editShiftPage.removeAllRestBreaks();
+            editShiftPage.removeAllMealBreaks();
             editShiftPage.clickOnUpdateButton();
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();

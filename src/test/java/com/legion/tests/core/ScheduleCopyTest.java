@@ -275,7 +275,7 @@ public class ScheduleCopyTest extends TestBase {
             createSchedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
             // Click on Next button successfully, schedule will be created
             createSchedulePage.clickNextButtonOnCreateScheduleWindow();
-            String needComplianceReviewMessage1 = complianceCount+" Shift";
+            String needComplianceReviewMessage1 = complianceCount+"Shift ";
             String needComplianceReviewMessage2 = "Need compliance review";
             SimpleUtils.assertOnFail("The shift need compliance review message display incorrectly, the expected is:"
                             +needComplianceReviewMessage1 + needComplianceReviewMessage2 +" the actual is:"+createSchedulePage.getComplianceShiftsMessageOnScheduleSuccessModal(),

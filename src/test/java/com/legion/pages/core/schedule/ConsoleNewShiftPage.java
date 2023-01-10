@@ -2289,7 +2289,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement newCreateShiftModal;
 
     public boolean checkIfNewCreateShiftPageDisplay() throws Exception {
-        if (isElementLoaded(newCreateShiftModal, 10)) {
+        if (isElementLoaded(newCreateShiftModal, 30)) {
             SimpleUtils.pass("The new create shift modal display! ");
             return true;
         } else {

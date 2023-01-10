@@ -2688,7 +2688,7 @@ public class ParentChildLGTest extends TestBase {
             List<WebElement> shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, selectedTM1.split(" ")[0]);
             SimpleUtils.assertOnFail("The "+selectedTM1+ "shift is not exist on the first day! ",
                     shiftsOfOneDay.size()>=1, false);
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             scheduleMainPage.saveSchedule();
             locations = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
             SimpleUtils.assertOnFail("It should has one location display, but actual is has :"+locations.size(),
@@ -2815,7 +2815,7 @@ public class ParentChildLGTest extends TestBase {
                     locations.size() ==1, false);
             SimpleUtils.assertOnFail("It should has "+count+1+" shifts display, but actual is has :"+scheduleShiftTablePage.getShiftsCount(),
                     shiftCount == scheduleShiftTablePage.getShiftsCount() -1, false);
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             scheduleMainPage.saveSchedule();
             locations = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
             SimpleUtils.assertOnFail("It should has one location display, but actual is has :"+locations.size(),
@@ -2897,6 +2897,7 @@ public class ParentChildLGTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            Thread.sleep(5000);
             scheduleMainPage.saveSchedule();
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());

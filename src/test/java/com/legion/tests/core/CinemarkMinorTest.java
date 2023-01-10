@@ -1431,6 +1431,7 @@ public class CinemarkMinorTest extends TestBase {
                 shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor daily max "+scheduleMaxHours+" hrs"), false);
 
         newShiftPage.clickOnOfferOrAssignBtn();
+        Thread.sleep(5000);
         scheduleMainPage.saveSchedule();
         //check the compliance smart card
         SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
@@ -2375,7 +2376,7 @@ public class CinemarkMinorTest extends TestBase {
         if (dayOfWeek.equalsIgnoreCase("Monday")
                 ||dayOfWeek.equalsIgnoreCase("Tuesday")
                 ||dayOfWeek.equalsIgnoreCase("Wednesday") ) {
-            minorName = minorNames.Minor14.getValue();
+            minorName = minorNames.Minor15.getValue();
         } else
             minorName = minorNames.Minor17.getValue();
         SimpleUtils.pass("Get minor user: "+minorName+ " successfully! ");

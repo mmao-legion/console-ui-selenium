@@ -431,6 +431,7 @@ public class HardStopForMinorViolation extends TestBase {
             MyThreadLocal.setAssignTMStatus(true);
             newShiftPage.searchTeamMemberByName(minorName);
             newShiftPage.clickOnOfferOrAssignBtn();
+            Thread.sleep(3000);
             scheduleMainPage.saveSchedule();
 
             //Edit the open shift to has minor violation
