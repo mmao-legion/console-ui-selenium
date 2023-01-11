@@ -392,7 +392,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                     selectWhichWeekToCopyFrom("SUGGESTED");
                     clickOnFinishButtonOnCreateSchedulePage();
                 } else {
-                    WebElement element = (new WebDriverWait(getDriver(), 120))
+                    WebElement element = (new WebDriverWait(getDriver(), 180))
                             .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
                     waitForSeconds(3);
                     if (isElementLoaded(element, 15) && isClickable(element, 15)) {
@@ -410,7 +410,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                     selectWhichWeekToCopyFrom("SUGGESTED");
                     clickOnFinishButtonOnCreateSchedulePage();
                 } else {
-                    WebElement element = (new WebDriverWait(getDriver(), 120))
+                    WebElement element = (new WebDriverWait(getDriver(), 180))
                             .until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[ng-click=\"goToSchedule()\"]")));
                     waitForSeconds(3);
                     if (isElementLoaded(element, 15) && isClickable(element, 15)) {
