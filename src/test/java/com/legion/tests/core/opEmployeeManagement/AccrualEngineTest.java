@@ -886,7 +886,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Lynn")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Export employee time off balance")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false) // is blocked by https://legiontech.atlassian.net/browse/OPS-6563
     public void verifyExportEmployeeTimeOffBalanceAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
