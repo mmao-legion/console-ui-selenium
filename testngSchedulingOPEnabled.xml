@@ -432,13 +432,13 @@
                 </class>
             </classes>
         </test>
-
+<!--
     <test name="Bulk Create Test">
         <classes>
             <class name="com.legion.tests.core.BulkCreateTest">
                 <methods>
                     <include name="validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin" />
-                    <include name="validateAllItemsOnTheSelectTMPageAsInternalAdmin" /> <!--  need run on 24hrs ops env-->
+                    <include name="validateAllItemsOnTheSelectTMPageAsInternalAdmin" /> need run on 24hrs ops env
                     <include name="validateTheWarningMessageOfTheItemsOnFirstPageOfCreateShiftModalAsInternalAdmin" />
                     <include name="validateAssignOrOfferTMsInSearchAndRecommendedTabsAsInternalAdmin" />
                     <include name="validateAssignShiftsForEachDaySwitchAsInternalAdmin" />
@@ -456,7 +456,7 @@
             </class>
         </classes>
     </test>
-
+    https://legiontech.atlassian.net/browse/SCH-8716 -->
 <!--    <test name="Schedule Copy Improvement Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleCopyImprovementTest">

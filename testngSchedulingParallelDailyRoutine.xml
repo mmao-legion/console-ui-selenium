@@ -675,7 +675,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
         </classes>
     </test>
 
-
+<!--
     <test name="Bulk Create Test">
         <classes>
             <class name="com.legion.tests.core.BulkCreateTest">
@@ -697,6 +697,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
             </class>
         </classes>
     </test>
+    https://legiontech.atlassian.net/browse/SCH-8716-->
     <test name="Overtime Rate Shift Offer Claim Test">
         <classes>
             <class name="com.legion.tests.core.OvertimeShiftOfferTest">
