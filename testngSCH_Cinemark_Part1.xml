@@ -376,7 +376,7 @@
         </classes>
     </test>
 
-<!--    <test name="Bulk Create Test">
+<!--  SCH-8716  <test name="Bulk Create Test">
         <classes>
             <class name="com.legion.tests.core.BulkCreateTest">
                 <methods>
