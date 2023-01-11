@@ -870,7 +870,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 if(areListElementVisible(scheduleOperatingHrsOnEditPage, 15)
                         && scheduleOperatingHrsOnEditPage.size() >0){
                     for (WebElement scheduleOperatingHour: scheduleOperatingHrsOnEditPage){
-                        if (scheduleOperatingHour.getAttribute("class").contains(shiftTime.substring(shiftTime.length() - 2))) {
+                        if (scheduleOperatingHour.getAttribute("class").toLowerCase().contains(shiftTime.substring(shiftTime.length() - 2).toLowerCase())) {
                             if(scheduleOperatingHour.getText().equals(
                                     shiftTime.split(":")[0]
                                             .replace("am", "").replace("pm", "")
