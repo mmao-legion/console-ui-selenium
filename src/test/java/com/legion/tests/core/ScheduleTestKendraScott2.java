@@ -7178,12 +7178,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				configurationPage.publishNowTheTemplate();
 				switchToConsoleWindow();
 			}
-			Thread.sleep(3000);
 			refreshCachesAfterChangeTemplate();
-			Thread.sleep(200000);
+			Thread.sleep(180000);
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(20000);
-			refreshPage();
 
 			//Go to the schedule view table
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();

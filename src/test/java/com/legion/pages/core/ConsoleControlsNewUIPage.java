@@ -6843,7 +6843,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void turnOnOrTurnOffSpreadOfHoursToggle(boolean action) throws Exception {
 		String content = getSpreadOfHoursContent();
-		if (isElementLoaded(spreadOfHoursSection, 10)
+		if (isElementLoaded(spreadOfHoursSection, 20)
 				&&spreadOfHoursSection.findElement(By.cssSelector(".info")).getText().equalsIgnoreCase("Spread Of Hours")
 				&&content.contains("An employee will receive a ")
 				&&content.contains(" hour premium if the total time from the beginning and end of the work day is greater than ")
@@ -7803,18 +7803,18 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public String getAccrualTimeOverrideToggleActiveBtnLabel() throws Exception {
-		String seniorityToggleActiveBtnLabel = "";
+		String accrualTimeOverrideActiveBtnLabel = "";
 		if (isElementLoaded(accrualTimeOverrideToggle,10)) {
-			WebElement seniorityToggleActiveActiveBtn = accrualTimeOverrideToggle.findElement(
+			WebElement accrualTimeOverrideToggleActiveBtn = accrualTimeOverrideToggle.findElement(
 					By.cssSelector("div.lg-button-group-selected"));
-			if (isElementLoaded(seniorityToggleActiveActiveBtn,10))
-				seniorityToggleActiveBtnLabel = seniorityToggleActiveActiveBtn.getText();
+			if (isElementLoaded(accrualTimeOverrideToggleActiveBtn,10))
+				accrualTimeOverrideActiveBtnLabel = accrualTimeOverrideToggleActiveBtn.getText();
 			else
-				SimpleUtils.fail("Scheduling Policies: Seniority toggle active Button not loaded.", false);
+				SimpleUtils.fail("Scheduling Policies: Accrual time override active button not loaded.", false);
 		} else
-			SimpleUtils.fail("Scheduling Policies: Seniority toggle section not loaded.", false);
+			SimpleUtils.fail("Scheduling Policies: Accrual time override toggle section not loaded.", false);
 
-		return seniorityToggleActiveBtnLabel;
+		return accrualTimeOverrideActiveBtnLabel;
 	}
 
 	@Override
