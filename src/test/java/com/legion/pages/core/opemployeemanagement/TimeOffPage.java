@@ -147,7 +147,7 @@ public class TimeOffPage extends BasePage {
     }
 
     public void switchToTimeOffTab() {
-        waitForSeconds(15);
+        waitForSeconds(25);
         scrollToElement(timeOffTab);
         timeOffTab.click();
     }
