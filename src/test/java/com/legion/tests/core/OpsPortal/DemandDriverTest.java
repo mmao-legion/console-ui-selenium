@@ -256,6 +256,9 @@ public enum modelSwitchOperation{
             //Add new input stream in settings
             for (HashMap<String, String> inputStreamToAdd : inputStreamInfoToAdd){
                 settingsAndAssociationPage.createInputStream(inputStreamToAdd);
+                if (inputStreamToAdd.get("Type").equals("Aggregated")){
+                    settingsAndAssociationPage.verifyIfAllBaseStreamsInListForAggregatedInputStream(inputStreamToAdd);
+                }
             }
 
             //edit the input stream in settings
@@ -3037,7 +3040,7 @@ public enum modelSwitchOperation{
             configurationPage.addOrEditDemandDriverInTemplate(driver1);
             settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
             //Add association and save
-            configurationPage.createDynamicGroup(templateName, "Location Name", location);
+            configurationPage.createDynamicGroup(templateName, "Custom", "Auto test" + templateName);
             configurationPage.selectOneDynamicGroup(templateName);
             //Could publish normally
             configurationPage.clickOnTemplateDetailTab();
@@ -3046,6 +3049,8 @@ public enum modelSwitchOperation{
             settingsAndAssociationPage.removeInputStream(baseInputStreamName);
             String inputStreamUsedInDriverWarning = "This input stream is used in the template " + "[" + templateName + "]";
             settingsAndAssociationPage.validateWarningMessage(inputStreamUsedInDriverWarning);
+            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+            configurationPage.archiveOrDeleteTemplate(templateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

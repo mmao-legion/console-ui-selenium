@@ -55,4 +55,5 @@ public interface SettingsAndAssociationPage {
     public void validateWarningMessage(String warningMsgToVerify) throws Exception;
     public void clickCancelBtn() throws Exception;
     public void removeInputStream(String name) throws Exception;
+    public void verifyIfAllBaseStreamsInListForAggregatedInputStream(HashMap<String, String> aggregatedInputStream) throws Exception;
 }
