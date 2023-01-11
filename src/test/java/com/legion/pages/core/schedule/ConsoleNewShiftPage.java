@@ -55,7 +55,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = ".tma-staffing-option-text-title")
     private List<WebElement> radioBtnShiftTexts;
 
-    @FindBy(css = "button.tma-action")
+    @FindBy(css = "button.sch-save")
     private WebElement btnSave;
 
     @FindBy(css = "[ng-click=\"handleNext()\"]")
@@ -184,7 +184,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     public void clickOnCreateOrNextBtn() throws Exception {
         if (isElementLoaded(btnSave, 10)) {
-            click(btnSave);
+            clickTheElement(btnSave);
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
         }else if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
             try {
@@ -874,7 +874,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                             if(scheduleOperatingHour.getText().equals(
                                     shiftTime.split(":")[0]
                                             .replace("am", "").replace("pm", "")
-                                            .replace("AM", "").replace("PM", ""))){
+                                            .replace("AM", "").replace("PM", "").replaceFirst("^0*", ""))){
                                 element = scheduleOperatingHour;
                                 break;
                             }

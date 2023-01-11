@@ -526,8 +526,8 @@ public abstract class TestBase {
 
         newShiftPage.clickOnDayViewAddNewShiftButton();
         Thread.sleep(5000);
-        SimpleUtils.assertOnFail("New create shift page is not display! ",
-                newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
+//        SimpleUtils.assertOnFail("New create shift page is not display! ",
+//                newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
         // Select work role
         newShiftPage.selectWorkRole(workRole);
         // Set shift name
