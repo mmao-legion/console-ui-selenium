@@ -866,7 +866,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             WebElement element = null;
             String am = "am";
             String pm = "pm";
-            if (shiftTime.length() > 2 && (shiftTime.contains(am) || shiftTime.contains(pm))) {
+            if (shiftTime.length() > 2 && (shiftTime.toLowerCase().contains(am) || shiftTime.toLowerCase().contains(pm))) {
                 if(areListElementVisible(scheduleOperatingHrsOnEditPage, 15)
                         && scheduleOperatingHrsOnEditPage.size() >0){
                     for (WebElement scheduleOperatingHour: scheduleOperatingHrsOnEditPage){
@@ -1023,8 +1023,10 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                         for (WebElement searchResult : searchResults) {
                             WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-name"));
                             WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
+                            WebElement locationInfo = searchResult.findElement(By.className("tma-description-fields"));
                             if (workerName != null && optionCircle != null) {
-                                if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                                if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())
+                                        ||locationInfo.getText().contains(name)) {
                                     clickTheElement(optionCircle);
                                     SimpleUtils.report("Select Team Member: " + name + " Successfully!");
                                     waitForSeconds(2);

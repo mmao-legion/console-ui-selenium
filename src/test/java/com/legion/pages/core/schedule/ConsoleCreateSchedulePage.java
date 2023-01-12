@@ -2199,7 +2199,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     @Override
     public String getComplianceShiftsMessageOnScheduleSuccessModal() throws Exception {
         String message = "";
-        if (checkIfCheckOutButtonLoaded() && isElementLoaded(needComplianceReviewSection, 5)){
+        if (checkIfCheckOutButtonLoaded() && isElementLoaded(needComplianceReviewSection, 15)){
             message = needComplianceReviewSection.getText();
             SimpleUtils.pass("Get need compliance review message successfully! :"+message);
         }else
