@@ -1027,6 +1027,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                             if (workerName != null && optionCircle != null) {
                                 if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())
                                         ||locationInfo.getText().contains(name)) {
+                                    WebElement status = searchResult.findElement(By.cssSelector(".worker-edit-availability-status"));
+                                    MyThreadLocal.setMessageOfTMScheduledStatus(status.getText());
                                     clickTheElement(optionCircle);
                                     SimpleUtils.report("Select Team Member: " + name + " Successfully!");
                                     waitForSeconds(2);
