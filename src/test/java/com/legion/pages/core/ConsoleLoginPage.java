@@ -93,7 +93,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 			clickTheElement(newSignInBtn);
 			try {
 				if (System.getProperty("enterprise").equalsIgnoreCase("vailqacn")) {
-					waitForSeconds(5);
+					waitForSeconds(8);
 					if (isElementLoaded(newSignInBtn, 5) && isClickable(newSignInBtn, 5)) {
 						clickTheElement(newSignInBtn);
 					}
