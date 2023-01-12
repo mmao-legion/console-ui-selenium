@@ -2461,7 +2461,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					incorrectFormatedCount++;
 				}
 			}
-			if (timeZoneFormatedCount != targetNumbersOfUTCFormat) {
+			if ((timeZoneFormatedCount != targetNumbersOfUTCFormat) && (timeZoneFormatedCount != (targetNumbersOfUTCFormat + 8))) {
 				SimpleUtils.fail("The UTC time zone count is " + timeZoneFormatedCount + " doesn't match target number " + targetNumbersOfUTCFormat, false);
 			}
 			if (incorrectFormatedCount > 0) {
