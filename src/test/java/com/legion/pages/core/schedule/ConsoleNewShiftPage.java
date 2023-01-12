@@ -2448,6 +2448,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(css = "[id*=\"ShiftName_field\"]")
     private WebElement shiftNameOnNewCreateShiftPage;
+    @FindBy(css = "[placeholder*=\"Shift Name\"]")
+    private WebElement shiftNameOnOldCreateShiftPage;
     public boolean checkIfShiftNameInputIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
         if (isElementLoaded(shiftNameOnNewCreateShiftPage, 5)) {
@@ -2561,6 +2563,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(css = "[name=\"shiftNotes\"]")
     private WebElement shiftNotesOnNewCreateShiftPage;
+    @FindBy(css = ".tma-staffing-note-text")
+    private WebElement shiftNotesOnOldCreateShiftPage;
     public boolean checkIfShiftNotesTextAreaIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
         if (isElementLoaded(shiftNotesOnNewCreateShiftPage, 5)) {
@@ -3044,6 +3048,11 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             shiftNotesOnNewCreateShiftPage.sendKeys(Keys.DELETE);
             shiftNotesOnNewCreateShiftPage.sendKeys(String.valueOf(shiftNotes));
             SimpleUtils.report("Set Shift Notes on New Create Shift page successfully! ");
+        } else if (isElementLoaded(shiftNotesOnOldCreateShiftPage, 5)) {
+            shiftNotesOnOldCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+            shiftNotesOnOldCreateShiftPage.sendKeys(Keys.DELETE);
+            shiftNotesOnOldCreateShiftPage.sendKeys(String.valueOf(shiftNotes));
+            SimpleUtils.report("Set Shift Notes on New Create Shift page successfully! ");
         } else
             SimpleUtils.report("The Shift Notes textarea is not loaded on New Create Shift page! ");
     }
@@ -3054,7 +3063,12 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             shiftNameOnNewCreateShiftPage.sendKeys(Keys.DELETE);
             shiftNameOnNewCreateShiftPage.sendKeys(String.valueOf(shiftName));
             SimpleUtils.report("Set shift name on New Create Shift page successfully! ");
-        } else
+        } else if (isElementLoaded(shiftNameOnOldCreateShiftPage, 5)) {
+            shiftNameOnOldCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+            shiftNameOnOldCreateShiftPage.sendKeys(Keys.DELETE);
+            shiftNameOnOldCreateShiftPage.sendKeys(shiftName);
+            SimpleUtils.report("Set shift name on New Create Shift page successfully! ");
+        }else
             SimpleUtils.report("The shift name input is not loaded on New Create Shift page! ");
     }
 

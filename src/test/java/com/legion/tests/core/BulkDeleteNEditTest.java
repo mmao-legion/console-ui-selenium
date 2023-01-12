@@ -342,7 +342,9 @@ public class BulkDeleteNEditTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             createShiftsWithSpecificValues(workRole1, shiftName1, null, "9:00am", "12:00pm",
-                    2, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), shiftNotes1, "");
+                    1, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), shiftNotes1, "");
+            createShiftsWithSpecificValues(workRole1, shiftName1, null, "9:00am", "12:00pm",
+                    1, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), shiftNotes1, "");
             String selectedDate = dates.get(1);
 
             shiftIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
@@ -1070,8 +1072,11 @@ public class BulkDeleteNEditTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
-                    2, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+            List<String> assignedNames2 = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
 
+            assignedNames.add(assignedNames2.get(0));
             HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             scheduleMainPage.saveSchedule();
 
