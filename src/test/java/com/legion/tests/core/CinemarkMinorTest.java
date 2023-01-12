@@ -188,8 +188,12 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))) +" Jan 1",
+            //First half of the year
+            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))-1) +" Aug 1",
                     (Integer.parseInt(dayInfo.get("year"))) +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
+            //second half
+//            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))) +" Jan 1",
+//                    (Integer.parseInt(dayInfo.get("year"))) +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
 
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
             teamPage.setNonSchoolDaysForNonSchoolWeek();
@@ -1391,7 +1395,9 @@ public class CinemarkMinorTest extends TestBase {
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1.split(" ")[0]);
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
+        Thread.sleep(3000);
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        Thread.sleep(6000);
         newShiftPage.clickOnDayViewAddNewShiftButton();
         newShiftPage.customizeNewShiftPage();
 
@@ -1718,6 +1724,7 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.clickOnCreateOrNextBtn();
         newShiftPage.searchTeamMemberByName(firstNameOfTM1);
         newShiftPage.clickOnOfferOrAssignBtn();
+        Thread.sleep(3000);
         scheduleMainPage.saveSchedule();
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1896,9 +1903,6 @@ public class CinemarkMinorTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheMainCalendarInfoOnThePageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
             TeamPage teamPage = pageFactory.createConsoleTeamPage();
             teamPage.goToTeam();
             teamPage.verifyTeamPageLoadedProperlyWithNoLoadingIcon();

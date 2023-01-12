@@ -199,6 +199,7 @@ public class SplitAndSpreadTest extends TestBase {
         scheduleMainPage.selectShiftTypeFilterByText("Assigned");
         List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
         String firstNameOfTM1 = shiftInfo.get(0);
+        String lastNameOfTM1 = shiftInfo.get(5);
         String workRoleOfTM1 = shiftInfo.get(4);
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
@@ -212,7 +213,7 @@ public class SplitAndSpreadTest extends TestBase {
         newShiftPage.moveSliderAtCertainPoint("8:00am",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
-        newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+        newShiftPage.searchTeamMemberByName(firstNameOfTM1 + " " + lastNameOfTM1);
         newShiftPage.clickOnOfferOrAssignBtn();
 
         newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -221,7 +222,7 @@ public class SplitAndSpreadTest extends TestBase {
         newShiftPage.moveSliderAtCertainPoint("12:00pm",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
-        newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+        newShiftPage.searchTeamMemberByName(firstNameOfTM1 + " " + lastNameOfTM1);
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
 
@@ -234,7 +235,7 @@ public class SplitAndSpreadTest extends TestBase {
         newShiftPage.moveSliderAtCertainPoint("3:00pm",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
-        newShiftPage.searchWithOutSelectTM(firstNameOfTM1);
+        newShiftPage.searchWithOutSelectTM(firstNameOfTM1 + " " + lastNameOfTM1);
         String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
         SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("will trigger split shift"), false);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);

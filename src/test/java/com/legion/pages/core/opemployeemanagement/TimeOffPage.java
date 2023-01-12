@@ -147,7 +147,7 @@ public class TimeOffPage extends BasePage {
     }
 
     public void switchToTimeOffTab() {
-        waitForSeconds(15);
+        waitForSeconds(25);
         scrollToElement(timeOffTab);
         timeOffTab.click();
     }
@@ -541,14 +541,13 @@ public class TimeOffPage extends BasePage {
 
     @FindBy(css = "input[aria-label = 'Annual Leave']")
     private WebElement annualLeaveTimeOffReason;
-    @FindBy(css = "input[aria-label = 'Annual Leave1']")
-    private WebElement annualLeave1TimeOffReason;
+    @FindBy(css = "input[aria-label = 'Annual Leave4']")
+    private WebElement annualLeave4TimeOffReason;
     @FindBy(css = "input[aria-label = 'Annual Leave2']")
     private WebElement annualLeave2TimeOffReason;
 
     public void timeOffTypeSingleFilter() throws Exception{
-        click(timeOffTypeSelect);
-        click(annualLeave1TimeOffReason);
+        click(annualLeave4TimeOffReason);
         click(annualLeave2TimeOffReason);
         click(annualLeaveTimeOffReason);
 
@@ -557,7 +556,7 @@ public class TimeOffPage extends BasePage {
             click(showMoreButton);
         }
         for(int i = 0; i < historyItems.size(); i++){
-            if(historyItems.get(i).getAttribute("innerText").contains("Annual Leave") && !historyItems.get(i).getAttribute("innerText").contains("Annual Leave1") && !historyItems.get(i).getAttribute("innerText").contains("Annual Leave2"))
+            if(historyItems.get(i).getAttribute("innerText").contains("Annual Leave") && !historyItems.get(i).getAttribute("innerText").contains("Annual Leave4") && !historyItems.get(i).getAttribute("innerText").contains("Annual Leave2"))
                 SimpleUtils.pass("Accrual Ledger filter successfully");
             else
                 SimpleUtils.fail("Accrual Ledger filter failed",false);
@@ -566,7 +565,7 @@ public class TimeOffPage extends BasePage {
 
     public void timeOffTypeMutiplyFilter() throws Exception{
         click(timeOffTypeSelect);
-        click(annualLeave1TimeOffReason);
+        click(annualLeave4TimeOffReason);
         click(annualLeave2TimeOffReason);
 
         if(isElementLoaded(showMoreButton)) {
@@ -704,7 +703,7 @@ public class TimeOffPage extends BasePage {
             click(showMoreButton);
         }
         System.out.println(historyItems.size());
-        if(historyItems.size() == 30)
+        if(historyItems.size() == 13)
             SimpleUtils.pass("All accrual display successfully");
         else
             SimpleUtils.fail("All accrual display failed",false);
@@ -746,7 +745,7 @@ public class TimeOffPage extends BasePage {
             scrollToElement(showMoreButton);
             click(showMoreButton);
         }
-        if(historyItems.size() == 29)
+        if(historyItems.size() == 11)
             SimpleUtils.pass("Mutiply action filter correct");
         else
             SimpleUtils.fail("Mutiply action filter wrong",false);

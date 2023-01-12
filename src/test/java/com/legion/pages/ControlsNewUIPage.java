@@ -380,4 +380,16 @@ public interface ControlsNewUIPage {
 	public void isSortOfSenioritySectionLoaded() throws Exception;
 	public void selectSortOfSeniority(String optionValue) throws Exception;
 	public String getSenioritySort() throws Exception;
+	public boolean isScheduleRestrictionLoaded() throws Exception;
+	public void isAccrualTimeOverrideLoaded() throws Exception;
+	public void updateAccrualTimeOverrideToggle(String isToggleOpen) throws Exception;
+	public String getAccrualTimeOverrideToggleActiveBtnLabel() throws Exception;
+	public boolean isDeleteTimeOffBtnLoaded() throws Exception;
+	public void clickDeleteTimeOffBtn() throws Exception;
+	public boolean isAddTimeOffBtnLoaded() throws Exception;
+	public boolean isAddTimeOffBtnClickable() throws Exception;
+	public void addTimeOffReasonOnSchedulingPolicy(String timeOffReason, String maximum) throws Exception;
+	public void modifyTimeOffReasonOnSchedulingPolicy(String timeOffReason, String maximum) throws Exception;
+	public List<String> getTimeOffReasonsOnSchedulingPolicy() throws Exception;
+	public void clickAddTimeOffBtn() throws Exception;
 }

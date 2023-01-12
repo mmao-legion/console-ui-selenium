@@ -508,7 +508,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @FindBy(className = "week-schedule-shift-wrapper")
     private List<WebElement> shiftsWeekView;
-    @FindBy(css = ".week-schedule-worker-name")
+    @FindBy(css = "[id=\"schedule-grid-react-wrapper\"] .week-schedule-worker-name")
     private List<WebElement> namesWeekView;
     @FindBy(css = ".sch-day-view-shift-worker-name")
     private List<WebElement> namesDayView;
@@ -2500,7 +2500,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(css = "span.lgn-alert-message")
     private List<WebElement> warningMessagesInWarningMode;
 
-    @FindBy(className = "lgn-action-button-success")
+    @FindBy(css = ".lgn-action-button-success")
     private WebElement okBtnInWarningMode;
 
     @FindBy(css = ".lgn-action-button-success")
@@ -2528,7 +2528,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public void clickOnOkButtonInWarningMode() throws Exception {
         if(isElementLoaded(okBtnInWarningMode, 5)) {
-            click(okBtnOnConfirm);
+            click(okBtnInWarningMode);
             SimpleUtils.pass("Click on Ok button on warning successfully");
         } else {
             SimpleUtils.report("Ok button fail to load");
@@ -2621,7 +2621,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement start : startElements) {
                 WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
                 if (startName != null) {
-                    if (startName.getText().equalsIgnoreCase(firstName)) {
+                    if (startName.getText().contains(firstName)) {
                         SimpleUtils.pass("Can find the TM:" + firstName + " on " + startIndex);
                         isCopied = true;
                         break;
@@ -2633,7 +2633,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement end : endElements) {
                 WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
                 if (endName != null) {
-                    if (endName.getText().equalsIgnoreCase(firstName)) {
+                    if (endName.getText().contains(firstName)) {
                         isCopied = true;
                         break;
                     }
@@ -4531,5 +4531,80 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.report("There is no shift for :"+teamMemberName+" !");
         }else
             SimpleUtils.report("Schedule Week View: shifts load failed or there is no shift in this week");
+    }
+
+
+    @Override
+    public List<WebElement> selectMultipleSameAssignmentShiftsOnOneDay(int shiftCount, String tmName, int dayIndex) throws Exception {
+        List<WebElement> selectedShifts = new ArrayList<>();
+//        List<String> selectedShiftTMNames = new ArrayList<>();
+//        List<WebElement> names = new ArrayList<>();
+//        if (areListElementVisible(namesWeekView, 10)) {
+//            names = namesWeekView;
+//        } else if (areListElementVisible(namesDayView, 10)) {
+//            names = namesDayView;
+//        }
+        List<WebElement> names = getDriver().findElements(By.cssSelector("[id=\"schedule-grid-react-wrapper\"] [data-day-index=\"" + dayIndex + "\"] .week-schedule-worker-name"));
+        scrollToBottom();
+        waitForSeconds(2);
+        if (names.size() >= shiftCount) {
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (WebElement name : names) {
+                if (name.getText().toLowerCase().contains(tmName.toLowerCase())) {
+                    action.click(name);
+                    selectedShifts.add(name);
+                    SimpleUtils.pass("Bulk action: Click " + tmName + "'s shift successfully! ");
+                }
+                if (selectedShifts.size() == shiftCount) {
+                    break;
+                }
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
+                SimpleUtils.pass("Selected " + shiftCount + " shifts successfully");
+            } else {
+                SimpleUtils.fail("Expected to select " + shiftCount + " shifts, but actually selected " +
+                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+            }
+        } else {
+            SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+        }
+        return selectedShifts;
+    }
+
+
+    @Override
+    public HashSet<Integer> verifyCanSelectMultipleShiftsOnOneDay(int shiftCount, int dayIndex) throws Exception {
+        skipTheNewFeatureDialog();
+        HashSet<Integer> set = new HashSet<>();
+//        List<WebElement> names = null;
+//        if (areListElementVisible(namesWeekView, 10)) {
+//            names = namesWeekView;
+//        } else if (areListElementVisible(shiftOuterInDayView, 10)) {
+//            names = shiftOuterInDayView;
+//        }
+        List<WebElement> names = getDriver().findElements(By.cssSelector("[id=\"schedule-grid-react-wrapper\"] [data-day-index=\"" + dayIndex + "\"] .week-schedule-worker-name"));
+        if (names.size() >= shiftCount) {
+            SimpleUtils.randomSet(0, names.size() - 1, shiftCount, set);
+            Actions action = new Actions(getDriver());
+            action.keyDown(Keys.CONTROL).build().perform();
+            for (int i : set) {
+                scrollToBottom();
+                waitForSeconds(1);
+                action.moveToElement(names.get(i)).click(names.get(i));
+                waitForSeconds(1);
+            }
+            action.keyUp(Keys.CONTROL).build().perform();
+            if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
+                SimpleUtils.pass("Selected " + shiftCount + " shifts successfully");
+            } else {
+                SimpleUtils.fail("Expected to select " + shiftCount + " shifts, but actually selected " +
+                        getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+            }
+        } else {
+            SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+        }
+        return set;
     }
 }

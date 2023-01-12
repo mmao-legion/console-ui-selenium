@@ -38,6 +38,9 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 
     @FindBy(css = "[type=submit]")
 	private WebElement newSignInBtn;
+
+    @FindBy(css = ".MuiFormHelperText-root")
+	private WebElement helperText;
     
     @FindBy(className="fa-sign-out")
     private WebElement logoutButton;
@@ -78,17 +81,7 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 				break;
 			}
 		}
-		if (isElementLoaded(loginButton, 5)) {
-			getActiveConsoleName(loginButton);
-			userNameField.clear();
-			passwordField.clear();
-			if (userName.contains("@" + getEnterprise())) {
-				userName = userName.replace("@" + getEnterprise(), "");
-			}
-			userNameField.sendKeys(userName);
-			passwordField.sendKeys(Password);
-			clickTheElement(loginButton);
-		} else if (isElementLoaded(newSignInBtn, 5)) {
+		if (isElementLoaded(newSignInBtn, 5)) {
 			newUserNameField.clear();
 			newUserNameField.sendKeys(userName);
 			newUserNameField.sendKeys(Keys.ENTER);
@@ -96,8 +89,20 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 				newPasswordInput.clear();
 				newPasswordInput.sendKeys(Password);
 			}
+			waitForSeconds(1);
 			clickTheElement(newSignInBtn);
+			try {
+				if (System.getProperty("enterprise").equalsIgnoreCase("vailqacn")) {
+					waitForSeconds(5);
+					if (isElementLoaded(newSignInBtn, 5) && isClickable(newSignInBtn, 5)) {
+						clickTheElement(newSignInBtn);
+					}
+				}
+			} catch (Exception e) {
+				// Do nothing
+			}
 		}
+		verifyLegionTermsOfService();
 		waitForSeconds(4);
     }
 
@@ -366,7 +371,8 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 	public void verifyLegionTermsOfService() throws Exception {
 		if (isElementLoaded(legionTermsOfService,5)
 				&& isElementLoaded(legionTermsOfServiceAgreeButton, 5)) {
-			getDriver().executeScript("arguments[0].scrollIntoView()", legionTermsOfService.findElement(By.xpath("./p[67]")));
+			int paragraphSize = legionTermsOfService.findElements(By.xpath("./p")).size();
+			getDriver().executeScript("arguments[0].scrollIntoView()", legionTermsOfService.findElement(By.xpath("./p["+paragraphSize+"]")));
 			waitForSeconds(3);
 			clickTheElement(legionTermsOfServiceAgreeButton);
 		}else

@@ -767,6 +767,7 @@ public class ScheduleCoverageTest extends TestBase {
                 scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
                 SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+                scheduleCommonPage.navigateToNextWeek();
                 boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
                 if (isWeekGenerated) {
                     createSchedulePage.unGenerateActiveScheduleScheduleWeek();

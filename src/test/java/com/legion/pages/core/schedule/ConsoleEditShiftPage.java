@@ -463,7 +463,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
             timeSection = getSpecificElementByTypeAndColumn(sectionType.EndTime.getType(), "Edited");
         }
         WebElement checkbox = timeSection.findElement(By.cssSelector("[type=checkbox]"));
-        WebElement parent = checkbox.findElement(By.xpath("./../.."));
+        WebElement parent = checkbox.findElement(By.xpath("./.."));
         if (check) {
             if (!parent.getAttribute("class").contains("Mui-checked")) {
                 clickTheElement(checkbox);
@@ -573,7 +573,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         } else {
             option = allowComplianceOption;
         }
-        WebElement parent = option.findElement(By.xpath("./../.."));
+        WebElement parent = option.findElement(By.xpath("./.."));
         if (isCheck) {
             if (parent != null) {
                 if (!parent.getAttribute("class").contains("Mui-checked")) {
@@ -929,25 +929,39 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
             SimpleUtils.report("There is no rest break buttons! ");
     }
     
-    @FindBy(css = "#shiftStart-helper-text")
-    private WebElement startTimeErrorMessage;
-    @FindBy(css = "#shiftEnd-helper-text")
-    private WebElement endTimeErrorMessage;
+//    @FindBy(css = "#shiftStart-helper-text")
+//    private WebElement startTimeErrorMessage;
+//    @FindBy(css = "#shiftEnd-helper-text")
+//    private WebElement endTimeErrorMessage;
     @Override
     public List<String> getErrorMessageOfTime() throws Exception {
         List<String> errorMessages = new ArrayList<>();
-        if (isElementLoaded(startTimeErrorMessage, 5) && !(isElementLoaded(endTimeErrorMessage, 5))) {
+        WebElement startTimeErrorMessage = null;
+        WebElement endTimeErrorMessage = null;
+        try {
+            startTimeErrorMessage = getSpecificElementByTypeAndColumn(sectionType.StartTime.getType(), "Edited")
+                    .findElement(By.cssSelector("#legion_cons_Schedule_Schedule_EditShifts_StartTime-helper-text"));
+        } catch (Exception e) {
+            // Do nothing
+        }
+        try {
+            endTimeErrorMessage = getSpecificElementByTypeAndColumn(sectionType.EndTime.getType(), "Edited")
+                    .findElement(By.cssSelector("#legion_cons_Schedule_Schedule_EditShifts_EndTime-helper-text"));
+        } catch (Exception e) {
+            // Do nothing
+        }
+        if (startTimeErrorMessage != null && endTimeErrorMessage == null) {
             waitForSeconds(1);
-            errorMessages.add(0, startTimeErrorMessage.getText().trim());
+            errorMessages.add(startTimeErrorMessage.getText().trim());
             SimpleUtils.report("Catch the error message of Start Time!");
-        } else if (isElementLoaded(endTimeErrorMessage, 5) && !(isElementLoaded(startTimeErrorMessage, 5))) {
+        } else if (startTimeErrorMessage == null && endTimeErrorMessage != null) {
             waitForSeconds(1);
-            errorMessages.add(0, endTimeErrorMessage.getText().trim());
+            errorMessages.add(endTimeErrorMessage.getText().trim());
             SimpleUtils.report("Catch the error message of End Time!");
-        } else if (isElementLoaded(startTimeErrorMessage, 5) && isElementLoaded(endTimeErrorMessage, 5)) {
+        } else if (startTimeErrorMessage != null && endTimeErrorMessage != null) {
             waitForSeconds(1);
-            errorMessages.add(0, startTimeErrorMessage.getText().trim());
-            errorMessages.add(1, endTimeErrorMessage.getText().trim());
+            errorMessages.add(startTimeErrorMessage.getText().trim());
+            errorMessages.add(endTimeErrorMessage.getText().trim());
             SimpleUtils.report("Catch the error message of Start Time & End Time!");
         }
         return errorMessages;
@@ -1107,5 +1121,17 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         }else
             SimpleUtils.fail("Rest breaks on single edit shift page display incorrectly", false);
         return count;
+    }
+
+
+
+    @FindBy (css = ".MuiPaper-elevation>div>div>div>button:nth-child(2)")
+    private WebElement updateAnywayButton;
+    @Override
+    public void clickOnUpdateAnywayButton() throws Exception {
+//        waitForSeconds(2);
+        if (isElementLoaded(updateAnywayButton, 3)) {
+            clickTheElement(updateAnywayButton);
+        }
     }
 }
