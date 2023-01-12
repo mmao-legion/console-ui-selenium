@@ -415,6 +415,7 @@ public class SplitAndSpreadTest extends TestBase {
         List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
         String firstNameOfTM1 = shiftInfo.get(0);
         String workRoleOfTM1 = shiftInfo.get(4);
+        String lastNameOfTM1 = shiftInfo.get(5);
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
         scheduleMainPage.saveSchedule();
@@ -434,7 +435,7 @@ public class SplitAndSpreadTest extends TestBase {
         newShiftPage.moveSliderAtCertainPoint("8:00am",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
-        newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+        newShiftPage.searchTeamMemberByName(firstNameOfTM1 + " " + lastNameOfTM1);
         newShiftPage.clickOnOfferOrAssignBtn();
 
 
@@ -448,7 +449,7 @@ public class SplitAndSpreadTest extends TestBase {
         newShiftPage.moveSliderAtCertainPoint("12:00pm",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
-        newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+        newShiftPage.searchTeamMemberByName(firstNameOfTM1 + " " + lastNameOfTM1);
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
 

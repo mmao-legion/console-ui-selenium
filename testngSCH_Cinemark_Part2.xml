@@ -204,7 +204,7 @@
                     <include name="verifySplitShiftViolationWhenSearchTMAsInternalAdmin" />
                     <include name="verifySplitShiftViolationWillShowOnTheSecondShiftAsInternalAdmin" />
 <!--                    <include name="verifySplitShiftViolationWhenDragDropToChangeAssignmentAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6361-->
-                    <include name="verifySplitShiftViolationWhenDragDropToAnotherDayAsInternalAdmin" />
+<!--                    <include name="verifySplitShiftViolationWhenDragDropToAnotherDayAsInternalAdmin" SCH-8428/>-->
                     <!--  SCH-5605                  <include name="verifySplitShiftViolationOpenShiftCannotBeClaimedAsTeamMember" />   -->
                 </methods>
             </class>
