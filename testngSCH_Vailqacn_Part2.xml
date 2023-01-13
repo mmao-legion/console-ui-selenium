@@ -391,18 +391,18 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                 <methods>
                     <include name="verifyTheContentOnSingleEditShiftsWindowForRegularLocationAsInternalAdmin" />
                     <include name="verifyTheCurrentColumnOnSingleEditShiftsWindowAsInternalAdmin" />
- <!--                   <include name="verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin" /> need disable override assignment rules setting so not run on vailqacn to avoid affect other cases -->
-                    <!--       <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" /> Blocked by bug: https://legiontech.atlassian.net/browse/SCH-8240 />-->
-                    <!--        <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
-                    <!--        <include name="verifyChangingEndTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202
+                    <include name="verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin" /> need disable override assignment rules setting so not run on vailqacn to avoid affect other cases
+                    <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" /> Blocked by bug: https://legiontech.atlassian.net/browse/SCH-8240 />
+                    <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202
+                    <include name="verifyChangingEndTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202
                     <include name="verifyChangingDateOnSingleEditShiftsWindowAsInternalAdmin" />
-     <!--               <include name="verifyChangingAssignmentOnSingleEditShiftsWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8443
+                    <include name="verifyChangingAssignmentOnSingleEditShiftsWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8443
                     <include name="verifyChangingShiftNotesOnSingleEditShiftWindowAsInternalAdmin" />
                     <include name="verifyTheContentOfBreaksSectionsAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditMealBreaksOnSingleEditShiftPageAsInternalAdmin" />
-                    <!--                    <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334
+                    <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334
                     <include name="verifyTheDailyOTAndDTViolationsOnSingleEditShiftPageAsInternalAdmin" />
-                    <!--                    <include name="verifyTheWeeklyOTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8430 https://legiontech.atlassian.net/browse/SCH-8429
+                    <include name="verifyTheWeeklyOTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8430 https://legiontech.atlassian.net/browse/SCH-8429
                     <include name="verifyTheClopeningViolationsOnSingleEditShiftPageAsInternalAdmin" />
                     <include name="verifyTheSplitViolationsOnSingleEditShiftPageAsInternalAdmin" />
                     <include name="verifyTheSpreadViolationsOnSingleEditShiftPageAsInternalAdmin" />
@@ -411,8 +411,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                 </methods>
             </class>
         </classes>
-    </test>
--->
+    </test>-->
 <!--    <test name="Team Page Test">
         <classes>
             <class name="com.legion.tests.core.TeamTest">
