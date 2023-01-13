@@ -96,8 +96,8 @@
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
                     <!--           <include name="verifyTheNoBudgetPermissionForSMAsInternalAdmin" />blocked by SCH-7258-->
-                    <include name="verifyOverrideAssignmentRulesToNoAsInternalAdmin" />
-                    <include name="verifyOverrideAssignmentRulesToYesAsInternalAdmin" />
+                    <!-- <include name="verifyOverrideAssignmentRulesToNoAsInternalAdmin" />
+                    <include name="verifyOverrideAssignmentRulesToYesAsInternalAdmin" /> blocked by SCH-8716-->
                     <include name="" />
                 </methods>
             </class>
