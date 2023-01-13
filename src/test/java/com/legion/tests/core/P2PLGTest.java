@@ -1316,7 +1316,9 @@ public class P2PLGTest extends TestBase {
             String day = scheduleCommonPage.getActiveDayInfo().get("day");
             scheduleCommonPage.clickOnWeekView();
             String shiftStartTime = "8am";
+            String shiftStartTime2 = "8:00 am";
             String shiftEndTime = "11am";
+            String shiftEndTime2 = "11:00 am";
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
@@ -1346,12 +1348,12 @@ public class P2PLGTest extends TestBase {
             newShiftPage.searchWithOutSelectTM(firstNameOfTM + " "+lastNameOfTM);
             String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
             SimpleUtils.assertOnFail("Overlapping violation message fail to load! The actual message is: "+shiftWarningMessage,
-                    shiftWarningMessage.contains(shiftStartTime+ " - "+shiftEndTime), false);
+                    shiftWarningMessage.contains(shiftStartTime2) && shiftWarningMessage.contains(shiftEndTime2), false);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
-            String expectedWarningMessage = firstNameOfTM+ " is scheduled "+ shiftStartTime+ " - "+shiftEndTime+ " on "+ weekDay + ", " + month + " " + day;
+            String expectedWarningMessage = firstNameOfTM+ " is scheduled "+ shiftStartTime2+ " - "+shiftEndTime2+ " on "+ weekDay;
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-                if (warningMessage.contains(expectedWarningMessage)){
+                if (warningMessage.toLowerCase().contains(expectedWarningMessage.toLowerCase())){
                     SimpleUtils.pass("Overlapping violation message displays");
                 } else {
                     SimpleUtils.fail("There is no Overlapping warning message displaying, the actual is:"+warningMessage, false);

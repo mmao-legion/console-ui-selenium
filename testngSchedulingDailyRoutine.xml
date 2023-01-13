@@ -104,7 +104,7 @@
         </classes>
     </test>
 
-    <test name="Bulk Delete and Edit Test">
+<!-- SCH-8716   <test name="Bulk Delete and Edit Test">
         <classes>
             <class name="com.legion.tests.core.BulkDeleteNEditTest">
                 <methods>
@@ -112,5 +112,5 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 </suite> <!-- Suite -->

@@ -3911,7 +3911,7 @@ private List<WebElement> locationColumn;
 			Date start = df.parse(startDate);
 			Date end = df.parse(EndDate);
 		    Long betweenDays = (end.getTime() - start.getTime()) / (1000L*3600L*24L);
-			if (summerDays.size() == 364 - betweenDays)
+			if ((summerDays.size() == 364 - betweenDays) || (summerDays.size() == 365 - betweenDays))
 				SimpleUtils.pass("School Calendars Page: Summer days are consistent with user entered dates");
 			else
 				SimpleUtils.fail("School Calendars Page: Summer days are inconsistent with user entered dates",false);

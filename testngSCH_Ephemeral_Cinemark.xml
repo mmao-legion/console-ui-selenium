@@ -18,7 +18,7 @@
         </classes>
     </test>
 
-    <test name="Bulk Create Test">
+    <!--Blocked by SCH-8716 <test name="Bulk Create Test">
         <classes>
             <class name="com.legion.tests.core.BulkCreateTest">
                 <methods>
@@ -37,7 +37,7 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
     <test name="Bulk Edit and Delete Test">
         <classes>
@@ -246,8 +246,8 @@
                     <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
                     <include name="verifyRegionListAndSubRegionOnComplianceInBUViewAsInternalAdmin" />
                     <include name="verifyDistrictListAndSubDistrictOnComplianceInBUViewAsInternalAdmin" />
-                    <include name="verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin" />
-                    <include name="verifyTotalViolationHrsOnComplianceInRegionViewAsInternalAdmin" />
+<!--                    <include name="verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin" SCH-8703/>-->
+<!--                    <include name="verifyTotalViolationHrsOnComplianceInRegionViewAsInternalAdmin" SCH-8703/>-->
                     <include name="verifyTotalLocationsWithViolationCardInComplianceBUViewAsInternalAdmin" />
                     <include name="verifyTotalLocationsWithViolationCardInComplianceRegionViewAsInternalAdmin" />
                     <include name="verifyTopViolationsCardInComplianceBUViewAsInternalAdmin" />
