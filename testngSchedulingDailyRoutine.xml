@@ -91,18 +91,17 @@
             </classes>
         </test> https://legiontech.atlassian.net/browse/SCH-7212 -->
 
-    <test name="Schedule New UI Test">
+<!--    <test name="Schedule New UI Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
-                    <!--           <include name="verifyTheNoBudgetPermissionForSMAsInternalAdmin" />blocked by SCH-7258-->
-                    <!-- <include name="verifyOverrideAssignmentRulesToNoAsInternalAdmin" />
-                    <include name="verifyOverrideAssignmentRulesToYesAsInternalAdmin" /> blocked by SCH-8716-->
-                    <include name="" />
+                    &lt;!&ndash;           <include name="verifyTheNoBudgetPermissionForSMAsInternalAdmin" />blocked by SCH-7258&ndash;&gt;
+                    &lt;!&ndash; <include name="verifyOverrideAssignmentRulesToNoAsInternalAdmin" />
+                    <include name="verifyOverrideAssignmentRulesToYesAsInternalAdmin" /> blocked by SCH-8716&ndash;&gt;
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
 <!-- SCH-8716   <test name="Bulk Delete and Edit Test">
         <classes>
