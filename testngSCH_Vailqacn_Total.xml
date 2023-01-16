@@ -41,8 +41,8 @@
                     <include name="verifyShiftInfoInViewProfileAsInternalAdmin"/>
                     <include name="verifyShiftInfoInPersonalMyScheduleAsInternalAdmin"/>
                     <include name="verifyShiftInfoInPersonalMyPreferenceAsInternalAdmin"/>
-                    <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
-                    <include name="verifyTheFunctionalityOfGreenOrGreyAvailableAsInternalAdmin"/>
+                <!--    <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
+                    <include name="verifyTheFunctionalityOfGreenOrGreyAvailableAsInternalAdmin"/> Blocked by SCH-8716 -->
                 </methods>
             </class>
         </classes>
