@@ -969,7 +969,7 @@ public class FTSERelevantTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00AM", "11:00PM");
 
             //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1251,7 +1251,7 @@ public class FTSERelevantTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00AM", "11:00PM");
 
             //Delete all auto-generated shifts for the FTSE employee
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
@@ -1321,7 +1321,7 @@ public class FTSERelevantTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("8:00AM", "11:00PM");
 
             //Delete all auto-generated shifts for the FTSE employee
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
@@ -1545,7 +1545,7 @@ public class FTSERelevantTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "10:00PM");
 
             //Delete all auto-generated shifts for the FTSE employee
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
