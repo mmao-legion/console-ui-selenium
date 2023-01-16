@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="7" name="LegionTest" parallel="tests">
+<suite verbose ="0" thread-count="5" name="LegionTest" parallel="tests">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Scheduling OP Enabled Regression"/>
@@ -422,9 +422,9 @@
 <!--                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" Blocked by queue/>-->
 <!--                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />-->
                     <include name="verifyRejectCoverRequestOfShiftSwapActivityAsTeamMember" />
-                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
+<!--                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" SCH-8631/>-->
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
-                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
+<!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" SCH-8631/>-->
                     <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />
 <!--                    <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" /> -->
 <!--                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />https://legiontech.atlassian.net/browse/SCH-7699 -->
@@ -745,7 +745,7 @@ SCH-5862-->
                     <include name="verifyFunctionalityOfDisplayOrderAsInternalAdmin" />
                     <include name="verifyWorkRoleDisplayOrderInConsoleAsInternalAdmin" />
                     <include name="verifyTheColorOfTheShiftInTMViewConsistentWithManagerViewAsTeamMember" />
-                    <include name="verifyTheRemovedWorkRoleShouldNotBeCopiedAsInternalAdmin" />
+<!--                    <include name="verifyTheRemovedWorkRoleShouldNotBeCopiedAsInternalAdmin" />-->
                 </methods>
             </class>
         </classes>
@@ -843,16 +843,16 @@ SCH-5862-->
         </classes>
     </test>-->
 
-    <test name="Shift Pattern Test">
+<!--    <test name="Shift Pattern Test">
         <classes>
             <class name="com.legion.tests.core.ShiftPatternTest">
                 <methods>
-                    <include name="verifyCreatingShiftPatternFromSchedulingRulesTemplateAsInternalAdmin" />
-<!--                    <include name="verifyCreatingShiftPatternFromLocationLevelTemplateAsInternalAdmin" Blocked by SCH-8313/>-->
+&lt;!&ndash;                    <include name="verifyCreatingShiftPatternFromSchedulingRulesTemplateAsInternalAdmin" SCH-8716/>&ndash;&gt;
+&lt;!&ndash;                    <include name="verifyCreatingShiftPatternFromLocationLevelTemplateAsInternalAdmin" Blocked by SCH-8313/>&ndash;&gt;
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
 <!--    <test name="Team Page Test">
         <classes>

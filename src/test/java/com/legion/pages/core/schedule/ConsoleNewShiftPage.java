@@ -3121,7 +3121,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 SimpleUtils.report("The Create Shift dialog is closed!");
             else
                 SimpleUtils.fail("The Create Shift dialog is not closed!", false);
-        }else{
+        } else if (isElementLoaded(closeSelectTMWindowBtn, 5)) {
+            closeCustomizeNewShiftWindow();
+        } else{
             SimpleUtils.fail("The Close button is not loaded correctly!", false);
         }
     }
