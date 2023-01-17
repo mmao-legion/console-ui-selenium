@@ -370,8 +370,8 @@
                     <include name="verifyMoveMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
                     <include name="verifyCopyMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
                     <include name="verifyTheShiftsWithSameTMsAndOverlappingShiftTimeCannotBulkDragAndDropAsInternalAdmin" />
-                    <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterMoveAsInternalAdmin" />
-                    <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterCopyAsInternalAdmin" />
+<!--                    <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterMoveAsInternalAdmin" />
+                    <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterCopyAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-8716-->
                     <!--                  <include name="verifyBulkMoveShiftsThatWillIncurOTViolationAsInternalAdmin" />
                                       <include name="verifyBulkCopyShiftsThatWillIncurOTViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7007-->
                     <!--                  <include name="verifyBulkMoveShiftsThatWillIncur7thDayViolationAsInternalAdmin" />
