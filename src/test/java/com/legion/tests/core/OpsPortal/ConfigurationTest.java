@@ -1317,6 +1317,7 @@ public class ConfigurationTest extends TestBase {
             }
             //Check current template can show well or not
             scheduleCommonPage.navigateToPreviousWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
             activeDayAndOperatingHrs = consoleToggleSummaryPage.getOperatingHrsValue("Sun");
             String currentOH = activeDayAndOperatingHrs.get("ScheduleOperatingHrs");
             if(currentOH.contains(currentOperatingHour)){
@@ -2676,9 +2677,12 @@ public class ConfigurationTest extends TestBase {
             String workRoleName="AMBASSADOR";
             //Turn off WorkRoleSettingsTemplateOP toggle
             ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", false);
-            getDriver().navigate().refresh();
+
             //Verify user can update hourly rate in work role details page
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.verifyBackBtnIsClickable();
             userManagementPage.clickOnUserManagementTab();
             userManagementPage.goToWorkRolesTile();
             userManagementPage.updateWorkRoleHourlyRate(hourlyRate);
@@ -2708,16 +2712,21 @@ public class ConfigurationTest extends TestBase {
             String workRoleName="AMBASSADOR";
             //Turn on WorkRoleSettingsTemplateOP toggle
             ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
-            getDriver().navigate().refresh();
+
             //Verify user can update hourly rate in work role details page
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.verifyBackBtnIsClickable();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickOnLocationsTab();
+
             userManagementPage.clickOnUserManagementTab();
             userManagementPage.goToWorkRolesTile();
             userManagementPage.goToWorkRolesDetails(workRoleName);
             userManagementPage.hourlyRateFieldIsNotShowing();
 
             //Verify location level hourly rate is read only
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickOnLocationsTab();
             locationsPage.goToSubLocationsInLocationsPage();
             locationsPage.goToLocationDetailsPage(locationName);
@@ -2742,7 +2751,11 @@ public class ConfigurationTest extends TestBase {
             String mode = "edit";
             //Turn on WorkRoleSettingsTemplateOP toggle
             ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
-            getDriver().navigate().refresh();
+
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.goToWorkRoleSettingsTile();
@@ -2776,7 +2789,7 @@ public class ConfigurationTest extends TestBase {
 
             //Turn on WorkRoleSettingsTemplateOP toggle
             ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
-            getDriver().navigate().refresh();
+
 
             //go to user management -> work roles page to check the count of the work roles
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
@@ -2831,6 +2844,15 @@ public class ConfigurationTest extends TestBase {
             Random random=new Random();
             int number=random.nextInt(90)+10;
             String updateValue=String.valueOf(number);
+
+            //Turn on WorkRoleSettingsTemplateOP toggle
+            ToggleAPI.updateToggle(Toggles.WorkRoleSettingsTemplateOP.getValue(), "fiona+99@legion.co", "admin11.a", true);
+
+
+            //go to user management -> work roles page to check the count of the work roles
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToWorkRolesTile();
 
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickOnLocationsTab();
