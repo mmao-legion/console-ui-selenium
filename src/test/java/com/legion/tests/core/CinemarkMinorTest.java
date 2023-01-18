@@ -1759,10 +1759,8 @@ public class CinemarkMinorTest extends TestBase {
 
 
         //check the violation message in Status column
-        String message = shiftOperatePage.getTheMessageOfTMScheduledStatus();
-        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor weekly max "
-                        +maxOfDays+"days! The actual is: "+message,
-                message.contains("Minor weekly max "+ maxOfDays+ " days"), false);
+        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor weekly max "+maxOfDays+"days! ",
+                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor weekly max "+ maxOfDays+ " days"), false);
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
 
