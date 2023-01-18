@@ -50,4 +50,5 @@ public interface ScheduleCommonPage {
     public void VerifyStaffListInSchedule(String name) throws Exception;
     public String getActiveWeekStartDayFromSchedule() throws Exception;
     public boolean checkIfDayAndWeekViewButtonEnabled () throws Exception;
+    public Map<String, String> getSelectedWeekInfo() throws Exception;
 }

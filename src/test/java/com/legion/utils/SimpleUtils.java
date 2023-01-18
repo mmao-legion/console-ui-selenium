@@ -2062,4 +2062,21 @@ public class SimpleUtils {
 		}
 		return isSame;
 	}
+
+	public static int getWeekStartDayOfTheYear(String wholeDate, String dateFormat) {
+		int weekStartDayOfTheYear = 0;
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+			Date date = sdf.parse(wholeDate);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+
+			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+			cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - dayOfWeek);
+			weekStartDayOfTheYear = cal.get(Calendar.DAY_OF_YEAR);
+		} catch (ParseException pe) {
+			SimpleUtils.fail("Failed to parse date: " + wholeDate + " to format: " + dateFormat, false);
+		}
+		return weekStartDayOfTheYear;
+	}
 }
