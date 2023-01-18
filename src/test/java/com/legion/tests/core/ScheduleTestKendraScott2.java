@@ -2560,7 +2560,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 			// Select one team member to view profile
-
+			Thread.sleep(3000);
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
 			teamPage.goToTeam();
 			List<String> tmList = teamPage.getTMNameList();

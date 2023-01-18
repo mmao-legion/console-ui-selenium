@@ -550,7 +550,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement temporaryTransferButton;
 	@FindBy (className = "check-image")
 	private WebElement checkImage;
-	@FindBy (css="[ng-click=\"viewProfile(worker)\"]")
+	@FindBy (css="[data-testid=\"lg-table-name\"] span")
 	private List<WebElement> teamMemberNames;
 	@FindBy (css = "#legion_cons_Team_Roster_Table [role=\"row\"] [data-testid=\"lg-table-name\"] span")
 	private List<WebElement> newTeamMemberNames;

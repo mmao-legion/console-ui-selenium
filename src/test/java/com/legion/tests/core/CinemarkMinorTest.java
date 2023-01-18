@@ -1040,7 +1040,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "9am,4pm";
             String shiftTime3 = "9am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "8:30am - 4pm";
+            String scheduleFromToTime = "8:30 AM - 4:00 PM";
             String scheduleMaxHours = "5";
             String selectWeekDayName = "Mon";
             if (minorName.contains("14")
@@ -1049,7 +1049,7 @@ public class CinemarkMinorTest extends TestBase {
                 shiftTime2 = "9am,4pm";
                 shiftTime3 = "8am,2pm";
                 workRole = minorWorkRole;
-                scheduleFromToTime = "8am - 4pm";
+                scheduleFromToTime = "8:00 AM - 4:00 PM";
                 scheduleMaxHours = "6";
                 selectWeekDayName = "Mon";
             }
@@ -1096,7 +1096,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "9am,5pm";
             String shiftTime3 = "9am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "9am - 5pm";
+            String scheduleFromToTime = "9:00 AM - 5:00 PM";
             String scheduleMaxHours = "6";
             String selectWeekDayName = "Fri";
             if (minorName.contains("14")
@@ -1105,7 +1105,7 @@ public class CinemarkMinorTest extends TestBase {
                 shiftTime2 = "9am,5pm";
                 shiftTime3 = "11am,4pm";
                 workRole = minorWorkRole;
-                scheduleFromToTime = "8:30am - 5pm";
+                scheduleFromToTime = "8:30 AM - 5:00 PM";
                 scheduleMaxHours = "5";
                 selectWeekDayName = "Fri";
             }
@@ -1152,7 +1152,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "10am,7pm";
             String shiftTime3 = "10am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "9:30am - 7pm";
+            String scheduleFromToTime = "9:30 AM - 7:00 PM";
             String scheduleMaxHours = "7";
             String selectWeekDayName = "Sat";
             if (minorName.contains("14")
@@ -1161,7 +1161,7 @@ public class CinemarkMinorTest extends TestBase {
                 shiftTime2 = "9am,6pm";
                 shiftTime3 = "9am,3pm";
                 workRole = minorWorkRole;
-                scheduleFromToTime = "9am - 6pm";
+                scheduleFromToTime = "9:00 AM - 6:00 PM";
                 scheduleMaxHours = "7";
                 selectWeekDayName = "Sat";
             }
@@ -1209,7 +1209,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "10am,8pm";
             String shiftTime3 = "10am,2pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "10am - 8pm";
+            String scheduleFromToTime = "10:00 AM - 8:00 PM";
             String scheduleMaxHours = "8";
             String selectWeekDayName = "Sun";
             if (minorName.contains("14")
@@ -1218,7 +1218,7 @@ public class CinemarkMinorTest extends TestBase {
                 shiftTime2 = "10am,9pm";
                 shiftTime3 = "10am,4pm";
                 workRole = minorWorkRole;
-                scheduleFromToTime = "9:30am - 9pm";
+                scheduleFromToTime = "9:30 AM - 9:00 PM";
                 scheduleMaxHours = "9";
                 selectWeekDayName = "Sun";
             }
@@ -1263,7 +1263,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime2 = "11am,10pm";
             String shiftTime3 = "11am,7pm";
             String workRole = minorWorkRole;
-            String scheduleFromToTime = "10:30am - 10pm";
+            String scheduleFromToTime = "10:30 AM - 10:00 PM";
             String scheduleMaxHours = "9";
             if (minorName.contains("14")
                     ||minorName.contains("15")) {
@@ -1271,7 +1271,7 @@ public class CinemarkMinorTest extends TestBase {
                 shiftTime2 = "10am,10pm";
                 shiftTime3 = "10am,4pm";
                 workRole = minorWorkRole;
-                scheduleFromToTime = "10am - 10pm";
+                scheduleFromToTime = "10:00 AM - 10:00 PM";
                 scheduleMaxHours = "10";
             }
             verifyDayOvertimeViolationsForMinors(minorName, shiftTime1, shiftTime2, shiftTime3, workRole, scheduleFromToTime, scheduleMaxHours, true, null);
@@ -1350,7 +1350,7 @@ public class CinemarkMinorTest extends TestBase {
         String warningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! but actual is: "
                         +warningMessage,
-                warningMessage.contains("Minor hrs "+ scheduleFromToTime.toLowerCase()), false);
+                warningMessage.toLowerCase().contains(("Minor hrs "+ scheduleFromToTime).toLowerCase()), false);
         Thread.sleep(5000);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         Thread.sleep(5000);
@@ -1379,11 +1379,12 @@ public class CinemarkMinorTest extends TestBase {
         WebElement newAddedShift = scheduleShiftTablePage.
                 getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1.split(" ")[0]).get(0));
         String expectMessage = "Minor hrs "+ scheduleFromToTime;
-        String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString().replace(":00 ", "").replace(":30 ", ":30").toLowerCase();
+        String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString();
+//                .replace(":00 ", "").replace(":30 ", ":30").toLowerCase();
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! the expect is: "+expectMessage
                             +" the actual is:"+actualMessage,
-                    actualMessage.contains(expectMessage.toLowerCase()), false);
+                    actualMessage.toLowerCase().contains(expectMessage.toLowerCase()), false);
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
 
