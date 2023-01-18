@@ -338,8 +338,8 @@
                     <include name="verifyShiftInfoInViewProfileAsInternalAdmin"/>
                     <include name="verifyShiftInfoInPersonalMyScheduleAsInternalAdmin"/>
                     <include name="verifyShiftInfoInPersonalMyPreferenceAsInternalAdmin"/>
-                <!--    <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
-                    <include name="verifyTheFunctionalityOfGreenOrGreyAvailableAsInternalAdmin"/>  Blocked by SCH-8716 -->
+                    <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
+                    <include name="verifyTheFunctionalityOfGreenOrGreyAvailableAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
@@ -433,12 +433,12 @@
             </classes>
         </test>
 
-<!--  SCH-8716  <test name="Bulk Create Test">
+    <test name="Bulk Create Test">
         <classes>
             <class name="com.legion.tests.core.BulkCreateTest">
                 <methods>
                     <include name="validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin" />
-                    <include name="validateAllItemsOnTheSelectTMPageAsInternalAdmin" /> &lt;!&ndash;  need run on 24hrs ops env&ndash;&gt;
+                    <include name="validateAllItemsOnTheSelectTMPageAsInternalAdmin" /> <!--  need run on 24hrs ops env-->
                     <include name="validateTheWarningMessageOfTheItemsOnFirstPageOfCreateShiftModalAsInternalAdmin" />
                     <include name="validateAssignOrOfferTMsInSearchAndRecommendedTabsAsInternalAdmin" />
                     <include name="validateAssignShiftsForEachDaySwitchAsInternalAdmin" />
@@ -455,7 +455,7 @@
                 </methods>
             </class>
         </classes>
-    </test>-->
+    </test>
 
 <!--    <test name="Schedule Copy Improvement Test">
         <classes>
@@ -815,24 +815,24 @@ SCH-5862-->
         </classes>
     </test>
 
-   <!-- SCH-8716 <test name="Single Shift Edit Test">
+    <test name="Single Shift Edit Test">
         <classes>
             <class name="com.legion.tests.core.SingleShiftEditTest">
                 <methods>
                     <include name="verifyTheContentOnSingleEditShiftsWindowForRegularLocationAsInternalAdmin" />
                     <include name="verifyTheCurrentColumnOnSingleEditShiftsWindowAsInternalAdmin" />
- &lt;!&ndash;                   <include name="verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin" /> &ndash;&gt;
-                    &lt;!&ndash;                    <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8240&ndash;&gt;
-                    &lt;!&ndash;        <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202&ndash;&gt;
-                    &lt;!&ndash;        <include name="verifyChangingEndTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202&ndash;&gt;
+ <!--                   <include name="verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin" /> -->
+                    <!--                    <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8240-->
+                    <!--        <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
+                    <!--        <include name="verifyChangingEndTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
                     <include name="verifyChangingDateOnSingleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingAssignmentOnSingleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingShiftNotesOnSingleEditShiftWindowAsInternalAdmin" />
                     <include name="verifyTheContentOfBreaksSectionsAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditMealBreaksOnSingleEditShiftPageAsInternalAdmin" />
-                    &lt;!&ndash;                    <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334&ndash;&gt;
+                    <!--                    <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334-->
                     <include name="verifyTheDailyOTAndDTViolationsOnSingleEditShiftPageAsInternalAdmin" />
-                    &lt;!&ndash;                    <include name="verifyTheWeeklyOTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8430 https://legiontech.atlassian.net/browse/SCH-8429&ndash;&gt;
+                    <!--                    <include name="verifyTheWeeklyOTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8430 https://legiontech.atlassian.net/browse/SCH-8429-->
                     <include name="verifyTheClopeningViolationsOnSingleEditShiftPageAsInternalAdmin" />
                     <include name="verifyTheSplitViolationsOnSingleEditShiftPageAsInternalAdmin" />
                     <include name="verifyTheSpreadViolationsOnSingleEditShiftPageAsInternalAdmin" />
@@ -841,18 +841,18 @@ SCH-5862-->
                 </methods>
             </class>
         </classes>
-    </test>-->
+    </test>
 
-<!--    <test name="Shift Pattern Test">
+    <test name="Shift Pattern Test">
         <classes>
             <class name="com.legion.tests.core.ShiftPatternTest">
                 <methods>
-&lt;!&ndash;                    <include name="verifyCreatingShiftPatternFromSchedulingRulesTemplateAsInternalAdmin" SCH-8716/>&ndash;&gt;
-&lt;!&ndash;                    <include name="verifyCreatingShiftPatternFromLocationLevelTemplateAsInternalAdmin" Blocked by SCH-8313/>&ndash;&gt;
+                    <include name="verifyCreatingShiftPatternFromSchedulingRulesTemplateAsInternalAdmin" />
+<!--                    <include name="verifyCreatingShiftPatternFromLocationLevelTemplateAsInternalAdmin" Blocked by SCH-8313/>-->
                 </methods>
             </class>
         </classes>
-    </test>-->
+    </test>
 
 <!--    <test name="Team Page Test">
         <classes>
