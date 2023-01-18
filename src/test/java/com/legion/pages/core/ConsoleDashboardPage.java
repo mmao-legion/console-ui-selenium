@@ -193,7 +193,8 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
     @Override
     public SchedulePage goToTodayForNewUI() throws Exception {
-        waitForPageLoaded(getDriver());
+        //waitForPageLoaded(getDriver());
+		waitForSeconds(10);
         checkElementVisibility(viewMyScheduleBtn);
         SimpleUtils.pass("Dashboard Page Loaded Successfully!");
         activeConsoleName = scheduleConsoleName.getText();
