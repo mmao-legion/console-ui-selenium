@@ -53,10 +53,4 @@ public class ScheduleCostAPI {
         }
         return scheduleCostContainer;
     }
-
-    private static HashMap<String, String> getWeekData() {
-        HashMap<String, String> weekData = new HashMap<>();
-
-        return weekData;
-    }
 }
