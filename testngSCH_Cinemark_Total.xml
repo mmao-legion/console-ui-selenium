@@ -843,7 +843,7 @@ SCH-5862-->
             </classes>
     </test>
 
-       <test name="Shift Pattern Test">
+    <test name="Shift Pattern Test">
             <classes>
                 <class name="com.legion.tests.core.ShiftPatternTest">
                     <methods>
@@ -852,7 +852,7 @@ SCH-5862-->
                     </methods>
                 </class>
             </classes>
-    </test>-->
+    </test>
 
 <!--    <test name="Team Page Test">
         <classes>
