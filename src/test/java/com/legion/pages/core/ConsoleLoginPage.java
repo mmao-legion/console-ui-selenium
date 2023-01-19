@@ -99,7 +99,17 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 					} else if (isElementLoaded(newSignInBtn, 5) && newSignInBtn.getText().contains("Signing in")) {
 						getDriver().navigate().refresh();
 						waitForSeconds(5);
-						loginToLegionWithCredential(userName, Password);
+						if (isElementLoaded(newSignInBtn, 5)) {
+							newUserNameField.clear();
+							newUserNameField.sendKeys(userName);
+							newUserNameField.sendKeys(Keys.ENTER);
+							if (isElementLoaded(newPasswordInput, 3)) {
+								newPasswordInput.clear();
+								newPasswordInput.sendKeys(Password);
+							}
+							waitForSeconds(1);
+							clickTheElement(newSignInBtn);
+						}
 					}
 				}
 			} catch (Exception e) {
