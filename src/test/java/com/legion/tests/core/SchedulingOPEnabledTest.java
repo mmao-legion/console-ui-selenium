@@ -262,6 +262,8 @@ public class SchedulingOPEnabledTest  extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             shiftOperatePage.verifyScheduledWarningWhenAssigning(firstShiftInfo.get(0) + " " + firstShiftInfo.get(5),
                     firstShiftInfo.get(2));
+            newShiftPage.clickCloseBtnForCreateShift();
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
