@@ -1530,15 +1530,19 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         String tmDetailName = null;
         if (scheduleCommonPage.isScheduleDayViewActive()) {
             clickTheElement(shift.findElement(By.cssSelector(".sch-day-view-shift .sch-shift-worker-img-cursor")));
+            SimpleUtils.pass("Click shift avatar in day view successfully!");
         } else {
             clickTheElement(shift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+            SimpleUtils.pass("Click shift avatar in week view successfully!");
         }
 
         clickOnViewProfile();
         waitForSeconds(2);
         if (isElementEnabled(tmpProfileContainer, 15)) {
+            SimpleUtils.pass("The profile page loaded successfully! ");
             if (isElementEnabled(personalDetailsName, 15)) {
                 tmDetailName = personalDetailsName.getText();
+                SimpleUtils.pass("Get employee detail name successfully! The detail name is:"+tmDetailName);
             } else
                 SimpleUtils.fail("TM detail name fail to load!", false);
         } else
