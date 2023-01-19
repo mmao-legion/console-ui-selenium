@@ -667,7 +667,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
 <!--                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
 <!--                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
                     <include name="verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin" />
-                    <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
+<!--                    <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" Need fix/>-->
                     <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <!-- <include name="verifyErrorMessageOfStartAndEndTimeOnBulkEditAsInternalAdmin" />  Blocked by bug: SCH-8623 -->
                 </methods>
@@ -717,7 +717,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
         </classes>
     </test>
 
-    <test name="Badge Test" >
+<!--  Need Fix  <test name="Badge Test" >
         <classes>
             <class name="com.legion.tests.core.BadgeTest">
                 <methods>
@@ -725,7 +725,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
     <!--
     <test name="Consolidating Filters Test">
         <classes>

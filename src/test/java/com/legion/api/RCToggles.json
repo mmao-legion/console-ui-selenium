@@ -17,5 +17,6 @@
   "ShowAnnouncementGroupOP": "op,opauto,carters",
   "UseDemandDriverTemplateSwitch": "op,opauto",
   "EnableChangeLocationGroupSetting": "op,opauto",
-  "WorkRoleSettingsTemplateOP": "opauto"
+  "WorkRoleSettingsTemplateOP": "opauto",
+  "TAScheduleCost": "americold,panda2bts"
 }
