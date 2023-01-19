@@ -136,6 +136,8 @@ public class MealAndRestBreakTest extends TestBase {
             scheduleCommonPage.clickOnWeekView();
             shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.verifySpecificOptionEnabledOnShiftMenu(editBreakOption);
+
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

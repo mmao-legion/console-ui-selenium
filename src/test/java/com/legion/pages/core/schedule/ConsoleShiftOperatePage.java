@@ -905,6 +905,19 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             clickTheElement(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
             SimpleUtils.pass("Click the selected shift avatar in week view successfully! ");
         }
+        try {
+            if(!isElementLoaded(editMealBreakTime,5)) {
+                if (isElementLoaded(selectedShift.findElement(By.cssSelector("div.sch-day-view-shift-worker-detail")), 5)) {
+                    clickTheElement(selectedShift.findElement(By.cssSelector("div.sch-day-view-shift-worker-detail")));
+                } else if (isElementLoaded(selectedShift.findElement(By.cssSelector(".week-schedule-shift .shift-container .rows .worker-image-optimized img")))) {
+                    clickTheElement(selectedShift.findElement(By.cssSelector(".week-schedule-shift .shift-container .rows .worker-image-optimized img")));
+                }
+            }
+        } catch (Exception e) {
+            if (isElementLoaded(selectedShift.findElement(By.cssSelector(".week-schedule-shift .shift-container .rows .worker-image-optimized img")))) {
+                clickTheElement(selectedShift.findElement(By.cssSelector(".week-schedule-shift .shift-container .rows .worker-image-optimized img")));
+            }
+        }
         clickOnEditMeaLBreakTime();
         if (isMealBreakTimeWindowDisplayWell(true)) {
             if (isSavedChange) {
