@@ -77,7 +77,8 @@ public class ActivityTest extends TestBase {
         PersonalEmergency("PERSONAL EMERGENCY"),
         FamilyEmergency("FAMILY EMERGENCY"),
         FloatingHoliday("FLOATING HOLIDAY"),
-        Sick("SICK");
+        Sick("SICK"),
+        Holiday("Holiday");
         private final String value;
         timeOffReasonType(final String newValue) {
             value = newValue;
@@ -1589,6 +1590,8 @@ public class ActivityTest extends TestBase {
                 profileNewUIPage.selectTimeOffReason(timeOffReasonType.Sick.getValue());
             } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Vacation.getValue())){
                 profileNewUIPage.selectTimeOffReason(timeOffReasonType.Vacation.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Holiday.getValue())) {
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.Holiday.getValue());
             }
             profileNewUIPage.selectStartAndEndDate(advancedDays, 1, 6);
             profileNewUIPage.clickOnSaveTimeOffRequestBtn();
