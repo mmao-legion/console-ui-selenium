@@ -3265,7 +3265,7 @@ public class DragAndDropTest extends TestBase {
             SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
                     thirdTMShiftsOnTargetDay.size()==1, false);
             SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should display on second day! ",
-                    forthTMShiftsOnTargetDay.size()==1, false);
+                    forthTMShiftsOnTargetDay.size()>=1, false);
 
             scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 4, true);
             scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);

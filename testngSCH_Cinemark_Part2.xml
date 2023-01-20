@@ -369,8 +369,7 @@ SCH-5862-->
         </classes>
     </test>
 
-    <!--
-       <test name="Drag And Drop Test">
+<!--    SCH-7007 SCH-6816  <test name="Drag And Drop Test">
            <classes>
                <class name="com.legion.tests.core.DragAndDropTest">
                    <methods>
@@ -384,18 +383,17 @@ SCH-5862-->
                        <include name="verifyTheShiftsWithSameTMsAndOverlappingShiftTimeCannotBulkDragAndDropAsInternalAdmin" />
                        <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterMoveAsInternalAdmin" />
                        <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterCopyAsInternalAdmin" />
-                                       <include name="verifyBulkMoveShiftsThatWillIncurOTViolationAsInternalAdmin" />
-                                         <include name="verifyBulkCopyShiftsThatWillIncurOTViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7007-->
-                    <!--                  <include name="verifyBulkMoveShiftsThatWillIncur7thDayViolationAsInternalAdmin" />
-                                     <include name="verifyBulkCopyShiftsThatWillIncur7thDayViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-6816
-                    <include name="verifyShiftsCanBeDragAndDropSeveralTimesWithOutSaveAsInternalAdmin" />
-                    <include name="verifyBulkDragAndDropByDifferentAccessRolesAsInternalAdmin" />
+                       <include name="verifyBulkMoveShiftsThatWillIncurOTViolationAsInternalAdmin" />
+                       <include name="verifyBulkCopyShiftsThatWillIncurOTViolationAsInternalAdmin" />
+                       <include name="verifyBulkMoveShiftsThatWillIncur7thDayViolationAsInternalAdmin" />
+                       <include name="verifyBulkCopyShiftsThatWillIncur7thDayViolationAsInternalAdmin" />
+                        <include name="verifyShiftsCanBeDragAndDropSeveralTimesWithOutSaveAsInternalAdmin" />
+                        <include name="verifyBulkDragAndDropByDifferentAccessRolesAsInternalAdmin" />
                     <include name="verifySwapAndAssignButtonOnDragAndDropConfirmChangeModalAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
-    </test>
-   -->
+    </test>-->
     <test name="OP Config Test">
         <classes>
             <class name="com.legion.tests.core.OPConfigTest">
@@ -439,18 +437,18 @@ SCH-5862-->
                 <methods>
                     <include name="verifyTheContentOnSingleEditShiftsWindowForRegularLocationAsInternalAdmin" />
                     <include name="verifyTheCurrentColumnOnSingleEditShiftsWindowAsInternalAdmin" />
- <!--                   <include name="verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin" /> -->
-                    <!--                    <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8240-->
-                    <!--        <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
-                    <!--        <include name="verifyChangingEndTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202
+                    <include name="verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin" />
+                                        <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8240
+                            <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202
+                            <include name="verifyChangingEndTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202
                     <include name="verifyChangingDateOnSingleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingAssignmentOnSingleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingShiftNotesOnSingleEditShiftWindowAsInternalAdmin" />
                     <include name="verifyTheContentOfBreaksSectionsAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditMealBreaksOnSingleEditShiftPageAsInternalAdmin" />
-                    <!--                    <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334
+                                        <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334
                     <include name="verifyTheDailyOTAndDTViolationsOnSingleEditShiftPageAsInternalAdmin" />
-                    <!--                    <include name="verifyTheWeeklyOTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8430 https://legiontech.atlassian.net/browse/SCH-8429
+                                      <include name="verifyTheWeeklyOTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8430 https://legiontech.atlassian.net/browse/SCH-8429
                     <include name="verifyTheClopeningViolationsOnSingleEditShiftPageAsInternalAdmin" />
                     <include name="verifyTheSplitViolationsOnSingleEditShiftPageAsInternalAdmin" />
                     <include name="verifyTheSpreadViolationsOnSingleEditShiftPageAsInternalAdmin" />
@@ -459,8 +457,7 @@ SCH-5862-->
                 </methods>
             </class>
         </classes>
-    </test>
--->
+    </test>-->
     <test name="Shift Pattern Test">
         <classes>
             <class name="com.legion.tests.core.ShiftPatternTest">

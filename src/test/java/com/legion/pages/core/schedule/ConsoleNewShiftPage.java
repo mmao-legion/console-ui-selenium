@@ -567,7 +567,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(className = "react-select__option")
     private List<WebElement> dropDownListOnNewCreateShiftPage;
     public void selectWorkRole(String workRoles) throws Exception {
-        waitForSeconds(5);
+        waitForSeconds(10);
         if (isElementLoaded(btnWorkRole, 15)) {
             clickTheElement(btnWorkRole);
             SimpleUtils.pass("Work Role button clicked Successfully");
@@ -3121,7 +3121,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 SimpleUtils.report("The Create Shift dialog is closed!");
             else
                 SimpleUtils.fail("The Create Shift dialog is not closed!", false);
-        }else{
+        } else if (isElementLoaded(closeSelectTMWindowBtn, 5)) {
+            closeCustomizeNewShiftWindow();
+        } else{
             SimpleUtils.fail("The Close button is not loaded correctly!", false);
         }
     }

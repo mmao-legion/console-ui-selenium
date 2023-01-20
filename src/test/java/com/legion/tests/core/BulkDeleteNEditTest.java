@@ -1072,11 +1072,8 @@ public class BulkDeleteNEditTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
-                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
-            List<String> assignedNames2 = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
-                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+                    2, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
 
-            assignedNames.add(assignedNames2.get(0));
             HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             scheduleMainPage.saveSchedule();
 
@@ -1169,10 +1166,7 @@ public class BulkDeleteNEditTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
-                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
-            List<String> assignedNames2 = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
-                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
-            assignedNames.add(assignedNames2.get(0));
+                    2, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
 
             HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             scheduleMainPage.saveSchedule();
@@ -1253,6 +1247,8 @@ public class BulkDeleteNEditTest extends TestBase {
             } else {
                 SimpleUtils.fail("Assign or Offer to Specific TM's is not disabled!", false);
             }
+            editShiftPage.clickOnCancelButton();
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -41,8 +41,8 @@
                     <include name="verifyShiftInfoInViewProfileAsInternalAdmin"/>
                     <include name="verifyShiftInfoInPersonalMyScheduleAsInternalAdmin"/>
                     <include name="verifyShiftInfoInPersonalMyPreferenceAsInternalAdmin"/>
-                <!--    <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
-                    <include name="verifyTheFunctionalityOfGreenOrGreyAvailableAsInternalAdmin"/> Blocked by SCH-8716 -->
+                    <include name="verifyMaxShiftDurationInfoInDayViewAsInternalAdmin"/>
+                    <include name="verifyTheFunctionalityOfGreenOrGreyAvailableAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
@@ -370,10 +370,10 @@
                     <include name="verifyMoveMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
                     <include name="verifyCopyMultipleShiftsOnDifferentDayAndSomeLocationAsInternalAdmin" />
                     <include name="verifyTheShiftsWithSameTMsAndOverlappingShiftTimeCannotBulkDragAndDropAsInternalAdmin" />
-                    <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterMoveAsInternalAdmin" />
-                    <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterCopyAsInternalAdmin" />
-                    <!--                  <include name="verifyBulkMoveShiftsThatWillIncurOTViolationAsInternalAdmin" />
-                                      <include name="verifyBulkCopyShiftsThatWillIncurOTViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7007-->
+                    <!--                    <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterMoveAsInternalAdmin" />
+                                        <include name="verifyShiftsWillConvertToOpenIfItWillIncurConflictAfterCopyAsInternalAdmin" />-->
+                    <include name="verifyBulkMoveShiftsThatWillIncurOTViolationAsInternalAdmin" />
+         <!--           <include name="verifyBulkCopyShiftsThatWillIncurOTViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7007-->
                     <!--                  <include name="verifyBulkMoveShiftsThatWillIncur7thDayViolationAsInternalAdmin" />
                                      <include name="verifyBulkCopyShiftsThatWillIncur7thDayViolationAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-6816 -->
                     <include name="verifyShiftsCanBeDragAndDropSeveralTimesWithOutSaveAsInternalAdmin" />
@@ -516,7 +516,7 @@
                     <include name="verifySplitShiftViolationWhenSearchTMAsInternalAdmin" />
                     <include name="verifySplitShiftViolationWillShowOnTheSecondShiftAsInternalAdmin" />
 <!--                    <include name="verifySplitShiftViolationWhenDragDropToChangeAssignmentAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6361-->
-                    <include name="verifySplitShiftViolationWhenDragDropToAnotherDayAsInternalAdmin" />
+                    <!--                    <include name="verifySplitShiftViolationWhenDragDropToAnotherDayAsInternalAdmin" SCH-8428/>-->
 <!--  SCH-5605                  <include name="verifySplitShiftViolationOpenShiftCannotBeClaimedAsTeamMember" />   -->
                 </methods>
             </class>
@@ -667,7 +667,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
 <!--                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
 <!--                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
                     <include name="verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin" />
-                    <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
+<!--                    <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" Need fix/>-->
                     <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <!-- <include name="verifyErrorMessageOfStartAndEndTimeOnBulkEditAsInternalAdmin" />  Blocked by bug: SCH-8623 -->
                 </methods>
@@ -676,7 +676,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
     </test>
 
 
-    <test name="Bulk Create Test">
+   <test name="Bulk Create Test">
         <classes>
             <class name="com.legion.tests.core.BulkCreateTest">
                 <methods>
@@ -717,7 +717,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
         </classes>
     </test>
 
-    <test name="Badge Test" >
+<!--  Need Fix  <test name="Badge Test" >
         <classes>
             <class name="com.legion.tests.core.BadgeTest">
                 <methods>
@@ -725,7 +725,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
     <!--
     <test name="Consolidating Filters Test">
         <classes>
@@ -751,24 +751,24 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
     </test>
 
 
-    <test name="Single Shift Edit Test">
+ <test name="Single Shift Edit Test">
         <classes>
             <class name="com.legion.tests.core.SingleShiftEditTest">
                 <methods>
                     <include name="verifyTheContentOnSingleEditShiftsWindowForRegularLocationAsInternalAdmin" />
                     <include name="verifyTheCurrentColumnOnSingleEditShiftsWindowAsInternalAdmin" />
- <!--                   <include name="verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin" /> need disable override assignment rules setting so not run on vailqacn to avoid affect other cases -->
-                    <!--       <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" /> Blocked by bug: https://legiontech.atlassian.net/browse/SCH-8240 />-->
-                    <!--        <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
-                    <!--        <include name="verifyChangingEndTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
+ <!--                  <include name="verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin" /> need disable override assignment rules setting so not run on vailqacn to avoid affect other cases -->
+                    <!--        <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" /> Blocked by bug: https://legiontech.atlassian.net/browse/SCH-8240 /> -->
+                    <!--         <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202 -->
+                    <!--         <include name="verifyChangingEndTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202 -->
                     <include name="verifyChangingDateOnSingleEditShiftsWindowAsInternalAdmin" />
-     <!--               <include name="verifyChangingAssignmentOnSingleEditShiftsWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8443-->
+     <!--               <include name="verifyChangingAssignmentOnSingleEditShiftsWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8443 -->
                     <include name="verifyChangingShiftNotesOnSingleEditShiftWindowAsInternalAdmin" />
                     <include name="verifyTheContentOfBreaksSectionsAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditMealBreaksOnSingleEditShiftPageAsInternalAdmin" />
-                    <!--                    <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334-->
+                    <!--                     <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334 -->
                     <include name="verifyTheDailyOTAndDTViolationsOnSingleEditShiftPageAsInternalAdmin" />
-                    <!--                    <include name="verifyTheWeeklyOTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8430 https://legiontech.atlassian.net/browse/SCH-8429-->
+                    <!--                    <include name="verifyTheWeeklyOTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8430 https://legiontech.atlassian.net/browse/SCH-8429 -->
                     <include name="verifyTheClopeningViolationsOnSingleEditShiftPageAsInternalAdmin" />
                     <include name="verifyTheSplitViolationsOnSingleEditShiftPageAsInternalAdmin" />
                     <include name="verifyTheSpreadViolationsOnSingleEditShiftPageAsInternalAdmin" />

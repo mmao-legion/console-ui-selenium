@@ -7704,7 +7704,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public String getSeniorityToggleActiveBtnLabel() throws Exception {
 		String seniorityToggleActiveBtnLabel = "";
-		if (isElementLoaded(seniorityToggle,10)) {
+		if (isElementLoaded(seniorityToggle,20)) {
 			WebElement seniorityToggleActiveActiveBtn = seniorityToggle.findElement(
 					By.cssSelector("div.lg-button-group-selected"));
 			if (isElementLoaded(seniorityToggleActiveActiveBtn,10))

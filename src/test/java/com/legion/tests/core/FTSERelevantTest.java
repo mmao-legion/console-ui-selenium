@@ -312,7 +312,6 @@ public class FTSERelevantTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
@@ -365,7 +364,7 @@ public class FTSERelevantTest extends TestBase {
 
             //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE T.");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
             scheduleMainPage.saveSchedule();
 
             //Create a new shift and assign it to the FTSE employee
@@ -463,7 +462,7 @@ public class FTSERelevantTest extends TestBase {
 
             //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE T.");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
             scheduleMainPage.saveSchedule();
 
             //Create a new shift and assign it to the FTSE employee
@@ -510,7 +509,6 @@ public class FTSERelevantTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
@@ -565,7 +563,7 @@ public class FTSERelevantTest extends TestBase {
 
             //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE T.");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
             scheduleMainPage.saveSchedule();
 
             //Create multiple shifts and assign them to the FTSE employee
@@ -834,7 +832,7 @@ public class FTSERelevantTest extends TestBase {
 
             //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE T.");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
             scheduleMainPage.saveSchedule();
 
             //Create multiple shifts and assign them to the same FTSE employee
@@ -973,7 +971,7 @@ public class FTSERelevantTest extends TestBase {
 
             //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE T.");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
             scheduleMainPage.saveSchedule();
 
             //Create multiple shifts and assign them to the FTSE employee
@@ -1184,7 +1182,7 @@ public class FTSERelevantTest extends TestBase {
             //Delete all auto-generated shifts for the FTSE employee
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE T.");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
             scheduleMainPage.saveSchedule();
 
             //Create multiple shifts and assign them to the FTSE employee

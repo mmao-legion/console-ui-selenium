@@ -354,6 +354,10 @@ public abstract class TestBase {
                 }
             } catch (Exception exp) {
                 Reporter.log("Error closing browser");
+            } finally {
+                if (getDriver() != null) {
+                    getDriver().quit();
+                }
             }
         }
 

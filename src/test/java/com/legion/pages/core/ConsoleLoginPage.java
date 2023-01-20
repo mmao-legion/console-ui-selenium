@@ -92,10 +92,24 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 			waitForSeconds(1);
 			clickTheElement(newSignInBtn);
 			try {
-				if (System.getProperty("enterprise").equalsIgnoreCase("vailqacn")) {
-					waitForSeconds(8);
-					if (isElementLoaded(newSignInBtn, 5) && isClickable(newSignInBtn, 5)) {
+				if (System.getProperty("enterprise").equalsIgnoreCase("vailqacn") || System.getProperty("enterprise").equalsIgnoreCase("cinemark-wkdy")) {
+					waitForSeconds(10);
+					if (isElementLoaded(newSignInBtn, 5) && newSignInBtn.getText().equalsIgnoreCase("Sign in")) {
 						clickTheElement(newSignInBtn);
+					} else if (isElementLoaded(newSignInBtn, 5) && newSignInBtn.getText().contains("Signing in")) {
+						getDriver().navigate().refresh();
+						waitForSeconds(5);
+						if (isElementLoaded(newSignInBtn, 5)) {
+							newUserNameField.clear();
+							newUserNameField.sendKeys(userName);
+							newUserNameField.sendKeys(Keys.ENTER);
+							if (isElementLoaded(newPasswordInput, 3)) {
+								newPasswordInput.clear();
+								newPasswordInput.sendKeys(Password);
+							}
+							waitForSeconds(1);
+							clickTheElement(newSignInBtn);
+						}
 					}
 				}
 			} catch (Exception e) {

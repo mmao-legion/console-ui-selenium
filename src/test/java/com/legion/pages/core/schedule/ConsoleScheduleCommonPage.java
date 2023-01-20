@@ -867,6 +867,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
         }
     }
 
+    @Override
     public Map<String, String> getSelectedWeekInfo() throws Exception{
         Map<String, String> dayInfo = new HashMap<>();
         WebElement activeWeek = MyThreadLocal.getDriver().findElement(By.cssSelector(".day-week-picker-period-active"));
