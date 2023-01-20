@@ -7719,7 +7719,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void updateSeniorityToggle(String isSeniorityToggleOpen) throws Exception {
-		if (isElementLoaded(seniorityToggle,20)) {
+		if (isElementLoaded(seniorityToggle,25)) {
 			WebElement applyLaborBudgetBtnGroup = seniorityToggle.findElement(
 					By.cssSelector("div.lg-button-group"));
 			if (applyLaborBudgetBtnGroup.getAttribute("class").contains("disabled")) {
