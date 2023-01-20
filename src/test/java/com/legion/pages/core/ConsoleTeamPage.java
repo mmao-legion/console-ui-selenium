@@ -715,6 +715,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement timeOffRejectBtn;
 	@FindBy(css = ".row.th div")
 	private List<WebElement> columnsInRoster;
+	@FindBy(css = "[role=\"columnheader\"]")
+	private List<WebElement> newColumnsInRoster;
 	@FindBy(css = ".tr .name")
 	private List<WebElement> namesInRoster;
 	@FindBy(css = ".tr [ng-if=\"showWorkerId\"]")
@@ -844,15 +846,25 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void verifyTheColumnInRosterPage(boolean isLocationGroup) throws Exception {
 		try {
-			List<String> expectedColumnsRegular = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "EMPLOYMENT", "STATUS", "BADGES", "ACTION"));
-			List<String> expectedColumnsLG = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "EMPLOYMENT", "LOCATION", "STATUS", "BADGES", "ACTION"));
 			List<String> actualColumns = new ArrayList<>();
+			List<String> expectedColumnsRegular = null;
+			List<String> expectedColumnsLG = null;
 			if (areListElementVisible(columnsInRoster, 5)) {
 				for (WebElement column : columnsInRoster) {
 					if (column.getText() != null && !column.getText().isEmpty()) {
 						actualColumns.add(column.getText());
 					}
 				}
+				expectedColumnsRegular = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "EMPLOYMENT", "STATUS", "BADGES", "ACTION"));
+				expectedColumnsLG = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "EMPLOYMENT", "LOCATION", "STATUS", "BADGES", "ACTION"));
+			} else if (areListElementVisible(newColumnsInRoster, 5)) {
+				for (WebElement column : newColumnsInRoster) {
+					if (column.getText() != null && !column.getText().isEmpty() && !column.getText().equalsIgnoreCase(" ")) {
+						actualColumns.add(column.getText());
+					}
+				}
+				expectedColumnsRegular = new ArrayList<>(Arrays.asList("NAME", "LEGION ONBOARDING", "JOB TITLE", "EMPLOYMENT", "MINOR", "EID", "BADGES"));
+				expectedColumnsLG = new ArrayList<>(Arrays.asList("NAME", "LEGION ONBOARDING", "JOB TITLE", "EMPLOYMENT", "MINOR", "EID", "LOCATION", "BADGES"));
 			} else {
 				SimpleUtils.fail("Team Roster Page: Columns failed to load!", false);
 			}
@@ -861,7 +873,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					SimpleUtils.pass("Team Roster: Verified the columns are correct for location group!");
 				} else {
 					SimpleUtils.fail("Team Roster: Verified the columns are incorrect for location group! Expected: "
-					+ expectedColumnsLG.toString() + ". But actual columns: " + actualColumns.toString(), false);
+							+ expectedColumnsLG.toString() + ". But actual columns: " + actualColumns.toString(), false);
 				}
 			} else {
 				if (actualColumns.containsAll(expectedColumnsRegular) && expectedColumnsRegular.containsAll(actualColumns)) {
