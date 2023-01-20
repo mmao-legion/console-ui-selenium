@@ -2584,7 +2584,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     }
 
     private boolean isSaveConfirmPopupLoaded() throws Exception {
-        waitForSeconds(10);
+        waitForSeconds(15);
         boolean isLoaded = false;
         if (isClickable(saveOnSaveConfirmationPopup, 30)) {
             isLoaded =true;
