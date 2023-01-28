@@ -96,7 +96,8 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 					waitForSeconds(10);
 					if (isElementLoaded(newSignInBtn, 5) && newSignInBtn.getText().equalsIgnoreCase("Sign in")) {
 						clickTheElement(newSignInBtn);
-					} else if (isElementLoaded(newSignInBtn, 5) && newSignInBtn.getText().contains("Signing in")) {
+					} else if ((isElementLoaded(newSignInBtn, 5) && newSignInBtn.getText().contains("Signing in")) ||
+							isElementLoaded(getDriver().findElement(By.cssSelector("p.Mui-error")))) {
 						getDriver().navigate().refresh();
 						waitForSeconds(5);
 						if (isElementLoaded(newSignInBtn, 5)) {
