@@ -94,21 +94,23 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 			try {
 				if (System.getProperty("enterprise").equalsIgnoreCase("vailqacn") || System.getProperty("enterprise").equalsIgnoreCase("cinemark-wkdy")) {
 					waitForSeconds(10);
-					if (isElementLoaded(newSignInBtn, 5) && newSignInBtn.getText().equalsIgnoreCase("Sign in")) {
-						clickTheElement(newSignInBtn);
-					} else if ((isElementLoaded(newSignInBtn, 5) && newSignInBtn.getText().contains("Signing in")) ||
-							isElementLoaded(getDriver().findElement(By.cssSelector("p.Mui-error")))) {
-						getDriver().navigate().refresh();
-						waitForSeconds(5);
-						if (isElementLoaded(newSignInBtn, 5)) {
-							newUserNameField.clear();
-							newUserNameField.sendKeys(userName);
-							newUserNameField.sendKeys(Keys.ENTER);
-							if (isElementLoaded(newPasswordInput, 3)) {
-								newPasswordInput.clear();
-								newPasswordInput.sendKeys(Password);
+					if (isElementLoaded(newSignInBtn, 5)) {
+						if (newSignInBtn.getText().contains("Signing in") ||
+							isElementLoaded(getDriver().findElement(By.cssSelector("p.Mui-error")), 5)) {
+							getDriver().navigate().refresh();
+							waitForSeconds(5);
+							if (isElementLoaded(newSignInBtn, 5)) {
+								newUserNameField.clear();
+								newUserNameField.sendKeys(userName);
+								newUserNameField.sendKeys(Keys.ENTER);
+								if (isElementLoaded(newPasswordInput, 3)) {
+									newPasswordInput.clear();
+									newPasswordInput.sendKeys(Password);
+								}
+								waitForSeconds(1);
+								clickTheElement(newSignInBtn);
 							}
-							waitForSeconds(1);
+						} else if (newSignInBtn.getText().equalsIgnoreCase("Sign in")) {
 							clickTheElement(newSignInBtn);
 						}
 					}
