@@ -1128,7 +1128,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 //    @FindBy(linkText = "Offer anyway")
 //    private WebElement offerAnywayBtn;
 
-    @FindBy(css = ".sc-iIUQWv.dLvCCh")
+    @FindBy(css = ".sc-iIUQWv.fidaYp")
     private WebElement offerAnywayBtn;
     @Override
     public void searchTeamMemberByNameAndAssignOrOfferShift(String name, Boolean isOffering) throws Exception {
