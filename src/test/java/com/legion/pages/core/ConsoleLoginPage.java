@@ -109,8 +109,10 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 								}
 								waitForSeconds(1);
 								clickTheElement(newSignInBtn);
+								waitForSeconds(5);
 							}
-						} else if (newSignInBtn.getText().equalsIgnoreCase("Sign in")) {
+						}
+						if (isElementLoaded(newSignInBtn, 5)) {
 							clickTheElement(newSignInBtn);
 						}
 					}
