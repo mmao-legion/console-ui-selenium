@@ -1316,9 +1316,7 @@ public class P2PLGTest extends TestBase {
             String day = scheduleCommonPage.getActiveDayInfo().get("day");
             scheduleCommonPage.clickOnWeekView();
             String shiftStartTime = "8am";
-            String shiftStartTime2 = "8:00 am";
             String shiftEndTime = "11am";
-            String shiftEndTime2 = "11:00 am";
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
@@ -1346,11 +1344,11 @@ public class P2PLGTest extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchWithOutSelectTM(firstNameOfTM + " "+lastNameOfTM);
-            String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+            String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus().toLowerCase();
             SimpleUtils.assertOnFail("Overlapping violation message fail to load! The actual message is: "+shiftWarningMessage,
-                    shiftWarningMessage.contains(shiftStartTime2) && shiftWarningMessage.contains(shiftEndTime2), false);
+                    shiftWarningMessage.contains(shiftStartTime) && shiftWarningMessage.contains(shiftEndTime), false);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
-            String expectedWarningMessage = firstNameOfTM+ " is scheduled "+ shiftStartTime2+ " - "+shiftEndTime2+ " on "+ weekDay;
+            String expectedWarningMessage = firstNameOfTM+ " is scheduled "+ shiftStartTime+ " - "+shiftEndTime+ " on "+ weekDay;
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
                 if (warningMessage.toLowerCase().contains(expectedWarningMessage.toLowerCase())){
