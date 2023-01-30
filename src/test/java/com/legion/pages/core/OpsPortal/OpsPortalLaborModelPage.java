@@ -1046,19 +1046,21 @@ public class OpsPortalLaborModelPage extends BasePage implements LaborModelPage 
 
 	@Override
 	public void selectWorkRoles(String workRole) throws Exception {
-		WebElement workRoleSelectBox = getDriver().findElement(By.xpath("//td[contains(text(),'" + workRole + "')]/following-sibling::*[2]/input-field"));
 		boolean isTabFound = false;
-		if (isElementLoaded(workRoleSelectBox)) {
-			for (WebElement subTab : subTabs) {
-					click(workRoleSelectBox);
+		List<WebElement> workRoles = getDriver().findElements(By.xpath("//table/tbody/tr"));
+		for (WebElement element : workRoles) {
+			if (isElementLoaded(element.findElement(By.cssSelector("td:nth-child(1)")))) {
+				if (element.findElement(By.cssSelector("td:nth-child(1)")).getAttribute("innerText").trim().contains(workRole)) {
+					element.findElement(By.cssSelector("td:nth-child(3) input-field")).click();
 					isTabFound = true;
+					break;
+				}
 			}
-			if (isTabFound)
-				SimpleUtils.pass("" + workRole + "' is selected successfully.");
-			else
-				SimpleUtils.fail("'" + workRole + "' is not selected.", true);
-		} else
-			SimpleUtils.fail("'" + workRole + "' is not showing.", false);
+		}
+		if (isTabFound)
+			SimpleUtils.pass("" + workRole + "' is selected successfully.");
+		else
+			SimpleUtils.fail("'" + workRole + "' is not selected.", true);
 	}
 
 	@Override
