@@ -1,7 +1,7 @@
 package com.legion.utils;
 
 public class Constants {
-    public static final String NoLongEligibleTakeShiftErrorMessage = "Error!We are sorry. You are not eligible to claim this shift.";
+    public static final String NoLongEligibleTakeShiftErrorMessage = "Error! We are sorry. You are not eligible to claim this shift.";
     public static final String WillTriggerWeeklyOTErrorMessage = "Error!We are sorry. You are not eligible to claim this shift, as it will trigger Over Time for the week.";
     public static final String WillTriggerDailyOTErrorMessage = "Error!We are sorry. You are not eligible to claim this shift, as it will trigger Over Time for the day.";
     public static final String ClaimSuccessMessage = "Success! This shift is yours, and has been added to your schedule.";

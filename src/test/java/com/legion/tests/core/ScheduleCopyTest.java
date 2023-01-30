@@ -3,11 +3,13 @@ package com.legion.tests.core;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
@@ -92,8 +94,27 @@ public class ScheduleCopyTest extends TestBase {
             ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+            boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+            String isBudgetEnabled = "";
+            //Check the budget is enabled or not
+            if (isLocationUsingControlsConfiguration) {
+                controlsNewUIPage.clickOnControlsConsoleMenu();
+                controlsNewUIPage.clickOnControlsSchedulingPolicies();
+                Thread.sleep(10000);
+                isBudgetEnabled = controlsNewUIPage.getApplyLaborBudgetToSchedulesActiveBtnLabel();
+            }
+//            else {
+//                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+//                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+//                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+//                locationsPage.clickOnLocationsTab();
+//                locationsPage.goToGlobalConfigurationInLocations();
+//                Thread.sleep(10000);
+//                isBudgetEnabled = controlsNewUIPage.getApplyLaborBudgetToSchedulesActiveBtnLabel();
+//                switchToConsoleWindow();
+//            }
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -133,8 +154,11 @@ public class ScheduleCopyTest extends TestBase {
             //Verify the functionality of Next button on Confirm Operating Hours window
             createSchedulePage.clickCreateScheduleButton();
             createSchedulePage.clickNextButtonOnCreateScheduleWindow();
-            //Verify the content on Enter Budget window
-            createSchedulePage.verifyTheContentOnEnterBudgetWindow(weekInfo, location);
+            if (isBudgetEnabled.equalsIgnoreCase("yes")){
+                //Verify the content on Enter Budget window
+                createSchedulePage.verifyTheContentOnEnterBudgetWindow(weekInfo, location);
+            }
+
             //Verify the functioning of Edit button on Enter Budget window
             //Verify budget hours can be updated
             float budgetHrs = createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();

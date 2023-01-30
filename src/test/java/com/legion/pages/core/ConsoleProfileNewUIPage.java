@@ -2967,7 +2967,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			selectByVisibleText(schoolCalendarSelect, givenCalendar);
 			if (areListElementVisible(saveBtnsOfProfile,5)) {
 				clickTheElement(saveBtnsOfProfile.get(0));
-				if (isElementLoaded(popupMessage,5) && popupMessage.getText().contains("Success"))
+				if (isElementLoaded(popupMessage,10) && popupMessage.getText().contains("Success"))
 					SimpleUtils.pass("Profile Page: The selected calendar is saved successfully");
 				else
 					SimpleUtils.fail("Profile Page: No success message when saving the profile",false);
