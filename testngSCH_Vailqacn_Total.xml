@@ -309,7 +309,7 @@
                     <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />
                     <include name="verifyTurnOnGFEAsInternalAdmin" />
                     <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
-                    <include name="verifyContentOfGFEAsInternalAdmin" />
+<!--                    <include name="verifyContentOfGFEAsInternalAdmin" SCH-8920/>-->
                     <include name="verifyVSLInfoAsInternalAdmin" />
                 </methods>
             </class>

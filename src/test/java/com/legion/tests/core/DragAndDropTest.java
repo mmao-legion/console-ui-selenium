@@ -305,6 +305,7 @@ public class DragAndDropTest extends TestBase {
             scheduleShiftTablePage.selectSwapOrAssignOption("swap");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
             mySchedulePage.verifyShiftsAreSwapped(swapData);
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
