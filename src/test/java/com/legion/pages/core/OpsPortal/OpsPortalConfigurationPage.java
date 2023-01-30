@@ -2419,7 +2419,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 //					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
 //				}
 				scrollToBottom();
-				if (isElementEnabled(saveAsDraftButton, 5)
+				if (isElementEnabled(saveAsDraftButton, 10)
 						&& isElementLoaded(templateDetailsAssociateTab, 10)
 						&& isElementLoaded(templateDetailsBTN, 10)
 						&& isElementLoaded(templateExternalAttributesBTN, 10)) {

@@ -5209,6 +5209,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.searchTeamMemberByName(tmFullName);
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
+			Thread.sleep(5000);
 			createSchedulePage.publishActiveSchedule();
 			scheduleMainPage.clickOnOpenSearchBoxButton();
 			scheduleMainPage.searchShiftOnSchedulePage(tmFullName);
@@ -7823,7 +7824,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.clickOnCreateOrNextBtn();
 			Thread.sleep(3000);
 			scheduleMainPage.saveSchedule();
-
+			Thread.sleep(3000);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();

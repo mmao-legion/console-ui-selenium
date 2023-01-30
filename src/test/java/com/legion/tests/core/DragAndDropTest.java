@@ -767,7 +767,7 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(firstNameOfTM1);
             newShiftPage.clickOnOfferOrAssignBtn();
-
+            Thread.sleep(5000);
             //Create new shift for TM2 on Tuesday
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
@@ -3085,7 +3085,7 @@ public class DragAndDropTest extends TestBase {
     @TestName(description = "Validate bulk move the shifts that will incur OT violation")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyBulkMoveShiftsThatWillIncurOTViolationAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
-        try{
+//        try{
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -3121,6 +3121,7 @@ public class DragAndDropTest extends TestBase {
                 firstNameOfTM1  = shiftInfo.get(0);
             }
             String workRole1= shiftInfo.get(4);
+            String lastNameOfTM1 = shiftInfo.get(5);
             String firstNameOfTM2 = shiftInfo.get(0);
             while (firstNameOfTM2.equalsIgnoreCase("open")
                     || firstNameOfTM2.equalsIgnoreCase("unassigned")
@@ -3129,6 +3130,7 @@ public class DragAndDropTest extends TestBase {
                 firstNameOfTM2  = shiftInfo.get(0);
             }
             String workRole2= shiftInfo.get(4);
+            String lastNameOfTM2 = shiftInfo.get(5);
             String firstNameOfTM3 = shiftInfo.get(0);
             while (firstNameOfTM3.equalsIgnoreCase("open")
                     || firstNameOfTM3.equalsIgnoreCase("unassigned")
@@ -3138,6 +3140,7 @@ public class DragAndDropTest extends TestBase {
                 firstNameOfTM3  = shiftInfo.get(0);
             }
             String workRole3= shiftInfo.get(4);
+            String lastNameOfTM3 = shiftInfo.get(5);
             String firstNameOfTM4 = shiftInfo.get(0);
             while (firstNameOfTM4.equalsIgnoreCase("open")
                     || firstNameOfTM4.equalsIgnoreCase("unassigned")
@@ -3148,6 +3151,7 @@ public class DragAndDropTest extends TestBase {
                 firstNameOfTM4  = shiftInfo.get(0);
             }
             String workRole4= shiftInfo.get(4);
+            String lastNameOfTM4 = shiftInfo.get(5);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
@@ -3167,10 +3171,10 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(5,5,5);
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
-            newShiftPage.searchTeamMemberByName(firstNameOfTM2);
-            newShiftPage.searchTeamMemberByName(firstNameOfTM3);
-            newShiftPage.searchTeamMemberByName(firstNameOfTM4);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1+" "+lastNameOfTM1);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM2+" "+lastNameOfTM2);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM3+" "+lastNameOfTM3);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM4+" "+lastNameOfTM4);
             newShiftPage.clickOnOfferOrAssignBtn();
 
             //Create OT shift on second day
@@ -3186,7 +3190,7 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(4,4,4);
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM1);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM1+" "+lastNameOfTM1);
             newShiftPage.clickOnOfferOrAssignBtn();
 
             //Create split shift on second day
@@ -3202,7 +3206,7 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(4,4,4);
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM2);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM2+" "+lastNameOfTM2);
             newShiftPage.clickOnOfferOrAssignBtn();
             //Create spread shift on second day
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -3217,7 +3221,7 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(4,4,4);
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM3);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM3+" "+lastNameOfTM3);
             newShiftPage.clickOnOfferOrAssignBtn();
             //Create clopening shift on second day
             newShiftPage.clickOnDayViewAddNewShiftButton();
@@ -3232,7 +3236,7 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(3,3,3);
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstNameOfTM4);
+            newShiftPage.searchTeamMemberByName(firstNameOfTM4+" "+lastNameOfTM4);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
 
@@ -3372,9 +3376,9 @@ public class DragAndDropTest extends TestBase {
             SimpleUtils.assertOnFail("Spread compliance message display failed",
                     scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(forthTMShiftsOnTargetDay.get(forthTMShiftsOnTargetDay.size()-1)).contains("Clopening"), false);
 
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+//        } catch (Exception e){
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
     }
 
 
