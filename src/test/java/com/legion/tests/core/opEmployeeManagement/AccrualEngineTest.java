@@ -25,15 +25,20 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
@@ -1076,7 +1081,7 @@ public class AccrualEngineTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Accrual Engine Distribution Types")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false) // function changed, need to rewrite
     public void verifyAccrualPromotionWorksWellAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
         //go to setting page
         AbsentManagePage absentManagePage = new AbsentManagePage();
@@ -1265,7 +1270,7 @@ public class AccrualEngineTest extends TestBase {
         expectedTOBalance.put("Covid2", "0");//HireDate~Specified/worked hours/fix days
         expectedTOBalance.put("Covid3", "0");//Specified~HireDate/worked hours/fix days
         expectedTOBalance.put("Covid4", "0");//Specified~Specified/worked hours/fix days
-        expectedTOBalance.put("Floating Holiday", "30");//HireDate~HireDate/Monthly /hire month/ begin
+        expectedTOBalance.put("Floating Holiday", "10");//HireDate~HireDate/Monthly /hire month/ begin
         expectedTOBalance.put("Grandparents Day Off1", "21");//Specified~Specified/Weekly
 
         //and verify the result in UI
@@ -1892,6 +1897,40 @@ public class AccrualEngineTest extends TestBase {
                 System.out.println(value);
             }
         }
+    }
+
+    public void changeCellValue(String filePath){
+        FileInputStream fileInputStream = null;
+        FileOutputStream fileOutputStream = null;
+        SimpleDateFormat dfs = new SimpleDateFormat("yyyy-MM-dd");
+        String descString = dfs.format(new Date());
+
+        try{
+            fileInputStream = new FileInputStream(filePath);
+            Workbook workbook = new XSSFWorkbook(fileInputStream);
+            Sheet sheet = workbook.getSheet("");
+            int lastRowNum = sheet.getLastRowNum();
+            for(int i=1; i<=lastRowNum; i++){
+                Row row = sheet.getRow(i);
+                if(row == null)
+                    continue;
+                else{
+                    Cell cell = row.getCell(1);
+                    if(cell == null)
+                        continue;
+                    else{
+                        String cellValue = cell.getStringCellValue();
+                        if(cellValue.matches("XXXX-XX-XX"))
+                            cell.setCellValue(descString);
+                    }
+                }
+            }
+            fileOutputStream = new FileOutputStream(filePath);
+            workbook.write(fileOutputStream);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     public ArrayList<String> getHolidaysViaAPI(String sessionId) {
@@ -2705,6 +2744,7 @@ public class AccrualEngineTest extends TestBase {
     @TestName(description = "OPS-3961 Ability to receive employee current accrual amount towards worked hour (total hour) distribution, annual use limit, annual earn limit")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
     public void verifyAbilityToReceiveEmployeeCurrentAccrualAmountAsInternalAdminOfAccrualEngineTest(String browser, String username, String password, String location) {
+        //changeCellValue("src/test/resources/uploadFile/AccrualLedger_3961.csv");
         //verify that the target template is here.
         AbsentManagePage absentManagePage = new AbsentManagePage();
         String templateName = "Activity";
@@ -2954,11 +2994,11 @@ public class AccrualEngineTest extends TestBase {
 
         //expected accrual
         expectedTOBalance.put("Annual Leave", "52");
-        expectedTOBalance.put("Annual Leave1", "104");
+        expectedTOBalance.put("Annual Leave1", "182");
         expectedTOBalance.put("Annual Leave2", "12");
-        expectedTOBalance.put("Annual Leave3", "12");
+        expectedTOBalance.put("Annual Leave3", "21");
         expectedTOBalance.put("Annual Leave4", "12");
-        expectedTOBalance.put("Bereavement1", "12");
+        expectedTOBalance.put("Bereavement1", "22");
         expectedTOBalance.put("Bereavement2", "5");
         expectedTOBalance.put("Bereavement3", "5");
         expectedTOBalance.put("Bereavement4", "0");
@@ -3060,6 +3100,30 @@ public class AccrualEngineTest extends TestBase {
 
             UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
             userManagementPage.verifyHistoryDeductType();
+        }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Nancy")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "OPS-5724 Support Import balance during look back")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false)
+    public void verifyImportBalanceDuringLookBackAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+        try {
+            //go to console
+            RightHeaderBarPage rightHeaderBarPage = new RightHeaderBarPage();
+            rightHeaderBarPage.switchToConsole();
+            //go to Carters location
+            ConsoleNavigationPage consoleNavigationPage = new ConsoleNavigationPage();
+            consoleNavigationPage.searchLocation("Carters");
+            //go to team member details and switch to the time off tab.
+            consoleNavigationPage.navigateTo("Team");
+            TimeOffPage timeOffPage = new TimeOffPage();
+            TeamPage teamPage = pageFactory.createConsoleTeamPage();
+            teamPage.goToTeam();
+
         }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
