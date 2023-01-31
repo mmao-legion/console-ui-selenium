@@ -3,7 +3,7 @@
   "MinorRulesTemplate": "cinemark-wkdy",
   "DynamicGroupV2": "",
   "ScheduleShowFullNames": "cinemark-wkdy",
-  "EnableDemandDriverTemplate": "op,opauto",
+  "EnableDemandDriverTemplate": "op,opauto,demosetup4",
   "MixedModeDemandDriverSwitch": "op,opauto",
   "MealAndRestTemplate": "cinemark-wkdy,op",
   "ScheduleEditShiftTimeNew": "vailqacn,cinemark-wkdy",
