@@ -3916,6 +3916,8 @@ public class P2PLGTest extends TestBase {
             editShiftPage.verifyThreeColumns();
             // Verify the editable types show on Shift Detail section in day view
             editShiftPage.verifyEditableTypesShowOnShiftDetail();
+            editShiftPage.clickOnXButton();
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
