@@ -2058,9 +2058,11 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
             SimpleUtils.assertOnFail("The Edit button on Confirm Operating Hours window should be loaded! ",
                     isElementLoaded(backBtnOnCreateScheduleWindow, 5), false);
 
-            SimpleUtils.assertOnFail("The target budget hrs display incorrectly, the expected is:"+targetBudgetHrs
-                            +" the actual is: "+targetBudget.getText(),
-                    Float.parseFloat(targetBudget.getText().split(" ")[0]) == targetBudgetHrs, false);
+            if (targetBudgetHrs>=0){
+                SimpleUtils.assertOnFail("The target budget hrs display incorrectly, the expected is:"+targetBudgetHrs
+                                +" the actual is: "+targetBudget.getText(),
+                        Float.parseFloat(targetBudget.getText().split(" ")[0]) == targetBudgetHrs, false);
+            }
 
             String graphDescription1 = "Budget";
             String graphDescription2 = "Scheduled";

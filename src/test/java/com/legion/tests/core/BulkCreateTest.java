@@ -372,6 +372,7 @@ public class BulkCreateTest extends TestBase {
             SimpleUtils.assertOnFail("The close icon is not loaded on New create shift page! ",
                     newShiftPage.checkIfCloseIconIsLoadedOnNewCreateShiftPage(), false);
             //Verify the create shift modal will be closed after click X icon
+            Thread.sleep(3000);
             newShiftPage.closeNewCreateShiftPage();
             SimpleUtils.assertOnFail("New create shift page should not display! ",
                     !newShiftPage.checkIfNewCreateShiftPageDisplay(), false);

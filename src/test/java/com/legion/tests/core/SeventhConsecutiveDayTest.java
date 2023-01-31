@@ -363,7 +363,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectJobTitleFilterByText(jobTitle);
-            Thread.sleep(3000);
+            Thread.sleep(5000);
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
@@ -855,6 +855,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName2);
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            Thread.sleep(3000);
             scheduleMainPage.saveSchedule();
 
             //Create 7 shifts for TM1 on the 7 consecutive days and save
@@ -1116,6 +1117,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectJobTitleFilterByText(jobTitle);
+            Thread.sleep(3000);
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
