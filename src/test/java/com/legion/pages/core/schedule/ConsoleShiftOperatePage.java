@@ -1939,6 +1939,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 if (isElementLoaded(editShiftTimeOption, 20)) {
                     scrollToElement(editShiftTimeOption);
                     click(editShiftTimeOption);
+                    waitForSeconds(3);
                     if (isElementEnabled(editShiftTimePopUp, 15)) {
                         if (isElementLoaded(sliderContainer, 10)) {
                             moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");

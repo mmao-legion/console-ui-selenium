@@ -154,15 +154,14 @@ public class ScheduleCopyTest extends TestBase {
             //Verify the functionality of Next button on Confirm Operating Hours window
             createSchedulePage.clickCreateScheduleButton();
             createSchedulePage.clickNextButtonOnCreateScheduleWindow();
+            float budgetHrs = -1;
             if (isBudgetEnabled.equalsIgnoreCase("yes")){
                 //Verify the content on Enter Budget window
                 createSchedulePage.verifyTheContentOnEnterBudgetWindow(weekInfo, location);
+                //Verify the functioning of Edit button on Enter Budget window
+                //Verify budget hours can be updated
+                budgetHrs = createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
             }
-
-            //Verify the functioning of Edit button on Enter Budget window
-            //Verify budget hours can be updated
-            float budgetHrs = createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
-
             //Verify the content on Copy Schedule window
             createSchedulePage.verifyTheContentOnCopyScheduleWindow(weekInfo, location, budgetHrs, 0);
         } catch (Exception e) {
