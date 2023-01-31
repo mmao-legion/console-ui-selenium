@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite verbose="10" name="Legion Test" parallel="classes" thread-count="5">
+<suite verbose="10" name="Legion Test" parallel="classes" thread-count="5" configfailurepolicy="continue">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Automation - Daily Routine"/>
