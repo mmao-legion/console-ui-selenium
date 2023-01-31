@@ -1239,8 +1239,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.fail("Info icon popup fail to load", false);
         } else
             SimpleUtils.fail("Shift fail to load", false);
-        Actions actions = new Actions(getDriver());
-        actions.moveByOffset(0, 0).click().build().perform();
+        // Actions actions = new Actions(getDriver());
+        // actions.moveByOffset(0, 0).click().build().perform();
         return complianceMessages;
     }
 

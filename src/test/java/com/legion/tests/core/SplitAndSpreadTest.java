@@ -162,6 +162,7 @@ public class SplitAndSpreadTest extends TestBase {
         SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift"), false);
 
         //verify split shift violation after publishing.
+        createSchedulePage.publishActiveSchedule();
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
         SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift"), false);
     }
