@@ -137,7 +137,7 @@ public class ActivityPage extends BasePage{
 
     public void verifyActivityTimeOffStatus() throws Exception{
         int size = getActvityTimeOffSize();
-        for(int i=0; i < size-1; i++){
+        for(int i=1; i < size-1; i++){
             if(isElementLoaded(activityTimeOffStatus.get(i),5)){
                 if(activityTimeOffStatus.get(i).getText().equals("PENDING")){
                     SimpleUtils.pass("Activity time off status is correct");
@@ -177,8 +177,8 @@ public class ActivityPage extends BasePage{
     }
 
     public void verifyApprove() throws Exception{
-        if(isElementLoaded(approveRejectText.get(0),5)) {
-            if (approveRejectText.get(0).getAttribute("innerText").contains("Approved")) {
+        if(isElementLoaded(approveRejectText.get(1),5)) {
+            if (approveRejectText.get(1).getAttribute("innerText").contains("Approved")) {
                 SimpleUtils.pass("Approved successfully");
             }else{
                 SimpleUtils.fail("Approved failed",false);
@@ -189,8 +189,8 @@ public class ActivityPage extends BasePage{
     }
 
     public void verifyReject() throws Exception{
-        if(isElementLoaded(approveRejectText.get(1),5)) {
-            if (approveRejectText.get(1).getAttribute("innerText").contains("Rejected")) {
+        if(isElementLoaded(approveRejectText.get(2),5)) {
+            if (approveRejectText.get(2).getAttribute("innerText").contains("Rejected")) {
                 SimpleUtils.pass("Rejected successfully");
                 click(Activity);
             }else{

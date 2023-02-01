@@ -357,7 +357,7 @@ public class TimeOffPage extends BasePage {
 
     public void verifyTimeOffStatus() throws Exception {
         waitForSeconds(5);
-        if (timeOffStatus.get(1).getAttribute("innerText").toUpperCase().equals("CANCELLED") && timeOffStatus.get(3).getAttribute("innerText").toUpperCase().equals("REJECTED") && timeOffStatus.get(4).getAttribute("innerText").toUpperCase().equals("APPROVED")) {
+        if (timeOffStatus.get(4).getAttribute("innerText").toUpperCase().equals("CANCELLED") && timeOffStatus.get(2).getAttribute("innerText").toUpperCase().equals("REJECTED") && timeOffStatus.get(3).getAttribute("innerText").toUpperCase().equals("APPROVED")) {
             SimpleUtils.pass("Time off status is correct");
         } else
             SimpleUtils.fail("Time off status is wrong", false);
