@@ -1402,4 +1402,51 @@ public class UserManagementTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Yang")
+    @Enterprise(name = "Op_Enterprise")
+    @TestName(description = "Upload/receive EmployeeAttributes via API")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyUploadReceiveEmployeeAttributesViaAPIAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleDateFormat dfs = new SimpleDateFormat("yyyyMMddHHmmss");
+            String currentTime = dfs.format(new Date()).trim();
+            String attributeName = "autoAttributeName" + currentTime;
+            String attributeType = "String";
+            String attributeValue = "autoAttributeValue";
+            String attributeDescription = "autoAttributeDescription";
+            String EffectiveDate = "2022-12-16";
+            String employeeExternalId = "987456";
+            String employeeName = "Rosa yang";
+            String accessToken = "d41ffa7c55c3c68c8561fa106b23a9d057728d86";
+
+            UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+            userManagementPage.clickOnUserManagementTab();
+            userManagementPage.goToUserAndRoles();
+            userManagementPage.goToAttribute();
+            userManagementPage.addGlobalAttribute(attributeName, attributeType, attributeValue, attributeDescription);
+            userManagementPage.searchGlobalAttribute(attributeName, 1);
+
+            List<HashMap> employeeAttributes = new ArrayList<HashMap>();
+            HashMap<String, Object> attribute = new HashMap<>();
+            attribute.put("employeeId", "");
+            attribute.put("employeeExternalId", employeeExternalId);
+            attribute.put("attributeName", attributeName);
+            attribute.put("description", attributeDescription);
+            attribute.put("booleanValue", null);
+            attribute.put("formula", null);
+            attribute.put("stringValue", attributeValue);
+            attribute.put("numericValue", null);
+            attribute.put("asOfEffectiveDate", EffectiveDate);
+            attribute.put("deleted", false);
+            employeeAttributes.add(attribute);
+            userManagementPage.uploadEmployeeAttributes(employeeAttributes, 200, accessToken);
+            userManagementPage.getEmployeeAttributes(employeeExternalId, 200, accessToken, attributeName);
+            userManagementPage.removeGlobalAttribute(attributeName);
+            userManagementPage.searchGlobalAttribute(attributeName, 0);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
