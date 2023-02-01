@@ -445,7 +445,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             for (WebElement settingsType : settingsTypes) {
                 if (settingsType.findElement(By.cssSelector("lg-paged-search")).getAttribute("placeholder").contains(type)) {
                     clickTheElement(settingsType.findElement(By.cssSelector("div.header-add-icon button")));
-                    if (isElementLoaded(popUpWindow, 5)) {
+                    if (isElementLoaded(popUpWindow, 8)) {
                         displayNameInput = fieldsInput.get(0).findElement(By.cssSelector("input[aria-label=\"Display Name\"]"));
                         NameOrSourceTypeInput = fieldsInput.get(1).findElement(By.cssSelector("input"));
                         displayNameInput.sendKeys(displayName);
@@ -701,7 +701,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                     scrollToElement(settingsType.findElement(By.cssSelector("lg-paged-search")));
                     waitForSeconds(3);
                     clickTheElement(settingsType.findElement(By.cssSelector("div.header-add-icon button")));
-                    if (isElementLoaded(popUpWindow, 15)) {
+                    if (isElementLoaded(popUpWindow, 25)) {
                         NameInput = fieldsInput.get(0).findElement(By.xpath("//input[contains(@placeholder, 'Input Stream')]"));
                         NameInput.sendKeys(inputStreamSpecificInfo.get("Name"));
                         //Verify if the input name is existing
@@ -1215,7 +1215,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         WebElement searchResult = searchSettingsForDemandDriver(type, name);
         if(searchResult != null){
             clickTheElement(searchResult.findElement(By.cssSelector("lg-button[label=\"Remove\"] button")));
-            if (isElementLoaded(popUpWindow.findElement(By.cssSelector("modal[modal-title*=\"Remove\"]")))){
+            if (isElementLoaded(popUpWindow.findElement(By.cssSelector("modal[modal-title*=\"Remove\"]")), 15)){
                 clickTheElement(popUpWindow.findElement(By.cssSelector("lg-button[label=\"OK\"] button")));
             }else{
                 SimpleUtils.fail("There should pop up a confirmation window!", false);
