@@ -1540,8 +1540,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         waitForSeconds(3);
         if (isElementEnabled(tmpProfileContainer, 15)) {
             SimpleUtils.pass("The profile page loaded successfully! ");
-            waitForSeconds(1);
             if (isElementEnabled(personalDetailsName, 15)) {
+                waitForSeconds(2);
                 tmDetailName = personalDetailsName.getText();
                 if (tmDetailName.length()!=0 && tmDetailName.split(" ").length>1){
                     SimpleUtils.pass("Get employee detail name successfully! The detail name is:"+tmDetailName);
