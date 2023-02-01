@@ -90,7 +90,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	 @FindBy(css="[class='console-navigation-item-label Team']")
 	 private WebElement goToTeamTab;
 		
-	 @FindBy(css=".search-input-box")
+	 @FindBy(id="legion_cons_Team_Roster_Search_field")
 	 private WebElement searchTextBox;
 		
 	 @FindBy(css=".search-icon")
@@ -1068,7 +1068,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				}
 			}
 		}else {
-			SimpleUtils.fail("Failed to find the search textbox element!", true);
+			SimpleUtils.fail("Failed to find the search textbox element!", false);
 		}
 	}
 
@@ -2599,6 +2599,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	private void changeAvailabilityHours(String zoneClassName, String expectedColor) throws Exception {
+		scrollToBottom();
+		waitForSeconds(2);
 		List<WebElement> zones = getDriver().findElements(By.className(zoneClassName));
 		if (areListElementVisible(zones, 5)) {
 			for (int i = 0; i < zones.size(); i++) {

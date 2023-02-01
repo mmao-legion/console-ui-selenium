@@ -546,6 +546,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     @FindBy(css = "div.lg-toast")
     private WebElement successMsg;
     public void saveSchedule() throws Exception {
+        waitForSeconds(3);
         if (isElementEnabled(scheduleSaveBtn, 10) && isClickable(scheduleSaveBtn, 10)) {
             scrollToElement(scheduleSaveBtn);
             clickTheElement(scheduleSaveBtn);
@@ -560,11 +561,6 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             waitForNotExists(saveOnSaveConfirmationPopup, 30);
             waitForSeconds(5);
             try{
-//                if (isElementLoaded(msgOnTop, 20)) {
-//                    if (msgOnTop.getText().contains("Success")){
-//                        SimpleUtils.pass("Save the Schedule Successfully!");
-//                    }
-//                } else
                 if (isElementLoaded(editScheduleButton, 10)) {
                     SimpleUtils.pass("Save the Schedule Successfully!");
                 } else {

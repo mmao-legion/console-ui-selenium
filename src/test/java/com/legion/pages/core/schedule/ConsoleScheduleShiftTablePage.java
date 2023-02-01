@@ -3503,7 +3503,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 scrollToBottom();
                 waitForSeconds(1);
                 action.moveToElement(names.get(i)).click(names.get(i));
-                waitForSeconds(1);
+                waitForSeconds(2);
             }
             action.keyUp(Keys.CONTROL).build().perform();
             if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
