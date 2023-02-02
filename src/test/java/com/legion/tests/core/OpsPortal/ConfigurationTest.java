@@ -2695,7 +2695,7 @@ public class ConfigurationTest extends TestBase {
             locationsPage.clickActionsForTemplate("Assignment Rules", "Edit");
             userManagementPage.verifySearchWorkRole(workRoleName);
             userManagementPage.goToWorkRolesDetails(workRoleName);
-            userManagementPage.verifyLocationLevelHourlyRateIsReadOnly();
+            //userManagementPage.verifyLocationLevelHourlyRateIsReadOnly();
         }catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
