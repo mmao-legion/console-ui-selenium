@@ -214,7 +214,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             // Validate what happens next to the Edit!
             // When Status is finalized, look for extra popup.
             clickTheElement(editScheduleButton);
-            waitForSeconds(2);
+            waitForSeconds(5);
             if(isElementLoaded(popupAlertPremiumPay,15) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
                 waitForSeconds(2);
@@ -2580,9 +2580,9 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     }
 
     private boolean isSaveConfirmPopupLoaded() throws Exception {
-        waitForSeconds(15);
+        waitForSeconds(20);
         boolean isLoaded = false;
-        if (isClickable(saveOnSaveConfirmationPopup, 30)) {
+        if (isClickable(saveOnSaveConfirmationPopup, 45)) {
             isLoaded =true;
             SimpleUtils.pass("Schedule save button is loaded successfully! ");
         } else {

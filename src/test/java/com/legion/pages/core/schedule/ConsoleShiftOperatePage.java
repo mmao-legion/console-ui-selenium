@@ -1077,7 +1077,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @Override
     public void clickOnUpdateEditShiftTimeButton() throws Exception{
-        if(isElementLoaded(updateButtonInEditShiftTimeWindow,5))
+        if(isElementLoaded(updateButtonInEditShiftTimeWindow,15))
         {
             if (checkIfUpdateButtonEnabled()) {
                 click(updateButtonInEditShiftTimeWindow);

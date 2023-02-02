@@ -63,7 +63,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     public void customizeNewShiftPage() throws Exception
     {
-        Thread.sleep(5000);
+        Thread.sleep(8000);
         if(isElementLoaded(customizeNewShift,35))
         {
             SimpleUtils.pass("Customize New Shift Page loaded Successfully!");
@@ -1087,8 +1087,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                         clickTheElement(offerButton);
                                         SimpleUtils.report("Offer Team Member: " + name + " Successfully!");
                                     }
-                                    waitForSeconds(5);
-                                    if (areListElementVisible(buttonsOnWarningMode, 5)) {
+                                    waitForSeconds(7);
+                                    if (areListElementVisible(buttonsOnWarningMode, 10)) {
                                         if (buttonsOnWarningMode.size()==2) {
                                             if (buttonsOnWarningMode.get(1).getText().toLowerCase().trim().equalsIgnoreCase("assign anyway")){
                                                 clickTheElement(buttonsOnWarningMode.get(1));
@@ -1096,7 +1096,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                             } else if(buttonsOnWarningMode.get(1).getText().toLowerCase().trim().equalsIgnoreCase("offer anyway")){
                                                 clickTheElement(buttonsOnWarningMode.get(1));
                                                 SimpleUtils.report("Assign Team Member: Click on 'OFFER ANYWAY' button Successfully!");
-                                            }
+                                            }else
+                                                SimpleUtils.report("Assign Team Member: ASSIGN ANYWAY and OFFER ANYWAY button fail to load! The button is:"
+                                                        +buttonsOnWarningMode.get(1).getText().toLowerCase().trim());
                                         }
                                     }else
                                         SimpleUtils.report("Buttons on warning mode are not loaded! ");
@@ -2294,7 +2296,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement newCreateShiftModal;
 
     public boolean checkIfNewCreateShiftPageDisplay() throws Exception {
-        if (isElementLoaded(newCreateShiftModal, 30)) {
+        if (isElementLoaded(newCreateShiftModal, 35)) {
             SimpleUtils.pass("The new create shift modal display! ");
             return true;
         } else {
@@ -2595,7 +2597,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public void closeNewCreateShiftPage () throws Exception {
         if (isElementLoaded(closeIconOnNewCreateShiftPage, 5)) {
             clickTheElement(closeIconOnNewCreateShiftPage);
-            waitForSeconds(5);
+            waitForSeconds(8);
             if (!checkIfNewCreateShiftPageDisplay()) {
                 SimpleUtils.pass("The New Create Shift page been closed successfully! ");
             } else
