@@ -39,8 +39,8 @@ public class BulkCreateTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    //@Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate all items display on the first page of Create shift modal")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -246,8 +246,8 @@ public class BulkCreateTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    //@Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the warning messages of the items on the first page of create shift modal")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheWarningMessageOfTheItemsOnFirstPageOfCreateShiftModalAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -277,6 +277,7 @@ public class BulkCreateTest extends TestBase {
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
+            Thread.sleep(3000);
             SimpleUtils.assertOnFail("New create shift page is not display! ",
                     newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
             //Fill the required option
@@ -427,6 +428,7 @@ public class BulkCreateTest extends TestBase {
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
+            Thread.sleep(3000);
             SimpleUtils.assertOnFail("New create shift page is not display! ",
                     newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
             //Fill the required option
@@ -804,10 +806,11 @@ public class BulkCreateTest extends TestBase {
             String lastNameOfTM = shiftInfo.get(5);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
-            scheduleMainPage.saveSchedule();
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//            scheduleMainPage.saveSchedule();
+//            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
+            Thread.sleep(3000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             SimpleUtils.assertOnFail("New create shift page is not display! ",
