@@ -1318,7 +1318,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 
 	@FindBy(css = "select.ng-pristine")
 	private WebElement jobTypeSelect;
-	@FindBy(css ="div.calendar-body > div:nth-child(7)")
+	@FindBy(css ="div.calendar-body > div:nth-child(6)")
 	private WebElement lastWeek;
 	@FindBy(css = "nav.lg-tabs__nav > div:nth-child(4)")
 	private WebElement dynamicGroup;
