@@ -8030,5 +8030,18 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("User failed to create new future template!", false);
 		}
 	}
+
+	@FindBy(css = "question-input[question-title=\"Input budget as labor hours or total wages?\"] select[ng-change=\"$ctrl.handleChange()\"]")
+	private WebElement inputBudgetSettingDropdown;
+	@Override
+	public void updateInputBudgetSettingDropdownOption(String option) throws Exception {
+		if (isElementLoaded(inputBudgetSettingDropdown, 10)) {
+			Select dropdown = new Select(inputBudgetSettingDropdown);
+			dropdown.selectByVisibleText(option);
+			SimpleUtils.pass("OP Page: Global Configuration: Input budget as labor hours or total wages settings been changed successfully");
+		} else {
+			SimpleUtils.fail("OP Page: Global Configuration: Input budget as labor hours or total wages settings dropdown list not loaded.", false);
+		}
+	}
 }
 
