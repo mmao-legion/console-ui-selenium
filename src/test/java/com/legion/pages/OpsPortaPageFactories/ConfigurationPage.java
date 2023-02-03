@@ -277,5 +277,6 @@ public interface ConfigurationPage {
     public HashMap<String,String> getDefaultHourlyRate(List<String> workRoles);
     public void updateWorkRoleHourlyRate(String workRole,String updateValue);
     public void createFutureWRSTemplateBasedOnExistingTemplate(String templateName, String button, int date, String editOrViewMode) throws Exception;
+    public void updateInputBudgetSettingDropdownOption(String option) throws Exception;
 }
 
