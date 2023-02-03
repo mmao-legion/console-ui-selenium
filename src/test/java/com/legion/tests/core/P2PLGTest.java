@@ -3,6 +3,7 @@ package com.legion.tests.core;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleCompliancePage;
@@ -4584,6 +4585,7 @@ public class P2PLGTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ConfigurationPage configuration = pageFactory.createOpsPortalConfigurationPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             locationsPage.clickOnLocationsTab();
@@ -4591,9 +4593,11 @@ public class P2PLGTest extends TestBase {
             locationsPage.editLaborBudgetSettingContent();
             locationsPage.turnOnOrTurnOffLaborBudgetToggle(true);
             locationsPage.selectBudgetGroup("By Location");
+            configuration.updateInputBudgetSettingDropdownOption("Hours");
             locationsPage.saveTheGlobalConfiguration();
-            Thread.sleep(60000);
             switchToConsoleWindow();
+            refreshCachesAfterChangeTemplate();
+            Thread.sleep(60000);
 
             //Select parent location's budget/guidance value
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
