@@ -1164,7 +1164,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 if(scheduleCommonPage.isScheduleDayViewActive()){
                     workerName = shiftWeekView.findElement(By.className("sch-day-view-shift-worker-name"));
                 } else
-                    workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
+                    workerName = shiftWeekView.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (workerName != null && workerName.getText().toLowerCase().contains(name.toLowerCase())) {
                     allShifts.add(shiftWeekView);
                 }
