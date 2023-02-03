@@ -2411,7 +2411,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement shift : shifts) {
 //                clickTheElement(shift.findElement(By.className("week-schedule-shit-open-popover")));
 //                String shiftName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
-                String shiftName = shift.findElement(By.className("week-schedule-worker-name")).getText().toLowerCase();
+                String shiftName = shift.findElement(By.cssSelector(".rows .week-schedule-worker-name")).getText().toLowerCase();
                 if (!shiftName.equals("") && shiftName.contains(name.toLowerCase())) {
                     shiftsOfOneTM.add(shift);
                     SimpleUtils.pass("shift exists on this day!");

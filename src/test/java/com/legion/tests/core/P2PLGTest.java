@@ -4552,7 +4552,7 @@ public class P2PLGTest extends TestBase {
             editShiftPage.clickOnUpdateButton();
             mySchedulePage.verifyThePopupMessageOnTop("Success");
             // Verify the shifts are moved to the selected child location
-            scheduleMainPage.selectGroupByFilter(actualLocations.get(1));
+            scheduleMainPage.selectLocationFilterByText(actualLocations.get(1));
             SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
                     scheduleShiftTablePage.getOneDayShiftByName(0, shiftInfoList1.get(0)).size() == 1, false);
             SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
