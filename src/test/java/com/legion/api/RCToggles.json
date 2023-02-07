@@ -15,7 +15,7 @@
   "EnableAccrual": "op,opauto,carters",
   "EnableEmployeeManagement": "op,opauto,carters",
   "ShowAnnouncementGroupOP": "op,opauto,carters",
-  "UseDemandDriverTemplateSwitch": "op,opauto",
+  "UseDemandDriverTemplateSwitch": "op,opauto,demosetup4",
   "EnableChangeLocationGroupSetting": "op,opauto",
   "WorkRoleSettingsTemplateOP": "opauto,americold"
 }
