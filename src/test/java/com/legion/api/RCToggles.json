@@ -4,7 +4,7 @@
   "DynamicGroupV2": "",
   "ScheduleShowFullNames": "cinemark-wkdy",
   "EnableDemandDriverTemplate": "op,opauto,demosetup4",
-  "MixedModeDemandDriverSwitch": "op,opauto",
+  "MixedModeDemandDriverSwitch": "op,opauto,demosetup4",
   "MealAndRestTemplate": "cinemark-wkdy,op",
   "ScheduleEditShiftTimeNew": "vailqacn,cinemark-wkdy",
   "EnableTahoeStorage": "opauto",
@@ -15,7 +15,7 @@
   "EnableAccrual": "op,opauto,carters",
   "EnableEmployeeManagement": "op,opauto,carters",
   "ShowAnnouncementGroupOP": "op,opauto,carters",
-  "UseDemandDriverTemplateSwitch": "op,opauto",
+  "UseDemandDriverTemplateSwitch": "op,opauto,demosetup4",
   "EnableChangeLocationGroupSetting": "op,opauto",
   "WorkRoleSettingsTemplateOP": "opauto,americold"
 }
