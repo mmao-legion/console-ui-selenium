@@ -328,6 +328,7 @@ public class HardStopForMinorViolation extends TestBase {
             //Create open shift with no minor violation
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
+            Thread.sleep(5000);
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectWeekDaysByDayName("Mon");

@@ -2199,6 +2199,7 @@ public class ParentChildLGTest extends TestBase {
             scheduleMainPage.clickOnFilterBtn();
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            Thread.sleep(5000);
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.selectWorkRole(workRole);
