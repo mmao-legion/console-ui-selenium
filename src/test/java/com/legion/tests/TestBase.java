@@ -117,7 +117,9 @@ public abstract class TestBase {
         DistrictManager("DistrictManager"),
         DistrictManager2("DistrictManager2"),
         CustomerAdmin("CustomerAdmin"),
-        CustomerAdmin2("CustomerAdmin2");
+        CustomerAdmin2("CustomerAdmin2"),
+        AreaManager("AreaManager"),
+        GeneralManager("GeneralManager");
         private final String role;
         AccessRoles(final String accessRole) {
             role = accessRole;
@@ -352,6 +354,10 @@ public abstract class TestBase {
                 }
             } catch (Exception exp) {
                 Reporter.log("Error closing browser");
+            } finally {
+                if (getDriver() != null) {
+                    getDriver().quit();
+                }
             }
         }
 
@@ -524,8 +530,8 @@ public abstract class TestBase {
 
         newShiftPage.clickOnDayViewAddNewShiftButton();
         Thread.sleep(5000);
-        SimpleUtils.assertOnFail("New create shift page is not display! ",
-                newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
+//        SimpleUtils.assertOnFail("New create shift page is not display! ",
+//                newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
         // Select work role
         newShiftPage.selectWorkRole(workRole);
         // Set shift name

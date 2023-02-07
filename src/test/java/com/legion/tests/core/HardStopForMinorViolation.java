@@ -223,7 +223,7 @@ public class HardStopForMinorViolation extends TestBase {
             //Publish the template
             configurationPage.publishNowTheTemplate();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
-
+            Thread.sleep(3000);
             //Go to schedule and make one minor shift has violation
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -338,6 +338,7 @@ public class HardStopForMinorViolation extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(minorName);
             newShiftPage.clickOnOfferOrAssignBtn();
+            Thread.sleep(5000);
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
             List<WebElement> openShifts = scheduleShiftTablePage.getAllShiftsOfOneTM("open");
@@ -431,6 +432,7 @@ public class HardStopForMinorViolation extends TestBase {
             MyThreadLocal.setAssignTMStatus(true);
             newShiftPage.searchTeamMemberByName(minorName);
             newShiftPage.clickOnOfferOrAssignBtn();
+            Thread.sleep(3000);
             scheduleMainPage.saveSchedule();
 
             //Edit the open shift to has minor violation
@@ -474,6 +476,7 @@ public class HardStopForMinorViolation extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(minorName);
             newShiftPage.clickOnOfferOrAssignBtn();
+            Thread.sleep(3000);
             scheduleMainPage.saveSchedule();
 
             //Edit the open shift to has minor violation

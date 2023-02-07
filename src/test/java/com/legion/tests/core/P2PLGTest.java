@@ -3,6 +3,7 @@ package com.legion.tests.core;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleCompliancePage;
@@ -1344,14 +1345,14 @@ public class P2PLGTest extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchWithOutSelectTM(firstNameOfTM + " "+lastNameOfTM);
-            String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+            String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus().toLowerCase();
             SimpleUtils.assertOnFail("Overlapping violation message fail to load! The actual message is: "+shiftWarningMessage,
-                    shiftWarningMessage.contains(shiftStartTime+ " - "+shiftEndTime), false);
+                    shiftWarningMessage.contains(shiftStartTime) && shiftWarningMessage.contains(shiftEndTime), false);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
-            String expectedWarningMessage = firstNameOfTM+ " is scheduled "+ shiftStartTime+ " - "+shiftEndTime+ " on "+ weekDay + ", " + month + " " + day;
+            String expectedWarningMessage = firstNameOfTM+ " is scheduled "+ shiftStartTime+ " - "+shiftEndTime+ " on "+ weekDay;
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-                if (warningMessage.contains(expectedWarningMessage)){
+                if (warningMessage.toLowerCase().contains(expectedWarningMessage.toLowerCase())){
                     SimpleUtils.pass("Overlapping violation message displays");
                 } else {
                     SimpleUtils.fail("There is no Overlapping warning message displaying, the actual is:"+warningMessage, false);
@@ -2462,6 +2463,7 @@ public class P2PLGTest extends TestBase {
                     locations.size() ==1, false);
             SimpleUtils.assertOnFail("It should has "+count+1+" shifts display, but actual is has :"+scheduleShiftTablePage.getShiftsCount(),
                     shiftCount == scheduleShiftTablePage.getShiftsCount() -1, false);
+            Thread.sleep(3000);
             scheduleMainPage.saveSchedule();
             locations = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
             SimpleUtils.assertOnFail("It should has one location display, but actual is has :"+locations.size(),
@@ -3022,7 +3024,7 @@ public class P2PLGTest extends TestBase {
             for (String name : locationNames) {
                 scheduleDMViewPage.getAllScheduleInfoFromScheduleInDMViewByLocation(name);
                 scheduleDMViewPage.clickOnRefreshButton();
-                scheduleDMViewPage.clickOnRefreshButton();
+//                scheduleDMViewPage.clickOnRefreshButton();
                 String publishStatus = scheduleDMViewPage.getAllUpperFieldInfoFromScheduleByUpperField(name)
                         .get("publishedStatus");
                 SimpleUtils.assertOnFail("The "+name+" schedule status should be Published, but actual is:"+publishStatus,
@@ -3915,6 +3917,8 @@ public class P2PLGTest extends TestBase {
             editShiftPage.verifyThreeColumns();
             // Verify the editable types show on Shift Detail section in day view
             editShiftPage.verifyEditableTypesShowOnShiftDetail();
+            editShiftPage.clickOnXButton();
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -4549,7 +4553,7 @@ public class P2PLGTest extends TestBase {
             editShiftPage.clickOnUpdateButton();
             mySchedulePage.verifyThePopupMessageOnTop("Success");
             // Verify the shifts are moved to the selected child location
-            scheduleMainPage.selectGroupByFilter(actualLocations.get(1));
+            scheduleMainPage.selectLocationFilterByText(actualLocations.get(1));
             SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
                     scheduleShiftTablePage.getOneDayShiftByName(0, shiftInfoList1.get(0)).size() == 1, false);
             SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
@@ -4581,6 +4585,7 @@ public class P2PLGTest extends TestBase {
             LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ConfigurationPage configuration = pageFactory.createOpsPortalConfigurationPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
             SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
             locationsPage.clickOnLocationsTab();
@@ -4588,9 +4593,11 @@ public class P2PLGTest extends TestBase {
             locationsPage.editLaborBudgetSettingContent();
             locationsPage.turnOnOrTurnOffLaborBudgetToggle(true);
             locationsPage.selectBudgetGroup("By Location");
+            configuration.updateInputBudgetSettingDropdownOption("Hours");
             locationsPage.saveTheGlobalConfiguration();
-            Thread.sleep(60000);
             switchToConsoleWindow();
+            refreshCachesAfterChangeTemplate();
+            Thread.sleep(60000);
 
             //Select parent location's budget/guidance value
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();

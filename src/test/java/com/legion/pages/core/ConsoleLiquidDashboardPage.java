@@ -26,7 +26,7 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
     @FindBy (css = ".edit-dashboard-text")
     private WebElement editDasboardText;
 
-    @FindBy (xpath = "//ng-container[contains(@ng-repeat, \"groupedWidgets\")]")
+    @FindBy (css = "[ng-repeat*=\"groupedWidgets\"]")
     private List<WebElement> widgetsInManagePage;
 
     @FindBy (css = "[label=\"Manage\"]")
@@ -106,22 +106,22 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             clickTheElement(manageBtn);
             if (areListElementVisible(widgets,10)){
                 for (int i=0; i<widgets.size(); i++) {
-                    widgetName = widgets.get(i).findElement(By.cssSelector("div[class=\"detail-div\"] :nth-child(1)")).getText().toLowerCase();
+                    widgetName = widgets.get(i).findElement(By.cssSelector("div[class=\"detail-div\"] :nth-child(1)")).getText().toLowerCase().trim();
                     if (widget.toLowerCase().contains(widgetName)){
-                        if (widgets.get(i).findElement(By.cssSelector("ng-form input")).getAttribute("class").contains("ng-not-empty")){
-                            SimpleUtils.pass(widget+"widget's already switched on!");
-                        } else {
+                        if (widgets.get(i).findElement(By.cssSelector("ng-form input")).getAttribute("class").contains("ng-empty")){
                             scrollToElement(widgets.get(i));
-                            click(widgets.get(i).findElement(By.cssSelector(".slider")));
+                            clickTheElement(widgets.get(i).findElement(By.cssSelector(".slider")));
                             SimpleUtils.pass(widget+" widget's switched on!");
-                            waitForSeconds(2);
+                            waitForSeconds(4);
+                        } else {
+                            SimpleUtils.pass(widget+"widget's already switched on!");
                         }
                         break;
                     }
                 }
                 //return to edit dashboard
                 if (isElementLoaded(editDashboardBtn,10)){
-                    click(editDashboardBtn);
+                    clickTheElement(editDashboardBtn);
                     SimpleUtils.assertOnFail(widget+" widget is not loaded!",verifyIfSpecificWidgetDisplayed(widget), false);
                 } else {
                     SimpleUtils.fail("Edit Dashboard button fail to load!",true);
@@ -143,15 +143,15 @@ public class ConsoleLiquidDashboardPage extends BasePage implements LiquidDashbo
             click(manageBtn);
             if (areListElementVisible(widgets,10)){
                 for (int i=0; i<widgets.size(); i++) {
-                    widgetName = widgets.get(i).findElement(By.cssSelector("div[class=\"detail-div\"] :nth-child(1)")).getText().toLowerCase();
+                    widgetName = widgets.get(i).findElement(By.cssSelector("div[class=\"detail-div\"] :nth-child(1)")).getText().toLowerCase().trim();
                     if (widget.contains(widgetName)){
-                        if (widgets.get(i).findElement(By.cssSelector("ng-form input")).getAttribute("class").contains("ng-empty")){
-                            SimpleUtils.pass(widget+" widget's already switched off!");
-                        } else {
+                        if (widgets.get(i).findElement(By.cssSelector("ng-form input")).getAttribute("class").contains("ng-not-empty")){
                             scrollToElement(widgets.get(i));
                             clickTheElement(widgets.get(i).findElement(By.cssSelector(".slider")));
                             SimpleUtils.pass(widget+" widget's switched off!");
                             waitForSeconds(2);
+                        } else {
+                            SimpleUtils.pass(widget+" widget's already switched off!");
                         }
                         break;
                     }

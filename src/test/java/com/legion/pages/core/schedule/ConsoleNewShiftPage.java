@@ -55,7 +55,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = ".tma-staffing-option-text-title")
     private List<WebElement> radioBtnShiftTexts;
 
-    @FindBy(css = "button.tma-action")
+    @FindBy(css = "button.sch-save")
     private WebElement btnSave;
 
     @FindBy(css = "[ng-click=\"handleNext()\"]")
@@ -63,7 +63,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     public void customizeNewShiftPage() throws Exception
     {
-        Thread.sleep(5000);
+        Thread.sleep(8000);
         if(isElementLoaded(customizeNewShift,35))
         {
             SimpleUtils.pass("Customize New Shift Page loaded Successfully!");
@@ -184,7 +184,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     public void clickOnCreateOrNextBtn() throws Exception {
         if (isElementLoaded(btnSave, 10)) {
-            click(btnSave);
+            clickTheElement(btnSave);
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
         }else if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
             try {
@@ -567,7 +567,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(className = "react-select__option")
     private List<WebElement> dropDownListOnNewCreateShiftPage;
     public void selectWorkRole(String workRoles) throws Exception {
-        waitForSeconds(5);
+        waitForSeconds(10);
         if (isElementLoaded(btnWorkRole, 15)) {
             clickTheElement(btnWorkRole);
             SimpleUtils.pass("Work Role button clicked Successfully");
@@ -866,15 +866,15 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             WebElement element = null;
             String am = "am";
             String pm = "pm";
-            if (shiftTime.length() > 2 && (shiftTime.contains(am) || shiftTime.contains(pm))) {
+            if (shiftTime.length() > 2 && (shiftTime.toLowerCase().contains(am) || shiftTime.toLowerCase().contains(pm))) {
                 if(areListElementVisible(scheduleOperatingHrsOnEditPage, 15)
                         && scheduleOperatingHrsOnEditPage.size() >0){
                     for (WebElement scheduleOperatingHour: scheduleOperatingHrsOnEditPage){
-                        if (scheduleOperatingHour.getAttribute("class").contains(shiftTime.substring(shiftTime.length() - 2))) {
+                        if (scheduleOperatingHour.getAttribute("class").toLowerCase().contains(shiftTime.substring(shiftTime.length() - 2).toLowerCase())) {
                             if(scheduleOperatingHour.getText().equals(
                                     shiftTime.split(":")[0]
                                             .replace("am", "").replace("pm", "")
-                                            .replace("AM", "").replace("PM", ""))){
+                                            .replace("AM", "").replace("PM", "").replaceFirst("^0*", ""))){
                                 element = scheduleOperatingHour;
                                 break;
                             }
@@ -1023,8 +1023,12 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                         for (WebElement searchResult : searchResults) {
                             WebElement workerName = searchResult.findElement(By.className("worker-edit-search-worker-name"));
                             WebElement optionCircle = searchResult.findElement(By.className("tma-staffing-option-outer-circle"));
+                            WebElement locationInfo = searchResult.findElement(By.className("tma-description-fields"));
                             if (workerName != null && optionCircle != null) {
-                                if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())) {
+                                if (workerName.getText().toLowerCase().trim().replaceAll("\n"," ").contains(name.split(" ")[0].trim().toLowerCase())
+                                        ||locationInfo.getText().contains(name)) {
+                                    WebElement status = searchResult.findElement(By.cssSelector(".worker-edit-availability-status"));
+                                    MyThreadLocal.setMessageOfTMScheduledStatus(status.getText());
                                     clickTheElement(optionCircle);
                                     SimpleUtils.report("Select Team Member: " + name + " Successfully!");
                                     waitForSeconds(2);
@@ -1083,18 +1087,21 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                         clickTheElement(offerButton);
                                         SimpleUtils.report("Offer Team Member: " + name + " Successfully!");
                                     }
-                                    waitForSeconds(2);
-                                    if (areListElementVisible(buttonsOnWarningMode, 5)) {
+                                    waitForSeconds(7);
+                                    if (areListElementVisible(buttonsOnWarningMode, 10)) {
                                         if (buttonsOnWarningMode.size()==2) {
-                                            if (buttonsOnWarningMode.get(1).getText().toLowerCase().equalsIgnoreCase("assign anyway")){
+                                            if (buttonsOnWarningMode.get(1).getText().toLowerCase().trim().equalsIgnoreCase("assign anyway")){
                                                 clickTheElement(buttonsOnWarningMode.get(1));
                                                 SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
-                                            } else if(buttonsOnWarningMode.get(1).getText().toLowerCase().equalsIgnoreCase("offer anyway")){
+                                            } else if(buttonsOnWarningMode.get(1).getText().toLowerCase().trim().equalsIgnoreCase("offer anyway")){
                                                 clickTheElement(buttonsOnWarningMode.get(1));
                                                 SimpleUtils.report("Assign Team Member: Click on 'OFFER ANYWAY' button Successfully!");
-                                            }
+                                            }else
+                                                SimpleUtils.report("Assign Team Member: ASSIGN ANYWAY and OFFER ANYWAY button fail to load! The button is:"
+                                                        +buttonsOnWarningMode.get(1).getText().toLowerCase().trim());
                                         }
-                                    }
+                                    }else
+                                        SimpleUtils.report("Buttons on warning mode are not loaded! ");
                                     if(!areListElementVisible(assignedShiftsOnShiftAssignedSections, 5)
                                             && !areListElementVisible(shiftOffersOnShiftAssignedSections, 5)){
                                         SimpleUtils.fail("Fail to assign or offer TM on search or recommended TM page! ", false);
@@ -1124,7 +1131,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 //    @FindBy(linkText = "Offer anyway")
 //    private WebElement offerAnywayBtn;
 
-    @FindBy(css = ".sc-iIUQWv.dLvCCh")
+    @FindBy(css = ".sc-iIUQWv.fidaYp")
     private WebElement offerAnywayBtn;
     @Override
     public void searchTeamMemberByNameAndAssignOrOfferShift(String name, Boolean isOffering) throws Exception {
@@ -1757,6 +1764,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                         }
                     }
                     clickTheElement(editOperatingHourSaveButton);
+                    waitForSeconds(1);
                     if (isElementEnabled(editOperatingHoursBtn, 15)) {
                         SimpleUtils.pass("Create Schedule: Save the operating hours Successfully!");
                     } else {
@@ -2288,7 +2296,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement newCreateShiftModal;
 
     public boolean checkIfNewCreateShiftPageDisplay() throws Exception {
-        if (isElementLoaded(newCreateShiftModal, 10)) {
+        if (isElementLoaded(newCreateShiftModal, 35)) {
             SimpleUtils.pass("The new create shift modal display! ");
             return true;
         } else {
@@ -2447,6 +2455,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(css = "[id*=\"ShiftName_field\"]")
     private WebElement shiftNameOnNewCreateShiftPage;
+    @FindBy(css = "[placeholder*=\"Shift Name\"]")
+    private WebElement shiftNameOnOldCreateShiftPage;
     public boolean checkIfShiftNameInputIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
         if (isElementLoaded(shiftNameOnNewCreateShiftPage, 5)) {
@@ -2560,6 +2570,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(css = "[name=\"shiftNotes\"]")
     private WebElement shiftNotesOnNewCreateShiftPage;
+    @FindBy(css = ".tma-staffing-note-text")
+    private WebElement shiftNotesOnOldCreateShiftPage;
     public boolean checkIfShiftNotesTextAreaIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
         if (isElementLoaded(shiftNotesOnNewCreateShiftPage, 5)) {
@@ -2585,7 +2597,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public void closeNewCreateShiftPage () throws Exception {
         if (isElementLoaded(closeIconOnNewCreateShiftPage, 5)) {
             clickTheElement(closeIconOnNewCreateShiftPage);
-            waitForSeconds(3);
+            waitForSeconds(8);
             if (!checkIfNewCreateShiftPageDisplay()) {
                 SimpleUtils.pass("The New Create Shift page been closed successfully! ");
             } else
@@ -2877,7 +2889,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
 
 
-    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[2]/div/div")
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[2]/div/div/div")
     private List<WebElement> assignedShiftsOnShiftAssignedSections;
     public List<String> getAssignedShiftOnShiftAssignedSection() {
         List<String> assignedShifts = new ArrayList<>();
@@ -2892,7 +2904,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return assignedShifts;
     }
 
-    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[4]/div")
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[4]/div/div/div")
     private List<WebElement> shiftOffersOnShiftAssignedSections;
     @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div[2]/div/div[4]/button")
     private WebElement clearOffersLink;
@@ -3043,6 +3055,11 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             shiftNotesOnNewCreateShiftPage.sendKeys(Keys.DELETE);
             shiftNotesOnNewCreateShiftPage.sendKeys(String.valueOf(shiftNotes));
             SimpleUtils.report("Set Shift Notes on New Create Shift page successfully! ");
+        } else if (isElementLoaded(shiftNotesOnOldCreateShiftPage, 5)) {
+            shiftNotesOnOldCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+            shiftNotesOnOldCreateShiftPage.sendKeys(Keys.DELETE);
+            shiftNotesOnOldCreateShiftPage.sendKeys(String.valueOf(shiftNotes));
+            SimpleUtils.report("Set Shift Notes on New Create Shift page successfully! ");
         } else
             SimpleUtils.report("The Shift Notes textarea is not loaded on New Create Shift page! ");
     }
@@ -3053,7 +3070,12 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             shiftNameOnNewCreateShiftPage.sendKeys(Keys.DELETE);
             shiftNameOnNewCreateShiftPage.sendKeys(String.valueOf(shiftName));
             SimpleUtils.report("Set shift name on New Create Shift page successfully! ");
-        } else
+        } else if (isElementLoaded(shiftNameOnOldCreateShiftPage, 5)) {
+            shiftNameOnOldCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+            shiftNameOnOldCreateShiftPage.sendKeys(Keys.DELETE);
+            shiftNameOnOldCreateShiftPage.sendKeys(shiftName);
+            SimpleUtils.report("Set shift name on New Create Shift page successfully! ");
+        }else
             SimpleUtils.report("The shift name input is not loaded on New Create Shift page! ");
     }
 
@@ -3102,7 +3124,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 SimpleUtils.report("The Create Shift dialog is closed!");
             else
                 SimpleUtils.fail("The Create Shift dialog is not closed!", false);
-        }else{
+        } else if (isElementLoaded(closeSelectTMWindowBtn, 5)) {
+            closeCustomizeNewShiftWindow();
+        } else{
             SimpleUtils.fail("The Close button is not loaded correctly!", false);
         }
     }

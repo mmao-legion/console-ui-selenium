@@ -1,9 +1,9 @@
 {
-  "UseLegionAccrual": "dgstage,op,opauto,carters",
+  "UseLegionAccrual": "dgstage,op,opauto,carters,americold",
   "MinorRulesTemplate": "cinemark-wkdy",
   "DynamicGroupV2": "",
   "ScheduleShowFullNames": "cinemark-wkdy",
-  "EnableDemandDriverTemplate": "op,opauto",
+  "EnableDemandDriverTemplate": "op,opauto,demosetup4",
   "MixedModeDemandDriverSwitch": "op,opauto",
   "MealAndRestTemplate": "cinemark-wkdy,op",
   "ScheduleEditShiftTimeNew": "vailqacn,cinemark-wkdy",
@@ -11,11 +11,13 @@
   "EnableLongTermBudgetPlan": "opauto",
   "UseLegionAccrual": "op,opauto,carters",
   "EnableDayUnitTimeOffReason": "op,opauto,carters",
-  "UseAbsenceMgmtConfiguration": "op,opauto,carters",
+  "UseAbsenceMgmtConfiguration": "op,opauto,carters,americold",
   "EnableAccrual": "op,opauto,carters",
   "EnableEmployeeManagement": "op,opauto,carters",
   "ShowAnnouncementGroupOP": "op,opauto,carters",
-  "UseDemandDriverTemplateSwitch": "op,opauto",
+  "UseDemandDriverTemplateSwitch": "op,opauto,demosetup4",
   "EnableChangeLocationGroupSetting": "op,opauto",
-  "WorkRoleSettingsTemplateOP": "opauto"
+  "WorkRoleSettingsTemplateOP": "opauto,americold",
+  "TAScheduleCost": "americold,panda2bts",
+  "EnableMultiWorkRolePerShiftSCH": "americold"
 }

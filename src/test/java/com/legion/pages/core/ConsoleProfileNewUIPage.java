@@ -41,8 +41,10 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private List<WebElement> profilePageSubSections;
 	@FindBy(css="[ng-click*=\"TimeOff()\"]")
 	private WebElement newTimeOffBtn;
-	@FindBy(css = "div.reasons-reason ")
+	@FindBy(css = "div.reasons-reason")
 	private List<WebElement> timeOffReasons;
+	@FindBy(css = "[ng-repeat*=\"timeOffType\"] .count-block-label")
+	private List<WebElement> newTimeOffReasons;
 	@FindBy(css = "textarea[placeholder=\"Optional explanation\"]")
 	private WebElement timeOffExplanationtextArea;
 	@FindBy(css= "div.real-day")
@@ -293,14 +295,17 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	@Override
 	public boolean isReasonLoad(String timeOffReasonLabel) throws Exception{
 		boolean result = false;
+		List<WebElement> reasons = null;
 		if(areListElementVisible(timeOffReasons, 20)) {
-			for(WebElement timeOffReason : timeOffReasons) {
-				if(timeOffReason.getText().toLowerCase().contains(timeOffReasonLabel.toLowerCase())) {
-					result = true;
-				}
+			reasons = timeOffReasons;
+		} else if (areListElementVisible(newTimeOffReasons, 5)) {
+			reasons = newTimeOffReasons;
+		}
+		for(WebElement timeOffReason : reasons) {
+			if(timeOffReason.getText().toLowerCase().contains(timeOffReasonLabel.toLowerCase())) {
+				result = true;
+				break;
 			}
-		} else {
-			result = true;
 		}
 		return result;
 	}
@@ -2368,6 +2373,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public String getNickNameFromProfile() throws Exception {
 		String nickName = "";
 		try{
+			waitForSeconds(3);
 			if(isElementLoaded(userProfileImage, 5)){
 				clickTheElement(userProfileImage);
 				clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));
@@ -2961,7 +2967,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			selectByVisibleText(schoolCalendarSelect, givenCalendar);
 			if (areListElementVisible(saveBtnsOfProfile,5)) {
 				clickTheElement(saveBtnsOfProfile.get(0));
-				if (isElementLoaded(popupMessage,5) && popupMessage.getText().contains("Success"))
+				if (isElementLoaded(popupMessage,10) && popupMessage.getText().contains("Success"))
 					SimpleUtils.pass("Profile Page: The selected calendar is saved successfully");
 				else
 					SimpleUtils.fail("Profile Page: No success message when saving the profile",false);

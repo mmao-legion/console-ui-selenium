@@ -1,12 +1,15 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
@@ -683,4 +686,72 @@ public class ForecastTest extends TestBase{
 
 		SimpleUtils.assertOnFail("Insight smart card has no changes!", insightDataBefore.entrySet().containsAll(forecastPage.getInsightDataInShopperWeekView().entrySet()), false);
 	}
+
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Verify the manage past demand forecast permission for different access roles")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyTheManagePastDemandForecastPermissionForDifferentAccessRolesAsInternalAdmin (String browser, String username, String password, String location) throws Exception {
+		try {
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			ForecastPage forecastPage = pageFactory.createForecastPage();
+			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			int count = (int)(Math.random()*6+1);
+			String accessRole = "";
+			String roleName = "";
+			switch(count) {
+				case 1: accessRole = AccessRoles.StoreManager.getValue(); roleName = "Store Manager";break;
+				case 2: accessRole = AccessRoles.TeamLead.getValue(); roleName = "Team Lead";break;
+				case 3: accessRole = AccessRoles.CustomerAdmin.getValue(); roleName = "Admin";break;
+				case 4: accessRole = AccessRoles.GeneralManager.getValue(); roleName = "General Manager";break;
+				case 5: accessRole = AccessRoles.AreaManager.getValue(); roleName = "Area Manager";break;
+			}
+			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+			SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+			Thread.sleep(3000);
+			userManagementPage.clickOnUserManagementTab();
+			SimpleUtils.assertOnFail("Users and Roles card not loaded Successfully!", controlsNewUIPage.isControlsUsersAndRolesCard(), false);
+			userManagementPage.goToUserAndRoles();
+			userManagementPage.goToAccessRolesTab();
+			cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+			//Get permission status for specific roles
+			String section = "Schedule";
+			String permission = "Manage Past Demand Forecast";
+			boolean status = controlsNewUIPage.getStatusOfSpecificPermissionForSpecificRoles(section, roleName, permission);
+			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+			loginPage.logOut();
+			//Verify the shifts can be created by new UI by original SM access role
+			Thread.sleep(5000);
+			SimpleUtils.pass("Will login as: "+ accessRole);
+			loginAsDifferentRole(accessRole);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()),
+					false);
+			forecastPage.clickOnShopper();
+			SimpleUtils.assertOnFail("Demand forecast edit button should always enabled for current week! ",
+					forecastPage.isDemandForecastEditButtonEnabled(), false);
+			scheduleCommonPage.navigateToPreviousWeek();
+			if (status){
+				SimpleUtils.assertOnFail("Demand forecast edit button should be enabled for past week! ",
+						forecastPage.isDemandForecastEditButtonEnabled(), false);
+			}else
+				SimpleUtils.assertOnFail("Demand forecast edit button should be disabled for past week! ",
+						!forecastPage.isDemandForecastEditButtonEnabled(), false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+
+	}
+
+
 }

@@ -344,7 +344,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		}
 		return false;
 	}
-	@FindBy(css = ".lg-toast")
+	@FindBy(css = ".lg-toast p")
 	private WebElement msgOnTop;
 	@Override
 	public void verifyApproveShiftOfferRequestAndGetErrorOnActivity(String requestUserName, String expectedMessage) throws Exception {
@@ -360,7 +360,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 					for (WebElement button : actionButtons) {
 						if ("approve".equalsIgnoreCase(button.getText())) {
 							clickTheElement(button);
-							waitForSeconds(1);
+//							waitForSeconds(1);
 							if (isElementLoaded(msgOnTop, 20)) {
 								String errorMessage = msgOnTop.getText();
 								if (errorMessage.contains(expectedMessage)) {

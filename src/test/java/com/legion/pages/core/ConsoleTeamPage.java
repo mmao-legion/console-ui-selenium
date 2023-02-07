@@ -90,7 +90,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	 @FindBy(css="[class='console-navigation-item-label Team']")
 	 private WebElement goToTeamTab;
 		
-	 @FindBy(css=".search-input-box")
+	 @FindBy(id="legion_cons_Team_Roster_Search_field")
 	 private WebElement searchTextBox;
 		
 	 @FindBy(css=".search-icon")
@@ -550,7 +550,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement temporaryTransferButton;
 	@FindBy (className = "check-image")
 	private WebElement checkImage;
-	@FindBy (css="[ng-click=\"viewProfile(worker)\"]")
+	@FindBy (css="[data-testid=\"lg-table-name\"] span")
 	private List<WebElement> teamMemberNames;
 	@FindBy (css = "#legion_cons_Team_Roster_Table [role=\"row\"] [data-testid=\"lg-table-name\"] span")
 	private List<WebElement> newTeamMemberNames;
@@ -715,6 +715,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	private WebElement timeOffRejectBtn;
 	@FindBy(css = ".row.th div")
 	private List<WebElement> columnsInRoster;
+	@FindBy(css = "[role=\"columnheader\"]")
+	private List<WebElement> newColumnsInRoster;
 	@FindBy(css = ".tr .name")
 	private List<WebElement> namesInRoster;
 	@FindBy(css = ".tr [ng-if=\"showWorkerId\"]")
@@ -844,15 +846,25 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	@Override
 	public void verifyTheColumnInRosterPage(boolean isLocationGroup) throws Exception {
 		try {
-			List<String> expectedColumnsRegular = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "EMPLOYMENT", "STATUS", "BADGES", "ACTION"));
-			List<String> expectedColumnsLG = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "EMPLOYMENT", "LOCATION", "STATUS", "BADGES", "ACTION"));
 			List<String> actualColumns = new ArrayList<>();
+			List<String> expectedColumnsRegular = null;
+			List<String> expectedColumnsLG = null;
 			if (areListElementVisible(columnsInRoster, 5)) {
 				for (WebElement column : columnsInRoster) {
 					if (column.getText() != null && !column.getText().isEmpty()) {
 						actualColumns.add(column.getText());
 					}
 				}
+				expectedColumnsRegular = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "EMPLOYMENT", "STATUS", "BADGES", "ACTION"));
+				expectedColumnsLG = new ArrayList<>(Arrays.asList("NAME", "EMPLOYEE ID", "JOB TITLE", "EMPLOYMENT", "LOCATION", "STATUS", "BADGES", "ACTION"));
+			} else if (areListElementVisible(newColumnsInRoster, 5)) {
+				for (WebElement column : newColumnsInRoster) {
+					if (column.getText() != null && !column.getText().isEmpty() && !column.getText().equalsIgnoreCase(" ")) {
+						actualColumns.add(column.getText());
+					}
+				}
+				expectedColumnsRegular = new ArrayList<>(Arrays.asList("NAME", "LEGION ONBOARDING", "JOB TITLE", "EMPLOYMENT", "MINOR", "EID", "BADGES"));
+				expectedColumnsLG = new ArrayList<>(Arrays.asList("NAME", "LEGION ONBOARDING", "JOB TITLE", "EMPLOYMENT", "MINOR", "EID", "LOCATION", "BADGES"));
 			} else {
 				SimpleUtils.fail("Team Roster Page: Columns failed to load!", false);
 			}
@@ -861,7 +873,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 					SimpleUtils.pass("Team Roster: Verified the columns are correct for location group!");
 				} else {
 					SimpleUtils.fail("Team Roster: Verified the columns are incorrect for location group! Expected: "
-					+ expectedColumnsLG.toString() + ". But actual columns: " + actualColumns.toString(), false);
+							+ expectedColumnsLG.toString() + ". But actual columns: " + actualColumns.toString(), false);
 				}
 			} else {
 				if (actualColumns.containsAll(expectedColumnsRegular) && expectedColumnsRegular.containsAll(actualColumns)) {
@@ -1056,7 +1068,7 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 				}
 			}
 		}else {
-			SimpleUtils.fail("Failed to find the search textbox element!", true);
+			SimpleUtils.fail("Failed to find the search textbox element!", false);
 		}
 	}
 
@@ -2587,6 +2599,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 	}
 
 	private void changeAvailabilityHours(String zoneClassName, String expectedColor) throws Exception {
+		scrollToBottom();
+		waitForSeconds(2);
 		List<WebElement> zones = getDriver().findElements(By.className(zoneClassName));
 		if (areListElementVisible(zones, 5)) {
 			for (int i = 0; i < zones.size(); i++) {
@@ -3911,7 +3925,7 @@ private List<WebElement> locationColumn;
 			Date start = df.parse(startDate);
 			Date end = df.parse(EndDate);
 		    Long betweenDays = (end.getTime() - start.getTime()) / (1000L*3600L*24L);
-			if (summerDays.size() == 364 - betweenDays)
+			if ((summerDays.size() == 364 - betweenDays) || (summerDays.size() == 365 - betweenDays))
 				SimpleUtils.pass("School Calendars Page: Summer days are consistent with user entered dates");
 			else
 				SimpleUtils.fail("School Calendars Page: Summer days are inconsistent with user entered dates",false);

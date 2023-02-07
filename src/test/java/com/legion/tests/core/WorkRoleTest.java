@@ -173,7 +173,7 @@ public class WorkRoleTest extends TestBase {
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             SimpleUtils.assertOnFail("Work Role order is incorrect on Create New Shift page", newShiftPage.areWorkRoleDisplayOrderCorrect(workRoleNOrders), false);
-            newShiftPage.clickOnBackButton();
+            newShiftPage.clickCloseBtnForCreateShift();
             scheduleMainPage.clickOnCancelButtonOnEditMode();
 
             scheduleCommonPage.clickOnDayView();
@@ -189,7 +189,7 @@ public class WorkRoleTest extends TestBase {
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             SimpleUtils.assertOnFail("Work Role order is incorrect on Create New Shift page", newShiftPage.areWorkRoleDisplayOrderCorrect(workRoleNOrders), false);
-            newShiftPage.clickOnBackButton();
+            newShiftPage.clickCloseBtnForCreateShift();
             scheduleMainPage.clickOnCancelButtonOnEditMode();
             scheduleCommonPage.clickOnWeekView();
 

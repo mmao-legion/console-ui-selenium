@@ -39,11 +39,17 @@ public class ToggleAPI {
                 }
             }
             if (enterpriseNames != null && enterpriseNames.size() > 0) {
-                for (String name : enterpriseNames) {
-                    HashMap<String, Object> rulesValue = new HashMap<>();
-                    rulesValue.put("enterpriseName", name);
-                    rules.add(rulesValue);
+                String enterpriseNameForAPI = "";
+                for (int i = 0; i < enterpriseNames.size(); i++) {
+                    if (i != enterpriseNames.size() - 1) {
+                        enterpriseNameForAPI = enterpriseNameForAPI + enterpriseNames.get(i) + "\",\"";
+                    } else {
+                        enterpriseNameForAPI = enterpriseNameForAPI + enterpriseNames.get(i);
+                    }
                 }
+                HashMap<String, Object> rulesValue = new HashMap<>();
+                rulesValue.put("enterpriseName", enterpriseNameForAPI);
+                rules.add(rulesValue);
             } else {
                 rules = new ArrayList<>();
             }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+        <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite verbose ="0" thread-count="5" name="LegionTest">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="yes"/>
@@ -14,7 +14,7 @@
                 <methods>
                     <include name="verifyProjectedComplianceWidgetOnDashboardInDMViewAsInternalAdmin" />
                     <include name="verifySchedulePublishStatusWidgetOnDashboardInDMViewAsInternalAdmin" />
-<!--                    <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7185-->
+                    <!--                    <include name="verifySchedulesGuidanceByDayWidgetOnDashboardInDMViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7185-->
                     <!--                   <include name="verifyLocationSummaryWidgetOnDashboardInDMViewOnNonTAEnvAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5413 -->
                     <!--<include name="verifyTheContentOfOpenShiftsForDMViewAsInternalAdmin" /> we don't have open shifts widget for now-->
                     <!--                    <include name="verifyScheduleStatusAndHoursOnScheduleDMViewForNotStartedScheduleOnNonTAEnvAsInternalAdmin" />
@@ -24,17 +24,17 @@
             </class>
         </classes>
     </test>
-<!-- Age < 16 yr old
-    <test name="Scheduling Minor Test">
-        <classes>
-            <class name="com.legion.tests.core.SchedulingMinorTest">
-                <methods>
-                    <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-    -->
+    <!-- Age < 16 yr old
+        <test name="Scheduling Minor Test">
+            <classes>
+                <class name="com.legion.tests.core.SchedulingMinorTest">
+                    <methods>
+                        <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
+                    </methods>
+                </class>
+            </classes>
+        </test>
+        -->
     <!--
     <test name="Drag And Drop Test">
         <classes>
@@ -58,18 +58,18 @@
             </class>
         </classes>
     </test>
-<!--
-    <test name="Parent Child LG Test">
-        <classes>
-            <class name="com.legion.tests.core.ParentChildLGTest">
-                <methods>
-                    <include name="validateTheLocationFilterOnDemandTabAsInternalAdmin" />
-                    <include name="validateTheLocationFilterOnLabelTabAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-https://legiontech.atlassian.net/browse/SCH-7510 -->
+    <!--
+        <test name="Parent Child LG Test">
+            <classes>
+                <class name="com.legion.tests.core.ParentChildLGTest">
+                    <methods>
+                        <include name="validateTheLocationFilterOnDemandTabAsInternalAdmin" />
+                        <include name="validateTheLocationFilterOnLabelTabAsInternalAdmin" />
+                    </methods>
+                </class>
+            </classes>
+        </test>
+    https://legiontech.atlassian.net/browse/SCH-7510 -->
     <test name="LiquidDashboard Test">
         <classes>
             <class name="com.legion.tests.core.LiquidDashboardTest">
@@ -79,32 +79,31 @@ https://legiontech.atlassian.net/browse/SCH-7510 -->
             </class>
         </classes>
     </test>
-<!--
-    <test name="Delete Schedule Test">
-        <classes>
-            <class name="com.legion.tests.core.DeleteScheduleTest">
-                <methods>
-                    <include name="verifySMDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />
-                    <include name="verifyAdminDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test> https://legiontech.atlassian.net/browse/SCH-7212 -->
+    <!--
+        <test name="Delete Schedule Test">
+            <classes>
+                <class name="com.legion.tests.core.DeleteScheduleTest">
+                    <methods>
+                        <include name="verifySMDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />
+                        <include name="verifyAdminDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />
+                    </methods>
+                </class>
+            </classes>
+        </test> https://legiontech.atlassian.net/browse/SCH-7212 -->
 
-    <test name="Schedule New UI Test">
+<!--    <test name="Schedule New UI Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
-    <!--           <include name="verifyTheNoBudgetPermissionForSMAsInternalAdmin" />blocked by SCH-7258-->
-                    <include name="verifyOverrideAssignmentRulesToNoAsInternalAdmin" />
-                    <include name="verifyOverrideAssignmentRulesToYesAsInternalAdmin" />
-                    <include name="" />
+                    &lt;!&ndash;           <include name="verifyTheNoBudgetPermissionForSMAsInternalAdmin" />blocked by SCH-7258&ndash;&gt;
+                    &lt;!&ndash; <include name="verifyOverrideAssignmentRulesToNoAsInternalAdmin" />
+                    <include name="verifyOverrideAssignmentRulesToYesAsInternalAdmin" /> blocked by SCH-8716&ndash;&gt;
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
-    <test name="Bulk Delete and Edit Test">
+<!-- SCH-8716   <test name="Bulk Delete and Edit Test">
         <classes>
             <class name="com.legion.tests.core.BulkDeleteNEditTest">
                 <methods>
@@ -112,5 +111,5 @@ https://legiontech.atlassian.net/browse/SCH-7510 -->
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 </suite> <!-- Suite -->

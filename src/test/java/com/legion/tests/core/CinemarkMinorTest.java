@@ -1264,6 +1264,7 @@ public class CinemarkMinorTest extends TestBase {
             String shiftTime3 = "11am,7pm";
             String workRole = minorWorkRole;
             String scheduleFromToTime = "10:30am - 10pm";
+            String scheduleFromToTime2 = "10:30 AM - 10:00 PM";
             String scheduleMaxHours = "9";
             if (minorName.contains("14")
                     ||minorName.contains("15")) {
@@ -1350,7 +1351,7 @@ public class CinemarkMinorTest extends TestBase {
         String warningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! but actual is: "
                         +warningMessage,
-                warningMessage.contains("Minor hrs "+ scheduleFromToTime.toLowerCase()), false);
+                warningMessage.toLowerCase().contains(("Minor hrs "+ scheduleFromToTime).toLowerCase()), false);
         Thread.sleep(5000);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         Thread.sleep(5000);
@@ -1379,11 +1380,12 @@ public class CinemarkMinorTest extends TestBase {
         WebElement newAddedShift = scheduleShiftTablePage.
                 getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1.split(" ")[0]).get(0));
         String expectMessage = "Minor hrs "+ scheduleFromToTime;
-        String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString().replace(":00 ", "").replace(":30 ", ":30").toLowerCase();
+        String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString().replace(" AM", "am").replace(" PM", "pm").replace(":00", "");;
+//                .replace(":00 ", "").replace(":30 ", ":30").toLowerCase();
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! the expect is: "+expectMessage
                             +" the actual is:"+actualMessage,
-                    actualMessage.contains(expectMessage.toLowerCase()), false);
+                    actualMessage.toLowerCase().contains(expectMessage.toLowerCase()), false);
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
 
@@ -1431,6 +1433,7 @@ public class CinemarkMinorTest extends TestBase {
                 shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor daily max "+scheduleMaxHours+" hrs"), false);
 
         newShiftPage.clickOnOfferOrAssignBtn();
+        Thread.sleep(5000);
         scheduleMainPage.saveSchedule();
         //check the compliance smart card
         SimpleUtils.assertOnFail("The compliance smart card display correctly! ",
@@ -1757,8 +1760,10 @@ public class CinemarkMinorTest extends TestBase {
 
 
         //check the violation message in Status column
-        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor weekly max "+maxOfDays+"days! ",
-                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor weekly max "+ maxOfDays+ " days"), false);
+        String message = shiftOperatePage.getTheMessageOfTMScheduledStatus();
+        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor weekly max "
+                        +maxOfDays+"days! The actual is: "+message,
+                message.contains("Minor weekly max "+ maxOfDays+ " days"), false);
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
 
@@ -2375,7 +2380,7 @@ public class CinemarkMinorTest extends TestBase {
         if (dayOfWeek.equalsIgnoreCase("Monday")
                 ||dayOfWeek.equalsIgnoreCase("Tuesday")
                 ||dayOfWeek.equalsIgnoreCase("Wednesday") ) {
-            minorName = minorNames.Minor14.getValue();
+            minorName = minorNames.Minor15.getValue();
         } else
             minorName = minorNames.Minor17.getValue();
         SimpleUtils.pass("Get minor user: "+minorName+ " successfully! ");

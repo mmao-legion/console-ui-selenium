@@ -255,12 +255,15 @@ public class SchedulingOPEnabledTest  extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
-            newShiftPage.selectWorkRole(scheduleWorkRoles.get("GENERAL MANAGER"));
-            //newShiftPage.moveSliderAtCertainPoint("6:00pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.selectWorkRole(firstShiftInfo.get(4));
+            newShiftPage.moveSliderAtCertainPoint("4pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.selectWorkingDaysOnNewShiftPageByIndex(Integer.parseInt(firstShiftInfo.get(1)));
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            shiftOperatePage.verifyScheduledWarningWhenAssigning(firstShiftInfo.get(0), firstShiftInfo.get(2));
+            shiftOperatePage.verifyScheduledWarningWhenAssigning(firstShiftInfo.get(0) + " " + firstShiftInfo.get(5),
+                    firstShiftInfo.get(2));
+            newShiftPage.clickCloseBtnForCreateShift();
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="10" name="LegionTest" parallel="tests">
+<suite verbose ="0" thread-count="10" name="LegionTest" parallel="tests" configfailurepolicy="continue">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="No"/>
     <parameter name="testRailRunName" value="Ephemeral - Auto "/>
@@ -18,7 +18,7 @@
         </classes>
     </test>
 
-    <test name="Bulk Create Test">
+    <!--Blocked by SCH-8716 <test name="Bulk Create Test">
         <classes>
             <class name="com.legion.tests.core.BulkCreateTest">
                 <methods>
@@ -37,9 +37,9 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
-    <test name="Bulk Edit and Delete Test">
+<!--  SCH-8759   <test name="Bulk Edit and Delete Test">
         <classes>
             <class name="com.legion.tests.core.BulkDeleteNEditTest">
                 <methods>
@@ -50,7 +50,7 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
     <test name="Consolidating Filters Test">
         <classes>
@@ -130,7 +130,6 @@
         <classes>
             <class name="com.legion.tests.core.P2PLGTest">
                 <methods>
-                    <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnP2PLGAsInternalAdmin" />
                     <include name="verifyAnalyticsTableOnComplianceInDMViewWhenItIncludesLGAsInternalAdmin" />
                     <include name="verifyAnalyticsTableOnTimesheetInDMViewWhenItIncludesLGAsInternalAdmin" />
                     <include name="verifyChangingLocationForP2POnMultipleEditShiftsWindowAsInternalAdmin" />
@@ -144,9 +143,9 @@
         <classes>
             <class name="com.legion.tests.core.ParentChildLGTest">
                 <methods>
-                    <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+<!--                    <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />-->
                     <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
-                    <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+<!--                    <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />-->
                     <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForParentChildLGAsInternalAdmin" />
                     <include name="validateNavigationRosterScheduleAndDashboardOfParentChildLGAsInternalAdmin" />
                     <include name="verifyChangingLocationForPCOnMultipleEditShiftsWindowAsInternalAdmin" />
@@ -244,12 +243,11 @@
                     <include name="verifyRegionViewNavigationAsInternalAdmin" />
                     <include name="verifyControlsInBUViewAsInternalAdmin" />
                     <include name="verifyControlsInRegionViewAsInternalAdmin" />
-                    <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
                     <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
                     <include name="verifyRegionListAndSubRegionOnComplianceInBUViewAsInternalAdmin" />
                     <include name="verifyDistrictListAndSubDistrictOnComplianceInBUViewAsInternalAdmin" />
-                    <include name="verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin" />
-                    <include name="verifyTotalViolationHrsOnComplianceInRegionViewAsInternalAdmin" />
+<!--                    <include name="verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin" SCH-8703/>-->
+<!--                    <include name="verifyTotalViolationHrsOnComplianceInRegionViewAsInternalAdmin" SCH-8703/>-->
                     <include name="verifyTotalLocationsWithViolationCardInComplianceBUViewAsInternalAdmin" />
                     <include name="verifyTotalLocationsWithViolationCardInComplianceRegionViewAsInternalAdmin" />
                     <include name="verifyTopViolationsCardInComplianceBUViewAsInternalAdmin" />
