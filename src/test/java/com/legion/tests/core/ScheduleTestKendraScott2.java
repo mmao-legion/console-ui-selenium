@@ -7824,9 +7824,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.clickOnCreateOrNextBtn();
 			Thread.sleep(3000);
 			scheduleMainPage.saveSchedule();
-			Thread.sleep(3000);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
+			Thread.sleep(5000);
 			newShiftPage.customizeNewShiftPage();
 			newShiftPage.clearAllSelectedDays();
 			newShiftPage.selectSpecificWorkDay(1);

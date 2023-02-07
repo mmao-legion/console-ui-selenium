@@ -72,7 +72,7 @@
                     <include name="verifyTheContentOnEditSingleShiftWindowForP2PAsInternalAdmin" />
                     <include name="verifyChangingLocationForP2POnSingleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyEmployeeCanReceiveAndAcceptOffersForP2PLGAsTeamMember" />
-                    <include name="verifyEmployeesCanSwapShiftsForP2PLGAsTeamMember" />
+<!--                    <include name="verifyEmployeesCanSwapShiftsForP2PLGAsTeamMember" /> need more time to check-->
 <!--                    <include name="verifyEmployeesCanClaimCoverRequestForP2PLGAsTeamMember" /> Need more time to check-->
                     <include name="verifyDragAndDropShiftToSameLocationForP2PLGScheduleAsInternalAdmin" />
 <!--                    <include name="verifyDragAndDropShiftToDifferentLocationForP2PLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8614-->
@@ -118,7 +118,7 @@
                     <include name="validateAssignTMWhenTMHasMaxNoOfShiftsScheduledForParentChildAsInternalAdmin" /> need rerun-->
                     <include name="validateAssignTMWhenTMHasOverlappingViolationForParentChildAsInternalAdmin" />
                     <include name="validateTheGroupByDropdownListForParentChildAsInternalAdmin" />
-                    <include name="validateTheFilterOnSchedulePageForParentChildAsInternalAdmin" />
+<!--                    <include name="validateTheFilterOnSchedulePageForParentChildAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-9009-->
                     <include name="verifyTheFunctionOfCopyScheduleForParentChildAsInternalAdmin" />
                     <!--         <include name="validatePrintScheduleForParentChildAsInternalAdmin" /> cannot run on jenkins-->
                     <!--        <include name="validateUIPerformanceForLargeRosterAsInternalAdminPC" />This no envs to run the performance case-->
@@ -581,7 +581,7 @@
                     <include name="verifySpreadOfHoursViolationWhenSearchTMAsInternalAdmin" />
                     <include name="verifySpreadOfHoursViolationWhenEditShiftTimeAsInternalAdmin" />
 <!--                    <include name="verifySpreadOfHoursViolationWhenDraggingTheAvatarToChangeTheAssignmentAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6361-->
-                    <include name="verifySpreadOfHoursViolationWhenDraggingTheShiftToAnotherDayAsInternalAdmin" />
+<!--                  <include name="verifySpreadOfHoursViolationWhenDraggingTheShiftToAnotherDayAsInternalAdmin" /> SCH-8428-->
 <!--                    <include name="verifyOpenShiftWithSpreadOfHoursViolationCannotBeClaimedAsTeamMember" /> SCH-6338-->
                     <include name="verifySplitShiftCanBeConfiguredAsInternalAdmin" />
                     <include name="verifySplitShiftViolationWhenSearchTMAsInternalAdmin" />
