@@ -586,6 +586,7 @@ public class BulkCreateTest extends TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            Thread.sleep(5000);
             newShiftPage.clickOnDayViewAddNewShiftButton();
             SimpleUtils.assertOnFail("New create shift page is not display! ",
                     newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
@@ -768,8 +769,8 @@ public class BulkCreateTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify assign shift by each days")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyAssignShiftByEachDaysAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -801,6 +802,7 @@ public class BulkCreateTest extends TestBase {
                 shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
                 //Search shift by TM names: first name and last name
                 firstNameOfTM = shiftInfo.get(0);
+                Thread.sleep(3000);
             }
             String workRole = shiftInfo.get(4);
             String lastNameOfTM = shiftInfo.get(5);
