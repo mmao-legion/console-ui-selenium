@@ -236,8 +236,8 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-        Thread.sleep(3000);
         newShiftPage.clickOnDayViewAddNewShiftButton();
+        Thread.sleep(5000);
         newShiftPage.customizeNewShiftPage();
         newShiftPage.clearAllSelectedDays();
         newShiftPage.selectSpecificWorkDay(7);
@@ -1750,6 +1750,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
         scheduleMainPage.saveSchedule();
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+        Thread.sleep(5000);
         NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
         newShiftPage.clickOnDayViewAddNewShiftButton();
         newShiftPage.customizeNewShiftPage();

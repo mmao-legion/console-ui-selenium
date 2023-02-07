@@ -1537,16 +1537,17 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
 
         clickOnViewProfile();
-        waitForSeconds(3);
+        waitForSeconds(8);
         if (isElementEnabled(tmpProfileContainer, 15)) {
             SimpleUtils.pass("The profile page loaded successfully! ");
             if (isElementEnabled(personalDetailsName, 15)) {
                 waitForSeconds(2);
-                tmDetailName = personalDetailsName.getText();
+                tmDetailName = personalDetailsName.getText().trim();
                 if (tmDetailName.length()!=0 && tmDetailName.split(" ").length>1){
                     SimpleUtils.pass("Get employee detail name successfully! The detail name is:"+tmDetailName);
                 }else
-                    SimpleUtils.fail("Fail to get the employee detail name on profile page! ", false);
+                    SimpleUtils.fail("Fail to get the employee detail name on profile page! The actual name is:"
+                            +tmDetailName, false);
             } else
                 SimpleUtils.fail("TM detail name fail to load!", false);
         } else
