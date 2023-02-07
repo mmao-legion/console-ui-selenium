@@ -55,4 +55,7 @@ public class Constants {
 
     //download location
     public static final String downloadBusiness = System.getProperty("env")+"legion/integration/downloadBusiness";
+
+    //employee attributes
+    public static final String addEmployeeAttributes = System.getProperty("env")+"legion/v2/external-attributes/employee-attributes";
 }

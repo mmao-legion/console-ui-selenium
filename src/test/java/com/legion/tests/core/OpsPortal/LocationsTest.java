@@ -2967,7 +2967,7 @@ public class LocationsTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyLocationTypeCouldBeChangedWithToggleOnAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("MMddHH");
+            SimpleDateFormat sdf = new SimpleDateFormat("MMddHHmm");
             String currentDate = sdf.format(new Date()).trim();
             String regularLocation = "RegularNone-Jane" + currentDate;
             String p2pLocation = "P2P-Jane" + currentDate;

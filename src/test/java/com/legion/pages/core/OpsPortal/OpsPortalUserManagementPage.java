@@ -3,14 +3,18 @@ package com.legion.pages.core.OpsPortal;
 import com.legion.pages.BasePage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.tests.TestBase;
+import com.legion.utils.Constants;
 import com.legion.utils.SimpleUtils;
 import cucumber.api.java.ro.Si;
+import io.restassured.RestAssured;
+import org.hamcrest.Matchers;
 import org.openqa.selenium.*;
 import org.openqa.selenium.internal.FindsByCssSelector;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
+import java.io.File;
 import java.net.URL;
 import java.util.*;
 import static com.legion.utils.MyThreadLocal.*;
@@ -2193,6 +2197,118 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 			}
 		}
 		return count;
+	}
+
+	@Override
+	public void uploadEmployeeAttributes(List<HashMap> employeeAttributesList,int expectedStatusCode, String accessToken) {
+
+		String url = Constants.addEmployeeAttributes;
+		HashMap<String, Object> jsonAsMap = new HashMap<>();
+		jsonAsMap.put("records", employeeAttributesList);
+		RestAssured.given().log().all().contentType("application/json").header("accessToken", accessToken)
+				.body(jsonAsMap).when().post(url)
+				.then().log().all().statusCode(expectedStatusCode);//.body("responseStatus", Matchers.equalToIgnoringCase("SUCCESS"))
+	}
+
+	@FindBy(css = "div.lg-tabs__nav-item:nth-child(6)")
+	private WebElement attribute;
+
+	public void goToAttribute() throws Exception {
+		if (isExist(attribute)) {
+			click(attribute);
+			SimpleUtils.pass("attribute is exist");
+		} else
+			SimpleUtils.fail("attribute is not exist", false);
+	}
+
+	@FindBy(css = "lg-button[label='Add Custom Attribute'] button")
+	private WebElement addCustomAttributeButton;
+	@FindBy(xpath = "//input-field[contains(@value,'newAttribute.attributeName')]//input")
+	private WebElement attributeNameInput;
+	@FindBy(xpath = "//input-field[contains(@value,'displayValue')]")
+	private WebElement attributeTypeInput;
+	@FindBy(xpath = "//lg-search-options/div/div/div/div")
+	private List<WebElement> attributeTypeList;
+	@FindBy(xpath = "//input-field[contains(@value,'newAttribute.stringValue')]//input")
+	private WebElement attributeValueInput;
+	@FindBy(xpath = "//input-field[contains(@value,'newAttribute.description')]//input")
+	private WebElement attributeDescriptionInput;
+	@FindBy(css = "lg-button[label='Save'] button")
+	private WebElement saveButton;
+	@FindBy(xpath = "(//lg-button[@label='Remove'])[21]/button")
+	private WebElement removeButton;
+	@FindBy(xpath = "//input-field[contains(@placeholder,'You can search by attribute name')]//input")
+	private WebElement attributeSearchInput;
+	@FindBy(xpath = "//tr[contains(@ng-repeat,'filterEmployeeAttributes')]")
+	private List<WebElement> attributesList;
+
+	public void addGlobalAttribute(String attributeName, String attributeType, String attributeValue, String attributeDescription) throws Exception {
+		click(addCustomAttributeButton);
+		attributeNameInput.sendKeys(attributeName);
+		selectAttributeType(attributeType);
+		if (attributeType.equalsIgnoreCase("Boolean")) {
+			getDriver().findElement(By.xpath("//lg-button-group//span[contains(text(), '" + attributeValue + "')]/parent::div")).click();
+		} else {
+			attributeValueInput.sendKeys(attributeValue);
+		}
+		attributeDescriptionInput.sendKeys(attributeDescription);
+		click(saveButton);
+	}
+
+	public void selectAttributeType(String attributeType) throws Exception {
+		Boolean b = false;
+		if (isElementEnabled(attributeTypeInput, 2)) {
+			clickTheElement(attributeTypeInput);
+			for (WebElement type : attributeTypeList) {
+				if (type.getAttribute("innerText").trim().contains(attributeType)) {
+					type.click();
+					SimpleUtils.pass("User can select attribute Type: " + attributeType + " Successfully");
+					b = true;
+					break;
+				}
+			}
+			if (!b) {
+				SimpleUtils.fail("User can not select attribute Type", false);
+			}
+		}
+	}
+
+	public void searchGlobalAttribute(String attributeName, int searchResult) throws Exception {
+		attributeSearchInput.clear();
+		attributeSearchInput.sendKeys(attributeName);
+		waitForSeconds(3);
+		if (attributesList.size() == searchResult) {
+			SimpleUtils.pass("expected search");
+		} else {
+			SimpleUtils.fail("unexpected search", false);
+
+		}
+	}
+
+	public void removeGlobalAttribute(String attributeName) throws Exception {
+		attributeSearchInput.clear();
+		attributeSearchInput.sendKeys(attributeName);
+		waitForSeconds(3);
+		if (attributesList.size() >0 ) {
+			removeButton.click();
+			okBtnInCreateNewsFeedGroupPage.click();
+			SimpleUtils.pass("remove attribute");
+		} else {
+			SimpleUtils.fail("can not remove attribute", false);
+		}
+	}
+
+	@Override
+	public void getEmployeeAttributes(String employeeId, int expectedStatusCode, String accessToken, String attributeName) {
+		String url = Constants.addEmployeeAttributes;
+		String str = RestAssured.given().log().all().contentType("application/json").header("accessToken", accessToken)
+				.param("employeeId",employeeId).when().get(url)
+				.then().log().all().statusCode(expectedStatusCode).extract().path("records.attributeName").toString();
+		if (str.contains(String.valueOf(attributeName))) {
+			SimpleUtils.pass("get expected attribute");
+		} else {
+			SimpleUtils.fail("Can not get expected attribute", false);
+		}
 	}
 }
 

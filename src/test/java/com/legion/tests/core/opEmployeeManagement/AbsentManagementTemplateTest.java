@@ -256,7 +256,7 @@ public class AbsentManagementTemplateTest extends TestBase {
     @Owner(owner = "Sophia")
     @Enterprise(name = "Op_Enterprise")
     @TestName(description = "Template Details Page")
-    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class, enabled = false) //blocked by OPS-6707
     public void verifyTemplateDetailsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         OpsPortalNavigationPage navigationPage = new OpsPortalNavigationPage();
         navigationPage.navigateToEmployeeManagement();
@@ -791,26 +791,26 @@ public class AbsentManagementTemplateTest extends TestBase {
         absentManagePage.verifyTimeOffPage();
         absentManagePage.verifyPromotionPage();
 
-//        Boolean timeOffReasonFlag, promotionFlag;
-//        timeOffReasonFlag = absentManagePage.searchTimeOffReason("we");
-//        if(timeOffReasonFlag == false){
-//            SimpleUtils.pass("Non exist time off reason search failed");
-//        }else
-//            SimpleUtils.fail("Non exist time off reason search successfully",false);
-//        timeOffReasonFlag = absentManagePage.searchTimeOffReason("Annual Leave");
-//        if(timeOffReasonFlag == true){
-//            SimpleUtils.pass("Exist time off reason search successfully");
-//        }else
-//            SimpleUtils.fail("Exist time off reason search failed",false);
-//        promotionFlag = absentManagePage.searchPromotion("we");
-//        if(promotionFlag == false){
-//            SimpleUtils.pass("Non exist promotion search failed");
-//        }else
-//            SimpleUtils.fail("Non exist promotion search successfully",false);
-//        promotionFlag = absentManagePage.searchPromotion("promotion");
-//        if(promotionFlag == false){
-//            SimpleUtils.pass("Exist promotion search successfully");
-//        }else
-//            SimpleUtils.fail("Exist promotion search failed",false);
+        Boolean timeOffReasonFlag, promotionFlag;
+        timeOffReasonFlag = absentManagePage.searchTimeOffReason("we");
+        if(timeOffReasonFlag == false){
+            SimpleUtils.pass("Non exist time off reason search failed");
+        }else
+            SimpleUtils.fail("Non exist time off reason search successfully",false);
+        timeOffReasonFlag = absentManagePage.searchTimeOffReason("Annual Leave");
+        if(timeOffReasonFlag == true){
+            SimpleUtils.pass("Exist time off reason search successfully");
+        }else
+            SimpleUtils.fail("Exist time off reason search failed",false);
+        promotionFlag = absentManagePage.searchPromotion("we");
+        if(promotionFlag == false){
+            SimpleUtils.pass("Non exist promotion search failed");
+        }else
+            SimpleUtils.fail("Non exist promotion search successfully",false);
+        promotionFlag = absentManagePage.searchPromotion("promotion");
+        if(promotionFlag == false){
+            SimpleUtils.pass("Exist promotion search successfully");
+        }else
+            SimpleUtils.fail("Exist promotion search failed",false);
     }
 }
