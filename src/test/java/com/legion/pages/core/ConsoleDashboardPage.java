@@ -1363,13 +1363,15 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 
 	@FindBy(css = "div.lg-search-options__option")
 	private List<WebElement> distrcitsListInDashboardPage;
+	@FindBy(css="div.search-dropdown-wrapper div.lg-search-options__option.ng-binding")
+	private List<WebElement> newLocationsListInDashboardPage;
 	@Override
 	public List<String> getDistrcitListInDashboard() throws Exception{
-		click(searchIcon);
+		clickTheElement(searchIcon);
 		waitForSeconds(3);
-		if (locationsListInDashboardPage.size()>0) {
+		if (newLocationsListInDashboardPage.size()>0) {
 			List<String> districtList = new ArrayList<String>();
-			for (WebElement district: distrcitsListInDashboardPage
+			for (WebElement district: newLocationsListInDashboardPage
 			) {
 				if (district.isDisplayed()) {
 					districtList.add(district.getText().split("\n")[0]);

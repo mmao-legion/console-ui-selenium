@@ -445,7 +445,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             for (WebElement settingsType : settingsTypes) {
                 if (settingsType.findElement(By.cssSelector("lg-paged-search")).getAttribute("placeholder").contains(type)) {
                     clickTheElement(settingsType.findElement(By.cssSelector("div.header-add-icon button")));
-                    if (isElementLoaded(popUpWindow, 5)) {
+                    if (isElementLoaded(popUpWindow, 8)) {
                         displayNameInput = fieldsInput.get(0).findElement(By.cssSelector("input[aria-label=\"Display Name\"]"));
                         NameOrSourceTypeInput = fieldsInput.get(1).findElement(By.cssSelector("input"));
                         displayNameInput.sendKeys(displayName);
@@ -576,6 +576,11 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                 }
             }
         }
+        //Navigate to the first page.
+        while (isElementLoaded(settingsTypes.get(2).findElement(By.cssSelector(".lg-pagination__arrow--left")), 5)
+                && !settingsTypes.get(2).findElement(By.cssSelector(".lg-pagination__arrow--left")).getAttribute("class").contains("disabled")) {
+            clickTheElement(settingsTypes.get(2).findElement(By.cssSelector(".lg-pagination__arrow--left")));
+        }
         return  streamNames;
     }
 
@@ -623,23 +628,48 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         return nameList;
     }
 
-    public boolean verifyIfAllBaseStreamsInListForAggregatedInputStream(List<String> basicStreamNames) throws Exception{
-        boolean verifyResult = false;
-        List<String> streamNamesInList = new ArrayList<>();
+    public List<String> getStreamsInAggregated() throws Exception {
+        List<String> baseInputStreamList = new ArrayList<>();
+        for (WebElement streamOption : streamOptions) {
+            baseInputStreamList.add(streamOption.findElement(By.cssSelector("input-field")).getAttribute("label"));
+        }
+        return baseInputStreamList;
+    }
+    public List<String> getCertainGranularityBaseInputStreams(String granularity) throws Exception{
+        List<String> streamNameListForCertainGranularity = new ArrayList<>();
+        List<String> baseInputStreamList = new ArrayList<>();
+        baseInputStreamList = getStreamNamesInList("Base");
 
-        for (WebElement streamOption : streamOptions){
-            streamNamesInList.add(streamOption.findElement(By.cssSelector("input-field label")).getText());
+        if (granularity == null){
+            granularity = "Slot (30 min)";
         }
-        if (basicStreamNames.size() != streamNamesInList.size()){
-            SimpleUtils.fail("The total number in the stream list is not correct!", false);
-        }else{
-            Collections.sort(basicStreamNames);
-            Collections.sort(streamNamesInList);
-            if (ListUtils.isEqualList(basicStreamNames, streamNamesInList)){
-                verifyResult = true;
-            }
+        for (String baseStream : baseInputStreamList){
+            clickEditBtn(baseStream);
+            waitForSeconds(3);
+            if (getGranularityForCertainInputStream().equals(granularity))
+                streamNameListForCertainGranularity.add(baseStream);
         }
-        return  verifyResult;
+        return streamNameListForCertainGranularity;
+    }
+
+    public void verifyIfAllBaseStreamsInListForAggregatedInputStream(HashMap<String, String> aggregatedStream) throws Exception{
+        List<String> streamNameListForCertainGranularity = new ArrayList<>();
+        List<String> streamsInAggregated = new ArrayList<>();
+
+       //Get all the base input streams with certain granularity in the input stream list.
+        streamNameListForCertainGranularity = getCertainGranularityBaseInputStreams(aggregatedStream.get("Granularity"));
+        //Enter aggregated input stream and get the stream list.
+        clickEditBtn(aggregatedStream.get("Name"));
+        clickTheElement(streamValueInput);
+        streamsInAggregated = getStreamsInAggregated();
+        clickCancelBtn();
+        Collections.sort(streamNameListForCertainGranularity);
+        Collections.sort(streamsInAggregated);
+
+        if(ListUtils.isEqualList(streamNameListForCertainGranularity, streamsInAggregated)){
+            SimpleUtils.pass("Base streams in aggregated are correct!");
+        }else
+            SimpleUtils.fail("Base streams in aggregated are NOT correct!", false);
     }
 
     @FindBy(css = "select[aria-label=\"Type\"]")
@@ -663,7 +693,6 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         String[] streamsToSet = null;
 
         //Get stream names
-        basicStreamNameList = getStreamNamesInList("Base");
         allStreamNameList = getStreamNamesInList("All");
         if (areListElementVisible(settingsTypes, 5)) {
             for (WebElement settingsType : settingsTypes) {
@@ -672,7 +701,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                     scrollToElement(settingsType.findElement(By.cssSelector("lg-paged-search")));
                     waitForSeconds(3);
                     clickTheElement(settingsType.findElement(By.cssSelector("div.header-add-icon button")));
-                    if (isElementLoaded(popUpWindow, 15)) {
+                    if (isElementLoaded(popUpWindow, 25)) {
                         NameInput = fieldsInput.get(0).findElement(By.xpath("//input[contains(@placeholder, 'Input Stream')]"));
                         NameInput.sendKeys(inputStreamSpecificInfo.get("Name"));
                         //Verify if the input name is existing
@@ -699,11 +728,6 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
 
                                 if (streamValueInput.getAttribute("class").contains("ng-empty")) {
                                     clickTheElement(streamValueInput);
-                                    if (verifyIfAllBaseStreamsInListForAggregatedInputStream(basicStreamNameList)){
-                                        SimpleUtils.pass("Stream options for aggregated type are correct!");
-                                    }else {
-                                        SimpleUtils.fail("Stream options are not correct!", false);
-                                    }
 
                                     for (WebElement streamOption : streamOptions) {
                                         if ("All".equalsIgnoreCase(inputStreamSpecificInfo.get("Streams"))) {
@@ -763,16 +787,18 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                     clickTheElement(streamValueInput);
                     for (WebElement streamOption : streamOptions) {
                         if (streamOption.findElement(By.cssSelector("input")).getAttribute("class").contains("ng-not-empty")){
-                            scrollToElement(streamOption);
-                            streamOption.click();
+                            scrollToElement(streamOption.findElement(By.cssSelector("input-field")));
+                            click(streamOption.findElement(By.cssSelector("input-field")));
                             waitForSeconds(2);
                         }
                     }
                     for (WebElement streamOption : streamOptions){
                         if ("All".equalsIgnoreCase(inputStreamUpdated.get("Streams"))){
-                            streamOption.click();
+                            scrollToElement(streamOption.findElement(By.cssSelector("input-field")));
+                            click(streamOption.findElement(By.cssSelector("input-field")));
                         }else if (streamOption.findElement(By.cssSelector("label.input-label")).getText().equalsIgnoreCase(inputStreamUpdated.get("Streams"))){
-                            streamOption.click();
+                            scrollToElement(streamOption.findElement(By.cssSelector("input-field")));
+                            click(streamOption.findElement(By.cssSelector("input-field")));
                         }
                     }
                     clickTheElement(streamValueInput);
@@ -831,7 +857,6 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
             resultType = searchResultElement.findElement(By.cssSelector("td:nth-child(2)")).getText();
             resultSource = searchResultElement.findElement(By.cssSelector("td:nth-child(3)")).getText();
             resultTag = searchResultElement.findElement(By.cssSelector("td:nth-child(4) span")).getText();
-
             if (inputStreamInfo.get("Name").equalsIgnoreCase(resultName)
                     && inputStreamInfo.get("Type").equalsIgnoreCase(resultType)) {
                 if ("Base".equalsIgnoreCase(resultType) && resultSource.equals("")) {
@@ -839,7 +864,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
                 } else if ("Aggregated".equalsIgnoreCase(resultType)) {
                     if ("All".equalsIgnoreCase(inputStreamInfo.get("Streams"))) {
                         searchSettingsForDemandDriver("input stream", "");
-                        baseCount = calculateBaseInputStream();
+                        baseCount = getCertainGranularityBaseInputStreams(inputStreamInfo.get("Granularity")).size();
                         if (baseCount == Integer.parseInt(resultSource.split(" ")[0])){
                             isSame = true;
                         }
@@ -1190,7 +1215,7 @@ public class OpsPortalSettingsAndAssociationPage extends BasePage implements Set
         WebElement searchResult = searchSettingsForDemandDriver(type, name);
         if(searchResult != null){
             clickTheElement(searchResult.findElement(By.cssSelector("lg-button[label=\"Remove\"] button")));
-            if (isElementLoaded(popUpWindow.findElement(By.cssSelector("modal[modal-title*=\"Remove\"]")))){
+            if (isElementLoaded(popUpWindow.findElement(By.cssSelector("modal[modal-title*=\"Remove\"]")), 15)){
                 clickTheElement(popUpWindow.findElement(By.cssSelector("lg-button[label=\"OK\"] button")));
             }else{
                 SimpleUtils.fail("There should pop up a confirmation window!", false);
