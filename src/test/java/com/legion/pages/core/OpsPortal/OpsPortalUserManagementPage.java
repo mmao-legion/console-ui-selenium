@@ -831,7 +831,7 @@ public class OpsPortalUserManagementPage extends BasePage implements UserManagem
 		if (isElementEnabled(usersAndRolesCard,5)) {
 			click(usersAndRolesCard);
 		//	waitForSeconds(15);
-			if (isElementEnabled(addNewUserBtn,5)) {
+			if (isElementEnabled(addNewUserBtn,15)) {
 				SimpleUtils.pass("Can go to Users and Roles page successfully");
 			}else
 				SimpleUtils.fail("Go to Users and Roles page failed",false);

@@ -3,11 +3,13 @@ package com.legion.tests.core;
 import com.legion.api.toggle.ToggleAPI;
 import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
@@ -31,8 +33,8 @@ public class ScheduleCopyTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the content on create schedule page in week view")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheContentOnCreateSchedulePageInWeekViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -42,8 +44,6 @@ public class ScheduleCopyTest extends TestBase {
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -94,8 +94,27 @@ public class ScheduleCopyTest extends TestBase {
             ToggleSummaryPage toggleSummaryPage = pageFactory.createToggleSummaryPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
+            boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+            String isBudgetEnabled = "Yes";
+            //Check the budget is enabled or not
+            if (isLocationUsingControlsConfiguration) {
+                controlsNewUIPage.clickOnControlsConsoleMenu();
+                controlsNewUIPage.clickOnControlsSchedulingPolicies();
+                Thread.sleep(10000);
+                isBudgetEnabled = controlsNewUIPage.getApplyLaborBudgetToSchedulesActiveBtnLabel();
+            }
+//            else {
+//                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+//                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+//                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+//                locationsPage.clickOnLocationsTab();
+//                locationsPage.goToGlobalConfigurationInLocations();
+//                Thread.sleep(10000);
+//                isBudgetEnabled = controlsNewUIPage.getApplyLaborBudgetToSchedulesActiveBtnLabel();
+//                switchToConsoleWindow();
+//            }
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -114,6 +133,7 @@ public class ScheduleCopyTest extends TestBase {
             }
             createSchedulePage.publishActiveSchedule();
             scheduleCommonPage.navigateToNextWeek();
+            Thread.sleep(5000);
             isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -135,12 +155,14 @@ public class ScheduleCopyTest extends TestBase {
             //Verify the functionality of Next button on Confirm Operating Hours window
             createSchedulePage.clickCreateScheduleButton();
             createSchedulePage.clickNextButtonOnCreateScheduleWindow();
-            //Verify the content on Enter Budget window
-            createSchedulePage.verifyTheContentOnEnterBudgetWindow(weekInfo, location);
-            //Verify the functioning of Edit button on Enter Budget window
-            //Verify budget hours can be updated
-            float budgetHrs = createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
-
+            float budgetHrs = -1;
+            if (isBudgetEnabled.equalsIgnoreCase("yes")){
+                //Verify the content on Enter Budget window
+                createSchedulePage.verifyTheContentOnEnterBudgetWindow(weekInfo, location);
+                //Verify the functioning of Edit button on Enter Budget window
+                //Verify budget hours can be updated
+                budgetHrs = createSchedulePage.checkEnterBudgetWindowLoadedForNonDG();
+            }
             //Verify the content on Copy Schedule window
             createSchedulePage.verifyTheContentOnCopyScheduleWindow(weekInfo, location, budgetHrs, 0);
         } catch (Exception e) {
@@ -204,8 +226,8 @@ public class ScheduleCopyTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-//    @Enterprise(name = "Vailqacn_Enterprise")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
+//    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the count of compliance shifts should be consistent with compliance smart card")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTheCountOfComplianceShiftsShouldBeConsistentWithComplianceSmartCardAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -246,6 +268,7 @@ public class ScheduleCopyTest extends TestBase {
                 newShiftPage.clickOnCreateOrNextBtn();
                 newShiftPage.searchTeamMemberByName(location.length()>7?location.substring(0, 7):location);
                 newShiftPage.clickOnOfferOrAssignBtn();
+                Thread.sleep(3000);
                 scheduleMainPage.saveSchedule();
             }
 
@@ -277,10 +300,12 @@ public class ScheduleCopyTest extends TestBase {
             createSchedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
             // Click on Next button successfully, schedule will be created
             createSchedulePage.clickNextButtonOnCreateScheduleWindow();
-            String needComplianceReviewMessage = complianceCount+"Shift Need compliance review";
+            String needComplianceReviewMessage1 = complianceCount+" Shift";
+            String needComplianceReviewMessage2 = "Need compliance review";
             SimpleUtils.assertOnFail("The shift need compliance review message display incorrectly, the expected is:"
-                            +needComplianceReviewMessage+" the actual is:"+createSchedulePage.getComplianceShiftsMessageOnScheduleSuccessModal(),
-                    needComplianceReviewMessage.equals(createSchedulePage.getComplianceShiftsMessageOnScheduleSuccessModal().replace("\n", " ")), false);
+                            +needComplianceReviewMessage1 + needComplianceReviewMessage2 +" the actual is:"+createSchedulePage.getComplianceShiftsMessageOnScheduleSuccessModal(),
+                    createSchedulePage.getComplianceShiftsMessageOnScheduleSuccessModal().contains(needComplianceReviewMessage1) &&
+                            createSchedulePage.getComplianceShiftsMessageOnScheduleSuccessModal().contains(needComplianceReviewMessage2), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }

@@ -2215,12 +2215,12 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@Override
 	public void publishNowTheTemplate() throws Exception {
-		if (isElementLoaded(dropdownArrowButton, 5)) {
+		if (isElementLoaded(dropdownArrowButton, 10)) {
 			scrollToElement(dropdownArrowButton);
 			click(dropdownArrowButton);
 			click(publishNowButton);
 			click(publishTemplateButton);
-			if (isElementLoaded(publishTemplateConfirmModal, 5)) {
+			if (isElementLoaded(publishTemplateConfirmModal, 10)) {
 				click(okButtonOnPublishTemplateConfirmModal);
 				waitForSeconds(3);
 				displaySuccessMessage();
@@ -2419,7 +2419,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 //					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
 //				}
 				scrollToBottom();
-				if (isElementEnabled(saveAsDraftButton, 5)
+				if (isElementEnabled(saveAsDraftButton, 10)
 						&& isElementLoaded(templateDetailsAssociateTab, 10)
 						&& isElementLoaded(templateDetailsBTN, 10)
 						&& isElementLoaded(templateExternalAttributesBTN, 10)) {
@@ -8029,6 +8029,19 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.pass("User create new future template successfully!");
 		} else {
 			SimpleUtils.fail("User failed to create new future template!", false);
+		}
+	}
+
+	@FindBy(css = "question-input[question-title=\"Input budget as labor hours or total wages?\"] select[ng-change=\"$ctrl.handleChange()\"]")
+	private WebElement inputBudgetSettingDropdown;
+	@Override
+	public void updateInputBudgetSettingDropdownOption(String option) throws Exception {
+		if (isElementLoaded(inputBudgetSettingDropdown, 10)) {
+			Select dropdown = new Select(inputBudgetSettingDropdown);
+			dropdown.selectByVisibleText(option);
+			SimpleUtils.pass("OP Page: Global Configuration: Input budget as labor hours or total wages settings been changed successfully");
+		} else {
+			SimpleUtils.fail("OP Page: Global Configuration: Input budget as labor hours or total wages settings dropdown list not loaded.", false);
 		}
 	}
 }

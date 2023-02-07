@@ -100,8 +100,8 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public boolean isEditShiftWindowLoaded() throws Exception {
-        waitForSeconds(5);
-        if (isElementLoaded(editShiftWindow, 15) && areListElementVisible(gridContainers, 10)) {
+        waitForSeconds(10);
+        if (isElementLoaded(editShiftWindow, 25) && areListElementVisible(gridContainers, 25)) {
             return true;
         }
         return false;

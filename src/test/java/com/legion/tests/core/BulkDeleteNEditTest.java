@@ -314,6 +314,7 @@ public class BulkDeleteNEditTest extends TestBase {
             createShiftsWithSpecificValues(workRole2, shiftName2, "", "1:00pm", "3:00pm",
                     1, Arrays.asList(2), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNotes2, "");
 
+            Thread.sleep(3000);
             HashSet<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
 
             scheduleShiftTablePage.selectSpecificShifts(shiftIndexes);
@@ -342,7 +343,9 @@ public class BulkDeleteNEditTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             createShiftsWithSpecificValues(workRole1, shiftName1, null, "9:00am", "12:00pm",
-                    2, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), shiftNotes1, "");
+                    1, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), shiftNotes1, "");
+            createShiftsWithSpecificValues(workRole1, shiftName1, null, "9:00am", "12:00pm",
+                    1, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.OpenShift.getValue(), shiftNotes1, "");
             String selectedDate = dates.get(1);
 
             shiftIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
@@ -1245,6 +1248,8 @@ public class BulkDeleteNEditTest extends TestBase {
             } else {
                 SimpleUtils.fail("Assign or Offer to Specific TM's is not disabled!", false);
             }
+            editShiftPage.clickOnCancelButton();
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

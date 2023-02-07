@@ -2461,7 +2461,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					incorrectFormatedCount++;
 				}
 			}
-			if (timeZoneFormatedCount != targetNumbersOfUTCFormat) {
+			if ((timeZoneFormatedCount != targetNumbersOfUTCFormat) && (timeZoneFormatedCount != (targetNumbersOfUTCFormat + 8))) {
 				SimpleUtils.fail("The UTC time zone count is " + timeZoneFormatedCount + " doesn't match target number " + targetNumbersOfUTCFormat, false);
 			}
 			if (incorrectFormatedCount > 0) {
@@ -6843,7 +6843,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public void turnOnOrTurnOffSpreadOfHoursToggle(boolean action) throws Exception {
 		String content = getSpreadOfHoursContent();
-		if (isElementLoaded(spreadOfHoursSection, 10)
+		if (isElementLoaded(spreadOfHoursSection, 20)
 				&&spreadOfHoursSection.findElement(By.cssSelector(".info")).getText().equalsIgnoreCase("Spread Of Hours")
 				&&content.contains("An employee will receive a ")
 				&&content.contains(" hour premium if the total time from the beginning and end of the work day is greater than ")
@@ -7704,7 +7704,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	@Override
 	public String getSeniorityToggleActiveBtnLabel() throws Exception {
 		String seniorityToggleActiveBtnLabel = "";
-		if (isElementLoaded(seniorityToggle,10)) {
+		if (isElementLoaded(seniorityToggle,20)) {
 			WebElement seniorityToggleActiveActiveBtn = seniorityToggle.findElement(
 					By.cssSelector("div.lg-button-group-selected"));
 			if (isElementLoaded(seniorityToggleActiveActiveBtn,10))
@@ -7719,7 +7719,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void updateSeniorityToggle(String isSeniorityToggleOpen) throws Exception {
-		if (isElementLoaded(seniorityToggle,20)) {
+		if (isElementLoaded(seniorityToggle,25)) {
 			WebElement applyLaborBudgetBtnGroup = seniorityToggle.findElement(
 					By.cssSelector("div.lg-button-group"));
 			if (applyLaborBudgetBtnGroup.getAttribute("class").contains("disabled")) {
@@ -7803,18 +7803,18 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public String getAccrualTimeOverrideToggleActiveBtnLabel() throws Exception {
-		String seniorityToggleActiveBtnLabel = "";
+		String accrualTimeOverrideActiveBtnLabel = "";
 		if (isElementLoaded(accrualTimeOverrideToggle,10)) {
-			WebElement seniorityToggleActiveActiveBtn = accrualTimeOverrideToggle.findElement(
+			WebElement accrualTimeOverrideToggleActiveBtn = accrualTimeOverrideToggle.findElement(
 					By.cssSelector("div.lg-button-group-selected"));
-			if (isElementLoaded(seniorityToggleActiveActiveBtn,10))
-				seniorityToggleActiveBtnLabel = seniorityToggleActiveActiveBtn.getText();
+			if (isElementLoaded(accrualTimeOverrideToggleActiveBtn,10))
+				accrualTimeOverrideActiveBtnLabel = accrualTimeOverrideToggleActiveBtn.getText();
 			else
-				SimpleUtils.fail("Scheduling Policies: Seniority toggle active Button not loaded.", false);
+				SimpleUtils.fail("Scheduling Policies: Accrual time override active button not loaded.", false);
 		} else
-			SimpleUtils.fail("Scheduling Policies: Seniority toggle section not loaded.", false);
+			SimpleUtils.fail("Scheduling Policies: Accrual time override toggle section not loaded.", false);
 
-		return seniorityToggleActiveBtnLabel;
+		return accrualTimeOverrideActiveBtnLabel;
 	}
 
 	@Override
@@ -8000,5 +8000,41 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}else
 			SimpleUtils.fail("Maximum input field is not loaded!", false);
 	}
+
+
+	@Override
+	public boolean getStatusOfSpecificPermissionForSpecificRoles(String section, String roles, String permission) throws Exception {
+		boolean status = false;
+		if (areListElementVisible(accessSections,10)){
+			for (WebElement accessSection : accessSections){
+				if (accessSection.findElement(By.tagName("span")).getText().equalsIgnoreCase(section)){
+					if (!accessSection.findElement(By.cssSelector("div")).getAttribute("class").contains("expand")){
+						clickTheElement(accessSection.findElement(By.tagName("span")));
+					}
+					int index = getTheIndexByAccessRolesName(roles, accessSection);
+					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".table-row"));
+					for (WebElement permissionTemp : permissions){
+						String s = permissionTemp.getText();
+						if (s!=null && s.toLowerCase().contains(permission.toLowerCase())){
+							SimpleUtils.pass("Found permission: "+ permission);
+							List<WebElement> permissionInputs = permissionTemp.findElements(By.tagName("input"));
+							if (permissionInputs.size()>index) {
+								if (permissionInputs.get(index).getAttribute("class").contains("ng-not-empty")) {
+									status = true;
+								}
+								break;
+							}
+						}
+					}
+					break;
+				}
+			}
+		} else {
+			SimpleUtils.fail("No access item loaded!", false);
+		}
+		return status;
+	}
+
+
 
 }

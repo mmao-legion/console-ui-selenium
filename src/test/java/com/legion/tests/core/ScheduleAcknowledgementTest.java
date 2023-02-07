@@ -513,6 +513,7 @@ public class ScheduleAcknowledgementTest extends TestBase {
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
             String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
             String firstName = tmFullName.split(" ")[0];
+            String lastName = tmFullName.split(" ")[1];
             String homeLocation = location;
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
@@ -571,7 +572,7 @@ public class ScheduleAcknowledgementTest extends TestBase {
             int pendingEmployeeCountBeforeEdit = smartCardPage.getCountFromSmartCardByName("SCHEDULE ACKNOWLEDGEMENT");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             createShiftsWithSpecificValues(workRole, "", "", "1:00pm", "3:00pm",
-                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", firstName);
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", firstName+" "+lastName);
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
             int pendingEmployeeCountAfterEdit = smartCardPage.getCountFromSmartCardByName("SCHEDULE ACKNOWLEDGEMENT");

@@ -115,4 +115,5 @@ public interface ForecastPage {
 	public ArrayList getTextOfScheduleWages() throws Exception;
 	public List<String> getLaborWorkRoles() throws Exception;
 	public boolean isLaborBudgetEditBtnLoaded() throws Exception;
+	public boolean isDemandForecastEditButtonEnabled() throws Exception;
 }

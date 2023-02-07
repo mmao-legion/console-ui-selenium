@@ -18,7 +18,10 @@ public enum Toggles {
     Announcements("Announcements"),
     UseDemandDriverTemplateSwitch("UseDemandDriverTemplateSwitch"),
     EnableChangeLocationGroupSetting("EnableChangeLocationGroupSetting"),
-    WorkRoleSettingsTemplateOP("WorkRoleSettingsTemplateOP");
+    WorkRoleSettingsTemplateOP("WorkRoleSettingsTemplateOP"),
+    TAScheduleCost("TAScheduleCost"),
+    EnableMultiWorkRolePerShiftSCH("EnableMultiWorkRolePerShiftSCH"),
+    UseAbsenceMgmtConfiguration("UseAbsenceMgmtConfiguration");
 
     private final String value;
 

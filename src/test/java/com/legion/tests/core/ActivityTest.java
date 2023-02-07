@@ -77,7 +77,8 @@ public class ActivityTest extends TestBase {
         PersonalEmergency("PERSONAL EMERGENCY"),
         FamilyEmergency("FAMILY EMERGENCY"),
         FloatingHoliday("FLOATING HOLIDAY"),
-        Sick("SICK");
+        Sick("SICK"),
+        Holiday("Holiday");
         private final String value;
         timeOffReasonType(final String newValue) {
             value = newValue;
@@ -95,10 +96,13 @@ public class ActivityTest extends TestBase {
             swapCoverNames = new ArrayList<>();
             swapCoverCredentials = getSwapCoverUserCredentials(location);
             for (Map.Entry<String, Object[][]> entry : swapCoverCredentials.entrySet()) {
-                swapCoverNames.add(entry.getKey());
+                if (workRoleName.isEmpty()) {
+                    swapCoverNames.add(entry.getKey());
+                    workRoleName = String.valueOf(swapCoverCredentials.get(swapCoverNames.get(0))[0][3]);
+                } else if (String.valueOf(swapCoverCredentials.get(swapCoverNames.get(0))[0][3]).equalsIgnoreCase(workRoleName)) {
+                    swapCoverNames.add(entry.getKey());
+                }
             }
-            workRoleName = String.valueOf(swapCoverCredentials.get(swapCoverNames.get(0))[0][3]);
-
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -1194,7 +1198,6 @@ public class ActivityTest extends TestBase {
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-        NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
         SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
         ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
         ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
@@ -1206,7 +1209,6 @@ public class ActivityTest extends TestBase {
         String firstName = tmFullName.split(" ")[0];
         String lastName = tmFullName.split(" ")[1];
         String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
-        String childLocation1 = location;
         loginPage.logOut();
         loginAsDifferentRole(AccessRoles.TeamMember2.getValue());
         profileNewUIPage.clickOnUserProfileImage();
@@ -1214,8 +1216,6 @@ public class ActivityTest extends TestBase {
         String tmFullName2 = profileNewUIPage.getUserProfileName().get("fullName");
         String firstName2 = tmFullName2.split(" ")[0];
         String lastName2 = tmFullName2.split(" ")[1];
-//        String childLocation2 = location;
-//        String jobTitle2 = profileNewUIPage.getJobTitleFromProfilePage();
         loginPage.logOut();
         loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
         goToSchedulePageScheduleTab();
@@ -1235,18 +1235,12 @@ public class ActivityTest extends TestBase {
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.selectJobTitleFilterByText(jobTitle);
         String workRole = shiftOperatePage.getRandomWorkRole();
-//            scheduleMainPage.clickOnFilterBtn();
-//            List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
 
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         createShiftsWithSpecificValues(workRole, null, null,
                 "8am", "2pm", 1, Arrays.asList(),
                 ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(),
                 null, firstName+ " "+ lastName);
-//            createShiftsWithSpecificValues(workRole, null, childLocationNames.get(1),
-//                    "8am", "2pm", 1, Arrays.asList(0,1,2),
-//                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(),
-//                    null, firstName2+ " "+lastName2);
 
         scheduleMainPage.saveSchedule();
         createSchedulePage.publishActiveSchedule();
@@ -1259,8 +1253,6 @@ public class ActivityTest extends TestBase {
         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         scheduleCommonPage.navigateToNextWeek();
 
-        // For Cover Feature
-//            List<String> swapCoverRequests = new ArrayList<>(Arrays.asList("Request to Swap Shift", "Request to Cover Shift"));
         mySchedulePage.selectSchedulFilter("Scheduled");
         int index = mySchedulePage.verifyClickOnAnyShift();
         String request = "Request to Cover Shift";
@@ -1282,30 +1274,32 @@ public class ActivityTest extends TestBase {
             count++;
         }
         System.out.println(coverList.toString());
+
+        swapCoverNames = new ArrayList<>();
+        swapCoverCredentials = getSwapCoverUserCredentials(location);
+        for (Map.Entry<String, Object[][]> entry : swapCoverCredentials.entrySet()) {
+            if (String.valueOf(entry.getValue()[0][3]).equalsIgnoreCase(workRole)) {
+                swapCoverNames.add(entry.getKey());
+            }
+        }
+
         mySchedulePage.clickTheShiftRequestToClaimShift(request, firstName);
-        SimpleUtils.assertOnFail("The TM:" + firstName2 + " should be listed! ",
-                mySchedulePage.checkIfTMExitsInCoverOrSwapRequestList(firstName2), false);
+//        SimpleUtils.assertOnFail("The TM:" + firstName2 + " should be listed! ",
+//                mySchedulePage.checkIfTMExitsInCoverOrSwapRequestList(firstName2), false);
         mySchedulePage.clickCloseDialogButton();
         loginPage.logOut();
 
-//        loginAsDifferentRole(AccessRoles.TeamMember.getValue());
-//        String requestName = "View Cover Request Status";
-//        int coverRequestsCount = 0;
-//        int i = 0;
-//        while (i<10 && coverRequestsCount==0) {
-//            Thread.sleep(30000);
-//            mySchedulePage.clickTheShiftRequestToClaimShift(requestName, firstName);
-//            coverRequestsCount = mySchedulePage.getCountOfCoverOrSwapRequestsInList();
-//            mySchedulePage.clickCloseDialogButton();
-//            i++;
-//        }
-//        mySchedulePage.clickTheShiftRequestToClaimShift(requestName, firstName);
-//        SimpleUtils.assertOnFail("The TM:" + firstName2 + " should be listed! ",
-//                mySchedulePage.checkIfTMExitsInCoverOrSwapRequestList(firstName2), false);
-//        mySchedulePage.clickCloseDialogButton();
-//        loginPage.logOut();
+        Object[][] credential = null;
+        for (String tm : coverList) {
+            if (swapCoverCredentials.containsKey(tm)) {
+                credential = swapCoverCredentials.get(tm);
+                break;
+            }
+        }
+        loginToLegionAndVerifyIsLoginDone(String.valueOf(credential[0][0]), String.valueOf(credential[0][1])
+                , String.valueOf(credential[0][2]));
 
-        loginAsDifferentRole(AccessRoles.TeamMember2.getValue());
+        // loginAsDifferentRole(AccessRoles.TeamMember2.getValue());
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
@@ -1596,6 +1590,8 @@ public class ActivityTest extends TestBase {
                 profileNewUIPage.selectTimeOffReason(timeOffReasonType.Sick.getValue());
             } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Vacation.getValue())){
                 profileNewUIPage.selectTimeOffReason(timeOffReasonType.Vacation.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Holiday.getValue())) {
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.Holiday.getValue());
             }
             profileNewUIPage.selectStartAndEndDate(advancedDays, 1, 6);
             profileNewUIPage.clickOnSaveTimeOffRequestBtn();

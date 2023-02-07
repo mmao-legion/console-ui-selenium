@@ -905,6 +905,19 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             clickTheElement(selectedShift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
             SimpleUtils.pass("Click the selected shift avatar in week view successfully! ");
         }
+        try {
+            if(!isElementLoaded(editMealBreakTime,5)) {
+                if (isElementLoaded(selectedShift.findElement(By.cssSelector("div.sch-day-view-shift-worker-detail")), 5)) {
+                    clickTheElement(selectedShift.findElement(By.cssSelector("div.sch-day-view-shift-worker-detail")));
+                } else if (isElementLoaded(selectedShift.findElement(By.cssSelector(".week-schedule-shift .shift-container .rows .worker-image-optimized img")))) {
+                    clickTheElement(selectedShift.findElement(By.cssSelector(".week-schedule-shift .shift-container .rows .worker-image-optimized img")));
+                }
+            }
+        } catch (Exception e) {
+            if (isElementLoaded(selectedShift.findElement(By.cssSelector(".week-schedule-shift .shift-container .rows .worker-image-optimized img")))) {
+                clickTheElement(selectedShift.findElement(By.cssSelector(".week-schedule-shift .shift-container .rows .worker-image-optimized img")));
+            }
+        }
         clickOnEditMeaLBreakTime();
         if (isMealBreakTimeWindowDisplayWell(true)) {
             if (isSavedChange) {
@@ -1064,7 +1077,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @Override
     public void clickOnUpdateEditShiftTimeButton() throws Exception{
-        if(isElementLoaded(updateButtonInEditShiftTimeWindow,5))
+        if(isElementLoaded(updateButtonInEditShiftTimeWindow,15))
         {
             if (checkIfUpdateButtonEnabled()) {
                 click(updateButtonInEditShiftTimeWindow);
@@ -1517,15 +1530,24 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         String tmDetailName = null;
         if (scheduleCommonPage.isScheduleDayViewActive()) {
             clickTheElement(shift.findElement(By.cssSelector(".sch-day-view-shift .sch-shift-worker-img-cursor")));
+            SimpleUtils.pass("Click shift avatar in day view successfully!");
         } else {
             clickTheElement(shift.findElement(By.cssSelector(".rows .worker-image-optimized img")));
+            SimpleUtils.pass("Click shift avatar in week view successfully!");
         }
 
         clickOnViewProfile();
-        waitForSeconds(2);
+        waitForSeconds(8);
         if (isElementEnabled(tmpProfileContainer, 15)) {
+            SimpleUtils.pass("The profile page loaded successfully! ");
             if (isElementEnabled(personalDetailsName, 15)) {
-                tmDetailName = personalDetailsName.getText();
+                waitForSeconds(2);
+                tmDetailName = personalDetailsName.getText().trim();
+                if (tmDetailName.length()!=0 && tmDetailName.split(" ").length>1){
+                    SimpleUtils.pass("Get employee detail name successfully! The detail name is:"+tmDetailName);
+                }else
+                    SimpleUtils.fail("Fail to get the employee detail name on profile page! The actual name is:"
+                            +tmDetailName, false);
             } else
                 SimpleUtils.fail("TM detail name fail to load!", false);
         } else
@@ -1919,6 +1941,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 if (isElementLoaded(editShiftTimeOption, 20)) {
                     scrollToElement(editShiftTimeOption);
                     click(editShiftTimeOption);
+                    waitForSeconds(3);
                     if (isElementEnabled(editShiftTimePopUp, 15)) {
                         if (isElementLoaded(sliderContainer, 10)) {
                             moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");

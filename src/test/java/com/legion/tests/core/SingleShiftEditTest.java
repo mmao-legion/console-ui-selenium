@@ -202,6 +202,7 @@ public class SingleShiftEditTest extends TestBase {
             int index = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon().iterator().next();
             mySchedulePage.clickOnShiftByIndex(index);
             shiftOperatePage.clickOnEditMeaLBreakTime();
+            Thread.sleep(5000);
             List<String> breakTimes = shiftOperatePage.verifyEditBreaks();
             shiftOperatePage.clickOnUpdateEditShiftTimeButton();
             String mealBreakTime = breakTimes.get(0).replace("am", "AM").replace("pm", "PM");
@@ -1015,6 +1016,7 @@ public class SingleShiftEditTest extends TestBase {
                 indexList.add(iterator.next());
             }
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            Thread.sleep(3000);
             String action = "Edit";
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
@@ -1163,7 +1165,7 @@ public class SingleShiftEditTest extends TestBase {
 
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify the functionality of edit meal breaks on single edit shift page")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheFunctionalityOfEditMealBreaksOnSingleEditShiftPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -1831,6 +1833,8 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.inputStartOrEndTime(inputStartTime, true);
             String inputEndTime = "9:00 PM";
             editShiftPage.inputStartOrEndTime(inputEndTime, false);
+            editShiftPage.removeAllRestBreaks();
+            editShiftPage.removeAllMealBreaks();
             editShiftPage.clickOnUpdateButton();
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();

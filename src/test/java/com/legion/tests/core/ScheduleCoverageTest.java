@@ -585,7 +585,8 @@ public class ScheduleCoverageTest extends TestBase {
                 arrowImgs.get(0).equalsIgnoreCase("red down"), false);
         arrowImgsBeforeChange = arrowImgs.size();
         //Verify the down arrow in red will show in save mode when the coverage more than 25%
-        scheduleMainPage.saveSchedule();
+            Thread.sleep(3000);
+            scheduleMainPage.saveSchedule();
         arrowImgs = scheduleShiftTablePage.getAllDifferenceHrsArrowImg();
         SimpleUtils.assertOnFail("The arrow img quantity before and after the change should be the same! " +
                         "Before is: "+ arrowImgsBeforeChange + " After is: " +arrowImgs.size(),
