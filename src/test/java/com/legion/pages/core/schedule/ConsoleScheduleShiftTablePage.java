@@ -3497,11 +3497,11 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
         if (names.size() >= shiftCount) {
             SimpleUtils.randomSet(0, names.size() - 1, shiftCount, set);
+            scrollToBottom();
+            waitForSeconds(1);
             Actions action = new Actions(getDriver());
             action.keyDown(Keys.CONTROL).build().perform();
             for (int i : set) {
-                scrollToBottom();
-                waitForSeconds(1);
                 action.moveToElement(names.get(i)).click(names.get(i));
                 waitForSeconds(2);
             }
