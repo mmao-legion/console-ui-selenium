@@ -2,6 +2,6 @@
   "TEST_RAIL_URL": "https://legiontech.testrail.io/",
   "TEST_RAIL_USER": "xiaorong.lin@legion.co",
   "TEST_RAIL_PASSWORD": "Welcome1a2",
-  "TEST_RAIL_PROJECT_ID" : "10",
+  "TEST_RAIL_PROJECT_ID" : "12",
   "TEST_RAIL_SUITE_ID" : "681"
 }
