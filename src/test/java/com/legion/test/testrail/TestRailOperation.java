@@ -17,26 +17,42 @@ import java.util.*;
 public class TestRailOperation {
     static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
     static HashMap<String,String> testRailCfgOp = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_OP.json");
+    static HashMap<String,String> testRailCfgElm = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_ELM.json");
 
     public static String getTestRailURL(){
-       if (!System.getProperty("enterprise").equalsIgnoreCase("opauto") && !System.getProperty("enterprise").equalsIgnoreCase("op")) {
-            return testRailConfig.get("TEST_RAIL_URL");
-        }else {
+        if (System.getProperty("enterprise") != null && (System.getProperty("enterprise").equalsIgnoreCase("opauto")
+                || System.getProperty("enterprise").equalsIgnoreCase("op"))) {
             return testRailCfgOp.get("TEST_RAIL_URL");
+        } else if (System.getProperty("enterprise") != null && (System.getProperty("enterprise").equalsIgnoreCase("vailqacn")
+                || System.getProperty("enterprise").equalsIgnoreCase("kendrascott2") || System.getProperty("enterprise")
+                .equalsIgnoreCase("cinemark-wkdy") || System.getProperty("enterprise").equalsIgnoreCase("circlek"))) {
+            return testRailConfig.get("TEST_RAIL_URL");
+        } else {
+            return testRailCfgElm.get("TEST_RAIL_URL");
         }
     }
     public static String getTestRailUser(){
-        if (!System.getProperty("enterprise").equalsIgnoreCase("opauto") && !System.getProperty("enterprise").equalsIgnoreCase("op")) {
-            return testRailConfig.get("TEST_RAIL_USER");
-        }else {
+        if (System.getProperty("enterprise") != null && (System.getProperty("enterprise").equalsIgnoreCase("opauto")
+                || System.getProperty("enterprise").equalsIgnoreCase("op"))) {
             return testRailCfgOp.get("TEST_RAIL_USER");
+        } else if (System.getProperty("enterprise") != null && (System.getProperty("enterprise").equalsIgnoreCase("vailqacn")
+                || System.getProperty("enterprise").equalsIgnoreCase("kendrascott2") || System.getProperty("enterprise")
+                .equalsIgnoreCase("cinemark-wkdy") || System.getProperty("enterprise").equalsIgnoreCase("circlek"))) {
+            return testRailConfig.get("TEST_RAIL_USER");
+        } else {
+            return testRailCfgElm.get("TEST_RAIL_USER");
         }
     }
     public static String getTestRailPassword(){
-        if (!System.getProperty("enterprise").equalsIgnoreCase("opauto") && !System.getProperty("enterprise").equalsIgnoreCase("op")) {
-            return testRailConfig.get("TEST_RAIL_PASSWORD");
-        }else {
+        if (System.getProperty("enterprise") != null && (System.getProperty("enterprise").equalsIgnoreCase("opauto")
+                || System.getProperty("enterprise").equalsIgnoreCase("op"))) {
             return testRailCfgOp.get("TEST_RAIL_PASSWORD");
+        } else if (System.getProperty("enterprise") != null && (System.getProperty("enterprise").equalsIgnoreCase("vailqacn")
+                || System.getProperty("enterprise").equalsIgnoreCase("kendrascott2") || System.getProperty("enterprise")
+                .equalsIgnoreCase("cinemark-wkdy") || System.getProperty("enterprise").equalsIgnoreCase("circlek"))) {
+            return testRailConfig.get("TEST_RAIL_PASSWORD");
+        } else {
+            return testRailCfgElm.get("TEST_RAIL_PASSWORD");
         }
     }
 
@@ -92,14 +108,21 @@ public class TestRailOperation {
         String testRailURL =        "";
         String testRailUser =       "";
         String testRailPassword =   "";
-        if (!System.getProperty("enterprise").equalsIgnoreCase("opauto") && !System.getProperty("enterprise").equalsIgnoreCase("op")) {
-            testRailURL = testRailConfig.get("TEST_RAIL_URL");
-            testRailUser = testRailConfig.get("TEST_RAIL_USER");
-            testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
-        }else {
+        if (System.getProperty("enterprise") != null && (System.getProperty("enterprise").equalsIgnoreCase("opauto")
+                || System.getProperty("enterprise").equalsIgnoreCase("op"))) {
             testRailURL = testRailCfgOp.get("TEST_RAIL_URL");
             testRailUser = testRailCfgOp.get("TEST_RAIL_USER");
             testRailPassword = testRailCfgOp.get("TEST_RAIL_PASSWORD");
+        } else if (System.getProperty("enterprise") != null && (System.getProperty("enterprise").equalsIgnoreCase("vailqacn")
+                || System.getProperty("enterprise").equalsIgnoreCase("kendrascott2") || System.getProperty("enterprise")
+                .equalsIgnoreCase("cinemark-wkdy") || System.getProperty("enterprise").equalsIgnoreCase("circlek"))) {
+            testRailURL = testRailConfig.get("TEST_RAIL_URL");
+            testRailUser = testRailConfig.get("TEST_RAIL_USER");
+            testRailPassword = testRailConfig.get("TEST_RAIL_PASSWORD");
+        } else {
+            testRailURL = testRailCfgElm.get("TEST_RAIL_URL");
+            testRailUser = testRailCfgElm.get("TEST_RAIL_USER");
+            testRailPassword = testRailCfgElm.get("TEST_RAIL_PASSWORD");
         }
         try {
             // Make a connection with TestRail Server
