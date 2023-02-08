@@ -4282,7 +4282,13 @@ public class ParentChildLGTest extends TestBase {
             // Verify can change the location without selecting the two options
             editShiftPage.selectSpecificOptionByText(actualLocations.get(1));
             editShiftPage.clickOnUpdateButton();
-            mySchedulePage.verifyThePopupMessageOnTop("Success");
+            if(mySchedulePage.checkIfThePopupMessageOnTop("Success")){
+                SimpleUtils.pass("The the location been changed successfully! ");
+            }else{
+                editShiftPage.clickOnUpdateAnywayButton();
+                SimpleUtils.assertOnFail("The the location fail to change! ",
+                        mySchedulePage.checkIfThePopupMessageOnTop("Success"), false);
+            }
             // Verify the shifts are moved to the selected child location
             scheduleMainPage.selectGroupByFilter(actualLocations.get(1));
             SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),

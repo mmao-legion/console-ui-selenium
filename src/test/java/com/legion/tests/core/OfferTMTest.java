@@ -315,6 +315,7 @@ public class OfferTMTest extends TestBase {
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         String workRoleOfTM = shiftOperatePage.getRandomWorkRole();
         scheduleMainPage.clickOnFilterBtn();
+        Thread.sleep(3000);
         scheduleMainPage.selectWorkRoleFilterByText(workRoleOfTM, false);
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
         scheduleMainPage.clickOnFilterBtn();
