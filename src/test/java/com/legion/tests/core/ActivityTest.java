@@ -1210,13 +1210,6 @@ public class ActivityTest extends TestBase {
         String lastName = tmFullName.split(" ")[1];
         String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
         loginPage.logOut();
-        loginAsDifferentRole(AccessRoles.TeamMember2.getValue());
-        profileNewUIPage.clickOnUserProfileImage();
-        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
-        String tmFullName2 = profileNewUIPage.getUserProfileName().get("fullName");
-        String firstName2 = tmFullName2.split(" ")[0];
-        String lastName2 = tmFullName2.split(" ")[1];
-        loginPage.logOut();
         loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
         goToSchedulePageScheduleTab();
         scheduleCommonPage.navigateToNextWeek();
@@ -1228,7 +1221,6 @@ public class ActivityTest extends TestBase {
         createSchedulePage.createScheduleForNonDGFlowNewUI();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
-        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName2);
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
         scheduleMainPage.saveSchedule();
@@ -1290,9 +1282,11 @@ public class ActivityTest extends TestBase {
         loginPage.logOut();
 
         Object[][] credential = null;
+        String coverTMName = "";
         for (String tm : coverList) {
             if (swapCoverCredentials.containsKey(tm)) {
                 credential = swapCoverCredentials.get(tm);
+                coverTMName = tm;
                 break;
             }
         }
@@ -1330,10 +1324,7 @@ public class ActivityTest extends TestBase {
         activityPage.verifyActivityBellIconLoaded();
         activityPage.verifyClickOnActivityIcon();
         activityPage.clickActivityFilterByIndex(indexOfActivityType.ShiftSwap.getValue(), indexOfActivityType.ShiftSwap.name());
-        activityPage.approveOrRejectShiftCoverRequestOnActivity(firstName, firstName2, approveRejectAction.Reject.getValue(),  location);
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(),false);
-//        }
+        activityPage.approveOrRejectShiftCoverRequestOnActivity(firstName, coverTMName, approveRejectAction.Reject.getValue(),  location);
     }
 
     @Automated(automated ="Automated")
