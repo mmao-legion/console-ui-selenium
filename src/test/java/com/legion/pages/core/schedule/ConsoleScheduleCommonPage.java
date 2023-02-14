@@ -110,7 +110,7 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
 
     @FindBy(className = "day-week-picker-arrow-left")
     private WebElement calendarNavigationPreviousWeekArrow;
-    @FindBy(id = "legion_cons_Schedule_Schedule_Week_button")
+    @FindBy(id = "legion_cons_Schedule_Schedule_Week_btn")
     private WebElement weekSubTabBtn;
 
     @Override

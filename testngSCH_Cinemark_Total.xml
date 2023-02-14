@@ -99,7 +99,7 @@
                                         <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
                                         <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6889-->
                     <include name="validateNavigationRosterScheduleAndDashboardOfParentChildLGAsInternalAdmin" />
-                    <!-- <include name="verifyEditOperatingHoursForLGAsInternalAdmin" />  local rerun pass, comment out for now-->
+                    <include name="verifyEditOperatingHoursForLGAsInternalAdmin" />
 <!--                    <include name="validateNavigationRosterScheduleAndDashboardOfParentChildLGAsInternalAdmin" /> need rerun-->
 
                     <include name="verifyEditOperatingHoursFunctionForLGAsInternalAdmin" />
@@ -321,20 +321,20 @@
         <classes>
             <class name="com.legion.tests.core.FTSERelevantTest">
                 <methods>
-                    <!--  <include name="verifyFTSEEmployeesIgnoreTheDayOTAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnoreTheDayOTAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnoreTheWeekOTAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnoreThe7thConsecutiveOTAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesIgnoreThe24HrsOTAsInternalAdmin"/> local rerun pass, comment out for now-->
+                    <include name="verifyFTSEEmployeesIgnoreThe24HrsOTAsInternalAdmin"/>
                     <!--  <include name="verifyFTSEEmployeeSupportClopeningViolationAsInternalAdmin"/>  Blocked by SCH-8605  -->
                     <include name="verifyFTSEEmployeeSupportMaxShiftViolationAsInternalAdmin"/>
                     <!--  <include name="verifyFTSEEmployeeSupportRoleViolationAsInternalAdmin"/>  Blocked by SCH-8334  -->
-                    <!--  <include name="verifyFTSEEmployeesIgnore4X10AgreementAsInternalAdmin"/>
+                    <include name="verifyFTSEEmployeesIgnore4X10AgreementAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnore5X8AgreementAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnore40X8AgreementAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnore40hrsAgreementAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnoreNoOverTimeAgreementAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnore50hrsPerWeekAgreementAsInternalAdmin"/>
-                    <include name="verifyFTSEEmployeesSupportSplitShiftsViolationAsInternalAdmin"/>  local rerun pass, comment out for now-->
+                    <include name="verifyFTSEEmployeesSupportSplitShiftsViolationAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesSupportSpreadOfHoursViolationAsInternalAdmin"/>
                     <include name="verifyShiftInfoInDayViewAsInternalAdmin"/>
                     <include name="verifyShiftInfoInViewProfileAsInternalAdmin"/>
@@ -353,10 +353,10 @@
                 <methods>
                     <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />
                     <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" />
-                    <!-- <include name="verifySeniorityNotDisplayWhenToggleTurnOffForSearchingAsInternalAdmin" />
-                      <include name="verifySeniorityNotDisplayWhenToggleTurnOffForRecommendAsInternalAdmin" />
+                    <include name="verifySeniorityNotDisplayWhenToggleTurnOffForSearchingAsInternalAdmin" />
+                    <include name="verifySeniorityNotDisplayWhenToggleTurnOffForRecommendAsInternalAdmin" />
                     <include name="verifySeniorityDisplayWhenToggleTurnOnForSearchingAsInternalAdmin" />
-                    <include name="verifySeniorityAlwaysDisplayOnSearchingDialogAsInternalAdmin" />  local rerun pass, comment out for now -->
+                    <include name="verifySeniorityAlwaysDisplayOnSearchingDialogAsInternalAdmin" />
                       <include name="verifySeniorityDisplayWhenToggleTurnOnForRecommendAsInternalAdmin" />
                     <include name="verifyAscendingOfSeniorityForSearchingAsInternalAdmin" />
                     <include name="verifyAscendingOfSeniorityForRecommendAsInternalAdmin" />
