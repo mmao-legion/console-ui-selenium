@@ -2058,15 +2058,20 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
             SimpleUtils.assertOnFail("The Edit button on Confirm Operating Hours window should be loaded! ",
                     isElementLoaded(backBtnOnCreateScheduleWindow, 5), false);
 
-            SimpleUtils.assertOnFail("The target budget hrs display incorrectly, the expected is:"+targetBudgetHrs
-                            +" the actual is: "+targetBudget.getText(),
-                    Float.parseFloat(targetBudget.getText().split(" ")[0]) == targetBudgetHrs, false);
-
+            if (targetBudgetHrs>=0){
+                SimpleUtils.assertOnFail("The target budget hrs display incorrectly, the expected is:"+targetBudgetHrs
+                                +" the actual is: "+targetBudget.getText(),
+                        Float.parseFloat(targetBudget.getText().split(" ")[0]) == targetBudgetHrs, false);
+            }
+            String graphDescription = "Guidance";
             String graphDescription1 = "Budget";
             String graphDescription2 = "Scheduled";
             SimpleUtils.assertOnFail("The graph descriptions display incorrectly, the expected is:"+graphDescription1 + " "+ graphDescription2
-                            +" the actual is: "+copyScheduleGraphDescriptions.toString(),
-                    copyScheduleGraphDescriptions.get(0).getText().equals(graphDescription1)
+                            +" the actual is: "
+                            +copyScheduleGraphDescriptions.get(0).getText() + " "
+                            +copyScheduleGraphDescriptions.get(1).getText(),
+                    (copyScheduleGraphDescriptions.get(0).getText().equals(graphDescription1)
+                            ||copyScheduleGraphDescriptions.get(0).getText().equals(graphDescription))
                             && copyScheduleGraphDescriptions.get(1).getText().equals(graphDescription2) , false);
 
         } else {

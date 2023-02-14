@@ -214,7 +214,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             // Validate what happens next to the Edit!
             // When Status is finalized, look for extra popup.
             clickTheElement(editScheduleButton);
-            waitForSeconds(2);
+            waitForSeconds(5);
             if(isElementLoaded(popupAlertPremiumPay,15) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
                 waitForSeconds(2);
@@ -546,6 +546,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     @FindBy(css = "div.lg-toast")
     private WebElement successMsg;
     public void saveSchedule() throws Exception {
+        waitForSeconds(3);
         if (isElementEnabled(scheduleSaveBtn, 10) && isClickable(scheduleSaveBtn, 10)) {
             scrollToElement(scheduleSaveBtn);
             clickTheElement(scheduleSaveBtn);
@@ -560,11 +561,6 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             waitForNotExists(saveOnSaveConfirmationPopup, 30);
             waitForSeconds(5);
             try{
-//                if (isElementLoaded(msgOnTop, 20)) {
-//                    if (msgOnTop.getText().contains("Success")){
-//                        SimpleUtils.pass("Save the Schedule Successfully!");
-//                    }
-//                } else
                 if (isElementLoaded(editScheduleButton, 10)) {
                     SimpleUtils.pass("Save the Schedule Successfully!");
                 } else {
@@ -2341,11 +2337,13 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                                 && shiftTypeFilters.get(5).getText().contains("Swap/Cover Requested")
                                 && shiftTypeFilters.get(6).getText().contains("Unavailable")
                                 && shiftTypeFilters.get(7).getText().contains("Unpublished changes")
-                        )
-//                        && shiftTypeFilters.get(7).getText().contains("New or Borrowed TM")
-//                        && (shiftTypeFilters.size()> 7? (shiftTypeFilters.get(7).getText().contains("Minor (14-15)") ||
-//                        shiftTypeFilters.get(7).getText().contains("Minor (16-17)")): true)
-                ){
+                        ) || (shiftTypeFilters.get(0).getText().contains("Action Required")
+                                && shiftTypeFilters.get(1).getText().contains("Assigned")
+                                && shiftTypeFilters.get(2).getText().contains("Compliance Review")
+                                && shiftTypeFilters.get(3).getText().contains("Open")
+                                && shiftTypeFilters.get(4).getText().contains("Swap/Cover Requested")
+                                && shiftTypeFilters.get(5).getText().contains("Unavailable")
+                                && shiftTypeFilters.get(6).getText().contains("Unpublished changes"))){
                     SimpleUtils.pass("The shift types display correctly in Filter dropdown list! ");
                 } else
                     SimpleUtils.fail("The shift types display incorrectly in Filter dropdown list! ", false);
@@ -2584,9 +2582,9 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     }
 
     private boolean isSaveConfirmPopupLoaded() throws Exception {
-        waitForSeconds(10);
+        waitForSeconds(25);
         boolean isLoaded = false;
-        if (isClickable(saveOnSaveConfirmationPopup, 30)) {
+        if (isElementLoaded(saveOnSaveConfirmationPopup, 45)) {
             isLoaded =true;
             SimpleUtils.pass("Schedule save button is loaded successfully! ");
         } else {

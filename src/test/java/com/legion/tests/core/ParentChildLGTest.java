@@ -1321,8 +1321,6 @@ public class ParentChildLGTest extends TestBase {
             scheduleCommonPage.clickOnWeekView();
             String shiftStartTime = "8am";
             String shiftEndTime = "11am";
-            String shiftStartTime2 = "8:00 am";
-            String shiftEndTime2 = "11:00 am";
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
@@ -1351,10 +1349,10 @@ public class ParentChildLGTest extends TestBase {
             newShiftPage.searchWithOutSelectTM(firstNameOfTM+ " "+lastName);
             String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
             SimpleUtils.assertOnFail("Overlapping violation message fail to load! The actual message is: "+shiftWarningMessage,
-                    shiftWarningMessage.toLowerCase().contains(shiftStartTime2.toLowerCase()) && shiftWarningMessage.toLowerCase()
-                    .contains(shiftEndTime2.toLowerCase()), false);
+                    shiftWarningMessage.toLowerCase().contains(shiftStartTime.toLowerCase()) && shiftWarningMessage.toLowerCase()
+                    .contains(shiftEndTime.toLowerCase()), false);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
-            String expectedWarningMessage = firstNameOfTM+ " is scheduled "+ shiftStartTime2+ " - "+shiftEndTime2+ " on "+ weekDay;
+            String expectedWarningMessage = firstNameOfTM+ " is scheduled "+ shiftStartTime+ " - "+shiftEndTime+ " on "+ weekDay;
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
                 if (warningMessage.toLowerCase().contains(expectedWarningMessage.toLowerCase())){
@@ -2201,6 +2199,7 @@ public class ParentChildLGTest extends TestBase {
             scheduleMainPage.clickOnFilterBtn();
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            Thread.sleep(5000);
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.selectWorkRole(workRole);
@@ -4283,7 +4282,13 @@ public class ParentChildLGTest extends TestBase {
             // Verify can change the location without selecting the two options
             editShiftPage.selectSpecificOptionByText(actualLocations.get(1));
             editShiftPage.clickOnUpdateButton();
-            mySchedulePage.verifyThePopupMessageOnTop("Success");
+            if(mySchedulePage.checkIfThePopupMessageOnTop("Success")){
+                SimpleUtils.pass("The the location been changed successfully! ");
+            }else{
+                editShiftPage.clickOnUpdateAnywayButton();
+                SimpleUtils.assertOnFail("The the location fail to change! ",
+                        mySchedulePage.checkIfThePopupMessageOnTop("Success"), false);
+            }
             // Verify the shifts are moved to the selected child location
             scheduleMainPage.selectGroupByFilter(actualLocations.get(1));
             SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),

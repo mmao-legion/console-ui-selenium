@@ -314,6 +314,7 @@ public class BulkDeleteNEditTest extends TestBase {
             createShiftsWithSpecificValues(workRole2, shiftName2, "", "1:00pm", "3:00pm",
                     1, Arrays.asList(2), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNotes2, "");
 
+            Thread.sleep(3000);
             HashSet<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
 
             scheduleShiftTablePage.selectSpecificShifts(shiftIndexes);

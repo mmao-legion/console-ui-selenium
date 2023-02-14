@@ -207,4 +207,17 @@ public interface UserManagementPage {
     public void hourlyRateFieldIsNotShowing();
 
     public int getTotalWorkRoleCount();
+
+    public void uploadEmployeeAttributes(List<HashMap> employeeAttributesList, int expectedStatusCode, String accessToken);
+
+    public void goToAttribute() throws Exception;
+
+    public void addGlobalAttribute(String attributeName, String attributeType, String attributeValue, String attributeDescription) throws Exception;
+
+    public void searchGlobalAttribute(String attributeName, int searchResult) throws Exception;
+
+    public void removeGlobalAttribute(String attributeName) throws Exception;
+
+    public void getEmployeeAttributes(String employeeId, int expectedStatusCode, String accessToken, String attributeName);
+
 }

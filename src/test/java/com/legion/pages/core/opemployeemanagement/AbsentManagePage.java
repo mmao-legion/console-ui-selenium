@@ -1258,10 +1258,14 @@ public class AbsentManagePage extends BasePage {
             timeOffReasonSearchBox.clear();
             timeOffReasonSearchBox.sendKeys(timeOffReasonName);
             waitForSeconds(3);
-            if(!noMatchTimeOffReason.getAttribute("class").contains("no-record"))
-                return true;
-            else
+//            if(!noMatchTimeOffReason.getAttribute("class").contains("no-record"))
+//                return true;
+//            else
+//                return false;
+            if(isElementLoaded(noMatchTimeOffReason,5))
                 return false;
+            else
+                return true;
         }else{
             SimpleUtils.fail("Time off reason search box loaded failed",false);
             return false;
@@ -1282,7 +1286,7 @@ public class AbsentManagePage extends BasePage {
         }
     }
 
-    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div")
+    @FindBy(css = "div:nth-child(2) > lg-paged-search > div > ng-transclude > table")
     private WebElement timeOffPage;
     @FindBy(css = "div:nth-child(2) > lg-paged-search > div > lg-tab-toolbar > div > div.lg-tab-toolbar__content > lg-pagination > div > div.lg-pagination__arrow.lg-pagination__arrow--right")
     private WebElement timeOffNextPage;

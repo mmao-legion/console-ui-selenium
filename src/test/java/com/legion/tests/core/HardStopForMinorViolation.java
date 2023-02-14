@@ -328,6 +328,7 @@ public class HardStopForMinorViolation extends TestBase {
             //Create open shift with no minor violation
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
+            Thread.sleep(5000);
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectWeekDaysByDayName("Mon");
@@ -338,6 +339,7 @@ public class HardStopForMinorViolation extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(minorName);
             newShiftPage.clickOnOfferOrAssignBtn();
+            Thread.sleep(5000);
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
             List<WebElement> openShifts = scheduleShiftTablePage.getAllShiftsOfOneTM("open");
@@ -475,6 +477,7 @@ public class HardStopForMinorViolation extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(minorName);
             newShiftPage.clickOnOfferOrAssignBtn();
+            Thread.sleep(3000);
             scheduleMainPage.saveSchedule();
 
             //Edit the open shift to has minor violation

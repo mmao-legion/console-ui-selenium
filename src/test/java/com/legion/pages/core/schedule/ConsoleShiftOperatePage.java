@@ -1077,7 +1077,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @Override
     public void clickOnUpdateEditShiftTimeButton() throws Exception{
-        if(isElementLoaded(updateButtonInEditShiftTimeWindow,5))
+        if(isElementLoaded(updateButtonInEditShiftTimeWindow,15))
         {
             if (checkIfUpdateButtonEnabled()) {
                 click(updateButtonInEditShiftTimeWindow);
@@ -1537,12 +1537,17 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
 
         clickOnViewProfile();
-        waitForSeconds(2);
+        waitForSeconds(8);
         if (isElementEnabled(tmpProfileContainer, 15)) {
             SimpleUtils.pass("The profile page loaded successfully! ");
             if (isElementEnabled(personalDetailsName, 15)) {
-                tmDetailName = personalDetailsName.getText();
-                SimpleUtils.pass("Get employee detail name successfully! The detail name is:"+tmDetailName);
+                waitForSeconds(2);
+                tmDetailName = personalDetailsName.getText().trim();
+                if (tmDetailName.length()!=0 && tmDetailName.split(" ").length>1){
+                    SimpleUtils.pass("Get employee detail name successfully! The detail name is:"+tmDetailName);
+                }else
+                    SimpleUtils.fail("Fail to get the employee detail name on profile page! The actual name is:"
+                            +tmDetailName, false);
             } else
                 SimpleUtils.fail("TM detail name fail to load!", false);
         } else
@@ -1936,6 +1941,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 if (isElementLoaded(editShiftTimeOption, 20)) {
                     scrollToElement(editShiftTimeOption);
                     click(editShiftTimeOption);
+                    waitForSeconds(3);
                     if (isElementEnabled(editShiftTimePopUp, 15)) {
                         if (isElementLoaded(sliderContainer, 10)) {
                             moveSliderAtCertainPointOnEditShiftTimePage(endTime, "End");
@@ -2939,7 +2945,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
     }
 
-    @FindBy(xpath = "//*[@id=\"create-new-shift-react\"]/div/div/div[1]/div[2]/div[2]/div/div[2]/div/div[2]/div/div[2]/div")
+    @FindBy(xpath = "(//*[@search-results=\"workerSearchResult\"]//table)[2]//tr")
     private List<WebElement> searchResultsNew;
     @Override
     public boolean verifyWFSFunction() {

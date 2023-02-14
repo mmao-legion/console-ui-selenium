@@ -5022,8 +5022,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
-	@Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//	@Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
 	@TestName(description = "Verify the employee name on shift in day and week view when enable ScheduleShowFullNames toggle")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheFullNamesOnShiftInDayAndWeekViewWhenEnableScheduleShowFullNamesToggleAsTeamMember(String username, String password, String browser, String location) throws Exception {
@@ -5196,6 +5196,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Add shifts for TM
 			String workRole = shiftOperatePage.getRandomWorkRole();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			Thread.sleep(3000);
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
 			newShiftPage.clearAllSelectedDays();
@@ -5208,6 +5209,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.searchTeamMemberByName(tmFullName);
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
+			Thread.sleep(5000);
 			createSchedulePage.publishActiveSchedule();
 			scheduleMainPage.clickOnOpenSearchBoxButton();
 			scheduleMainPage.searchShiftOnSchedulePage(tmFullName);
@@ -7804,6 +7806,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String lastNameOfTM = shiftInfo1.get(5);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+			Thread.sleep(3000);
 			scheduleMainPage.saveSchedule();
 			Thread.sleep(3000);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -7821,9 +7824,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.clickOnCreateOrNextBtn();
 			Thread.sleep(3000);
 			scheduleMainPage.saveSchedule();
-
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
+			Thread.sleep(5000);
 			newShiftPage.customizeNewShiftPage();
 			newShiftPage.clearAllSelectedDays();
 			newShiftPage.selectSpecificWorkDay(1);
@@ -9364,6 +9367,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
 			scheduleMainPage.saveSchedule();
+			Thread.sleep(3000);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			createShiftsWithSpecificValues(workRole, "", "", "6am", "2pm",
 					1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(),

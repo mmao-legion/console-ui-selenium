@@ -20,7 +20,8 @@ public enum Toggles {
     EnableChangeLocationGroupSetting("EnableChangeLocationGroupSetting"),
     WorkRoleSettingsTemplateOP("WorkRoleSettingsTemplateOP"),
     TAScheduleCost("TAScheduleCost"),
-    EnableMultiWorkRolePerShiftSCH("EnableMultiWorkRolePerShiftSCH");
+    EnableMultiWorkRolePerShiftSCH("EnableMultiWorkRolePerShiftSCH"),
+    UseAbsenceMgmtConfiguration("UseAbsenceMgmtConfiguration");
 
     private final String value;
 

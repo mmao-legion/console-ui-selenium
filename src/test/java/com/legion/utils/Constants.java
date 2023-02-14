@@ -1,10 +1,10 @@
 package com.legion.utils;
 
 public class Constants {
-    public static final String NoLongEligibleTakeShiftErrorMessage = "Error!We are sorry. You are not eligible to claim this shift.";
+    public static final String NoLongEligibleTakeShiftErrorMessage = "Error! We are sorry. You are not eligible to claim this shift.";
     public static final String WillTriggerWeeklyOTErrorMessage = "Error!We are sorry. You are not eligible to claim this shift, as it will trigger Over Time for the week.";
     public static final String WillTriggerDailyOTErrorMessage = "Error!We are sorry. You are not eligible to claim this shift, as it will trigger Over Time for the day.";
-    public static final String ClaimSuccessMessage = "Success!This shift is yours, and has been added to your schedule.";
+    public static final String ClaimSuccessMessage = "Success! This shift is yours, and has been added to your schedule.";
     public static final String ClaimRequestBeenSendForApprovalMessage = "Your claim request has been received and sent for approval";
     public static final String Hr = "HR";
     public static final String Ftp = "FTP";
@@ -55,4 +55,7 @@ public class Constants {
 
     //download location
     public static final String downloadBusiness = System.getProperty("env")+"legion/integration/downloadBusiness";
+
+    //employee attributes
+    public static final String addEmployeeAttributes = System.getProperty("env")+"legion/v2/external-attributes/employee-attributes";
 }

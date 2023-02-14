@@ -1895,4 +1895,21 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
             SimpleUtils.fail("The shifts on My Schedule page fail to load! ", false);
         return style;
     }
+
+    @Override
+    public boolean checkIfThePopupMessageOnTop(String expectedMessage) throws Exception {
+        boolean theMessageLoaded = false;
+        if (isElementLoaded(msgOnTop, 20)) {
+            String message = msgOnTop.getText();
+            if (message.contains(expectedMessage)) {
+                theMessageLoaded = true;
+                SimpleUtils.pass("Verified Message shows correctly!");
+            }else {
+                SimpleUtils.report("Message on top is incorrect, expected is: " + expectedMessage + ", but actual is: " + message);
+            }
+        }else {
+            SimpleUtils.report("Message on top not loaded Successfully!");
+        }
+        return theMessageLoaded;
+    }
 }

@@ -103,7 +103,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css = "lg-button[label=\"Save as draft\"] i.fa.fa-sort-down")
 	private WebElement dropdownArrowButton;
 
-	@FindBy(css = "i.fa.fa-sort-down")
+	@FindBy(css = "button.saveas-drop")
 	private WebElement dropdownArrowBTN;
 
 	@FindBy(css = "lg-button[label=\"Save as draft\"] h3[ng-click*=\"publishNow\"]")
@@ -2419,7 +2419,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 //					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
 //				}
 				scrollToBottom();
-				if (isElementEnabled(saveAsDraftButton, 5)
+				if (isElementEnabled(saveAsDraftButton, 10)
 						&& isElementLoaded(templateDetailsAssociateTab, 10)
 						&& isElementLoaded(templateDetailsBTN, 10)
 						&& isElementLoaded(templateExternalAttributesBTN, 10)) {
@@ -3906,6 +3906,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 //					taTemplateSpecialField.findElement(By.cssSelector("input")).sendKeys("5");
 //				}
 				clickOnTemplateDetailTab();
+				scrollToBottom();
 				publishNowTemplate();
 			} else {
 				SimpleUtils.fail("User can't click new template button successfully!", false);
@@ -4021,9 +4022,9 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			}
 			clickTheElement(templateNameList.get(0));
 			waitForSeconds(5);
-			List<WebElement> deleteArchiveBtn = getDriver().findElements(By.cssSelector("button[type=\"button\"]"));
+			List<WebElement> deleteArchiveBtn = getDriver().findElements(By.xpath("//button/span/span"));
 			for (WebElement e : deleteArchiveBtn) {
-				if (e.getText().equalsIgnoreCase(action)) {
+				if (e.getText().contains(action)) {
 					click(e);
 					break;
 				}

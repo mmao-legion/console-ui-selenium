@@ -256,6 +256,9 @@ public enum modelSwitchOperation{
             //Add new input stream in settings
             for (HashMap<String, String> inputStreamToAdd : inputStreamInfoToAdd){
                 settingsAndAssociationPage.createInputStream(inputStreamToAdd);
+                if (inputStreamToAdd.get("Type").equals("Aggregated")){
+                    settingsAndAssociationPage.verifyIfAllBaseStreamsInListForAggregatedInputStream(inputStreamToAdd);
+                }
             }
 
             //edit the input stream in settings
@@ -970,6 +973,7 @@ public enum modelSwitchOperation{
             String templateType = "Demand Drivers";
             String templateName = "Default";
             List<String> streamNameList = new ArrayList<>();
+            List<String> streamNameListForCertainGranularity = new ArrayList<>();
             List<String> streamNamesInDriverPage = new ArrayList<>();
 
             //Go to Demand Driver template
@@ -981,17 +985,24 @@ public enum modelSwitchOperation{
             //Go to settings page, get all the input streams
             settingsAndAssociationPage.goToTemplateListOrSettings("Settings");
             streamNameList = settingsAndAssociationPage.getStreamNamesInList("All");
+            for (String streamName : streamNameList){
+                settingsAndAssociationPage.clickEditBtn(streamName);
+                String granularityValue = settingsAndAssociationPage.getGranularityForCertainInputStream();
+                if (granularityValue.equals("Slot (30 min)"))
+                    streamNameListForCertainGranularity.add(streamName);
+            }
+
             //Go to driver details page, get all the input streams
             settingsAndAssociationPage.goToTemplateListOrSettings("Template");
-            configurationPage.clickOnSpecifyTemplateName("Default", "edit");
+            configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             configurationPage.clickAddOrEditForDriver("Add");
             streamNamesInDriverPage = configurationPage.getInputStreamInDrivers();
 
-            Collections.sort(streamNameList);
+            Collections.sort(streamNameListForCertainGranularity);
             Collections.sort(streamNamesInDriverPage);
-            if(streamNameList.size()==streamNamesInDriverPage.size()){
-                if(ListUtils.isEqualList(streamNameList, streamNamesInDriverPage)){
+            if(streamNameListForCertainGranularity.size()==streamNamesInDriverPage.size()){
+                if(ListUtils.isEqualList(streamNameListForCertainGranularity, streamNamesInDriverPage)){
                     SimpleUtils.pass("Input Streams in driver details page and Settings page are totally the same!");
                 }else {
                     SimpleUtils.fail("Input Streams in driver details page and Settings page are NOT the same!",false);
@@ -3029,7 +3040,7 @@ public enum modelSwitchOperation{
             configurationPage.addOrEditDemandDriverInTemplate(driver1);
             settingsAndAssociationPage.goToAssociationTabOnTemplateDetailsPage();
             //Add association and save
-            configurationPage.createDynamicGroup(templateName, "Location Name", location);
+            configurationPage.createDynamicGroup(templateName, "Custom", "Auto test" + templateName);
             configurationPage.selectOneDynamicGroup(templateName);
             //Could publish normally
             configurationPage.clickOnTemplateDetailTab();
@@ -3038,6 +3049,8 @@ public enum modelSwitchOperation{
             settingsAndAssociationPage.removeInputStream(baseInputStreamName);
             String inputStreamUsedInDriverWarning = "This input stream is used in the template " + "[" + templateName + "]";
             settingsAndAssociationPage.validateWarningMessage(inputStreamUsedInDriverWarning);
+            settingsAndAssociationPage.goToTemplateListOrSettings("Template");
+            configurationPage.archiveOrDeleteTemplate(templateName);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -79,4 +79,5 @@ public interface MySchedulePage {
     public void clickTheShiftRequestToClaimCoverShift(String requestName) throws Exception;
     public List<String> getCoverTMList() throws Exception;
     public String getStyleOfShiftByIndex(int index) throws Exception;
+    public boolean checkIfThePopupMessageOnTop(String expectedMessage) throws Exception;
 }

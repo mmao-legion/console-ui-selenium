@@ -1164,7 +1164,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 if(scheduleCommonPage.isScheduleDayViewActive()){
                     workerName = shiftWeekView.findElement(By.className("sch-day-view-shift-worker-name"));
                 } else
-                    workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
+                    workerName = shiftWeekView.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (workerName != null && workerName.getText().toLowerCase().contains(name.toLowerCase())) {
                     allShifts.add(shiftWeekView);
                 }
@@ -1239,8 +1239,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.fail("Info icon popup fail to load", false);
         } else
             SimpleUtils.fail("Shift fail to load", false);
-        Actions actions = new Actions(getDriver());
-        actions.moveByOffset(0, 0).click().build().perform();
+        // Actions actions = new Actions(getDriver());
+        // actions.moveByOffset(0, 0).click().build().perform();
         return complianceMessages;
     }
 
@@ -2411,7 +2411,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement shift : shifts) {
 //                clickTheElement(shift.findElement(By.className("week-schedule-shit-open-popover")));
 //                String shiftName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
-                String shiftName = shift.findElement(By.className("week-schedule-worker-name")).getText().toLowerCase();
+                String shiftName = shift.findElement(By.cssSelector(".rows .week-schedule-worker-name")).getText().toLowerCase();
                 if (!shiftName.equals("") && shiftName.contains(name.toLowerCase())) {
                     shiftsOfOneTM.add(shift);
                     SimpleUtils.pass("shift exists on this day!");
@@ -3497,13 +3497,13 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
         if (names.size() >= shiftCount) {
             SimpleUtils.randomSet(0, names.size() - 1, shiftCount, set);
+            scrollToBottom();
+            waitForSeconds(1);
             Actions action = new Actions(getDriver());
             action.keyDown(Keys.CONTROL).build().perform();
             for (int i : set) {
-                scrollToBottom();
-                waitForSeconds(1);
                 action.moveToElement(names.get(i)).click(names.get(i));
-                waitForSeconds(1);
+                waitForSeconds(2);
             }
             action.keyUp(Keys.CONTROL).build().perform();
             if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {

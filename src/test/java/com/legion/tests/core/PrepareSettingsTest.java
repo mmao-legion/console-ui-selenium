@@ -158,8 +158,6 @@ public class PrepareSettingsTest extends TestBase {
         try {
             ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), getUserNameNPwdForCallingAPI().get(0),
                     getUserNameNPwdForCallingAPI().get(1), false);
-            ToggleAPI.updateToggle(Toggles.TAScheduleCost.getValue(), getUserNameNPwdForCallingAPI().get(0),
-                    getUserNameNPwdForCallingAPI().get(1), false);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 

@@ -162,6 +162,7 @@ public class SplitAndSpreadTest extends TestBase {
         SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift"), false);
 
         //verify split shift violation after publishing.
+        createSchedulePage.publishActiveSchedule();
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
         SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift"), false);
     }
@@ -1150,7 +1151,7 @@ public class SplitAndSpreadTest extends TestBase {
     @TestName(description = "Validate open shift with 'Spread Of Hours' cannot be claimed")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyOpenShiftWithSpreadOfHoursViolationCannotBeClaimedAsTeamMember(String browser, String username, String password, String location) throws Exception {
-//        try {
+        try {
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
@@ -1352,12 +1353,13 @@ public class SplitAndSpreadTest extends TestBase {
 
             mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(isAllowEmployeeClaimOTOpenShift?Constants.NoLongEligibleTakeShiftErrorMessage:Constants.WillTriggerDailyOTErrorMessage);
             // Validate the availability of Claim Shift Request popup for the second shift
+            Thread.sleep(3000);
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
             mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(isAllowEmployeeClaimOTOpenShift?Constants.NoLongEligibleTakeShiftErrorMessage:Constants.WillTriggerDailyOTErrorMessage);
 
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 }
