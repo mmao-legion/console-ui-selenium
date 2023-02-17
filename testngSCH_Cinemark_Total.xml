@@ -434,6 +434,34 @@
             </classes>
         </test>
 
+    <test name="Single Shift Edit Test">
+        <classes>
+            <class name="com.legion.tests.core.SingleShiftEditTest">
+                <methods>
+                    <include name="verifyTheContentOnSingleEditShiftsWindowForRegularLocationAsInternalAdmin" />
+                    <include name="verifyTheCurrentColumnOnSingleEditShiftsWindowAsInternalAdmin" />
+                    <!--                  <include name="verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin" /> -->
+                    <!--                    <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8240-->
+                    <!--        <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
+                    <!--        <include name="verifyChangingEndTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
+                    <include name="verifyChangingDateOnSingleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyChangingAssignmentOnSingleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyChangingShiftNotesOnSingleEditShiftWindowAsInternalAdmin" />
+                    <include name="verifyTheContentOfBreaksSectionsAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfEditMealBreaksOnSingleEditShiftPageAsInternalAdmin" />
+                    <!--                    <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334-->
+                    <include name="verifyTheDailyOTAndDTViolationsOnSingleEditShiftPageAsInternalAdmin" />
+                    <!--                   <include name="verifyTheWeeklyOTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8430 https://legiontech.atlassian.net/browse/SCH-8429-->
+                    <include name="verifyTheClopeningViolationsOnSingleEditShiftPageAsInternalAdmin" />
+                    <include name="verifyTheSplitViolationsOnSingleEditShiftPageAsInternalAdmin" />
+                    <include name="verifyTheSpreadViolationsOnSingleEditShiftPageAsInternalAdmin" />
+                    <include name="verifyThe7thDayOTOnSingleEditShiftPageAsInternalAdmin" />
+                    <include name="verifyTheMealMissViolationOnSingleEditShiftPageAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
   <test name="Bulk Create Test">
         <classes>
             <class name="com.legion.tests.core.BulkCreateTest">
@@ -814,34 +842,6 @@ SCH-5862-->
                 </methods>
             </class>
         </classes>
-    </test>
-
-   <test name="Single Shift Edit Test">
-        <classes>
-            <class name="com.legion.tests.core.SingleShiftEditTest">
-                <methods>
-                    <include name="verifyTheContentOnSingleEditShiftsWindowForRegularLocationAsInternalAdmin" />
-                    <include name="verifyTheCurrentColumnOnSingleEditShiftsWindowAsInternalAdmin" />
-    <!--                  <include name="verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin" /> -->
-        <!--                    <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8240-->
-    <!--        <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
-    <!--        <include name="verifyChangingEndTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
-                    <include name="verifyChangingDateOnSingleEditShiftsWindowAsInternalAdmin" />
-                    <include name="verifyChangingAssignmentOnSingleEditShiftsWindowAsInternalAdmin" />
-                    <include name="verifyChangingShiftNotesOnSingleEditShiftWindowAsInternalAdmin" />
-                    <include name="verifyTheContentOfBreaksSectionsAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfEditMealBreaksOnSingleEditShiftPageAsInternalAdmin" />
-                    <!--                    <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334-->
-                    <include name="verifyTheDailyOTAndDTViolationsOnSingleEditShiftPageAsInternalAdmin" />
-                    <!--                   <include name="verifyTheWeeklyOTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8430 https://legiontech.atlassian.net/browse/SCH-8429-->
-                    <include name="verifyTheClopeningViolationsOnSingleEditShiftPageAsInternalAdmin" />
-                    <include name="verifyTheSplitViolationsOnSingleEditShiftPageAsInternalAdmin" />
-                    <include name="verifyTheSpreadViolationsOnSingleEditShiftPageAsInternalAdmin" />
-                    <include name="verifyThe7thDayOTOnSingleEditShiftPageAsInternalAdmin" />
-                    <include name="verifyTheMealMissViolationOnSingleEditShiftPageAsInternalAdmin" />
-                 </methods>
-                </class>
-            </classes>
     </test>
 
     <test name="Shift Pattern Test">
