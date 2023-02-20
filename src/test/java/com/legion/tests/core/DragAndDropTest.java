@@ -619,7 +619,7 @@ public class DragAndDropTest extends TestBase {
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-            newShiftPage.searchTeamMemberByName(firstName);
+            newShiftPage.searchTeamMemberByName(userName);
             newShiftPage.clickOnOfferOrAssignBtn();
 
             // Create an open shift on Tuesday
