@@ -41,7 +41,7 @@ import static org.testng.AssertJUnit.assertTrue;
  */
 public class SimpleUtils {
 
-	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/ciEnvCfg.json");
+	static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/EnvCfg.json");
 //		static Map<String,String> parameterMap = getPropertiesFromJsonFileWithOverrides("src/test/resources/envCfg.json");
 	static HashMap<String,String> testRailConfig = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
 	static HashMap<String,String> testRailCfgOp = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_OP.json");
@@ -1888,6 +1888,11 @@ public class SimpleUtils {
 		Random rand = new Random();
 		int rand_int = rand.nextInt(1000);
 		return rand_int;
+	}
+
+	public static String getUserName(){
+		String strUser = "nishant+" + generateRandomNumbers() + "@legion.co";
+		return strUser;
 	}
 
 		//added by Nishant for getSpecificTestRailId

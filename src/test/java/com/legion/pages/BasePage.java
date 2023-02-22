@@ -124,7 +124,7 @@ public class BasePage {
 
     public void clickOnMobileElement(WebElement element, boolean... shouldWait) {
     	try {
-            waitUntilElementIsVisibleOnMobile(element);
+//            waitUntilElementIsVisibleOnMobile(element);
             element.click();
         } catch (TimeoutException te) {
         	ExtentTestManager.getTest().log(Status.WARNING,te);
@@ -899,6 +899,54 @@ public class BasePage {
         } catch (Exception e) {
             //print error or something
         }
+    }
+
+    public void swipeUp1(int howManySwipes,long seconds) {
+        Dimension size = getAndroidDriver().manage().window().getSize();
+        // calculate coordinates for vertical swipe
+        int startVerticalY = (int) (size.height * 0.8);
+        int endVerticalY = (int) (size.height * 0.0001);
+        int startVerticalX = (int) (size.width / 2.1);
+        try {
+            for (int i = 1; i <= howManySwipes; i++) {
+                new TouchAction<>(getAndroidDriver()).press(point(startVerticalX, startVerticalY))
+                        .waitAction(waitOptions(ofSeconds(seconds))).moveTo(point(startVerticalX, endVerticalY)).release()
+                        .perform();
+            }
+        } catch (Exception e) {
+            //print error or something
+        }
+    }
+
+    public void swipeUpUntilElementFound(int howManySwipes,long seconds, MobileElement element) {
+        Dimension size = getAndroidDriver().manage().window().getSize();
+        // calculate coordinates for vertical swipe
+        int startVerticalY = (int) (size.height * 0.8);
+        int endVerticalY = (int) (size.height * 0.0001);
+        int startVerticalX = (int) (size.width / 2.1);
+        try {
+            for (int i = 1; i <= howManySwipes; i++) {
+                new TouchAction<>(getAndroidDriver()).press(point(startVerticalX, startVerticalY))
+                        .waitAction(waitOptions(ofSeconds(seconds))).moveTo(point(startVerticalX, endVerticalY)).release()
+                        .perform();
+                boolean display = getEnabledElement(element);
+                if(display){
+                    System.out.println("Count of swipe is " +i);
+                    break;
+                }
+
+            }
+        } catch (Exception e) {
+            //print error or something
+        }
+    }
+
+    public boolean getEnabledElement(MobileElement element){
+        boolean display = element.isEnabled();
+        if(display )
+            return true;
+        else
+            return false;
     }
 
     //added by Nishant

@@ -21,4 +21,17 @@ public class CacheAPI {
             SimpleUtils.report("Failed to refresh the cache!");
         }
     }
+
+    public static String getEmailVerificationURL(String username, String password) {
+        Response emailVerificationResponse = null;
+        try {
+            String sessionId = LoginAPI.getSessionIdFromLoginAPI(username, password);
+            emailVerificationResponse = given().log().all().header("sessionId", sessionId).when().get(System.getProperty("env")+ "legion/verificationmeta/").then().log().all().extract().response();
+            emailVerificationResponse.then().statusCode(202);
+           System.out.println("email verification is " + emailVerificationResponse.asString()) ;
+        } catch (Exception e) {
+            SimpleUtils.report("Failed to launch Email validation Api!");
+        }
+        return emailVerificationResponse.asString();
+    }
 }
