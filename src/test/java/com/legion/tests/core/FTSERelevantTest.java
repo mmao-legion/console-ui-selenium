@@ -1429,7 +1429,8 @@ public class FTSERelevantTest extends TestBase {
             //Delete all auto-generated shifts for the FTSE employee
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE T.");
+//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
+            shiftOperatePage.deleteAllShiftsInWeekView();
             scheduleMainPage.saveSchedule();
 
             //Create one shift and assign it to the FTSE employee
@@ -1549,7 +1550,8 @@ public class FTSERelevantTest extends TestBase {
             //Delete all auto-generated shifts for the FTSE employee
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
+//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
+            shiftOperatePage.deleteAllShiftsInWeekView();
             scheduleMainPage.saveSchedule();
 
             //Create one shift and assign it to the FTSE employee
