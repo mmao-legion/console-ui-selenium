@@ -508,7 +508,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @FindBy(className = "week-schedule-shift-wrapper")
     private List<WebElement> shiftsWeekView;
-    @FindBy(css = "[id=\"schedule-grid-react-wrapper\"] .week-schedule-worker-name")
+    @FindBy(css = "[id=\"schedule-grid-react-wrapper\"] [class=\"rows\"] .week-schedule-worker-name")
     private List<WebElement> namesWeekView;
     @FindBy(css = ".sch-day-view-shift-worker-name")
     private List<WebElement> namesDayView;
