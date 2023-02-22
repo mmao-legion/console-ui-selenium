@@ -839,7 +839,7 @@ public class BulkCreateTest extends TestBase {
             scheduleMainPage.saveSchedule();
 
             for (int i =0; i< 7; i++) {
-                SimpleUtils.assertOnFail("The "+firstNameOfTM+"''s shift is not exist on the " +i +" day! ",
+                SimpleUtils.assertOnFail("The "+firstNameOfTM+"'s shift is not exist on the " +i +" day! ",
                         scheduleShiftTablePage.getOneDayShiftByName(i, firstNameOfTM).size()==1, false);
             }
 

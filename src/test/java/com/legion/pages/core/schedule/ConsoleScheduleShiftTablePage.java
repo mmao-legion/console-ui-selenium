@@ -524,7 +524,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         String shiftTime = null;
         if (indexes.size() > 0 && areListElementVisible(shiftsWeekView, 5)) {
             for (int index : indexes) {
-                WebElement workerName = shiftsWeekView.get(index).findElement(By.className("week-schedule-worker-name"));
+                WebElement workerName = shiftsWeekView.get(index).findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (workerName != null) {
                     if (workerName.getText().contains(name)) {
                         shiftTime = shiftsWeekView.get(index).findElement(By.className("week-schedule-shift-time")).getText();
@@ -850,7 +850,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         waitForSeconds(3);
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShiftsFromAnotherLocation, 20) && index < weekShiftsFromAnotherLocation.size()) {
-            String firstName = weekShiftsFromAnotherLocation.get(index).findElement(By.className("week-schedule-worker-name")).getText();
+            String firstName = weekShiftsFromAnotherLocation.get(index).findElement(By.cssSelector(".rows .week-schedule-worker-name")).getText();
             String dayIndex = weekShiftsFromAnotherLocation.get(index).getAttribute("data-day-index");
             String lastName = shiftOperatePage.getTMDetailNameFromProfilePage(weekShiftsFromAnotherLocation.get(index)).split(" ")[1].trim();
             waitForSeconds(2);
@@ -1293,7 +1293,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement addedShiftIcon : addedShiftIcons) {
                 WebElement parent = addedShiftIcon.findElement(By.xpath("./../../../.."));
                 if (parent != null) {
-                    WebElement teamMemberName = parent.findElement(By.className("week-schedule-worker-name"));
+                    WebElement teamMemberName = parent.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                     if (teamMemberName != null && teamMemberName.getText().contains(name)) {
                         isFound = true;
                         SimpleUtils.pass("Added a New shift for: " + name + " is successful!");
@@ -1319,7 +1319,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<Integer> indexes = new ArrayList<>();
         if (areListElementVisible(shiftsInWeekView, 5)) {
             for (int i = 0; i < shiftsInWeekView.size(); i++) {
-                WebElement workerName = shiftsInWeekView.get(i).findElement(By.className("week-schedule-worker-name"));
+                WebElement workerName = shiftsInWeekView.get(i).findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (workerName != null) {
                     if (workerName.getText().contains(name)) {
                         indexes.add(i);
@@ -1683,7 +1683,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         //clickOnWeekView();
         if (areListElementVisible(weekScheduleShiftsOfWeekView, 10) && weekScheduleShiftsOfWeekView.size() != 0) {
             for (int i = 0; i < weekScheduleShiftsOfWeekView.size(); i++) {
-                if (weekScheduleShiftsOfWeekView.get(i).findElement(By.cssSelector(".week-schedule-worker-name")).getText().contains(teamMemberName)) {
+                if (weekScheduleShiftsOfWeekView.get(i).findElement(By.cssSelector(".rows .week-schedule-worker-name")).getText().contains(teamMemberName)) {
                     weekScheduleShiftTimeListOfWeekView.add(weekScheduleShiftsOfWeekView.get(i).findElement(By.cssSelector(".week-schedule-shift-time")).getText().replace(" ", "").toLowerCase());
                 }
             }
@@ -1732,7 +1732,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 if (weekShiftWrappers != null && weekShiftWrappers.size() > 0) {
                     for (WebElement weekShiftWrapper : weekShiftWrappers) {
                         WebElement shiftTime = weekShiftWrapper.findElement(By.className("week-schedule-shift-time"));
-                        WebElement workerName = weekShiftWrapper.findElement(By.className("week-schedule-worker-name"));
+                        WebElement workerName = weekShiftWrapper.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                         WebElement jobTitle = weekShiftWrapper.findElement(By.className("week-schedule-role-name"));
                         if (weekDay != null && shiftTime != null && workerName != null && jobTitle != null) {
                             infos.add(shiftTime.getText() + "\n" + workerName.getText() + "\n" + jobTitle.getText());
@@ -2028,12 +2028,12 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
         if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
             for (WebElement start : startElements) {
-                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
+                WebElement startName = start.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 WebElement startAvatar = start.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
                 if (startName != null && startAvatar != null && startName.getText().contains(firstName)) {
                     for (WebElement end : endElements) {
                         WebElement endAvatar = end.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
-                        WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
+                        WebElement endName = end.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                         if (endAvatar != null && endName != null && !endName.getText().contains(firstName) &&
                                 !endName.getText().equalsIgnoreCase("Open")) {
                             mouseHoverDragandDrop(startAvatar, endAvatar);
@@ -2117,7 +2117,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
             for (WebElement start : startElements) {
                 i++;
-                WebElement name1 = start.findElement(By.className("week-schedule-worker-name"));
+                WebElement name1 = start.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (name1 != null && name1.getText().split(" ")[0].equalsIgnoreCase(user1)) {
                     startAvatar = start.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
                     shiftsSwaped.put(user1,i);
@@ -2125,7 +2125,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             }
             for (WebElement end : endElements) {
                 j++;
-                WebElement name2 = end.findElement(By.className("week-schedule-worker-name"));
+                WebElement name2 = end.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (name2 != null  && name2.getText().split(" ")[0].equalsIgnoreCase(user2)) {
                     endAvatar = end.findElement(By.cssSelector(".rows .week-view-shift-image-optimized img"));
                     shiftsSwaped.put(user2,j);
@@ -2322,7 +2322,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> shifts = getDriver().findElements(By.cssSelector("[data-day-index=\"" + indexOfDay + "\"] .week-schedule-shift-wrapper"));
         if (shifts != null && shifts.size() > 0) {
             for (WebElement shift : shifts) {
-                WebElement name1 = shift.findElement(By.className("week-schedule-worker-name"));
+                WebElement name1 = shift.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (name1 != null && name1.getText().contains(name)) {
                     SimpleUtils.pass("shift exists on this day!");
                     count++;
@@ -2465,7 +2465,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement start : startElements) {
                 scrollToElement(start);
                 waitForSeconds(1);
-                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
+                WebElement startName = start.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 SimpleUtils.report("Check the tm name: "+ startName.getText().split(" ")[0]);
                 if (startName.getText().split(" ")[0].equalsIgnoreCase(firstName)) {
                     mouseHoverDragandDrop(startName, endElements.get(0));
@@ -2488,7 +2488,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     public String getNameOfTheFirstShiftInADay(int dayIndex) throws Exception {
         List<WebElement> elements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + dayIndex + "\"] .week-schedule-shift-wrapper"));
         if (areListElementVisible(elements, 10)){
-            return elements.get(0).findElement(By.className("week-schedule-worker-name")).getText();
+            return elements.get(0).findElement(By.cssSelector(".rows .week-schedule-worker-name")).getText();
         }
         return null;
     }
@@ -2583,7 +2583,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
         if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
             for (WebElement start : startElements) {
-                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
+                WebElement startName = start.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (startName != null) {
                     if (startName.getText().equalsIgnoreCase(firstName)) {
                         SimpleUtils.fail("Still can find the TM:" + firstName + " on " + startIndex, false);
@@ -2593,7 +2593,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 }
             }
             for (WebElement end : endElements) {
-                WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
+                WebElement endName = end.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (endName != null) {
                     if (endName.getText().contains(firstName)) {
                         isMoved = true;
@@ -2619,7 +2619,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> endElements = getDriver().findElements(By.cssSelector("[data-day-index=\"" + endIndex + "\"] .week-schedule-shift-wrapper"));
         if (startElements != null && endElements != null && startElements.size() > 0 && endElements.size() > 0) {
             for (WebElement start : startElements) {
-                WebElement startName = start.findElement(By.className("week-schedule-worker-name"));
+                WebElement startName = start.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (startName != null) {
                     if (startName.getText().contains(firstName)) {
                         SimpleUtils.pass("Can find the TM:" + firstName + " on " + startIndex);
@@ -2631,7 +2631,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 }
             }
             for (WebElement end : endElements) {
-                WebElement endName = end.findElement(By.className("week-schedule-worker-name"));
+                WebElement endName = end.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (endName != null) {
                     if (endName.getText().contains(firstName)) {
                         isCopied = true;
@@ -2707,7 +2707,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 result = shiftsWeekView.size();
             } else {
                 for (WebElement shiftWeekView : shiftsWeekView) {
-                    WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
+                    WebElement workerName = shiftWeekView.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                     if (workerName != null) {
                         if (workerName.getText().toLowerCase().contains(name.toLowerCase())) {
                             result++;
@@ -3088,7 +3088,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         return results;
     }
 
-    @FindBy(css = ".week-schedule-shift[data-day=\"1\"] .week-schedule-worker-name")
+    @FindBy(css = ".week-schedule-shift[data-day=\"1\"] .rows .week-schedule-worker-name")
     private List<WebElement> workerNamesOnTheShiftsOfTheFirstDay;
     @Override
     public void verifyGroupByTMOrderResults() throws Exception{
@@ -3195,7 +3195,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else {
             shifts = weekShifts;
             if (areListElementVisible(shifts, 20) && index < shifts.size()) {
-                fullName = shifts.get(index).findElement(By.className("week-schedule-worker-name")).getText();
+                fullName = shifts.get(index).findElement(By.cssSelector(".rows .week-schedule-worker-name")).getText();
             } else {
                 SimpleUtils.fail("Schedule Page: week shifts not loaded successfully!", false);
             }
@@ -3653,7 +3653,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             HashSet<Integer> shiftIndexes = new HashSet<>();
             //Get all index of TM's shifts
             for (int i=0; i< shiftsWeekView.size(); i++) {
-                    WebElement workerName = shiftsWeekView.get(i).findElement(By.className("week-schedule-worker-name"));
+                    WebElement workerName = shiftsWeekView.get(i).findElement(By.cssSelector("[class=\"rows\"] .week-schedule-worker-name"));
                     if (workerName != null) {
                         if (workerName.getText().toLowerCase().trim().contains(teamMemberName.toLowerCase().trim())) {
                             shiftIndexes.add(i);
@@ -3668,7 +3668,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     scrollToElement(shiftsWeekView.get(i));
                     waitForSeconds(1);
                     action.keyDown(Keys.CONTROL).build().perform();
-                    action.click(shiftsWeekView.get(i).findElement(By.className("week-schedule-worker-name")));
+                    action.click(shiftsWeekView.get(i).findElement(By.cssSelector("[class=\"rows\"] .week-schedule-worker-name")));
                     action.keyUp(Keys.CONTROL).build().perform();
                 }
                 int selectedShiftCount = getDriver().findElements(By.cssSelector(".shift-selected-multi")).size();
@@ -3702,7 +3702,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             Actions action = new Actions(getDriver());
             action.keyDown(Keys.CONTROL).build().perform();
             for (WebElement element : shiftsOnOneDay) {
-                WebElement shiftName = element.findElement(By.cssSelector(".week-schedule-worker-name"));
+                WebElement shiftName = element.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (!selectedShiftTMNames.contains(shiftName.getText())) {
                     action.click(element);
                     selectedShifts.add(element);
@@ -3798,7 +3798,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             Actions action = new Actions(getDriver());
             action.keyDown(Keys.CONTROL).build().perform();
             for (WebElement element : elements) {
-                WebElement shiftName = element.findElement(By.cssSelector(".week-schedule-worker-name"));
+                WebElement shiftName = element.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (!selectedShiftTMNames.contains(shiftName.getText())) {
                     scrollToElement(element);
                     waitForSeconds(1);
@@ -4494,7 +4494,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             HashSet<Integer> shiftIndexes = new HashSet<>();
             //Get all index of TM's shifts
             for (int i=0; i< shiftsWeekView.size(); i++) {
-                WebElement workerName = shiftsWeekView.get(i).findElement(By.className("week-schedule-worker-name"));
+                WebElement workerName = shiftsWeekView.get(i).findElement(By.cssSelector(".rows .week-schedule-worker-name"));
                 if (workerName != null) {
                     if (workerName.getText().toLowerCase().trim().contains(teamMemberName.toLowerCase().trim())) {
                         shiftIndexes.add(i);
@@ -4509,7 +4509,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     scrollToElement(shiftsWeekView.get(i));
                     waitForSeconds(1);
                     action.keyDown(Keys.CONTROL).build().perform();
-                    action.click(shiftsWeekView.get(i).findElement(By.className("week-schedule-worker-name")));
+                    action.click(shiftsWeekView.get(i).findElement(By.cssSelector(".rows .week-schedule-worker-name")));
                     action.keyUp(Keys.CONTROL).build().perform();
                 }
                 int selectedShiftCount = getDriver().findElements(By.cssSelector(".shift-selected-multi")).size();
@@ -4544,7 +4544,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 //        } else if (areListElementVisible(namesDayView, 10)) {
 //            names = namesDayView;
 //        }
-        List<WebElement> names = getDriver().findElements(By.cssSelector("[id=\"schedule-grid-react-wrapper\"] [data-day-index=\"" + dayIndex + "\"] .week-schedule-worker-name"));
+        List<WebElement> names = getDriver().findElements(By.cssSelector("[id=\"schedule-grid-react-wrapper\"] [data-day-index=\"" + dayIndex + "\"] .rows .week-schedule-worker-name"));
         scrollToBottom();
         waitForSeconds(2);
         if (names.size() >= shiftCount) {
@@ -4584,7 +4584,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 //        } else if (areListElementVisible(shiftOuterInDayView, 10)) {
 //            names = shiftOuterInDayView;
 //        }
-        List<WebElement> names = getDriver().findElements(By.cssSelector("[id=\"schedule-grid-react-wrapper\"] [data-day-index=\"" + dayIndex + "\"] .week-schedule-worker-name"));
+        List<WebElement> names = getDriver().findElements(By.cssSelector("[id=\"schedule-grid-react-wrapper\"] [data-day-index=\"" + dayIndex + "\"] .rows .week-schedule-worker-name"));
         if (names.size() >= shiftCount) {
             SimpleUtils.randomSet(0, names.size() - 1, shiftCount, set);
             Actions action = new Actions(getDriver());
