@@ -1162,7 +1162,11 @@ public class MealAndRestBreakTest extends TestBase {
 
             //Delete all auto-generated open shifts in the week
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleMainPage.clickOnOpenSearchBoxButton();
+            scheduleMainPage.searchShiftOnSchedulePage("Open");
+            shiftOperatePage.deleteAllShiftsInWeekView();
+            scheduleMainPage.clickOnCloseSearchBoxButton();
             scheduleMainPage.saveSchedule();
 
             //Create a 5hrs new open shift
@@ -1201,7 +1205,9 @@ public class MealAndRestBreakTest extends TestBase {
             shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
             scheduleCommonPage.clickOnWeekView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleMainPage.searchShiftOnSchedulePage("Open");
+            shiftOperatePage.deleteAllShiftsInWeekView();
             scheduleMainPage.saveSchedule();
             scheduleCommonPage.clickOnDayView();
 
@@ -1236,7 +1242,9 @@ public class MealAndRestBreakTest extends TestBase {
             shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
             scheduleCommonPage.clickOnWeekView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleMainPage.searchShiftOnSchedulePage("Open");
+            shiftOperatePage.deleteAllShiftsInWeekView();
             scheduleMainPage.saveSchedule();
             scheduleCommonPage.clickOnDayView();
 
@@ -1272,8 +1280,11 @@ public class MealAndRestBreakTest extends TestBase {
             shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
             scheduleCommonPage.clickOnWeekView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleMainPage.searchShiftOnSchedulePage("Open");
+            shiftOperatePage.deleteAllShiftsInWeekView();
+//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
+
             scheduleCommonPage.clickOnDayView();
 
             //Create a new 5hrs shift, check the meal break when shift length is changing dynamically
