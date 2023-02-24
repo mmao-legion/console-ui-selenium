@@ -21,7 +21,8 @@ public enum Toggles {
     WorkRoleSettingsTemplateOP("WorkRoleSettingsTemplateOP"),
     TAScheduleCost("TAScheduleCost"),
     EnableMultiWorkRolePerShiftSCH("EnableMultiWorkRolePerShiftSCH"),
-    UseAbsenceMgmtConfiguration("UseAbsenceMgmtConfiguration");
+    UseAbsenceMgmtConfiguration("UseAbsenceMgmtConfiguration"),
+    EnableSenioritySchedule("EnableSenioritySchedule");
 
     private final String value;
 
