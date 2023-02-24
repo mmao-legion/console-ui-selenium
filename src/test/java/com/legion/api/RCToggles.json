@@ -19,5 +19,6 @@
   "EnableChangeLocationGroupSetting": "op,opauto",
   "WorkRoleSettingsTemplateOP": "opauto,americold",
   "TAScheduleCost": "americold,panda2bts",
-  "EnableMultiWorkRolePerShiftSCH": "americold"
+  "EnableMultiWorkRolePerShiftSCH": "americold",
+  "EnableSenioritySchedule": "cinemark-wkdy"
 }
