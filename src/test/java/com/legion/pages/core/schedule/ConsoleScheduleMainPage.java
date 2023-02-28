@@ -465,7 +465,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         unCheckFilters(shiftTypeFilters);
         for (WebElement shiftTypeOption : shiftTypeFilters) {
             if (shiftTypeOption.getText().toLowerCase().contains(filterText.toLowerCase())) {
-                click(shiftTypeOption);
+                clickTheElement(shiftTypeOption.findElement(By.tagName("input")));
                 SimpleUtils.pass("Click the shift type successfully! ");
                 break;
             }

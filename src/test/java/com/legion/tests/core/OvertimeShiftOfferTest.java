@@ -226,7 +226,8 @@ public class OvertimeShiftOfferTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
             scheduleCommonPage.navigateToNextWeek();
             int shiftsCountAfter = shiftOperatePage.countShiftsByUserName(firstNameOfTM);
-            SimpleUtils.assertOnFail("Failed for approving overtime shift offer!", (shiftsCountAfter - shiftsCountBefore) == 1, false);
+            SimpleUtils.assertOnFail("Failed for approving overtime shift offer! shiftsCountBefore: " + shiftsCountBefore +
+                    ", shiftsCountAfter: " + shiftsCountAfter, (shiftsCountAfter - shiftsCountBefore) == 1, false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
