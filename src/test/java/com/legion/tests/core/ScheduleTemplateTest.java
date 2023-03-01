@@ -247,7 +247,7 @@ public class ScheduleTemplateTest extends TestBase {
             scheduleMainPage.saveSchedule();
             //https://legiontech.atlassian.net/browse/SCH-8043
             SimpleUtils.assertOnFail("The SCHEDULE ACKNOWLEDGEMENT smart card should not display before publish schedule! ",
-                    smartCardPage.isSpecificSmartCardLoaded(smartCardName), false);
+                    !smartCardPage.isSpecificSmartCardLoaded(smartCardName), false);
             //Verify the SCHEDULE ACKNOWLEDGEMENT smart card will display after publish schedule
             createSchedulePage.publishActiveSchedule();
             SimpleUtils.assertOnFail("The SCHEDULE ACKNOWLEDGEMENT smart card should display before publish schedule! ",

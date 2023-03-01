@@ -393,7 +393,7 @@ public class WorkRoleTest extends TestBase {
 
             SimpleUtils.assertOnFail("The work role color in Manager view is: "+workRoleColor
                             +" The work rol color is TM view is:"+styleOnTMView,
-                    styleOnTMView.contains(workRoleColor), false);
+                    styleOnTMView.contains(workRoleColor.split(":")[2].trim()), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
