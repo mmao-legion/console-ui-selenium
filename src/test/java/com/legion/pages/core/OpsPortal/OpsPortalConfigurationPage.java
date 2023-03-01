@@ -2116,7 +2116,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Clock-in form load failed", false);
 	}
 
-	@FindBy(css = "question-input[question-title=\"Do you want to send Shift Offers to other locations?\"] > div > div.lg-question-input__wrapper > ng-transclude > yes-no > ng-form > lg-button-group >div>div")
+	@FindBy(css = "[question-title=\"Enable the Work Force Sharing Group?\"] .lg-button-group div")
 	private List<WebElement> yesNoForWFS;
 
 	@Override
