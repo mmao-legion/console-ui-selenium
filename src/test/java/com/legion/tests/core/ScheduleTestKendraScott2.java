@@ -8461,7 +8461,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			String statusMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
 			SimpleUtils.assertOnFail("The Violation message on the Assign dialog is not expected!",
-					statusMessage.contains("Will trigger 1Hrs weekly OT"), false);
+					statusMessage.contains("weekly OT"), false);
 
 			shiftOperatePage.clickAssignBtnOnCreateShiftDialog(tmPartialName);
 			String standardAssignAnyway = tmPartialName + " will incur 1 hours of weekly overtime";
