@@ -2380,7 +2380,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if (areListElementVisible(shiftsWeekView, 15)) {
             for (WebElement shiftWeekView : shiftsWeekView) {
                 try {
-                    WebElement workerName = shiftWeekView.findElement(By.className("week-schedule-worker-name"));
+                    WebElement workerName = shiftWeekView.findElement(By.cssSelector("[class=\"rows\"] .week-schedule-worker-name"));
                     if (workerName != null) {
                         if (workerName.getText().toLowerCase().trim().contains(teamMemberName.toLowerCase().trim())) {
                             WebElement image = shiftWeekView.findElement(By.cssSelector(".rows .week-view-shift-image-optimized span"));
