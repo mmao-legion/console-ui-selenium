@@ -700,6 +700,8 @@ public class ScheduleCopyImprovementTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             shiftOperatePage.deleteAllOOOHShiftInWeekView();
             scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
 
             //Check there is no Unassigned shifts display
             unassignedShiftsCount = scheduleShiftTablePage.getAllShiftsOfOneTM("unassigned").size();

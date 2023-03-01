@@ -2100,7 +2100,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     continue;
                 }
             }
-            smartCardPage.clickOnClearShiftsBtnOnRequiredActionSmartCard();
+//            smartCardPage.clickOnClearShiftsBtnOnRequiredActionSmartCard();
         }else
             SimpleUtils.report("Schedule Week View: there is no shifts or Action Required smart card in this week");
     }
