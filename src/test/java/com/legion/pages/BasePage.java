@@ -106,7 +106,7 @@ public class BasePage {
     }
 
     public static void scrollToBottom() {
-        ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,100000)");
+        ((JavascriptExecutor) getDriver()).executeScript("window.scrollTo(0,1000000)");
     }
 
     public void scrollToElement(WebElement element) {
