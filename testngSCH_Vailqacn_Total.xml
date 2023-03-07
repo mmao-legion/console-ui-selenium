@@ -139,7 +139,7 @@
                     <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfMinTimeBetweenShiftsAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfDailyOTAsInternalAdmin" />
+<!--                    <include name="verifyTheFunctionalityOfDailyOTAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-9304-->
 <!--                    <include name="verifyTheBudgetHoursWhenByLocationAsInternalAdmin" Blocked by SCH-7081 />-->
                     <!-- <include name="verifyTMOverTimeStatusAsInternalAdmin" /> -->
                     <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
@@ -275,7 +275,7 @@
             <class name="com.legion.tests.core.ProfileNewUITestKendraScott2">
                 <methods>
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
-                    <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
+<!--                    <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/ELM-2566-->
 <!--                    <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-6118-->
 <!--                    <include name="verifyTMAndSMCanSeeTheDottedLinesToCheckTheAvailabilityChangesForThisWeekOnlyAsTeamMember" />
                     <include name="verifyTheDottedLinesOnAvailabilityForRepeatForwardAndApproveAsInternalAdmin" />

@@ -2116,7 +2116,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("Clock-in form load failed", false);
 	}
 
-	@FindBy(css = "[question-title=\"Enable the Work Force Sharing Group?\"] .lg-button-group div")
+	@FindBy(css = "[question-title=\"Do you want to send Shift Offers to other locations?\"] .lg-button-group div")
 	private List<WebElement> yesNoForWFS;
 
 	@Override
