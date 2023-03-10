@@ -2343,7 +2343,15 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                                 && shiftTypeFilters.get(3).getText().contains("Open")
                                 && shiftTypeFilters.get(4).getText().contains("Swap/Cover Requested")
                                 && shiftTypeFilters.get(5).getText().contains("Unavailable")
-                                && shiftTypeFilters.get(6).getText().contains("Unpublished changes"))){
+                                && shiftTypeFilters.get(6).getText().contains("Unpublished changes")) ||
+                        (shiftTypeFilters.get(0).getText().contains("Action Required")
+                                && shiftTypeFilters.get(1).getText().contains("Assigned")
+                                && shiftTypeFilters.get(2).getText().contains("Compliance Review")
+                                && shiftTypeFilters.get(3).getText().contains("New or Borrowed TM")
+                                && shiftTypeFilters.get(4).getText().contains("Open")
+                                && shiftTypeFilters.get(5).getText().contains("Swap/Cover Requested")
+                                && shiftTypeFilters.get(6).getText().contains("Unavailable")
+                                && shiftTypeFilters.get(7).getText().contains("Unpublished changes"))){
                     SimpleUtils.pass("The shift types display correctly in Filter dropdown list! ");
                 } else
                     SimpleUtils.fail("The shift types display incorrectly in Filter dropdown list! ", false);

@@ -2768,7 +2768,7 @@ public class ParentChildLGTest extends TestBase {
             if (isWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            createSchedulePage.createLGScheduleWithGivingTimeRange("6am", "6am");
+            createSchedulePage.createLGScheduleWithGivingTimeRange("6am", "12am");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
