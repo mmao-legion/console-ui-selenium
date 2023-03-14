@@ -288,7 +288,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 				SimpleUtils.report("No activities available for the selected filter");
 			}else{
 				SimpleUtils.fail("Failed to find the card that is new and contain: " + requestUserName + ", "
-						+ ", " + expectedMessage + "! Actual card is: " + messageText, false);
+						+ expectedMessage + "! Actual card is: " + messageText, false);
 			}
 		}else {
 			SimpleUtils.fail("Shift Offer Activity failed to Load!", false);

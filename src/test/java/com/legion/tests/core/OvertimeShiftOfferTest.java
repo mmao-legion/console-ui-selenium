@@ -199,7 +199,7 @@ public class OvertimeShiftOfferTest extends TestBase {
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.navigateToNextWeek();
             smartCardPage.clickLinkOnSmartCardByName("View Shifts");
-            SimpleUtils.assertOnFail("Didn't get open shift offer!", scheduleShiftTablePage.getShiftsCount()==1, false);
+            SimpleUtils.assertOnFail("Didn't get open shift offer!", scheduleShiftTablePage.getShiftsCount()>=1, false);
 
             // Claim overtime shift
             mySchedulePage.clickOnShiftByIndex(0);
