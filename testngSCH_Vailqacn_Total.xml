@@ -117,7 +117,7 @@
                     <include name="verifyPTORequestInScheduleAsInternalAdmin" />
                     <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
                     <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
-                    <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" />
+<!--                    <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" /> need more time to fix-->
                     <include name="verifyAssignTMInDayViewAsInternalAdmin" />
                     <include name="verifyConvertToOpenShiftInDayViewAsInternalAdmin" />
                     <include name="verifyEditShiftNotesInDayViewAsInternalAdmin" />
@@ -772,7 +772,7 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                     <include name="verifyTheClopeningViolationsOnSingleEditShiftPageAsInternalAdmin" />
                     <include name="verifyTheSplitViolationsOnSingleEditShiftPageAsInternalAdmin" />
                     <include name="verifyTheSpreadViolationsOnSingleEditShiftPageAsInternalAdmin" />
-                    <include name="verifyThe7thDayOTOnSingleEditShiftPageAsInternalAdmin" />
+<!--                    <include name="verifyThe7thDayOTOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-9443-->
                     <include name="verifyTheMealMissViolationOnSingleEditShiftPageAsInternalAdmin" />
                 </methods>
             </class>

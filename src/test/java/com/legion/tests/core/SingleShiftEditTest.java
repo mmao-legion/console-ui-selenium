@@ -1975,7 +1975,7 @@ public class SingleShiftEditTest extends TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            createShiftsWithSpecificValues(workRole1, "", "", "8:00am", "2:00pm",
+            createShiftsWithSpecificValues(workRole1, "", "", "8:00am", "3:00pm",
                     1, Arrays.asList(0,1,2,3,4,5,6), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", firstNameOfTM1+ " "+lastName);
 
             scheduleMainPage.saveSchedule();
