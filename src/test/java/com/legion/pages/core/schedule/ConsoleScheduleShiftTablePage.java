@@ -3645,7 +3645,6 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
     }
 
-
     @Override
     public void bulkDeleteTMShiftsInWeekView(String teamMemberName) throws Exception {
         unSelectAllBulkSelectedShifts();

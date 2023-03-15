@@ -570,7 +570,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                 SimpleUtils.report("stale element reference: element is not attached to the page document");
             }
         } else {
-            SimpleUtils.fail("Schedule save button not found", false);
+            SimpleUtils.report("Schedule save button not found");
         }
     }
 

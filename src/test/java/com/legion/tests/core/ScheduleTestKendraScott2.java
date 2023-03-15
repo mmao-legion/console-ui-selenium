@@ -458,7 +458,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
 		Thread.sleep(5000);
-		createSchedulePage.createScheduleForNonDGFlowNewUI();
+		createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("05:00AM", "11:00PM");
 		//In week view, Group by All filter have 4 filters:1.Group by all  2. Group by work role  3. Group by TM 4.Group by job title
 		scheduleMainPage.validateGroupBySelectorSchedulePage(false);
 		//Selecting any of them, check the schedule table
@@ -476,7 +476,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
 		Thread.sleep(5000);
-		createSchedulePage.createScheduleForNonDGFlowNewUI();
+		createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("05:00AM", "11:00PM");
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
 		scheduleMainPage.saveSchedule();
@@ -533,7 +533,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		newShiftPage.clickOnOfferOrAssignBtn();
 		Thread.sleep(5000);
 		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" ,
-				firstNameOfSelectedTM2.equals(scheduleShiftTablePage.getShiftById(selectedShiftId2).findElement(By.className("week-schedule-worker-name")).getText().split(" ")[0].trim()), false);
+				firstNameOfSelectedTM2.equals(scheduleShiftTablePage.getShiftById(selectedShiftId2).findElement(By.cssSelector(".row .week-schedule-worker-name")).getText().split(" ")[0].trim()), false);
 		scheduleMainPage.clickOnFilterBtn();
 		scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
 		scheduleMainPage.clickOnFilterBtn();
