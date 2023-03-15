@@ -4625,6 +4625,10 @@ public class P2PLGTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()), false);
             forecastPage.goToForecastLaborWeek();
+
+            scheduleMainPage.checkAllWorkRolesUnderLabor();
+            scheduleMainPage.clickWorkRoleFilterOfLabor();
+
             forecastPage.editLaborBudgetOnSummarySmartCard();
             String laborBudget1 = forecastPage.getLaborBudgetOnSummarySmartCard();
 
@@ -4632,6 +4636,10 @@ public class P2PLGTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()), false);
             forecastPage.goToForecastLaborWeek();
+
+            scheduleMainPage.checkAllWorkRolesUnderLabor();
+            scheduleMainPage.clickWorkRoleFilterOfLabor();
+
             forecastPage.editLaborBudgetOnSummarySmartCard();
             String laborBudget2 = forecastPage.getLaborBudgetOnSummarySmartCard();
 
