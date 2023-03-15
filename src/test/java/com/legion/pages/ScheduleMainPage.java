@@ -108,6 +108,8 @@ public interface ScheduleMainPage {
     public void clickCancelBtnOnEditOpeHoursPageForOP() throws Exception;
     public void clickSaveBtnOnEditOpeHoursPageForOP() throws Exception;
     public void saveScheduleWithoutChange() throws Exception;
+    public void checkAllWorkRolesUnderLabor() throws Exception;
+    public void clickWorkRoleFilterOfLabor() throws Exception;
 
 }
 

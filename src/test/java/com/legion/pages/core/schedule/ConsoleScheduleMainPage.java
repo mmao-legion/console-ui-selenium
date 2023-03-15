@@ -2592,4 +2592,41 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         }
         return isLoaded;
     }
+
+    @FindBy(css = "lg-filter[label=\"Work Role\"] [ng-click=\"$ctrl.openFilter()\"]")
+    private WebElement workRoleFilterButton;
+    @FindBy(css = "lg-filter[label=\"Work Role\"] input[type=\"checkbox\"]")
+    private List<WebElement> workRoleCheckBoxes;
+    @Override
+    public void checkAllWorkRolesUnderLabor() throws Exception {
+        if (isElementLoaded(workRoleFilterButton, 10) && isClickable(workRoleFilterButton, 10)) {
+            scrollToElement(workRoleFilterButton);
+            clickTheElement(workRoleFilterButton);
+            if (areListElementVisible(workRoleCheckBoxes,10)) {
+                for (WebElement checkBox : workRoleCheckBoxes){
+                    if(checkBox.getAttribute("class").contains("ng-empty")){
+                        scrollToElement(checkBox);
+                        click(checkBox);
+                    }
+                }
+            }else
+                SimpleUtils.fail("Work role list is not loaded!", false);
+        }else
+            SimpleUtils.fail("Work role filter box is not found!", false);
+    }
+
+    @Override
+    public void clickWorkRoleFilterOfLabor() throws Exception {
+        if (isElementLoaded(workRoleFilterButton, 10) && isClickable(workRoleFilterButton, 10)) {
+            scrollToElement(workRoleFilterButton);
+            clickTheElement(workRoleFilterButton);
+        }else
+            SimpleUtils.fail("Work role filter box is not found!", false);
+    }
+
+
+
+
+
+
 }
