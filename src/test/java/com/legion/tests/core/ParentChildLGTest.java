@@ -1600,7 +1600,9 @@ public class ParentChildLGTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
-
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToPreviousWeek();
+            Thread.sleep(3000);
             // Get the hours and the count of the tms for each day, ex: "37.5 Hrs 5TMs"
             HashMap<String, String> hoursNTMsCountFirstWeek = scheduleShiftTablePage.getTheHoursNTheCountOfTMsForEachWeekDays();
             HashMap<String, List<String>> shiftsForEachDayFirstWeek = scheduleShiftTablePage.getTheContentOfShiftsForEachWeekDay();
