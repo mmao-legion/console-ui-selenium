@@ -4201,10 +4201,10 @@ public class P2PLGTest extends TestBase {
             int oneDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
             SimpleUtils.assertOnFail("The expected count are: "+allShiftsCountBefore + " and "+ oneDayShiftsCountBefore
                             + ", but the actual are: "+allShiftsCountAfter + " and "+ oneDayShiftsCountAfter,
-                    allShiftsCountAfter == allShiftsCountBefore && oneDayShiftsCountAfter == oneDayShiftsCountBefore, false);
+                    allShiftsCountAfter == allShiftsCountBefore && oneDayShiftsCountAfter-2 == oneDayShiftsCountBefore, false);
             for (int i=0; i< selectedShiftCount;i++) {
                 SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
-                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()>0, false);
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()==0, false);
             }
             //Verify changes can be saved
             scheduleMainPage.saveSchedule();
@@ -4212,10 +4212,10 @@ public class P2PLGTest extends TestBase {
             oneDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
             SimpleUtils.assertOnFail("The expected count are: "+allShiftsCountBefore + " and "+ oneDayShiftsCountBefore
                             + ", but the actual are: "+allShiftsCountAfter + " and "+ oneDayShiftsCountAfter,
-                    allShiftsCountAfter == allShiftsCountBefore && oneDayShiftsCountAfter == oneDayShiftsCountBefore, false);
+                    allShiftsCountAfter == allShiftsCountBefore && oneDayShiftsCountAfter-2 == oneDayShiftsCountBefore, false);
             for (int i=0; i< selectedShiftCount;i++) {
                 SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
-                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()>0, false);
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()==0, false);
             }
             //Verify changes can be published
             createSchedulePage.publishActiveSchedule();
@@ -4223,10 +4223,10 @@ public class P2PLGTest extends TestBase {
             oneDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
             SimpleUtils.assertOnFail("The expected count are: "+allShiftsCountBefore + " and "+ oneDayShiftsCountBefore
                             + ", but the actual are: "+allShiftsCountAfter + " and "+ oneDayShiftsCountAfter,
-                    allShiftsCountAfter == allShiftsCountBefore && oneDayShiftsCountAfter == oneDayShiftsCountBefore, false);
+                    allShiftsCountAfter == allShiftsCountBefore && oneDayShiftsCountAfter-2 == oneDayShiftsCountBefore, false);
             for (int i=0; i< selectedShiftCount;i++) {
                 SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
-                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()>0, false);
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()==0, false);
             }
             //Check the shifts are not display on first location
             scheduleShiftTablePage.expandSpecificCountGroup(1);
@@ -4336,7 +4336,7 @@ public class P2PLGTest extends TestBase {
             scheduleShiftTablePage.expandSpecificCountGroup(1);
             for (int i=0; i< selectedShiftCount;i++) {
                 SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
-                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()==0, false);
+                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()>0, false);
             }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

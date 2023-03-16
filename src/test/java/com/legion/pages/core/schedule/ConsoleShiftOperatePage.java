@@ -2076,6 +2076,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     private List<WebElement> shiftsWeekView;
     @Override
     public void deleteAllOOOHShiftInWeekView() throws Exception {
+        ScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
         SmartCardPage smartCardPage = new ConsoleSmartCardPage();
         ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
         if (areListElementVisible(shiftsWeekView, 15) && smartCardPage.isRequiredActionSmartCardLoaded()) {
@@ -2100,7 +2101,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                     continue;
                 }
             }
-//            smartCardPage.clickOnClearShiftsBtnOnRequiredActionSmartCard();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+            scheduleMainPage.clickOnFilterBtn();
         }else
             SimpleUtils.report("Schedule Week View: there is no shifts or Action Required smart card in this week");
     }

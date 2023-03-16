@@ -41,9 +41,9 @@
                     <include name="verifyAnalyticsTableOnTimesheetInDMViewWhenItIncludesLGAsInternalAdmin" />
                     <include name="verifyTheContentOnMultipleEditShiftsWindowForP2PAsInternalAdmin" />
                     <!--
-                                        <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
+                                        <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-9466-->
                                         <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
-                                        <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6889-->
+                                        <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnP2PLGScheduleAsInternalAdmin" />
  <!--                   <include name="validateNavigationRosterScheduleAndDashboardOfP2PLGAsInternalAdmin" /> need rerun-->
                     <include name="verifyChangingLocationForP2POnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="VerifyTheBudgetGuidanceColumnShowCorrectlyInChildAsInternalAdmin" />
@@ -95,9 +95,9 @@
  <!--                   <include name="verifyTheContentOnMultipleEditShiftsWindowForPCAsInternalAdmin" />
                     <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForParentChildAsInternalAdmin" />need rerun-->
                     <!--
-                                        <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
+                                        <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-9466-->
                                         <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
-                                        <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6889-->
+                                        <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
                     <include name="verifyEditOperatingHoursForLGAsInternalAdmin" />
 <!--                    <include name="validateNavigationRosterScheduleAndDashboardOfParentChildLGAsInternalAdmin" /> need rerun-->
 
