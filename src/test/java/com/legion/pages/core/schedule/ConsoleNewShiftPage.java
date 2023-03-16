@@ -2403,7 +2403,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         } else if (isElementLoaded(workRoleOnNewShiftPage, 5)) {
             click(workRoleOnNewShiftPage);
             SimpleUtils.pass("Work Role button clicked Successfully");
-            if (dropDownListOnNewCreateShiftPage.size() > 0) {
+            waitForSeconds(1);
+            if (areListElementVisible(dropDownListOnNewCreateShiftPage, 10) && dropDownListOnNewCreateShiftPage.size() > 0) {
                 for (int i = 0; i < dropDownListOnNewCreateShiftPage.size() - 1; i++) {
                     int order1 = workRoleNOrders.get(dropDownListOnNewCreateShiftPage.get(i).getText().toLowerCase());
                     int order2 = workRoleNOrders.get(dropDownListOnNewCreateShiftPage.get(i + 1).getText().toLowerCase());
