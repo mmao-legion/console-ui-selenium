@@ -70,7 +70,7 @@ public class ShiftPatternTest extends TestBase {
             configurationPage.clickOnConfigurationCrad("Scheduling Rules");
             configurationPage.isTemplateListPageShow();
             String templateName = "TemplateName-ForAuto";
-            configurationPage.deleteTemplate(templateName);
+            configurationPage.archiveOrDeleteTemplate(templateName);
             String workRole = "General Manager";
 
             // Create new template with the 'New Template' button, there are 2 tabs: Detail and Association

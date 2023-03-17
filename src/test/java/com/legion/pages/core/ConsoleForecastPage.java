@@ -2359,8 +2359,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 				if (areListElementVisible(workRoleList, 3)) {
 					for (int i = 0; i < workRoleList.size() - 1; i++) {
 						System.out.println(workRoleList.get(i).findElement(By.cssSelector(".input-label")).getText().toLowerCase().trim());
-						int order1 = workRoleNOrders.get(workRoleList.get(i).findElement(By.cssSelector(".input-label")).getText().toLowerCase().trim());
-						int order2 = workRoleNOrders.get(workRoleList.get(i + 1).findElement(By.cssSelector(".input-label")).getText().toLowerCase().trim());
+						int order1 = workRoleNOrders.get(workRoleList.get(i).findElement(By.cssSelector(".input-label")).getText().toLowerCase().trim().replaceAll(" ", ""));
+						int order2 = workRoleNOrders.get(workRoleList.get(i + 1).findElement(By.cssSelector(".input-label")).getText().toLowerCase().trim().replaceAll(" ", ""));
 						if (order1 > order2) {
 							isConsistent = false;
 							break;

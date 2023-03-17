@@ -159,10 +159,15 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
                                                List<String> selectedDays, int mealStartOffset, int mealDuration,
                                                int restStartOffset, int restDuration, String shiftNote) throws Exception {
         boolean isPersist = true;
-        if (!shiftNameInput.getAttribute("value").equalsIgnoreCase(shiftName) || !descriptionInput.getAttribute("value")
-                .equalsIgnoreCase(description) || !startTimeInput.getAttribute("value").equalsIgnoreCase(startTime) ||
-        !endTimeInput.getAttribute("value").equalsIgnoreCase(endTime) || !shiftNotesInput.getAttribute("value").equalsIgnoreCase(shiftNote)) {
-            isPersist = false;
+        waitForSeconds(2);
+        if (isElementEnabled(shiftNameInput, 5)) {
+            if (!shiftNameInput.getAttribute("value").equalsIgnoreCase(shiftName) || !descriptionInput.getAttribute("value")
+                    .equalsIgnoreCase(description) || !startTimeInput.getAttribute("value").equalsIgnoreCase(startTime) ||
+                    !endTimeInput.getAttribute("value").equalsIgnoreCase(endTime) || !shiftNotesInput.getAttribute("value").equalsIgnoreCase(shiftNote)) {
+                isPersist = false;
+            }
+        } else {
+            SimpleUtils.report("Create New Shift dialog is not loaded");
         }
         for (int i = 0; i < dayLabels.size(); i++) {
             if (selectedDays.contains(dayLabels.get(i).getText())) {

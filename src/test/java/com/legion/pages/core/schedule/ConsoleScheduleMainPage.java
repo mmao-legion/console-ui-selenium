@@ -2472,8 +2472,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         boolean isConsistent = true;
         if (areListElementVisible(scheduleShiftTitles, 3)) {
             for (int i = 0; i < scheduleShiftTitles.size() - 1; i++) {
-                int order1 = workRoleNOrders.get(scheduleShiftTitles.get(i).getText().toLowerCase());
-                int order2 = workRoleNOrders.get(scheduleShiftTitles.get(i + 1).getText().toLowerCase());
+                int order1 = workRoleNOrders.get(scheduleShiftTitles.get(i).getText().toLowerCase().replaceAll(" ", ""));
+                int order2 = workRoleNOrders.get(scheduleShiftTitles.get(i + 1).getText().toLowerCase().replaceAll(" ", ""));
                 if (order1 > order2) {
                     isConsistent = false;
                     break;
@@ -2481,8 +2481,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             }
         } else if (areListElementVisible(scheduleShiftTitlesDayView, 3)) {
             for (int i = 0; i < scheduleShiftTitlesDayView.size() - 1; i++) {
-                int order1 = workRoleNOrders.get(scheduleShiftTitlesDayView.get(i).getText().toLowerCase());
-                int order2 = workRoleNOrders.get(scheduleShiftTitlesDayView.get(i + 1).getText().toLowerCase());
+                int order1 = workRoleNOrders.get(scheduleShiftTitlesDayView.get(i).getText().toLowerCase().replaceAll(" ", ""));
+                int order2 = workRoleNOrders.get(scheduleShiftTitlesDayView.get(i + 1).getText().toLowerCase().replaceAll(" ", ""));
                 if (order1 > order2) {
                     isConsistent = false;
                     break;
@@ -2500,9 +2500,9 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         ArrayList<WebElement> availableWorkRoleFilters = getAvailableFilters().get("workrole");
         for (int i = 0; i < availableWorkRoleFilters.size() - 1; i++) {
             int order1 = workRoleNOrders.get(availableWorkRoleFilters.get(i).getText().toLowerCase().
-                    substring(0, availableWorkRoleFilters.get(i).getText().toLowerCase().indexOf('(')).trim());
+                    substring(0, availableWorkRoleFilters.get(i).getText().toLowerCase().indexOf('(')).trim().replaceAll(" ", ""));
             int order2 = workRoleNOrders.get(availableWorkRoleFilters.get(i + 1).getText().toLowerCase().
-                    substring(0, availableWorkRoleFilters.get(i + 1).getText().toLowerCase().indexOf('(')).trim());
+                    substring(0, availableWorkRoleFilters.get(i + 1).getText().toLowerCase().indexOf('(')).trim().replaceAll(" ", ""));
             if (order1 > order2) {
                 isConsistent = false;
                 break;

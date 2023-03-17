@@ -304,7 +304,8 @@ public class OpsPortalWorkRolesPage extends BasePage {
     public void getWholeWorkRoleNDisplayOrderMap(HashMap<String, Integer> workRoleNOrders) throws Exception {
         if (areListElementVisible(workRoleNames, 5) && areListElementVisible(displayOrders, 5)) {
             for (int i = 0; i < workRoleNames.size(); i++) {
-                workRoleNOrders.put(workRoleNames.get(i).findElement(By.cssSelector("span.ng-binding")).getText().toLowerCase(), Integer.valueOf(displayOrders.get(i).getText()));
+                workRoleNOrders.put(workRoleNames.get(i).findElement(By.cssSelector("span.ng-binding")).getText().toLowerCase()
+                        .replaceAll(" ", ""), Integer.valueOf(displayOrders.get(i).getText()));
             }
             if (isElementLoaded(rightArrowBtn, 3) && !rightArrowBtn.getAttribute("class").contains("lg-pagination__arrow--disabled")) {
                 clickTheElement(rightArrowBtn);
