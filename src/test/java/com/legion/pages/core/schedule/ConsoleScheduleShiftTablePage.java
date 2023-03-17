@@ -3079,7 +3079,15 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement element: groupTitles){
                 HashMap<String, String> workRoleStyleInfo = new HashMap<>();
                 workRoleStyleInfo.put("optionName",element.findElement(By.cssSelector(".week-schedule-shift-title")).getText().toLowerCase());
-                workRoleStyleInfo.put("optionStyle", element.findElement(By.cssSelector(".week-schedule-shift-color")).getAttribute("style"));
+                try {
+                    if (isElementLoaded(element.findElement(By.cssSelector(".week-schedule-shift-color")), 5)) {
+                        workRoleStyleInfo.put("optionStyle", element.findElement(By.cssSelector(".week-schedule-shift-color")).getAttribute("style"));
+                    } else {
+                        workRoleStyleInfo.put("optionStyle","");
+                    }
+                } catch (Exception e) {
+                    workRoleStyleInfo.put("optionStyle","");
+                }
                 results.add(workRoleStyleInfo);
             }
         } else {
