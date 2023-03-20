@@ -577,8 +577,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 randomIndex = (new Random()).nextInt(profileIcons.size());
                 i++;
             }
-            clickTheElement(profileIcons.get(randomIndex));
             selectedShift = shifts.get(randomIndex);
+            clickTheElement(profileIcons.get(randomIndex));
         } else if (areListElementVisible(scheduleTableWeekViewWorkerDetail, 10) && areListElementVisible(dayViewAvailableShifts, 10)) {
             int randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
             int i = 0;
@@ -588,8 +588,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 randomIndex = (new Random()).nextInt(scheduleTableWeekViewWorkerDetail.size());
                 i++;
             }
-            clickTheElement(scheduleTableWeekViewWorkerDetail.get(randomIndex));
             selectedShift = dayViewAvailableShifts.get(randomIndex);
+            clickTheElement(scheduleTableWeekViewWorkerDetail.get(randomIndex));
         } else
             SimpleUtils.fail("Can't Click on Profile Icon due to unavailability ",false);
 

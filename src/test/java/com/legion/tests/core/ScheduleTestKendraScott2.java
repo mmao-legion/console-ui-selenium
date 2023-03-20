@@ -513,7 +513,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		String firstNameOfSelectedTM = newShiftPage.selectTeamMembers().split(" ")[0];
 		newShiftPage.clickOnOfferOrAssignBtn();
 		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" ,
-				firstNameOfSelectedTM.equals(scheduleShiftTablePage.getShiftById(selectedShiftId).findElement(By.className("week-schedule-worker-name")).getText().split(" ")[0].trim()), false);
+				firstNameOfSelectedTM.equals(scheduleShiftTablePage.getShiftById(selectedShiftId).findElement(By.cssSelector(".rows .week-schedule-worker-name")).getText().split(" ")[0].trim()), false);
 		//Select new TM from Recommended TMs tab
 		String firstNameOfSelectedTM2 = "";
 		String selectedShiftId2 = "";
@@ -533,7 +533,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		newShiftPage.clickOnOfferOrAssignBtn();
 		Thread.sleep(5000);
 		SimpleUtils.assertOnFail(" New selected TM doesn't display in scheduled table" ,
-				firstNameOfSelectedTM2.equals(scheduleShiftTablePage.getShiftById(selectedShiftId2).findElement(By.cssSelector(".row .week-schedule-worker-name")).getText().split(" ")[0].trim()), false);
+				firstNameOfSelectedTM2.equals(scheduleShiftTablePage.getShiftById(selectedShiftId2).findElement(By.cssSelector(".rows .week-schedule-worker-name")).getText().split(" ")[0].trim()), false);
 		scheduleMainPage.clickOnFilterBtn();
 		scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
 		scheduleMainPage.clickOnFilterBtn();
@@ -541,14 +541,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		//Click on the Convert to open shift, checkbox is available to offer the shift to any specific TM[optional] Cancel /yes
 		//if checkbox is unselected then, shift is convert to open
 		selectedShift = shiftOperatePage.clickOnProfileIcon();
-		String tmFirstName = selectedShift.findElement(By.className("week-schedule-worker-name")).getText().split(" ")[0];
+		String tmFirstName = selectedShift.findElement(By.cssSelector(".rows .week-schedule-worker-name")).getText().split(" ")[0];
 		shiftOperatePage.clickOnConvertToOpenShift();
 		if (shiftOperatePage.verifyConvertToOpenPopUpDisplay(tmFirstName)) {
 			shiftOperatePage.convertToOpenShiftDirectly();
 		}
         //if checkbox is select then select team member page will display
 		selectedShift = shiftOperatePage.clickOnProfileIcon();
-		tmFirstName = selectedShift.findElement(By.className("week-schedule-worker-name")).getText().split(" ")[0];
+		tmFirstName = selectedShift.findElement(By.cssSelector(".rows .week-schedule-worker-name")).getText().split(" ")[0];
 		shiftOperatePage.clickOnConvertToOpenShift();
 		if (shiftOperatePage.verifyConvertToOpenPopUpDisplay(tmFirstName)) {
 			shiftOperatePage.convertToOpenShiftAndOfferToSpecificTMs();

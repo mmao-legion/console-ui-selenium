@@ -2118,24 +2118,28 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 
 	@FindBy(css = "[question-title=\"Enable the Work Force Sharing Group?\"] .lg-button-group div")
 	private List<WebElement> yesNoForWFS;
+	@FindBy(css = "[question-title=\"Do you want to send Shift Offers to other locations?\"] .lg-button-group div")
+	private List<WebElement> yesNoForWFSControls;
 
 	@Override
 	public void setWFS(String wfsMode) {
+		List<WebElement> yesNo = null;
 		if (areListElementVisible(yesNoForWFS, 5)) {
-			for (WebElement yesNoOption : yesNoForWFS
-			) {
-				if (yesNoOption.getText().equalsIgnoreCase(wfsMode)) {
-					click(yesNoOption);
-					if (wfsMode.equalsIgnoreCase("yes")) {
-						setWFSStatus(true);
-					} else
-						setWFSStatus(false);
+			yesNo = yesNoForWFS;
+		} else if (areListElementVisible(yesNoForWFSControls, 15)) {
+			yesNo = yesNoForWFSControls;
+		}
+		for (WebElement yesNoOption : yesNo) {
+			if (yesNoOption.getText().equalsIgnoreCase(wfsMode)) {
+				click(yesNoOption);
+				if (wfsMode.equalsIgnoreCase("yes")) {
+					setWFSStatus(true);
+				} else
+					setWFSStatus(false);
 					break;
 				}
 			}
-			SimpleUtils.pass("Do you want to send Shift Offers to other locations?  to " + wfsMode);
-		} else
-			SimpleUtils.fail("Workforce sharing group ", false);
+		SimpleUtils.report("Do you want to send Shift Offers to other locations?  to " + wfsMode);
 	}
 
 	@Override
