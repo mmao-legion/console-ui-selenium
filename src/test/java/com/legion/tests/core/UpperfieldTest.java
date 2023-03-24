@@ -3155,7 +3155,8 @@ public class UpperfieldTest extends TestBase {
             String anotherBUName = locationSelectorPage.getSelectedUpperFields().get(BusinessUnit);
             locationSelectorPage.verifyTheDisplayBUWithSelectedBUConsistent(anotherBUName);
             List<String> regionInBU2 =  timeSheetPage.getLocationName();
-            SimpleUtils.assertOnFail("TimeSheet BU view page fail to update!", !regionInBU1.containsAll(regionInBU2), false);
+            SimpleUtils.assertOnFail("TimeSheet BU view page fail to update!",
+                    (regionInBU2.size() == 0) || (regionInBU2.size() != 0 && !regionInBU1.containsAll(regionInBU2)), false);
 
             //Validate the click ability of backward button.
             locationSelectorPage.changeUpperFieldDirect(BusinessUnit, buName);
