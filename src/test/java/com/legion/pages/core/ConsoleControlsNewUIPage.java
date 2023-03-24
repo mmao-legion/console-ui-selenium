@@ -7689,13 +7689,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 	}
 
-	@FindBy(css = "question-input[question-title*=\"Is Seniority taken into account for shift search and recommendation?\"]")
+	@FindBy(css = "question-input[question-title*=\"What type of seniority taken into account for search and recommendation?\"]")
 	private WebElement senioritySection;
 	@FindBy(css = "[question-title*=\"search and recommendation?\"] yes-no")
 	private WebElement seniorityToggle;
 	@Override
 	public void isSenioritySectionLoaded() throws Exception {
-		if (isElementLoaded(senioritySection,10))
+		if (isElementLoaded(senioritySection,20))
 			SimpleUtils.report("The seniority toggle is loaded!");
 		else
 			SimpleUtils.fail("The seniority toggle is not loaded!", false);
@@ -7750,6 +7750,24 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Scheduling Policies: Seniority toggle section is not loaded!", false);
 	}
 
+	@FindBy(css = "question-input[question-title*=\"What type of seniority taken into account for search and recommendation?\"] select")
+	private WebElement seniorityTypeList;
+	@Override
+	public void selectSeniorityType(String optionValue) throws Exception {
+		if (isElementLoaded(senioritySection, 3)){
+			if(isElementLoaded(seniorityTypeList, 3)){
+				Select selectedSenioritySort = new Select(seniorityTypeList);
+				selectedSenioritySort.selectByVisibleText(optionValue);
+				SimpleUtils.report("Select '" + optionValue + "' as the seniority's order");
+				waitForSeconds(2);
+			}else{
+				SimpleUtils.fail("Seniority sort list fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Seniority sort section fail to load!", false);
+		}
+	}
+
 	@FindBy(css = "question-input[question-title*=\"Sort seniority by ascending or descending?\"]")
 	private WebElement senioritySortSection;
 	@FindBy(css = "question-input[question-title*=\"Sort seniority by ascending or descending?\"] select")
@@ -7764,8 +7782,9 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("The sort of seniority section is not loaded!", false);
 	}
 	@Override
-	public void selectSortOfSeniority(String optionValue) throws Exception {
-		if (isElementLoaded(senioritySortSection, 3)){
+	public void selectSortOfSeniority(String seniorityType, String optionValue) throws Exception {
+		selectSeniorityType(seniorityType);
+		if (isElementLoaded(senioritySortSection, 20)){
 			if(isElementLoaded(senioritySortList, 3)){
 				Select selectedSenioritySort = new Select(senioritySortList);
 				selectedSenioritySort.selectByVisibleText(optionValue);

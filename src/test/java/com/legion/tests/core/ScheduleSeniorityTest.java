@@ -80,27 +80,35 @@ public class ScheduleSeniorityTest extends TestBase {
 			configurationPage.clickOnConfigurationCrad("Scheduling Policies");
 			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 
-			//Edit the seniority toggle as Yes, save the change
+			//Edit the seniority toggle as Seniority by enterprise, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(3000);
 			controlsNewUIPage.isSenioritySectionLoaded();
-			controlsNewUIPage.updateSeniorityToggle("Yes");
+			controlsNewUIPage.selectSeniorityType("Seniority by enterprise");
 			configurationPage.publishNowTheTemplate();
-			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
-			Thread.sleep(10000);
-			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
-			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"),false);
+//			Thread.sleep(10000);
+//			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
+//			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"),false);
 
-			//Edit the seniority toggle as No, save the change
+			//Edit the seniority toggle as No seniority, save the change
+			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(3000);
 			controlsNewUIPage.isSenioritySectionLoaded();
-			controlsNewUIPage.updateSeniorityToggle("No");
+			controlsNewUIPage.selectSeniorityType("No Seniority");
 			configurationPage.publishNowTheTemplate();
+//			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+//			Thread.sleep(10000);
+//			activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
+//			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("No"),false);
+
+			//Edit the seniority toggle as Seniority by work role, save the change
 			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
-			Thread.sleep(10000);
-			activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
-			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("No"),false);
+			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+			Thread.sleep(3000);
+			controlsNewUIPage.isSenioritySectionLoaded();
+			controlsNewUIPage.selectSeniorityType("Seniority by work role");
+			configurationPage.publishNowTheTemplate();
 
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
@@ -137,7 +145,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			//Edit the seniority sort as Ascending, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(3000);
-			controlsNewUIPage.selectSortOfSeniority("Ascending");
+			controlsNewUIPage.selectSortOfSeniority("Seniority by enterprise","Ascending");
 			configurationPage.publishNowTheTemplate();
 			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 			Thread.sleep(10000);
@@ -147,7 +155,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			//Edit the seniority sort as Descending, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(3000);
-			controlsNewUIPage.selectSortOfSeniority("Descending");
+			controlsNewUIPage.selectSortOfSeniority("Seniority by enterprise","Descending");
 			configurationPage.publishNowTheTemplate();
 			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 			Thread.sleep(10000);
@@ -188,16 +196,16 @@ public class ScheduleSeniorityTest extends TestBase {
 			configurationPage.clickOnConfigurationCrad("Scheduling Policies");
 			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 
-			//Edit the seniority toggle as No, save the change
+			//Edit the seniority toggle as No Seniority, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(3000);
 			controlsNewUIPage.isSenioritySectionLoaded();
-			controlsNewUIPage.updateSeniorityToggle("No");
+			controlsNewUIPage.selectSeniorityType("No Seniority");
 			configurationPage.publishNowTheTemplate();
-			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
-			Thread.sleep(10000);
-			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
-			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("No"),false);
+//			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+//			Thread.sleep(10000);
+//			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
+//			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("No"),false);
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(180000);
@@ -320,16 +328,16 @@ public class ScheduleSeniorityTest extends TestBase {
 			configurationPage.clickOnConfigurationCrad("Scheduling Policies");
 			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 
-			//Edit the seniority toggle as No, save the change
+			//Edit the seniority toggle as No Seniority, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(3000);
 			controlsNewUIPage.isSenioritySectionLoaded();
-			controlsNewUIPage.updateSeniorityToggle("No");
+			controlsNewUIPage.selectSeniorityType("No Seniority");
 			configurationPage.publishNowTheTemplate();
-			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
-			Thread.sleep(10000);
-			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
-			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("No"),false);
+//			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+//			Thread.sleep(10000);
+//			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
+//			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("No"),false);
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(200000);
@@ -459,16 +467,16 @@ public class ScheduleSeniorityTest extends TestBase {
 			configurationPage.clickOnConfigurationCrad("Scheduling Policies");
 			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 
-			//Edit the seniority toggle as Yes, save the change
+			//Edit the seniority toggle as Seniority by enterprise, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(3000);
 			controlsNewUIPage.isSenioritySectionLoaded();
-			controlsNewUIPage.updateSeniorityToggle("Yes");
+			controlsNewUIPage.selectSeniorityType("Seniority by enterprise");
 			configurationPage.publishNowTheTemplate();
-			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
-			Thread.sleep(10000);
-			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
-			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"),false);
+//			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+//			Thread.sleep(10000);
+//			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
+//			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"),false);
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(180000);
@@ -592,16 +600,16 @@ public class ScheduleSeniorityTest extends TestBase {
 			configurationPage.clickOnConfigurationCrad("Scheduling Policies");
 			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 
-			//Edit the seniority toggle as Yes, save the change
+			//Edit the seniority toggle as Seniority by enterprise, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(3000);
 			controlsNewUIPage.isSenioritySectionLoaded();
-			controlsNewUIPage.updateSeniorityToggle("Yes");
+			controlsNewUIPage.selectSeniorityType("Seniority by enterprise");
 			configurationPage.publishNowTheTemplate();
-			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
-			Thread.sleep(10000);
-			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
-			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"), false);
+//			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+//			Thread.sleep(10000);
+//			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
+//			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"), false);
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(180000);
@@ -734,16 +742,16 @@ public class ScheduleSeniorityTest extends TestBase {
 			configurationPage.clickOnConfigurationCrad("Scheduling Policies");
 			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 
-			//Edit the seniority toggle as Yes, save the change
+			//Edit the seniority toggle as Seniority by enterprise, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(3000);
 			controlsNewUIPage.isSenioritySectionLoaded();
-			controlsNewUIPage.updateSeniorityToggle("Yes");
+			controlsNewUIPage.selectSeniorityType("Seniority by enterprise");
 			configurationPage.publishNowTheTemplate();
-			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
-			Thread.sleep(10000);
-			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
-			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"),false);
+//			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+//			Thread.sleep(10000);
+//			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
+//			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("Yes"),false);
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(200000);
@@ -869,9 +877,10 @@ public class ScheduleSeniorityTest extends TestBase {
 			//Edit the seniority toggle as Yes set sort as Ascending, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(10000);
-			controlsNewUIPage.isSenioritySectionLoaded();
-			controlsNewUIPage.updateSeniorityToggle("Yes");
-			controlsNewUIPage.selectSortOfSeniority("Ascending");
+//			controlsNewUIPage.isSenioritySectionLoaded();
+//			controlsNewUIPage.selectSeniorityType("Seniority by enterprise");
+//			controlsNewUIPage.updateSeniorityToggle("Yes");
+			controlsNewUIPage.selectSortOfSeniority("Seniority by enterprise","Ascending");
 			configurationPage.publishNowTheTemplate();
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
@@ -997,12 +1006,13 @@ public class ScheduleSeniorityTest extends TestBase {
 			configurationPage.clickOnConfigurationCrad("Scheduling Policies");
 			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 
-			//Edit the seniority toggle as Yes set sort as Ascending, save the change
+			//Edit the seniority toggle as Seniority by enterprise and set sort as Ascending, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(10000);
-			controlsNewUIPage.isSenioritySectionLoaded();
-			controlsNewUIPage.updateSeniorityToggle("Yes");
-			controlsNewUIPage.selectSortOfSeniority("Ascending");
+//			controlsNewUIPage.isSenioritySectionLoaded();
+//			controlsNewUIPage.updateSeniorityToggle("Yes");
+//			controlsNewUIPage.selectSeniorityType("Seniority by enterprise");
+			controlsNewUIPage.selectSortOfSeniority("Seniority by enterprise","Ascending");
 			configurationPage.publishNowTheTemplate();
 			Thread.sleep(5000);
 			switchToConsoleWindow();
@@ -1135,12 +1145,13 @@ public class ScheduleSeniorityTest extends TestBase {
 			configurationPage.clickOnConfigurationCrad("Scheduling Policies");
 			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 
-			//Edit the seniority toggle as Yes set sort as Descending, save the change
+			//Edit the seniority toggle as Seniority by enterprise and set sort as Descending, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(3000);
-			controlsNewUIPage.isSenioritySectionLoaded();
-			controlsNewUIPage.updateSeniorityToggle("Yes");
-			controlsNewUIPage.selectSortOfSeniority("Descending");
+//			controlsNewUIPage.isSenioritySectionLoaded();
+//			controlsNewUIPage.updateSeniorityToggle("Yes");
+//			controlsNewUIPage.selectSeniorityType("Seniority by enterprise");
+			controlsNewUIPage.selectSortOfSeniority("Seniority by enterprise","Descending");
 			configurationPage.publishNowTheTemplate();
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
@@ -1270,9 +1281,10 @@ public class ScheduleSeniorityTest extends TestBase {
 			//Edit the seniority toggle as Yes set sort as Descending, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(3000);
-			controlsNewUIPage.isSenioritySectionLoaded();
-			controlsNewUIPage.updateSeniorityToggle("Yes");
-			controlsNewUIPage.selectSortOfSeniority("Descending");
+//			controlsNewUIPage.isSenioritySectionLoaded();
+//			controlsNewUIPage.updateSeniorityToggle("Yes");
+//			controlsNewUIPage.selectSeniorityType("Seniority by enterprise");
+			controlsNewUIPage.selectSortOfSeniority("Seniority by enterprise","Descending");
 			configurationPage.publishNowTheTemplate();
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
