@@ -378,7 +378,7 @@ public interface ControlsNewUIPage {
 	public String getSeniorityToggleActiveBtnLabel() throws Exception;
 	public void updateSeniorityToggle(String isSeniorityToggleOpen) throws Exception;
 	public void isSortOfSenioritySectionLoaded() throws Exception;
-	public void selectSortOfSeniority(String optionValue) throws Exception;
+	public void selectSortOfSeniority(String seniorityType, String optionValue) throws Exception;
 	public String getSenioritySort() throws Exception;
 	public boolean isScheduleRestrictionLoaded() throws Exception;
 	public void isAccrualTimeOverrideLoaded() throws Exception;
@@ -393,4 +393,5 @@ public interface ControlsNewUIPage {
 	public List<String> getTimeOffReasonsOnSchedulingPolicy() throws Exception;
 	public void clickAddTimeOffBtn() throws Exception;
 	public boolean getStatusOfSpecificPermissionForSpecificRoles(String section, String roles, String permission) throws Exception;
+	public void selectSeniorityType(String optionValue) throws Exception;
 }
