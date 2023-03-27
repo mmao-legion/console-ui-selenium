@@ -3132,7 +3132,11 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		Map<String, String> result = new HashMap<>();
 		if(isElementLoaded(hrProfileInfoSection, 5) && areListElementVisible(profileInfoFields, 10)){
 			for (WebElement element: profileInfoFields){
-				result.put(element.findElement(By.cssSelector(".label")).getText(), element.findElement(By.cssSelector(".value")).getText());
+				try {
+					result.put(element.findElement(By.cssSelector(".label")).getText(), element.findElement(By.cssSelector(".value")).getText());
+				} catch (Exception e) {
+					result.put(element.findElement(By.cssSelector(".label")).getText(), "");
+				}
 			}
 		} else {
 			SimpleUtils.fail("User Profile page: HR Profile Information section fail to load!", false);
