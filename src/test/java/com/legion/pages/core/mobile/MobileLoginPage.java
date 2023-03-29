@@ -113,24 +113,67 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 //
 //	//Blue app
 //
-	@FindBy(id="co.legion.client:id/loginBTN")
-	private MobileElement btnSelectLogin;
+//	@FindBy(id="co.legion.client.staging:id/signInBT")
+//	private MobileElement btnSelectLogin;
 
-	@FindBy(id="co.legion.client:id/tv_title")
+	@FindBy(xpath="//android.widget.Button[contains(@text,'Sign in')]")
+	private MobileElement btnSignIn;
+
+	@FindBy(xpath="//android.widget.TextView[contains(@text,'WELCOME TO LEGION')]")
 	private MobileElement titleLogin;
 
 	@FindBy(id="co.legion.client:id/buildType")
 	private MobileElement clickEnterprise;
 
-	@FindBy(id="co.legion.client:id/usernameET")
+	@FindBy(xpath="//android.widget.EditText[@index,'1']")
 	private MobileElement userNameMobile;
 
-	@FindBy(id="co.legion.client:id/passwordEditText")
+	@FindBy(xpath="//android.view.View[2]/android.view.View/android.view.View/android.widget.EditText")
 	private MobileElement passwordMobile;
 
-	@FindBy(id="co.legion.client:id/login")
+	@FindBy(xpath="//android.widget.Button[@index,'3']")
 	private MobileElement loginBtn;
 
+	@FindBy(xpath="//android.widget.Button[contains(@text,'Profile')]")
+	private MobileElement createProfileBtn;
+
+	@FindBy(xpath="//android.widget.TextView[contains(@text,'Employer')]")
+	private MobileElement txtCurrentEmployerPage;
+
+	@FindBy(xpath="//android.widget.EditText[@index,'1']")
+	private MobileElement txtCompanyIdentifier;
+
+	@FindBy(xpath="//android.widget.Button[@text,'Continue']")
+	private MobileElement btnContinue;
+
+	@FindBy(xpath="//android.widget.TextView[contains(@text,'company')]")
+	private MobileElement txtCompanyIdentifierMatch;
+
+	@FindBy(xpath="//android.widget.Button[1]")
+	private MobileElement btnCont;
+
+	@FindBy(xpath="//android.widget.TextView[contains(@text,'Profile today')]")
+	private MobileElement txtLegionProfileToday;
+
+	@FindBy(xpath="//android.view.View[2]/android.view.View[1]//android.widget.EditText")
+	private List<MobileElement> txtEmail;
+
+	@FindBy(xpath="//android.view.View[2]/android.view.View[2]//android.widget.EditText")
+	private MobileElement txtPassword;
+
+	@FindBy(xpath="//android.view.View[2]/android.view.View[3]//android.widget.EditText")
+	private MobileElement txtConfirmPassword;
+
+	@FindBy(xpath="//android.view.View[2]/android.view.View[4]//android.widget.EditText")
+	private MobileElement txtFName;
+
+	@FindBy(xpath="//android.view.View[2]/android.view.View[5]//android.widget.EditText")
+	private MobileElement txtLName;
+
+	@FindBy(xpath="//android.view.ViewGroup/android.widget.TextView")
+	private MobileElement txtLegionTermsOfServices;
+	@FindBy(xpath="//android.widget.Button[contains(@text,'Agree')]")
+	private MobileElement btnAgree;
 	@FindBy(xpath="//android.widget.TextView[@text='Shift Offers']")
 	private MobileElement shiftOffers;
 
@@ -257,10 +300,10 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 	@FindBy(id="co.legion.client:id/topSection")
 	private MobileElement imgLegion;
 
-	@FindBy(id="co.legion.client:id/side_menu_icon")
+	@FindBy(xpath="//android.widget.ImageButton[@content-desc='Home']")
 	private MobileElement iconSideMenu;
 
-	@FindBy(id="co.legion.client:id/logoutLL")
+	@FindBy(xpath="//android.widget.CheckedTextView[contains(@text,'Logout')]")
 	private MobileElement btnLogout;
 
 	@FindBy(id="co.legion.client:id/btNextTv")
@@ -317,7 +360,7 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 	@FindBy(id="co.legion.client:id/toolbarBack")
 	private MobileElement btnToolBarBack;
 
-	@FindBy(id="co.legion.client:id/saveTv")
+	@FindBy(xpath="//android.widget.TextView[contains(@text,'Logout')]")
 	private MobileElement btnLogoutSave;
 
 	@FindBy(id="co.legion.client:id/statTimeTV")
@@ -349,18 +392,23 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 	@Override
 	public void clickFirstLoginBtn() throws Exception {
 		// TODO Auto-generated method stub
-		if(isElementLoadedOnMobile(btnSelectLogin)){
-			clickOnMobileElement(btnSelectLogin);
-			SimpleUtils.pass("First Login Button clicked Successfully!");
+
+//		btnSelectLogin.click();
+		if(isElementLoadedOnMobile(btnSignIn,60)){
+			clickOnMobileElement(btnSignIn);
+			SimpleUtils.pass("First Sign In Button clicked Successfully!");
 		}else{
 			MyThreadLocal.setPlatformName("mobile");
-			SimpleUtils.fail("First Login Button not clicked Successfully!", false);
+			SimpleUtils.fail("First Sign In Button not clicked Successfully!", false);
 		}
 
 	}
 	
 	public void verifyLoginTitle(String textLogin) throws Exception{
-		if(isElementLoadedOnMobile(titleLogin)){
+		if(isElementLoadedOnMobile(titleLogin,60)){
+			System.out.println("Title login is " +titleLogin.getText());
+			boolean bol = titleLogin.getText().equalsIgnoreCase(textLogin);
+			System.out.println(bol);
 			if(titleLogin.getText().equalsIgnoreCase(textLogin)){
 				SimpleUtils.pass("Login Title "+ textLogin + " matches with "+titleLogin);
 			}else{
@@ -388,10 +436,11 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 	public void loginToLegionWithCredentialOnMobile(String userName, String Password) throws Exception
     {
     	waitForSeconds(2);
-    	if(isElementLoadedOnMobile(userNameMobile)){
+    	if(isElementLoadedOnMobile(userNameMobile,60)){
     		userNameMobile.sendKeys(userName);
     		waitForSeconds(3);
     		SimpleUtils.pass("Username entered Successfully!");
+			clickFirstLoginBtn();
     	}else{
     		MyThreadLocal.setPlatformName("mobile");
     		SimpleUtils.fail("Username not entered Successfully!",false);
@@ -405,20 +454,25 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
     		MyThreadLocal.setPlatformName("mobile");
     		SimpleUtils.fail("Password not entered Successfully!",false);
     	}
-
-		if(isElementLoadedOnMobile(imgLegion)){
-			clickOnMobileElement(imgLegion);
-			SimpleUtils.pass("Legion image clicked Successfully!");
-		}else{
-			MyThreadLocal.setPlatformName("mobile");
-			SimpleUtils.fail("Legion image not clicked Successfully!",false);
-		}
-    	
-    	clickOnMobileElement(loginBtn);
     }
 
+	// Click on Sign in button once username and pwd both entered
 
-    public void clickOpenShiftOffers(String teamMember) throws Exception{
+	public void clickLoginBtn() throws Exception {
+		// TODO Auto-generated method stub
+		if(isElementLoadedOnMobile(loginBtn,60)){
+			clickOnMobileElement(loginBtn);
+			SimpleUtils.pass("Sign in Button clicked after entering username and pwd");
+		}else{
+			MyThreadLocal.setPlatformName("mobile");
+			SimpleUtils.fail("Sign In Button not clicked Successfully!", false);
+		}
+
+	}
+
+
+
+	public void clickOpenShiftOffers(String teamMember) throws Exception{
 		waitForSeconds(8);
 //		validateOpenShiftInfoFromConsoleAndMobile();
 		if(isElementLoadedOnMobile(shiftOffers,20)){
@@ -617,25 +671,34 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 		}
 	}
 
-	public void clickLogoutBtn() throws Exception{
-		if(isElementLoadedOnMobile(iconSideMenu,5)){
+	// Verification of Home Page
+
+	public void displayHomePageLoaded() throws Exception{
+		if(isElementEnabledOnMobile(iconSideMenu,60)){
+			SimpleUtils.pass("Home Page loaded Successfully!!");
 			clickOnMobileElement(iconSideMenu);
 			SimpleUtils.pass("Clicked on side menu Successfully!!");
-			if(isElementLoadedOnMobile(btnLogout,5)){
-				clickOnMobileElement(btnLogout);
-				SimpleUtils.pass("Clicked on logout button Successfully!!");
-				if(isElementLoadedOnMobile(btnLogoutSave,5)){
-					clickOnMobileElement(btnLogoutSave);
-					SimpleUtils.pass("Clicked on logout save button Successfully!!");
-				}else{
-					SimpleUtils.fail("Logout Save button does not get clicked Successfully!!", false);
-				}
+		}else{
+			SimpleUtils.fail("Home Page does not get loaded Successfully!!", false);
+		}
+	}
+
+	public void clickLogoutBtn() throws Exception{
+
+		if(isElementEnabledOnMobile(btnLogout,20)){
+			clickOnMobileElement(btnLogout);
+			SimpleUtils.pass("Clicked on logout button Successfully!!");
+			if(isElementEnabledOnMobile(btnLogoutSave,20)){
+				clickOnMobileElement(btnLogoutSave);
+				SimpleUtils.pass("Clicked on logout save button Successfully!!");
+				waitForSeconds(3);
 			}else{
-				SimpleUtils.fail("Logout button does not get clicked Successfully!!", false);
+				SimpleUtils.fail("Logout Save button does not get clicked Successfully!!", false);
 			}
 		}else{
-			SimpleUtils.fail("Side menu does not get clicked Successfully!!", false);
+			SimpleUtils.fail("Logout button does not get clicked Successfully!!", false);
 		}
+
 	}
 
 	public void clickOnSwapLink() throws Exception{
@@ -858,6 +921,143 @@ public class MobileLoginPage extends BasePage implements LoginPageAndroid {
 			}else{
 				SimpleUtils.pass("Home Page not loaded Successfully!!");
 			}
+		}
+	}
+
+	public void clickOnLegionProfileBtn() throws Exception{
+		if(isElementEnabledOnMobile(createProfileBtn,30)){
+			clickOnMobileElement(createProfileBtn);
+			SimpleUtils.pass("Create Profile Page clicked Successfully!!");
+		}else{
+			SimpleUtils.fail("Craete Profile Page not clicked Successfully!!",false);
+		}
+	}
+
+	public void verifyCurrentEmployerPageLanded(String currentEmployerPage) throws Exception{
+		if(isElementEnabledOnMobile(txtCurrentEmployerPage,30)){
+			if(txtCurrentEmployerPage.getText().equalsIgnoreCase(currentEmployerPage)){
+				SimpleUtils.pass("Current Employer Page Title matched!!");
+			}else{
+				SimpleUtils.fail("Current Employer Page Title did not match!!" + txtCurrentEmployerPage.getText(), true );
+			}
+		}else{
+			SimpleUtils.fail("Employer Page not loaded Successfully!!",false);
+		}
+	}
+
+	public void enterCompanyIdentifier(String companyIdentifier) throws Exception{
+		if(isElementEnabledOnMobile(txtCompanyIdentifier,30)){
+			txtCompanyIdentifier.sendKeys(companyIdentifier);
+		}else{
+			SimpleUtils.fail("Company Identifier text is not enabled",false);
+		}
+	}
+
+	public void clickOnContinueBtn() throws Exception{
+		if(isElementEnabledOnMobile(btnContinue,30)){
+			clickOnMobileElement(btnContinue);
+			SimpleUtils.pass("Clicked on Continue button Successfully!!");
+		}else{
+			SimpleUtils.fail("Continue button is not enabled",false);
+		}
+	}
+
+	public void verifyFoundYourCompany() throws Exception {
+		if(isElementEnabledOnMobile(txtCompanyIdentifierMatch,30)){
+			if(isElementEnabledOnMobile(btnCont,5)){
+				clickOnMobileElement(btnCont);
+			}
+			else{
+				SimpleUtils.fail("Continue button is not enabled",false);
+			}
+		}else{
+			SimpleUtils.fail("Continue identifier is not displayed on the page " + txtCompanyIdentifierMatch.getText(),true);
+		}
+	}
+
+	public void verifyLegionProfileTodayPageLanded(String profileTodayPage) throws Exception{
+		if(isElementEnabledOnMobile(txtLegionProfileToday,30)){
+			if(txtLegionProfileToday.getText().equalsIgnoreCase(profileTodayPage)){
+				SimpleUtils.pass("Today Legion profile Page Title matched!!");
+			}else{
+				SimpleUtils.fail("Today Legion profile Page Title did not match!!" + txtLegionProfileToday.getText(), true );
+			}
+		}else{
+			SimpleUtils.fail("Today Legion profile Page not loaded Successfully!!",true);
+		}
+	}
+
+	public void verifyEmailPageLandedForOnboarding(String valEmail) throws Exception {
+		if(areListElementVisibleOnMobile(txtEmail,30)){
+			if(isElementEnabledOnMobile(txtEmail.get(0),10)){
+				txtEmail.get(0).sendKeys(valEmail);
+				SimpleUtils.pass("Emailid has entered successfully!!");
+			}else{
+				SimpleUtils.fail("Email text is not editable", false);
+			}
+		}else{
+			SimpleUtils.fail("Create Profile to fill up user details not loaded!!",false);
+		}
+
+	}
+
+	public void enterPassword(String pwd) throws Exception{
+		if(isElementEnabledOnMobile(txtPassword,5)){
+			txtPassword.sendKeys(pwd);
+			SimpleUtils.pass("Password has entered successfully!!");
+		}else{
+			SimpleUtils.fail("Password field is not editable",false);
+		}
+	}
+
+	public void enterConfirmPassword(String confirmPwd, String pwd) throws Exception{
+		if(isElementEnabledOnMobile(txtConfirmPassword,5)){
+			txtConfirmPassword.sendKeys(confirmPwd);
+			SimpleUtils.pass("Confirm Password " + confirmPwd + " matches with given password " + pwd);
+		}else{
+			SimpleUtils.fail("ConfirmPassword field is not editable",false);
+		}
+	}
+
+	public void enterFName(String fName) throws Exception{
+		if(isElementEnabledOnMobile(txtFName,5)){
+			txtFName.sendKeys(fName);
+			SimpleUtils.pass("First Name has entered successfully!!");
+		}else{
+			SimpleUtils.fail("First Name field is not editable",false);
+		}
+	}
+
+	public void enterLName(String lName) throws Exception{
+		if(isElementEnabledOnMobile(txtLName,5)){
+			txtLName.sendKeys(lName);
+			SimpleUtils.pass("Last Name has entered successfully!!");
+		}else{
+			SimpleUtils.fail("Last Name field is not editable",false);
+		}
+	}
+
+	public void verifyLegionTISPageLanded(String legionTIS) throws Exception{
+		if(isElementEnabledOnMobile(txtLegionTermsOfServices,120)){
+//			System.out.println(txtLegionTermsOfServices.getText());
+			if(txtLegionTermsOfServices.getText().equalsIgnoreCase(legionTIS)){
+				SimpleUtils.pass("Legion Terms of Service Page Title matched!!");
+			}else{
+				SimpleUtils.fail("Legion Terms of Service Page Title did not match!!" + txtLegionTermsOfServices.getText(), true );
+			}
+		}else{
+			SimpleUtils.fail("Legion Terms of Service Page not loaded Successfully!!",true);
+		}
+	}
+
+	public void clickOnTISAgreeBtn() throws Exception{
+		waitForSeconds(20);
+		swipeUpUntilElementFound(25,1,btnAgree);
+		if(isElementEnabledOnMobile(btnAgree,5)){
+			clickOnMobileElement(btnAgree);
+			SimpleUtils.pass("Clicked on Agree button successfully!!");
+		}else{
+			SimpleUtils.fail("Agree button is not clickable",false);
 		}
 	}
 

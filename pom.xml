@@ -17,8 +17,8 @@
         <datatable.version>1.0.3</datatable.version>
         <tag-expressions.version>1.1.1</tag-expressions.version>
         <gherkin.version>5.1.0</gherkin.version>
-        <enterprise>opauto</enterprise>
-        <env>https://rc-enterprise.dev.legion.work/</env>
+        <enterprise>legioncoffee</enterprise>
+        <env>https://staging-enterprise.dev.legion.work/</env>
         <testRail>No</testRail>
         <seleniumGridPort>4444</seleniumGridPort>
         <domainName>localhost</domainName>

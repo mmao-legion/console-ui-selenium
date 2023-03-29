@@ -2,9 +2,9 @@
  "CHROME_DRIVER_PATH": "D:\\chromedriver.exe",
   "FIREFOX_DRIVER_PATH": "D:\\geckodriver.exe",
  "DEVURL": "https://mobilestage.legion.work/",
- "QAURL": "https://rc-enterprise.dev.legion.work/",
+ "QAURL": "https://staging-enterprise.dev.legion.work/",
  "Screenshot_Path": "C:\\DevelopZorang15March\\console-ui-selenium",
- "ENTERPRISE" : "LegionCoffee2",
+ "ENTERPRISE" : "legioncoffee",
  "Coffee_Enterprise" : "LegionCoffee",
  "LegionTech_Enterprise" : "LegionTech",
  "Coffee2_Enterprise" : "LegionCoffee2",
@@ -38,9 +38,9 @@
  "scheduleWeekCount" : "6",
  "WeekStartOn" : "MON",
  "appiumServerPath" : "C:\\Program Files\\nodejs\\node.exe",
- "appiumJsPath" : "C:\\Users\\Lenovo\\AppData\\Local\\Programs\\Appium\\resources\\app\\node_modules\\appium\\lib\\appium.js",
+ "appiumJsPath" : "C:\\Users\\praka\\Downloads\\resources\\app\\node_modules\\appium\\lib\\appium.js",
  "deviceName" : "OnePlus 6T",
- "platformVersion" : "9",
+ "platformVersion" : "11",
  "isParallelBrowser" : "true",
  "Download_File_Default_Dir" : "C:\\Users\\Lenovo\\Downloads",
  "isHeadlessBrowser" : "false",
@@ -49,5 +49,6 @@
  "legion.cucumber.extent.report.theme" : "dark",
  "legion.cucumber.extent.report.title" : "Legion Cucumber Report",
  "isGridEnabled" : "false",
- "URL" : "http://{0}:{1}/wd/hub"
+ "URL" : "http://{0}:{1}/wd/hub",
+ "password" : "Legionco1"
 }

@@ -289,6 +289,8 @@ public class MyThreadLocal {
 		return testRailRun.get();
 	}
 	public static final ThreadLocal<AndroidDriver<MobileElement>> android_driver = new ThreadLocal<>();
+
+	public static final ThreadLocal<AndroidDriver<MobileElement>> android_driver_web = new ThreadLocal<>();
 	public static ThreadLocal<String> platformname = new ThreadLocal<>();
 
 	public static void setTotalSuiteTestCases(Integer value) {
@@ -439,6 +441,14 @@ public class MyThreadLocal {
 
 	public static AndroidDriver<MobileElement> getAndroidDriver() {
 		return android_driver.get();
+	}
+
+	public static void setAndroidWebDriver(AndroidDriver<MobileElement> _driver) {
+		android_driver_web.set(_driver);
+	}
+
+	public static AndroidDriver<MobileElement> getAndroidWebDriver() {
+		return android_driver_web.get();
 	}
 
 	public static void setEnterprise(String _enterprise) {

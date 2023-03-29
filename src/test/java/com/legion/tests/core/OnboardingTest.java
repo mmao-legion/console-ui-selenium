@@ -27,6 +27,7 @@ import static com.legion.utils.MyThreadLocal.*;
 
 public class OnboardingTest extends TestBase {
 
+   int a =10;
     private static HashMap<String, String> testDataMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/OnboardingTestData.json");
     private String nonSSOEnterprise = propertyMap.get("KendraScott2_Enterprise");
     private String ssoEnterprise = propertyMap.get("Dgch_Enterprise");
@@ -42,6 +43,7 @@ public class OnboardingTest extends TestBase {
     private String firstName = "";
 
     private static Map<String, String> newTMDetails = JsonUtil.getPropertiesFromJsonFile("src/test/resources/AddANewTeamMember.json");
+    int c = 20;
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{

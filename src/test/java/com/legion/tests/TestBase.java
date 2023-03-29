@@ -2,6 +2,7 @@ package com.legion.tests;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.Status;
+import com.google.common.collect.ImmutableMap;
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleAdminPage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
@@ -134,10 +135,27 @@ public abstract class TestBase {
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
+        if (System.getProperty("enterprise") != null && (System.getProperty("enterprise").equalsIgnoreCase("opauto")
+        || System.getProperty("enterprise").equalsIgnoreCase("op"))) {
+            testSuiteID = testRailCfgOp.get("TEST_RAIL_SUITE_ID");
+            testRailProjectID = testRailCfgOp.get("TEST_RAIL_PROJECT_ID");
+            finalTestRailRunName = testRailRunName;
+        }else{
+            testSuiteID = testRailCfg.get("TEST_RAIL_SUITE_ID");
+            testRailProjectID = testRailCfg.get("TEST_RAIL_PROJECT_ID");
+            finalTestRailRunName = testRailRunName;
+        }
+
+
+        if (AllTestCaseIDList==null){
+            AllTestCaseIDList = new ArrayList<Integer>();
+        }
+//        startServer();
+//        mobilePageFactory = createMobilePageFactory();
         //For mobile.
         if(platform!= null && executionon!= null && runMode!= null){
             if (platform.equalsIgnoreCase("android") && executionon.equalsIgnoreCase("realdevice")
-                    && runMode.equalsIgnoreCase("mobile") || runMode.equalsIgnoreCase("mobileAndWeb")){
+                    && runMode.equalsIgnoreCase("mobile") ){
                 startServer();
                 mobilePageFactory = createMobilePageFactory();
             } else{
@@ -176,22 +194,50 @@ public abstract class TestBase {
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setCapability("deviceName", propertyMap.get("deviceName"));
         caps.setCapability("platformName", "Android");
+//        caps.setCapability(CapabilityType.BROWSER_NAME, "Chrome");
+//        caps.setCapability(CapabilityType.VERSION, "108");
         caps.setCapability("noReset",true);
         caps.setCapability("platformVersion", propertyMap.get("platformVersion"));
         caps.setCapability("autoAcceptAlerts", true);
-        caps.setCapability("appPackage", "co.legion.client");
-        caps.setCapability("appActivity", "activities.LegionSplashActivity");
+        caps.setCapability("appPackage", "co.legion.client.staging");
+//        caps.setCapability("appActivity", "activities.LegionSplashActivity");
+        caps.setCapability("appActivity", "co.legion.client.activities.newloginsplash.InitialScreenActivity");
         caps.setCapability("newCommandTimeout", "360");
-        setAndroidDriver( new AndroidDriver<MobileElement>(new URL("https://127.0.0.1:4723/wd/hub"), caps));
+        setAndroidDriver( new AndroidDriver<MobileElement>(new URL("http://localhost:4723/wd/hub"), caps));
         getAndroidDriver().manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
         sleep(10000);
         ExtentTestManager.getTest().log(Status.PASS, "Launched Mobile Application Successfully!");
+//        Map<String, Object> cap = getAndroidDriver().getSessionDetails();
+//        System.out.println("cap is");
+
     }
 
-    @BeforeClass
-    protected void init () {
-        ScreenshotManager.createScreenshotDirIfNotExist();
+    public static void launchMobileWebApp() throws Exception{
+        DesiredCapabilities caps = new DesiredCapabilities();
+        caps.setCapability("deviceName", propertyMap.get("deviceName"));
+        caps.setCapability("platformName", "Android");
+        caps.setCapability("chromedriverExecutable","D:\\drivers\\chromedriver.exe");
+        caps.setCapability(CapabilityType.BROWSER_NAME, "Chrome");
+        caps.setCapability("platformVersion", propertyMap.get("platformVersion"));
+        caps.setCapability("noReset",true);
+//        caps.setCapability("appium:chromeoptions", ImmutableMap("w3c",false));
+        caps.setCapability("newCommandTimeout", "360");
+        caps.setCapability("appium:chromeOptions",ImmutableMap.of("w3c",false));
+        setAndroidWebDriver( new AndroidDriver<MobileElement>(new URL("http://localhost:4723/wd/hub"), caps));
+        getAndroidWebDriver().manage().timeouts().implicitlyWait(80, TimeUnit.SECONDS);
+        sleep(10000);
+//        getAndroidWebDriver().get("https://www.makemytrip.com");
+        ExtentTestManager.getTest().log(Status.PASS, "Launched Mobile Application Successfully!");
+//        Map<String, Object> cap = getAndroidDriver().getSessionDetails();
+//        System.out.println("cap is");
+
     }
+
+
+//    @BeforeClass
+//    protected void init () {
+//        ScreenshotManager.createScreenshotDirIfNotExist();
+//    }
 
     @BeforeMethod(alwaysRun = true)
     protected void initTestFramework(Method method, ITestContext context) throws AWTException, IOException, APIException, JSONException {
@@ -369,7 +415,7 @@ public abstract class TestBase {
         }
         ExtentTestManager.getTest().info("tearDown finished");
         extent.flush();
-//        stopServer();
+
     }
 
     @AfterSuite
@@ -381,6 +427,7 @@ public abstract class TestBase {
                 TestRailOperation.deleteTestRail(testRunList);
             }
         }
+        stopServer();
     }
 
 
@@ -620,6 +667,7 @@ public abstract class TestBase {
     }
 
     public abstract void firstTest(Method testMethod, Object[] params) throws Exception;
+
     // TODO Auto-generated method stub
 
 
