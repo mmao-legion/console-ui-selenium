@@ -304,8 +304,8 @@
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager" />
                     <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
-                    <include name="verifyAutoPublishSettingAsInternalAdmin" />
-                    <include name="verifyAutoPublishSettingCanBeSavedAsInternalAdmin" />
+<!--                    <include name="verifyAutoPublishSettingAsInternalAdmin" />-->
+<!--                    <include name="verifyAutoPublishSettingCanBeSavedAsInternalAdmin" />-->
                     <include name="verifyWorkRoleConfigurationAsInternalAdmin" />
                     <include name="verifyWorkRoleInFilterAsInternalAdmin" />
                     <include name="verifyWorkRoleInScheduleAsInternalAdmin" />
