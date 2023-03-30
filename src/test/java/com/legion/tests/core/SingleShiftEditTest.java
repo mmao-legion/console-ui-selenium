@@ -975,7 +975,8 @@ public class SingleShiftEditTest extends TestBase {
             scheduleMainPage.saveSchedule();
 
             // Verify the offers are in draft status after saving the schedule
-            shiftOperatePage.clickOnProfileIconOfOpenShift();
+            int index = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon().iterator().next();
+            shiftOperatePage.clickOnProfileIconByIndex(index);
             scheduleShiftTablePage.clickViewStatusBtn();
             shiftOperatePage.verifyTMInTheOfferList(assignedNames.get(0), "Draft Offer");
             shiftOperatePage.closeViewStatusContainer();
