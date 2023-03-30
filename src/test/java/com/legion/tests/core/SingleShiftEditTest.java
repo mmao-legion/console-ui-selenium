@@ -900,7 +900,7 @@ public class SingleShiftEditTest extends TestBase {
 
             // Go to Schedule page, Schedule tab
             goToSchedulePageScheduleTab();
-
+            scheduleCommonPage.navigateToNextWeek();
             // Create schedule if it is not created
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
