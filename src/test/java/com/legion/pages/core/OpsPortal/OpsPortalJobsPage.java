@@ -1622,11 +1622,11 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	@Override
 	public void selectWeeksForJobToTakePlaceByIndex(int index) {
 		if (areListElementVisible(selectableWeekSelectors, 5)) {
-			if (selectableWeekSelectors.size() >= index) {
+			if (selectableWeekSelectors.size() > index) {
 				clickTheElement(selectableWeekSelectors.get(index));
 				SimpleUtils.pass("Click the " + index + " week in Select week for job to take place calendar successfully! ");
 			} else {
-				index = index - selectableWeekSelectors.size();
+				index = index - selectableWeekSelectors.size()+1;
 				click(navigateToNextMonthButton);
 				SimpleUtils.pass("Click Next month button successfully! ");
 				clickTheElement(selectableWeekSelectors.get(index));

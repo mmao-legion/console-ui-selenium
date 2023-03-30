@@ -456,7 +456,7 @@
                     <include name="verifyTheSplitViolationsOnSingleEditShiftPageAsInternalAdmin" />
                     <include name="verifyTheSpreadViolationsOnSingleEditShiftPageAsInternalAdmin" />
  <!--                   <include name="verifyThe7thDayOTOnSingleEditShiftPageAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-9443 -->
-                    <include name="verifyTheMealMissViolationOnSingleEditShiftPageAsInternalAdmin" />
+<!--                    <include name="verifyTheMealMissViolationOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-9304-->
                 </methods>
             </class>
         </classes>
