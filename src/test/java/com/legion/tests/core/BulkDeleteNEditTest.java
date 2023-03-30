@@ -384,10 +384,10 @@ public class BulkDeleteNEditTest extends TestBase {
 
             // Create schedule if it is not created
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isWeekGenerated) {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
             ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
             String workRole1 = workRoles.get(0).get("optionName");
@@ -396,7 +396,7 @@ public class BulkDeleteNEditTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             int selectedShiftCount = 2;
-            createShiftsWithSpecificValues(workRole1, "", "", "7:00pm", "11:00pm",
+            createShiftsWithSpecificValues(workRole1, "", "", "9:00pm", "11:00pm",
                     2, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
             HashSet<Integer> set = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             scheduleShiftTablePage.rightClickOnSelectedShifts(set);
@@ -1167,6 +1167,13 @@ public class BulkDeleteNEditTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             String workRole = shiftOperatePage.getRandomWorkRole();
 
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            String activeWeek = scheduleCommonPage.getActiveWeekText();
+            scheduleCommonPage.clickOnDayView();
+            scheduleCommonPage.navigateDayViewWithDayName(activeWeek.replace("\n", " ").substring(0,3));
+            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleMainPage.saveSchedule();
+            scheduleCommonPage.clickOnWeekView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
                     2, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
