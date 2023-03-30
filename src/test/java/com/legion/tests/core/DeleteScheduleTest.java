@@ -380,7 +380,7 @@ public class DeleteScheduleTest extends TestBase {
     @TestName(description = "Verify SM delete schedule should keep the system schedule when Centralized Schedule Release is Yes")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifySMDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        try {
+//        try {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
@@ -400,7 +400,7 @@ public class DeleteScheduleTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
-            int index = 0;
+            int index = 1;
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -568,9 +568,9 @@ public class DeleteScheduleTest extends TestBase {
             SimpleUtils.assertOnFail("The expected status is "+expectedStatus+ ", the actual status is: "+scheduleStatusOnOverViewTable
                     , scheduleStatusOnOverViewTable.equalsIgnoreCase(expectedStatus)
                             ||scheduleStatusOnOverViewTable.equalsIgnoreCase("Finalized"), false);
-        } catch (Exception e){
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+//        } catch (Exception e){
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
     }
 
 

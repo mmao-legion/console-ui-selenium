@@ -3421,7 +3421,7 @@ public class ParentChildLGTest extends TestBase {
                     allShiftsCountAfter == allShiftsCountBefore && oneDayShiftsCountAfter-2 == oneDayShiftsCountBefore, false);
             for (int i=0; i< selectedShiftCount;i++) {
                 SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
-                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()>0, false);
+                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size()>0, false);
             }
             //Verify changes can be saved
             scheduleMainPage.saveSchedule();
@@ -3432,7 +3432,7 @@ public class ParentChildLGTest extends TestBase {
                     allShiftsCountAfter == allShiftsCountBefore && oneDayShiftsCountAfter-2 == oneDayShiftsCountBefore, false);
             for (int i=0; i< selectedShiftCount;i++) {
                 SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
-                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()>0, false);
+                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size()>0, false);
             }
             //Verify changes can be published
             createSchedulePage.publishActiveSchedule();
@@ -3443,13 +3443,13 @@ public class ParentChildLGTest extends TestBase {
                     allShiftsCountAfter == allShiftsCountBefore && oneDayShiftsCountAfter-2 == oneDayShiftsCountBefore, false);
             for (int i=0; i< selectedShiftCount;i++) {
                 SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
-                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()>0, false);
+                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size()>0, false);
             }
             //Check the shifts are not display on first location
             scheduleShiftTablePage.expandSpecificCountGroup(1);
             for (int i=0; i< selectedShiftCount;i++) {
                 SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be moved! ",
-                        scheduleShiftTablePage.getOneDayShiftByName(1, shiftNames.get(i)).size()>0, false);
+                        scheduleShiftTablePage.getOneDayShiftByName(2, shiftNames.get(i)).size()==0, false);
             }
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
