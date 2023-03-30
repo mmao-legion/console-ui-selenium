@@ -354,12 +354,12 @@
                     <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" />
                     <include name="verifySeniorityNotDisplayWhenToggleTurnOffForSearchingAsInternalAdmin" />
                     <include name="verifySeniorityNotDisplayWhenToggleTurnOffForRecommendAsInternalAdmin" />
-                    <include name="verifySeniorityDisplayWhenToggleTurnOnForSearchingAsInternalAdmin" />
+                    <!-- <include name="verifySeniorityDisplayWhenToggleTurnOnForSearchingAsInternalAdmin" />
                     <include name="verifySeniorityAlwaysDisplayOnSearchingDialogAsInternalAdmin" />
                       <include name="verifySeniorityDisplayWhenToggleTurnOnForRecommendAsInternalAdmin" />
                     <include name="verifyAscendingOfSeniorityForSearchingAsInternalAdmin" />
                     <include name="verifyAscendingOfSeniorityForRecommendAsInternalAdmin" />
-                    <include name="verifyDescendingOfSeniorityForSearchingAsInternalAdmin" />
+                    <include name="verifyDescendingOfSeniorityForSearchingAsInternalAdmin" /> Blocked by SCH-9554  -->
                     <!--  <include name="verifyDescendingOfSeniorityForRecommendAsInternalAdmin" />  Blocked by SCH-8613 -->
                 </methods>
             </class>
