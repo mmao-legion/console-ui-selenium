@@ -133,7 +133,7 @@ public interface JobsPage {
 
     public void removeFirstDynamicGroup() throws Exception;
 
-    public void archiveSpecificJob(String jobTitle) throws Exception;
+    public void archiveOrStopSpecificJob(String jobTitle) throws Exception;
 
     public void selectWeeksForJobToTakePlaceByIndex(int index);
 
