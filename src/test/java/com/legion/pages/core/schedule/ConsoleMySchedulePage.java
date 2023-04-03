@@ -1869,8 +1869,8 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
                     index = 1;
                     clickTheElement(popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")));
                     SimpleUtils.pass("Click " + requestName + " button Successfully!");
-                } else
-                    SimpleUtils.fail("View Shift popup fail to display! ", false);
+                    break;
+                }
             }
             if (index == 0) {
                 SimpleUtils.fail("Failed to select one shift to claim", false);
