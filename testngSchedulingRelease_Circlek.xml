@@ -98,4 +98,49 @@
         </classes>
     </test>
 
+    <test name="Consolidating Filters Test">
+        <classes>
+            <class name="com.legion.tests.core.ConsolidatingFiltersTest">
+                <methods>
+                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Location Navigation Test">
+        <classes>
+            <class name="com.legion.tests.core.LocationNavigationTest">
+                <methods>
+                    <include name="verifySearchingAndSelectingTheLocationOnSMScheduleTabAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Meal And Rest Break Test">
+        <classes>
+            <class name="com.legion.tests.core.MealAndRestBreakTest">
+                <methods>
+                    <include name="verifyEditBreaksOptionIsAvailableAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfEditBreaksWeekViewAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" />
+                    <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Schedule Copy Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleCopyTest">
+                <methods>
+                    <include name="verifyTheEnhancedCopyModalForNonDgFlowAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfCopyingASuggestedScheduleAsInternalAdmin" />
+                    <include name="verifyTheCountOfComplianceShiftsShouldBeConsistentWithComplianceSmartCardAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->
