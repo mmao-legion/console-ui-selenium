@@ -1055,8 +1055,10 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 }
             } else {
                 String oldEndTime = shiftTimeBeforeUpdate.split("-")[1];
-                String newEndTime = Integer.parseInt(oldEndTime.split(":")[0])+1+oldEndTime.split(":")[1];
-                shiftEndInput.clear();
+                int newEnd = Integer.parseInt(oldEndTime.split(":")[0]) == 11 ?
+                        Integer.parseInt(oldEndTime.split(":")[0]) - 1 : Integer.parseInt(oldEndTime.split(":")[0]) + 1;
+                String newEndTime = newEnd + ":" + oldEndTime.split(":")[1];
+                clearTheText(shiftEndInput);
                 shiftEndInput.sendKeys(newEndTime);
             }
 
