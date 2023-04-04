@@ -1662,7 +1662,7 @@ public class ParentChildLGTest extends TestBase {
             if ((isComplianceCardLoadedFirstWeek == isComplianceCardLoadedSecondWeek) && (complianceShiftCountFirstWeek == complianceShiftCountSecondWeek)) {
                 SimpleUtils.pass("Verified Compliance is consistent with the copied schedule");
             } else {
-                SimpleUtils.fail("Verified Compliance is inconsistent with the copied schedule!", true);
+                SimpleUtils.fail("Verified Compliance is inconsistent with the copied schedule!", false);
             }
 
             //Partial copy and select all work roles

@@ -1591,7 +1591,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 	}
 
 	@Override
-	public void archiveSpecificJob(String jobTitle) throws Exception {
+	public void archiveOrStopSpecificJob(String jobTitle) throws Exception {
 		if (isElementEnabled(searchInputBox, 10)) {
 			searchInputBox.clear();
 			searchInputBox.sendKeys(jobTitle);
@@ -1599,7 +1599,7 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 			waitForSeconds(5);
 			if (jobRows.size() <= 0) {
 				SimpleUtils.report("There is no "+jobTitle+" job in Jobs! ");
-			}else {
+			}else if (isElementLoaded(archiveBtnInJobListPage, 5)){
 				for (WebElement row: jobRows) {
 					WebElement archiveBtn = row.findElement(By.cssSelector("span[ng-click=\"applyAction(6,job)\"]"));
 					clickTheElement(archiveBtn);
@@ -1608,6 +1608,17 @@ public class OpsPortalJobsPage extends BasePage implements JobsPage {
 						clickTheElement(confirmBtnInStopJobPopUpWins);
 						SimpleUtils.pass("Click confirm button in stop job popup windows successfully! ");
 					}
+				}
+			} else if (isElementLoaded(stopBtnInJobListPage, 5)){
+				clickTheElement(stopBtnInJobListPage);
+				if (verifyJobActionsWarningPageShowWell()) {
+					clickTheElement(confirmBtnInStopJobPopUpWins);
+					waitForSeconds(15);
+					ArrayList<HashMap<String,String>> jobInfo = iCanGetJobInfo(jobTitle);
+					if (jobInfo.size()>0 && jobInfo.get(0).get("status").equalsIgnoreCase("Stopped")) {
+						SimpleUtils.pass("The job:" +jobTitle + " was stopped successfully");
+					}else
+						SimpleUtils.fail("The job:" +jobTitle + " failed to stop",false);
 				}
 			}
 		} else

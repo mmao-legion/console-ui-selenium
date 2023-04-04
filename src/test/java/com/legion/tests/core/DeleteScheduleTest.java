@@ -444,7 +444,7 @@ public class DeleteScheduleTest extends TestBase {
             String jobTitle = "Release Schedule For Auto";
             String jobType = "Release Schedule";
             String releaseDay = "100";
-            jobsPage.archiveSpecificJob(jobTitle);
+            jobsPage.archiveOrStopSpecificJob(jobTitle);
             jobsPage.iCanEnterCreateNewJobPage();
             jobsPage.selectJobType(jobType);
             jobsPage.selectWeeksForJobToTakePlaceByIndex(index);
