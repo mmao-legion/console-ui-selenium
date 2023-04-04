@@ -207,10 +207,10 @@ public class ConsoleInboxPage  extends BasePage implements InboxPage {
     @FindBy(css = ".new-announcement-modal")
     private WebElement newAnnouncementModal;
 
-    @FindBy(xpath = "//div[contains(@ng-if,\"options.canSendGFE\")]")
+    @FindBy(xpath = "//div[contains(@ng-if,\"options.canSendGoodFaithEstimate\")]")
     private WebElement announcementTypeSection;
 
-    @FindBy(xpath = "//div[contains(@ng-class,\"options.canSendGFE\")]")
+    @FindBy(xpath = "//div[contains(@ng-class,\"options.canSendGoodFaithEstimate\")]")
     private WebElement sendToSection;
 
     @FindBy(css = ".gfe-send-to-select")
