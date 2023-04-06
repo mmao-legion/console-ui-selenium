@@ -1861,19 +1861,24 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
 
     @Override
     public void clickTheShiftRequestToClaimCoverShift(String requestName) throws Exception {
-        int index = 0;
+        boolean isCoverRequest = false;
         if (areListElementVisible(tmIcons, 15)) {
             for (WebElement tmIcon : tmIcons) {
                 moveToElementAndClick(tmIcon);
-                if (isPopOverLayoutLoaded()) {
-                    index = 1;
-                    clickTheElement(popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")));
-                    SimpleUtils.pass("Click " + requestName + " button Successfully!");
-                    break;
+                try {
+                    if (isPopOverLayoutLoaded() && isElementLoaded(popOverLayout.findElement(By.cssSelector(".sch-worker-comment-comment")), 5)
+                            && popOverLayout.findElement(By.cssSelector(".sch-worker-comment-comment")).getText().contains("Hey, I have a commitment")) {
+                        isCoverRequest = true;
+                        clickTheElement(popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")));
+                        SimpleUtils.pass("Click " + requestName + " button Successfully!");
+                        break;
+                    }
+                } catch (Exception e) {
+                    // Do nothing
                 }
             }
-            if (index == 0) {
-                SimpleUtils.fail("Failed to select one shift to claim", false);
+            if (!isCoverRequest) {
+                SimpleUtils.fail("Failed to find the cover request!", false);
             }
         } else {
             SimpleUtils.fail("Team Members' Icons not loaded", false);
