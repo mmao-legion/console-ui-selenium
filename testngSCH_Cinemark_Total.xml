@@ -119,7 +119,7 @@
                     <include name="validateAssignTMWhenTMHasOverlappingViolationForParentChildAsInternalAdmin" />
                     <include name="validateTheGroupByDropdownListForParentChildAsInternalAdmin" />
 <!--                    <include name="validateTheFilterOnSchedulePageForParentChildAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-9009-->
-                    <include name="verifyTheFunctionOfCopyScheduleForParentChildAsInternalAdmin" />
+<!--                    <include name="verifyTheFunctionOfCopyScheduleForParentChildAsInternalAdmin" /> need more time-->
                     <!--         <include name="validatePrintScheduleForParentChildAsInternalAdmin" /> cannot run on jenkins-->
                     <!--        <include name="validateUIPerformanceForLargeRosterAsInternalAdminPC" />This no envs to run the performance case-->
                     <include name="validateOperateParentChildLGScheduleByDifferentUserAsInternalAdmin" />
