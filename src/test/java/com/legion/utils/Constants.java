@@ -21,7 +21,8 @@ public class Constants {
     public static final String ChangePassword = "Change Password";
     public static final String ManualOnboard = "Manual Onboard";
     public static final String ControlEnterprice = "Vailqacn_Enterprise";
-    public static final String OpEnterprice = "CinemarkWkdy_Enterprise";
+    public static final String OpEnterprise1 = "CinemarkWkdy_Enterprise";
+    public static final String OpEnterprise2 = "Circlek_Enterprise";
 
     //accrual
     public static final String loginUrlRC =System.getProperty("env")+"legion/authentication/login";

@@ -952,13 +952,13 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 selectWorkRole(workRole);
             clearAllSelectedDays();
             if (i == 0) {
-                if (getEnterprise().equalsIgnoreCase(propertyMap.get(Constants.OpEnterprice))) {
+                if (getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprise1)) || getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprise2))) {
                     selectDaysByIndex(2, 2, 2);
                 } else {
                     selectDaysByIndex(2, 4, 6);
                 }
             }else {
-                if (getEnterprise().equalsIgnoreCase(propertyMap.get(Constants.OpEnterprice))) {
+                if (getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprise1)) || getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprise2))) {
                     selectDaysByIndex(4, 4, 4);
                 } else {
                     selectDaysByIndex(1, 3, 5);

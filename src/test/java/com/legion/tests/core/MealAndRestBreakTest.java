@@ -330,7 +330,7 @@ public class MealAndRestBreakTest extends TestBase {
                 SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
                 controlsNewUIPage.clickOnControlsComplianceSection();
                 SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprice))) {
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprise1)) || getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprise2))) {
                 //Go to OP page
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -364,7 +364,7 @@ public class MealAndRestBreakTest extends TestBase {
             controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
                     ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "6",true );
 
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprice))){
+            if (getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprise1)) || getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprise2))){
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
             }

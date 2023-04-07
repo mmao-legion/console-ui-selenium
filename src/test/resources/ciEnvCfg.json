@@ -16,6 +16,7 @@
   "CinemarkWkdy_Enterprise" : "cinemark-wkdy",
   "Dgch_Enterprise" : "dgch",
   "Vailqacn_Enterprise": "vailqacn",
+  "Circlek_Enterprise": "Circlek",
   "DEFAULT_USERNAME" : "admin2.a",
   "DEFAULT_PASSWORD" : "admin2.a",
   "ENVIRONMENT" : "QA",
