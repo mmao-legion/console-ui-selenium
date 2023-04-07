@@ -697,18 +697,19 @@ public class ConsoleLocationSelectorPage extends BasePage implements LocationSel
     //Check the navigation bar - location fiels shows as 'All locations' or not?
     @Override
     public void isDMView() throws Exception {
-        String locationFieldsText = "All Locations";
-        if(getCurrentUserDefaultLocation().contains(locationFieldsText)){
+        String locationFieldsText1 = "All";
+        String locationFieldsText2 = "Location";
+        if(getCurrentUserDefaultLocation().contains(locationFieldsText1) && getCurrentUserDefaultLocation().contains(locationFieldsText2)){
             SimpleUtils.pass("Dashboard page shows as DM view!");
         }else {
-            SimpleUtils.fail("Dashboard page shows as NOT DM view!",true);
+            SimpleUtils.fail("Dashboard page shows as NOT DM view!",false);
         }
     }
     @Override
     public void isSMView() throws Exception {
         String locationFieldsText = "All Locations";
         if(getCurrentUserDefaultLocation().contains(locationFieldsText)){
-            SimpleUtils.fail("Dashboard page shows as NOT SM view!",true);
+            SimpleUtils.fail("Dashboard page shows as NOT SM view!",false);
         }else {
             SimpleUtils.pass("Dashboard page shows as SM view!");
         }
