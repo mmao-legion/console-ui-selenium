@@ -280,6 +280,8 @@ public class OPConfigTest extends TestBase {
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
 //            Thread.sleep(5000);
             loginPage.logOut();
+            refreshPage();
+            Thread.sleep(5000);
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             Thread.sleep(5000);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();

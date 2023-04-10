@@ -2215,6 +2215,7 @@ public class CinemarkMinorTest extends TestBase {
                     if (shifts.size() >0) {
                         switch (scheduleCommonPage.getActiveDayInfo().get("weekDay")) {
                             case "Fri":
+                            case "Thu":
                                 for (WebElement shift : shifts) {
                                     int index = scheduleShiftTablePage.getTheIndexOfShift(shift);
                                     String shiftTime = scheduleShiftTablePage.getTheShiftInfoInDayViewByIndex(index).get(2);
