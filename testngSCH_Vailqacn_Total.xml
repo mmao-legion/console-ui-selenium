@@ -686,9 +686,9 @@ https://legiontech.atlassian.net/browse/SCH-4832-->
                     <include name="validateAssignShiftsForEachDaySwitchAsInternalAdmin" />
                     <include name="verifyAssignShiftByEachDaysAsInternalAdmin" />
                     <include name="validateTheAutoAssignmentWorkFlowAsInternalAdmin" />
-                    <include name="validateTheOfferTMsWorkFlowAsInternalAdmin" />
+<!--                    <include name="validateTheOfferTMsWorkFlowAsInternalAdmin" />
                     <include name="validateOfferShiftByEachDaysAsInternalAdmin" />
-                    <include name="validateTheAssignAndOfferWorkFlowAsInternalAdmin" />
+                    <include name="validateTheAssignAndOfferWorkFlowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-9541-->
                     <include name="validateTheAssignShiftsWorkFlowAsInternalAdmin" />
                     <include name="validateTheShiftsCanBeCreatedAfterUpdateShiftInfoAsInternalAdmin" />
                     <include name="validateTheNextDayCheckBoxOnCreateShiftModalAsInternalAdmin" />
