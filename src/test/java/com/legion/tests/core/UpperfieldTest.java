@@ -2672,8 +2672,8 @@ public class UpperfieldTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify Districts with Violations on Compliance in Region View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTotalLocationsWithViolationCardInComplianceRegionViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
@@ -2703,7 +2703,7 @@ public class UpperfieldTest extends TestBase {
 
             for (int i = 0; i < extraHours.size(); i++){
                 if (
-//                        extraHours.get(i) > 0 ||
+                        extraHours.get(i) > 0 ||
                         publishStatus.get(i).equals("Yes")){
                     totalLocationWithViolation ++;
                 }
@@ -3123,8 +3123,8 @@ public class UpperfieldTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify Timesheet functionality on Timesheet in BU View")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyTimesheetFunctionalityInBUViewAsInternalAdmin(String browser, String username, String password, String location) throws Exception {

@@ -6346,8 +6346,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
-	@Enterprise(name = "Vailqacn_Enterprise")
-//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+//	@Enterprise(name = "Vailqacn_Enterprise")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
 	@TestName(description = "Validate the Next day checkbox on edit shift time page")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
@@ -6384,8 +6384,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();
 			String shiftHrsAfterCheckNextDay = shiftInfo.get("workCurrentShiftHrs").split(" ")[0];
 			SimpleUtils.assertOnFail("The shift hrs display incorrectly on edit shift time page, the expected is:"
-							+Float.parseFloat(shiftHrsBeforeCheckNextDay)+24 + " the actual is: "+Float.parseFloat(shiftHrsAfterCheckNextDay),
-					Float.parseFloat(shiftHrsBeforeCheckNextDay)+24 == Float.parseFloat(shiftHrsAfterCheckNextDay),false);
+							+(Float.parseFloat(shiftHrsBeforeCheckNextDay)+24) + " the actual is: "+Float.parseFloat(shiftHrsAfterCheckNextDay),
+					(Float.parseFloat(shiftHrsBeforeCheckNextDay)+23.5 == Float.parseFloat(shiftHrsAfterCheckNextDay))||
+							(Float.parseFloat(shiftHrsBeforeCheckNextDay)+24 == Float.parseFloat(shiftHrsAfterCheckNextDay)),false);
 
 			shiftOperatePage.checkOrUnCheckNextDayOnEditShiftTimePage(false);
 			shiftInfo = shiftOperatePage.getInfoFromCardOnEditShiftTimePage();

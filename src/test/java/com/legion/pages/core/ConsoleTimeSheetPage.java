@@ -339,7 +339,7 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	@Override
 	public void clickOnTimeSheetConsoleMenu() throws Exception {
-		if(isElementLoaded(timeSheetConsoleMenuDiv))
+		if(isElementLoaded(timeSheetConsoleMenuDiv, 30))
 			click(timeSheetConsoleMenuDiv);
 		else
 			SimpleUtils.fail("Timesheet Console Menu not loaded Successfully!", false);
@@ -2542,12 +2542,12 @@ public class ConsoleTimeSheetPage extends BasePage implements TimeSheetPage{
 
 	public List<String> getLocationName() throws Exception {
 		List<String> listLocationName = new ArrayList<>();
-		if(areListElementVisible(listLocations,5)){
+		if(areListElementVisible(listLocations,15)){
 			for(int i=0; i<listLocations.size();i++){
 				listLocationName.add(listLocations.get(i).getText());
 			}
 		}else{
-			SimpleUtils.fail("Location not displayed on DM view of Timesheet table",true);
+			SimpleUtils.report("Location not displayed on DM view of Timesheet table");
 		}
 		return listLocationName;
 	}

@@ -1776,6 +1776,9 @@ public class ScheduleCopyImprovementTest extends TestBase {
             createSchedulePage.selectWhichWeekToCopyFrom(firstWeekInfo);
             createSchedulePage.clickOnFinishButtonOnCreateSchedulePage();
 
+            scheduleCommonPage.navigateToPreviousWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            Thread.sleep(5000);
             List<WebElement> shifts = scheduleShiftTablePage.getOneDayShiftByName(0, teamMember1);
             SimpleUtils.assertOnFail("Get compliance shift failed",shifts.size()==1, false);
 

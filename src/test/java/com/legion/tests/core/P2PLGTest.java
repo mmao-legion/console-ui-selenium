@@ -3809,6 +3809,7 @@ public class P2PLGTest extends TestBase {
 
             //Validate the data of analytics table for past week.
             scheduleCommonPage.navigateToPreviousWeek();
+            Thread.sleep(5000);
             scheduleDMViewPage.clickSpecificLocationInDMViewAnalyticTable(location);
             SimpleUtils.assertOnFail("This is not the Timesheet SM view page for past week!",timeSheetPage.isTimeSheetPageLoaded(), false);
             dashboardPage.clickOnDashboardConsoleMenu();
@@ -4939,18 +4940,18 @@ public class P2PLGTest extends TestBase {
             List<String> claimShift = new ArrayList<>(Arrays.asList("View Offer"));
             mySchedulePage.selectOneShiftIsClaimShift(claimShift);
             mySchedulePage.clickTheShiftRequestByName(claimShift.get(0));
-            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimSuccessMessage);
+            mySchedulePage.verifyClickAgreeBtnOnClaimShiftOfferWithMessage(Constants.ClaimRequestBeenSendForApprovalMessage);
             loginPage.logOut();
 
             // 4.Login with SM to check activity
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
-    //        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-    //        ActivityPage activityPage = pageFactory.createConsoleActivityPage();
-    //        activityPage.verifyActivityBellIconLoaded();
-    //        activityPage.verifyClickOnActivityIcon();
-    //        activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
-    //        activityPage.verifyActivityOfShiftOffer(teamMemberName, "");
-    //        activityPage.approveOrRejectShiftOfferRequestOnActivity(teamMemberName, ActivityTest.approveRejectAction.Approve.getValue());
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+            activityPage.verifyActivityBellIconLoaded();
+            activityPage.verifyClickOnActivityIcon();
+            activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
+            activityPage.verifyActivityOfShiftOffer(teamMemberName, "");
+            activityPage.approveOrRejectShiftOfferRequestOnActivity(teamMemberName, ActivityTest.approveRejectAction.Approve.getValue());
 
             //Check the shift been scheduled
             goToSchedulePageScheduleTab();
