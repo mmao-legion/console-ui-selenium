@@ -34,6 +34,7 @@ public class SplitAndSpreadTest extends TestBase {
 
     private static String controlEnterprice = "Vailqacn_Enterprise";
     private static String opEnterprice = "CinemarkWkdy_Enterprise";
+    private static String releaseOpEnterprice = "Circlek_Enterprise";
     private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
     private static String opWorkRole = scheduleWorkRoles.get("TEAM_MEMBER_CORPORATE_THEATRE");
     private static String controlWorkRole = scheduleWorkRoles.get("RETAIL_BOOTFITTER");
@@ -62,7 +63,7 @@ public class SplitAndSpreadTest extends TestBase {
         if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
             controlsNewUIPage.clickOnControlsConsoleMenu();
             controlsNewUIPage.clickOnControlsComplianceSection();
-        } else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
+        } else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice)) || getDriver().getCurrentUrl().contains(propertyMap.get(releaseOpEnterprice))) {
             //Go to OP page
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -85,7 +86,7 @@ public class SplitAndSpreadTest extends TestBase {
         controlsNewUIPage.editSplitShiftPremium("1", "60", false);
         controlsNewUIPage.editSplitShiftPremium("1", "60", true);
 
-        if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))){
+        if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice)) || getDriver().getCurrentUrl().contains(propertyMap.get(releaseOpEnterprice))){
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.publishNowTheTemplate();
         }
@@ -594,7 +595,7 @@ public class SplitAndSpreadTest extends TestBase {
                 controlsPage.gotoControlsPage();
                 SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
                 controlsNewUIPage.clickOnControlsComplianceSection();
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
+            } else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice)) || getDriver().getCurrentUrl().contains(propertyMap.get(releaseOpEnterprice))) {
                 //Go to OP page
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -619,7 +620,8 @@ public class SplitAndSpreadTest extends TestBase {
             controlsNewUIPage.editSpreadOfHoursPremium("2", "12", false);
             controlsNewUIPage.verifyCloseSplitShiftPremiumDialogButton();
 
-            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
+            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase()) ||
+                    getDriver().getCurrentUrl().contains(propertyMap.get(releaseOpEnterprice))){
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
                 Thread.sleep(120000);

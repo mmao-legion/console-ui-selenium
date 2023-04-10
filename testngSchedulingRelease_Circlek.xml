@@ -143,4 +143,31 @@
         </classes>
     </test>
 
+    <test name="Scheduling OP Enabled Test">
+        <classes>
+            <class name="com.legion.tests.core.SchedulingOPEnabledTest">
+                <methods>
+                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
+                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
+                    <include name="verifyComplianceSmartCardFunctionalityAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Split And Spread Test">
+        <classes>
+            <class name="com.legion.tests.core.SplitAndSpreadTest">
+                <methods>
+                    <include name="verifySpreadOfHoursCanBeConfiguredAsInternalAdmin" />
+                    <include name="verifySpreadOfHoursViolationWhenSearchTMAsInternalAdmin" />
+                    <include name="verifySpreadOfHoursViolationWhenEditShiftTimeAsInternalAdmin" />
+                    <include name="verifySplitShiftCanBeConfiguredAsInternalAdmin" />
+                    <include name="verifySplitShiftViolationWhenSearchTMAsInternalAdmin" />
+                    <include name="verifySplitShiftViolationWillShowOnTheSecondShiftAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->
