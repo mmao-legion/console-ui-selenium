@@ -395,10 +395,10 @@ public class BulkDeleteNEditTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
-            int selectedShiftCount = 2;
             createShiftsWithSpecificValues(workRole1, "", "", "9:00pm", "11:00pm",
                     2, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
             HashSet<Integer> set = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+            scheduleShiftTablePage.selectSpecificShifts(set);
             scheduleShiftTablePage.rightClickOnSelectedShifts(set);
             String action = "Edit";
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
