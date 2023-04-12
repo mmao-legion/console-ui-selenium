@@ -22,7 +22,8 @@ public enum Toggles {
     TAScheduleCost("TAScheduleCost"),
     EnableMultiWorkRolePerShiftSCH("EnableMultiWorkRolePerShiftSCH"),
     UseAbsenceMgmtConfiguration("UseAbsenceMgmtConfiguration"),
-    EnableSenioritySchedule("EnableSenioritySchedule");
+    EnableSenioritySchedule("EnableSenioritySchedule"),
+    EnableScheduleOnAccrualSCH("EnableScheduleOnAccrualSCH");
 
     private final String value;
 

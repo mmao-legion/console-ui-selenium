@@ -1,5 +1,7 @@
 package com.legion.tests.core;
 
+import com.legion.api.toggle.ToggleAPI;
+import com.legion.api.toggle.Toggles;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
@@ -39,6 +41,9 @@ public class ScheduleAccrualTimeTest extends TestBase {
 		try {
 			this.createDriver((String) params[0], "69", "Window");
 			visitPage(testMethod);
+			ToggleAPI.updateToggle(Toggles.UseAbsenceMgmtConfiguration.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), true);
+			ToggleAPI.updateToggle(Toggles.UseLegionAccrual.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), true);
+			ToggleAPI.updateToggle(Toggles.EnableScheduleOnAccrualSCH.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), true);
 			loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
@@ -148,7 +153,7 @@ public class ScheduleAccrualTimeTest extends TestBase {
 			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
 			Thread.sleep(5000);
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-			Thread.sleep(15000);
+			Thread.sleep(30000);
 			SimpleUtils.assertOnFail("No existing Time off reason!",!(controlsNewUIPage.isAddTimeOffBtnClickable())
 					&&controlsNewUIPage.isDeleteTimeOffBtnLoaded(),false);
 			controlsNewUIPage.modifyTimeOffReasonOnSchedulingPolicy("Vacation","35");
