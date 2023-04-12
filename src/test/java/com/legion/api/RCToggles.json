@@ -20,5 +20,6 @@
   "WorkRoleSettingsTemplateOP": "opauto,americold",
   "TAScheduleCost": "americold,panda2bts",
   "EnableMultiWorkRolePerShiftSCH": "americold",
-  "EnableSenioritySchedule": "cinemark-wkdy"
+  "EnableSenioritySchedule": "cinemark-wkdy",
+  "EnableScheduleOnAccrualSCH": "cineamrk-wkdy"
 }
