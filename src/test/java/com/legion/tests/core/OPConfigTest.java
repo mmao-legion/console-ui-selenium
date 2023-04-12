@@ -267,6 +267,8 @@ public class OPConfigTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
+//            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI(getUserNameNPwdForCallingAPI().get(0),
+//                    getUserNameNPwdForCallingAPI().get(1));
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ForecastPage forecastPage = pageFactory.createForecastPage();
@@ -276,12 +278,13 @@ public class OPConfigTest extends TestBase {
             String option = "None";
             setLaborPreferencesForForecastSummarySmartcardSetting(option);
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+            refreshCachesAfterChangeTemplate();
 //            Thread.sleep(5000);
-            loginPage.logOut();
-            refreshPage();
-            Thread.sleep(5000);
-            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-            Thread.sleep(5000);
+//            loginPage.logOut();
+//            refreshPage();
+//            Thread.sleep(5000);
+//            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+//            Thread.sleep(5000);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);

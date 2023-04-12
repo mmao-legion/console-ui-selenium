@@ -320,6 +320,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void selectTimeOffReason(String reasonLabel) throws Exception
 	{
 		boolean isTimeOffReasonSelected = false;
+		waitForSeconds(3);
 		if(areListElementVisible(timeOffReasons, 20)) {
 			for(WebElement timeOffReason : timeOffReasons) {
 				if(timeOffReason.getText().toLowerCase().contains(reasonLabel.toLowerCase())) {

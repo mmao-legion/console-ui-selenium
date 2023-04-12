@@ -146,6 +146,7 @@ public class ConsoleAdminPage extends BasePage implements AdminPage {
 				if (cacheNameInList.equalsIgnoreCase(cacheName)) {
 					isTemplateExist = true;
 					click(cache.findElement(By.tagName("button")));
+					waitForSeconds(2);
 					SimpleUtils.pass("Click the Refresh button successfully! ");
 					try{
 						WebElement requestSendTime = cache.findElement(By.cssSelector("div[ng-if=\"hasPendingRequest(cache)\"]"));
