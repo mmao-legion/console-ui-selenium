@@ -3814,6 +3814,7 @@ public class P2PLGTest extends TestBase {
             SimpleUtils.assertOnFail("This is not the Timesheet SM view page for past week!",timeSheetPage.isTimeSheetPageLoaded(), false);
             dashboardPage.clickOnDashboardConsoleMenu();
             locationSelectorPage.reSelectDistrict(districtName);
+            Thread.sleep(5000);
             timeSheetPage.clickOnTimeSheetConsoleMenu();
             //Validate the data of analytics table for current week.
             scheduleDMViewPage.clickSpecificLocationInDMViewAnalyticTable(location);
@@ -4909,6 +4910,8 @@ public class P2PLGTest extends TestBase {
             newShiftPage.customizeNewShiftPage();
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.selectChildLocInCreateShiftWindow(childLocationNames.get(0));
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectSpecificWorkDay(1);
             newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());

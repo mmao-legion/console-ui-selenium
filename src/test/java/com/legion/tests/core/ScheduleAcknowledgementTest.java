@@ -152,8 +152,9 @@ public class ScheduleAcknowledgementTest extends TestBase {
             SimpleUtils.assertOnFail("The SCHEDULE ACKNOWLEDGEMENT smart card should not display before publish schedule! ",
                     !smartCardPage.isSpecificSmartCardLoaded(smartCardName), false);
             //Verify the SCHEDULE ACKNOWLEDGEMENT smart card will display after publish schedule
+            Thread.sleep(5000);
             createSchedulePage.publishActiveSchedule();
-            SimpleUtils.assertOnFail("The SCHEDULE ACKNOWLEDGEMENT smart card should display before publish schedule! ",
+            SimpleUtils.assertOnFail("The SCHEDULE ACKNOWLEDGEMENT smart card should display after publish schedule! ",
                     smartCardPage.isSpecificSmartCardLoaded(smartCardName), false);
             //Get count before acknowledge
             int pendingEmployeeCountBeforeAcknowledge = smartCardPage.getCountFromSmartCardByName(smartCardName);

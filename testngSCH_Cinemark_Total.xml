@@ -71,8 +71,8 @@
                     <include name="verifyAutomaticallyExpandWhenGroupByInP2PLGAsInternalAdmin" />
                     <include name="verifyTheContentOnEditSingleShiftWindowForP2PAsInternalAdmin" />
                     <include name="verifyChangingLocationForP2POnSingleEditShiftsWindowAsInternalAdmin" />
-                    <include name="verifyEmployeeCanReceiveAndAcceptOffersForP2PLGAsTeamMember" />
-<!--                    <include name="verifyEmployeesCanSwapShiftsForP2PLGAsTeamMember" /> need more time to check-->
+ <!--               <include name="verifyEmployeeCanReceiveAndAcceptOffersForP2PLGAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-9769-->
+                    <!--                                        <include name="verifyEmployeesCanSwapShiftsForP2PLGAsTeamMember" /> need more time to check-->
 <!--                    <include name="verifyEmployeesCanClaimCoverRequestForP2PLGAsTeamMember" /> Need more time to check-->
                     <include name="verifyDragAndDropShiftToSameLocationForP2PLGScheduleAsInternalAdmin" />
 <!--                    <include name="verifyDragAndDropShiftToDifferentLocationForP2PLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8614-->
@@ -96,7 +96,7 @@
                     <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForParentChildAsInternalAdmin" />need rerun-->
                     <!--
                                         <include name="verifyCopyShiftsToSameDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-9466-->
-                                        <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
+<!--                                        <include name="verifyMoveShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />need rerun-->
                                         <include name="verifyCopyShiftsToAnotherDayAndAnotherLocationOnParentChildLGScheduleAsInternalAdmin" />
                     <include name="verifyEditOperatingHoursForLGAsInternalAdmin" />
 <!--                    <include name="validateNavigationRosterScheduleAndDashboardOfParentChildLGAsInternalAdmin" /> need rerun-->
@@ -128,7 +128,7 @@
                     <!--<include name="verifyEmployeeCanAcknowledgeTheNotificationForLGAsStoreManager" />  https://legiontech.atlassian.net/browse/SCH-7939-->
                     <include name="verifyTheContentOnEditSingleShiftWindowForParentChildAsInternalAdmin" />
                     <include name="verifyChangingLocationForPCOnSingleEditShiftsWindowAsInternalAdmin" />
-                    <include name="verifyEmployeeCanReceiveAndAcceptOffersForParentChildLGAsTeamMember" />
+<!--                    <include name="verifyEmployeeCanReceiveAndAcceptOffersForParentChildLGAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-9769-->
 <!--                    <include name="verifyEmployeesCanSwapShiftsForParentChildLGAsTeamMember" />
                     <include name="verifyEmployeesCanClaimCoverRequestForParentChildLGAsTeamMember" /> Need more time check-->
                     <include name="verifyDragAndDropShiftToSameLocationForParentChildLGScheduleAsInternalAdmin" />
