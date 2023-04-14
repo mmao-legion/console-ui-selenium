@@ -3547,23 +3547,26 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public void selectSpecificShifts(HashSet<Integer> shiftIndexes) throws Exception {
         skipTheNewFeatureDialog();
+        List<WebElement> names = null;
+        List<WebElement> shifts = null;
+        if (areListElementVisible(namesWeekView, 10) && areListElementVisible(shiftsWeekView, 5)) {
+            names = namesWeekView;
+            shifts = shiftsWeekView;
+        } else if (areListElementVisible(namesDayView, 10) && areListElementVisible(dayViewAvailableShifts, 5)) {
+            names = namesDayView;
+            shifts = dayViewAvailableShifts;
+        }
+        try {
+            if (isElementLoaded(getDriver().findElement(By.cssSelector(".edit-border")), 5)) {
+                scrollToElement(getDriver().findElement(By.cssSelector(".edit-border")));
+            } else if (isElementLoaded(getDriver().findElement(By.cssSelector("[ng-href=\"mailto:help@legion.co\"]")), 5)) {
+                scrollToElement(getDriver().findElement(By.cssSelector("[ng-href=\"mailto:help@legion.co\"]")));
+            }
+        } catch (Exception e) {
+            scrollToBottom();
+        }
+        waitForSeconds(2);
         if (!areListElementVisible(selectedShifts, 5)) {
-            List<WebElement> names = null;
-            if (areListElementVisible(namesWeekView, 10)) {
-                names = namesWeekView;
-            } else if (areListElementVisible(namesDayView, 10)) {
-                names = namesDayView;
-            }
-            try {
-                if (isElementLoaded(getDriver().findElement(By.cssSelector(".edit-border")), 5)) {
-                    scrollToElement(getDriver().findElement(By.cssSelector(".edit-border")));
-                } else if (isElementLoaded(getDriver().findElement(By.cssSelector("[ng-href=\"mailto:help@legion.co\"]")), 5)) {
-                    scrollToElement(getDriver().findElement(By.cssSelector("[ng-href=\"mailto:help@legion.co\"]")));
-                }
-            } catch (Exception e) {
-                scrollToBottom();
-            }
-            waitForSeconds(2);
             if (names.size() >= shiftIndexes.size()) {
                 Actions action = new Actions(getDriver());
                 action.keyDown(Keys.CONTROL).build().perform();
@@ -3571,6 +3574,27 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     scrollToElement(names.get(i));
                     waitForSeconds(1);
                     action.moveToElement(names.get(i)).click(names.get(i));
+                }
+                action.keyUp(Keys.CONTROL).build().perform();
+                if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftIndexes.size()) {
+                    SimpleUtils.pass("Selected " + shiftIndexes.size() + " shifts successfully");
+                } else {
+                    SimpleUtils.fail("Expected to select " + shiftIndexes.size() + " shifts, but actually selected " +
+                            getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+                }
+            } else {
+                SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+            }
+        } else {
+            if (names.size() >= shiftIndexes.size()) {
+                Actions action = new Actions(getDriver());
+                action.keyDown(Keys.CONTROL).build().perform();
+                for (int i : shiftIndexes) {
+                    scrollToElement(names.get(i));
+                    waitForSeconds(1);
+                    if (!shifts.get(i).getAttribute("class").contains("shift-selected-multi")) {
+                        action.moveToElement(names.get(i)).click(names.get(i));
+                    }
                 }
                 action.keyUp(Keys.CONTROL).build().perform();
                 if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftIndexes.size()) {

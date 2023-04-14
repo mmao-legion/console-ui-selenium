@@ -1584,7 +1584,7 @@ public class ActivityTest extends TestBase {
             } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Holiday.getValue())) {
                 profileNewUIPage.selectTimeOffReason(timeOffReasonType.Holiday.getValue());
             }
-            profileNewUIPage.selectStartAndEndDate(advancedDays, 1, 6);
+            profileNewUIPage.selectStartAndEndDate(advancedDays, 1, 1);
             profileNewUIPage.clickOnSaveTimeOffRequestBtn();
             loginPage.logOut();
 
@@ -1617,8 +1617,10 @@ public class ActivityTest extends TestBase {
                 profileNewUIPage.selectTimeOffReason(timeOffReasonType.Sick.getValue());
             } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Vacation.getValue())){
                 profileNewUIPage.selectTimeOffReason(timeOffReasonType.Vacation.getValue());
+            } else if (profileNewUIPage.isReasonLoad(timeOffReasonType.Holiday.getValue())) {
+                profileNewUIPage.selectTimeOffReason(timeOffReasonType.Holiday.getValue());
             }
-            profileNewUIPage.selectStartAndEndDate(advancedDays, 1, 6);
+            profileNewUIPage.selectStartAndEndDate(advancedDays, 1, 1);
             profileNewUIPage.clickOnSaveTimeOffRequestBtn();
             loginPage.logOut();
 

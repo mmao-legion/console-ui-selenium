@@ -43,8 +43,12 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	private WebElement newTimeOffBtn;
 	@FindBy(css = "div.reasons-reason")
 	private List<WebElement> timeOffReasons;
-	@FindBy(css = "[ng-repeat*=\"timeOffType\"] .count-block-label")
+	@FindBy(css = ".lg-search-options__option")
 	private List<WebElement> newTimeOffReasons;
+	@FindBy(css = ".lg-picker-input__wrapper")
+	private WebElement reasonsWrapper;
+	@FindBy(css = "input[placeholder=\"Select...\"]")
+	private WebElement reasonSelect;
 	@FindBy(css = "textarea[placeholder=\"Optional explanation\"]")
 	private WebElement timeOffExplanationtextArea;
 	@FindBy(css= "div.real-day")
@@ -298,8 +302,13 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		List<WebElement> reasons = null;
 		if(areListElementVisible(timeOffReasons, 20)) {
 			reasons = timeOffReasons;
-		} else if (areListElementVisible(newTimeOffReasons, 5)) {
-			reasons = newTimeOffReasons;
+		} else if (isElementLoaded(reasonSelect, 5)) {
+			if (!isElementLoaded(reasonsWrapper, 5)) {
+				clickTheElement(reasonSelect);
+			}
+			if (areListElementVisible(newTimeOffReasons, 5)) {
+				reasons = newTimeOffReasons;
+			}
 		}
 		for(WebElement timeOffReason : reasons) {
 			if(timeOffReason.getText().toLowerCase().contains(timeOffReasonLabel.toLowerCase())) {
@@ -333,7 +342,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			else
 				SimpleUtils.fail("Controls Page: Time Off Reason '"+ reasonLabel +"' not found.", false);
 		} else if (isElementLoaded(timeOffReasonSelector, 5)) {
-			clickTheElement(timeOffReasonSelector);
+			if (!isElementLoaded(reasonsWrapper, 5)) {
+				clickTheElement(reasonSelect);
+			}
 			if (areListElementVisible(timeOffReasonOptions)) {
 				boolean isTimeOffReasonExists = false;
 				for (WebElement option: timeOffReasonOptions) {
