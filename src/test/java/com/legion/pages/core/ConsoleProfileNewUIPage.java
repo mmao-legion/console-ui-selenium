@@ -3809,7 +3809,9 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	public void createTimeOffOnSpecificDays(String timeOffReasonLabel, String timeOffExplanationText,String fromDay, int duration) throws Exception {
 		final int timeOffRequestCount = timeOffRequestRows.size();
-		clickOnCreateTimeOffBtn();
+		if (!isNewTimeOffWindowLoaded()) {
+			clickOnCreateTimeOffBtn();
+		}
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
 //		String d="2021 Apr 15";
 		String d= fromDay;

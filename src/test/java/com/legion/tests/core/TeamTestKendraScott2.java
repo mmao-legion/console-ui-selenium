@@ -1686,7 +1686,12 @@ public class TeamTestKendraScott2 extends TestBase{
 			//Go to Time Off tab and create time off on the same week
 			profileNewUIPage.selectProfilePageSubSectionByLabel(timeoffLabel);
 			String timeOffExplanationText = "Sample Explanation Text";
-			profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.JuryDuty.getValue(), timeOffExplanationText, fromDate1, 0);
+			profileNewUIPage.clickOnCreateTimeOffBtn();
+			if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.JuryDuty.getValue())) {
+				profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.JuryDuty.getValue(), timeOffExplanationText, fromDate1, 0);
+			} else if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.Holiday.getValue())) {
+				profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.Holiday.getValue(), timeOffExplanationText, fromDate1, 0);
+			}
 
 			//Go the Preference and check the time off will display
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
