@@ -500,8 +500,10 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
                 for (int i = 0; i<strList.size()-1; i++){
                     keyTemp = keyTemp +" "+ strList.get(i);
                 }
-                if (SimpleUtils.isNumeric(strList.get(strList.size()-1))){
-                    result.put(keyTemp, Float.valueOf(strList.get(strList.size()-1)));
+                String number = strList.get(strList.size()-1).endsWith("0") ? strList.get(strList.size()-1).substring(0,
+                        strList.get(strList.size()-1).length() - 1) : strList.get(strList.size()-1);
+                if (SimpleUtils.isNumeric(number)){
+                    result.put(keyTemp.trim(), Float.valueOf(strList.get(strList.size()-1)));
                 } else {
                     SimpleUtils.fail("The violation hrs count is not numeric, please check!", false);
                 }

@@ -2755,20 +2755,20 @@ public class UpperfieldTest extends TestBase {
             if ((topViolationInOvertimeCol+topViolationInClopeningCol+topViolationInMissedMealCol+topViolationInScheduleChangedCol+topViolationInDoubletimeCol) != 0.0){
                 HashMap<String, Float> valuesFromLocationsWithViolationCard = compliancePage.getViolationHrsFromTop1ViolationCardAndVerifyInfo();
 
-                if (valuesFromLocationsWithViolationCard.containsKey("Overtime (Hrs)")){
-                    SimpleUtils.assertOnFail("Overtime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Overtime (Hrs)")-topViolationInOvertimeCol)==0, false);
+                if (valuesFromLocationsWithViolationCard.containsKey("Overtime")){
+                    SimpleUtils.assertOnFail("Overtime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Overtime")-topViolationInOvertimeCol)==0, false);
                 }
-                if (valuesFromLocationsWithViolationCard.containsKey("Clopening (Hrs)")){
-                    SimpleUtils.assertOnFail("Clopening (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Clopening (Hrs)")-topViolationInClopeningCol)==0, false);
+                if (valuesFromLocationsWithViolationCard.containsKey("Clopening")){
+                    SimpleUtils.assertOnFail("Clopening (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Clopening")-topViolationInClopeningCol)==0, false);
                 }
-                if (valuesFromLocationsWithViolationCard.containsKey("Overtime (Hrs)")){
+                if (valuesFromLocationsWithViolationCard.containsKey("Missed Meal")){
                     SimpleUtils.assertOnFail("Missed Meal on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Missed Meal")-topViolationInMissedMealCol)==0, false);
                 }
                 if (valuesFromLocationsWithViolationCard.containsKey("Schedule Changed")){
                     SimpleUtils.assertOnFail("Schedule Changed on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Schedule Changed")-topViolationInScheduleChangedCol)==0, false);
                 }
-                if (valuesFromLocationsWithViolationCard.containsKey("Doubletime (Hrs)")){
-                    SimpleUtils.assertOnFail("Doubletime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Doubletime (Hrs)")-topViolationInDoubletimeCol)==0, false);
+                if (valuesFromLocationsWithViolationCard.containsKey("Doubletime")){
+                    SimpleUtils.assertOnFail("Doubletime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Doubletime")-topViolationInDoubletimeCol)==0, false);
                 }
             }
 
@@ -2809,20 +2809,20 @@ public class UpperfieldTest extends TestBase {
             if ((topViolationInOvertimeCol+topViolationInClopeningCol+topViolationInMissedMealCol+topViolationInScheduleChangedCol+topViolationInDoubletimeCol) != 0.0){
                 HashMap<String, Float> valuesFromLocationsWithViolationCard = compliancePage.getViolationHrsFromTop1ViolationCardAndVerifyInfo();
 
-                if (valuesFromLocationsWithViolationCard.containsKey("Overtime (Hrs)")){
-                    SimpleUtils.assertOnFail("Overtime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Overtime (Hrs)")-topViolationInOvertimeCol)==0, false);
+                if (valuesFromLocationsWithViolationCard.containsKey("Overtime")){
+                    SimpleUtils.assertOnFail("Overtime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Overtime")-topViolationInOvertimeCol)==0, false);
                 }
-                if (valuesFromLocationsWithViolationCard.containsKey("Clopening (Hrs)")){
-                    SimpleUtils.assertOnFail("Clopening (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Clopening (Hrs)")-topViolationInClopeningCol)==0, false);
+                if (valuesFromLocationsWithViolationCard.containsKey("Clopening")){
+                    SimpleUtils.assertOnFail("Clopening (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Clopening")-topViolationInClopeningCol)==0, false);
                 }
-                if (valuesFromLocationsWithViolationCard.containsKey("Overtime (Hrs)")){
+                if (valuesFromLocationsWithViolationCard.containsKey("Missed Meal")){
                     SimpleUtils.assertOnFail("Missed Meal on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Missed Meal")-topViolationInMissedMealCol)==0, false);
                 }
                 if (valuesFromLocationsWithViolationCard.containsKey("Schedule Changed")){
                     SimpleUtils.assertOnFail("Schedule Changed on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Schedule Changed")-topViolationInScheduleChangedCol)==0, false);
                 }
-                if (valuesFromLocationsWithViolationCard.containsKey("Doubletime (Hrs)")){
-                    SimpleUtils.assertOnFail("Doubletime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Doubletime (Hrs)")-topViolationInDoubletimeCol)==0, false);
+                if (valuesFromLocationsWithViolationCard.containsKey("Doubletime")){
+                    SimpleUtils.assertOnFail("Doubletime (Hrs) on smart cart is not correct!", Math.abs(valuesFromLocationsWithViolationCard.get("Doubletime")-topViolationInDoubletimeCol)==0, false);
                 }
             }
 
