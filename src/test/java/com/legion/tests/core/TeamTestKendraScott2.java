@@ -1452,8 +1452,8 @@ public class TeamTestKendraScott2 extends TestBase{
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Mary")
-	@Enterprise(name = "Vailqacn_Enterprise")
-//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+//	@Enterprise(name = "Vailqacn_Enterprise")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
 	@TestName(description = "Validate the available left hrs when TM has shifts on the week")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void validateTheAvailableLeftHrsWhenTMHasShiftsOnTheWeekAsTeamMember(String browser, String username, String password, String location) throws Exception {
@@ -1612,8 +1612,8 @@ public class TeamTestKendraScott2 extends TestBase{
 
 	@Automated(automated ="Automated")
 	@Owner(owner = "Mary")
-	@Enterprise(name = "Vailqacn_Enterprise")
-//	@Enterprise(name = "CinemarkWkdy_Enterprise")
+//	@Enterprise(name = "Vailqacn_Enterprise")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
 	@TestName(description = "Validate the time off on availability table")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
 	public void validateTimeOffOnAvailabilityTableAsTeamMember(String browser, String username, String password, String location) throws Exception {
@@ -1691,7 +1691,7 @@ public class TeamTestKendraScott2 extends TestBase{
 				profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.JuryDuty.getValue(), timeOffExplanationText, fromDate1, 0);
 			} else if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.Holiday.getValue())) {
 				profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.Holiday.getValue(), timeOffExplanationText, fromDate1, 0);
-			}
+			} 
 
 			//Go the Preference and check the time off will display
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
@@ -1712,9 +1712,9 @@ public class TeamTestKendraScott2 extends TestBase{
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
 			totalHoursValue = availabilityData.get("totalHoursValue").toString();
 			remainingHoursValue = availabilityData.get("remainingHoursValue").toString();
-			SimpleUtils.assertOnFail("The total and remaining hrs should be 168, but the actual are: "
+			SimpleUtils.assertOnFail("The total and remaining hrs should be 144, but the actual are: "
 							+ totalHoursValue +" and "+ remainingHoursValue,
-					totalHoursValue.equals("168.0")&&remainingHoursValue.equals("168.0"), false);
+					totalHoursValue.equals("144.0")&&remainingHoursValue.equals("144.0"), false);
 			//Go to Time Off tab and reject the time off
 			profileNewUIPage.selectProfilePageSubSectionByLabel(timeoffLabel);
 			profileNewUIPage.rejectAllTimeOff();
