@@ -191,7 +191,7 @@
                     <include name="verifySchoolCalendarDefaultMonthAsInternalAdmin" />
                     <include name="verifyTheMainCalendarInfoOnThePageAsInternalAdmin" />
                     <include name="verifyAutoScheduleRespectTheMinorsRulesAsInternalAdmin" />
-                    <include name="verifyRecommendationRespectTheMinorsRulesAsInternalAdmin" />
+<!--                    <include name="verifyRecommendationRespectTheMinorsRulesAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-9782-->
                     <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" />
                 </methods>
             </class>

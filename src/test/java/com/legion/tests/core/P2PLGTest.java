@@ -3809,6 +3809,7 @@ public class P2PLGTest extends TestBase {
 
             //Validate the data of analytics table for past week.
             scheduleCommonPage.navigateToPreviousWeek();
+            timeSheetPage.clickOnRefreshButton();
             Thread.sleep(5000);
             scheduleDMViewPage.clickSpecificLocationInDMViewAnalyticTable(location);
             SimpleUtils.assertOnFail("This is not the Timesheet SM view page for past week!",timeSheetPage.isTimeSheetPageLoaded(), false);
