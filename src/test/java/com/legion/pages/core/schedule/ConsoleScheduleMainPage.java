@@ -2051,11 +2051,11 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         if(isElementLoaded(clearFilterOnFilterDropdownPopup, 15)){
             if(clearFilterOnFilterDropdownPopup.getAttribute("class").contains("active")){
                 scrollToElement(clearFilterOnFilterDropdownPopup);
-                click(clearFilterOnFilterDropdownPopup);
+                clickTheElement(clearFilterOnFilterDropdownPopup);
                 waitForSeconds(2);
                 SimpleUtils.pass("Click Clear Filter button on Filter dropdown popup successfully! ");
             } else if (!clearFilterOnFilterDropdownPopup.getAttribute("class").contains("active")) {
-                click(filterButton);
+                clickTheElement(filterButton);
                 waitForSeconds(2);
                 SimpleUtils.report("Clear filter button is disabled because there is no filters been selected! ");
             }

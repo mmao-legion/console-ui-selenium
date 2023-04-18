@@ -2277,9 +2277,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnFilterBtn();
 		scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
 		shiftOperatePage.deleteAllShiftsInWeekView();
+		scheduleMainPage.saveSchedule();
 		scheduleMainPage.clickOnFilterBtn();
 		scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
-		scheduleMainPage.saveSchedule();
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		shiftOperatePage.clickOnProfileIcon();
 		shiftOperatePage.clickOnConvertToOpenShift();
