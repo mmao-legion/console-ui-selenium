@@ -139,7 +139,7 @@ public class OpsPortalLocationsPage extends BasePage implements LocationsPage {
 			waitForSeconds(5);
 			if (modelSwitchOption.size() != 0) {
 				for (WebElement subOption : modelSwitchOption) {
-					if (subOption.getText().equalsIgnoreCase(value)) {
+					if (subOption.getText().toLowerCase().contains(value.toLowerCase())) {
 						click(subOption);
 						waitForSeconds(5);
 					}

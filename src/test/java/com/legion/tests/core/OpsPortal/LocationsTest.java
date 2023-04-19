@@ -48,7 +48,7 @@ public class LocationsTest extends TestBase {
     public enum modelSwitchOperation {
 
         Console("Console"),
-        OperationPortal("Control Center");
+        OperationPortal("Control Cent");
 
         private final String value;
 
