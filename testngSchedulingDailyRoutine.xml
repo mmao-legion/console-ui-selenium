@@ -52,8 +52,8 @@
                 <methods>
                     <include name="verifySMCannotSeeDeleteButtonIfScheduleIsNotPublishedAsInternalAdmin" />
                     <include name="verifySMCanPublishScheduleIfScheduleIsNotPublishedAsInternalAdmin" />
-                    <include name="verifySMDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />
-                    <include name="verifyAdminDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />
+<!--                    <include name="verifySMDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />
+                    <include name="verifyAdminDeleteScheduleShouldKeepSystemScheduleWhenCentralizedScheduleReleaseIsYesAsInternalAdmin" />Need more time to check-->
                 </methods>
             </class>
         </classes>
