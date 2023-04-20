@@ -111,4 +111,10 @@ public interface PageFactory {
     EditShiftPage createEditShiftPage();
 
     ShiftPatternPage createConsoleShiftPatternPage();
+
+    NewShiftPatternBiddingPage createNewShiftPatternBiddingPage();
+
+    BidShiftPatternBiddingPage createBidShiftPatternBiddingPage();
+
+    RulePage createRulePage();
 }

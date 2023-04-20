@@ -886,4 +886,14 @@ SCH-5862-->
             </class>
         </classes>
     </test>
+
+    <test name="Shift Pattern Bidding Test">
+        <classes>
+            <class name="com.legion.tests.core.ShiftPatternBiddingTest">
+                <methods>
+                    <include name="verifyTheEndToEndFlowOfShiftBiddingAsTeamMember"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

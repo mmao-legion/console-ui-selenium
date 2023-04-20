@@ -212,4 +212,19 @@ public class ConsoleWebPageFactory implements PageFactory {
 	public ShiftPatternPage createConsoleShiftPatternPage() {
 		return new ConsoleShiftPatternPage();
 	}
+
+	@Override
+	public NewShiftPatternBiddingPage createNewShiftPatternBiddingPage() {
+		return new ConsoleNewShiftPatternBiddingPage();
+	}
+
+	@Override
+	public BidShiftPatternBiddingPage createBidShiftPatternBiddingPage() {
+		return new ConsoleBidShiftPatternBiddingPage();
+	}
+
+	@Override
+	public RulePage createRulePage() {
+		return new ConsoleRulePage();
+	}
 }

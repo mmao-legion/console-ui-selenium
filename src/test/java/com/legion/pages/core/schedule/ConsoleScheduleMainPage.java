@@ -2632,9 +2632,4 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             SimpleUtils.fail("Work role filter box is not found!", false);
     }
 
-
-
-
-
-
 }
