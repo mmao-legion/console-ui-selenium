@@ -295,6 +295,7 @@ public class OPConfigTest extends TestBase {
             while (i<15 && textOnLaborSmartCard.toLowerCase().contains("wages")) {
                 Thread.sleep(60000);
                 loginPage.logOut();
+                Thread.sleep(5000);
                 loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
                 Thread.sleep(5000);
                 scheduleCommonPage.clickOnScheduleConsoleMenuItem();

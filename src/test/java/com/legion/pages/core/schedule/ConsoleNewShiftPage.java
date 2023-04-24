@@ -2335,9 +2335,11 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     if (nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
                         SimpleUtils.pass("Next day checkbox has already been checked! ");
                     } else {
+                        if(!isElementLoaded(nextDayTooltip, 5)){
+                            click(nextDayIcon);
+                        }
+                        waitForSeconds(3);
                         clickTheElement(nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root input")));
-                        waitForSeconds(2);
-                        moveToElementAndClick(nextDayIcon);
                         if (nextDayTooltip.findElement(By.cssSelector("span.MuiCheckbox-root")).getAttribute("class").contains("checked")){
                             SimpleUtils.pass("Check Next day checkbox successfully! ");
                         } else
