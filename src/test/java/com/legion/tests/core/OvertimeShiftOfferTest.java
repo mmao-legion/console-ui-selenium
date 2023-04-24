@@ -59,26 +59,6 @@ public class OvertimeShiftOfferTest extends TestBase {
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 
-            // Make sure the access for allow TM to claim overtime shift rate was set
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-            if (!isLocationUsingControlsConfiguration){
-                controlsPage.gotoControlsPage();
-                SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-                controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-                SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
-                controlsPage.clickGlobalSettings();
-                controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
-                controlsNewUIPage.allowEmployeesClaimOvertimeShiftOffer();
-
-                // Make sure the access for TM claimed open shift offer is approved by SM
-                controlsPage.gotoControlsPage();
-                SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-                controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-                SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
-                String option = "Always";
-                controlsNewUIPage.updateOpenShiftApprovedByManagerOption(option);
-               }
-
             // Start to check and generate target schedule
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
