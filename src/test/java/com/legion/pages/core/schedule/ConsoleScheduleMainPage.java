@@ -1547,7 +1547,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                 WebElement weekDay = dayList.findElement(By.cssSelector(".ng-binding"));
                 if (weekDay != null) {
                     WebElement startNEndTimes = dayList.findElement(By.cssSelector(".text-right.ng-binding"));
-                    if(weekDays.contains(weekDay)){
+                    if(weekDays.contains(weekDay.getText())){
                         SimpleUtils.assertOnFail("The operating hours is not expected!",
                                 startNEndTimes.getText().trim().equalsIgnoreCase(duration), false);
                     }

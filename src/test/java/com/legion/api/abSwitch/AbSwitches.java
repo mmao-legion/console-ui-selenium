@@ -83,8 +83,6 @@ public enum AbSwitches {
 
     ScheduleGenerateCopyManagerView("ScheduleGenerateCopyManagerView"),
 
-    ScheduleUseNewUi("ScheduleUseNewUi"),
-
     PremiumCalculatorSwitch("PremiumCalculatorSwitch"),
 
     CustomizableDashboard("CustomizableDashboard"),
