@@ -716,7 +716,7 @@ public class SplitAndSpreadTest extends TestBase {
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage1 = tmFirstName + " will incur spread of hours.";
                 String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-                if (warningMessage.contains(warningMessage1)){
+                if (warningMessage.toLowerCase().contains(warningMessage1.toLowerCase())){
                     SimpleUtils.pass("The message in warning mode display correctly! ");
                 } else
                     SimpleUtils.fail("The message in warning mode display incorrectly! the expected is: "

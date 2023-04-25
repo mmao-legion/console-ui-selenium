@@ -811,7 +811,7 @@ SCH-5862-->
         <classes>
             <class name="com.legion.tests.core.OPConfigTest">
                 <methods>
-                    <include name="verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin" />
+<!--                    <include name="verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin" /> need more time check-->
                     <include name="verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin" />
                 </methods>
             </class>

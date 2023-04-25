@@ -5553,6 +5553,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00PM");
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+			scheduleMainPage.saveSchedule();
 			String workRole = shiftOperatePage.getRandomWorkRole();
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

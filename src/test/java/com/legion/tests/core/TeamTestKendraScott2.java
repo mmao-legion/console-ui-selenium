@@ -1691,8 +1691,6 @@ public class TeamTestKendraScott2 extends TestBase{
 				profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.Bereavement.getValue(), timeOffExplanationText, fromDate1, 0);
 			} else if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.UnpaidTimeOff.getValue())) {
 				profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.UnpaidTimeOff.getValue(), timeOffExplanationText, fromDate1, 0);
-			} else if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.FloatingHoliday.getValue())) {
-				profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.FloatingHoliday.getValue(), timeOffExplanationText, fromDate1, 0);
 			}
 
 			//Go the Preference and check the time off will display
