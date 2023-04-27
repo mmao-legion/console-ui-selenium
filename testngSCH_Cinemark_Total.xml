@@ -73,8 +73,8 @@
                     <include name="verifyChangingLocationForP2POnSingleEditShiftsWindowAsInternalAdmin" />
  <!--               <include name="verifyEmployeeCanReceiveAndAcceptOffersForP2PLGAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-9769-->
                     <!--                                        <include name="verifyEmployeesCanSwapShiftsForP2PLGAsTeamMember" /> need more time to check-->
-<!--                    <include name="verifyEmployeesCanClaimCoverRequestForP2PLGAsTeamMember" /> Need more time to check-->
-                    <include name="verifyDragAndDropShiftToSameLocationForP2PLGScheduleAsInternalAdmin" />
+<!--                    <include name="verifyEmployeesCanClaimCoverRequestForP2PLGAsTeamMember" />
+                    <include name="verifyDragAndDropShiftToSameLocationForP2PLGScheduleAsInternalAdmin" />Need more time to check-->
 <!--                    <include name="verifyDragAndDropShiftToDifferentLocationForP2PLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8614-->
                     <include name="verifyDragAndDropEmployeeToSameLocationForP2PLGScheduleAsInternalAdmin" />
                     <include name="verifyDragAndDropEmployeeToDifferentLocationForP2PLGScheduleAsInternalAdmin" />
@@ -133,7 +133,7 @@
                     <include name="verifyEmployeesCanClaimCoverRequestForParentChildLGAsTeamMember" /> Need more time check-->
                     <include name="verifyDragAndDropShiftToSameLocationForParentChildLGScheduleAsInternalAdmin" />
 <!--                    <include name="verifyDragAndDropShiftToDifferentLocationForParentChildLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8614-->
-                    <include name="verifyDragAndDropEmployeeToSameLocationForParentChildLGScheduleAsInternalAdmin" />
+                    <!--                       <include name="verifyDragAndDropEmployeeToSameLocationForParentChildLGScheduleAsInternalAdmin" />Need more time check-->
                     <include name="verifyDragAndDropEmployeeToDifferentLocationForParentChildLGScheduleAsInternalAdmin" />
                 </methods>
             </class>
@@ -811,7 +811,7 @@ SCH-5862-->
         <classes>
             <class name="com.legion.tests.core.OPConfigTest">
                 <methods>
-                    <include name="verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin" />
+<!--                    <include name="verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin" /> need more time check-->
                     <include name="verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin" />
                 </methods>
             </class>

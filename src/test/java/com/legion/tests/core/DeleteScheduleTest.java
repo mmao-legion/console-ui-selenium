@@ -678,6 +678,7 @@ public class DeleteScheduleTest extends TestBase {
                     scheduleMainPage.isManagerViewSelected(), false);
             // Click on Suggested tab, observe the suggested schedule, Suggested schedule should be kept
             scheduleMainPage.clickOnSuggestedButton();
+            scheduleMainPage.clickOnSuggestedButton();
             SimpleUtils.assertOnFail("The schedule table is display correctly! ",
                     scheduleShiftTablePage.isScheduleTableDisplay(), false);
             //Go to Overview tab, check the status of the schedule
