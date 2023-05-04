@@ -7794,9 +7794,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if(!isActiveWeekGenerated){
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
 			List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
 			String firstNameOfTM = shiftInfo1.get(0);
 			int shiftCount1 = 0;

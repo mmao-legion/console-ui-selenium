@@ -5742,6 +5742,7 @@ public class P2PLGTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //Verify the assignment can be swapped when drag&drop employee avatar to another one in same day and same location
             scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM,0,firstNameOfTM2);
+            Thread.sleep(3000);
             scheduleShiftTablePage.selectSwapOrAssignOption("swap");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
             if (scheduleShiftTablePage.verifyDayHasShiftByName(0,firstNameOfTM2)==1

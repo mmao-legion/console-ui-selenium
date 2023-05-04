@@ -2653,7 +2653,7 @@ public class UpperfieldTest extends TestBase {
 
             for (int i = 0; i < extraHours.size(); i++){
                 if (
-//                        extraHours.get(i) > 0 ||
+                        extraHours.get(i) > 0 ||
                                 publishStatus.get(i).equals("Yes")){
                     totalLocationWithViolation ++;
                 }

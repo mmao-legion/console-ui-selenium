@@ -275,6 +275,7 @@ public class OPConfigTest extends TestBase {
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             String option = "None";
             setLaborPreferencesForForecastSummarySmartcardSetting(option);
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
@@ -309,8 +310,10 @@ public class OPConfigTest extends TestBase {
             SimpleUtils.assertOnFail("The Wages row should not display on Forecast Labor smart card! the actual text is "+textOnLaborSmartCard,
                     !textOnLaborSmartCard.toLowerCase().contains("wages"), false);
             loginPage.logOut();
+            Thread.sleep(5000);
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             Thread.sleep(5000);
+            dashboardPage.clickOnDashboardConsoleMenu();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
