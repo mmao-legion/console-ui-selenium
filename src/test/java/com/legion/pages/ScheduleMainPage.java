@@ -110,6 +110,7 @@ public interface ScheduleMainPage {
     public void saveScheduleWithoutChange() throws Exception;
     public void checkAllWorkRolesUnderLabor() throws Exception;
     public void clickWorkRoleFilterOfLabor() throws Exception;
+    public void isShiftTitleExist(ArrayList<String> shiftTitle) throws Exception;
 
 }
 

@@ -51,4 +51,5 @@ public interface ScheduleCommonPage {
     public String getActiveWeekStartDayFromSchedule() throws Exception;
     public boolean checkIfDayAndWeekViewButtonEnabled () throws Exception;
     public Map<String, String> getSelectedWeekInfo() throws Exception;
+    public void clickOnMultiWeekView() throws Exception;
 }

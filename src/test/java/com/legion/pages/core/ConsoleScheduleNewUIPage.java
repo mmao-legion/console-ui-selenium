@@ -64,7 +64,8 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
         groupbyTM("Group by TM"),
         groupbyJobTitle("Group by Job Title"),
         groupbyLocation("Group by Location"),
-        groupbyDayParts("Group by Day Parts");
+        groupbyDayParts("Group by Day Parts"),
+        groupbyPattern("Group by Pattern");
 
         private final String value;
 

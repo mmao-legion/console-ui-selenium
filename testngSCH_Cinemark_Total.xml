@@ -896,4 +896,18 @@ SCH-5862-->
             </class>
         </classes>
     </test>
+
+    <test name="Relief Pool Testing">
+        <classes>
+            <class name="com.legion.tests.core.ReliefPoolTest">
+                <methods>
+                    <include name="verifyAutoGroupConfigsAsInternalAdmin"/>
+                    <include name="verifyOpenShiftGroupRulesConfigsAsInternalAdmin"/>
+                    <include name="verifyConfigOfAdvancedHoursAsInternalAdmin"/>
+                    <include name="verifyGroupByPatternAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->

@@ -394,4 +394,13 @@ public interface ControlsNewUIPage {
 	public void clickAddTimeOffBtn() throws Exception;
 	public boolean getStatusOfSpecificPermissionForSpecificRoles(String section, String roles, String permission) throws Exception;
 	public void selectSeniorityType(String optionValue) throws Exception;
+	public void isAutoGroupSectionLoaded() throws Exception;
+	public String getAutoGroupToggleActiveBtnLabel() throws Exception;
+	public void updateAutoGroupToggle(String isAutoGroupToggleOpen) throws Exception;
+	public void selectOpenShiftGroupRule(ArrayList<String> optionValues) throws Exception;
+	public boolean isOpenShiftGroupRuleSectionLoaded() throws Exception;
+	public void verifyTextInOpenShiftGroupRuleInputBox(String text) throws Exception;
+	public boolean isAutoApprovalSectionLoaded() throws Exception;
+	public void setAutoApprovalAdvancedHours(String hours) throws Exception;
+	public String getAutoApprovalAdvancedHours() throws Exception;
 }

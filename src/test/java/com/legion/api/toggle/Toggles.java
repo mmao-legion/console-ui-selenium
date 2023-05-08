@@ -23,7 +23,8 @@ public enum Toggles {
     EnableMultiWorkRolePerShiftSCH("EnableMultiWorkRolePerShiftSCH"),
     UseAbsenceMgmtConfiguration("UseAbsenceMgmtConfiguration"),
     EnableSenioritySchedule("EnableSenioritySchedule"),
-    EnableScheduleOnAccrualSCH("EnableScheduleOnAccrualSCH");
+    EnableScheduleOnAccrualSCH("EnableScheduleOnAccrualSCH"),
+    ReliefPool("ReliefPool");
 
     private final String value;
 

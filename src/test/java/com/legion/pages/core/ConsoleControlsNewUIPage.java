@@ -8055,5 +8055,176 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	}
 
 
+	@FindBy(css = "question-input[question-title*=\"Automatically group consecutive shifts of the same instance in a shift pattern?\"]")
+	private WebElement autoGroupSection;
+	@FindBy(css = "[question-title*=\"Automatically group consecutive shifts of the same instance in a shift pattern?\"] yes-no")
+	private WebElement autoGroupToggle;
+	@Override
+	public void isAutoGroupSectionLoaded() throws Exception {
+		if (isElementLoaded(autoGroupSection,20))
+			SimpleUtils.report("Auto Group Section is loaded!");
+		else
+			SimpleUtils.fail("Auto Group Section is not loaded!", false);
+	}
+
+	@Override
+	public String getAutoGroupToggleActiveBtnLabel() throws Exception {
+		String autoGroupToggleActiveBtnLabel = "";
+		if (isElementLoaded(autoGroupToggle, 20)) {
+			WebElement autoGroupToggleActiveActiveBtn = autoGroupToggle.findElement(
+					By.cssSelector("div.lg-button-group-selected"));
+			if (isElementLoaded(autoGroupToggleActiveActiveBtn, 10))
+				autoGroupToggleActiveBtnLabel = autoGroupToggleActiveActiveBtn.getText();
+			else
+				SimpleUtils.fail("Schedule Collaboration: Auto Group active Button is not loaded.", false);
+		} else
+			SimpleUtils.fail("Schedule Collaboration: Auto Group active Button is not loaded.", false);
+
+		return autoGroupToggleActiveBtnLabel;
+	}
+
+	@Override
+	public void updateAutoGroupToggle(String isAutoGroupToggleOpen) throws Exception {
+		if (isElementLoaded(autoGroupToggle,25)) {
+			WebElement autoGroupBtnGroup = autoGroupToggle.findElement(
+					By.cssSelector("div.lg-button-group"));
+			if (autoGroupBtnGroup.getAttribute("class").contains("disabled")) {
+				SimpleUtils.fail("Seniority toggle is disabled.", false);
+			}
+			else{
+				List<WebElement> autoGroupToggleBtns = autoGroupToggle.findElements(
+						By.cssSelector("div[ng-click=\"!button.disabled && $ctrl.change(button.value)\"]"));
+				waitForSeconds(5);
+				if (autoGroupToggleBtns.size() > 0) {
+					for (WebElement autoGroupToggleBtn : autoGroupToggleBtns) {
+						if (autoGroupToggleBtn.getText().toLowerCase().contains(isAutoGroupToggleOpen.toLowerCase())) {
+							scrollToElement(autoGroupToggleBtn);
+							clickTheElement(autoGroupToggleBtn);
+						}
+					}
+					if (getAutoGroupToggleActiveBtnLabel().toLowerCase().contains(isAutoGroupToggleOpen.toLowerCase()))
+						SimpleUtils.pass("Scheduling Collaboration: Auto group toggle is updated with value: '"
+								+ isAutoGroupToggleOpen + "'.");
+					else
+						SimpleUtils.fail("Scheduling Collaboration: Auto group toggle is not updated with value: '"
+								+ isAutoGroupToggleOpen + "'.", false);
+				} else
+					SimpleUtils.fail("Scheduling Collaboration: Auto group toggle buttons are not loaded!", false);
+			}
+
+		} else
+			SimpleUtils.fail("Scheduling Collaboration: Auto group toggle section is not loaded!", false);
+	}
+
+	@FindBy(css = "question-input[question-title*=\"What criteria are used when evaluating employees for open shift offers?\"] lg-multiple-select")
+	private WebElement openShiftGroupRulesBox;
+	@FindBy(css = "question-input[question-title*=\"What criteria are used when evaluating employees for open shift offers?\"] lg-multiple-select div input[placeholder*=\"Select\"]")
+	private WebElement openShiftGroupRulesInputField;
+	@FindBy(css = "div[class=\"select-list-item ng-scope\"] input-field")
+	private List<WebElement> openShiftGroupRulesList;
+	@FindBy(css = "div[class=\"select-list-item ng-scope\"] input-field ng-form input")
+	private List<WebElement> openShiftGroupRuleCheckbox;
+	@Override
+	public boolean isOpenShiftGroupRuleSectionLoaded() throws Exception {
+		boolean isLoaded;
+		if (isElementLoaded(openShiftGroupRulesBox,10)) {
+			SimpleUtils.report("Auto Approval section is loaded!");
+			isLoaded = true;
+		}
+		else {
+			SimpleUtils.report("Auto Approval section is not loaded!");
+			isLoaded = false;
+		}
+		return isLoaded;
+	}
+
+	@Override
+	public void verifyTextInOpenShiftGroupRuleInputBox(String text) throws Exception {
+		if (isElementLoaded(autoGroupSection, 10)){
+			if(isElementLoaded(openShiftGroupRulesInputField, 10)){
+				if(openShiftGroupRulesInputField.getAttribute("value").trim().contains(text))
+					SimpleUtils.pass("The text in open shift group rules input box is expected!");
+				else {
+					System.out.println("===========" + openShiftGroupRulesInputField.getAttribute("value").trim() + "==============");
+					SimpleUtils.fail("The text in open shift group rules input box is not expected!", false);
+				}
+			}else
+				SimpleUtils.fail("Open shift group rules box fail to load!", false);
+		} else
+			SimpleUtils.fail("Open shift group rules section fail to load!", false);
+	}
+
+	@Override
+	public void selectOpenShiftGroupRule(ArrayList<String> optionValues) throws Exception {
+		if (isElementLoaded(autoGroupSection, 10)){
+			if(isElementLoaded(openShiftGroupRulesBox, 10)){
+				click(openShiftGroupRulesBox);
+				for(WebElement checkBox : openShiftGroupRuleCheckbox)
+					if(checkBox.getAttribute("class").contains("ng-not-empty"))
+						click(checkBox);
+				ArrayList<String> options = new ArrayList<>();
+				options = optionValues;
+				int count = 0;
+				for(int num = 0; num < optionValues.size(); num++){
+					for(WebElement openShiftGroupRule : openShiftGroupRulesList){
+						if(openShiftGroupRule.getText().trim().contains(options.get(num))){
+							WebElement checkBox = openShiftGroupRule.findElement(By.cssSelector("ng-form[class*=\"input-form\"]"));
+							click(checkBox);
+							count = count + 1;
+						}
+					}
+				}
+				if(count != options.size())
+					SimpleUtils.fail("Open shift group rules not match!", false);
+				SimpleUtils.report("Select '" + options + "' as the open shift group rule");
+				waitForSeconds(2);
+			}else{
+				SimpleUtils.fail("Open shift group rules list fail to load!", false);
+			}
+		} else {
+			SimpleUtils.fail("Open shift group rules section fail to load!", false);
+		}
+	}
+
+	@FindBy(css = "question-input[question-title*=\"How many hours before the shift starts is the auto assignment made?\"]")
+	private WebElement autoApprovalSection;
+	@FindBy(css = "question-input[question-title*=\"How many hours before the shift starts is the auto assignment made?\"] input")
+	private WebElement autoApprovalAdvancedHours;
+	@FindBy(css = "question-input[question-title*=\"How many hours before the shift starts is the auto assignment made?\"] ng-form")
+	private WebElement advancedHours;
+	@FindBy(css = "question-input[question-title*=\"How many hours before the shift starts is the auto assignment made?\"] input")
+	private WebElement advancedHoursText;
+	@Override
+	public boolean isAutoApprovalSectionLoaded() throws Exception {
+		boolean isLoaded;
+		if (isElementLoaded(autoApprovalSection,10)) {
+			SimpleUtils.report("Auto Approval section is loaded!");
+			isLoaded = true;
+		}else {
+			SimpleUtils.report("Auto Approval section is loaded!");
+			isLoaded = false;
+		}
+		return isLoaded;
+	}
+
+	public void setAutoApprovalAdvancedHours(String hours) throws Exception {
+		isAutoApprovalSectionLoaded();
+		if (isElementLoaded(autoApprovalAdvancedHours)) {
+			autoApprovalAdvancedHours.clear();
+			autoApprovalAdvancedHours.sendKeys(hours);
+		}
+		else
+			SimpleUtils.fail("Input field of auto approval advance hours is not loaded!", false);
+	}
+
+	public String getAutoApprovalAdvancedHours() throws Exception {
+		isAutoApprovalSectionLoaded();
+		String hours = null;
+		if (isElementLoaded(advancedHours,60))
+			hours = advancedHoursText.getAttribute("value").trim();
+		else
+			SimpleUtils.fail("Input field of auto approval advance hours is not loaded!", false);
+		return hours;
+	}
 
 }
