@@ -1211,6 +1211,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     @FindBy(css = "[class=\"week-schedule-shift-title\"]")
     private List<WebElement> scheduleShiftTitles;
+    @FindBy(css = "[class=\"sch-group-header\"]")
+    private List<WebElement> dayScheduleShiftTitles;
     @FindBy(css = ".sch-group-label")
     private List<WebElement> scheduleShiftTitlesDayView;
     @Override
@@ -1901,6 +1903,38 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyAll.getValue());
         }
         else SimpleUtils.fail("Group By Selector is not available on screen ", true);
+    }
+
+    @Override
+    public void isShiftTitleExist(ArrayList<String> shiftTitle) throws Exception {
+        if (isElementLoaded(groupBySelector, 5)) {
+            selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+            if (areListElementVisible(scheduleShiftTitles, 10) && scheduleShiftTitles.size() > 0) {
+                int count = 0;
+                for (int i = 0; i < shiftTitle.size(); i++) {
+                    for (WebElement weekScheduleShiftTitle : scheduleShiftTitles)
+                        if (!shiftTitle.get(i).trim().equalsIgnoreCase(weekScheduleShiftTitle.getText().trim())) {
+                            count = count + 1;
+                            continue;
+                        }
+                    if (count == scheduleShiftTitles.size())
+                        SimpleUtils.fail("No matches shift title!", false);
+                }
+            } else if (areListElementVisible(dayScheduleShiftTitles, 10) && dayScheduleShiftTitles.size() > 0) {
+                int count = 0;
+                for (int i = 0; i < shiftTitle.size(); i++) {
+                    for (WebElement dayScheduleShiftTitle : dayScheduleShiftTitles)
+                        if (!shiftTitle.get(i).trim().equalsIgnoreCase(dayScheduleShiftTitle.getText().trim())) {
+                            count = count + 1;
+                            continue;
+                        }
+                    if (count == dayScheduleShiftTitles.size())
+                        SimpleUtils.fail("No matches shift title!", false);
+                }
+            } else
+                SimpleUtils.fail("In schedule view: Shift titles are not loaded correctly ", false);
+        }else
+            SimpleUtils.fail("Group by section is not loaded!", false);
     }
 
 

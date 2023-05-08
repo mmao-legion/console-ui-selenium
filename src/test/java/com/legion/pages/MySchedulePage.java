@@ -2,6 +2,7 @@ package com.legion.pages;
 
 import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface MySchedulePage {
@@ -80,4 +81,8 @@ public interface MySchedulePage {
     public List<String> getCoverTMList() throws Exception;
     public String getStyleOfShiftByIndex(int index) throws Exception;
     public boolean checkIfThePopupMessageOnTop(String expectedMessage) throws Exception;
+    public void clickAnyShiftInOpenShiftGroup(int count, String shiftWorkRole) throws Exception;
+    public void checkOpenShiftGroup(int count, String shiftDuration, String shiftWorkRole, ArrayList<String> weekDays, ArrayList<String> specificDates, String location) throws Exception;
+    public void cancelClaimOpenShiftGroupRequest(List<String> expectedRequests, String shiftWorkRole) throws Exception;
+    public ArrayList<String> getAllWeekDays() throws Exception;
 }

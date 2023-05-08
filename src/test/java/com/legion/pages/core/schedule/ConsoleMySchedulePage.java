@@ -1917,4 +1917,131 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         }
         return theMessageLoaded;
     }
+
+    @FindBy (css = ".sch-day-view-shift-worker-title-role.ng-binding")
+    private List<WebElement> workRoles;
+    @Override
+    public void clickAnyShiftInOpenShiftGroup(int count, String shiftWorkRole) throws Exception {
+        List<String> expectedShift = new ArrayList<>(Arrays.asList("View Group Offer" + "(" + count + ")"));
+        if (areListElementVisible(tmIcons, 15) && tmIcons.size() > 0) {
+            for (int i = 0; i < tmIcons.size(); i++) {
+                if(workRoles.get(i).getText().trim().equalsIgnoreCase(shiftWorkRole)){
+                    scrollToElement(tmIcons.get(i));
+                    waitForSeconds(1);
+                    clickTheElement(tmIcons.get(i));
+                }else
+                    continue;
+                if (isPopOverLayoutLoaded())
+                    verifyShiftRequestButtonOnPopup(expectedShift);
+                else
+                    SimpleUtils.fail("Open shift group view request is not loaded!", false);
+            }
+        } else
+            SimpleUtils.fail("Open shift group not displayed!", false);
+    }
+
+    @FindBy(className = "accept-shift-shift-info")
+    private List<WebElement> shiftsDetail;
+    @FindBy(css = ".accept-shift-header-title.ng-binding")
+    private WebElement shiftGroupTitle;
+    @Override
+    public void checkOpenShiftGroup(int count, String shiftDuration, String shiftWorkRole, ArrayList<String> weekDays, ArrayList<String> specificDates, String location) throws Exception {
+//        List<String> expectedShifts = new ArrayList<>(Arrays.asList("View Group Offer" + "(" + count + ")"));
+//        if (areListElementVisible(tmIcons, 15) && tmIcons.size() > 0) {
+//            for (int i = 0; i < tmIcons.size(); i++) {
+//                if(workRoles.get(i).getText().trim().equalsIgnoreCase(shiftWorkRole)){
+//                    scrollToElement(tmIcons.get(i));
+//                    waitForSeconds(1);
+//                    clickTheElement(tmIcons.get(i));
+//                }else
+//                    continue;
+//                if (isPopOverLayoutLoaded())
+//                    verifyShiftRequestButtonOnPopup(expectedShifts);
+//                else
+//                    SimpleUtils.fail("Open shift group view request is not loaded!", false);
+//            }
+//        } else
+//            SimpleUtils.fail("Open shift group not displayed!", false);
+        clickAnyShiftInOpenShiftGroup(count, shiftWorkRole);
+        List<String> expectedShifts = new ArrayList<>(Arrays.asList("View Group Offer" + "(" + count + ")"));
+        ArrayList<String> dates = new ArrayList<String>();
+        dates = specificDates;
+//        if (areListElementVisible(workRoles, 15) && workRoles.size() > 0) {
+//            int i = 0;
+//            for (; i<workRoles.size(); i++){
+//                if(workRoles.get(i).getText().trim().equalsIgnoreCase(shiftWorkRole)){
+//                    scrollToElement(tmIcons.get(i));
+//                    waitForSeconds(1);
+//                    clickTheElement(tmIcons.get(i));
+//                    break;
+//                }
+//            }
+        if (isPopOverLayoutLoaded()) {
+            verifyShiftRequestButtonOnPopup(expectedShifts);
+            clickTheElement(popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")));
+            if(isElementLoaded(shiftGroupTitle) && shiftGroupTitle.getText().trim().contains("Open Shift Group (" + count + ")")) {
+                if (areListElementVisible(shiftsDetail, 5)) {
+                    for (int dayOfWeek = 0; dayOfWeek < shiftsDetail.size(); dayOfWeek++) {
+                        String detail = shiftsDetail.get(dayOfWeek).getText().toLowerCase().replaceAll("\\s*", "");
+                        if (detail.contains(shiftWorkRole.toLowerCase().trim()) && detail.contains(weekDays.get(dayOfWeek).toLowerCase().trim())
+                                && detail.contains(location.toLowerCase().trim()) && detail.contains(shiftDuration.trim())
+                                && detail.contains(dates.get(dayOfWeek).toLowerCase().trim()))
+                            SimpleUtils.pass("Shift detail is correct: " + detail);
+                        else
+                            SimpleUtils.fail("Shift detail is incorrect!: " + shiftWorkRole.toLowerCase().trim() + weekDays.get(dayOfWeek).toLowerCase().trim() + location.toLowerCase().trim() + shiftDuration.trim() + dates.get(dayOfWeek).toLowerCase().trim() + "The expected one is: " + detail, false);
+                    }
+                } else
+                    SimpleUtils.fail("Shift detail dialog is not loaded!", false);
+            }else{
+                SimpleUtils.fail("Shift group title is not displayed correctly!", false);}
+        }else
+            SimpleUtils.fail("Popover layout is not loaded!",false);
+    }
+
+    public void cancelClaimOpenShiftGroupRequest(List<String> expectedRequests, String shiftWorkRole) throws Exception {
+        List<String> claimStatus = new ArrayList<>(Arrays.asList("Claim Shift Approval Pending", "Cancel Claim Request"));
+        String expectedMessage = "Cancelled successfully";
+        if (areListElementVisible(tmIcons, 15) && tmIcons.size() > 0) {
+            for (int i = 0; i < tmIcons.size(); i++) {
+                if(areListElementVisible(workRoles, 15) && workRoles.size() > 0) {
+                    if (workRoles.get(i).getText().trim().equalsIgnoreCase(shiftWorkRole)) {
+                        scrollToElement(tmIcons.get(i));
+                        waitForSeconds(1);
+                        clickTheElement(tmIcons.get(i));
+                    } else
+                        continue;
+                    if (isPopOverLayoutLoaded()){
+                        verifyShiftRequestButtonOnPopup(claimStatus);
+                        clickTheShiftRequestByName(claimStatus.get(1));
+                        verifyReConfirmDialogPopup();
+                        verifyClickOnYesButton();
+                        verifyThePopupMessageOnTop(expectedMessage);
+                    }else
+                        SimpleUtils.fail("Open shift group view request is not loaded!", false);
+                }else
+                    SimpleUtils.fail("Shifts work roles are not loaded!",false);
+            }
+        }else
+            SimpleUtils.fail("Team Members' Icons not loaded Successfully!", false);
+    }
+
+    @FindBy(css = "[id*=\"legion_cons_Schedule_Schedule_day\"]")
+    private List<WebElement> datesOfWeek;
+    @Override
+    public ArrayList<String> getAllWeekDays() throws Exception {
+        ArrayList<String> workDays = new ArrayList<String>();
+        String[] workDay = null;
+        String expectedDate;
+        if (areListElementVisible(datesOfWeek, 15) && datesOfWeek.size() > 0) {
+            for(int i = 0; i<datesOfWeek.size(); i++){
+                workDay = datesOfWeek.get(i).getText().split("\n");
+                workDay = workDay[1].split(" ");
+                expectedDate = workDay[1] + workDay[0];
+                workDays.add(expectedDate);
+            }
+        } else
+            SimpleUtils.fail("Work days of schedule week are not loaded!", false);
+        return workDays;
+    }
+
 }

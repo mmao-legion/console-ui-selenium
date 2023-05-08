@@ -112,6 +112,8 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
     private WebElement calendarNavigationPreviousWeekArrow;
     @FindBy(id = "legion_cons_Schedule_Schedule_Week_btn")
     private WebElement weekSubTabBtn;
+    @FindBy(id = "legion_cons_Schedule_Schedule_MultiWeek_btn")
+    private WebElement multiWeekTabBtn;
 
     @Override
     public void clickOnWeekView() throws Exception {
@@ -133,6 +135,26 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
             SimpleUtils.pass("Schedule page week view loaded successfully!");
         } else {
             SimpleUtils.fail("Schedule Page Week View Button not Loaded Successfully!", true);
+        }
+    }
+
+    @Override
+    public void clickOnMultiWeekView() throws Exception {
+        WebElement scheduleMultiWeekViewButton = null;
+        if (isElementLoaded(multiWeekTabBtn, 5)) {
+            scheduleMultiWeekViewButton = multiWeekTabBtn;
+        } else {
+            scheduleMultiWeekViewButton = MyThreadLocal.getDriver().
+                    findElement(By.cssSelector("div.lg-button-group-last"));
+        }
+        if (isElementLoaded(scheduleMultiWeekViewButton,15)) {
+            if (!scheduleMultiWeekViewButton.getAttribute("class").toString().contains("selected"))//selected
+            {
+                clickTheElement(scheduleMultiWeekViewButton);
+            }
+            SimpleUtils.pass("Schedule page multi week view loaded successfully!");
+        } else {
+            SimpleUtils.fail("Schedule Page Multi-Week View Button not Loaded Successfully!", true);
         }
     }
 
