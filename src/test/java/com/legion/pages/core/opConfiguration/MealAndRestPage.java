@@ -41,7 +41,7 @@ public class MealAndRestPage extends BasePage implements com.legion.pages.opConf
     @FindBy(css = "[form-title=\"Rest Breaks\"] th.ng-binding")
     private List<WebElement> restBreakTableTitles;
 
-    @FindBy(css = "[form-title=\"Meal Breaks\"] [label=\"+ Add\"]")
+    @FindBy(css = "[form-title=\"Meal Breaks\"] [label*=\"+ Add\"]")
     private WebElement mealAddBtn;
 
     @FindBy(css = "[form-title=\"Rest Breaks\"] [label=\"+ Add\"]")
