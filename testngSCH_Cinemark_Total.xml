@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="5" name="LegionTest" parallel="tests" configfailurepolicy="continue">
+<suite verbose ="0" thread-count="6" name="LegionTest" parallel="tests" configfailurepolicy="continue">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Scheduling OP Enabled Regression"/>
@@ -193,26 +193,6 @@
                     <include name="verifyAutoScheduleRespectTheMinorsRulesAsInternalAdmin" />
 <!--                    <include name="verifyRecommendationRespectTheMinorsRulesAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-9782-->
                     <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Seniority Relevant Testing">
-        <classes>
-            <class name="com.legion.tests.core.ScheduleSeniorityTest">
-                <methods>
-                    <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />
-                    <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" />
-                    <include name="verifySeniorityNotDisplayWhenToggleTurnOffForSearchingAsInternalAdmin" />
-                    <include name="verifySeniorityNotDisplayWhenToggleTurnOffForRecommendAsInternalAdmin" />
-                    <!-- <include name="verifySeniorityDisplayWhenToggleTurnOnForSearchingAsInternalAdmin" />
-                    <include name="verifySeniorityAlwaysDisplayOnSearchingDialogAsInternalAdmin" />
-                      <include name="verifySeniorityDisplayWhenToggleTurnOnForRecommendAsInternalAdmin" />
-                    <include name="verifyAscendingOfSeniorityForSearchingAsInternalAdmin" />
-                    <include name="verifyAscendingOfSeniorityForRecommendAsInternalAdmin" />
-                    <include name="verifyDescendingOfSeniorityForSearchingAsInternalAdmin" /> Blocked by SCH-9554  -->
-                    <!--  <include name="verifyDescendingOfSeniorityForRecommendAsInternalAdmin" />  Blocked by SCH-8613 -->
                 </methods>
             </class>
         </classes>
@@ -892,6 +872,26 @@ SCH-5862-->
             <class name="com.legion.tests.core.ShiftPatternBiddingTest">
                 <methods>
                     <include name="verifyTheEndToEndFlowOfShiftBiddingAsTeamMember"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Seniority Relevant Testing">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleSeniorityTest">
+                <methods>
+                    <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />
+                    <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" />
+                    <include name="verifySeniorityNotDisplayWhenToggleTurnOffForSearchingAsInternalAdmin" />
+                    <include name="verifySeniorityNotDisplayWhenToggleTurnOffForRecommendAsInternalAdmin" />
+                    <!-- <include name="verifySeniorityDisplayWhenToggleTurnOnForSearchingAsInternalAdmin" />
+                    <include name="verifySeniorityAlwaysDisplayOnSearchingDialogAsInternalAdmin" />
+                      <include name="verifySeniorityDisplayWhenToggleTurnOnForRecommendAsInternalAdmin" />
+                    <include name="verifyAscendingOfSeniorityForSearchingAsInternalAdmin" />
+                    <include name="verifyAscendingOfSeniorityForRecommendAsInternalAdmin" />
+                    <include name="verifyDescendingOfSeniorityForSearchingAsInternalAdmin" /> Blocked by SCH-9554  -->
+                    <!--  <include name="verifyDescendingOfSeniorityForRecommendAsInternalAdmin" />  Blocked by SCH-8613 -->
                 </methods>
             </class>
         </classes>
