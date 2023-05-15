@@ -151,9 +151,9 @@ public class MealAndRestPage extends BasePage implements com.legion.pages.opConf
             if (isElementLoaded(mealAddBtn, 5)) {
                 clickTheElement(mealAddBtn);
                 if (areListElementVisible(mealInputs, 10) && mealInputs.size() == 13) {
-                    for (WebElement input : mealInputs) {
-                        if (!input.getAttribute("value").equalsIgnoreCase(zero)) {
-                            SimpleUtils.fail("The Default value is not zero!", false);
+                    for (int i = 0; i < mealInputs.size(); i++) {
+                        if ((i == 1 || i == 2 || i == 7 || i == 11 || i == 12) && !mealInputs.get(i).getAttribute("value").equalsIgnoreCase(zero)) {
+                            SimpleUtils.fail("The Default value is not zero, N/A or #!", false);
                             break;
                         }
                     }
@@ -249,9 +249,9 @@ public class MealAndRestPage extends BasePage implements com.legion.pages.opConf
     }
 
     @Override
-    public void verifyCanSetTheValueForInputs(String mealOrRest, List<Integer> settings) throws Exception {
+    public void verifyCanSetTheValueForInputs(String mealOrRest, List<String> settings) throws Exception {
         if (mealOrRest.equalsIgnoreCase("Meal")) {
-            if (areListElementVisible(mealInputs, 5) && mealInputs.size() == 7 && settings.size() == 7) {
+            if (areListElementVisible(mealInputs, 5) && mealInputs.size() == 13 && settings.size() == 13) {
                 for (int i = 0; i < mealInputs.size(); i++) {
                     clickTheElement(mealInputs.get(i));
                     mealInputs.get(i).clear();
@@ -286,10 +286,10 @@ public class MealAndRestPage extends BasePage implements com.legion.pages.opConf
     }
 
     @Override
-    public Boolean verifyMealAndRestValueAreSaved(String mealOrRest, List<Integer> settings) throws Exception {
+    public Boolean verifyMealAndRestValueAreSaved(String mealOrRest, List<String> settings) throws Exception {
         boolean isSaved = true;
         if (mealOrRest.equalsIgnoreCase("Meal")) {
-            if (areListElementVisible(mealInputs, 5) && mealInputs.size() == 7 && settings.size() == 7) {
+            if (areListElementVisible(mealInputs, 5) && mealInputs.size() == 13 && settings.size() == 13) {
                 for (int i = 0; i < mealInputs.size(); i++) {
                     if (!mealInputs.get(i).getAttribute("value").equals(String.valueOf(settings.get(i)))) {
                         isSaved = false;

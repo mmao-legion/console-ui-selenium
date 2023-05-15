@@ -9,7 +9,7 @@ public interface MealAndRestPage {
     public void verifyTheFunctionalityOfInputsInMealOrRest(String mealOrRest) throws Exception;
     public void verifyXbuttonOnMealOrRest(String mealOrRest) throws Exception;
     public void verifyTheContentOnRestBreaksSection() throws Exception;
-    public void verifyCanSetTheValueForInputs(String mealOrRest, List<Integer> settings) throws Exception;
-    public Boolean verifyMealAndRestValueAreSaved(String mealOrRest, List<Integer> settings) throws Exception;
+    public void verifyCanSetTheValueForInputs(String mealOrRest, List<String> settings) throws Exception;
+    public Boolean verifyMealAndRestValueAreSaved(String mealOrRest, List<String> settings) throws Exception;
     public void setRestDuration(String restDuration) throws Exception;
 }

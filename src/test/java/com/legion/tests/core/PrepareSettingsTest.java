@@ -315,16 +315,16 @@ public class PrepareSettingsTest extends TestBase {
             configurationPage.archiveOrDeleteTemplate(eventManagerTemplate);
             configurationPage.archiveOrDeleteTemplate(generalManagerTemplate);
             configurationPage.archiveOrDeleteTemplate(teamMemberTemplate);
-            List<Integer> mealSettings = new ArrayList<>(Arrays.asList(1, 240, 721, 20, 120, 120, 0));
-            List<Integer> restSettings = new ArrayList<>(Arrays.asList(180, 721, 1));
+            List<String> mealSettings = new ArrayList<>(Arrays.asList("1", "240", "721", "", "", "", "", "20", "", "", "", "120", "120"));
+            List<String> restSettings = new ArrayList<>(Arrays.asList("180", "721", "1"));
             String restDuration = "15";
             createMealAndRestTemplates(eventManagerTemplate, mealSettings, restSettings, eventManagerGroupTitle, restDuration);
-            mealSettings = new ArrayList<>(Arrays.asList(1, 240, 721, 25, 120, 120, 0));
-            restSettings = new ArrayList<>(Arrays.asList(180, 721, 1));
+            mealSettings = new ArrayList<>(Arrays.asList("1", "240", "721", "", "", "", "", "25", "", "", "", "120", "120"));
+            restSettings = new ArrayList<>(Arrays.asList("180", "721", "1"));
             restDuration = "20";
             createMealAndRestTemplates(generalManagerTemplate, mealSettings, restSettings, generalManagerGroupTitle, restDuration);
-            mealSettings = new ArrayList<>(Arrays.asList(1, 240, 721, 30, 120, 120, 0));
-            restSettings = new ArrayList<>(Arrays.asList(180, 721, 1));
+            mealSettings = new ArrayList<>(Arrays.asList("1", "240", "721", "", "", "", "", "30", "", "", "", "120", "120"));
+            restSettings = new ArrayList<>(Arrays.asList("180", "721", "1"));
             restDuration = "25";
             createMealAndRestTemplates(teamMemberTemplate, mealSettings, restSettings, teamMemberGroupTitle, restDuration);
         } catch (Exception e){
@@ -332,7 +332,7 @@ public class PrepareSettingsTest extends TestBase {
         }
     }
 
-    private void createMealAndRestTemplates(String templateName, List<Integer> mealSettings, List<Integer> restSettings,
+    private void createMealAndRestTemplates(String templateName, List<String> mealSettings, List<String> restSettings,
                                             String dynamicGroup, String restDuration) throws Exception {
         String meal = "Meal";
         String rest = "Rest";

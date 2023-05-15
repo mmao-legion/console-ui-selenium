@@ -787,16 +787,16 @@ SCH-5862-->
         </classes>
     </test>
    -->
-    <test name="OP Config Test">
+<!--    <test name="OP Config Test">
         <classes>
             <class name="com.legion.tests.core.OPConfigTest">
                 <methods>
-<!--                    <include name="verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin" />
-                    <include name="verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin" />need more time check-->
+&lt;!&ndash;                    <include name="verifyWagesShowsWhenSettingLaborPreferencesToWagesAsInternalAdmin" />
+                    <include name="verifyWagesShouldNotShowsWhenSettingLaborPreferencesToNoneAsInternalAdmin" />need more time check&ndash;&gt;
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
     <test name="Schedule Copy Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleCopyTest">

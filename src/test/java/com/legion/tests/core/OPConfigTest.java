@@ -232,11 +232,11 @@ public class OPConfigTest extends TestBase {
             configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             // Verify can set the meal breaks
-            List<Integer> mealSettings = new ArrayList<>(Arrays.asList(1, 240, 480, 20, 120, 120, 0));
+            List<String> mealSettings = new ArrayList<String>(Arrays.asList("1", "240", "480", "", "", "", "", "20", "", "", "", "120", "120"));
             mealAndRestPage.clickOnAddButtonOnMealOrRestSection(meal);
             mealAndRestPage.verifyCanSetTheValueForInputs(meal, mealSettings);
             // Verify can set the rest breaks
-            List<Integer> restSettings = new ArrayList<>(Arrays.asList(180, 360, 1));
+            List<String> restSettings = new ArrayList<>(Arrays.asList("180", "360", "1"));
             mealAndRestPage.clickOnAddButtonOnMealOrRestSection(rest);
             mealAndRestPage.verifyCanSetTheValueForInputs(rest, restSettings);
             // Verify can select the Association
