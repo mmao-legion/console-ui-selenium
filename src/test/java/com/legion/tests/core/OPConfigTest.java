@@ -227,6 +227,7 @@ public class OPConfigTest extends TestBase {
             configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MealAndRest.getValue());
             // Verify the content on Meal and Rest page
             configurationPage.isTemplateListPageShow();
+            configurationPage.archiveOrDeleteTemplate(templateName);
             configurationPage.createNewTemplate(templateName);
             configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();

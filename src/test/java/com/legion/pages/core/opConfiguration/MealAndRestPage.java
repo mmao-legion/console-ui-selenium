@@ -47,7 +47,7 @@ public class MealAndRestPage extends BasePage implements com.legion.pages.opConf
     @FindBy(css = "[form-title=\"Rest Breaks\"] [label=\"+ Add\"]")
     private WebElement restAddBtn;
 
-    @FindBy(css = "[form-title=\"Meal Breaks\"] input[type=\"number\"]")
+    @FindBy(css = "[modal-title=\"New Meal Break Rule\"] input[type=\"number\"]")
     private List<WebElement> mealInputs;
 
     @FindBy(css = "[form-title=\"Rest Breaks\"] table input[type=\"number\"]")
@@ -150,7 +150,7 @@ public class MealAndRestPage extends BasePage implements com.legion.pages.opConf
         if (mealOrRest.equalsIgnoreCase("Meal")) {
             if (isElementLoaded(mealAddBtn, 5)) {
                 clickTheElement(mealAddBtn);
-                if (areListElementVisible(mealInputs, 10) && mealInputs.size() == 7) {
+                if (areListElementVisible(mealInputs, 10) && mealInputs.size() == 13) {
                     for (WebElement input : mealInputs) {
                         if (!input.getAttribute("value").equalsIgnoreCase(zero)) {
                             SimpleUtils.fail("The Default value is not zero!", false);
