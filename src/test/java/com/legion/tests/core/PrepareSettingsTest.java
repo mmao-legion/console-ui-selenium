@@ -195,18 +195,19 @@ public class PrepareSettingsTest extends TestBase {
             controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
             cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Schedule Collaboration"));
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.setWFS("No");
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
             configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
             configurationPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
-            configurationPage.publishNowTheTemplate();
+//            configurationPage.publishNowTheTemplate();
 
             String wfsName = "Lone Star Region";
-            cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Schedule Collaboration"));
-            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            configurationPage.setWFS("Yes");
-            configurationPage.selectWFSGroup(wfsName);
-            configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
-            configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
+//            cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Schedule Collaboration"));
+//            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
+//            configurationPage.selectWFSGroup(wfsName);
+//            configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
+//            configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
             configurationPage.publishNowTheTemplate();
 
             //Set buffer hours on OP: before--2, after--3
