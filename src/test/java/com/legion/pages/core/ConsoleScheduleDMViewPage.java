@@ -1567,9 +1567,9 @@ public class ConsoleScheduleDMViewPage extends BasePage implements ScheduleDMVie
     public void verifySearchLocationInScheduleDMView(String location) throws Exception {
         boolean flag = true;
         waitForSeconds(5);
-        if (isElementLoaded(analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")),60)){
-            analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).clear();
-            analyticsTableInScheduleDMViewPage.findElement(By.cssSelector("[ng-class=\"{'ng-invalid': $ctrl.invalid}\"]")).sendKeys(location);
+        if (isElementLoaded(getDriver().findElement(By.cssSelector(".analytics-new-table input[placeholder=\"Search\"]")),60)){
+            getDriver().findElement(By.cssSelector(".analytics-new-table input[placeholder=\"Search\"]")).clear();
+            getDriver().findElement(By.cssSelector(".analytics-new-table input[placeholder=\"Search\"]")).sendKeys(location);
             for (String s: getLocationsInScheduleDMViewLocationsTable()){
                 flag = flag && s.contains(location);
             }
