@@ -687,27 +687,27 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     }
 
 //
-//    @Override
-//    public void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception {
-//        if (isElementLoaded(agreeClaimBtn, 5)) {
-//            click(agreeClaimBtn);
-//            String expectedMessage = "Your claim request has been received and sent for approval";
-//            verifyThePopupMessageOnTop(expectedMessage);
-//        }else {
-//            SimpleUtils.fail("I Agree Button not loaded Successfully!", false);
-//        }
-//    }
+    @Override
+    public void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception {
+        if (isElementLoaded(agreeClaimBtn, 5)) {
+            click(agreeClaimBtn);
+            String expectedMessage = "Your claim request has been received and sent for approval";
+            verifyThePopupMessageOnTop(expectedMessage);
+        }else {
+            SimpleUtils.fail("I Agree Button not loaded Successfully!", false);
+        }
+    }
 
-//    @Override
-//    public void verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval() throws Exception {
-//        if (isElementLoaded(agreeClaimBtn, 5)) {
-//            click(agreeClaimBtn);
-//            String expectedMessage = "Success! This shift is yours, and has been added to your schedule.";
-//            verifyThePopupMessageOnTop(expectedMessage);
-//        }else {
-//            SimpleUtils.fail("I Agree Button not loaded Successfully!", false);
-//        }
-//    }
+    @Override
+    public void verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval() throws Exception {
+        if (isElementLoaded(agreeClaimBtn, 5)) {
+            click(agreeClaimBtn);
+            String expectedMessage = "Success! This shift is yours, and has been added to your schedule.";
+            verifyThePopupMessageOnTop(expectedMessage);
+        }else {
+            SimpleUtils.fail("I Agree Button not loaded Successfully!", false);
+        }
+    }
 
     @Override
     public void verifyClickAgreeBtnOnClaimShiftOfferWithMessage(String expectedMessage) throws Exception {
@@ -2036,7 +2036,23 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
             for(int i = 0; i<datesOfWeek.size(); i++){
                 workDay = datesOfWeek.get(i).getText().split("\n");
                 workDay = workDay[1].split(" ");
-                expectedDate = workDay[1] + workDay[0];
+                expectedDate = workDay[0] + workDay[1];
+                workDays.add(expectedDate);
+            }
+        } else
+            SimpleUtils.fail("Work days of schedule week are not loaded!", false);
+        return workDays;
+    }
+
+    @Override
+    public ArrayList<String> getAllWeekDaysForActivityDetailVerification() throws Exception {
+        ArrayList<String> workDays = new ArrayList<String>();
+        String[] workDay = null;
+        String expectedDate;
+        if (areListElementVisible(datesOfWeek, 15) && datesOfWeek.size() > 0) {
+            for(int i = 0; i<datesOfWeek.size(); i++){
+                workDay = datesOfWeek.get(i).getText().split("\n");
+                expectedDate = workDay[1];
                 workDays.add(expectedDate);
             }
         } else

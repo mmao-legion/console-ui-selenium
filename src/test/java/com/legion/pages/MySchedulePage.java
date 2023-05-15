@@ -83,6 +83,9 @@ public interface MySchedulePage {
     public boolean checkIfThePopupMessageOnTop(String expectedMessage) throws Exception;
     public void clickAnyShiftInOpenShiftGroup(int count, String shiftWorkRole) throws Exception;
     public void checkOpenShiftGroup(int count, String shiftDuration, String shiftWorkRole, ArrayList<String> weekDays, ArrayList<String> specificDates, String location) throws Exception;
+    public void verifyClickAgreeBtnOnClaimShiftOffer() throws Exception;
     public void cancelClaimOpenShiftGroupRequest(List<String> expectedRequests, String shiftWorkRole) throws Exception;
     public ArrayList<String> getAllWeekDays() throws Exception;
+    public ArrayList<String> getAllWeekDaysForActivityDetailVerification() throws Exception;
+    public void verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval() throws Exception;
 }

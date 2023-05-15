@@ -9895,6 +9895,34 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			AnalyzePage analyzePage = pageFactory.createAnalyzePage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+			//Go to OP page
+			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+			SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+			locationsPage.clickOnLocationsTab();
+			locationsPage.goToSubLocationsInLocationsPage();
+			locationsPage.searchLocation(location);               ;
+			SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+			locationsPage.clickOnLocationInLocationResult(location);
+			locationsPage.clickOnConfigurationTabOfLocation();
+			HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+
+			String option = "Yes, all unassigned shifts";
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			configurationPage.goToConfigurationPage();
+			controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
+			cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Schedule Collaboration"));
+			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+			configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
+			configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
+			configurationPage.publishNowTheTemplate();
+			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(180000);
+
+
 			//Go to schedule page, create a new schedule, modify the schedule and publish
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
