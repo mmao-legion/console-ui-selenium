@@ -9,6 +9,7 @@ import cucumber.api.java.hu.Ha;
 import org.junit.rules.ExpectedException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.server.handler.ClickElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -921,4 +922,99 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 			SimpleUtils.fail("Shift Swap Activity failed to Load!", false);
 		}
 	}
+
+	@Override
+	public void verifyNewClaimOpenShiftGroupCardShowsOnActivity(String requestUserName, String workRole, String shiftDateAndTime, String location) throws Exception {
+		String expectedMessage = requestUserName + " claimed the "+workRole+ " open shift group on "+shiftDateAndTime+ " @"+location+".";
+		waitForSeconds(5);
+		if (areListElementVisible(activityCards, 15)) {
+			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
+			if (message != null && message.getText().equalsIgnoreCase(expectedMessage)) {
+				SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
+			}else {
+				SimpleUtils.fail("Failed to find the card that is new and contain: " + expectedMessage + "! Actual card is: " + message.getText(), false);
+			}
+		}else {
+			SimpleUtils.fail("Shift Swap Activity failed to Load!", false);
+		}
+	}
+
+	@Override
+	public void approveOrRejectOpenShiftGroupRequestOnActivity(String requestUserName, String action) throws Exception {
+		WebElement openShiftGroupCard = activityCards.get(0);
+		if (openShiftGroupCard != null) {
+			List<WebElement> actionButtons = openShiftGroupCard.findElements(By.className("notification-buttons-button"));
+			if (actionButtons != null && actionButtons.size() == 2) {
+				for (WebElement button : actionButtons) {
+					if (action.equalsIgnoreCase(button.getText())) {
+						click(button);
+						break;
+					}
+				}
+				// Wait for the card to change the status message, such as approved or rejected
+				waitForSeconds(5);
+				clickTheElement(activityFilters.get(1));
+				waitForSeconds(1);
+				clickTheElement(activityFilters.get(1));
+				if (areListElementVisible(activityCards, 15)) {
+					WebElement approveOrRejectMessage = activityCards.get(0).findElement(By.cssSelector(".notification-approved"));
+					if (approveOrRejectMessage != null && approveOrRejectMessage.getText().toLowerCase().contains(action.toLowerCase())) {
+						SimpleUtils.pass(action + " the open shift group request for: " + requestUserName + " Successfully!");
+					} else {
+						SimpleUtils.fail(action + " message failed to load!", false);
+					}
+				}
+			}else {
+				SimpleUtils.fail("Action buttons: Approve and Reject failed to load!", false);
+			}
+		}else {
+			SimpleUtils.fail("Failed to find a new Shift Swap activity!", false);
+		}
+	}
+
+	@FindBy (css = "div[class=\"notification-details__shift-group-date\"]")
+	private List<WebElement> dates;
+	@FindBy (css = "div[class=\"notification-details__shift-group-time\"]")
+	private List<WebElement> shiftTimes;
+	@FindBy (css = "div[class=\"notification-details__shift-group-wrapper ng-scope\"]")
+	private List<WebElement> shiftSections;
+	@Override
+	public void verifyContentOfOpenShiftGroupRequestOnActivity(ArrayList<String> specificDate, String shiftStartNEndTime, String workRole, String location) throws Exception {
+		WebElement openShiftGroupCard = activityCards.get(0);
+		if (openShiftGroupCard != null) {
+			if (areListElementVisible(detailLinksInActivities, 5)){
+				if (detailLinksInActivities.get(0).getText().trim().equalsIgnoreCase("Details"))
+					clickTheElement(detailLinksInActivities.get(0));
+				if(!areListElementVisible(shiftSections,10))
+					SimpleUtils.fail("Shift details in activity are not laoded correctly!",false);
+				String shiftDate = null;
+				String shiftTime = null;
+				String shiftWorkRole = null;
+				String shiftLocation = null;
+				for (int i = 0; i < shiftSections.size(); i++) {
+					shiftDate = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-date"))
+							.getText().replaceAll("\\n", "");
+
+					shiftTime = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-time span:nth-child(1)"))
+							.getText().replaceAll(" ", "") + "-" + shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-time span:nth-child(2)"))
+							.getText().replaceAll(" ", "");
+
+					shiftWorkRole = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-role span:nth-child(1)")).getText();
+					shiftLocation = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-role span:nth-child(2)")).getText();
+					if (shiftDate.equalsIgnoreCase(specificDate.get(i)) & shiftTime.equalsIgnoreCase(shiftStartNEndTime) &
+							shiftWorkRole.equalsIgnoreCase(workRole) & shiftLocation.equalsIgnoreCase(location))
+						continue;
+					else
+						SimpleUtils.fail("Shift information in activity is not correct! The actual result is: " +
+								"" + shiftDate + " " + shiftTime + " " + shiftWorkRole + " " + shiftLocation
+								+ "And expected result is: " + specificDate.get(i) + " " + shiftStartNEndTime + " "
+								+ workRole + " " + location, false);
+				}
+				} else
+					SimpleUtils.fail("Failed to load open shift group detail button in activity!", false);
+			}else
+				SimpleUtils.fail("Failed to find open shift group request in activity!", false);
+	}
+
+
 }
