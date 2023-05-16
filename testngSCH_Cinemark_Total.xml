@@ -278,7 +278,7 @@
 <!--                    <include name="verifyCommonUIOfWidgetsAsStoreManager" /> https://legiontech.atlassian.net/browse/SCH-6542-->
 <!--                    <include name="verifyScheduleFunctionalityForecastAsStoreManager" /> https://legiontech.atlassian.net/browse/SCH-6396-->
 <!--                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin" Blocked by bug: SCH-5896/>-->
-                    <include name="validateWeatherSmartCardOnForecastPage" />
+                    <include name="validateWeatherSmartCardOnForecastPageAsInternalAdmin" />
                     <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
  <!--                   <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />-->
 <!--                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" Blocked by bug: SCH-3934/>-->

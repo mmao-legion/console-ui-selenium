@@ -1288,7 +1288,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the Schedule functionality > Shopper Forecast> Weather smartcard")
     @Test(dataProvider = "legionTeamCredentialsByEnterprise", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateWeatherSmartCardOnForecastPage(String username, String password, String browser, String location)
+    public void validateWeatherSmartCardOnForecastPageAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
