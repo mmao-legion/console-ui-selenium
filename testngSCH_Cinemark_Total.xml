@@ -872,6 +872,7 @@ SCH-5862-->
             <class name="com.legion.tests.core.ShiftPatternBiddingTest">
                 <methods>
                     <include name="verifyTheEndToEndFlowOfShiftBiddingAsTeamMember"/>
+                    <include name="verifyAutoAssignShiftPatternToEmployeeBySeniorityWorkRoleAsTeamMember5" />
                 </methods>
             </class>
         </classes>
