@@ -129,6 +129,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(className = "react-select__option")
     private List<WebElement> assignmentOptionsInDropDownList;
     public void clickRadioBtnStaffingOption(String staffingOption) throws Exception {
+        scrollToBottom();
+        waitForSeconds(1);
         if (areListElementVisible(radioBtnStaffingOptions, 5)
                 && areListElementVisible(radioBtnShiftTexts, 5)) {
             boolean flag = false;
