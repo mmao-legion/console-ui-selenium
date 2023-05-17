@@ -6,4 +6,6 @@ public interface BidShiftPatternBiddingPage {
     public void clickNextButton() throws Exception;
     public void addAllShiftPatterns() throws Exception;
     public void clickSubmitButton() throws Exception;
+    public void addSpecificShiftPattern(String workRole, String shiftPatternName) throws Exception;
+    public void rankSelectedShiftPattern(String workRole, String shiftPatternName, int rank);
 }

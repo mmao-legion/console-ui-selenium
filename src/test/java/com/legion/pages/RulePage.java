@@ -10,4 +10,6 @@ public interface RulePage {
     public boolean checkIfThereAreAssignmentOnRulePage() throws Exception;
     public List<String> getAllShiftPatternsAssignmentsOnScheduleRulePage() throws Exception;
     public void clickBackButton() throws Exception;
+    public void assignEmployeeToSpecificShiftPattern(String employeeName, String workRole, String shiftPatternName, String startDate, String endDate) throws Exception;
+    public List<String> getAssignmentOfShiftPattern(String workRole, String shiftPatternName);
 }
