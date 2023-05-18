@@ -683,6 +683,9 @@ public class DeleteScheduleTest extends TestBase {
                     scheduleShiftTablePage.isScheduleTableDisplay(), false);
             //Go to Overview tab, check the status of the schedule
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            refreshPage();
+            Thread.sleep(5000);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             //The status should be Not Started
             scheduleStatusOnOverViewTable = scheduleOverviewPage.getScheduleWeeksStatus().get(index);
             expectedStatus = "Not Started";
