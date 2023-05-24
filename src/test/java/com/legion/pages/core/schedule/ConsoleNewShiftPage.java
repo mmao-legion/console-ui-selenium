@@ -202,6 +202,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 // Do Nothing
             }
             click(btnSaveOnNewCreateShiftPage);
+            clickOnOkButtonOnErrorDialog();
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
         }else {
             SimpleUtils.fail("Create or Next Button not clicked Successfully on Customize new Shift page!", false);
@@ -556,6 +557,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             if (areListElementVisible(buttonsOnWarningMode, 10)) {
                 click(buttonsOnWarningMode.get(1));
             }
+            clickOnOkButtonOnErrorDialog();
         }else{
             SimpleUtils.fail("Offer Or Assign Button is not clickable", false);
         }
@@ -1288,6 +1290,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 SimpleUtils.fail("Location group dropdown loaded fail! ", false);
             //close the dropdown list
             click(btnSaveOnNewCreateShiftPage);
+            clickOnOkButtonOnErrorDialog();
         }else {
             SimpleUtils.fail("Child location button is not clickable", false);
         }
@@ -3173,5 +3176,12 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         }else{
             SimpleUtils.fail("The Close button is not loaded correctly!", false);
         }
+    }
+
+    public void clickOnOkButtonOnErrorDialog () throws Exception {
+        if (isElementLoaded(okBtnInWarningMode, 5)) {
+            clickTheElement(okBtnInWarningMode);
+        }else
+            SimpleUtils.report("The OK button fail to load! ");
     }
 }

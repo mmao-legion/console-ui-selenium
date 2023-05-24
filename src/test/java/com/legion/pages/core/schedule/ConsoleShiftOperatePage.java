@@ -2782,7 +2782,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 for (WebElement status: tmScheduledStatusOnNewCreateShiftPage) {
                     statusMessage = statusMessage + status.getText() + "\n";
                 }
-                messageOfTMScheduledStatus = statusMessage.replace(" AM", "am").replace(" PM", "pm").replace(":00", "");
+                messageOfTMScheduledStatus = statusMessage.replace(" AM", "am").replace(" PM", "pm").replace(":00", "").replace(" 0", " ");
                 MyThreadLocal.setMessageOfTMScheduledStatus(statusMessage);
             }else {
                 SimpleUtils.report("TM scheduled status is not loaded!");

@@ -1349,22 +1349,22 @@ public class CinemarkMinorTest extends TestBase {
 
         //check the violation message in Status column
         String warningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
-        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs "+scheduleFromToTime+"! but actual is: "
+        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor working hrs "+scheduleFromToTime+"! but actual is: "
                         +warningMessage,
-                warningMessage.toLowerCase().contains(("Minor hrs "+ scheduleFromToTime).toLowerCase()), false);
+                warningMessage.toLowerCase().contains(("Minor working hrs "+ scheduleFromToTime).toLowerCase()), false);
         Thread.sleep(5000);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         Thread.sleep(5000);
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+" should be scheduled from "+ scheduleFromToTime;
+//            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+" should be scheduled from "+ scheduleFromToTime;
             String warningMessage2 = "Please confirm that you want to make this change.";
             String messageInWarningMode = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
-            if (messageInWarningMode.contains(warningMessage1)&& messageInWarningMode.contains(warningMessage2)){
+            if (messageInWarningMode.toLowerCase().contains(("Minor working hrs "+ scheduleFromToTime).toLowerCase())&& messageInWarningMode.contains(warningMessage2)){
                 SimpleUtils.pass("The message in warning mode display correctly!");
             } else
                 SimpleUtils.fail("The message in warning mode display incorrectly!  The expected message is :"+
-                        warningMessage1 + warningMessage2+" The actual message is : " + messageInWarningMode, false);
+                        ("Minor working hrs "+ scheduleFromToTime).toLowerCase() + warningMessage2+" The actual message is : " + messageInWarningMode, false);
             shiftOperatePage.clickOnAssignAnywayButton();
         } else
             SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
@@ -1379,7 +1379,7 @@ public class CinemarkMinorTest extends TestBase {
         //check the violation in i icon popup of new create shift
         WebElement newAddedShift = scheduleShiftTablePage.
                 getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1.split(" ")[0]).get(0));
-        String expectMessage = "Minor hrs "+ scheduleFromToTime;
+        String expectMessage = "Minor working hrs "+ scheduleFromToTime;
         String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString().replace(" AM", "am").replace(" PM", "pm").replace(":00", "");;
 //                .replace(":00 ", "").replace(":30 ", ":30").toLowerCase();
         if (newAddedShift != null) {
@@ -1417,9 +1417,9 @@ public class CinemarkMinorTest extends TestBase {
 
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+"'s daily schedule should not exceed "+ scheduleMaxHours +" hours";
+//            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+"'s daily schedule should not exceed "+ scheduleMaxHours +" hours";
             String warningMessage2 = "Please confirm that you want to make this change.";
-            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
+            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().toLowerCase().contains(("Minor working hrs "+ scheduleFromToTime).toLowerCase())
                     && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
                 SimpleUtils.pass("The message in warning mode display correctly! ");
             } else

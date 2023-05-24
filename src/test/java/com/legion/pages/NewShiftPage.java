@@ -118,4 +118,5 @@ public interface NewShiftPage {
     public void emptySearchBox() throws Exception;
     public void clickSearchIcon() throws Exception;
     public List<String> getWorkRoleList() throws Exception;
+    public void clickOnOkButtonOnErrorDialog () throws Exception;
 }

@@ -150,7 +150,6 @@ public class HardStopForMinorViolation extends TestBase {
 //            shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(minorName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<WebElement> minorShifts = scheduleShiftTablePage.getAllShiftsOfOneTM(minorName.split(" ")[0]);
             SimpleUtils.assertOnFail("The minor shift fail to created! ", minorShifts.size()>0, false);

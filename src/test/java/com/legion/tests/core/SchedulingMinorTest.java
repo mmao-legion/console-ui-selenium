@@ -783,8 +783,8 @@ public class SchedulingMinorTest extends TestBase {
 
 
             //check the violation message in Status column
-            SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs 9:30AM - 7:30PM! ",
-                    shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs 9:30AM - 7:30PM"), false);
+            SimpleUtils.assertOnFail("There should have minor warning message display as: Minor working hrs 9:30AM - 7:30PM! ",
+                    shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor working hrs 9:30AM - 7:30PM"), false);
 
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
@@ -793,7 +793,7 @@ public class SchedulingMinorTest extends TestBase {
             WebElement newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1).get(0));
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
-                        scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor hrs 9:30AM - 7:30PM"), false);
+                        scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor working hrs 9:30AM - 7:30PM"), false);
             } else
                 SimpleUtils.fail("Get new added shift failed! ", false);
 
@@ -826,8 +826,8 @@ public class SchedulingMinorTest extends TestBase {
                 SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
             //check the violation message in Status column
-            SimpleUtils.assertOnFail("There should have minor warning message display as: Minor hrs 10AM - 7PM! ",
-                    shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor hrs 10AM - 7PM"), false);
+            SimpleUtils.assertOnFail("There should have minor warning message display as: Minor working hrs 10AM - 7PM! ",
+                    shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor working hrs 10AM - 7PM"), false);
 
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
@@ -836,7 +836,7 @@ public class SchedulingMinorTest extends TestBase {
             newAddedShift = scheduleShiftTablePage.getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM2).get(0));
             if (newAddedShift != null) {
                 SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! ",
-                        scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor hrs 10AM - 7PM"), false);
+                        scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor working hrs 10AM - 7PM"), false);
             } else
                 SimpleUtils.fail("Get new added shift failed", false);
         } catch (Exception e){

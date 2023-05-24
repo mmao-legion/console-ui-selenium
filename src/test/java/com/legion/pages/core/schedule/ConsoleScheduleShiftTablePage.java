@@ -2518,7 +2518,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement message: warningMessagesInWarningModeOnNewCreaeShiftPage) {
                 warningMessage = warningMessage + " " + message.getText();
             }
-            warningMessage = warningMessage.replace(" AM", "am").replace(" PM", "pm").replace(":00", "").trim();
+            warningMessage = warningMessage.replace(" AM", "am").replace(" PM", "pm")
+                    .replace(":00", "").replace(" 0", " ").trim();
         }else {
             SimpleUtils.fail("Warning message fail to load", false);
         }
