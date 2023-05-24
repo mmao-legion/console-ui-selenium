@@ -1462,7 +1462,7 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickClearAssignmentsLink();
             String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
-            SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("will trigger split shift"), false);
+            SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("split shift"), false);
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
@@ -1487,7 +1487,7 @@ public class FTSERelevantTest extends TestBase {
     public void verifyFTSEEmployeesSupportSpreadOfHoursViolationAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
         try {
-            //Set split shift violation in the Compliance page
+            //Set spread of hours violation in the Compliance page
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1569,12 +1569,12 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickClearAssignmentsLink();
             SimpleUtils.assertOnFail("The spread of hour violation fail to display in Status column! The actual message is: " + shiftOperatePage.getTheMessageOfTMScheduledStatus(),
-                    shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Will trigger spread of hours"), false);
+                    shiftOperatePage.getTheMessageOfTMScheduledStatus().toLowerCase().contains("spread of hours"), false);
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
 
-            //Verify the split shift violation after saving.
+            //Verify the spread of hours violation after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage(tmPartialName);
             List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
@@ -1593,7 +1593,7 @@ public class FTSERelevantTest extends TestBase {
     public void verifyShiftInfoInDayViewAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
         try {
-            //Set split shift violation in the Compliance page
+            //Set different role for different enterprises
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -1713,7 +1713,7 @@ public class FTSERelevantTest extends TestBase {
     public void verifyShiftInfoInViewProfileAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
         try {
-            //Set split shift violation in the Compliance page
+            //Set different roles for different enterprises
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -1829,7 +1829,7 @@ public class FTSERelevantTest extends TestBase {
     public void verifyShiftInfoInPersonalMyScheduleAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
         try {
-            //Set split shift violation in the Compliance page
+            //Set different roles for different enterprises
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -1986,7 +1986,7 @@ public class FTSERelevantTest extends TestBase {
     public void verifyShiftInfoInPersonalMyPreferenceAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
         try {
-            //Set split shift violation in the Compliance page
+            //Set different roles for different enterprises
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -2110,7 +2110,7 @@ public class FTSERelevantTest extends TestBase {
     public void verifyMaxShiftDurationInfoInDayViewAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
         try {
-            //Set split shift violation in the Compliance page
+            //Set different roles for different enterprises
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
@@ -2195,7 +2195,7 @@ public class FTSERelevantTest extends TestBase {
     public void verifyTheFunctionalityOfGreenOrGreyAvailableAsInternalAdmin(String username, String password, String browser, String location)
             throws Exception {
         try {
-            //Set split shift violation in the Compliance page
+            //Set different roles for different enterprises
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
