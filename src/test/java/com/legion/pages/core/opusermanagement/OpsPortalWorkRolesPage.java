@@ -78,7 +78,7 @@ public class OpsPortalWorkRolesPage extends BasePage {
     private WebElement saveBtnOnDetails;
     @FindBy(css = ".lg-template-work-roles__drag-handle")
     private List<WebElement> dragHandles;
-    @FindBy(css = "input[placeholder=\"Work role name\"]")
+    @FindBy(css = "input[placeholder=\"Work role display name\"]")
     private WebElement workRoleNameInput;
     @FindBy(css = "[aria-label=\"Work Role Class\"]")
     private WebElement workRoleClassSelect;
