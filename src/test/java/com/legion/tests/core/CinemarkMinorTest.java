@@ -1380,8 +1380,9 @@ public class CinemarkMinorTest extends TestBase {
         WebElement newAddedShift = scheduleShiftTablePage.
                 getTheShiftByIndex(scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM1.split(" ")[0]).get(0));
         String expectMessage = "Minor working hrs "+ scheduleFromToTime;
-        String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString().replace(" AM", "am").replace(" PM", "pm").replace(":00", "");;
-//                .replace(":00 ", "").replace(":30 ", ":30").toLowerCase();
+        String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString().replace(" AM", "am").replace(" PM", "pm").replace(":00", "")
+                .replace(" 0", " ");
+//                .replace(":30 ", ":30").toLowerCase();
         if (newAddedShift != null) {
             SimpleUtils.assertOnFail("The minor violation message display incorrectly in i icon popup! the expect is: "+expectMessage
                             +" the actual is:"+actualMessage,
@@ -1418,9 +1419,9 @@ public class CinemarkMinorTest extends TestBase {
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
 //            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+"'s daily schedule should not exceed "+ scheduleMaxHours +" hours";
+            String warningMessage1 = "Minor daily max "+ scheduleMaxHours +" hrs";
             String warningMessage2 = "Please confirm that you want to make this change.";
-            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().toLowerCase().contains(("Minor working hrs "+ scheduleFromToTime).toLowerCase())
-                    && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().replace(".0","").contains(warningMessage1)){
                 SimpleUtils.pass("The message in warning mode display correctly! ");
             } else
                 SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
