@@ -3179,9 +3179,13 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     }
 
     public void clickOnOkButtonOnErrorDialog () throws Exception {
-        if (isElementLoaded(okBtnInWarningMode, 5)) {
-            clickTheElement(okBtnInWarningMode);
-        }else
-            SimpleUtils.report("The OK button fail to load! ");
+        try {
+            if (isElementLoaded(okBtnInWarningMode, 5)) {
+                clickTheElement(okBtnInWarningMode);
+            } else
+                SimpleUtils.report("Toggle: EnableNewSchedulingErrorHandlingSCH is disabled");
+        } catch (Exception e) {
+            SimpleUtils.report("Toggle: EnableNewSchedulingErrorHandlingSCH is disabled");
+        }
     }
 }

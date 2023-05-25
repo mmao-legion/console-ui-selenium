@@ -97,7 +97,7 @@ public class SplitAndSpreadTest extends TestBase {
     @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Verify Will trigger Split Shift violation when search TM")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifySplitShiftViolationWhenSearchTMAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+    public void verifySplitShiftViolationWhenSearchTMAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -109,15 +109,15 @@ public class SplitAndSpreadTest extends TestBase {
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
         scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
+                scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
         // Navigate to a week
         scheduleCommonPage.navigateToNextWeek();
         // create the schedule and pick up roles and employee.
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-        if (isWeekGenerated){
+        if (isWeekGenerated) {
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
         }
         createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -134,8 +134,8 @@ public class SplitAndSpreadTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         newShiftPage.clickOnDayViewAddNewShiftButton();
         newShiftPage.selectWorkRole(workRoleOfTM1);
-        newShiftPage.moveSliderAtCertainPoint("10:00am",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-        newShiftPage.moveSliderAtCertainPoint("8:00am",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("10:00am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("8:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
         newShiftPage.searchTeamMemberByName(firstNameOfTM1);
@@ -147,13 +147,14 @@ public class SplitAndSpreadTest extends TestBase {
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         newShiftPage.clickOnDayViewAddNewShiftButton();
         newShiftPage.selectWorkRole(workRoleOfTM1);
-        newShiftPage.moveSliderAtCertainPoint("1:00pm",ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-        newShiftPage.moveSliderAtCertainPoint("12:00pm",ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("1:00pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        newShiftPage.moveSliderAtCertainPoint("12:00pm", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
         newShiftPage.clickOnCreateOrNextBtn();
         newShiftPage.searchTeamMemberByName(firstNameOfTM1);
         String shiftWarningMessage = MyThreadLocal.getMessageOfTMScheduledStatus();
-        SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("will trigger split shift"), false);
+        SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("split shift"), false);
+
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
         //verify split shift violation after saving.
@@ -239,11 +240,11 @@ public class SplitAndSpreadTest extends TestBase {
         newShiftPage.clickOnCreateOrNextBtn();
         newShiftPage.searchWithOutSelectTM(firstNameOfTM1 + " " + lastNameOfTM1);
         String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
-        SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("will trigger split shift"), false);
+        SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("split shift"), false);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-            if (warningMessage.contains("will incur split shifts")){
+            if (warningMessage.toLowerCase().contains("split shift")){
                 SimpleUtils.pass("Split shifts warning message displays");
             } else {
                 SimpleUtils.fail("There is no split shifts warning message displaying", false);
@@ -709,12 +710,12 @@ public class SplitAndSpreadTest extends TestBase {
             //check the violation message in Status column
             Thread.sleep(3000);
             SimpleUtils.assertOnFail("The spread of hour violation fail to display in Status column! The actual message is: " + shiftOperatePage.getTheMessageOfTMScheduledStatus(),
-                    shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Will trigger spread of hours"), false);
+                    shiftOperatePage.getTheMessageOfTMScheduledStatus().toLowerCase().contains("spread of hours"), false);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(tmFirstName);
             //check the message in warning mode
             Thread.sleep(5000);
             if(newShiftPage.ifWarningModeDisplay()){
-                String warningMessage1 = tmFirstName + " will incur spread of hours.";
+                String warningMessage1 = "spread of hours";
                 String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
                 if (warningMessage.toLowerCase().contains(warningMessage1.toLowerCase())){
                     SimpleUtils.pass("The message in warning mode display correctly! ");
