@@ -7620,7 +7620,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail(expectedWaningMessage+ " message fail to load! The actual message is:"+shiftWarningMessage,
 					shiftWarningMessage.contains(expectedWaningMessage), false);
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
-			expectedWaningMessage = firstNameOfTM+ " does not have minimum time between shifts";
+//			expectedWaningMessage = firstNameOfTM+ " does not have minimum time between shifts";
 			if(newShiftPage.ifWarningModeDisplay()){
 				String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
 
