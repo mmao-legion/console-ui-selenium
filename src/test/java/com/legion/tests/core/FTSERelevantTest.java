@@ -851,6 +851,7 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
+            newShiftPage.clickOnOkButtonOnErrorDialog();
             scheduleMainPage.saveSchedule();
 
             //Verify Max Shifts violation displays after saving.

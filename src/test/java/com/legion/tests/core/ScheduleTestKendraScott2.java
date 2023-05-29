@@ -8493,6 +8493,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("The Violation message on the AssignAnyway page is not expected!", assignAnywayMessage.contains(standardAssignAnyway1) & assignAnywayMessage.contains(standardAssignAnyway2), false);
 			shiftOperatePage.clickOnAssignAnywayButton();
 			newShiftPage.clickOnOfferOrAssignBtn();
+			newShiftPage.clickOnOkButtonOnErrorDialog();
 			scheduleMainPage.saveSchedule();
 
 			//Verify the WeekOT violation after saving.
