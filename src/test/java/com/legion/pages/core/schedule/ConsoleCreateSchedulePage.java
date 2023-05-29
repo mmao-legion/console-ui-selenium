@@ -2198,7 +2198,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
         }
     }
 
-    @FindBy(css = "div.required-action-card")
+    @FindBy(css = "[ng-if*=\"complianceViolationsCount\"]")
     private WebElement needComplianceReviewSection;
 
     @Override

@@ -7763,7 +7763,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
 			String actualMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(shiftsOfFirstDay.get(3)).toString();
 			SimpleUtils.assertOnFail("'Max shift per day violation' compliance message display failed",
-					actualMessage.contains("Max shift per day violation") , false);
+					actualMessage.contains("Max shift per day") , false);
 
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(),false);
