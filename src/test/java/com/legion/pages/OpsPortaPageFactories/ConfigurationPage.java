@@ -278,5 +278,6 @@ public interface ConfigurationPage {
     public void updateWorkRoleHourlyRate(String workRole,String updateValue);
     public void createFutureWRSTemplateBasedOnExistingTemplate(String templateName, String button, int date, String editOrViewMode) throws Exception;
     public void updateInputBudgetSettingDropdownOption(String option) throws Exception;
+    public void enableOrDisableRequiredEmployeeAcknowledgeSetting(String yesOrNo) throws Exception;
 }
 

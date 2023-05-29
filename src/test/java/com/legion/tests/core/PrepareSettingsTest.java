@@ -159,6 +159,7 @@ public class PrepareSettingsTest extends TestBase {
             ToggleAPI.updateToggle(Toggles.DynamicGroupV2.getValue(), getUserNameNPwdForCallingAPI().get(0),
                     getUserNameNPwdForCallingAPI().get(1), false);
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             dashboardPage.clickOnIntegrationConsoleMenu();
@@ -189,8 +190,14 @@ public class PrepareSettingsTest extends TestBase {
             locationsPage.clickOnConfigurationTabOfLocation();
             HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
 
+            configurationPage.goToConfigurationPage();
+            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+            cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Scheduling Policies"));
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.enableOrDisableRequiredEmployeeAcknowledgeSetting("Yes");
+            configurationPage.publishNowTheTemplate();
+
             String option = "Yes, all unassigned shifts";
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
             cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Schedule Collaboration"));

@@ -8048,5 +8048,35 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("OP Page: Global Configuration: Input budget as labor hours or total wages settings dropdown list not loaded.", false);
 		}
 	}
+
+
+	@FindBy(css = "question-input[question-title=\"Are employees required to acknowledge their schedule?\"] yes-no")
+	private WebElement requireEmployeeAcknowledgeSetting;
+
+	@Override
+	public void enableOrDisableRequiredEmployeeAcknowledgeSetting(String yesOrNo) throws Exception {
+		if (isElementLoaded(requireEmployeeAcknowledgeSetting, 10)) {
+			scrollToElement(requireEmployeeAcknowledgeSetting);
+			if (yesOrNo.equalsIgnoreCase("yes")) {
+				if (isElementLoaded(requireEmployeeAcknowledgeSetting.findElement(By.cssSelector(".lg-button-group-first")), 10)) {
+					click(requireEmployeeAcknowledgeSetting.findElement(By.cssSelector(".lg-button-group-first")));
+					SimpleUtils.pass("Turned on 'Are employees required to acknowledge their schedule?' setting successfully! ");
+				} else {
+					SimpleUtils.fail("Yes button fail to load!", false);
+				}
+			} else if (yesOrNo.equalsIgnoreCase("no")) {
+				if (isElementLoaded(requireEmployeeAcknowledgeSetting.findElement(By.cssSelector(".lg-button-group-last")), 10)) {
+					click(requireEmployeeAcknowledgeSetting.findElement(By.cssSelector(".lg-button-group-last")));
+					SimpleUtils.pass("Turned off 'Are employees required to acknowledge their schedule?' setting successfully! ");
+				} else {
+					SimpleUtils.fail("No button fail to load!", false);
+				}
+			} else {
+				SimpleUtils.warn("You have to input the right command: yes or no");
+			}
+		} else {
+			SimpleUtils.fail("'Are employees required to acknowledge their schedule?' setting is not loaded!", false);
+		}
+	}
 }
 

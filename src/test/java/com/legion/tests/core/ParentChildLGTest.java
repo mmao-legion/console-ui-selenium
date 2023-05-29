@@ -3488,7 +3488,7 @@ public class ParentChildLGTest extends TestBase {
             if (isWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createLGScheduleWithGivingTimeRange("08:00am", "09:00pm");
             if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
