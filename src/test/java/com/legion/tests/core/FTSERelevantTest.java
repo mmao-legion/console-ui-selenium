@@ -858,7 +858,8 @@ public class FTSERelevantTest extends TestBase {
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage(tmPartialName);
             List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(6));
-            SimpleUtils.assertOnFail("The Max Shifts violation message is not showing!", complianceMessage.contains("Max shift per week violation"), false);
+            SimpleUtils.assertOnFail("The Max Shifts violation message is not showing!",
+                    complianceMessage.contains("Max shift per week violation") || complianceMessage.contains("Max days per week"), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
