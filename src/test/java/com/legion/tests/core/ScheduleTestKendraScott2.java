@@ -8221,7 +8221,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
-			createSchedulePage.createScheduleForNonDGFlowNewUI();
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "09:00pm");
 
 			//Edit the operating day and cancel all actions.
 			scheduleMainPage.goToToggleSummaryView();
@@ -8274,19 +8274,15 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
 		} finally{
-			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
-			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(FTSERelevantTest.SchedulePageSubTabText.Overview.getValue()), true);
-			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
-			scheduleCommonPage.clickOnWeekView();
-			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (isActiveWeekGenerated) {
-				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-			}
-			Thread.sleep(5000);
-			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00am", "06:00am");
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			goToSchedulePageScheduleTab();
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			scheduleMainPage.goToEditOperatingHoursView();
+			List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
+			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "08:00AM","09:00PM");
+			scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
+			scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "8AM-9PM");
 		}
 	}
 
