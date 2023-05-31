@@ -1517,7 +1517,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.clickOnUpdateButton();
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
-                if (warningMessage.contains("will incur 4 hours of daily overtime")){
+                if (warningMessage.contains("4.0 hrs daily overtime")){
                     SimpleUtils.pass("Minor warning message for exceed the weekend or holiday hours displays");
                 } else {
                     SimpleUtils.fail("There is no daily OT violation warning message display, the actual message is:"+warningMessage, false);
@@ -1530,7 +1530,7 @@ public class SingleShiftEditTest extends TestBase {
             List<String> complianceMessages = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
                     (scheduleShiftTablePage.getTheShiftByIndex(index));
             SimpleUtils.assertOnFail("The Role Violation should display! The actual message is: "+complianceMessages,
-                    complianceMessages.contains("3.5 hrs daily overtime") || complianceMessages.contains("4 hrs daily overtime"), false);
+                    complianceMessages.contains("3.5 hrs daily overtime") || complianceMessages.contains("4.0 hrs daily overtime"), false);
             createSchedulePage.publishActiveSchedule();
 
             //Validate the daily DT Violation on edit single shift page
@@ -1549,7 +1549,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.clickOnUpdateButton();
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
-                if (warningMessage.contains("will incur 4 hours of daily doubletime")){
+                if (warningMessage.contains("4.0 hrs daily doubletime")){
                     SimpleUtils.pass("Minor warning message for exceed the weekend or holiday hours displays");
                 } else {
                     SimpleUtils.fail("There is no daily OT violation warning message display, the actual message is:"+warningMessage, false);
@@ -1562,7 +1562,7 @@ public class SingleShiftEditTest extends TestBase {
             complianceMessages = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
                     (scheduleShiftTablePage.getTheShiftByIndex(index));
             SimpleUtils.assertOnFail("The Role Violation should display! The actual message is: "+complianceMessages,
-                    complianceMessages.contains("4 hrs daily double overtime")
+                    complianceMessages.contains("4.0 hrs daily double overtime")
                             || complianceMessages.contains("3.5 hrs daily double overtime"), false);
 
         } catch (Exception e) {
@@ -1750,7 +1750,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.clickOnUpdateButton();
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
-                if (warningMessage.contains("will incur clopening")){
+                if (warningMessage.contains("Clopening")){
                     SimpleUtils.pass("Clopening warning message displays! ");
                 } else {
                     SimpleUtils.fail("There is no Cloepning violation warning message display, the actual message is:"+warningMessage, false);
@@ -1839,7 +1839,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.clickOnUpdateButton();
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
-                if (warningMessage.contains("will incur split shifts")){
+                if (warningMessage.contains("Split Shift")){
                     SimpleUtils.pass("Split warning message displays! ");
                 } else {
                     SimpleUtils.fail("There is no Split violation warning message display, the actual message is:"+warningMessage, false);
@@ -1919,7 +1919,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.clickOnUpdateButton();
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
-                if (warningMessage.contains("will incur spread of hours")){
+                if (warningMessage.contains("Spread of hours")){
                     SimpleUtils.pass("Spread warning message displays! ");
                 } else {
                     SimpleUtils.fail("There is no Spread violation warning message display, the actual message is:"+warningMessage, false);
