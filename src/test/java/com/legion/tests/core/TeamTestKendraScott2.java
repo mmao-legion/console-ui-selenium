@@ -1687,8 +1687,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.selectProfilePageSubSectionByLabel(timeoffLabel);
 			String timeOffExplanationText = "Sample Explanation Text";
 			profileNewUIPage.clickOnCreateTimeOffBtn();
-			if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.Holiday.getValue())) {
-				profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.Holiday.getValue(), timeOffExplanationText, fromDate1, 0);
+			if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.JuryDuty.getValue())) {
+				profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.JuryDuty.getValue(), timeOffExplanationText, fromDate1, 0);
 			} else if (profileNewUIPage.isReasonLoad(ActivityTest.timeOffReasonType.UnpaidTimeOff.getValue())) {
 				profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.UnpaidTimeOff.getValue(), timeOffExplanationText, fromDate1, 0);
 			}

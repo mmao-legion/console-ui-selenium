@@ -141,21 +141,6 @@
     </test>
 
 
-    <test name="Hard Stop For Minor Violation Test">
-        <classes>
-            <class name="com.legion.tests.core.HardStopForMinorViolation">
-                <methods>
-                    <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
-<!--                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
-                    <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
-                    <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
-<!--                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
-                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
 
     <test name="Cinemark Minor Test">
         <classes>
@@ -205,7 +190,7 @@
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
-                    <include name="verifyTheFunctionalityOfDailyOTAsInternalAdmin" />
+<!--                    <include name="verifyTheFunctionalityOfDailyOTAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-10337-->
                     <include name="verifyTheBufferHoursDisplayInScheduleAsInternalAdmin"/>
                     <include name="verifySearchBarOnSchedulePageInWeekViewAsInternalAdmin" />
                     <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
@@ -433,7 +418,7 @@
                     <include name="verifyTheContentOfBreaksSectionsAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditMealBreaksOnSingleEditShiftPageAsInternalAdmin" />
                     <!--                    <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334-->
-                    <include name="verifyTheDailyOTAndDTViolationsOnSingleEditShiftPageAsInternalAdmin" />
+ <!--                   <include name="verifyTheDailyOTAndDTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-10117-->
                     <!--                   <include name="verifyTheWeeklyOTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8430 https://legiontech.atlassian.net/browse/SCH-8429-->
                     <include name="verifyTheClopeningViolationsOnSingleEditShiftPageAsInternalAdmin" />
                     <include name="verifyTheSplitViolationsOnSingleEditShiftPageAsInternalAdmin" />
@@ -909,6 +894,23 @@ SCH-5862-->
                     <include name="verifyOpenShiftGroupRulesConfigsAsInternalAdmin"/>
                     <include name="verifyConfigOfAdvancedHoursAsInternalAdmin"/>
                     <include name="verifyGroupByPatternAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="Hard Stop For Minor Violation Test">
+        <classes>
+            <class name="com.legion.tests.core.HardStopForMinorViolation">
+                <methods>
+                    <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
+                    <!--                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
+                    <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
+                    <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
+                    <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
+                    <!--                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
+                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
