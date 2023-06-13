@@ -703,6 +703,7 @@ public class ForecastTest extends TestBase{
 			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
 			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
 			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			int count = (int)(Math.random()*6+1);
 			String accessRole = "";
 			String roleName = "";
@@ -731,6 +732,7 @@ public class ForecastTest extends TestBase{
 			Thread.sleep(5000);
 			SimpleUtils.pass("Will login as: "+ accessRole);
 			loginAsDifferentRole(accessRole);
+			dashboardPage.clickOnDashboardConsoleMenu();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",

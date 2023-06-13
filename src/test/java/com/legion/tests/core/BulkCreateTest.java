@@ -1055,8 +1055,8 @@ public class BulkCreateTest extends TestBase {
 
     @Automated(automated = "Automated")
     @Owner(owner = "Mary")
-    @Enterprise(name = "Vailqacn_Enterprise")
-//    @Enterprise(name = "CinemarkWkdy_Enterprise")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the offer TMs workflow")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
     public void validateTheOfferTMsWorkFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
@@ -1254,9 +1254,9 @@ public class BulkCreateTest extends TestBase {
             scheduleCommonPage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
-            }
 
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00AM");
             String workRole = shiftOperatePage.getRandomWorkRole();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
