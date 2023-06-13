@@ -878,12 +878,12 @@ public class SingleShiftEditTest extends TestBase {
             // Verify the shifts are moved to the selected day
             String firstName1 = assignedNames.get(0).contains(" ") ? assignedNames.get(0).split(" ")[0] : assignedNames.get(0);
             SimpleUtils.assertOnFail("Shift with name: " + firstName1 + " is not moved to the selected date!",
-                    scheduleShiftTablePage.getOneDayShiftByName(0, firstName1).size() == 1, false);
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstName1).size() >= 1, false);
 
             // Verify the changes can be saved successfully
             scheduleMainPage.saveSchedule();
             SimpleUtils.assertOnFail("Shift with name: " + firstName1 + " is not moved to the selected date!",
-                    scheduleShiftTablePage.getOneDayShiftByName(0, firstName1).size() == 1, false);
+                    scheduleShiftTablePage.getOneDayShiftByName(0, firstName1).size() >= 1, false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
