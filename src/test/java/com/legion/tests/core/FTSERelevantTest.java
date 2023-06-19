@@ -290,7 +290,7 @@ public class FTSERelevantTest extends TestBase {
         try {
             this.createDriver((String) params[0], "69", "Window");
             visitPage(testMethod);
-            ToggleAPI.updateToggle(Toggles.EnableMultiWorkRolePerShiftSCH.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), false);
+            // ToggleAPI.updateToggle(Toggles.EnableMultiWorkRolePerShiftSCH.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), false);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

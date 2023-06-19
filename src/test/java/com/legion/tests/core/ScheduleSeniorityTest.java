@@ -46,7 +46,7 @@ public class ScheduleSeniorityTest extends TestBase {
 		try {
 			this.createDriver((String) params[0], "69", "Window");
 			visitPage(testMethod);
-			ToggleAPI.updateToggle(Toggles.EnableSenioritySchedule.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), true);
+			//ToggleAPI.updateToggle(Toggles.EnableSenioritySchedule.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), true);
 			loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
