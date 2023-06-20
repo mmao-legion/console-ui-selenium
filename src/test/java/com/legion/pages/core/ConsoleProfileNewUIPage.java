@@ -3190,18 +3190,18 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			if (fieldsInHRProfileInformationSection.size() == 14) {
 				if (fieldsInHRProfileInformationSection.get(0).getText().equalsIgnoreCase("Name")
 						&& fieldsInHRProfileInformationSection.get(1).getText().equalsIgnoreCase("JOB TITLE")
-						&& fieldsInHRProfileInformationSection.get(2).getText().equalsIgnoreCase("MANAGER NAME")
-						&& fieldsInHRProfileInformationSection.get(3).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("HOME STORE")
-						&& fieldsInHRProfileInformationSection.get(4).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("EMPLOYEE ID")
-						&& fieldsInHRProfileInformationSection.get(5).getText().equalsIgnoreCase("DATE HIRED")
-						&& fieldsInHRProfileInformationSection.get(6).getText().equalsIgnoreCase("EMPLOYMENT TYPE")
-						&& fieldsInHRProfileInformationSection.get(7).getText().equalsIgnoreCase("HOURLY RATE")
-						&& fieldsInHRProfileInformationSection.get(8).getText().equalsIgnoreCase("EMPLOYMENT STATUS")
-						&& fieldsInHRProfileInformationSection.get(9).getText().equalsIgnoreCase("EXEMPT")
-						&& fieldsInHRProfileInformationSection.get(10).getText().equalsIgnoreCase("ADDRESS")
-						&& fieldsInHRProfileInformationSection.get(11).getText().equalsIgnoreCase("MINOR")
-						&& fieldsInHRProfileInformationSection.get(12).getText().equalsIgnoreCase("CONTACT INFORMATION")
-						&& fieldsInHRProfileInformationSection.get(13).getText().equalsIgnoreCase("SENIORITY BY WORK ROLE")) {
+						&& fieldsInHRProfileInformationSection.get(2).getText().equalsIgnoreCase("SENIORITY")
+						&& fieldsInHRProfileInformationSection.get(3).getText().equalsIgnoreCase("MANAGER NAME")
+						&& fieldsInHRProfileInformationSection.get(4).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("HOME STORE")
+						&& fieldsInHRProfileInformationSection.get(5).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("EMPLOYEE ID")
+						&& fieldsInHRProfileInformationSection.get(6).getText().equalsIgnoreCase("DATE HIRED")
+						&& fieldsInHRProfileInformationSection.get(7).getText().equalsIgnoreCase("EMPLOYMENT TYPE")
+						&& fieldsInHRProfileInformationSection.get(8).getText().equalsIgnoreCase("HOURLY RATE")
+						&& fieldsInHRProfileInformationSection.get(9).getText().equalsIgnoreCase("EMPLOYMENT STATUS")
+						&& fieldsInHRProfileInformationSection.get(10).getText().equalsIgnoreCase("EXEMPT")
+						&& fieldsInHRProfileInformationSection.get(11).getText().equalsIgnoreCase("ADDRESS")
+						&& fieldsInHRProfileInformationSection.get(12).getText().equalsIgnoreCase("MINOR")
+						&& fieldsInHRProfileInformationSection.get(13).getText().equalsIgnoreCase("CONTACT INFORMATION")) {
 					SimpleUtils.pass("User Profile page: The fields in HR Profile Information section display correctly! ");
 				} else
 					SimpleUtils.fail("User Profile page: The fields in HR Profile Information section failed to display !", false);
