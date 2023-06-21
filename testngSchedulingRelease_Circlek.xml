@@ -28,6 +28,7 @@
             <class name="com.legion.tests.core.DragAndDropTest">
                 <methods>
                     <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
+                    <include name="verifyShiftsCanBeDragAndDropWhenGroupByTMAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
