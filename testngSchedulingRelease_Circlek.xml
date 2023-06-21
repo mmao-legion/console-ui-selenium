@@ -29,6 +29,7 @@
                 <methods>
                     <include name="verifyWarningMessageWhenAssignTMToOpenShiftThatTMIsAlreadyAssignedToAsStoreManager" />
                     <include name="verifyShiftsCanBeDragAndDropWhenGroupByTMAsInternalAdmin" />
+                    <include name="verifyShiftsAvatarCanBeDragAndDropWhenGroupByTMAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

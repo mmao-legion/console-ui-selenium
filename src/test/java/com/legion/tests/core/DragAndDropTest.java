@@ -4479,11 +4479,11 @@ public class DragAndDropTest extends TestBase {
             // Navigate to next week
             scheduleCommonPage.navigateToNextWeek();
             // create the schedule.
-//            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-//            if (isWeekGenerated) {
-//                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-//            }
-//            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Assigned");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -4507,6 +4507,7 @@ public class DragAndDropTest extends TestBase {
             String firstNameOfTM2 = shiftInfo2.get(0);
             String workRoleOfTM2 = shiftInfo2.get(4);
             int dayIndex2 = Integer.parseInt(shiftInfo2.get(1));
+            Thread.sleep(3000);
             scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(dayIndex1, firstNameOfTM1, dayIndex2, firstNameOfTM2);
             List<String> swapData = scheduleShiftTablePage.getShiftSwapDataFromConfirmPage("swap");
             scheduleShiftTablePage.selectSwapOrAssignOption("swap");
@@ -4535,14 +4536,15 @@ public class DragAndDropTest extends TestBase {
             workRoleOfTM2 = shiftInfo2.get(4);
             dayIndex2 = Integer.parseInt(shiftInfo2.get(1));
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            Thread.sleep(5000);
             scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(dayIndex1, firstNameOfTM1, dayIndex2, firstNameOfTM2);
             scheduleShiftTablePage.selectSwapOrAssignOption("assign");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
-            if (scheduleShiftTablePage.verifyDayHasShiftByName(0,firstNameOfTM1)==1 && scheduleShiftTablePage.verifyDayHasShiftByName(1,firstNameOfTM1)==1){
+            if (scheduleShiftTablePage.verifyDayHasShiftByName(dayIndex1,firstNameOfTM1)==1 && scheduleShiftTablePage.verifyDayHasShiftByName(dayIndex2,firstNameOfTM1)>=1){
                 SimpleUtils.pass("assign successfully!");
             }
             scheduleMainPage.saveSchedule();
-            if (scheduleShiftTablePage.verifyDayHasShiftByName(0,firstNameOfTM1)==1 && scheduleShiftTablePage.verifyDayHasShiftByName(1,firstNameOfTM1)==1){
+            if (scheduleShiftTablePage.verifyDayHasShiftByName(dayIndex1,firstNameOfTM1)==1 && scheduleShiftTablePage.verifyDayHasShiftByName(dayIndex2,firstNameOfTM1)>=1){
                 SimpleUtils.pass("assign successfully!");
             }
         } catch (Exception e){

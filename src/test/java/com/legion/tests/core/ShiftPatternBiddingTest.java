@@ -52,7 +52,7 @@ public class ShiftPatternBiddingTest extends TestBase {
     private String workRole1= "Mate";
     private String workRole2 = "Master";
     private String workRole3 = "Deckhand";
-    private String workRole4 = "Chief Engineer";
+    private String workRole4 = "Engineer Chief";
     private String workRole1ShiftPattern1 = "Mate";
     private String workRole2ShiftPattern1 = "Master";
     private String workRole3ShiftPattern1 = "S12 - Crew 1";
