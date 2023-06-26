@@ -732,6 +732,9 @@ public class ForecastTest extends TestBase{
 			Thread.sleep(5000);
 			SimpleUtils.pass("Will login as: "+ accessRole);
 			loginAsDifferentRole(accessRole);
+			loginPage.logOut();
+			Thread.sleep(5000);
+			loginAsDifferentRole(accessRole);
 			dashboardPage.clickOnDashboardConsoleMenu();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
