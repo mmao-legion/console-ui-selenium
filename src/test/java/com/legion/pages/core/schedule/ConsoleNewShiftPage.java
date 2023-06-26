@@ -2226,7 +2226,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.pass("Get selected days info successfully");
         }else if (areListElementVisible(selectedDaysOnNewCreateShiftPage, 5) && selectedDaysOnNewCreateShiftPage.size()>0) {
             for (int i=0;i< selectedDaysOnNewCreateShiftPage.size();i++){
-                selectedDates.add(getDriver().findElements(By.xpath("//span[contains(@class,'Mui-checked')]/following-sibling::span")).get(i).getText());
+                selectedDates.add(getDriver().findElements(By.xpath("//span[contains(@class,'Mui-checked')]/following-sibling::span")).get(i).getText().split(",")[0].trim());
             }
             SimpleUtils.pass("Get selected days info successfully");
         }else
