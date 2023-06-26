@@ -3116,7 +3116,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                         && actualShiftInfo.replaceAll(" ", "").contains(expectedShiftInfo.get(2).replaceAll(" ", ""))) {
                     SimpleUtils.pass("Shift info on the Meal Break pop up is correct!");
                 } else {
-                    SimpleUtils.fail("Shift info on the Meal Break pop up is correct!", false);
+                    SimpleUtils.fail("Shift info on the Meal Break pop up is incorrect!", false);
                 }
             } else {
                 SimpleUtils.fail("Shift container failed to load on meal break pop up!", false);
