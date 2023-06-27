@@ -893,7 +893,7 @@ SCH-5862-->
                     <include name="verifyAutoGroupConfigsAsInternalAdmin"/>
                     <include name="verifyOpenShiftGroupRulesConfigsAsInternalAdmin"/>
                     <include name="verifyConfigOfAdvancedHoursAsInternalAdmin"/>
-                    <include name="verifyGroupByPatternAsInternalAdmin"/>
+                    <!-- <include name="verifyGroupByPatternAsInternalAdmin"/>  Comment out until shift pattern auto script finish-->
                 </methods>
             </class>
         </classes>
