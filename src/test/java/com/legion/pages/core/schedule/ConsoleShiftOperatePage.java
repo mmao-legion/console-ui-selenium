@@ -564,7 +564,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
 
 
-    @FindBy(css = ".sch-shift-worker-initials")
+    @FindBy(css = "[id=\"legion_cons_Schedule_Schedule_TMInitialsImage\"]")
     private List<WebElement> profileIconsDayView;
 
     @Override
