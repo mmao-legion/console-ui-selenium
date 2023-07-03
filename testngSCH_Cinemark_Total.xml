@@ -272,11 +272,6 @@
 <!--                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" Blocked by bug: SCH-3934/>-->
  <!--                   <include name="verifyTheTeamFunctionalityInRosterForSort" />
                     <include name="verifyScheduleFunctionalityOverviewAsStoreManager" />-->
-                    <include name="verifyTheContentOfActivityPageAsStoreManager" />
-                    <include name="verifyToCloseActivityFeedAsStoreManager" />
-                    <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
-                    <include name="verifyAccessControlsOnActivitiesPage" />
-                    <include name="verifyTheContentOnActivityAsStoreManager" />
 <!--                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" Blocked by SCH-5574/>-->
     <!--                <include name="verifyDashboardFunctionalityAsTeamMember" />-->
                     <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
@@ -395,6 +390,10 @@
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
 <!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" SCH-8631/>-->
                     <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />
+                    <include name="verifyToCloseActivityFeedAsStoreManager" />
+                    <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
+                    <include name="verifyAccessControlsOnActivitiesPage" />
+                    <include name="verifyTheContentOnActivityAsStoreManager" />
 <!--                    <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" /> -->
 <!--                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />https://legiontech.atlassian.net/browse/SCH-7699 -->
                     </methods>
