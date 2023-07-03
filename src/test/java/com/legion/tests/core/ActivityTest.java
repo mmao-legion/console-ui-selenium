@@ -1263,6 +1263,7 @@ public class ActivityTest extends TestBase {
             mySchedulePage.clickOnShiftByIndex(index);
             mySchedulePage.clickTheShiftRequestByName(request);
             coverList = mySchedulePage.getCoverTMList();
+            Thread.sleep(5000);
             count++;
         }
         System.out.println(coverList.toString());
