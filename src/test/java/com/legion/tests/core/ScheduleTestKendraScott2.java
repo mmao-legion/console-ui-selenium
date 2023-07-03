@@ -6470,6 +6470,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.clickOnOkButtonOnErrorDialog();
 			scheduleMainPage.saveSchedule();
 
 			//Check the Open Shift in the WeekView
