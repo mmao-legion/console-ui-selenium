@@ -1940,6 +1940,33 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
             SimpleUtils.fail("Open shift group not displayed!", false);
     }
 
+    @Override
+    public boolean isOpenShiftGroupDisplayed(int count, String shiftWorkRole) throws Exception {
+        String expectedShiftViewInfo = "View Group Offer " + "(" + count + ")";
+        boolean isOpenShiftGroupDisplayed = false;
+        String actualShiftViewInfo;
+        if (areListElementVisible(workRoles, 15) && workRoles.size() > 0) {
+            for (int i = 0; i < workRoles.size(); i++) {
+                if(workRoles.get(i).getText().trim().equalsIgnoreCase(shiftWorkRole)) {
+                    scrollToElement(tmIcons.get(i));
+                    waitForSeconds(1);
+                    clickTheElement(tmIcons.get(i));
+                    if (isPopOverLayoutLoaded()) {
+                        actualShiftViewInfo = popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")).getText().trim();
+                        if (actualShiftViewInfo.equalsIgnoreCase(expectedShiftViewInfo)) {
+                            isOpenShiftGroupDisplayed = true;
+                            SimpleUtils.report("Specific open shift group is loaded!");
+                            break;
+                        }
+                    } else
+                        SimpleUtils.fail("Action list not pop up after click open shift", false);
+                }
+            }
+        } else
+            SimpleUtils.fail("No available open shift/open shift group!", false);
+        return isOpenShiftGroupDisplayed;
+    }
+
     @FindBy(className = "accept-shift-shift-info")
     private List<WebElement> shiftsDetail;
     @FindBy(css = ".accept-shift-header-title.ng-binding")
