@@ -241,6 +241,8 @@
                     <include name="VerifyTheScheduleVersionUnchangedWithUnmodifiedSaveAsInternalAdmin" />
                     <!-- <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOnAsInternalAdmin" />
                 <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOffAsInternalAdmin" />   The effective time is too long to run, no any useful method now -->
+                    <include name="validateTheScheduledHrsOnScheduleSmartCardWillChangedAccordinglyBySelectFilterInWeekViewAsInternalAdmin" />
+                    <include name="validateTheScheduledHrsOnScheduleSmartCardWillChangedAccordinglyBySelectFilterInDayViewAsInternalAdmin" />
                   </methods>
               </class>
           </classes>

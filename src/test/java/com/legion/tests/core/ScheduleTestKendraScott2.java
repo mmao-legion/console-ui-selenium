@@ -10196,4 +10196,199 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 		}
 	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the scheduled hrs on schedule smart card will changed accordingly by select filter in week view")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void validateTheScheduledHrsOnScheduleSmartCardWillChangedAccordinglyBySelectFilterInWeekViewAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+//		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
+
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "09:00pm");
+			//Get total scheduled hrs and wages
+
+			HashMap<String, Float> scheduleHoursForFirstSchedule = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard();
+			float totalScheduledHrs = scheduleHoursForFirstSchedule.get("scheduledHours");
+
+			//Select every shift type and get the scheduled hrs
+			List<String> allShiftType = scheduleMainPage.getSpecificFilterNames("Shift Type");
+			SimpleUtils.assertOnFail("Fail to get shift types! ", allShiftType.size()>0, false);
+			float scheduledHrsForEveryOptions = 0;
+			for (String shiftType : allShiftType){
+				scheduleMainPage.selectShiftTypeFilterByText(shiftType);
+				if (shiftType.equalsIgnoreCase("Assigned")
+						|| shiftType.equalsIgnoreCase("Open") ){
+					float scheduledHrs = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard().get("scheduledHours");
+					SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+									+", the scheduled hrs for every shift type option is "+scheduledHrs,
+							scheduledHrs <= totalScheduledHrs, false);
+					scheduledHrsForEveryOptions = scheduledHrsForEveryOptions + scheduledHrs;
+					SimpleUtils.pass("Get "+shiftType+"'s scheduled hrs successfully! ");
+				} else{
+					float scheduledHrs = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard().get("scheduledHours");
+					SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+									+", the scheduled hrs for every shift type option is "+scheduledHrs,
+							scheduledHrs < totalScheduledHrs, false);
+				}
+			}
+			SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+					+", the scheduled hrs for every shift type option is "+scheduledHrsForEveryOptions,
+					scheduledHrsForEveryOptions ==totalScheduledHrs, false);
+			scheduleMainPage.clickOnFilterBtn();
+			scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+			//Select every job title and get the scheduled hrs
+			List<String> allJobTitles = scheduleMainPage.getSpecificFilterNames("JOB TITLE");
+			SimpleUtils.assertOnFail("Fail to get JOB TITLEs! ", allJobTitles.size()>0, false);
+			scheduledHrsForEveryOptions = 0;
+			for (String jobTitle : allJobTitles){
+				scheduleMainPage.selectJobTitleFilterByText(jobTitle);
+				float scheduledHrs = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard().get("scheduledHours");
+				SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+								+", the scheduled hrs for every job title option is "+scheduledHrs,
+						scheduledHrs < totalScheduledHrs, false);
+				scheduledHrsForEveryOptions = scheduledHrsForEveryOptions + scheduledHrs;
+				SimpleUtils.pass("Get "+jobTitle+"'s scheduled hrs successfully! ");
+			}
+			SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+							+", the scheduled hrs for every job title option is "+scheduledHrsForEveryOptions,
+					scheduledHrsForEveryOptions ==totalScheduledHrs, false);
+
+			scheduleMainPage.clickOnFilterBtn();
+			scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+			//Select every work role and get the scheduled hrs
+			List<String> allWorkRoles = scheduleMainPage.getSpecificFilterNames("Work Role");
+			SimpleUtils.assertOnFail("Fail to get Work Roles! ", allWorkRoles.size()>0, false);
+			scheduledHrsForEveryOptions = 0;
+			for (String workRole : allWorkRoles){
+				scheduleMainPage.selectWorkRoleFilterByText(workRole, true);
+				float scheduledHrs = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard().get("scheduledHours");
+				SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+								+", the scheduled hrs for every work role option is "+scheduledHrs,
+						scheduledHrs < totalScheduledHrs, false);
+				scheduledHrsForEveryOptions = scheduledHrsForEveryOptions + scheduledHrs;
+				SimpleUtils.pass("Get "+workRole+"'s scheduled hrs successfully! ");
+			}
+			SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+							+", the scheduled hrs for every work role option is "+scheduledHrsForEveryOptions,
+					scheduledHrsForEveryOptions ==totalScheduledHrs, false);
+//		} catch (Exception e){
+//			SimpleUtils.fail(e.getMessage(), false);
+//		}
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate the scheduled hrs on schedule smart card will changed accordingly by select filter in day view")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void validateTheScheduledHrsOnScheduleSmartCardWillChangedAccordinglyBySelectFilterInDayViewAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
+
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "09:00pm");
+			scheduleCommonPage.clickOnDayView();
+			//Get total scheduled hrs and wages
+
+			HashMap<String, Float> scheduleHoursForFirstSchedule = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard();
+			float totalScheduledHrs = scheduleHoursForFirstSchedule.get("scheduledHours");
+
+			//Select every shift type and get the scheduled hrs
+			List<String> allShiftType = scheduleMainPage.getSpecificFilterNames("Shift Type");
+			SimpleUtils.assertOnFail("Fail to get shift types! ", allShiftType.size()>0, false);
+			float scheduledHrsForEveryOptions = 0;
+			for (String shiftType : allShiftType){
+				scheduleMainPage.selectShiftTypeFilterByText(shiftType);
+				if (shiftType.equalsIgnoreCase("Assigned")
+						|| shiftType.equalsIgnoreCase("Open") ){
+					float scheduledHrs = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard().get("scheduledHours");
+					SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+									+", the scheduled hrs for every shift type option is "+scheduledHrs,
+							scheduledHrs <= totalScheduledHrs, false);
+					scheduledHrsForEveryOptions = scheduledHrsForEveryOptions + scheduledHrs;
+					SimpleUtils.pass("Get "+shiftType+"'s scheduled hrs successfully! ");
+				} else{
+					float scheduledHrs = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard().get("scheduledHours");
+					SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+									+", the scheduled hrs for every shift type option is "+scheduledHrs,
+							scheduledHrs < totalScheduledHrs, false);
+				}
+			}
+			SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+							+", the scheduled hrs for every shift type option is "+scheduledHrsForEveryOptions,
+					scheduledHrsForEveryOptions ==totalScheduledHrs, false);
+			scheduleMainPage.clickOnFilterBtn();
+			scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+			//Select every job title and get the scheduled hrs
+			List<String> allJobTitles = scheduleMainPage.getSpecificFilterNames("JOB TITLE");
+			SimpleUtils.assertOnFail("Fail to get JOB TITLEs! ", allJobTitles.size()>0, false);
+			scheduledHrsForEveryOptions = 0;
+			for (String jobTitle : allJobTitles){
+				scheduleMainPage.selectJobTitleFilterByText(jobTitle);
+				float scheduledHrs = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard().get("scheduledHours");
+				SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+								+", the scheduled hrs for every job title option is "+scheduledHrs,
+						scheduledHrs < totalScheduledHrs, false);
+				scheduledHrsForEveryOptions = scheduledHrsForEveryOptions + scheduledHrs;
+				SimpleUtils.pass("Get "+jobTitle+"'s scheduled hrs successfully! ");
+			}
+			SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+							+", the scheduled hrs for every job title option is "+scheduledHrsForEveryOptions,
+					scheduledHrsForEveryOptions ==totalScheduledHrs, false);
+
+			scheduleMainPage.clickOnFilterBtn();
+			scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+			//Select every work role and get the scheduled hrs
+			List<String> allWorkRoles = scheduleMainPage.getSpecificFilterNames("Work Role");
+			SimpleUtils.assertOnFail("Fail to get Work Roles! ", allWorkRoles.size()>0, false);
+			scheduledHrsForEveryOptions = 0;
+			for (String workRole : allWorkRoles){
+				scheduleMainPage.selectWorkRoleFilterByText(workRole, true);
+				float scheduledHrs = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard().get("scheduledHours");
+				SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+								+", the scheduled hrs for every work role option is "+scheduledHrs,
+						scheduledHrs < totalScheduledHrs, false);
+				scheduledHrsForEveryOptions = scheduledHrsForEveryOptions + scheduledHrs;
+				SimpleUtils.pass("Get "+workRole+"'s scheduled hrs successfully! ");
+			}
+			SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
+							+", the scheduled hrs for every work role option is "+scheduledHrsForEveryOptions,
+					scheduledHrsForEveryOptions ==totalScheduledHrs, false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
 }
