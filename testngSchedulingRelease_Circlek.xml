@@ -49,6 +49,8 @@
                     <include name="verifyContentAfterChangingOperatingHrsNextDayAsInternalAdmin" />
                     <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
                     <include name="verifyGroupByDayPartsCanBeCollapsedNExpandedAsStoreManager" />
+                    <include name="validateTheScheduledHrsOnScheduleSmartCardWillChangedAccordinglyBySelectFilterInWeekViewAsInternalAdmin" />
+                    <include name="validateTheScheduledHrsOnScheduleSmartCardWillChangedAccordinglyBySelectFilterInDayViewAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

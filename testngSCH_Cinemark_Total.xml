@@ -243,6 +243,8 @@
                 <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOffAsInternalAdmin" />   The effective time is too long to run, no any useful method now -->
                     <include name="validateTheScheduledHrsOnScheduleSmartCardWillChangedAccordinglyBySelectFilterInWeekViewAsInternalAdmin" />
                     <include name="validateTheScheduledHrsOnScheduleSmartCardWillChangedAccordinglyBySelectFilterInDayViewAsInternalAdmin" />
+                    <include name="validateTMCanViewTeamScheduleAfterGenerateScheduleAsInternalAdmin" />
+                    <include name="validateSMCanViewScheduleInManagerAndEmployeeViewAfterGenerateScheduleAsInternalAdmin" />
                   </methods>
               </class>
           </classes>

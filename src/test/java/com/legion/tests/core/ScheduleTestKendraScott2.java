@@ -10391,4 +10391,115 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.fail(e.getMessage(), false);
 		}
 	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate TM can view team schedule after generate schedule")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void validateTMCanViewTeamScheduleAfterGenerateScheduleAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
+
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "09:00pm");
+			createSchedulePage.publishActiveSchedule();
+			int shiftCountInScheduleForAdmin = scheduleShiftTablePage.getShiftsCount();
+			SimpleUtils.assertOnFail("There is no shifts display in the schedule for admin! ",
+					shiftCountInScheduleForAdmin > 0,false);
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			Thread.sleep(3000);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.TeamSchedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
+			mySchedulePage.selectSchedulFilter("Scheduled");
+			int shiftCountInScheduleForTM = scheduleShiftTablePage.getShiftsCount();
+			mySchedulePage.selectSchedulFilter("Open");
+			shiftCountInScheduleForTM = shiftCountInScheduleForTM+scheduleShiftTablePage.getShiftsCount();
+			SimpleUtils.assertOnFail("There is no shifts display in the schedule for admin! ",
+					shiftCountInScheduleForTM > 0,false);
+			SimpleUtils.assertOnFail("The shift count in schedule for admin is "+shiftCountInScheduleForAdmin+
+							" The shift count in schedule for TM is "+shiftCountInScheduleForTM,
+					shiftCountInScheduleForTM == shiftCountInScheduleForAdmin, false);
+
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Mary")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Validate SM can view schedule in manager and employee view after generate schedule")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void validateSMCanViewScheduleInManagerAndEmployeeViewAfterGenerateScheduleAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
+
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			loginPage.logOut();
+			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "09:00pm");
+			createSchedulePage.publishActiveSchedule();
+			int shiftCountInScheduleForSM = scheduleShiftTablePage.getShiftsCount();
+			SimpleUtils.assertOnFail("There is no shifts display in the schedule for admin! ",
+					shiftCountInScheduleForSM > 0,false);
+			Thread.sleep(3000);
+			dashboardPage.clickOnProfileIconOnDashboard();
+			dashboardPage.clickOnSwitchToEmployeeView();
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.TeamSchedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
+			mySchedulePage.selectSchedulFilter("Scheduled");
+			int shiftCountInScheduleForTM = scheduleShiftTablePage.getShiftsCount();
+			mySchedulePage.selectSchedulFilter("Open");
+			shiftCountInScheduleForTM = shiftCountInScheduleForTM+scheduleShiftTablePage.getShiftsCount();
+			SimpleUtils.assertOnFail("There is no shifts display in the schedule for admin! ",
+					shiftCountInScheduleForTM > 0,false);
+			SimpleUtils.assertOnFail("The shift count in schedule for admin is "+shiftCountInScheduleForSM+
+							" The shift count in schedule for TM is "+shiftCountInScheduleForTM,
+					shiftCountInScheduleForTM == shiftCountInScheduleForSM, false);
+
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
 }
