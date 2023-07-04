@@ -88,4 +88,5 @@ public interface MySchedulePage {
     public ArrayList<String> getAllWeekDays() throws Exception;
     public ArrayList<String> getAllWeekDaysForActivityDetailVerification() throws Exception;
     public void verifyClickAgreeBtnOnClaimShiftOfferWhenDontNeedApproval() throws Exception;
+    public boolean isOpenShiftGroupDisplayed(int count, String shiftWorkRole) throws Exception;
 }

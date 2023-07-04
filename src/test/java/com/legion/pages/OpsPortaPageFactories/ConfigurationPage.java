@@ -279,5 +279,7 @@ public interface ConfigurationPage {
     public void createFutureWRSTemplateBasedOnExistingTemplate(String templateName, String button, int date, String editOrViewMode) throws Exception;
     public void updateInputBudgetSettingDropdownOption(String option) throws Exception;
     public void enableOrDisableRequiredEmployeeAcknowledgeSetting(String yesOrNo) throws Exception;
+    public void deleteScheduleRules() throws Exception;
+    public void DeleteStaffingRulesForParticularRule(String workRole) throws Exception;
 }
 

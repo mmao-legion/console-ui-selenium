@@ -976,7 +976,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					//get first char of the work role name
 					char fir = workRole.charAt(0);
 					String newWorkRole = String.valueOf(fir).toUpperCase() + " " + workRole;
-					if (workRoleName.equals(newWorkRole)) {
+					if (workRoleName.equalsIgnoreCase(newWorkRole)) {
 						WebElement staffingRulesAddButton = workRoleItem.findElement(By.cssSelector("lg-button"));
 						clickTheElement(staffingRulesAddButton);
 						waitForSeconds(5);
@@ -8078,5 +8078,50 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			SimpleUtils.fail("'Are employees required to acknowledge their schedule?' setting is not loaded!", false);
 		}
 	}
+
+
+	@FindBy(css = "div.settings-work-role-detail-edit-rules")
+	private List<WebElement> basicScheduleRuleList;
+	@Override
+	public void deleteScheduleRules() throws Exception {
+		int countOfScheduleRules = basicScheduleRuleList.size();
+		if (countOfScheduleRules != 0) {
+			for(int i=0; i<countOfScheduleRules; i++) {
+				WebElement deleteButton = basicScheduleRuleList.get(i).findElement(By.cssSelector("span.settings-work-rule-edit-delete-icon"));
+				clickTheElement(deleteButton);
+				if (isElementEnabled(deleteButtonOnDialogPage, 2)) {
+					clickTheElement(deleteButtonOnDialogPage);
+				}
+				waitForSeconds(2);
+				if (basicScheduleRuleList.get(i).findElements(By.cssSelector("div[ng-if=\"$ctrl.isViewMode()\"]>div")).size() == 1) {
+					SimpleUtils.pass("User can delete basic staffing rule successfully!");
+				} else {
+					SimpleUtils.fail("User can't delete advance staffing rule successfully!", false);
+				}
+			}
+		}else
+			SimpleUtils.report("No any schedule rules!");
+	}
+
+	@FindBy(xpath = "//lg-tab-toolbar//lg-search//input")
+	private WebElement workRoleSearchInput;
+	@FindBy(css = "tbody[ng-repeat=\"workRole in $ctrl.sortedRows\"]>tr>td:nth-child(2)>lg-button>button[type='button']")
+	private WebElement staffingRulesForWorkRoleInSchedulingRole;
+	@Override
+	public void DeleteStaffingRulesForParticularRule(String workRole) throws Exception {
+		if (isElementLoaded(workRoleSearchInput, 5)) {
+			workRoleSearchInput.clear();
+			workRoleSearchInput.sendKeys(workRole);
+			if (isElementLoaded(staffingRulesForWorkRoleInSchedulingRole, 5)) {
+					if (!staffingRulesForWorkRoleInSchedulingRole.getText().contains("Add")) {
+						click(staffingRulesForWorkRoleInSchedulingRole);
+						deleteScheduleRules();
+						saveBtnIsClickable();
+					}
+			}
+		} else
+			SimpleUtils.fail("Work role search box is not loaded!", false);
+	}
+
 }
 
