@@ -10204,7 +10204,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@TestName(description = "Validate the scheduled hrs on schedule smart card will changed accordingly by select filter in week view")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void validateTheScheduledHrsOnScheduleSmartCardWillChangedAccordinglyBySelectFilterInWeekViewAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
-//		try {
+		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -10289,9 +10289,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
 							+", the scheduled hrs for every work role option is "+scheduledHrsForEveryOptions,
 					scheduledHrsForEveryOptions ==totalScheduledHrs, false);
-//		} catch (Exception e){
-//			SimpleUtils.fail(e.getMessage(), false);
-//		}
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}
 	}
 
 
@@ -10396,7 +10396,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
 	@Enterprise(name = "CinemarkWkdy_Enterprise")
-	@TestName(description = "Validate TM can view team schedule after generate schedule")
+	@TestName(description = "Validate TM can view team schedule after generate and publish schedule")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void validateTMCanViewTeamScheduleAfterGenerateScheduleAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
 		try {
@@ -10450,7 +10450,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	@Automated(automated = "Automated")
 	@Owner(owner = "Mary")
 	@Enterprise(name = "CinemarkWkdy_Enterprise")
-	@TestName(description = "Validate SM can view schedule in manager and employee view after generate schedule")
+	@TestName(description = "Validate SM can view schedule in manager and employee view after generate and publish schedule")
 	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
 	public void validateSMCanViewScheduleInManagerAndEmployeeViewAfterGenerateScheduleAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
 		try {
