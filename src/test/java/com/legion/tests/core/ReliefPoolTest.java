@@ -229,6 +229,9 @@ public class ReliefPoolTest extends TestBase {
 			//Input advanced hours, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(3000);
+
+			controlsNewUIPage.isAutoGroupSectionLoaded();
+			controlsNewUIPage.updateAutoGroupToggle("Yes");
 			controlsNewUIPage.isAutoApprovalSectionLoaded();
 			String inputAdvancedHours = "48";
 			controlsNewUIPage.setAutoApprovalAdvancedHours(inputAdvancedHours);
@@ -273,7 +276,49 @@ public class ReliefPoolTest extends TestBase {
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+			SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+			locationsPage.clickOnLocationsTab();
+			locationsPage.goToSubLocationsInLocationsPage();
+			locationsPage.goToLocationDetailsPage("panregularlocation2");
+			locationsPage.goToConfigurationTabInLocationLevel();
+			String workRole = "Master";
+			String template = "Scheduling Rules";
+			locationsPage.clickActionsForTemplate(template,"Edit");
+			configurationPage.DeleteStaffingRulesForParticularRule(workRole);
+			configurationPage.saveBtnIsClickable();
+
+			//Add new master shift pattern
+			ShiftPatternPage shiftPatternPage = pageFactory.createConsoleShiftPatternPage();
+			locationsPage.clickActionsForTemplate(template,"Edit");
+			configurationPage.selectWorkRoleToEdit(workRole);
+			configurationPage.checkTheEntryOfAddShiftPatternRule();
+			String patternName = "Master";
+			String patternDescription = "Description";
+			String patternInstances = "1";
+			shiftPatternPage.inputNameDescriptionNInstances(patternName, patternDescription, patternInstances);
+			shiftPatternPage.selectTheCurrentWeek();
+			// Verify the work role should in role input
+			shiftPatternPage.selectAddOnOrOffWeek(true);
+			shiftPatternPage.clickOnAddShiftButton();
+			shiftPatternPage.verifyWorkRoleNameShows(workRole);
+			// Verify can create the shift pattern rule
+			List<String> workDays = new ArrayList<>(Arrays.asList("Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday","Sunday"));
+			shiftPatternPage.selectWorkDays(workDays);
+			shiftPatternPage.inputStartOrEndTime("9", "0", "a", true);
+			shiftPatternPage.inputStartOrEndTime("5", "0", "p", false);
+			shiftPatternPage.clickOnCreateButton();
+			configurationPage.verifyCheckMarkButtonOnAdvanceStaffingRulePage();
+//			configurationPage.clickOnSaveButtonOnScheduleRulesListPage();
+			locationsPage.clickOnSaveButton();
+			locationsPage.clickOnSaveButton();
+			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(200000);
+
 
 			// Go to Schedule page, create a schedule
 			goToSchedulePageScheduleTab();
@@ -283,7 +328,7 @@ public class ReliefPoolTest extends TestBase {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
-			createSchedulePage.createScheduleForNonDGFlowNewUI();
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00AM");
 
 			//Check Group by Pattern filter in the group by list
 			ArrayList<String> shiftTitles = new ArrayList<>();
@@ -620,6 +665,283 @@ public class ReliefPoolTest extends TestBase {
 			activityPage.verifyNewClaimOpenShiftGroupCardShowsOnActivity(tmName, shiftWorkRole, openShiftGroupPeriod, locationName);
 			SimpleUtils.assertOnFail("Approve & Reject buttons should not loaded!",
 					!activityPage.isApproveRejectBtnsLoaded(0), false);
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate open shift groups of other work roles won't offer to employee")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyRoleViolationOfReliefPoolAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			//Go to the Scheduling page
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+//			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+//			SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+//			locationsPage.clickOnLocationsTab();
+//			locationsPage.goToSubLocationsInLocationsPage();
+//			locationsPage.searchLocation(location);
+//			SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+//			locationsPage.clickOnLocationInLocationResult(location);
+//			locationsPage.clickOnConfigurationTabOfLocation();
+//			HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+//			String templateName = templateTypeAndName.get("Schedule Collaboration");
+//			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+//			configurationPage.goToConfigurationPage();
+//			configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
+//			configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+//			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+//			Thread.sleep(3000);
+//
+//			controlsNewUIPage.isAutoGroupSectionLoaded();
+//			controlsNewUIPage.updateAutoGroupToggle("Yes");
+//			ArrayList<String> selectOptions = new ArrayList<>();
+//			selectOptions.add("AssignmentRuleCheck()");
+//			controlsNewUIPage.selectOpenShiftGroupRule(selectOptions);
+//			configurationPage.publishNowTheTemplate();
+//			switchToConsoleWindow();
+//			refreshCachesAfterChangeTemplate();
+//			Thread.sleep(30000);
+
+
+//			Go to Schedule page, create a schedule
+//			goToSchedulePageScheduleTab();
+//			scheduleCommonPage.navigateToNextWeek();
+//			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+//			if(isActiveWeekGenerated){
+//				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//			}
+//			Thread.sleep(5000);
+//			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00AM");
+//			createSchedulePage.publishActiveSchedule();
+
+
+			//Login as TM, check the open shift group
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+//			Thread.sleep(120000);
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.MySchedule.getValue());
+			Thread.sleep(3000);
+			scheduleCommonPage.navigateToNextWeek();
+			smartCardPage.clickLinkOnSmartCardByName("View Shifts");
+			int shiftCount = 7;
+			String availableRule = "Master";
+			String unavailableRule = "Deckhand";
+			SimpleUtils.assertOnFail("Shift assignment rule of open shift group is not working!",
+					mySchedulePage.isOpenShiftGroupDisplayed(shiftCount,availableRule) & !mySchedulePage.isOpenShiftGroupDisplayed(shiftCount,unavailableRule),false);
+
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate open shift groups of other work roles won't offer to employee")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyScheduleConflictWhenTimePeriodOverlappingOfReliefPoolAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			//Go to the Scheduling page
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+			SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+			locationsPage.clickOnLocationsTab();
+			locationsPage.goToSubLocationsInLocationsPage();
+			locationsPage.searchLocation(location);
+			SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+			locationsPage.clickOnLocationInLocationResult(location);
+			locationsPage.clickOnConfigurationTabOfLocation();
+			HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+			String templateName = templateTypeAndName.get("Schedule Collaboration");
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			configurationPage.goToConfigurationPage();
+			configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
+			configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+			Thread.sleep(3000);
+
+			controlsNewUIPage.isAutoGroupSectionLoaded();
+			controlsNewUIPage.updateAutoGroupToggle("Yes");
+			ArrayList<String> selectOptions = new ArrayList<>();
+			selectOptions.add("ScheduleConflictCheck()");
+			controlsNewUIPage.selectOpenShiftGroupRule(selectOptions);
+			configurationPage.publishNowTheTemplate();
+			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(30000);
+
+
+			// Go to Schedule page, create a schedule
+			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00AM");
+
+			//Create multiple open shifts and assign to employee to incur conflicts
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			String tmName = "Sebastian";
+			String shiftWorkRole1 = "Master";
+			String shiftWorkRole2 = "Mate";
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectDaysByIndex(2,4,4);
+			newShiftPage.selectWorkRole(shiftWorkRole1);
+			newShiftPage.moveSliderAtCertainPoint("05:00pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("09:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+			scheduleMainPage.publishOrRepublishSchedule();
+
+			//Login as TM, check the open shift group
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			scheduleCommonPage.clickOnDayView();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			Thread.sleep(120000);
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.MySchedule.getValue());
+			Thread.sleep(3000);
+			scheduleCommonPage.navigateToNextWeek();
+			smartCardPage.clickLinkOnSmartCardByName("View Shifts");
+			SimpleUtils.assertOnFail("Shift assignment rule of open shift group is not working!",
+					!mySchedulePage.isOpenShiftGroupDisplayed(7,shiftWorkRole1) & !mySchedulePage.isOpenShiftGroupDisplayed(5,shiftWorkRole2),false);
+
+
+		} catch (Exception e) {
+			SimpleUtils.fail(e.getMessage(), false);
+		}
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Cosimo")
+	@Enterprise(name = "KendraScott2_Enterprise")
+	@TestName(description = "Validate open shift groups can be offered to employee if time period not overlapping")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void verifyScheduleConflictNotTriggerWhenTimePeriodNotIncludedOfReliefPoolAsInternalAdmin(String username, String password, String browser, String location)
+			throws Exception {
+		try {
+			//Go to the Scheduling page
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+//			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+//			SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+//			locationsPage.clickOnLocationsTab();
+//			locationsPage.goToSubLocationsInLocationsPage();
+//			locationsPage.searchLocation(location);
+//			SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+//			locationsPage.clickOnLocationInLocationResult(location);
+//			locationsPage.clickOnConfigurationTabOfLocation();
+//			HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+//			String templateName = templateTypeAndName.get("Schedule Collaboration");
+//			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+//			configurationPage.goToConfigurationPage();
+//			configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
+//			configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
+//			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+//			Thread.sleep(3000);
+//
+//			controlsNewUIPage.isAutoGroupSectionLoaded();
+//			controlsNewUIPage.updateAutoGroupToggle("Yes");
+//			ArrayList<String> selectOptions = new ArrayList<>();
+//			selectOptions.add("ScheduleConflictCheck()");
+//			controlsNewUIPage.selectOpenShiftGroupRule(selectOptions);
+//			configurationPage.publishNowTheTemplate();
+//			switchToConsoleWindow();
+//			refreshCachesAfterChangeTemplate();
+//			Thread.sleep(30000);
+
+
+			// Go to Schedule page, create a schedule
+			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if(isActiveWeekGenerated){
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
+			Thread.sleep(5000);
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00AM");
+
+			//Create multiple open shifts and assign to employee to incur conflicts
+			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+			String tmName = "Sebastian";
+			String shiftWorkRole1 = "Master";
+			String shiftWorkRole2 = "Deckhand";
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleMainPage.isAddNewDayViewShiftButtonLoaded();
+			newShiftPage.clickOnDayViewAddNewShiftButton();
+			newShiftPage.customizeNewShiftPage();
+			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectDaysByIndex(0,6,6);
+			newShiftPage.selectWorkRole(shiftWorkRole1);
+			newShiftPage.moveSliderAtCertainPoint("08:00pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+			newShiftPage.moveSliderAtCertainPoint("01:00pm", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.searchTeamMemberByName(tmName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+			scheduleMainPage.saveSchedule();
+			scheduleMainPage.publishOrRepublishSchedule();
+
+			//Login as TM, check the open shift group
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			scheduleCommonPage.clickOnDayView();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			Thread.sleep(120000);
+			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.MySchedule.getValue());
+			Thread.sleep(3000);
+			scheduleCommonPage.navigateToNextWeek();
+			smartCardPage.clickLinkOnSmartCardByName("View Shifts");
+			SimpleUtils.assertOnFail("Open shift group should be offered to TM when not overlapping with regular shifts!",
+					mySchedulePage.isOpenShiftGroupDisplayed(5,shiftWorkRole2),false);
+
 
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
