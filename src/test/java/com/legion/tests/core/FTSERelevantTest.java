@@ -482,7 +482,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            createSchedulePage.publishActiveSchedule();
 
             //Verify no any WeekOT violation after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();
@@ -582,8 +581,8 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
+            newShiftPage.clickOnOkButtonOnErrorDialog();
             scheduleMainPage.saveSchedule();
-            createSchedulePage.publishActiveSchedule();
 
             //Verify no any 7th consecutive violation after saving.
             scheduleMainPage.clickOnOpenSearchBoxButton();

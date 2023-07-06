@@ -972,6 +972,10 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 		}
 	}
 
+	@FindBy (css = "div[class*=\"notification-details__shift-group-title\"]")
+	private WebElement shiftTitle;
+	@FindBy (css = "div[class*=\"notification-details__shift-group-expiry\"]")
+	private WebElement shiftExpiryDate;
 	@FindBy (css = "div[class=\"notification-details__shift-group-date\"]")
 	private List<WebElement> dates;
 	@FindBy (css = "div[class=\"notification-details__shift-group-time\"]")
@@ -979,42 +983,45 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	@FindBy (css = "div[class=\"notification-details__shift-group-wrapper ng-scope\"]")
 	private List<WebElement> shiftSections;
 	@Override
-	public void verifyContentOfOpenShiftGroupRequestOnActivity(ArrayList<String> specificDate, String shiftStartNEndTime, String workRole, String location) throws Exception {
+	public void verifyContentOfOpenShiftGroupRequestOnActivity(String shiftGroupTitle, String expiryDate, ArrayList<String> specificDate, String shiftStartNEndTime, String workRole, String location) throws Exception {
 		WebElement openShiftGroupCard = activityCards.get(0);
 		if (openShiftGroupCard != null) {
-			if (areListElementVisible(detailLinksInActivities, 5)){
-				if (detailLinksInActivities.get(0).getText().trim().equalsIgnoreCase("Details"))
-					clickTheElement(detailLinksInActivities.get(0));
-				if(!areListElementVisible(shiftSections,10))
-					SimpleUtils.fail("Shift details in activity are not laoded correctly!",false);
-				String shiftDate = null;
-				String shiftTime = null;
-				String shiftWorkRole = null;
-				String shiftLocation = null;
-				for (int i = 0; i < shiftSections.size(); i++) {
-					shiftDate = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-date"))
-							.getText().replaceAll("\\n", "");
+			if (areListElementVisible(detailLinksInActivities, 5)) {
+				if (shiftTitle.getText().equalsIgnoreCase(shiftGroupTitle) & shiftExpiryDate.getText().replaceAll("\\n", "").trim().contains(expiryDate)) {
+					if (detailLinksInActivities.get(0).getText().trim().equalsIgnoreCase("Details"))
+						clickTheElement(detailLinksInActivities.get(0));
+					if (!areListElementVisible(shiftSections, 10))
+						SimpleUtils.fail("Shift details in activity are not loaded correctly!", false);
+					String shiftDate = null;
+					String shiftTime = null;
+					String shiftWorkRole = null;
+					String shiftLocation = null;
+					for (int i = 0; i < shiftSections.size(); i++) {
+						shiftDate = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-date"))
+								.getText().replaceAll("\\n", "");
 
-					shiftTime = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-time span:nth-child(1)"))
-							.getText().replaceAll(" ", "") + "-" + shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-time span:nth-child(2)"))
-							.getText().replaceAll(" ", "");
-
-					shiftWorkRole = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-role span:nth-child(1)")).getText();
-					shiftLocation = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-role span:nth-child(2)")).getText();
-					if (shiftDate.equalsIgnoreCase(specificDate.get(i)) & shiftTime.equalsIgnoreCase(shiftStartNEndTime) &
-							shiftWorkRole.equalsIgnoreCase(workRole) & shiftLocation.equalsIgnoreCase(location))
-						continue;
-					else
-						SimpleUtils.fail("Shift information in activity is not correct! The actual result is: " +
-								"" + shiftDate + " " + shiftTime + " " + shiftWorkRole + " " + shiftLocation
-								+ "And expected result is: " + specificDate.get(i) + " " + shiftStartNEndTime + " "
-								+ workRole + " " + location, false);
-				}
-				} else
-					SimpleUtils.fail("Failed to load open shift group detail button in activity!", false);
-			}else
-				SimpleUtils.fail("Failed to find open shift group request in activity!", false);
+						shiftTime = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-time span:nth-child(1)"))
+								.getText().replaceAll(" ", "") + "-" + shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-time span:nth-child(2)"))
+								.getText().replaceAll(" ", "");
+						shiftWorkRole = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-role span:nth-child(1)")).getText();
+						shiftLocation = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-role span:nth-child(2)")).getText();
+						if (shiftDate.equalsIgnoreCase(specificDate.get(i)) & shiftTime.equalsIgnoreCase(shiftStartNEndTime) &
+								shiftWorkRole.equalsIgnoreCase(workRole) & shiftLocation.equalsIgnoreCase(location))
+							continue;
+						else
+							SimpleUtils.fail("Shift information in activity is not correct! The actual result is: " +
+									"" + shiftDate + " " + shiftTime + " " + shiftWorkRole + " " + shiftLocation
+									+ "And expected result is: " + specificDate.get(i) + " " + shiftStartNEndTime + " "
+									+ workRole + " " + location, false);
+						}
+				}else
+					SimpleUtils.fail("Shift title or expiry date in activity are not correct! The actual group title is: " +
+							"" + shiftTitle.getText().replaceAll("\\n", "").trim() + " Expiry date is: "
+							+ shiftExpiryDate.getText().replaceAll("\\n", "").trim() +
+							"And expected group title is: " + shiftGroupTitle + " " + " Expiry date is: " + expiryDate, false);
+			} else
+				SimpleUtils.fail("Request detail link is not loaded!", false);
+		}else
+			SimpleUtils.fail("Failed to find open shift group request in activity!", false);
 	}
-
-
 }

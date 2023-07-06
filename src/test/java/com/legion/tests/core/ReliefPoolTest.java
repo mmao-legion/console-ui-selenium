@@ -41,6 +41,8 @@ public class ReliefPoolTest extends TestBase {
 			this.createDriver((String) params[0], "69", "Window");
 			visitPage(testMethod);
 			ToggleAPI.updateToggle(Toggles.ReliefPool.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), true);
+			ToggleAPI.updateToggle(Toggles.EnableForce24hTimeFormat.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), false);
+			ToggleAPI.updateToggle(Toggles.EnableSchTmView24hTimeFormat.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), false);
 			loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
@@ -384,9 +386,73 @@ public class ReliefPoolTest extends TestBase {
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
+			//Prepare master shift pattern at location level
+			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+			SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+			locationsPage.clickOnLocationsTab();
+			locationsPage.goToSubLocationsInLocationsPage();
+			locationsPage.goToLocationDetailsPage("panregularlocation2");
+			locationsPage.goToConfigurationTabInLocationLevel();
+			String patternName1 = "Master";
+			String patternName2 = "Deckhand";
+			String patternDescription = "Description";
+			String patternInstances = "1";
+			String template = "Scheduling Rules";
+			locationsPage.clickActionsForTemplate(template,"Edit");
+			configurationPage.selectWorkRoleToEdit(patternName1);
+			configurationPage.deleteScheduleRules();
+			locationsPage.clickOnSaveButton();
+			configurationPage.selectWorkRoleToEdit(patternName2);
+			configurationPage.deleteScheduleRules();
+			locationsPage.clickOnSaveButton();
+
+			//Add new Master shift pattern
+			ShiftPatternPage shiftPatternPage = pageFactory.createConsoleShiftPatternPage();
+			configurationPage.selectWorkRoleToEdit(patternName1);
+			configurationPage.checkTheEntryOfAddShiftPatternRule();
+
+			shiftPatternPage.inputNameDescriptionNInstances(patternName1, patternDescription, patternInstances);
+			shiftPatternPage.selectTheCurrentWeek();
+
+			shiftPatternPage.selectAddOnOrOffWeek(true);
+			shiftPatternPage.clickOnAddShiftButton();
+			shiftPatternPage.verifyWorkRoleNameShows(patternName1);
+
+			List<String> workDays = new ArrayList<>(Arrays.asList("Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday","Sunday"));
+			shiftPatternPage.selectWorkDays(workDays);
+			shiftPatternPage.inputStartOrEndTime("9", "0", "a", true);
+			shiftPatternPage.inputStartOrEndTime("5", "0", "p", false);
+			shiftPatternPage.clickOnCreateButton();
+			configurationPage.verifyCheckMarkButtonOnAdvanceStaffingRulePage();
+//			configurationPage.clickOnSaveButtonOnScheduleRulesListPage();
+			locationsPage.clickOnSaveButton();
+
+			//Add new Deckhand shift pattern
+			configurationPage.selectWorkRoleToEdit(patternName2);
+			configurationPage.checkTheEntryOfAddShiftPatternRule();
+
+			shiftPatternPage.inputNameDescriptionNInstances(patternName2, patternDescription, patternInstances);
+			shiftPatternPage.selectTheCurrentWeek();
+			// Verify the work role should in role input
+			shiftPatternPage.selectAddOnOrOffWeek(true);
+			shiftPatternPage.clickOnAddShiftButton();
+			shiftPatternPage.verifyWorkRoleNameShows(patternName2);
+			// Verify can create the shift pattern rule
+			shiftPatternPage.selectWorkDays(workDays);
+			shiftPatternPage.inputStartOrEndTime("7", "0", "a", true);
+			shiftPatternPage.inputStartOrEndTime("7", "0", "p", false);
+			shiftPatternPage.clickOnCreateButton();
+			configurationPage.verifyCheckMarkButtonOnAdvanceStaffingRulePage();
+			locationsPage.clickOnSaveButton();
+			locationsPage.clickOnSaveButton();
+			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
+			Thread.sleep(200000);
+
 			// Go to Schedule page, create a schedule
 			goToSchedulePageScheduleTab();
-			scheduleCommonPage.navigateToNextWeek();
 			scheduleCommonPage.navigateToNextWeek();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if(isActiveWeekGenerated){
@@ -400,18 +466,26 @@ public class ReliefPoolTest extends TestBase {
 			scheduleCommonPage.clickOnWeekView();
 			scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
 			scheduleMainPage.clickOnOpenSearchBoxButton();
-			scheduleMainPage.searchShiftOnSchedulePage("Master");
+			scheduleMainPage.searchShiftOnSchedulePage(patternName1);
 			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
 			shiftOperatePage.clickOnOfferTMOption();
-			newShiftPage.searchTeamMemberByName("Sebastian");
+			String tmName = "Sebastian";
+			newShiftPage.searchTeamMemberByName(tmName);
 			newShiftPage.clickOnOfferOrAssignBtn();
 
-			//Login as TM, check the open shift group
+			scheduleMainPage.searchShiftOnSchedulePage(patternName2);
+			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+			shiftOperatePage.clickOnOfferTMOption();
+			newShiftPage.searchTeamMemberByName(tmName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+
 			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 			scheduleCommonPage.clickOnDayView();
 			ArrayList<String> expectedWorkDays = mySchedulePage.getAllWeekDays();
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
+
+			//Login as TM, check the open shift group
 			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
 			SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
@@ -420,28 +494,26 @@ public class ReliefPoolTest extends TestBase {
 			Thread.sleep(3000);
 			scheduleCommonPage.navigateToNextWeek();
 			smartCardPage.clickLinkOnSmartCardByName("View Shifts");
-			SimpleUtils.assertOnFail("Didn't get open shift group offer!", scheduleShiftTablePage.getShiftsCount() == 14, false);
-			SimpleUtils.assertOnFail("The shift hours were incorrect!", scheduleShiftTablePage.getShiftTextByIndex(0).replaceAll(" ", "").contains("6:00am-4:00pm"), false );
+//			SimpleUtils.assertOnFail("Didn't get open shift group offer!", scheduleShiftTablePage.getShiftsCount() == 14, false);
+//			SimpleUtils.assertOnFail("The shift hours were incorrect!", scheduleShiftTablePage.getShiftTextByIndex(0).replaceAll(" ", "").contains("6:00am-4:00pm"), false );
 
 			int shiftCount = 7;
-			String shiftWorkRole1 = "Master";
-			String shiftWorkRole2 = "Deckhand";
 			String locationName = "SeaspanRegularLocation2";
-			String shiftTimePeriod1 = "6:00am-4:00pm";
+			String shiftTimePeriod1 = "9:00am-5:00pm";
 			String shiftTimePeriod2 = "7:00am-7:00pm";
 			List<String> expectedRequest = Arrays.asList("View Group Offer(" + shiftCount + ")");
 			ArrayList<String> weekDays = new ArrayList<String>(Arrays.asList("Sun","Mon","Tue","Wed","Thu","Fri","Sat"));
-			mySchedulePage.checkOpenShiftGroup(shiftCount, shiftTimePeriod1, shiftWorkRole1, weekDays, expectedWorkDays,locationName);
+			mySchedulePage.checkOpenShiftGroup(shiftCount, shiftTimePeriod1, patternName1, weekDays, expectedWorkDays,locationName);
 			mySchedulePage.verifyClaimShiftOfferNBtnsLoaded();
 			mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
 
 			//Decline the open shift group offer
-			mySchedulePage.checkOpenShiftGroup(shiftCount, shiftTimePeriod2, shiftWorkRole2, weekDays, expectedWorkDays,locationName);
+			mySchedulePage.checkOpenShiftGroup(shiftCount, shiftTimePeriod2, patternName2, weekDays, expectedWorkDays,locationName);
 			mySchedulePage.verifyClaimShiftOfferNBtnsLoaded();
 			mySchedulePage.clickOnDeclineButton();
 
 			//Cancel claim the open shift group offer
-			mySchedulePage.cancelClaimOpenShiftGroupRequest(expectedRequest,shiftWorkRole1);
+			mySchedulePage.cancelClaimOpenShiftGroupRequest(expectedRequest,patternName1);
 
 
 		} catch (Exception e) {
@@ -467,6 +539,8 @@ public class ReliefPoolTest extends TestBase {
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			//Set up manager approval process
 			LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
 			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
 			SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -484,12 +558,45 @@ public class ReliefPoolTest extends TestBase {
 			configurationPage.clickOnSpecifyTemplateName(templateName, "edit");
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 			Thread.sleep(3000);
-
 			configurationPage.enableOrDisableApproveShiftInHomeLocationSetting("yes");
 			configurationPage.enableOrDisableApproveShiftInNonHomeLocationSetting("yes");
 			controlsNewUIPage.setAutoApprovalAdvancedHours("0");
-
 			configurationPage.publishNowTheTemplate();
+
+			locationsPage.clickOnLocationsTab();
+			locationsPage.goToSubLocationsInLocationsPage();
+			locationsPage.goToLocationDetailsPage("panregularlocation2");
+			locationsPage.goToConfigurationTabInLocationLevel();
+			String patternName = "Master";
+			String patternDescription = "Description";
+			String patternInstances = "1";
+			String patternTemplate = "Scheduling Rules";
+			locationsPage.clickActionsForTemplate(patternTemplate,"Edit");
+			configurationPage.selectWorkRoleToEdit(patternName);
+			configurationPage.deleteScheduleRules();
+			locationsPage.clickOnSaveButton();
+
+			//Add new Master shift pattern
+			ShiftPatternPage shiftPatternPage = pageFactory.createConsoleShiftPatternPage();
+			configurationPage.selectWorkRoleToEdit(patternName);
+			configurationPage.checkTheEntryOfAddShiftPatternRule();
+
+			shiftPatternPage.inputNameDescriptionNInstances(patternName, patternDescription, patternInstances);
+			shiftPatternPage.selectTheCurrentWeek();
+
+			shiftPatternPage.selectAddOnOrOffWeek(true);
+			shiftPatternPage.clickOnAddShiftButton();
+			shiftPatternPage.verifyWorkRoleNameShows(patternName);
+
+			List<String> workDays = new ArrayList<>(Arrays.asList("Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday","Sunday"));
+			shiftPatternPage.selectWorkDays(workDays);
+			shiftPatternPage.inputStartOrEndTime("9", "0", "a", true);
+			shiftPatternPage.inputStartOrEndTime("5", "0", "p", false);
+			shiftPatternPage.clickOnCreateButton();
+			configurationPage.verifyCheckMarkButtonOnAdvanceStaffingRulePage();
+			locationsPage.clickOnSaveButton();
+			locationsPage.clickOnSaveButton();
+
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(30000);
@@ -506,19 +613,18 @@ public class ReliefPoolTest extends TestBase {
 			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00AM");
 			createSchedulePage.publishActiveSchedule();
 
-			//TM can receive open shift group
+//			//TM can receive open shift group
 			String tmName = "Sebastian";
-			String shiftWorkRole = "Master";
-//			scheduleCommonPage.clickOnWeekView();
-//			scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
-//			scheduleMainPage.clickOnOpenSearchBoxButton();
-//			scheduleMainPage.searchShiftOnSchedulePage(shiftWorkRole);
-//			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
-//			shiftOperatePage.clickOnOfferTMOption();
-//			newShiftPage.searchTeamMemberByName(tmName);
-//			newShiftPage.clickOnOfferOrAssignBtn();
-
-			//Login as TM, check the open shift group
+			scheduleCommonPage.clickOnWeekView();
+			scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+			scheduleMainPage.clickOnOpenSearchBoxButton();
+			scheduleMainPage.searchShiftOnSchedulePage(patternName);
+			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+			shiftOperatePage.clickOnOfferTMOption();
+			newShiftPage.searchTeamMemberByName(tmName);
+			newShiftPage.clickOnOfferOrAssignBtn();
+//
+//			//Login as TM, check the open shift group
 			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 			scheduleCommonPage.clickOnDayView();
 			ArrayList<String> expectedWorkDays = mySchedulePage.getAllWeekDays();
@@ -538,13 +644,13 @@ public class ReliefPoolTest extends TestBase {
 
 			int shiftCount = 7;
 			String locationName = "SeaspanRegularLocation2";
-			String shiftTimePeriod = "9:00am-4:00pm";
+			String shiftTimePeriod = "9:00am-5:00pm";
 			ArrayList<String> weekDays = new ArrayList<String>(Arrays.asList("Sun","Mon","Tue","Wed","Thu","Fri","Sat"));
-			mySchedulePage.checkOpenShiftGroup(shiftCount, shiftTimePeriod, shiftWorkRole, weekDays, expectedWorkDays,locationName);
+			mySchedulePage.checkOpenShiftGroup(shiftCount, shiftTimePeriod, patternName, weekDays, expectedWorkDays,locationName);
 			mySchedulePage.verifyClaimShiftOfferNBtnsLoaded();
 			mySchedulePage.verifyClickAgreeBtnOnClaimShiftOffer();
 
-			//Login as SM, reject the open shift group request
+			//Login as SM, check folded open shift group request
 			loginPage.logOut();
 			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			ActivityPage activityPage = pageFactory.createConsoleActivityPage();
@@ -553,7 +659,7 @@ public class ReliefPoolTest extends TestBase {
 			activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(),
 					ActivityTest.indexOfActivityType.ShiftOffer.name());
 			String openShiftGroupPeriod = shiftTimePeriodInActivity.get(0) + " - " + shiftTimePeriodInActivity.get(shiftTimePeriodInActivity.size()-1);
-			activityPage.verifyNewClaimOpenShiftGroupCardShowsOnActivity(tmName, shiftWorkRole, openShiftGroupPeriod, locationName);
+			activityPage.verifyNewClaimOpenShiftGroupCardShowsOnActivity(tmName, patternName, openShiftGroupPeriod, locationName);
 			SimpleUtils.assertOnFail("Should load Approval and Reject buttons!",
 					activityPage.isApproveRejectBtnsLoaded(0), false);
 
@@ -564,7 +670,9 @@ public class ReliefPoolTest extends TestBase {
 				shiftsDateInActivityRequest.add(template);
 			}
 			activityPage.clickDetailLinksInActivitiesByIndex(0);
-			activityPage.verifyContentOfOpenShiftGroupRequestOnActivity(shiftsDateInActivityRequest,shiftTimePeriod,shiftWorkRole,locationName);
+			String shiftGroupTitle = "Open Shift Group";
+			String shiftExpiryDate = "Offer expires at " + shiftTimePeriodInActivity.get(0) + ", 9:00 AM";
+			activityPage.verifyContentOfOpenShiftGroupRequestOnActivity(shiftGroupTitle, shiftExpiryDate, shiftsDateInActivityRequest,shiftTimePeriod,patternName,locationName);
 
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);

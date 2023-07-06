@@ -24,7 +24,9 @@ public enum Toggles {
     UseAbsenceMgmtConfiguration("UseAbsenceMgmtConfiguration"),
     EnableSenioritySchedule("EnableSenioritySchedule"),
     EnableScheduleOnAccrualSCH("EnableScheduleOnAccrualSCH"),
-    ReliefPool("ReliefPool");
+    ReliefPool("ReliefPool"),
+    EnableForce24hTimeFormat("EnableForce24hTimeFormat"),
+    EnableSchTmView24hTimeFormat ("EnableSchTmView24hTimeFormat");
 
     private final String value;
 

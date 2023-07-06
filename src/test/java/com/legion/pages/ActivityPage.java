@@ -45,5 +45,5 @@ public interface ActivityPage{
                                                                       boolean isNewLabelShows, String location1, String location2) throws Exception;
     public void verifyNewClaimOpenShiftGroupCardShowsOnActivity(String requestUserName, String workRole, String shiftDateAndTime, String location) throws Exception;
     public void approveOrRejectOpenShiftGroupRequestOnActivity(String requestUserName, String action) throws Exception;
-    public void verifyContentOfOpenShiftGroupRequestOnActivity(ArrayList<String> specificDate, String shiftStartNEndTime, String workRole, String location) throws Exception;
+    public void verifyContentOfOpenShiftGroupRequestOnActivity(String shiftGroupTitle, String shiftExpiryDate, ArrayList<String> specificDate, String shiftStartNEndTime, String workRole, String location) throws Exception;
 }
