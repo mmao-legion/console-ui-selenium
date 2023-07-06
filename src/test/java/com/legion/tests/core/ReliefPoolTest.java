@@ -41,8 +41,8 @@ public class ReliefPoolTest extends TestBase {
 			this.createDriver((String) params[0], "69", "Window");
 			visitPage(testMethod);
 			ToggleAPI.updateToggle(Toggles.ReliefPool.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), true);
-			ToggleAPI.updateToggle(Toggles.EnableForce24hTimeFormat.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), false);
-			ToggleAPI.updateToggle(Toggles.EnableSchTmView24hTimeFormat.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), false);
+//			ToggleAPI.updateToggle(Toggles.EnableForce24hTimeFormat.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), false);
+//			ToggleAPI.updateToggle(Toggles.EnableSchTmView24hTimeFormat.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1), false);
 			loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
