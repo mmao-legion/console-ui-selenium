@@ -8080,7 +8080,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	}
 
 
-	@FindBy(css = "div.settings-work-role-detail-edit-rules")
+	@FindBy(css = "div[ng-class=\"getClassForRuleContainer()\"]")
 	private List<WebElement> basicScheduleRuleList;
 	@Override
 	public void deleteScheduleRules() throws Exception {
@@ -8093,10 +8093,10 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 					clickTheElement(deleteButtonOnDialogPage);
 				}
 				waitForSeconds(2);
-				if (basicScheduleRuleList.get(i).findElements(By.cssSelector("div[ng-if=\"$ctrl.isViewMode()\"]>div")).size() == 1) {
+				if (!isElementDisplayed(deleteButton)) {
 					SimpleUtils.pass("User can delete basic staffing rule successfully!");
 				} else {
-					SimpleUtils.fail("User can't delete advance staffing rule successfully!", false);
+					SimpleUtils.fail("User can't delete schedule rule successfully!", false);
 				}
 			}
 		}else
