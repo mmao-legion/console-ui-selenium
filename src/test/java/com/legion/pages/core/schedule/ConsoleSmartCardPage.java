@@ -41,13 +41,23 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
 //			Thread.sleep(2000);
             String scheduleWagesAndHoursCardText = budgetedScheduledLabelsDivElement.getText();
             String [] tmp =  scheduleWagesAndHoursCardText.split("\n");
-            String[] scheduleWagesAndHours = new String[5];
+            String[] scheduleWagesAndHours = new String[6];
             if (tmp.length>6) {
-                scheduleWagesAndHours[0] = tmp[0];
-                scheduleWagesAndHours[1] = tmp[1];
-                scheduleWagesAndHours[2] = tmp[2];
-                scheduleWagesAndHours[3] = tmp[3]+" "+tmp[4]+" "+tmp[5];
-                scheduleWagesAndHours[4] = tmp[6];
+                if(scheduleWagesAndHoursCardText.contains("Non-Budgeted")){
+                    scheduleWagesAndHours[0] = tmp[0];
+                    scheduleWagesAndHours[1] = tmp[1];
+                    scheduleWagesAndHours[2] = tmp[2];
+                    scheduleWagesAndHours[3] = tmp[3];
+                    scheduleWagesAndHours[4] = tmp[4]+" "+tmp[5]+" "+tmp[6];
+                    scheduleWagesAndHours[5] = tmp[7];
+                } else {
+                    scheduleWagesAndHours[0] = tmp[0];
+                    scheduleWagesAndHours[1] = tmp[1];
+                    scheduleWagesAndHours[2] = tmp[2];
+                    scheduleWagesAndHours[3] = tmp[3]+" "+tmp[4]+" "+tmp[5];
+                    scheduleWagesAndHours[4] = tmp[6];
+                }
+
             }else
                 scheduleWagesAndHours =tmp;
             for(int i = 0; i < scheduleWagesAndHours.length; i++)
