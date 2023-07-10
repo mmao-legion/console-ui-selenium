@@ -187,6 +187,7 @@ public class ShiftPatternBiddingTest extends TestBase {
                     getUserNameNPwdForCallingAPI().get(1));
             //Verify employee can be assign to the shifts after generated schedule
             goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
             rulePage.clickRuleButton();
 
             //There is one assignment on rule page
