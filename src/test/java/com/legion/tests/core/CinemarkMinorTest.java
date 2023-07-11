@@ -188,12 +188,15 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            //First half of the year
-            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))-1) +" Aug 1",
-                    (Integer.parseInt(dayInfo.get("year"))) +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
-            //second half
-//            teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))) +" Jan 1",
-//                    (Integer.parseInt(dayInfo.get("year"))) +" "+ dayInfo.get("month") + " "+ dayInfo.get("day"));
+            if (!dayInfo.get("month").contains("Jul")) {
+                //First half of the year
+                teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year")) - 1) + " Aug 1",
+                        (Integer.parseInt(dayInfo.get("year"))) + " " + dayInfo.get("month") + " " + dayInfo.get("day"));
+            } else {
+                //second half
+                teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))) + " Jan 1",
+                        (Integer.parseInt(dayInfo.get("year"))) + " " + dayInfo.get("month") + " " + dayInfo.get("day"));
+            }
 
             teamPage.clickOnSaveSchoolSessionCalendarBtn();
             teamPage.setNonSchoolDaysForNonSchoolWeek();
