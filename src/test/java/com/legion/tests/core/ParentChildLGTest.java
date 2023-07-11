@@ -4785,6 +4785,7 @@ public class ParentChildLGTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //Verify the assignment can be swapped when drag&drop employee avatar to another one in same day and same location
             scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM,0,firstNameOfTM2);
+            Thread.sleep(3000);
             scheduleShiftTablePage.selectSwapOrAssignOption("swap");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
             if (scheduleShiftTablePage.verifyDayHasShiftByName(0,firstNameOfTM2)==1
@@ -4799,6 +4800,7 @@ public class ParentChildLGTest extends TestBase {
             //Verify the assignment can be covered when drag&drop employee avatar to another one in same day and same location
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM2,0,firstNameOfTM);
+            Thread.sleep(3000);
             scheduleShiftTablePage.selectSwapOrAssignOption("assign");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
             if (scheduleShiftTablePage.verifyDayHasShiftByName(0,firstNameOfTM2)==2
@@ -4919,6 +4921,7 @@ public class ParentChildLGTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //Verify the assignment can be swapped when drag&drop employee avatar to another one in same day and same location
             scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM,0,firstNameOfTM2);
+            Thread.sleep(3000);
             scheduleShiftTablePage.selectSwapOrAssignOption("swap");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
             if (scheduleShiftTablePage.verifyDayHasShiftByName(0,firstNameOfTM2)==1
@@ -4933,6 +4936,7 @@ public class ParentChildLGTest extends TestBase {
             //Verify the assignment can be covered when drag&drop employee avatar to another one in same day and same location
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM2,0,firstNameOfTM);
+            Thread.sleep(3000);
             scheduleShiftTablePage.selectSwapOrAssignOption("assign");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
             if (scheduleShiftTablePage.verifyDayHasShiftByName(0,firstNameOfTM2)==2
@@ -4958,6 +4962,7 @@ public class ParentChildLGTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //Verify the assignment can be swapped when drag&drop employee avatar to another one in different day and same location
             scheduleShiftTablePage.dragOneAvatarToAnotherSpecificAvatar(0,firstNameOfTM,1,firstNameOfTM2);
+            Thread.sleep(3000);
             scheduleShiftTablePage.selectSwapOrAssignOption("assign");
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
             if (scheduleShiftTablePage.verifyDayHasShiftByName(0,firstNameOfTM)==1

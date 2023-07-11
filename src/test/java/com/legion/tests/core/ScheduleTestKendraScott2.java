@@ -10232,11 +10232,16 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			List<String> allShiftType = scheduleMainPage.getSpecificFilterNames("Shift Type");
 			SimpleUtils.assertOnFail("Fail to get shift types! ", allShiftType.size()>0, false);
 			float scheduledHrsForEveryOptions = 0;
+			float scheduledHrsForOpenShifts = 0;
 			for (String shiftType : allShiftType){
 				scheduleMainPage.selectShiftTypeFilterByText(shiftType);
 				if (shiftType.equalsIgnoreCase("Assigned")
 						|| shiftType.equalsIgnoreCase("Open") ){
+					if (shiftType.equalsIgnoreCase("Open")){
+						scheduledHrsForOpenShifts = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard().get("scheduledHours");
+					}
 					float scheduledHrs = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard().get("scheduledHours");
+
 					SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
 									+", the scheduled hrs for every shift type option is "+scheduledHrs,
 							scheduledHrs <= totalScheduledHrs, false);
@@ -10267,6 +10272,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				scheduledHrsForEveryOptions = scheduledHrsForEveryOptions + scheduledHrs;
 				SimpleUtils.pass("Get "+jobTitle+"'s scheduled hrs successfully! ");
 			}
+			scheduledHrsForEveryOptions = scheduledHrsForEveryOptions+scheduledHrsForOpenShifts;
 			SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
 							+", the scheduled hrs for every job title option is "+scheduledHrsForEveryOptions,
 					scheduledHrsForEveryOptions ==totalScheduledHrs, false);
@@ -10330,10 +10336,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			List<String> allShiftType = scheduleMainPage.getSpecificFilterNames("Shift Type");
 			SimpleUtils.assertOnFail("Fail to get shift types! ", allShiftType.size()>0, false);
 			float scheduledHrsForEveryOptions = 0;
+			float scheduledHrsForOpenShifts = 0;
 			for (String shiftType : allShiftType){
 				scheduleMainPage.selectShiftTypeFilterByText(shiftType);
 				if (shiftType.equalsIgnoreCase("Assigned")
 						|| shiftType.equalsIgnoreCase("Open") ){
+					if (shiftType.equalsIgnoreCase("Open")){
+						scheduledHrsForOpenShifts = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard().get("scheduledHours");
+					}
 					float scheduledHrs = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard().get("scheduledHours");
 					SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
 									+", the scheduled hrs for every shift type option is "+scheduledHrs,
@@ -10365,6 +10375,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				scheduledHrsForEveryOptions = scheduledHrsForEveryOptions + scheduledHrs;
 				SimpleUtils.pass("Get "+jobTitle+"'s scheduled hrs successfully! ");
 			}
+			scheduledHrsForEveryOptions = scheduledHrsForEveryOptions+scheduledHrsForOpenShifts;
 			SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
 							+", the scheduled hrs for every job title option is "+scheduledHrsForEveryOptions,
 					scheduledHrsForEveryOptions ==totalScheduledHrs, false);
