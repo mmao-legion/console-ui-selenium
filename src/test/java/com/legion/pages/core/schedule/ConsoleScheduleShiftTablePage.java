@@ -1231,7 +1231,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             if (isElementLoaded(popOverContent, 5)){
                 if (areListElementVisible(complianceMessageInInfoIconPopup, 5) && complianceMessageInInfoIconPopup.size()>0){
                     for (int i=0; i< complianceMessageInInfoIconPopup.size(); i++){
-                        complianceMessages.add(complianceMessageInInfoIconPopup.get(i).getText());
+                        complianceMessages.add(complianceMessageInInfoIconPopup.get(i).getText().replace(".0", ""));
                     }
                 } else
                     SimpleUtils.report("There is no compliance message in info icon popup");
@@ -2519,7 +2519,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 warningMessage = warningMessage + " " + message.getText();
             }
             warningMessage = warningMessage.replace(" AM", "am").replace(" PM", "pm")
-                    .replace(":00", "").replace(" 0", " ").trim();
+                    .replace(":00", "").replace(" 0", " ").replace(".0", "").trim();
         }else {
             SimpleUtils.fail("Warning message fail to load", false);
         }

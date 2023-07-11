@@ -1749,7 +1749,7 @@ public class CinemarkMinorTest extends TestBase {
 
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+"'s weekly schedule should not exceed "+ maxOfDays +" days";
+            String warningMessage1 = "Minor weekly max "+ maxOfDays +" days";
             String warningMessage2 = "Please confirm that you want to make this change.";
             String actualMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
             if (actualMessage.contains(warningMessage1)
@@ -1820,7 +1820,7 @@ public class CinemarkMinorTest extends TestBase {
 
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+"'s weekly schedule should not exceed "+ maxOfScheduleHours +" hours";
+            String warningMessage1 = "Minor weekly max "+ maxOfScheduleHours +" hours";
             String warningMessage2 = "Please confirm that you want to make this change.";
             if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
                     && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
