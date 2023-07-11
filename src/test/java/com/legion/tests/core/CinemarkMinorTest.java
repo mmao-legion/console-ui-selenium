@@ -1820,7 +1820,7 @@ public class CinemarkMinorTest extends TestBase {
 
         //check the message in warning mode
         if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage1 = "Minor weekly max "+ maxOfScheduleHours +" hours";
+            String warningMessage1 = "Minor weekly max "+ maxOfScheduleHours +" hrs";
             String warningMessage2 = "Please confirm that you want to make this change.";
             if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
                     && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
