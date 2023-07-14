@@ -8258,7 +8258,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleMainPage.goToEditOperatingHoursView();
 
 			//Editing the operating day and save all actions.
-			List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
+//			List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
+			List<String> weekDays = new ArrayList<>(Arrays.asList("Friday", "Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"));
 			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "10:00AM","10:00PM");
 			scheduleMainPage.clickCancelBtnOnEditOpeHoursPage();
 			scheduleMainPage.checkOperatingHoursOnToggleSummary();

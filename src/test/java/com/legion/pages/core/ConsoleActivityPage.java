@@ -924,11 +924,11 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	}
 
 	@Override
-	public void verifyNewClaimOpenShiftGroupCardShowsOnActivity(String requestUserName, String workRole, String shiftDateAndTime, String location) throws Exception {
+	public void verifyNewClaimOpenShiftGroupCardShowsOnActivity(int requestNum, String requestUserName, String workRole, String shiftDateAndTime, String location) throws Exception {
 		String expectedMessage = requestUserName + " claimed the "+workRole+ " open shift group on "+shiftDateAndTime+ " @"+location+".";
 		waitForSeconds(5);
 		if (areListElementVisible(activityCards, 15)) {
-			WebElement message = activityCards.get(0).findElement(By.className("notification-content-message"));
+			WebElement message = activityCards.get(requestNum).findElement(By.className("notification-content-message"));
 			if (message != null && message.getText().equalsIgnoreCase(expectedMessage)) {
 				SimpleUtils.pass("Find Card: " + message.getText() + " Successfully!");
 			}else {
@@ -940,8 +940,8 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 	}
 
 	@Override
-	public void approveOrRejectOpenShiftGroupRequestOnActivity(String requestUserName, String action) throws Exception {
-		WebElement openShiftGroupCard = activityCards.get(0);
+	public void approveOrRejectOpenShiftGroupRequestOnActivity(int requestNum, String action) throws Exception {
+		WebElement openShiftGroupCard = activityCards.get(requestNum);
 		if (openShiftGroupCard != null) {
 			List<WebElement> actionButtons = openShiftGroupCard.findElements(By.className("notification-buttons-button"));
 			if (actionButtons != null && actionButtons.size() == 2) {
@@ -959,7 +959,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 				if (areListElementVisible(activityCards, 15)) {
 					WebElement approveOrRejectMessage = activityCards.get(0).findElement(By.cssSelector(".notification-approved"));
 					if (approveOrRejectMessage != null && approveOrRejectMessage.getText().toLowerCase().contains(action.toLowerCase())) {
-						SimpleUtils.pass(action + " the open shift group request for: " + requestUserName + " Successfully!");
+						SimpleUtils.pass(action + " the open shift group request is " + action + "successfully!");
 					} else {
 						SimpleUtils.fail(action + " message failed to load!", false);
 					}
@@ -996,6 +996,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 					String shiftTime = null;
 					String shiftWorkRole = null;
 					String shiftLocation = null;
+					List<WebElement> actionButtons = openShiftGroupCard.findElements(By.className("notification-buttons-button"));
 					for (int i = 0; i < shiftSections.size(); i++) {
 						shiftDate = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-date"))
 								.getText().replaceAll("\\n", "");
@@ -1006,7 +1007,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 						shiftWorkRole = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-role span:nth-child(1)")).getText();
 						shiftLocation = shiftSections.get(i).findElement(By.cssSelector(".notification-details__shift-group-role span:nth-child(2)")).getText();
 						if (shiftDate.equalsIgnoreCase(specificDate.get(i)) & shiftTime.equalsIgnoreCase(shiftStartNEndTime) &
-								shiftWorkRole.equalsIgnoreCase(workRole) & shiftLocation.equalsIgnoreCase(location))
+								shiftWorkRole.equalsIgnoreCase(workRole) & shiftLocation.equalsIgnoreCase(location) & areListElementVisible(actionButtons,5))
 							continue;
 						else
 							SimpleUtils.fail("Shift information in activity is not correct! The actual result is: " +
@@ -1023,5 +1024,28 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 				SimpleUtils.fail("Request detail link is not loaded!", false);
 		}else
 			SimpleUtils.fail("Failed to find open shift group request in activity!", false);
+	}
+
+	@Override
+	public boolean isOpenShiftGroupRequestFolded() throws Exception {
+		boolean isRequestFolded = true;
+		WebElement openShiftGroupCard = activityCards.get(0);
+		if (openShiftGroupCard != null) {
+			WebElement detailLink = openShiftGroupCard.findElement(By.cssSelector("div[ng-if=\"canShowDetails()\"]"));
+			if (isElementLoaded(detailLink,5)) {
+				if (detailLink.getText().trim().equalsIgnoreCase("Details") & !isElementLoaded(shiftTitle)
+						& !isElementLoaded(shiftExpiryDate) & !areListElementVisible(dates) & !areListElementVisible(shiftTimes)){
+					SimpleUtils.report("Open Shift Group Request is folded!");
+				}else if(detailLink.getText().trim().equalsIgnoreCase("Less") & isElementLoaded(shiftTitle)
+						& isElementLoaded(shiftExpiryDate) & areListElementVisible(dates) & areListElementVisible(shiftTimes)) {
+					isRequestFolded = false;
+					SimpleUtils.report("Open Shift Group Request is unfolded!");
+				}else
+					SimpleUtils.fail("Open Shift Group Request is not displayed correctly!",false);
+			} else
+				SimpleUtils.fail("Request detail link is not loaded!", false);
+		}else
+			SimpleUtils.fail("Failed to find open shift group request in activity!", false);
+		return isRequestFolded;
 	}
 }
