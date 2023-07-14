@@ -43,7 +43,8 @@ public interface ActivityPage{
     public void verifyNewClaimOpenShiftCardShowsOnActivity(String requestUserName, String workRole, String shiftDateAndTime, String location) throws Exception;
     public void verifyNewShiftSwapCardWithTwoLocationsShowsOnActivity(String requestUserName, String respondUserName, String actionLabel,
                                                                       boolean isNewLabelShows, String location1, String location2) throws Exception;
-    public void verifyNewClaimOpenShiftGroupCardShowsOnActivity(String requestUserName, String workRole, String shiftDateAndTime, String location) throws Exception;
-    public void approveOrRejectOpenShiftGroupRequestOnActivity(String requestUserName, String action) throws Exception;
+    public void verifyNewClaimOpenShiftGroupCardShowsOnActivity(int requestNum, String requestUserName, String workRole, String shiftDateAndTime, String location) throws Exception;
+    public void approveOrRejectOpenShiftGroupRequestOnActivity(int requestNum, String action) throws Exception;
     public void verifyContentOfOpenShiftGroupRequestOnActivity(String shiftGroupTitle, String shiftExpiryDate, ArrayList<String> specificDate, String shiftStartNEndTime, String workRole, String location) throws Exception;
+    public boolean isOpenShiftGroupRequestFolded() throws Exception;
 }
