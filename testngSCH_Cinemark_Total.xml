@@ -390,9 +390,9 @@
 <!--                    <include name="verifyActivityOfPublishUpdateScheduleAsInternalAdmin" Blocked by queue/>-->
 <!--                    <include name="verifyActivityOfClaimOpenShiftAsTeamLead" />-->
                     <include name="verifyRejectCoverRequestOfShiftSwapActivityAsTeamMember" />
-<!--                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" SCH-8631/>-->
+                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyTheContentOfShiftSwapActivityAsStoreManager" />
-<!--                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" SCH-8631/>-->
+                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
                     <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
