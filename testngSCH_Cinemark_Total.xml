@@ -896,7 +896,11 @@ SCH-5862-->
                     <include name="verifyAutoGroupConfigsAsInternalAdmin"/>
                     <include name="verifyOpenShiftGroupRulesConfigsAsInternalAdmin"/>
                     <include name="verifyConfigOfAdvancedHoursAsInternalAdmin"/>
-                    <!-- <include name="verifyGroupByPatternAsInternalAdmin"/>  Comment out until shift pattern auto script finish-->
+                    <!-- <include name="verifyGroupByPatternAsInternalAdmin"/>
+                    <include name="verifyFunctionOfOpenShiftGroupAsInternalAdmin"/>
+                    <include name="verifyRequestInActivityAsInternalAdmin"/>
+                    <include name="verifyManagerApprovalAsInternalAdmin"/>
+                    <include name="verifyDisableManagerApprovalAsInternalAdmin"/> Comment out until SCH-10058 fixed-->
                 </methods>
             </class>
         </classes>
