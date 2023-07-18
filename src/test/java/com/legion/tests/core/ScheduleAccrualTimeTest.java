@@ -200,10 +200,11 @@ public class ScheduleAccrualTimeTest extends TestBase {
 			configurationPage.goToConfigurationPage();
 			configurationPage.clickOnConfigurationCrad("Scheduling Policies");
 			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
+			Thread.sleep(10000);
 
 			//Add one time off reason under Schedule Restriction, save the change
 			configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-			Thread.sleep(15000);
+			Thread.sleep(30000);
 			SimpleUtils.assertOnFail("Schedule Restriction is not loaded!",controlsNewUIPage.isScheduleRestrictionLoaded(),false);
 			if(controlsNewUIPage.isAddTimeOffBtnClickable()){
 				controlsNewUIPage.clickAddTimeOffBtn();

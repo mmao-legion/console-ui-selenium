@@ -3188,4 +3188,22 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.report("Toggle: EnableNewSchedulingErrorHandlingSCH is disabled");
         }
     }
+
+    public void inputTeamMember(String name) throws Exception {
+        if (areListElementVisible(searchAndRecommendedTMTabs, 10)) {
+            if (searchAndRecommendedTMTabs.size() == 2) {
+                //click(btnSearchteamMember.get(1));
+                if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+                    textSearchOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+                    textSearchOnNewCreateShiftPage.sendKeys(Keys.DELETE);
+                    textSearchOnNewCreateShiftPage.sendKeys(name);
+                    waitForSeconds(3);
+                }else
+                    SimpleUtils.fail("Search box in shift creation page is not loaded correctly!",false);
+            }else
+                SimpleUtils.fail("Search employee tab or recommended employee tab is not loaded correctly!",false);
+        }else
+            SimpleUtils.fail("Shift creation dialog is not loaded correctly!",false);
+    }
+
 }
