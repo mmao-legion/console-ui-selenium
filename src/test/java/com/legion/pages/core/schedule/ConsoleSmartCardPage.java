@@ -157,6 +157,18 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         return false;
     }
 
+    @Override
+    public int getSwapCountFromSwapRequestsCard(String cardLabel) throws Exception {
+        int count = 0;
+        for (WebElement carouselCard : carouselCards) {
+            if (carouselCard.getText().toLowerCase().contains(cardLabel.toLowerCase())
+                    && isSmartcardContainText(carouselCard)) {
+                count = Integer.parseInt(carouselCard.findElement(By.tagName("h1")).getText().split(" ")[0].trim());
+            }
+        }
+        return count;
+    }
+
 
     void smartCardScrolleToLeft() throws Exception {
         if (isElementLoaded(smartcardArrowLeft, 2)) {

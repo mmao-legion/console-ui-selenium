@@ -9,6 +9,7 @@ public interface SmartCardPage {
     public HashMap<String, Float> updateScheduleHoursAndWages(HashMap<String, Float> scheduleHoursAndWages,
                                                                      String hours, String hoursAndWagesKey);
     public boolean isSmartCardAvailableByLabel(String cardLabel) throws Exception;
+    public int getSwapCountFromSwapRequestsCard(String cardLabel) throws Exception;
     public String getsmartCardTextByLabel(String cardLabel);
     public String getWeatherTemperature() throws Exception;
     public HashMap<String, String> getHoursFromSchedulePage() throws Exception;

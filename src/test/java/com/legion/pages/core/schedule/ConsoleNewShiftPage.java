@@ -587,10 +587,11 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 SimpleUtils.fail("Work Roles size are empty", false);
             }
         } else if (isElementLoaded(workRoleOnNewShiftPage, 25)) {
-            if (dropDownListOnNewCreateShiftPage.size() == 0) {
+            if (!areListElementVisible(dropDownListOnNewCreateShiftPage, 5) && dropDownListOnNewCreateShiftPage.size() == 0) {
                 click(workRoleOnNewShiftPage);
             }
             SimpleUtils.pass("Work Role button clicked Successfully");
+            waitForSeconds(1);
             if (dropDownListOnNewCreateShiftPage.size() > 0) {
                 for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
                     if (listWorkRole.getText().toLowerCase().trim().contains(workRoles.toLowerCase().trim())) {

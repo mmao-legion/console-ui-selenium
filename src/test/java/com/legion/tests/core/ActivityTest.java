@@ -500,7 +500,11 @@ public class ActivityTest extends TestBase {
 
             // Validate that swap request smartcard is available to recipient team member
             String smartCard = "SWAP REQUESTS";
-            smartCardPage.isSmartCardAvailableByLabel(smartCard);
+            boolean isSwapCardShown = smartCardPage.isSmartCardAvailableByLabel(smartCard);
+            int swapCount = 0;
+            if (isSwapCardShown) {
+                 swapCount = smartCardPage.getSwapCountFromSwapRequestsCard(smartCard);
+            }
             // Validate the availability of all swap request shifts in schedule table
             String linkName = "View All";
             smartCardPage.clickLinkOnSmartCardByName(linkName);
@@ -508,8 +512,13 @@ public class ActivityTest extends TestBase {
             // Validate that recipient can claim the swap request shift.
             mySchedulePage.verifyClickAcceptSwapButton();
             //SCH-6843
+            isSwapCardShown = smartCardPage.isSmartCardAvailableByLabel(smartCard);
+            int currentSwapCount = 0;
+            if (isSwapCardShown) {
+                currentSwapCount = smartCardPage.getCountFromSmartCardByName(smartCard);
+            }
             SimpleUtils.assertOnFail("The swap smart card should disappear",
-                    !smartCardPage.isSmartCardAvailableByLabel(smartCard), false);
+                    swapCount - currentSwapCount == 1, false);
             loginPage.logOut();
 
             // Login as Store Manager
