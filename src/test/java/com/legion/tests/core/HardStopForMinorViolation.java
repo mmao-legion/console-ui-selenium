@@ -717,7 +717,7 @@ public class HardStopForMinorViolation extends TestBase {
             createSchedulePage.publishActiveSchedule();
 
             //Create open shift with no minor violation
-            String minorName = cinemarkMinors.get("Minor15-2");
+            String minorName = cinemarkMinors.get("Minor16-2");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.clickCloseBtnForCreateShift();
@@ -726,7 +726,7 @@ public class HardStopForMinorViolation extends TestBase {
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectWeekDaysByDayName("Mon");
             newShiftPage.moveSliderAtCertainPoint("1pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("9am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.selectWorkRole(minorWorkRole);
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
@@ -746,12 +746,12 @@ public class HardStopForMinorViolation extends TestBase {
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
-            String minor15TemplateName = "Minor15Template-ForAuto";
+            String minor15TemplateName = "Minor16Template-ForAuto";
             configurationPage.clickOnSpecifyTemplateName(minor15TemplateName, "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
             String fromTimeBefore = cinemarkSetting14N15.get(CinemarkMinorTest.minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[0];
-            String fromTimeAfterChanged = Integer.parseInt(fromTimeBefore.split(":")[0])+1 + ":"+fromTimeBefore.split(":")[1];
+            String fromTimeAfterChanged = Integer.parseInt(fromTimeBefore.split(":")[0])+2 + ":"+fromTimeBefore.split(":")[1];
             cinemarkMinorPage.setMinorRuleByDay(CinemarkMinorTest.minorRuleDayType.SchoolToday_SchoolTomorrow.getValue(), fromTimeAfterChanged, cinemarkSetting14N15.get(CinemarkMinorTest.minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[1], cinemarkSetting14N15.get(CinemarkMinorTest.minorRuleDayType.SchoolToday_SchoolTomorrow.getValue()).split(",")[2]);
             configurationPage.publishNowTheTemplate();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());

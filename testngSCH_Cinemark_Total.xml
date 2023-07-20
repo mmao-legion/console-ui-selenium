@@ -148,7 +148,6 @@
                 <methods>
                     <!--                           <include name="verifyTurnOnAndSetMinorRuleAsInternalAdmin" />Due to new template -->
                     <include name="verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin" />
-                    <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" />
                     <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
                     <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                     <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
@@ -180,7 +179,7 @@
                     <include name="verifyTheMainCalendarInfoOnThePageAsInternalAdmin" />
                     <include name="verifyAutoScheduleRespectTheMinorsRulesAsInternalAdmin" />
 <!--                    <include name="verifyRecommendationRespectTheMinorsRulesAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-9782-->
-
+                    <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
