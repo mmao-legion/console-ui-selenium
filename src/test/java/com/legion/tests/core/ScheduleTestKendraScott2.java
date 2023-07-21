@@ -8528,7 +8528,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
 			String tmPartialName = "WMTester";
 			String workRole;
 //			if (isLocationUsingControlsConfiguration){
