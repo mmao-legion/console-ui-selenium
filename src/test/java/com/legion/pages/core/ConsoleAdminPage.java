@@ -112,7 +112,8 @@ public class ConsoleAdminPage extends BasePage implements AdminPage {
 	@FindBy(css = "[data-testid=\"console.legionadmin.inspector\"]")
 	private WebElement inspectorTab;
 
-	@FindBy(css = ".lg-button-group-last")
+//	@FindBy(css = ".lg-button-group-last")
+	@FindBy(css = "div[id=\"legion_cons_Admin_Inspector_Cache_button\"]")
 	private WebElement cacheTab;
 
 	@FindBy(css = "[ng-repeat=\"cache in filteredCaches\"]")
