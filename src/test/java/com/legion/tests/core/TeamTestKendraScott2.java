@@ -68,7 +68,6 @@ public class TeamTestKendraScott2 extends TestBase{
 	private static HashMap<String, Object[][]> controlTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("VailqacnTeamMembers.json");
 	private static HashMap<String, Object[][]> opTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
 	private static String controlEnterprice = "Vailqacn_Enterprise";
-	private static String opEnterprice = "CinemarkWkdy_Enterprise";
 
 
 	@Override
@@ -747,29 +746,16 @@ public class TeamTestKendraScott2 extends TestBase{
 			String permission = "Invite Employee";
 			String actionOff = "off";
 			String actionOn = "on";
-			if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
-				controlsPage.gotoControlsPage();
-				controlsNewUIPage.isControlsPageLoaded();
-				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-				controlsNewUIPage.verifyUsersAreLoaded();
-				controlsPage.clickGlobalSettings();
-				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForDM, section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForSM, section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForTL, section, permission, actionOn);
-
-			} else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
-				OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
-				opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-				ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-				configurationPage.goToUserManagementPage();
-				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForDM, section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForSM, section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForTL, section, permission, actionOn);
-				switchToConsoleWindow();
-			}
+			OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
+			opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			configurationPage.goToUserManagementPage();
+			controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+			controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+			controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForDM, section, permission, actionOn);
+			controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForSM, section, permission, actionOn);
+			controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForTL, section, permission, actionOn);
+			switchToConsoleWindow();
 
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();

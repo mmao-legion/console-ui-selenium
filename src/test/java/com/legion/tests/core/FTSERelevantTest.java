@@ -40,7 +40,6 @@ public class FTSERelevantTest extends TestBase {
     private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
     private static String opWorkRole = scheduleWorkRoles.get("RETAIL_ASSOCIATE");
     private static String controlWorkRole = scheduleWorkRoles.get("RETAIL_RENTAL_MGMT");
-    private static String controlEnterprice = "Vailqacn_Enterprise";
     private static String opEnterprice = "CinemarkWkdy_Enterprise";
 
     public enum weekCount {

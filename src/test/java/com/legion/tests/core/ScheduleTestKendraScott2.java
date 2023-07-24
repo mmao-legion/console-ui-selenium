@@ -43,8 +43,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
 	private static String opWorkRole = scheduleWorkRoles.get("RETAIL_ASSOCIATE");
 	private static String controlWorkRole = scheduleWorkRoles.get("RETAIL_RENTAL_MGMT");
-	private static String controlEnterprice = "Vailqacn_Enterprise";
-	private static String opEnterprice = "CinemarkWkdy_Enterprise";
 
 	public enum weekCount {
 		Zero(0),
@@ -6605,10 +6603,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				locationsPage.selectBudgetGroup("By Location");
 				locationsPage.saveTheGlobalConfiguration();
 				Thread.sleep(240000);
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				//Back to the console page
+				switchToConsoleWindow();
 			}
 
 			//Go to the forecast labor tab
@@ -6736,10 +6732,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
 				Thread.sleep(240000);
 
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				//Back to the console page
+				switchToConsoleWindow();
 			}
 
 			//Go to forecast page, clear the budget value
@@ -6806,10 +6800,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection,permission,actionOn);
 				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
 				Thread.sleep(240000);
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				//Back to the console page
+				switchToConsoleWindow();
 
 				//Login as SM, check the Create Schedule button is enabled
 				loginPage.logOut();
@@ -6869,10 +6861,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				compliancePage.editDayOTSetting("8 hours", "single work day", true);
 				configurationPage.publishNowTheTemplate();
 				Thread.sleep(240000);
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				//Back to the console page
+				switchToConsoleWindow();
 			}
 
 			//Go to the schedule view table
@@ -7018,10 +7008,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				controlsNewUIPage.selectClopeningHoursOP("12");
 				configurationPage.publishNowTheTemplate();
 				Thread.sleep(240000);
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				//Back to the console page
+				switchToConsoleWindow();
 			}
 
 			//Go to the schedule view table
@@ -7507,10 +7495,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				controlsNewUIPage.enableOverRideAssignmentRuleAsYesForOP();
 				configurationPage.publishNowTheTemplate();
 				Thread.sleep(240000);
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				//Back to the console page
+				switchToConsoleWindow();
 			}
 		}
 	}

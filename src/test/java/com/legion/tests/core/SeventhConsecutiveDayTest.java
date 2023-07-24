@@ -79,28 +79,23 @@ public class SeventhConsecutiveDayTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             // Checking configuration in controls
-            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
 
-                ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-            } else {
-                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-                locationsPage.clickOnLocationsTab();
-                locationsPage.goToSubLocationsInLocationsPage();
-                locationsPage.searchLocation(location);               ;
-                SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
-                locationsPage.clickOnLocationInLocationResult(location);
-                locationsPage.clickOnConfigurationTabOfLocation();
-                HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
-                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-                configurationPage.goToConfigurationPage();
-                configurationPage.clickOnConfigurationCrad("Compliance");
-                configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
-                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            }
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Compliance");
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             controlsNewUIPage.turnOnOrTurnOffDailyOTToggle(false);
             compliancePage.turnOnOrTurnOffDailyDTToggle(false);
@@ -113,10 +108,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
                     consecutiveOTOptions.WorkweekLessThan40Hrs.getValue(), false);
             compliancePage.editConsecutiveOTSetting(consecutiveOTDaysCount.Seventh.getValue(),
                     consecutiveOTOptions.Always.getValue(), true);
-            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
-                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-                configurationPage.publishNowTheTemplate();
-            }
+            configurationPage.publishNowTheTemplate();
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }
@@ -276,45 +268,36 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
     private void setConsecutiveOTAndDTSettings (String consecutiveOTDaysCount, String consecutiveOTOptions, String location) throws Exception {
         CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-        if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
 
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            controlsNewUIPage.clickOnControlsConsoleMenu();
-            controlsNewUIPage.clickOnControlsComplianceSection();
-        } else {
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-            locationsPage.clickOnLocationsTab();
-            locationsPage.goToSubLocationsInLocationsPage();
-            locationsPage.searchLocation(location);               ;
-            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
-            locationsPage.clickOnLocationInLocationResult(location);
-            locationsPage.clickOnConfigurationTabOfLocation();
-            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad("Compliance");
-            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
-            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-        }
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.searchLocation(location);               ;
+        SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+        locationsPage.clickOnLocationInLocationResult(location);
+        locationsPage.clickOnConfigurationTabOfLocation();
+        HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad("Compliance");
+        configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+
         String contentBeforeChange = compliancePage.getConsecutiveOTSettingContent();
         compliancePage.turnOnOrTurnOffDayOTToggle(true);
         compliancePage.turnOnOrTurnOffConsecutiveDTToggle(false);
         compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
         compliancePage.editConsecutiveOTSetting(consecutiveOTDaysCount, consecutiveOTOptions, true);
-        if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
-            String contentAfterChange = compliancePage.getConsecutiveOTSettingContent();
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            configurationPage.publishNowTheTemplate();
-            switchToConsoleWindow();
-            if (!contentAfterChange.equals(contentBeforeChange)) {
-                ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-                for (int i=0; i< 10; i++) {
-                    Thread.sleep(60000);
-                    scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-                }
-
+        String contentAfterChange = compliancePage.getConsecutiveOTSettingContent();
+        configurationPage.publishNowTheTemplate();
+        switchToConsoleWindow();
+        if (!contentAfterChange.equals(contentBeforeChange)) {
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            for (int i=0; i< 10; i++) {
+                Thread.sleep(60000);
+                scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             }
         }
     }
@@ -1370,29 +1353,22 @@ public class SeventhConsecutiveDayTest extends TestBase {
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-            } else {
-                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-                locationsPage.clickOnLocationsTab();
-                locationsPage.goToSubLocationsInLocationsPage();
-                locationsPage.searchLocation(location);               ;
-                SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
-                locationsPage.clickOnLocationInLocationResult(location);
-                locationsPage.clickOnConfigurationTabOfLocation();
-                HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
-                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-                configurationPage.goToConfigurationPage();
-                configurationPage.clickOnConfigurationCrad("Compliance");
-                configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
-                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            }
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Compliance");
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
             compliancePage.turnOnOrTurnOffConsecutiveDTToggle(false);
             compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(false);
-            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
-                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
                 switchToConsoleWindow();
                 ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1400,10 +1376,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
                     Thread.sleep(60000);
                     scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 }
-            }
 
-
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -1445,10 +1418,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-            } else {
+
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -1464,14 +1434,11 @@ public class SeventhConsecutiveDayTest extends TestBase {
                 configurationPage.clickOnConfigurationCrad("Compliance");
                 configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
                 configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            }
             compliancePage.turnOnOrTurnOffDailyDTToggle(true);
             compliancePage.turnOnOrTurnOffConsecutiveDTToggle(true);
             compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
             compliancePage.editConsecutiveOTSetting(consecutiveOTDaysCount.Seventh.getValue(),
                     consecutiveOTOptions.WorkweekLessThan40Hrs.getValue(), true);
-            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
-                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
                 switchToConsoleWindow();
                 ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1479,9 +1446,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
                     Thread.sleep(60000);
                     scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 }
-            }
 
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -1523,10 +1488,6 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-            } else {
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -1542,17 +1503,13 @@ public class SeventhConsecutiveDayTest extends TestBase {
                 configurationPage.clickOnConfigurationCrad("Compliance");
                 configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
                 configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            }
             compliancePage.turnOnOrTurnOffDailyDTToggle(true);
             compliancePage.turnOnOrTurnOffConsecutiveDTToggle(true);
             compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
             compliancePage.editConsecutiveOTSetting(consecutiveOTDaysCount.Seventh.getValue(),
                     consecutiveOTOptions.WorkweekLessThan40Hrs.getValue(), true);
-            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
-                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
                 switchToConsoleWindow();
-            }
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -1588,10 +1545,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-            } else {
+
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -1607,14 +1561,12 @@ public class SeventhConsecutiveDayTest extends TestBase {
                 configurationPage.clickOnConfigurationCrad("Compliance");
                 configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
                 configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            }
+
             compliancePage.turnOnOrTurnOffDailyDTToggle(true);
             compliancePage.turnOnOrTurnOffConsecutiveDTToggle(false);
             compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
             compliancePage.editConsecutiveOTSetting(consecutiveOTDaysCount.Seventh.getValue(),
                     consecutiveOTOptions.WorkweekLessThan40Hrs.getValue(), true);
-            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
-                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
                 switchToConsoleWindow();
                 ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1622,9 +1574,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
                     Thread.sleep(60000);
                     scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 }
-            }
 
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -1659,10 +1609,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
 
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
-            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(controlEnterprice).toLowerCase())){
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-            } else {
+
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -1678,7 +1625,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
                 configurationPage.clickOnConfigurationCrad("Compliance");
                 configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
                 configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            }
+
             //weekly OT
             compliancePage.turnOnOrTurnOffDailyDTToggle(true);
             compliancePage.turnOnOrTurnOffWeelyDTToggle(true);
@@ -1686,8 +1633,6 @@ public class SeventhConsecutiveDayTest extends TestBase {
             compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
             compliancePage.editConsecutiveOTSetting(consecutiveOTDaysCount.Seventh.getValue(),
                     consecutiveOTOptions.WorkweekLessThan40Hrs.getValue(), true);
-            if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())){
-                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.publishNowTheTemplate();
                 switchToConsoleWindow();
                 ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1695,10 +1640,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
                     Thread.sleep(60000);
                     scheduleCommonPage.clickOnScheduleConsoleMenuItem();
                 }
-            }
 
-
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
