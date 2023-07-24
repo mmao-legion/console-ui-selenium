@@ -8514,17 +8514,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
 			String tmPartialName = "WMTester";
 			String workRole;
-			if (isLocationUsingControlsConfiguration){
-				//Go to compliance page and set week OT violation
-				workRole = "Retail Associate";
-				controlsNewUIPage.clickOnControlsConsoleMenu();
-				controlsNewUIPage.clickOnControlsComplianceSection();
-				compliancePage.turnOnOrTurnOffWeeklyOTToggle(false);
-				compliancePage.editWeeklyOTSetting("40 hours");
-			}else {
+//			if (isLocationUsingControlsConfiguration){
+//				//Go to compliance page and set week OT violation
+//				workRole = "Retail Associate";
+//				controlsNewUIPage.clickOnControlsConsoleMenu();
+//				controlsNewUIPage.clickOnControlsComplianceSection();
+//				compliancePage.turnOnOrTurnOffWeeklyOTToggle(false);
+//				compliancePage.editWeeklyOTSetting("40 hours");
+//			}else {
 				workRole = "TEAM MEMBER CORPORATE-THEATRE";
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
 				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -8545,7 +8545,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				compliancePage.turnOnOrTurnOffWeeklyOTToggle(false);
 				configurationPage.publishNowTheTemplate();
 				switchToConsoleWindow();
-			}
+//			}
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(60000);
 
@@ -8581,6 +8581,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.moveSliderAtCertainPoint("9:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.inputTeamMember(tmPartialName);
+			newShiftPage.clickOnBackButton();
+			newShiftPage.clickOnCreateOrNextBtn();
 			newShiftPage.searchTeamMemberByName(tmPartialName);
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
@@ -8596,6 +8599,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.moveSliderAtCertainPoint("10:00am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
 			newShiftPage.moveSliderAtCertainPoint("9:00am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+			newShiftPage.clickOnCreateOrNextBtn();
+			newShiftPage.inputTeamMember(tmPartialName);
+			newShiftPage.clickOnBackButton();
 			newShiftPage.clickOnCreateOrNextBtn();
 			newShiftPage.searchTeamMemberByName(tmPartialName);
 			newShiftPage.clickClearAssignmentsLink();
