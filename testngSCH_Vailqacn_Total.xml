@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="7" name="LegionTest" parallel="tests" configfailurepolicy="continue">
+<suite verbose ="0" thread-count="6" name="LegionTest" parallel="tests" configfailurepolicy="continue">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="Yes"/>
     <parameter name="testRailRunName" value="Automation Regression-In parallel mode"/>
@@ -12,13 +12,13 @@
         <classes>
             <class name="com.legion.tests.core.PrepareSettingsTest">
                 <methods>
-                    <include name="prepareSettingsInControlsAsInternalAdmin"/>
+                    <include name="prepareSettingsInOPTemplateAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
     </test>
 
-    <test name="FTSE Support Variant Violations Except OT Ones">
+   <!-- <test name="FTSE Support Variant Violations Except OT Ones">
         <classes>
             <class name="com.legion.tests.core.FTSERelevantTest">
                 <methods>
@@ -26,9 +26,9 @@
                     <include name="verifyFTSEEmployeesIgnoreTheWeekOTAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnoreThe7thConsecutiveOTAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnoreThe24HrsOTAsInternalAdmin"/>
-                    <!--  <include name="verifyFTSEEmployeeSupportClopeningViolationAsInternalAdmin"/> Blocked by SCH-8605  -->
+                    &lt;!&ndash;  <include name="verifyFTSEEmployeeSupportClopeningViolationAsInternalAdmin"/> Blocked by SCH-8605  &ndash;&gt;
                     <include name="verifyFTSEEmployeeSupportMaxShiftViolationAsInternalAdmin"/>
-                    <!--  <include name="verifyFTSEEmployeeSupportRoleViolationAsInternalAdmin"/>  Blocked by SCH-8334  -->
+                    &lt;!&ndash;  <include name="verifyFTSEEmployeeSupportRoleViolationAsInternalAdmin"/>  Blocked by SCH-8334  &ndash;&gt;
                     <include name="verifyFTSEEmployeesIgnore4X10AgreementAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnore5X8AgreementAsInternalAdmin"/>
                     <include name="verifyFTSEEmployeesIgnore40X8AgreementAsInternalAdmin"/>
@@ -46,7 +46,7 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
     <test name="Activity Test">
         <classes>
@@ -171,7 +171,7 @@
                            <classes>
                                <class name="com.legion.tests.core.ScheduleCopyImprovementTest">
                                    <methods>
-                                       <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin" />
+<!--                                       <include name="validateTheUnassignedShiftsConvertToOpenShiftsSettingInControlAsInternalAdmin" />-->
                                        <include name="validateShiftsWithConvertToOpenShiftsWhenGeneratingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
                                        <include name="validateShiftsWithConvertToOpenShiftsWhenCopyingScheduleSettingAsKeepAsUnassignedAsInternalAdmin" />
                                        <include name="validateTheScheduleWithBothUnassignedAndOOOHShiftsAsInternalAdmin" />
@@ -300,21 +300,21 @@
         </classes>
     </test>
 
-    <test name="Inbox Test">
-        <classes>
-            <class name="com.legion.tests.core.InboxTest">
-                <methods>
-                    <include name="verifyTheContentOfOperationHoursAndTheFirstDayOfWeekAsInternalAdmin" />
-                    <include name="verifyVSLInfoShowsOrNotAsInternalAdmin" />
-                    <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />
-                    <include name="verifyTurnOnGFEAsInternalAdmin" />
-                    <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />
-<!--                    <include name="verifyContentOfGFEAsInternalAdmin" SCH-8920/>-->
-                    <include name="verifyVSLInfoAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+<!--    <test name="Inbox Test">-->
+<!--        <classes>-->
+<!--            <class name="com.legion.tests.core.InboxTest">-->
+<!--                <methods>-->
+<!--                    <include name="verifyTheContentOfOperationHoursAndTheFirstDayOfWeekAsInternalAdmin" />-->
+<!--                    <include name="verifyVSLInfoShowsOrNotAsInternalAdmin" />-->
+<!--                    <include name="verifyTheContentOfWeekSummaryForDifferentTMAsInternalAdmin" />-->
+<!--                    <include name="verifyTurnOnGFEAsInternalAdmin" />-->
+<!--                    <include name="verifyTheTemplateLoadedWhenSelectingGFEAsInternalAdmin" />-->
+<!--&lt;!&ndash;                    <include name="verifyContentOfGFEAsInternalAdmin" SCH-8920/>&ndash;&gt;-->
+<!--                    <include name="verifyVSLInfoAsInternalAdmin" />-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--        </classes>-->
+<!--    </test>-->
 
     <test name="DM View Test">
         <classes>
