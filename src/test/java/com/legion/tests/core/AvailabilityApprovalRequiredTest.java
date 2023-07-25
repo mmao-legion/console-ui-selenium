@@ -1,11 +1,14 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
@@ -866,21 +869,29 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         // Set availability policy
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        controlsPage.gotoControlsPage();
+        //Go to OP page
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.searchLocation(location);               ;
+        SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+        locationsPage.clickOnLocationInLocationResult(location);
+        locationsPage.clickOnConfigurationTabOfLocation();
+        HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
 
-        dashboardPage.navigateToDashboard();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
+        configurationPage.goToConfigurationPage();
         controlsNewUIPage.clickOnControlsSchedulingPolicies();
-        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-        controlsNewUIPage.clickOnGlobalLocationButton();
-//        String isApprovalRequired = "Required for all changes";
+        cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Scheduling Policies"));
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
         controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(AvailabilityApprovalRequiredOptions.RequiredForAllChanged.getValue());
+        configurationPage.publishNowTheTemplate();
+        Thread.sleep(3000);
+        switchToConsoleWindow();
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
 
@@ -949,26 +960,34 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
     @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Validate cancelled/approved/rejected and dated request has no option when clicking the request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void validateCancelledAvailabilityHasNoOptionRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
+    public void validateCancelledAvailabilityHasNoOptionRequestAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Login with Store Manager Credentials
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         // Set availability policy
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        controlsPage.gotoControlsPage();
+        //Go to OP page
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.searchLocation(location);               ;
+        SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+        locationsPage.clickOnLocationInLocationResult(location);
+        locationsPage.clickOnConfigurationTabOfLocation();
+        HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
 
-        dashboardPage.navigateToDashboard();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
+        configurationPage.goToConfigurationPage();
         controlsNewUIPage.clickOnControlsSchedulingPolicies();
-        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-        controlsNewUIPage.clickOnGlobalLocationButton();
-//        String isApprovalRequired = "Required for all changes";
+        cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Scheduling Policies"));
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
         controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(AvailabilityApprovalRequiredOptions.RequiredForAllChanged.getValue());
+        configurationPage.publishNowTheTemplate();
+        Thread.sleep(3000);
+        switchToConsoleWindow();
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
 

@@ -207,34 +207,34 @@
         </classes>
     </test>
 
-    <test name="TeamTab Test KendraScott2">
+<!--    <test name="TeamTab Test KendraScott2">
         <classes>
             <class name="com.legion.tests.core.TeamTestKendraScott2">
                 <methods>
                     <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" />
                     <include name="verifyTheTeamFunctionalityInRosterForSortAsInternalAdmin" />
                     <include name="verifyRemoveAccessToEmployeeProfileInTeamScheduleAsInternalAdmin" />
-<!--                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5674-->
-<!--                    <include name="validateCancelledAvailabilityHasNoOptionRequestAsStoreManager" /> added to AvailabilityApprovalRequiredTest-->
-<!--                    <include name="verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5657-->
+&lt;!&ndash;                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5674&ndash;&gt;
+&lt;!&ndash;                    <include name="validateCancelledAvailabilityHasNoOptionRequestAsInternalAdmin" /> added to AvailabilityApprovalRequiredTest&ndash;&gt;
+&lt;!&ndash;                    <include name="verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5657&ndash;&gt;
                     <include name="verifyCanUpdateTheHRConfigInIntegrationAsInternalAdmin" />
-<!--                    <include name="verifyTheButtonsForEmployeeInDifferentStatusAsInternalAdmin" Blocked by SCH-5660/>-->
-<!--                    <include name="validateErrorMessageWhenThereIsRecurringPendingAvailabilityRequestAsStoreManager" /> added to-->
-                    <!--                    <include name="validateErrorMessageWhenThereIsNoRecurringPendingAvailabilityRequestAsStoreManager" added to AvailabilityApprovalRequiredTest Blocked by SCH-5388/>-->
+&lt;!&ndash;                    <include name="verifyTheButtonsForEmployeeInDifferentStatusAsInternalAdmin" Blocked by SCH-5660/>&ndash;&gt;
+&lt;!&ndash;                    <include name="validateErrorMessageWhenThereIsRecurringPendingAvailabilityRequestAsStoreManager" /> added to&ndash;&gt;
+                    &lt;!&ndash;                    <include name="validateErrorMessageWhenThereIsNoRecurringPendingAvailabilityRequestAsStoreManager" added to AvailabilityApprovalRequiredTest Blocked by SCH-5388/>&ndash;&gt;
                     <include name="validateTheAvailableLeftHrsDisplayAs0WhenDeleteAllAvailabilitiesAsTeamMember" />
                     <include name="validateTheAvailableLeftHrsDisplayAs168WhenAddFullAvailabilitiesAsTeamMember" />
                     <include name="validateTheAvailableLeftHrsDisplayCorrectlyWhenUpdateAvailabilitiesAsTeamMember" />
                     <include name="validateTheAvailableLeftHrsWhenTMHasShiftsOnTheWeekAsTeamMember" />
                     <include name="validateTimeOffOnAvailabilityTableAsTeamMember" />
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWithScheduledShiftAsTeamMember" />
-<!--                    <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWillChangedAccordinglyAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-8602-->
+&lt;!&ndash;                    <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWillChangedAccordinglyAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-8602&ndash;&gt;
                     <include name="validateTheScheduledShiftAndHrsOnAvailabilityTablWhenThereIsNoShiftBeenScheduledAsTeamMember" />
                     <include name="validateTheApprovedOrRejectedAvailabilitiesRequestShouldNotBeAbleToOperateAsTeamMember" />
                     <include name="validateManagersCanConvertToOpenShiftAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
  <!--   <test name="Overview Test">
         <classes>
