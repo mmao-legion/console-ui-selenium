@@ -2550,6 +2550,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
 			SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
 			controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			configurationPage.publishNowTheTemplate();
+			Thread.sleep(3000);
+			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
 
 			dashboardPage.navigateToDashboard();
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -4882,6 +4887,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			controlsNewUIPage.clickOnGlobalLocationButton();
 			OpsPortalConfigurationPage opsPortalConfigurationPage = (OpsPortalConfigurationPage) pageFactory.createOpsPortalConfigurationPage();
 			opsPortalConfigurationPage.setWFS("No");
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			configurationPage.publishNowTheTemplate();
+			Thread.sleep(3000);
+			switchToConsoleWindow();
 
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -5285,12 +5294,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
 
-			controlsPage.gotoControlsPage();
-			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-			SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-			controlsNewUIPage.clickOnControlsSchedulingPolicies();
-			controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
-			int advancedDays = controlsNewUIPage.getDaysInAdvanceCreateTimeOff();
+			int advancedDays = 2;
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 

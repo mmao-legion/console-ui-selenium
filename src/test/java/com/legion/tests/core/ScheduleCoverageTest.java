@@ -133,15 +133,8 @@ public class ScheduleCoverageTest extends TestBase {
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String isBudgetEnabled = "";
             //Check the budget is enabled or not
-            if (isLocationUsingControlsConfiguration) {
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsSchedulingPolicies();
-                Thread.sleep(10000);
-                isBudgetEnabled = controlsNewUIPage.getApplyLaborBudgetToSchedulesActiveBtnLabel();
-            } else {
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -150,7 +143,7 @@ public class ScheduleCoverageTest extends TestBase {
                 Thread.sleep(10000);
                 isBudgetEnabled = controlsNewUIPage.getApplyLaborBudgetToSchedulesActiveBtnLabel();
                 switchToConsoleWindow();
-            }
+            refreshCachesAfterChangeTemplate();
 
             //Create the schedule if it is not created
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -327,15 +320,8 @@ public class ScheduleCoverageTest extends TestBase {
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String isBudgetEnabled = "";
             //Check the budget is enabled or not
-            if (isLocationUsingControlsConfiguration) {
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsSchedulingPolicies();
-                Thread.sleep(15000);
-                isBudgetEnabled = controlsNewUIPage.getApplyLaborBudgetToSchedulesActiveBtnLabel();
-            } else {
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -344,7 +330,7 @@ public class ScheduleCoverageTest extends TestBase {
                 Thread.sleep(10000);
                 isBudgetEnabled = controlsNewUIPage.getApplyLaborBudgetToSchedulesActiveBtnLabel();
                 switchToConsoleWindow();
-            }
+            refreshCachesAfterChangeTemplate();
 
             //Create the schedule if it is not created
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();

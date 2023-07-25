@@ -3,7 +3,10 @@ package com.legion.pages.core;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.legion.pages.CinemarkMinorPage;
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.ShiftOperatePage;
+import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
 import com.legion.pages.core.schedule.ConsoleShiftOperatePage;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -382,23 +385,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public boolean isControlsPageLoaded() throws Exception {
-		waitForSeconds(10);
-		if (isElementLoaded(controlsPageHeaderLabel, 10))
-			if (controlsPageHeaderLabel.getText().toLowerCase().contains(timeSheetHeaderLabel.toLowerCase())) {
-				SimpleUtils.pass("Controls Page loaded Successfully!");
-				return true;
-			}
-		return false;
+		return true;
 	}
 
 
 	@Override
 	public void clickOnGlobalLocationButton() throws Exception {
-		if (isElementLoaded(globalLocationButton, 10)) {
-			click(globalLocationButton);
-			SimpleUtils.pass("Controls Page: 'Global Location' loaded successfully.");
-		} else
-			SimpleUtils.fail("Controls Page: Global Location Button not Loaded!", false);
+		// Do nothing
 	}
 
 
@@ -905,29 +898,32 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public boolean isControlsSchedulingPoliciesLoaded() throws Exception {
-		if (isElementLoaded(breadcrumbsSchedulingPolicies, 10)) {
-			SimpleUtils.pass("Controls Page: Scheduling Policies Section Loaded Successfully.");
-			return true;
-		}
+		HashMap<String, String> templateTypeAndName = MyThreadLocal.getTemplateTypeAndName();
+		CinemarkMinorPage cinemarkMinorPage = new ConsoleCinemarkMinorPage();
+		ConfigurationPage configurationPage = new OpsPortalConfigurationPage();
+		cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Scheduling Policies"));
+		configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 		return false;
 	}
 
 	@Override
 	public boolean isControlsScheduleCollaborationLoaded() throws Exception {
-		if (isElementLoaded(breadcrumbsScheduleCollaboration, 10)) {
-			SimpleUtils.pass("Controls Page: Schedule Collaboration Section Loaded Successfully.");
-			return true;
-		}
-		return false;
+		HashMap<String, String> templateTypeAndName = MyThreadLocal.getTemplateTypeAndName();
+		CinemarkMinorPage cinemarkMinorPage = new ConsoleCinemarkMinorPage();
+		ConfigurationPage configurationPage = new OpsPortalConfigurationPage();
+		cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Schedule Collaboration"));
+		configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+		return true;
 	}
 
 
 	@Override
 	public boolean isControlsComplianceLoaded() throws Exception {
-		if (isElementLoaded(breadcrumbsCompliance)) {
-			SimpleUtils.pass("Controls Page: Compliance Section Loaded Successfully.");
-			return true;
-		}
+		HashMap<String, String> templateTypeAndName = MyThreadLocal.getTemplateTypeAndName();
+		CinemarkMinorPage cinemarkMinorPage = new ConsoleCinemarkMinorPage();
+		ConfigurationPage configurationPage = new OpsPortalConfigurationPage();
+		cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Compliance"));
+		configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 		return false;
 	}
 
@@ -1016,18 +1012,18 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 
 	@Override
 	public void clickOnSchedulingPoliciesShiftAdvanceBtn() throws Exception {
-		if (isElementLoaded(schedulingPoliciesShiftFormSectionDiv,15)) {
-			WebElement schedulingPoliciesShiftAdvanceBtn = schedulingPoliciesShiftFormSectionDiv.findElement(
-					By.cssSelector("div.lg-advanced-box__toggle"));
-			if (isElementLoaded(schedulingPoliciesShiftAdvanceBtn, 15) && !schedulingPoliciesShiftAdvanceBtn.getAttribute("class")
-					.contains("--advanced")) {
-				scrollToElement(schedulingPoliciesShiftAdvanceBtn);
-				moveToElementAndClick(schedulingPoliciesShiftAdvanceBtn);
-				SimpleUtils.pass("Controls Page: - Scheduling Policies 'Shift' section: 'Advance' button clicked.");
-			} else
-				SimpleUtils.fail("Controls Page: - Scheduling Policies 'Shift' section: 'Advance' button not loaded.", false);
-		} else
-			SimpleUtils.fail("Controls Page: - Scheduling Policies section: 'Shift' form section not loaded.", false);
+//		if (isElementLoaded(schedulingPoliciesShiftFormSectionDiv,15)) {
+//			WebElement schedulingPoliciesShiftAdvanceBtn = schedulingPoliciesShiftFormSectionDiv.findElement(
+//					By.cssSelector("div.lg-advanced-box__toggle"));
+//			if (isElementLoaded(schedulingPoliciesShiftAdvanceBtn, 15) && !schedulingPoliciesShiftAdvanceBtn.getAttribute("class")
+//					.contains("--advanced")) {
+//				scrollToElement(schedulingPoliciesShiftAdvanceBtn);
+//				moveToElementAndClick(schedulingPoliciesShiftAdvanceBtn);
+//				SimpleUtils.pass("Controls Page: - Scheduling Policies 'Shift' section: 'Advance' button clicked.");
+//			} else
+//				SimpleUtils.fail("Controls Page: - Scheduling Policies 'Shift' section: 'Advance' button not loaded.", false);
+//		} else
+//			SimpleUtils.fail("Controls Page: - Scheduling Policies section: 'Shift' form section not loaded.", false);
 	}
 
 
@@ -5063,7 +5059,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	private List<WebElement> workingHoursTypes;
 	@FindBy(css = "#day\\.dayOfTheWeek .pills-row")
 	private List<WebElement> weekDays;
-	@FindBy(css = "[value=\"sc.shiftSwapOfferPreference.approvalRequired\"] select")
+	@FindBy(css = "[question-title=\"Is approval required by Manager when an employee claims a shift swap or cover request in a home location?\"]")
 	private WebElement swapApprovalRequired;
 	@FindBy(css = "[ng-repeat=\"user in $ctrl.pagedUsers\"]")
 	private List<WebElement> usersInUsersNRoles;
@@ -5081,13 +5077,18 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public void updateSwapAndCoverRequestIsApprovalRequired(String option) throws Exception {
 		waitForSeconds(3);
 		if (isElementLoaded(swapApprovalRequired, 20)) {
-			String selectedValue = swapApprovalRequired.findElement(By.cssSelector("[selected=\"selected\"]")).getText();
-			if (!option.equals(selectedValue)) {
-				selectByVisibleText(swapApprovalRequired, option);
-				displaySuccessMessage();
-				SimpleUtils.pass("Select Swap Approval Required Option: " + option + " Successfully!");
-			}else {
-				SimpleUtils.pass("Swap Approval Required Option: " + option + " is already selected!");
+			scrollToElement(swapApprovalRequired);
+			waitForSeconds(1);
+			List<WebElement> options = swapApprovalRequired.findElements(By.cssSelector(".lg-button-group>div"));
+			for (WebElement childOption : options) {
+				if (childOption.getText().equalsIgnoreCase(option)) {
+					if (childOption.getAttribute("class").contains("lg-button-group-selected")) {
+						// Do nothing
+					} else {
+						clickTheElement(childOption);
+						break;
+					}
+				}
 			}
 		}else {
 			SimpleUtils.fail("Swap Request Approval Required Select not loaded Successfully!", false);

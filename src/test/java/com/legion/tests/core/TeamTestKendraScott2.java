@@ -2112,34 +2112,11 @@ public class TeamTestKendraScott2 extends TestBase{
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
 			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
-			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
 			String accessRoleTab = "Access Roles";
 			String permissionSection = "Schedule";
 			String permission = "Edit Past Schedule";
 			String actionOn = "on";
 			//Go to the configuration page and set the labor budget and By Location
-			if (isLocationUsingControlsConfiguration){
-				controlsNewUIPage.clickOnControlsConsoleMenu();
-				controlsNewUIPage.clickOnControlsSchedulingPolicies();
-				controlsNewUIPage.clickOnGlobalLocationButton();
-				controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
-				controlsNewUIPage.selectBudgetGroupNonOP("By Location");
-
-				//Go to Users and Roles page
-				controlsNewUIPage.clickOnControlsConsoleMenu();
-				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-				controlsNewUIPage.clickOnGlobalLocationButton();
-				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
-
-				//Add the Edit Past Schedule permission for SM & DM
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
-				String role = "Store Manager";
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
-				role = "Area Manager";
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-
-			}else {
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
 				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
 				SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -2164,7 +2141,6 @@ public class TeamTestKendraScott2 extends TestBase{
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
 				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
 				switchToConsoleWindow();
-			}
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(240000);
 

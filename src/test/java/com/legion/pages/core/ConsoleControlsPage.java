@@ -2,6 +2,13 @@ package com.legion.pages.core;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
 
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
+import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
+import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
+import com.legion.pages.pagefactories.ConsoleWebPageFactory;
+import com.legion.tests.core.OpsPortal.LocationsTest;
+import com.legion.utils.MyThreadLocal;
 import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -12,7 +19,11 @@ import com.legion.pages.BasePage;
 import com.legion.pages.ControlsPage;
 import com.legion.utils.SimpleUtils;
 
+import java.util.HashMap;
+
 public class ConsoleControlsPage extends BasePage implements ControlsPage{
+
+	private PageFactory pageFactory = null;
 	
 	@FindBy (css = "div.console-navigation-item-label.Controls")
 	private WebElement controlsConsoleName;
@@ -28,17 +39,20 @@ public class ConsoleControlsPage extends BasePage implements ControlsPage{
 
 	@Override
 	public void gotoControlsPage() throws Exception {
-		// TODO Auto-generated method stub
-		if(isElementLoaded(controlsConsoleName)){
-			clickTheElement(controlsConsoleName);
-			//SimpleUtils.fail("Control not Loaded1", true);
-			checkElementVisibility(globalIconControls);
-			//SimpleUtils.fail("Control not Loaded2", true);
-			SimpleUtils.pass("Controls loaded successfully and Global icon present");
-		}else{
-			SimpleUtils.fail("Control not Loaded", false);
-		}
-		
+		LocationsPage locationsPage = new OpsPortalLocationsPage();
+		locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+		SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+		locationsPage.clickOnLocationsTab();
+		locationsPage.goToSubLocationsInLocationsPage();
+		String location = MyThreadLocal.getLocationName();
+		locationsPage.searchLocation(location);
+		SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+		locationsPage.clickOnLocationInLocationResult(location);
+		locationsPage.clickOnConfigurationTabOfLocation();
+		HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+		MyThreadLocal.setTemplateTypeAndName(templateTypeAndName);
+		ConfigurationPage configurationPage = new OpsPortalConfigurationPage();
+		configurationPage.goToConfigurationPage();
 	}
 	
 	@Override

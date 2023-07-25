@@ -216,8 +216,13 @@ public class ActivityTest extends TestBase {
         SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
         controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
         SimpleUtils.assertOnFail("Schedule Collaboration Page not loaded Successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
-        String option = "Always";
+        String option = "Yes";
         controlsNewUIPage.updateSwapAndCoverRequestIsApprovalRequired(option);
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        configurationPage.publishNowTheTemplate();
+        Thread.sleep(3000);
+        switchToConsoleWindow();
+        refreshCachesAfterChangeTemplate();
 
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
