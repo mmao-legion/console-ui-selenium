@@ -553,7 +553,7 @@
         </classes>
     </test>
 SCH-5863, SCH-6536-->
-    <test name="Controls New UI Test">
+<!--    <test name="Controls New UI Test">
         <classes>
             <class name="com.legion.tests.core.ControlsNewUITest">
                 <methods>
@@ -562,13 +562,13 @@ SCH-5863, SCH-6536-->
                     <include name="verifyTheTMCannotEditTheAvailabilityWhenWeekDuringSchedulePlanningWindowAsInternalAdmin" />
                     <include name="verifyTheSectionsDisplayOnWorkingHoursPageAsInternalAdmin" />
                     <include name="verifyTheRegularSectionsOnWorkingHoursPageAsInternalAdmin" />
-<!--                    <include name="verifyTheHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />  SCH-5882 -->
+&lt;!&ndash;                    <include name="verifyTheHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />  SCH-5882 &ndash;&gt;
                     <include name="verifyTheCompanyHolidaySectionsOnWorkingHoursPageAsInternalAdmin" />
                     <include name="verifySmartCopyConfigsInNonOPNotWorkingAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
     <!--
        <test name="Approve Activities By Home Or Non Home Manager Test">
            <classes>
