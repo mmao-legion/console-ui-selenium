@@ -943,6 +943,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private List<WebElement> listLocationGroup;
     @Override
     public void addNewShiftsByNames(List<String> names, String workRole) throws Exception {
+        scrollToTop();
+        waitForSeconds(2);
         for(int i = 0; i < 2; i++) {
             clickOnDayViewAddNewShiftButton();
             customizeNewShiftPage();
