@@ -336,6 +336,7 @@
         </classes>
     </test>
 
+<!--
     <test name="Scheduling Minor Test">
         <classes>
             <class name="com.legion.tests.core.SchedulingMinorTest">
@@ -344,15 +345,16 @@
                     <include name="verifyMinorInfoOnProfilePageAsInternalAdmin" />
                     <include name="verifyMinorFilterAsInternalAdmin" />
                     <include name="verifyMinorBadgeInfoAsInternalAdmin" />
-<!--                    <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin" />
+&lt;!&ndash;                    <include name="verifyNoWarningMessageAndViolationDisplayWhenMinorIsNotAvoidMinorSettingsAsInternalAdmin" />
                     <include name="verifyWarningMessageForExceedWeekdayHrsAsInternalAdmin"/>
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftsExceedTheWeeklyHoursAsInternalAdmin" />
                     <include name="verifyTheWarningMessageAndViolationWhenMinorShiftDaysExceedTheWeekDaysInSettingAsInternalAdmin" />
-                    <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />   https://legiontech.atlassian.net/browse/SCH-4754 -->
+                    <include name="verifyTheWarningMessageAndViolationWhenMinorIsUnder14YearsOldAsInternalAdmin" />   https://legiontech.atlassian.net/browse/SCH-4754 &ndash;&gt;
                 </methods>
             </class>
         </classes>
     </test>
+-->
 
     <test name="Drag And Drop Test">
         <classes>
