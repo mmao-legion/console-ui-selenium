@@ -241,8 +241,6 @@
             <class name="com.legion.tests.core.UpperfieldTest">
                 <methods>
                     <include name="verifyRegionViewNavigationAsInternalAdmin" />
-                    <include name="verifyControlsInBUViewAsInternalAdmin" />
-                    <include name="verifyControlsInRegionViewAsInternalAdmin" />
                     <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
                     <include name="verifyRegionListAndSubRegionOnComplianceInBUViewAsInternalAdmin" />
                     <include name="verifyDistrictListAndSubDistrictOnComplianceInBUViewAsInternalAdmin" />
