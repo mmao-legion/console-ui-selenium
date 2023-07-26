@@ -995,7 +995,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = "[placeholder=\"Search by Team Member, Role, Location or any combination.\"]")
     private WebElement textSearchOnNewCreateShiftPage;
 
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-container')]/div/div/div/p/parent::*/parent::*/parent::*/parent::*/parent::*/div[contains(@class,'MuiGrid-container')]")
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-container')]/div/div/div/button/parent::*/parent::*/parent::*/parent::*/parent::*/div[contains(@class,'MuiGrid-container')]")
     private List<WebElement> searchResultsOnNewCreateShiftPage;
 
     @FindBy(css = ".MuiDialogContent-root button")
