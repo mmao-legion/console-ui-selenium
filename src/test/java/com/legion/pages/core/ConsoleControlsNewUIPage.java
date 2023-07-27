@@ -1872,7 +1872,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Controls Page: - Scheduling Policies section: 'Time Off' form section not loaded.", false);
 	}
 
-	@FindBy(css = "[question-title*=\"days in advance.\"] .input-form")
+	@FindBy(css = "[question-title*=\"Number of days requests must be made in advance\"] .input-form")
 	private WebElement daysInAdvanceToCreateTimeOff;
 	@Override
 	public int getDaysInAdvanceCreateTimeOff() throws Exception {

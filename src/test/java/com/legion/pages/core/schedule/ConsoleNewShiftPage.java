@@ -826,7 +826,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     getActiveWeekText() + "'", false);
     }
 
-    @FindBy(css = "[id*=\"legion_cons_Schedule_Schedule_CreateShift\"]>label")
+    @FindBy(css = "[id*=\"legion_cons_Schedule_Schedule_CreateShift\"] label")
     private List<WebElement> weekDaysInNewCreateShiftPage;
     public void clearAllSelectedDays() throws Exception {
         if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {

@@ -7527,7 +7527,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-			boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//			boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
 //			if (!isLocationUsingControlsConfiguration) {
 //				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
 //				locationsPage.clickOnLocationsTab();

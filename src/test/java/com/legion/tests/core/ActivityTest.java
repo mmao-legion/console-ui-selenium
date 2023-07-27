@@ -12,6 +12,7 @@ import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.Constants;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -1564,11 +1565,16 @@ public class ActivityTest extends TestBase {
     public void verifyTheNotificationForRequestTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
             controlsPage.gotoControlsPage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-            controlsNewUIPage.clickOnControlsSchedulingPolicies();
-            controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+            configurationPage.clickOnConfigurationCrad("Scheduling Policies");
+            configurationPage.clickOnSpecifyTemplateName(MyThreadLocal.getTemplateTypeAndName().get("Scheduling Policies"), "edit");
+
+//            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+//            controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
             int advancedDays = controlsNewUIPage.getDaysInAdvanceCreateTimeOff();
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();

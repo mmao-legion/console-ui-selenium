@@ -835,16 +835,16 @@ public class MealAndRestBreakTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-            if (isLocationUsingControlsConfiguration){
-                //Config the Meal Break
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
-                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
-                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
-
-            }
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            if (isLocationUsingControlsConfiguration){
+//                //Config the Meal Break
+//                controlsNewUIPage.clickOnControlsConsoleMenu();
+//                controlsNewUIPage.clickOnControlsComplianceSection();
+//                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
+//                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
+//                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
+//
+//            }
 
             //Create a new schedule
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -1114,16 +1114,16 @@ public class MealAndRestBreakTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-            if (isLocationUsingControlsConfiguration){
-                //Config the Meal Break
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
-                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
-                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
-
-            }
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            if (isLocationUsingControlsConfiguration){
+//                //Config the Meal Break
+//                controlsNewUIPage.clickOnControlsConsoleMenu();
+//                controlsNewUIPage.clickOnControlsComplianceSection();
+//                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
+//                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
+//                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
+//
+//            }
 
             //Create a new schedule
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
