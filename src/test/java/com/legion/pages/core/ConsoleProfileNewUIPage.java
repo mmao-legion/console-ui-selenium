@@ -2974,7 +2974,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void selectAGivenCalendarForMinor(String givenCalendar) throws Exception {
-		if (isElementLoaded(editBtnOfProfile,5)) {
+		if (isElementLoaded(editBtnOfProfile,15)) {
 			clickTheElement(editBtnOfProfile);
 			selectByVisibleText(schoolCalendarSelect, givenCalendar);
 			if (areListElementVisible(saveBtnsOfProfile,5)) {

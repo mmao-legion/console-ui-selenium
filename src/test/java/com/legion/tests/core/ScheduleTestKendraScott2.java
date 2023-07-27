@@ -8383,17 +8383,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
 			String tmPartialName = "WMTester";
 			String workRole;
-			if (isLocationUsingControlsConfiguration){
-				//Go to compliance page and set week OT violation
-				workRole = "Retail Associate";
-				controlsNewUIPage.clickOnControlsConsoleMenu();
-				controlsNewUIPage.clickOnControlsComplianceSection();
-				compliancePage.turnOnOrTurnOffWeeklyOTToggle(true);
-				compliancePage.editWeeklyOTSetting("40 hours");
-			}else {
+//			if (isLocationUsingControlsConfiguration){
+//				//Go to compliance page and set week OT violation
+//				workRole = "Retail Associate";
+//				controlsNewUIPage.clickOnControlsConsoleMenu();
+//				controlsNewUIPage.clickOnControlsComplianceSection();
+//				compliancePage.turnOnOrTurnOffWeeklyOTToggle(true);
+//				compliancePage.editWeeklyOTSetting("40 hours");
+//			}else {
 				workRole = "TEAM MEMBER CORPORATE-THEATRE";
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
 				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -8415,7 +8415,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				compliancePage.editWeeklyOTSetting("40");
 				configurationPage.publishNowTheTemplate();
 				switchToConsoleWindow();
-			}
+//			}
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(60000);
 
@@ -8656,31 +8656,31 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String role = "Team Member";
 			String actionOn = "on";
 			String actionOff = "off";
-			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-			if (isLocationUsingControlsConfiguration){
-				//Go to Users and Roles page
-				controlsNewUIPage.clickOnControlsConsoleMenu();
-				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-				controlsNewUIPage.clickOnGlobalLocationButton();
-				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
-
-				//Check the View Team Schedule permission for SM and TM
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOff);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOff);
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-
-			}else {
+//			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//			if (isLocationUsingControlsConfiguration){
+//				//Go to Users and Roles page
+//				controlsNewUIPage.clickOnControlsConsoleMenu();
+//				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+//				controlsNewUIPage.clickOnGlobalLocationButton();
+//				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+//
+//				//Check the View Team Schedule permission for SM and TM
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+//
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOff);
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOff);
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+//
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+//
+//			}else {
 				//Go to Users and Roles page and switch to the Access Roles sub tab
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
 				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -8706,7 +8706,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
 				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
 				switchToConsoleWindow();
-			}
+//			}
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
 		} finally {
@@ -8718,20 +8718,20 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String permission = "View Team Schedule";
 			String role = "Team Member";
 			String actionOn = "on";
-			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-			if (isLocationUsingControlsConfiguration){
-				//Go to Users and Roles page
-				controlsNewUIPage.clickOnControlsConsoleMenu();
-				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-				controlsNewUIPage.clickOnGlobalLocationButton();
-				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
-
-				//Add the View Team Schedule permission for SM and TM
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-			}else {
+//			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//			if (isLocationUsingControlsConfiguration){
+//				//Go to Users and Roles page
+//				controlsNewUIPage.clickOnControlsConsoleMenu();
+//				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+//				controlsNewUIPage.clickOnGlobalLocationButton();
+//				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+//
+//				//Add the View Team Schedule permission for SM and TM
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+//			}else {
 				//Go to Users and Roles page and switch to the Access Roles sub tab
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
 				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -8746,7 +8746,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section,permission,actionOn);
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
 				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-			}
+//			}
 		}
 	}
 
