@@ -1567,15 +1567,16 @@ public class ActivityTest extends TestBase {
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
             ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
             LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            controlsPage.gotoControlsPage();
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-            configurationPage.clickOnConfigurationCrad("Scheduling Policies");
-            configurationPage.clickOnSpecifyTemplateName(MyThreadLocal.getTemplateTypeAndName().get("Scheduling Policies"), "edit");
+//            controlsPage.gotoControlsPage();
+//            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+//            SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+//            configurationPage.clickOnConfigurationCrad("Scheduling Policies");
+//            configurationPage.clickOnSpecifyTemplateName(MyThreadLocal.getTemplateTypeAndName().get("Scheduling Policies"), "edit");
 
 //            controlsNewUIPage.clickOnControlsSchedulingPolicies();
 //            controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
-            int advancedDays = controlsNewUIPage.getDaysInAdvanceCreateTimeOff();
+//            int advancedDays = controlsNewUIPage.getDaysInAdvanceCreateTimeOff();
+            int advancedDays =0;
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 

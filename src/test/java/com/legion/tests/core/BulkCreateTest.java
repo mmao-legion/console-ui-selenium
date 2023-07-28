@@ -219,6 +219,7 @@ public class BulkCreateTest extends TestBase {
 
             //Check shift per day warning message
             newShiftPage.setShiftPerDayOnNewCreateShiftPage(0);
+            newShiftPage.clickOnCreateOrNextBtn();
             expectMessage = "Must be > 0";
             actualMessage = newShiftPage.getShiftPerDayWarningMessage();
             SimpleUtils.assertOnFail("The shift per day warning message display incorrectly. The expect is: "+ expectMessage
@@ -226,6 +227,7 @@ public class BulkCreateTest extends TestBase {
                     expectMessage.equalsIgnoreCase(actualMessage), false);
 
             newShiftPage.setShiftPerDayOnNewCreateShiftPage(101);
+            newShiftPage.clickOnCreateOrNextBtn();
             expectMessage = "Max 100";
             actualMessage = newShiftPage.getShiftPerDayWarningMessage();
             SimpleUtils.assertOnFail("The shift per day warning message display incorrectly. The expect is: "+ expectMessage

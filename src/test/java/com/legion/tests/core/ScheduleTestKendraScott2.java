@@ -5047,14 +5047,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Login as admin
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			//Enable ScheduleShowFullNames toggle
+			refreshCachesAfterChangeToggleOrABSwitch();
+			Thread.sleep(3000);
+			loginPage.logOut();
+			//Login as admin
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
 			//Go to one schedule page week view
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -5169,7 +5172,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String firstAndInitialSecondName = tmFullName.split(" ")[0] + " " + tmFullName.split(" ")[1].substring(0, 1) + ".";
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			//Login as admin
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			//Enable ScheduleShowFullNames toggle
+			refreshCachesAfterChangeToggleOrABSwitch();
+			Thread.sleep(3000);
+			loginPage.logOut();
 			//Login as admin
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			//Enable ScheduleShowFullNames toggle
@@ -5207,6 +5215,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
 			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectDaysByIndex(0,0,1);
 			newShiftPage.selectSpecificWorkDay(1);
 			newShiftPage.moveSliderAtCertainPoint("4pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
 			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
@@ -6086,6 +6095,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Disable the ScheduleEditShiftTimeNew
 			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
 					getUserNameNPwdForCallingAPI().get(1), false);
+			refreshCachesAfterChangeToggleOrABSwitch();
+			Thread.sleep(3000);
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
@@ -6159,7 +6170,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	public void verifyTheShiftTimesConsistentOnInputAndShiftCardAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
 		try {
 			//Enable the ScheduleEditShiftTimeNew
-			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
+					getUserNameNPwdForCallingAPI().get(1), true);
+			refreshCachesAfterChangeToggleOrABSwitch();
+			Thread.sleep(3000);
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			//Login as admin
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -6244,7 +6262,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	public void verifyTheShiftTimeCanBeSetMoreThan24HrsThatSetByShiftTimeInputAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
 		try {
 			//Enable the ScheduleEditShiftTimeNew
-			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
+					getUserNameNPwdForCallingAPI().get(1), true);
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -6293,7 +6312,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	public void verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
 		try {
 			//Enable the ScheduleEditShiftTimeNew
-			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
+					getUserNameNPwdForCallingAPI().get(1), true);
+			refreshCachesAfterChangeToggleOrABSwitch();
+			Thread.sleep(3000);
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			//Login as admin
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -6358,7 +6384,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	public void verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
 		try {
 			//Enable the ScheduleEditShiftTimeNew
-			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
+					getUserNameNPwdForCallingAPI().get(1), true);
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();

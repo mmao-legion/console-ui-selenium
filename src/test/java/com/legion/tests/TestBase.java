@@ -828,6 +828,7 @@ public abstract class TestBase {
         adminPage.clickOnCacheTab();
         adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.TemplateAssociation.getValue());
         adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.Template.getValue());
+        adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.TemplateUserAssociation.getValue());
         adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.LocationBrokerContainer.getValue());
     }
 
@@ -858,5 +859,13 @@ public abstract class TestBase {
             count++;
         }
         return count;
+    }
+
+    public static void refreshCachesAfterChangeToggleOrABSwitch() throws Exception {
+        AdminPage adminPage = new ConsoleAdminPage();
+        adminPage.clickOnConsoleAdminMenu();
+        adminPage.clickOnInspectorTab();
+        adminPage.clickOnCacheTab();
+        adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.ABSwitch.getValue());
     }
 }
