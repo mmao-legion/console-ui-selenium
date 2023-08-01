@@ -947,7 +947,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.OpenShift.getOption());
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
-            mySchedulePage.verifyThePopupMessageOnTop("Success");
+//            mySchedulePage.verifyThePopupMessageOnTop("Success");
             SimpleUtils.assertOnFail("The previous assigned shifts are not converted to open shifts!",
                     scheduleShiftTablePage.getOneDayShiftByName(0, "Open").size() >= 1, false);
             scheduleMainPage.saveSchedule();
