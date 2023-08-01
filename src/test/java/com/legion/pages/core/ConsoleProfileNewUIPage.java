@@ -2388,10 +2388,12 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			waitForSeconds(3);
 			if(isElementLoaded(userProfileImage, 5)){
 				clickTheElement(userProfileImage);
+				waitForSeconds(1);
 				clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));
 				WebElement nameElement = null;
-				if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 5)) {
-					nameElement = getDriver().findElement(By.cssSelector(".userProfileText"));
+				waitForSeconds(3);
+				if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 25)) {
+					nameElement = getDriver().findElements(By.cssSelector(".userProfileText")).get(0);
 				} else if (areListElementVisible(getDriver().findElements(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")),5)) {
 					nameElement = getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)"));
 				}
