@@ -903,7 +903,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		ConfigurationPage configurationPage = new OpsPortalConfigurationPage();
 		cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Scheduling Policies"));
 		configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-		return false;
+		return true;
 	}
 
 	@Override

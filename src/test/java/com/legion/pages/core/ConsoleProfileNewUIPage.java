@@ -2391,7 +2391,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				waitForSeconds(1);
 				clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));
 				WebElement nameElement = null;
-				waitForSeconds(3);
+				waitForSeconds(5);
 				if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 25)) {
 					nameElement = getDriver().findElements(By.cssSelector(".userProfileText")).get(0);
 				} else if (areListElementVisible(getDriver().findElements(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")),5)) {

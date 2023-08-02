@@ -939,18 +939,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			String nickName = profileNewUIPage.getNickNameFromProfile();
 
-			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-
-			//T1838610 Validate the click ability of forward and backward button.
-			scheduleCommonPage.validateForwardAndBackwardButtonClickable();
-
-			//T1838611 Validate the data according to the selected week.
-			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
-			mySchedulePage.validateTheDataAccordingToTheSelectedWeek();
-
-			//T1838612 Validate the seven days - Sunday to Saturday is available in schedule table.
-			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-			mySchedulePage.validateTheSevenDaysIsAvailableInScheduleTable();
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 
@@ -958,15 +946,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-			// Go to Scheduling Policies to get the additional Scheduled Hour
-			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-			controlsPage.gotoControlsPage();
-			SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-			controlsNewUIPage.clickOnControlsSchedulingPolicies();
-			SimpleUtils.assertOnFail("Scheduling Policies Page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-			HashMap<String, Integer> schedulePoliciesBufferHours = controlsNewUIPage.getScheduleBufferHours();
 
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab("Schedule");
@@ -992,21 +971,26 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			createSchedulePage.publishActiveSchedule();
 			if (!toggleSummaryPage.isSummaryViewLoaded())
 				toggleSummaryPage.toggleSummaryView();
-			String theEarliestAndLatestTimeInSummaryView = toggleSummaryPage.getTheEarliestAndLatestTimeInSummaryView(schedulePoliciesBufferHours);
-			SimpleUtils.report("theEarliestAndLatestOperationHoursInSummaryView is " + theEarliestAndLatestTimeInSummaryView);
 			loginPage.logOut();
 
 			///Log in as team member again to compare the operation hours
 			loginToLegionAndVerifyIsLoginDone(username, password, location);
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.navigateToNextWeek();
-			String theEarliestAndLatestTimeInScheduleTable = mySchedulePage.getTheEarliestAndLatestTimeInScheduleTable();
-			SimpleUtils.report("theEarliestAndLatestOperationHoursInScheduleTable is " + theEarliestAndLatestTimeInScheduleTable);
-			// mySchedulePage.compareOperationHoursBetweenAdminAndTM(theEarliestAndLatestTimeInSummaryView, theEarliestAndLatestTimeInScheduleTable);
-			// todo: BLocked by https://legiontech.atlassian.net/browse/SCH-4413
 
 			//T1838613 Validate that hours and date is visible of shifts.
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 			mySchedulePage.validateThatHoursAndDateIsVisibleOfShifts();
+
+			//T1838610 Validate the click ability of forward and backward button.
+			scheduleCommonPage.validateForwardAndBackwardButtonClickable();
+
+			//T1838611 Validate the data according to the selected week.
+			mySchedulePage.validateTheDataAccordingToTheSelectedWeek();
+
+			//T1838612 Validate the seven days - Sunday to Saturday is available in schedule table.
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			mySchedulePage.validateTheSevenDaysIsAvailableInScheduleTable();
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(),false);
 		}
