@@ -6133,6 +6133,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			shiftOperatePage.clickOnCancelEditShiftTimeButton();
 			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
 					getUserNameNPwdForCallingAPI().get(1), true);
+			refreshCachesAfterChangeToggleOrABSwitch();
+			Thread.sleep(3000);
 			loginPage.logOut();
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			//Go to one schedule page day view
@@ -9394,6 +9396,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if(isActiveWeekGenerated){
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();

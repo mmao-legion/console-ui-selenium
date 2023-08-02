@@ -1457,7 +1457,7 @@ public class SingleShiftEditTest extends TestBase {
             boolean hasRoleViolation = false;
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
-                if (warningMessage.contains("This assignment will trigger a role violation.")){
+                if (warningMessage.contains("Role Violation")){
                     SimpleUtils.pass("Minor warning message for exceed the weekend or holiday hours displays");
                     hasRoleViolation = true;
                 } else {
