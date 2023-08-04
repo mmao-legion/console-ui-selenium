@@ -188,8 +188,8 @@ public class ActivityTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(swapCoverNames.get(0));
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(swapCoverNames.get(1));
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
-            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             // Add the new shifts for swap team members
             Thread.sleep(5000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
