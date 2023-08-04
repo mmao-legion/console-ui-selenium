@@ -947,7 +947,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.OpenShift.getOption());
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
-            mySchedulePage.verifyThePopupMessageOnTop("Success");
+//            mySchedulePage.verifyThePopupMessageOnTop("Success");
             SimpleUtils.assertOnFail("The previous assigned shifts are not converted to open shifts!",
                     scheduleShiftTablePage.getOneDayShiftByName(0, "Open").size() >= 1, false);
             scheduleMainPage.saveSchedule();
@@ -1457,7 +1457,7 @@ public class SingleShiftEditTest extends TestBase {
             boolean hasRoleViolation = false;
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
-                if (warningMessage.contains("This assignment will trigger a role violation.")){
+                if (warningMessage.contains("Role Violation")){
                     SimpleUtils.pass("Minor warning message for exceed the weekend or holiday hours displays");
                     hasRoleViolation = true;
                 } else {

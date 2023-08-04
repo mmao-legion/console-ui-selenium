@@ -572,6 +572,7 @@ public class ConsolidatingFiltersTest extends TestBase {
             SimpleUtils.assertOnFail("The filter name's order is incorrectly, the expected is:"+filterNamesAfterSort
                             +" The actual is:"+filterNamesBeforeSort,
                     filterNamesAfterSort.equals(filterNamesBeforeSort), false);
+            //Work role display order is related with the CC-> User Management-> Work Roles -> work role's display order
             filterText = "WORK ROLE";
             filterNamesBeforeSort = scheduleMainPage.getSpecificFilterNames(filterText);
             filterNamesAfterSort = scheduleMainPage.getSpecificFilterNames(filterText);
