@@ -155,6 +155,7 @@ public class WorkRoleTest extends TestBase {
             switchToConsoleWindow();
 
             goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
             // Create schedule if it is not created
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (!isWeekGenerated) {
