@@ -270,7 +270,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                     if (isElementLoaded(publishSheduleButton, 5)) {
                         // Wait for the Publish button to disappear.
                         waitForSeconds(10);
-                        if (isElementLoaded(publishSheduleButton, 5)) {
+                        if (isElementLoaded(publishSheduleButton, 35)) {
                             SimpleUtils.fail("Fail to publish this schedule! ", false);
                         }
                     }

@@ -1940,6 +1940,7 @@ public class ParentChildLGTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 //            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
+            scheduleMainPage.selectLocationFilterByText(childLocationNames.get(0));
             shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.verifyDeleteShift();
 
@@ -1989,6 +1990,7 @@ public class ParentChildLGTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 //            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
+            scheduleMainPage.selectLocationFilterByText(childLocationNames.get(0));
             shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.verifyDeleteShift();
 
