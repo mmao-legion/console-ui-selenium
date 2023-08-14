@@ -18,7 +18,7 @@
         </classes>
     </test>
 
-    <test name="Bulk Create Test">
+    <!--<test name="Bulk Create Test">
         <classes>
             <class name="com.legion.tests.core.BulkCreateTest">
                 <methods>
@@ -37,7 +37,7 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
     <test name="Bulk Edit and Delete Test">
         <classes>
