@@ -3,7 +3,7 @@
 <suite verbose ="0" name="LegionTest" configfailurepolicy="continue">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="No"/>
-    <parameter name="testRailRunName" value="Ephemeral - Auto "/>
+    <parameter name="testRailRunName" value="Staging - Auto "/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
