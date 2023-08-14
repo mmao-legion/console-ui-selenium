@@ -50,8 +50,10 @@ public class CredentialDataProviderSource {
          if (System.getProperty("enterprise")!=null && !System.getProperty("enterprise").isEmpty()) {
              //for release.
              if (System.getProperty("env")!=null && System.getProperty("env").toLowerCase().contains("rel")){
-                 fileName = "Release"+System.getProperty("enterprise")+fileName;
-             } else {
+                 fileName = "Release" + System.getProperty("enterprise") + fileName;
+             } else if (System.getProperty("env")!=null && System.getProperty("env").toLowerCase().contains("staging")) {
+                 fileName = "Staging" + System.getProperty("enterprise").toLowerCase() + fileName;
+             }else {
                  fileName = System.getProperty("enterprise")+fileName;
              }
          }else {

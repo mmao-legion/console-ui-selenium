@@ -80,7 +80,7 @@ public abstract class TestBase {
     public static Map<String, String> propertyMap = SimpleUtils.getParameterMap();
     public static Map<String, String> districtsMap = JsonUtil.getPropertiesFromJsonFile("src/test/resources/UpperfieldsForDifferentEnterprises.json");
     private static ExtentReports extent = ExtentReportManager.getInstance();
-    static HashMap<String,String> testRailCfg = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg.json");
+    static HashMap<String,String> testRailCfgSch = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_SCH.json");
     static HashMap<String,String> testRailCfgOp = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_OP.json");
     static HashMap<String,String> testRailCfgElm = JsonUtil.getPropertiesFromJsonFile("src/test/resources/TestRailCfg_ELM.json");
     public static AndroidDriver<MobileElement> driver;
@@ -139,17 +139,6 @@ public abstract class TestBase {
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
                             @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
-        if (System.getProperty("enterprise") != null && (System.getProperty("enterprise").equalsIgnoreCase("opauto")
-        || System.getProperty("enterprise").equalsIgnoreCase("op"))) {
-            testSuiteID = testRailCfgOp.get("TEST_RAIL_SUITE_ID");
-            testRailProjectID = testRailCfgOp.get("TEST_RAIL_PROJECT_ID");
-            finalTestRailRunName = testRailRunName;
-        }else{
-            testSuiteID = testRailCfg.get("TEST_RAIL_SUITE_ID");
-            testRailProjectID = testRailCfg.get("TEST_RAIL_PROJECT_ID");
-            finalTestRailRunName = testRailRunName;
-        }
-
 
         if (AllTestCaseIDList==null){
             AllTestCaseIDList = new ArrayList<Integer>();
@@ -171,16 +160,13 @@ public abstract class TestBase {
 
         if(System.getProperty("testRail") != null && System.getProperty("testRail").equalsIgnoreCase("Yes")){
             testRailReportingFlag = "Y";
-            if (System.getProperty("enterprise") != null && (System.getProperty("enterprise").equalsIgnoreCase("opauto")
-                    || System.getProperty("enterprise").equalsIgnoreCase("op"))) {
+            if (System.getProperty("module") != null && (System.getProperty("module").equalsIgnoreCase("op"))) {
                 testSuiteID = testRailCfgOp.get("TEST_RAIL_SUITE_ID");
                 testRailProjectID = testRailCfgOp.get("TEST_RAIL_PROJECT_ID");
-            } else if (System.getProperty("enterprise") != null && (System.getProperty("enterprise").equalsIgnoreCase("vailqacn")
-                    || System.getProperty("enterprise").equalsIgnoreCase("kendrascott2") || System.getProperty("enterprise")
-                    .equalsIgnoreCase("cinemark-wkdy") || System.getProperty("enterprise").equalsIgnoreCase("circlek"))) {
-                testSuiteID = testRailCfg.get("TEST_RAIL_SUITE_ID");
-                testRailProjectID = testRailCfg.get("TEST_RAIL_PROJECT_ID");
-            } else {
+            } else if (System.getProperty("module") != null && (System.getProperty("module").equalsIgnoreCase("sch"))) {
+                testSuiteID = testRailCfgSch.get("TEST_RAIL_SUITE_ID");
+                testRailProjectID = testRailCfgSch.get("TEST_RAIL_PROJECT_ID");
+            } else if (System.getProperty("module") != null && (System.getProperty("module").equalsIgnoreCase("elm"))){
                 testSuiteID = testRailCfgElm.get("TEST_RAIL_SUITE_ID");
                 testRailProjectID = testRailCfgElm.get("TEST_RAIL_PROJECT_ID");
             }
