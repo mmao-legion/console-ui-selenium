@@ -68,7 +68,6 @@ public class TeamTestKendraScott2 extends TestBase{
 	private static HashMap<String, Object[][]> controlTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("VailqacnTeamMembers.json");
 	private static HashMap<String, Object[][]> opTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
 	private static String controlEnterprice = "Vailqacn_Enterprise";
-	private static String opEnterprice = "CinemarkWkdy_Enterprise";
 
 
 	@Override
@@ -747,29 +746,16 @@ public class TeamTestKendraScott2 extends TestBase{
 			String permission = "Invite Employee";
 			String actionOff = "off";
 			String actionOn = "on";
-			if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
-				controlsPage.gotoControlsPage();
-				controlsNewUIPage.isControlsPageLoaded();
-				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-				controlsNewUIPage.verifyUsersAreLoaded();
-				controlsPage.clickGlobalSettings();
-				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForDM, section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForSM, section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForTL, section, permission, actionOn);
-
-			} else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
-				OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
-				opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-				ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-				configurationPage.goToUserManagementPage();
-				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForDM, section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForSM, section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForTL, section, permission, actionOn);
-				switchToConsoleWindow();
-			}
+			OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
+			opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			configurationPage.goToUserManagementPage();
+			controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+			controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+			controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForDM, section, permission, actionOn);
+			controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForSM, section, permission, actionOn);
+			controlsNewUIPage.turnOnOrOffSpecificPermissionForDifferentRole(rolePermissionForTL, section, permission, actionOn);
+			switchToConsoleWindow();
 
 
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
@@ -2126,34 +2112,11 @@ public class TeamTestKendraScott2 extends TestBase{
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
 			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
-			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
 			String accessRoleTab = "Access Roles";
 			String permissionSection = "Schedule";
 			String permission = "Edit Past Schedule";
 			String actionOn = "on";
 			//Go to the configuration page and set the labor budget and By Location
-			if (isLocationUsingControlsConfiguration){
-				controlsNewUIPage.clickOnControlsConsoleMenu();
-				controlsNewUIPage.clickOnControlsSchedulingPolicies();
-				controlsNewUIPage.clickOnGlobalLocationButton();
-				controlsNewUIPage.updateApplyLaborBudgetToSchedules("Yes");
-				controlsNewUIPage.selectBudgetGroupNonOP("By Location");
-
-				//Go to Users and Roles page
-				controlsNewUIPage.clickOnControlsConsoleMenu();
-				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-				controlsNewUIPage.clickOnGlobalLocationButton();
-				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
-
-				//Add the Edit Past Schedule permission for SM & DM
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
-				String role = "Store Manager";
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
-				role = "Area Manager";
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-
-			}else {
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
 				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
 				SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -2178,7 +2141,6 @@ public class TeamTestKendraScott2 extends TestBase{
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
 				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
 				switchToConsoleWindow();
-			}
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(240000);
 

@@ -1940,6 +1940,7 @@ public class ParentChildLGTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 //            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
+            scheduleMainPage.selectLocationFilterByText(childLocationNames.get(0));
             shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.verifyDeleteShift();
 
@@ -1989,6 +1990,7 @@ public class ParentChildLGTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 //            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
+            scheduleMainPage.selectLocationFilterByText(childLocationNames.get(0));
             shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.verifyDeleteShift();
 
@@ -3489,11 +3491,11 @@ public class ParentChildLGTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createLGScheduleWithGivingTimeRange("08:00am", "09:00pm");
-            if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
-                scheduleMainPage.saveSchedule();
-            }
+//            if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
+//                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+//                scheduleMainPage.saveSchedule();
+//            }
             scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
             scheduleShiftTablePage.expandSpecificCountGroup(2);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

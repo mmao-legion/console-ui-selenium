@@ -18,6 +18,8 @@
                     <include name="verifyTheContentOfActivityPageAsStoreManager" />
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
+                    <include name="verifyTheContentOfShiftSwapActivityAsInternalAdmin" />
+                    <include name="verifyTheFunctionOfShiftSwapActivityAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

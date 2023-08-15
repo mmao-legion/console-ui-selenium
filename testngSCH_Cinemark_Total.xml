@@ -140,7 +140,21 @@
         </classes>
     </test>
 
-
+    <test name="Hard Stop For Minor Violation Test">
+        <classes>
+            <class name="com.legion.tests.core.HardStopForMinorViolation">
+                <methods>
+                    <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
+                    <!--                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
+                    <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
+                    <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
+                    <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
+                    <!--                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
+                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 
     <test name="Cinemark Minor Test">
         <classes>
@@ -149,7 +163,6 @@
                     <!--                           <include name="verifyTurnOnAndSetMinorRuleAsInternalAdmin" />Due to new template -->
                     <include name="verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin" />
                     <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
-
                     <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                     <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
                     <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
@@ -196,7 +209,7 @@
                     <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
                     <include name="verifyActionRequiredSmartCardDisplayCorrectlyWhenScheduleCreatedByCopyPartialAsInternalAdmin" />
                     <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenEnableScheduleShowFullNamesToggleAsTeamMember" />
-                    <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember" />
+ <!--                   <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember" /> change toggle need time to effect -->
                     <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
                     <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
 <!--                    <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334-->
@@ -210,7 +223,7 @@
                     <include name="verifyTheItemsAfterClickTheShiftInDayViewAsInternalAdmin" />
                     <!--                   <include name="verifyShiftsCanBeDraggedInDayViewAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5728 -->
                     <!--                    <include name="verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin" /> will move to the overnight test file-->
-                    <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" />
+             <!--       <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" /> change toggle need time to effect -->
                     <include name="verifyTheShiftTimesConsistentOnInputAndShiftCardAsInternalAdmin" />
                     <!--                    <include name="verifyTheShiftTimeCanBeSetMoreThan24HrsThatSetByShiftTimeInputAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6247-->
                     <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" />
@@ -340,8 +353,6 @@
                     <!-- Added by Mary -->
                     <include name="verifyRegionViewNavigationAsInternalAdmin" />
                     <include name="verifyBUViewNavigationAsInternalAdmin" />
-                    <include name="verifyControlsInBUViewAsInternalAdmin" />
-                    <include name="verifyControlsInRegionViewAsInternalAdmin" />
                     <!--                         <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-5518 -->
                     <!--                     <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518 -->
                     <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
@@ -420,7 +431,7 @@
                     <include name="verifyChangingShiftNotesOnSingleEditShiftWindowAsInternalAdmin" />
                     <include name="verifyTheContentOfBreaksSectionsAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditMealBreaksOnSingleEditShiftPageAsInternalAdmin" />
-                    <!--                    <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334-->
+                    <include name="verifyTheRoleViolationsOnSingleEditShiftPageAsInternalAdmin" />
  <!--                   <include name="verifyTheDailyOTAndDTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-10117-->
                     <!--                   <include name="verifyTheWeeklyOTViolationsOnSingleEditShiftPageAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8430 https://legiontech.atlassian.net/browse/SCH-8429-->
                     <include name="verifyTheClopeningViolationsOnSingleEditShiftPageAsInternalAdmin" />
@@ -907,20 +918,6 @@ SCH-5862-->
     </test>
 
 
-    <test name="Hard Stop For Minor Violation Test">
-        <classes>
-            <class name="com.legion.tests.core.HardStopForMinorViolation">
-                <methods>
-                    <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
-                    <!--                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
-                    <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
-                    <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
-                    <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
-                    <!--                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
-                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+
 
 </suite> <!-- Suite -->

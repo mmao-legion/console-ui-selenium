@@ -518,7 +518,9 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
     public float getTopOneViolationHrsOrNumOfACol(List<Float> list) throws Exception {
         float result = 0;
         if (list.size()>0){
-            result = list.stream().sorted(Float::compareTo).collect(Collectors.toList()).get(list.size()-1);
+            for (float i : list) {
+                result = result + i;
+            }
         }
         return result;
     }

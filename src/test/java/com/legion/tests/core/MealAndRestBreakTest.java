@@ -325,30 +325,23 @@ public class MealAndRestBreakTest extends TestBase {
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
 
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(Constants.ControlEnterprice))){
-                controlsPage.gotoControlsPage();
-                SimpleUtils.assertOnFail("Controls Page failed to load", controlsNewUIPage.isControlsPageLoaded(), false);
-                controlsNewUIPage.clickOnControlsComplianceSection();
-                SimpleUtils.assertOnFail("Compliance Card failed to load", controlsNewUIPage.isCompliancePageLoaded(), false);
-            } else if (getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprise1)) || getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprise2))) {
-                //Go to OP page
-                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-                SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-                locationsPage.clickOnLocationsTab();
-                locationsPage.goToSubLocationsInLocationsPage();
-                locationsPage.searchLocation(location);               ;
-                SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
-                locationsPage.clickOnLocationInLocationResult(location);
-                locationsPage.clickOnConfigurationTabOfLocation();
-                HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
-                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-                configurationPage.goToConfigurationPage();
-                configurationPage.clickOnConfigurationCrad("Compliance");
-                configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
-                configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-                Thread.sleep(3000);
-            }
+            //Go to OP page
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("Control Center not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Compliance");
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            Thread.sleep(3000);
 
             //Turn off meal break setting
             controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(false);
@@ -364,10 +357,7 @@ public class MealAndRestBreakTest extends TestBase {
             controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
                     ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "6",true );
 
-            if (getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprise1)) || getDriver().getCurrentUrl().contains(propertyMap.get(Constants.OpEnterprise2))){
-                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-                configurationPage.publishNowTheTemplate();
-            }
+            configurationPage.publishNowTheTemplate();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -845,16 +835,16 @@ public class MealAndRestBreakTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-            if (isLocationUsingControlsConfiguration){
-                //Config the Meal Break
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
-                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
-                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
-
-            }
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            if (isLocationUsingControlsConfiguration){
+//                //Config the Meal Break
+//                controlsNewUIPage.clickOnControlsConsoleMenu();
+//                controlsNewUIPage.clickOnControlsComplianceSection();
+//                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
+//                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
+//                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
+//
+//            }
 
             //Create a new schedule
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -1124,16 +1114,16 @@ public class MealAndRestBreakTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-            if (isLocationUsingControlsConfiguration){
-                //Config the Meal Break
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
-                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
-                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
-
-            }
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            if (isLocationUsingControlsConfiguration){
+//                //Config the Meal Break
+//                controlsNewUIPage.clickOnControlsConsoleMenu();
+//                controlsNewUIPage.clickOnControlsComplianceSection();
+//                controlsNewUIPage.turnOnOrTurnOffMealBreakToggle(true);
+//                controlsNewUIPage.editMealBreak(ConsoleControlsNewUIPage.MealBreakDuration.Minute30.getValue(),
+//                        ConsoleControlsNewUIPage.MealBreakPaidType.Unpaid.getValue(), "5",true );
+//
+//            }
 
             //Create a new schedule
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();

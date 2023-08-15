@@ -195,16 +195,21 @@ public class DragAndDropTest extends TestBase {
             controlsNewUIPage.clickOnGlobalLocationButton();
             controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
             controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.publishNowTheTemplate();
+            Thread.sleep(3000);
 
             // Set "Can a manager add another locations' employee in schedule before the employee's home location has published the schedule?" to "Yes, anytime"
-            controlsPage.gotoControlsPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+            configurationPage.goToConfigurationPage();
             controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
             SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
             controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
             controlsNewUIPage.clickOnGlobalLocationButton();
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+
             configurationPage.setWFS("Yes");
+            configurationPage.publishNowTheTemplate();
+            Thread.sleep(3000);
+            switchToConsoleWindow();
 
             dashboardPage.navigateToDashboard();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
@@ -691,9 +696,13 @@ public class DragAndDropTest extends TestBase {
             controlsNewUIPage.clickOnControlsConsoleMenu();
             SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
             controlsNewUIPage.clickOnControlsSchedulingPolicies();
-            SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isCompliancePageLoaded(), false);
+            SimpleUtils.assertOnFail("Compliance page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
             //turn on clopening toggle and set hours
             controlsNewUIPage.selectClopeningHours(12);
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.publishNowTheTemplate();
+            Thread.sleep(3000);
+            switchToConsoleWindow();
 
             // Go to Schedule page, Schedule tab
 
@@ -1028,6 +1037,11 @@ public class DragAndDropTest extends TestBase {
             //controlsNewUIPage.clickOnGlobalLocationButton();
             controlsNewUIPage.clickOnSchedulingPoliciesShiftAdvanceBtn();
             controlsNewUIPage.enableOverRideAssignmentRuleAsYes();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            configurationPage.publishNowTheTemplate();
+            Thread.sleep(3000);
+            switchToConsoleWindow();
+            refreshCachesAfterChangeTemplate();
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();

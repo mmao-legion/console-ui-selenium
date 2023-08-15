@@ -587,10 +587,11 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 SimpleUtils.fail("Work Roles size are empty", false);
             }
         } else if (isElementLoaded(workRoleOnNewShiftPage, 25)) {
-            if (dropDownListOnNewCreateShiftPage.size() == 0) {
+            if (!areListElementVisible(dropDownListOnNewCreateShiftPage, 5) && dropDownListOnNewCreateShiftPage.size() == 0) {
                 click(workRoleOnNewShiftPage);
             }
             SimpleUtils.pass("Work Role button clicked Successfully");
+            waitForSeconds(1);
             if (dropDownListOnNewCreateShiftPage.size() > 0) {
                 for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
                     if (listWorkRole.getText().toLowerCase().trim().contains(workRoles.toLowerCase().trim())) {
@@ -825,7 +826,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     getActiveWeekText() + "'", false);
     }
 
-    @FindBy(css = "[class*=\"MuiGrid-root MuiGrid-item MuiGrid-grid-xs-10\"] [class*=\"MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2\"]")
+    @FindBy(css = "[id*=\"legion_cons_Schedule_Schedule_CreateShift\"] label")
     private List<WebElement> weekDaysInNewCreateShiftPage;
     public void clearAllSelectedDays() throws Exception {
         if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
@@ -942,6 +943,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private List<WebElement> listLocationGroup;
     @Override
     public void addNewShiftsByNames(List<String> names, String workRole) throws Exception {
+        scrollToTop();
+        waitForSeconds(2);
         for(int i = 0; i < 2; i++) {
             clickOnDayViewAddNewShiftButton();
             customizeNewShiftPage();
@@ -992,7 +995,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = "[placeholder=\"Search by Team Member, Role, Location or any combination.\"]")
     private WebElement textSearchOnNewCreateShiftPage;
 
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-container')]/div/div/div/p/parent::*/parent::*/parent::*/parent::*/parent::*/div[contains(@class,'MuiGrid-container')]")
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-container')]/div/div/div/button/parent::*/parent::*/parent::*/parent::*/parent::*/div[contains(@class,'MuiGrid-container')]")
     private List<WebElement> searchResultsOnNewCreateShiftPage;
 
     @FindBy(css = ".MuiDialogContent-root button")

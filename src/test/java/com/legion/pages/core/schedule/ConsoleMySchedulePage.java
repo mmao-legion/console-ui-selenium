@@ -97,7 +97,8 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     }
 
     public void validateTheScheduleShiftsAccordingToTheSelectedWeek() throws Exception {
-        if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20) && weekScheduleShiftsDateOfMySchedule.size() == 7 && isElementLoaded(currentActiveWeek, 5)) {
+        waitForSeconds(5);
+        if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20) && weekScheduleShiftsDateOfMySchedule.size() == 7 && isElementLoaded(currentActiveWeek, 25)) {
             String activeWeek = currentActiveWeek.getText();
             String weekScheduleShiftStartDate = weekScheduleShiftsDateOfMySchedule.get(0).getText();
             String weekScheduleShiftEndDate = weekScheduleShiftsDateOfMySchedule.get(6).getText();
@@ -422,6 +423,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     @Override
     public boolean isPopupWindowLoaded(String title) throws Exception {
         boolean isLoaded = false;
+        waitForSeconds(3);
         if (isElementLoaded(popUpWindow, 20) && isElementLoaded(popUpWindowTitle, 20)) {
             if (title.equalsIgnoreCase(popUpWindowTitle.getText())) {
                 SimpleUtils.pass(title + " window loaded Successfully!");
@@ -1087,7 +1089,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     @Override
     public String getSelectedWeek() throws Exception {
         String selectedWeek = "";
-        if (isElementLoaded(currentActiveWeek, 5)) {
+        if (isElementLoaded(currentActiveWeek, 15)) {
             selectedWeek = currentActiveWeek.getText();
             SimpleUtils.report("Get current active week: " + selectedWeek);
         }else {
@@ -1561,7 +1563,8 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
 
     @Override
     public void validateTheSevenDaysIsAvailableInScheduleTable() throws Exception {
-        if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20) && weekScheduleShiftsDateOfMySchedule.size() == 7 && isElementLoaded(currentActiveWeek, 5)) {
+        waitForSeconds(5);
+        if (areListElementVisible(weekScheduleShiftsDateOfMySchedule, 20) && weekScheduleShiftsDateOfMySchedule.size() == 7 && isElementLoaded(currentActiveWeek, 15)) {
             String activeWeek = currentActiveWeek.getText();
             String weekScheduleShiftStartDay = weekScheduleShiftsDateOfMySchedule.get(0).getText();
             String weekScheduleShiftEndDay = weekScheduleShiftsDateOfMySchedule.get(6).getText();

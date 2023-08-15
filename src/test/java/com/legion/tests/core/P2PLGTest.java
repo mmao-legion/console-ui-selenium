@@ -3668,7 +3668,7 @@ public class P2PLGTest extends TestBase {
             dashboardPage.navigateToDashboard();
             locationSelectorPage.changeLocation(location);
             List<String> dataOnComplianceViolationWidgetInSMDashboard = liquidDashboardPage.getDataOnComplianceViolationWidget();
-            String totalHrsInSMForPast = dataOnComplianceViolationWidgetInSMDashboard.get(0);
+            String totalHrsInSMForPast = dataOnComplianceViolationWidgetInSMDashboard.get(3);
             SimpleUtils.report("Total Extra Hours In DM View for past week is "+totalExtraHoursInDMView);
             SimpleUtils.report("Total Extra Hours In SM View for past week is "+totalHrsInSMForPast);
             if(totalHrsInSMForPast.equals(String.valueOf(Math.round(Float.parseFloat(totalExtraHoursInDMView)))))

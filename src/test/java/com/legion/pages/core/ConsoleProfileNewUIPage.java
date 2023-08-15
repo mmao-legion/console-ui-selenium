@@ -2388,10 +2388,12 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			waitForSeconds(3);
 			if(isElementLoaded(userProfileImage, 5)){
 				clickTheElement(userProfileImage);
+				waitForSeconds(1);
 				clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));
 				WebElement nameElement = null;
-				if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 5)) {
-					nameElement = getDriver().findElement(By.cssSelector(".userProfileText"));
+				waitForSeconds(5);
+				if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 25)) {
+					nameElement = getDriver().findElements(By.cssSelector(".userProfileText")).get(0);
 				} else if (areListElementVisible(getDriver().findElements(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")),5)) {
 					nameElement = getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)"));
 				}
@@ -2942,7 +2944,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 	public void verifySMCanSelectACalendarForMinor() throws Exception {
 		if (isElementLoaded(schoolCalendar,10)) {
 			SimpleUtils.pass("Profile Page: There should be \"School Calendar\" section loaded");
-			if (isElementLoaded(editBtnOfProfile,5)) {
+			if (isElementLoaded(editBtnOfProfile,15)) {
 				click(editBtnOfProfile);
 				if (isElementLoaded(schoolCalendarOptions,5) && schoolCalendarList.size() > 1) {
 					click(schoolCalendarOptions);
@@ -2974,7 +2976,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void selectAGivenCalendarForMinor(String givenCalendar) throws Exception {
-		if (isElementLoaded(editBtnOfProfile,5)) {
+		if (isElementLoaded(editBtnOfProfile,15)) {
 			clickTheElement(editBtnOfProfile);
 			selectByVisibleText(schoolCalendarSelect, givenCalendar);
 			if (areListElementVisible(saveBtnsOfProfile,5)) {
