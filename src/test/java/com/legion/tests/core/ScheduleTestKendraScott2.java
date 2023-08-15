@@ -8253,7 +8253,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
-			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "09:00pm");
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("07:00am", "09:00pm");
 
 			//Edit the operating day and cancel all actions.
 			scheduleMainPage.goToToggleSummaryView();
@@ -8313,9 +8313,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			scheduleMainPage.goToEditOperatingHoursView();
 			List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
-			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "08:00AM","09:00PM");
+			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "07:00AM","09:00PM");
 			scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
-			scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "8AM-9PM");
+			scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "7AM-9PM");
 		}
 	}
 
