@@ -4480,7 +4480,7 @@ public class ParentChildLGTest extends TestBase {
             String workRole = shiftInfo.get(4);
             String lastName = shiftInfo.get(5);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();

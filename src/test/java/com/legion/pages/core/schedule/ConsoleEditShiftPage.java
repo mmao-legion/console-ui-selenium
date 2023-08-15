@@ -706,7 +706,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
             String workRole = shiftInfo.get(4);
             String jobTitle = shiftInfo.get(3);
             String shiftTime = shiftInfo.get(6);
-            String shiftHours = shiftInfo.get(8);
+//            String shiftHours = shiftInfo.get(8);
 
             //Check the Avatar is display
             WebElement avatar = shiftInfoCard.findElement(By.cssSelector(".MuiAvatar-circular [alt=\""+firstName+" "+ lastName +"\"]"));

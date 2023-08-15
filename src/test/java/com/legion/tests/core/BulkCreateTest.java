@@ -195,10 +195,10 @@ public class BulkCreateTest extends TestBase {
             newShiftPage.moveSliderAtCertainPoint("11pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
             newShiftPage.selectSpecificWorkDay(7);
-            String expectMessage1 = "Hours on Friday: 6:00am - 12:00am. Hours on Saturday: 6:00am - 12:00am. Hours on Monday: 6:00am - 12:00am. Hours on Tuesday: 6:00am - 12:00am. Hours on Wednesday: 6:00am - 12:00am. Hours on Thursday: 6:00am - 12:00am";
-            String expectMessage2 = "Hours on Friday: 6:00 am - 12:00 am. Hours on Saturday: 6:00 am - 12:00 am. " +
-                    "Hours on Monday: 6:00 am - 12:00 am. Hours on Tuesday: 6:00 am - 12:00 am. Hours on Wednesday: 6:00 am - 12:00 am. " +
-                    "Hours on Thursday: 6:00 am - 12:00 am";
+            String expectMessage1 = "Hours on Friday: 5:00am - 12:00am. Hours on Saturday: 5:00am - 12:00am. Hours on Monday: 5:00am - 12:00am. Hours on Tuesday: 5:00am - 12:00am. Hours on Wednesday: 500am - 12:00am. Hours on Thursday: 5:00am - 12:00am";
+            String expectMessage2 = "Hours on Friday: 5:00 am - 12:00 am. Hours on Saturday: 5:00 am - 12:00 am. " +
+                    "Hours on Monday: 5:00 am - 12:00 am. Hours on Tuesday: 5:00 am - 12:00 am. Hours on Wednesday: 5:00 am - 12:00 am. " +
+                    "Hours on Thursday: 5:00 am - 12:00 am";
             String actualMessage = newShiftPage.getShiftStartWarningMessage();
             SimpleUtils.assertOnFail("The shift start warning message display incorrectly. The expect is: "+ expectMessage1
                             + " the actual is "+ actualMessage,

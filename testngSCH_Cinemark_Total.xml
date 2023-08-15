@@ -421,7 +421,7 @@
             <class name="com.legion.tests.core.SingleShiftEditTest">
                 <methods>
                     <include name="verifyTheContentOnSingleEditShiftsWindowForRegularLocationAsInternalAdmin" />
-                    <include name="verifyTheCurrentColumnOnSingleEditShiftsWindowAsInternalAdmin" />
+<!--                    <include name="verifyTheCurrentColumnOnSingleEditShiftsWindowAsInternalAdmin" /> No curent column now-->
                     <!--                  <include name="verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin" /> -->
                     <!--                    <include name="verifyChangingShiftNameOnSingleEditShiftsWindowAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8240-->
                     <!--        <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />https://legiontech.atlassian.net/browse/SCH-7202-->
