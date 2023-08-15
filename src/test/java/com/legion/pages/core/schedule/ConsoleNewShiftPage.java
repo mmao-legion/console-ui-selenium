@@ -124,7 +124,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
 
 //    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/form/div/div[1]/div[7]//div[contains(@class,'react-select__placeholder')]")
-    @FindBy(xpath = "//textarea//parent::div//parent::div//parent::div//parent::div/preceding-sibling::div[1]//div[contains(@class,'react-select__value-container')]/div[1]")
+    @FindBy(xpath = "//div[text()='Select Assignment']")
     private WebElement assignmentDropDownOnNewCreateShiftPage;
     @FindBy(className = "react-select__option")
     private List<WebElement> assignmentOptionsInDropDownList;
