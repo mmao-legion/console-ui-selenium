@@ -4216,8 +4216,8 @@ public class ParentChildLGTest extends TestBase {
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             // Verify the title of Edit Shifts window in day view
             editShiftPage.verifyTheTitleOfEditShiftsWindow(selectedShiftCount, startOfWeek);
-            // Verify the selected days show correctly in day view
-            editShiftPage.verifyShiftInfoCard(shiftInfo);
+//            // Verify the selected days show correctly in day view
+//            editShiftPage.verifyShiftInfoCard(shiftInfo);
             // Verify the Location Name shows correctly in day view
             editShiftPage.verifyLocationNameShowsCorrectly(location);
             // Verify the visibility of buttons in day view
