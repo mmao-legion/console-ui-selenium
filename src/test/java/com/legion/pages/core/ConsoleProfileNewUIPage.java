@@ -3857,8 +3857,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	public void updatePreferredOrBusyHoursToAllDay(int dayIndex, String hoursType) throws Exception {
 
-		String preferredHoursTabText = "Preferred";
-		String busyHoursTabText = "Busy";
+		String preferredHoursTabText = "When I prefer to work";
+		String busyHoursTabText = "When I prefer not to work";
 		WebElement availabilityToolTip = null;
 		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase())) {
 			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);

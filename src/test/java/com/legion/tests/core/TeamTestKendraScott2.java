@@ -1316,7 +1316,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.clickNextWeek();
 			profileNewUIPage.clickAvailabilityEditButton();
 			for (int i=0; i<7;i++) {
-				profileNewUIPage.updatePreferredOrBusyHoursToAllDay(i, "Preferred");
+				profileNewUIPage.updatePreferredOrBusyHoursToAllDay(i, "When I prefer to work");
 			}
 //			HashMap<String, Object> availabilityData = profileNewUIPage.getMyAvailabilityData();
 //			String totalHoursValue = availabilityData.get("totalHoursValue").toString();
