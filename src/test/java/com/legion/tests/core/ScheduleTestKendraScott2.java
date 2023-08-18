@@ -5051,10 +5051,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.navigateToNextWeek();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!isActiveWeekGenerated) {
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
-
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
 			//Delete all unassigned shifts and tm's shifts
 			shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
