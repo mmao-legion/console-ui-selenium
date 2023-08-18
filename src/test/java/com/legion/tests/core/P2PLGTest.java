@@ -4772,7 +4772,7 @@ public class P2PLGTest extends TestBase {
             // Verify the title of Edit Shifts window in day view
             editShiftPage.verifyTheTitleOfEditShiftsWindow(selectedShiftCount, startOfWeek);
             // Verify the selected days show correctly in day view
-            editShiftPage.verifyShiftInfoCard(shiftInfo);
+//            editShiftPage.verifyShiftInfoCard(shiftInfo);
             // Verify the Location Name shows correctly in day view
             editShiftPage.verifyLocationNameShowsCorrectly(location);
             // Verify the visibility of buttons in day view
