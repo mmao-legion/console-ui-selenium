@@ -2487,7 +2487,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //            int sliderIndex = 1;
 //            double hours = -0.5;//move 1 metric 0.5h left
 //            String leftOrRightDuration = "Right"; //move the right bar
-//            String hoursType = "Preferred";
+//            String hoursType = "When I prefer to work";
 //            String repeatChanges = "This week only";
 //            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
 //                    hours, repeatChanges);
@@ -2579,7 +2579,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //            int sliderIndex = 1;
 //            double hours = -0.5;//move 1 metric 0.5h left
 //            String leftOrRightDuration = "Right";
-//            String hoursType = "Preferred";
+//            String hoursType = "When I prefer to work";
 //            String repeatChanges = "repeat forward";
 //            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
 //                    hours, repeatChanges);
@@ -2796,7 +2796,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             profileNewUIPage.validateTheUpdateOfShiftPreferences(true, false);
 
             //T1838599 Validate the update of Availability.
-            profileNewUIPage.validateTheUpdateOfAvailability("Preferred", 1, "Right",
+            profileNewUIPage.validateTheUpdateOfAvailability("When I prefer to work", 1, "Right",
                     120, "This week only");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

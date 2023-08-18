@@ -243,12 +243,12 @@ public class ProfileNewUITest  extends TestBase{
 		      int sliderIndex = 1;
 			  int durationMinutes = 120;
 			  String leftOrRightDuration = "Right";
-			  String hoursType = "Preferred";
+			  String hoursType = "When I prefer to work";
 			  String repeatChanges = "This week only";
 		      profileNewUIPage.updateLockedAvailabilityPreferredOrBusyHoursSlider(hoursType, sliderIndex, leftOrRightDuration,
 		    		  durationMinutes, repeatChanges);
 		      
-		      hoursType = "Busy";
+		      hoursType = "When I prefer not to work";
 		      sliderIndex = 0;
 		      profileNewUIPage.updateLockedAvailabilityPreferredOrBusyHoursSlider(hoursType, sliderIndex, leftOrRightDuration,
 		    		  durationMinutes, repeatChanges);

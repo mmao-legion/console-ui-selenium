@@ -1186,7 +1186,7 @@ public class TeamTestKendraScott2 extends TestBase{
 		int sliderIndex = 1;
 		double hours = 0.5;//move 1 metric 0.5h right----increase
 		String leftOrRightDuration = "Right";
-		String hoursType = "Preferred";
+		String hoursType = "When I prefer to work";
 		String repeatChanges = "This week only";
 		profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
 				hours, repeatChanges);
@@ -1405,7 +1405,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			double hours = -0.5;
 			String repeatChanges = "This week only";
 			String leftOrRightDuration = "Right";
-			String hoursType = "Preferred";
+			String hoursType = "When I prefer to work";
 			profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
 					hours, repeatChanges);
 			availabilityData = profileNewUIPage.getMyAvailabilityData();
@@ -1518,7 +1518,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
 			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 			profileNewUIPage.clickAvailabilityEditButton();
-			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer to work");
 			Thread.sleep(5000);
 			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 //			locationSelectorPage.refreshTheBrowser();
@@ -1548,7 +1548,7 @@ public class TeamTestKendraScott2 extends TestBase{
 
 			//Add the availabilities again
 			profileNewUIPage.clickAvailabilityEditButton();
-			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer to work");
 			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 //			locationSelectorPage.refreshTheBrowser();
 //			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
@@ -1655,7 +1655,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			if (!totalHoursValue.equals("168.0") || !remainingHoursValue.equals("168.0")) {
 				profileNewUIPage.clickAvailabilityEditButton();
 				for (int i=0; i<7;i++) {
-					profileNewUIPage.updatePreferredOrBusyHoursToAllDay(i, "Preferred");
+					profileNewUIPage.updatePreferredOrBusyHoursToAllDay(i, "When I prefer to work");
 				}
 				profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 				availabilityData = profileNewUIPage.getMyAvailabilityData();
@@ -1803,7 +1803,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			Thread.sleep(2000);
 			profileNewUIPage.clickAvailabilityEditButton();
 			profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
-			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+			profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer to work");
 			profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 			locationSelectorPage.refreshTheBrowser();
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
@@ -2055,7 +2055,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			String firstWeek = profileNewUIPage.getAvailabilityWeek();
 			String repeatChanges = "This week only";
 			String leftOrRightDuration = "Right";
-			String hoursType = "Preferred";
+			String hoursType = "When I prefer to work";
 			HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
 //			if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
 				int sliderIndex = 1;

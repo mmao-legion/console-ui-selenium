@@ -1630,7 +1630,7 @@ public class ScheduleCopyImprovementTest extends TestBase {
             profileNewUIPage.clickNextWeek();
             profileNewUIPage.clickNextWeek();
             profileNewUIPage.clickAvailabilityEditButton();
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Busy");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer not to work");
             profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 
 

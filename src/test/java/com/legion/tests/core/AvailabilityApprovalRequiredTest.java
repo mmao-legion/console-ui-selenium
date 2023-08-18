@@ -108,8 +108,8 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
                 profileNewUIPage.clickNextWeek();
             }
             profileNewUIPage.clickAvailabilityEditButton();
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "Busy");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer to work");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "When I prefer not to work");
             profileNewUIPage.saveMyAvailabilityEditMode("This week only");
             List<WebElement> changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
             List<WebElement> changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();
@@ -121,8 +121,8 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
 
             profileNewUIPage.clickNextWeek();
             profileNewUIPage.clickAvailabilityEditButton();
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "Busy");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer to work");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "When I prefer not to work");
             profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 
             //Check the dotted line
@@ -286,8 +286,8 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             Thread.sleep(2000);
         }
         profileNewUIPage.clickAvailabilityEditButton();
-        profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
-        profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "Busy");
+        profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer to work");
+        profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "When I prefer not to work");
         profileNewUIPage.saveMyAvailabilityEditMode("Repeat Forward");
         List<WebElement> changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
         List<WebElement> changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();
@@ -430,7 +430,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             String weekInfo = profileNewUIPage.getAvailabilityWeek();
             String repeatChanges = "This week only";
             String leftOrRightDuration = "Right";
-            String hoursType = "Preferred";
+            String hoursType = "When I prefer to work";
             HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
             if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
                 int sliderIndex = 0;
@@ -516,7 +516,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             String weekInfo = profileNewUIPage.getAvailabilityWeek();
             String repeatChanges = "This week only";
             String leftOrRightDuration = "Right";
-            String hoursType = "Preferred";
+            String hoursType = "When I prefer to work";
             HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
             if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
                 int sliderIndex = 0;
@@ -607,7 +607,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             String weekInfo = profileNewUIPage.getAvailabilityWeek();
             String repeatChanges = "This week only";
             String leftOrRightDuration = "Right";
-            String hoursType = "Preferred";
+            String hoursType = "When I prefer to work";
             HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
             if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
                 int sliderIndex = 1;
@@ -701,7 +701,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             String weekInfo = profileNewUIPage.getAvailabilityWeek();
             String repeatChanges = "This week only";
             String leftOrRightDuration = "Right";
-            String hoursType = "Preferred";
+            String hoursType = "When I prefer to work";
             HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
             if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
                 int sliderIndex = 1;
@@ -780,7 +780,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         int sliderIndex = 1;
         double hours = 0.5;//move 1 metric 0.5h right----increase
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         String repeatChanges = "This week only";
         profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -793,7 +793,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         profileNewUIPage.cancelAllPendingAvailabilityRequest();
         hours = -0.5;//move 1 metric 0.5h left----decrease
         leftOrRightDuration = "Left";
-        hoursType = "Preferred";
+        hoursType = "When I prefer to work";
         repeatChanges = "repeat forward";
         profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -848,7 +848,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         int sliderIndex = 1;
         double hours = 0.5;//move 1 metric 0.5h right----increase
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         String repeatChanges = "This week only";
         profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -910,7 +910,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         String weekInfo = profileNewUIPage.getAvailabilityWeek();
         String repeatChanges = "This week only";
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
 
         if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
@@ -1005,7 +1005,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         }
         String repeatChanges = "This week only";
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
         if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
             int sliderIndex = 1;
@@ -1076,7 +1076,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         int sliderIndex = 1;
         double hours = 0.5;//move 1 metric 0.5h left----decrease
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         String repeatChanges = "This week only";
         String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -1144,7 +1144,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         int sliderIndex = 1;
         double hours = 0.5;//move 1 metric 0.5h left----decrease
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         String repeatChanges = "This week only";
         String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -1217,7 +1217,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         int sliderIndex = 1;
         double hours = 0.5;//move 1 metric 0.5h right----increase
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         String repeatChanges = "repeat forward";
         profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -1278,7 +1278,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         int sliderIndex = 1;
         double hours = 0.5;//move 1 metric 0.5h right----increase
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         String repeatChanges = "This week only";
         profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -1345,8 +1345,8 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
                 profileNewUIPage.clickNextWeek();
             }
             profileNewUIPage.clickAvailabilityEditButton();
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "Busy");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer to work");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "When I prefer not to work");
             profileNewUIPage.saveMyAvailabilityEditMode("Repeat Forward");
             List<WebElement> changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
             List<WebElement> changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();

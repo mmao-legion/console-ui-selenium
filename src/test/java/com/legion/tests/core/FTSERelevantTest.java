@@ -2238,7 +2238,7 @@ public class FTSERelevantTest extends TestBase {
             consoleTeamPage.searchAndSelectTeamMemberByName(tmPartialName);
             consoleTeamPage.navigateToWorkPreferencesTab();
             consoleTeamPage.editOrUnLockAvailability();
-            String hoursType = "Preferred";
+            String hoursType = "When I prefer to work";
             String availabilityChangesRepeat = "repeat forward";
             profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
             profileNewUIPage.updateSpecificPreferredOrBusyHoursToAllWeek(hoursType);
