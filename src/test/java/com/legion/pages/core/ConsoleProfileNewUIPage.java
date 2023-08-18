@@ -1658,8 +1658,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	//Haya: the old method updatePreferredOrBusyHoursDuration has problem with xOffSet. So add copied one and update it.
 	private void updatePreferredOrBusyHoursDurationNew(int rowIndex, double durationhours, String leftOrRightDuration, String hoursType) throws Exception {
-		String preferredHoursTabText = "Preferred";
-		String busyHoursTabText = "Busy";
+		String preferredHoursTabText = "When I prefer to work";
+		String busyHoursTabText = "When I prefer not to work";
 		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase()))
 			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
 		else
@@ -1776,8 +1776,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 
 	private void updatePreferredOrBusyHoursDuration(int rowIndex, int durationMinutes, String leftOrRightDuration, String hoursType) throws Exception {
-		String preferredHoursTabText = "Preferred";
-		String busyHoursTabText = "Busy";
+		String preferredHoursTabText = "When I prefer to work";
+		String busyHoursTabText = "When I prefer not to work";
 		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase()))
 			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
 		else
