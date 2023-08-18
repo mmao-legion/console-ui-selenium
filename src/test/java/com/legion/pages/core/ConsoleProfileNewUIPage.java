@@ -4076,8 +4076,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 
 	public void deleteAllAvailabilitiesForCurrentWeek() throws Exception {
-		String preferredHoursTabText = "Preferred";
-		String busyHoursTabText = "Busy";
+		String preferredHoursTabText = "When I prefer to work";
+		String busyHoursTabText = "When I prefer not to work";
 		selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
 		//Delete all preferred availabilities in the day
 		if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
@@ -4339,8 +4339,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void updateSpecificPreferredOrBusyHoursToAllWeek(String hoursType) throws Exception {
-		String preferredHoursTabText = "Preferred";
-		String busyHoursTabText = "Busy";
+		String preferredHoursTabText = "When I prefer to work";
+		String busyHoursTabText = "When I prefer not to work";
 		WebElement availabilityToolTip = null;
 		if (hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase())) {
 			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
