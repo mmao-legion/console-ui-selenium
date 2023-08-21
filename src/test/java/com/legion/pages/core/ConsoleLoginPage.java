@@ -397,4 +397,14 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		}else
 			SimpleUtils.report("There is no Legion Terms Of Service!");
 	}
+
+	@FindBy(css = "button[data-_pendo-button-primarybutton-1]")
+	private WebElement noButtonOnIntroductionMode;
+	@Override
+	public void closeIntroductionMode() throws Exception {
+		if (isElementLoaded(noButtonOnIntroductionMode,5)) {
+			clickTheElement(noButtonOnIntroductionMode);
+		}else
+			SimpleUtils.report("There is no Introduction mode display!");
+	}
 }
