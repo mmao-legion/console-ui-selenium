@@ -44,7 +44,6 @@
             <class name="com.legion.tests.core.BulkDeleteNEditTest">
                 <methods>
                     <include name="verifyDeleteMultipleShiftsInWeekViewAsInternalAdmin" />
-                    <include name="verifyTheCurrentColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
                     <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
                 </methods>

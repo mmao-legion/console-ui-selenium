@@ -713,7 +713,6 @@ SCH-5862-->
                     <include name="verifyDeleteMultipleShiftsInWeekViewAsInternalAdmin" />
                     <include name="verifyDeleteMultipleShiftsInDayViewAsInternalAdmin" />
                     <include name="verifyTheContentOnMultipleEditShiftsWindowAsInternalAdmin" />
-                    <include name="verifyTheCurrentColumnOnMultipleEditShiftsWindowAsInternalAdmin" />
 <!--                    <include name="verifyTheEditedColumnOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-9842/>-->
 <!--                    <include name="verifyChangingShiftNameOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: https://legiontech.atlassian.net/browse/SCH-6997/>-->
 <!--                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->

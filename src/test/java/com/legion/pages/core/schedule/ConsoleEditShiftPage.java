@@ -249,7 +249,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     public void verifyTheTextInCurrentColumn(String type, String value) throws Exception {
         WebElement gridRow = null;
         if (areListElementVisible(gridContainers, 3)) {
-            if (gridContainers.size() == 8) {
+            if (gridContainers.size() == 7) {
                 if (type.equals(sectionType.WorkRole.getType())) {
                     gridRow = gridContainers.get(1);
                 } else if (type.equals(sectionType.ShiftName.getType())) {
@@ -265,7 +265,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
                 } else if (type.equals(sectionType.ShiftNotes.getType())) {
                     gridRow = gridContainers.get(7);
                 }
-            } else if (gridContainers.size() == 9) {
+            } else if (gridContainers.size() == 8) {
                 if (type.equals(sectionType.WorkRole.getType())) {
                     gridRow = gridContainers.get(1);
                 } else if (type.equals(sectionType.Location.getType())) {

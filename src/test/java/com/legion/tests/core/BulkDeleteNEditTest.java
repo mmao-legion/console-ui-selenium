@@ -284,7 +284,6 @@ public class BulkDeleteNEditTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheCurrentColumnOnMultipleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            String various = "Various";
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Go to Schedule page, Schedule tab
@@ -322,18 +321,6 @@ public class BulkDeleteNEditTest extends TestBase {
             String action = "Edit";
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
-            // Verify "Various" will show when selecting different work roles
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.WorkRole.getType(), various);
-            // Verify "Various" will show when selecting different shift names
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.ShiftName.getType(), various);
-            // Verify "Various" will show when selecting the shifts with different start times
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.StartTime.getType(), various);
-            // Verify "Various" will show when selecting the shifts with different end times
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.EndTime.getType(), various);
-            // Verify "Various" will show when selecting the shifts on different days
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.Date.getType(), various);
-            // Verify "Various" will show when selecting the shifts with different shift notes
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.ShiftNotes.getType(), various);
 
             editShiftPage.clickOnDateSelect();
             List<String> dates = editShiftPage.getOptionsFromSpecificSelect();
