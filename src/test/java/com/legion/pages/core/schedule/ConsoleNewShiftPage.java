@@ -2216,7 +2216,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(css = "div.week-day-multi-picker-day-selected")
     private List<WebElement> selectedDaysOnCreateShiftPage;
-    @FindBy(css = "span.Mui-checked")
+    @FindBy(css = "[id*=\"legion_cons_Schedule_Schedule_CreateShift\"] span.Mui-checked")
     private List<WebElement> selectedDaysOnNewCreateShiftPage;
 
     @Override
@@ -2229,7 +2229,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.pass("Get selected days info successfully");
         }else if (areListElementVisible(selectedDaysOnNewCreateShiftPage, 5) && selectedDaysOnNewCreateShiftPage.size()>0) {
             for (int i=0;i< selectedDaysOnNewCreateShiftPage.size();i++){
-                selectedDates.add(getDriver().findElements(By.xpath("//span[contains(@class,'Mui-checked')]/following-sibling::span")).get(i).getText().split(",")[0].trim());
+                selectedDates.add(getDriver().findElements(By.xpath("//div[contains(@class,'MuiGrid-item')]/label/span[contains(@class,'Mui-checked')]/following-sibling::span")).get(i).getText().split(",")[0].trim());
             }
             SimpleUtils.pass("Get selected days info successfully");
         }else
@@ -2497,7 +2497,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public boolean checkIfNextButtonIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
         if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5) &&
-                btnSaveOnNewCreateShiftPage.getText().equals("NEXT")) {
+                btnSaveOnNewCreateShiftPage.getText().equalsIgnoreCase("NEXT")) {
             isLoaded = true;
             SimpleUtils.report("The Next button is loaded on New Create Shift page! ");
         } else
@@ -2508,7 +2508,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public boolean checkIfCreateButtonIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
         if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5) &&
-                btnSaveOnNewCreateShiftPage.getText().equals("CREATE")) {
+                btnSaveOnNewCreateShiftPage.getText().equalsIgnoreCase("CREATE")) {
             isLoaded = true;
             SimpleUtils.report("The Create button is loaded on New Create Shift page! ");
         } else
@@ -2519,7 +2519,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public boolean checkIfCancelButtonIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
         if (isElementLoaded(backButtonOnNewCreateShiftPage, 5) &&
-                backButtonOnNewCreateShiftPage.getText().equals("CANCEL")) {
+                backButtonOnNewCreateShiftPage.getText().equalsIgnoreCase("CANCEL")) {
             isLoaded = true;
             SimpleUtils.report("The Cancel button is loaded on New Create Shift page! ");
         } else
@@ -2530,7 +2530,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public boolean checkIfBackButtonIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
         if (isElementLoaded(backButtonOnNewCreateShiftPage, 5) &&
-                backButtonOnNewCreateShiftPage.getText().equals("BACK")) {
+                backButtonOnNewCreateShiftPage.getText().equalsIgnoreCase("BACK")) {
             isLoaded = true;
             SimpleUtils.report("The Back button is loaded on New Create Shift page! ");
         } else
@@ -2634,7 +2634,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return isLoaded;
     }
 
-    @FindBy(xpath = "//div[@id='create-new-shift-react']/div/div/form/div/div/div[7]/div[2]/div/p")
+    @FindBy(xpath = "//div[@id='create-new-shift-react']/div/div/form/div/div/div[9]/div[2]/div/p")
     private WebElement assignmentWarningMessageOnNewShiftPage;
     public boolean checkIfAssignmentWarningMessageIsLoaded() throws Exception {
         boolean isLoaded = false;
