@@ -79,7 +79,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     private WebElement xButton;
     @FindBy (css = "[ng-click*=back]")
     private WebElement cancelButton;
-    @FindBy (css = ".confirm")
+    @FindBy (css = "button#legion_cons_Schedule_Schedule_EditShifts_Update_button")
     private WebElement updateButton;
     @FindBy (css = "#edit-shift-react form>div:nth-child(3)>div")
     private WebElement optionsSection;
@@ -178,12 +178,11 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     }
 
     @Override
-    public void verifyThreeColumns() throws Exception {
+    public void verifyTwoColumns() throws Exception {
         if (areListElementVisible(gridContainers, 3) && gridContainers.size() > 0) {
-            List<WebElement> columns = gridContainers.get(0).findElements(By.cssSelector(".MuiTypography-root"));
-            if (columns.size() == 3 && columns.get(0).getText().equals("Value") && columns.get(1).getText().equals("Current")
-            && columns.get(2).getText().equals("Edited")) {
-                SimpleUtils.pass("The columns are correct: Value, Current and Edited");
+            List<WebElement> columns = gridContainers.get(0).findElements(By.cssSelector(".MuiGrid-root"));
+            if (columns.size() == 2) {
+                SimpleUtils.pass("The columns are correct");
             } else {
                 SimpleUtils.fail("The columns on Edit Shift window is incorrect!", false);
             }

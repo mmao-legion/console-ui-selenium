@@ -12,7 +12,7 @@ public interface EditShiftPage {
     public void verifyTheVisibilityOfButtons() throws Exception;
     public void verifyTheContentOfOptionsSection() throws Exception;
     public boolean isClearEditedFieldsBtnLoaded() throws Exception;
-    public void verifyThreeColumns() throws Exception;
+    public void verifyTwoColumns() throws Exception;
     public void verifyEditableTypesShowOnShiftDetail() throws Exception;
     public void clickOnXButton() throws Exception;
     public void clickOnCancelButton() throws Exception;

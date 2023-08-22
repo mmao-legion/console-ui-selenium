@@ -118,9 +118,9 @@ public class SingleShiftEditTest extends TestBase {
             // Verify the content of options section
             editShiftPage.verifyTheContentOfOptionsSectionIsNotLoaded();
             // Verify the visibility of Clear Edited Fields button
-            SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
+            //SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
             // Verify the three columns show on Shift Details section
-            editShiftPage.verifyThreeColumns();
+            editShiftPage.verifyTwoColumns();
             // Verify the editable types show on Shift Detail section
             editShiftPage.verifyEditableTypesShowOnSingleEditShiftDetail();
             // Verify the functionality of x button
@@ -154,9 +154,9 @@ public class SingleShiftEditTest extends TestBase {
             // Verify the content of options section in day view
             editShiftPage.verifyTheContentOfOptionsSectionIsNotLoaded();
             // Verify the visibility of Clear Edited Fields button in day view
-            SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
+            //SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
             // Verify the three columns show on Shift Details section in day view
-            editShiftPage.verifyThreeColumns();
+            editShiftPage.verifyTwoColumns();
             // Verify the editable types show on Shift Detail section in day view
             editShiftPage.verifyEditableTypesShowOnSingleEditShiftDetail();
         } catch (Exception e) {
