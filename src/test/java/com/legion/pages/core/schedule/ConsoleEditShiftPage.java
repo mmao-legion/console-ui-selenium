@@ -610,83 +610,93 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         } else if (column.equals("Edited")) {
             selector = ".MuiGrid-item:nth-child(2)";
         }
-        if (areListElementVisible(gridContainers, 3)) {
-            if (gridContainers.size() == 7) {
-                if (type.equals(sectionType.WorkRole.getType())) {
-                    element = gridContainers.get(0).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.ShiftName.getType())) {
-                    element = gridContainers.get(5).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.StartTime.getType())) {
-                    element = gridContainers.get(1).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.EndTime.getType())) {
-                    element = gridContainers.get(2).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.Date.getType())) {
-                    element = gridContainers.get(3).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.Assignment.getType())) {
-                    element = gridContainers.get(4).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.ShiftNotes.getType())) {
-                    element = gridContainers.get(6).findElement(By.cssSelector(selector));
+        int editShiftCount = Integer.parseInt(windowTitle.getText().trim().split(" ")[1]);
+        if (editShiftCount==1){
+            if (areListElementVisible(gridContainers, 3)) {
+                if (gridContainers.size() == 8) {
+                    if (type.equals(sectionType.WorkRole.getType())) {
+                        element = gridContainers.get(0).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Breaks.getType())) {
+                        element = gridContainers.get(1).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.StartTime.getType())) {
+                        element = gridContainers.get(2).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.EndTime.getType())) {
+                        element = gridContainers.get(3).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Date.getType())) {
+                        element = gridContainers.get(4).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Assignment.getType())) {
+                        element = gridContainers.get(5).findElement(By.cssSelector(selector));
+                    } else if(type.equals(sectionType.ShiftName.getType())) {
+                        element = gridContainers.get(6).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.ShiftNotes.getType())) {
+                        element = gridContainers.get(7).findElement(By.cssSelector(selector));
+                    }
+                } else if (gridContainers.size() == 9) {
+                    if (type.equals(sectionType.WorkRole.getType())) {
+                        element = gridContainers.get(0).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Breaks.getType())) {
+                        element = gridContainers.get(1).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Location.getType())) {
+                        element = gridContainers.get(2).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.StartTime.getType())) {
+                        element = gridContainers.get(3).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.EndTime.getType())) {
+                        element = gridContainers.get(4).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Date.getType())) {
+                        element = gridContainers.get(5).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Assignment.getType())) {
+                        element = gridContainers.get(6).findElement(By.cssSelector(selector));
+                    } else if(type.equals(sectionType.ShiftName.getType())) {
+                        element = gridContainers.get(7).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.ShiftNotes.getType())) {
+                        element = gridContainers.get(8).findElement(By.cssSelector(selector));
+                    }
                 }
-            } else if (gridContainers.size() == 8) {
-                if (type.equals(sectionType.WorkRole.getType())) {
-                    element = gridContainers.get(0).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.ShiftName.getType())) {
-                    element = gridContainers.get(6).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.Location.getType())) {
-                    element = gridContainers.get(1).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.StartTime.getType())) {
-                    element = gridContainers.get(2).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.EndTime.getType())) {
-                    element = gridContainers.get(3).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.Date.getType())) {
-                    element = gridContainers.get(4).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.Assignment.getType())) {
-                    element = gridContainers.get(5).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.ShiftNotes.getType())) {
-                    element = gridContainers.get(7).findElement(By.cssSelector(selector));
-                }
-            }else if (gridContainers.size() == 10) {
-                if (type.equals(sectionType.WorkRole.getType())) {
-                    element = gridContainers.get(1).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.ShiftName.getType())) {
-                    element = gridContainers.get(2).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.StartTime.getType())) {
-                    element = gridContainers.get(3).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.EndTime.getType())) {
-                    element = gridContainers.get(4).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.Breaks.getType())) {
-                    element = gridContainers.get(5).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.Date.getType())) {
-                    element = gridContainers.get(7).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.Assignment.getType())) {
-                    element = gridContainers.get(8).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.ShiftNotes.getType())) {
-                    element = gridContainers.get(9).findElement(By.cssSelector(selector));
-                }
-            }else if (gridContainers.size() == 11) {
-                if (type.equals(sectionType.WorkRole.getType())) {
-                    element = gridContainers.get(0).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.ShiftName.getType())) {
-                    element = gridContainers.get(2).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.Location.getType())) {
-                    element = gridContainers.get(3).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.StartTime.getType())) {
-                    element = gridContainers.get(4).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.EndTime.getType())) {
-                    element = gridContainers.get(5).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.Breaks.getType())) {
-                    element = gridContainers.get(1).findElement(By.cssSelector(selector));
-                }else if (type.equals(sectionType.Date.getType())) {
-                    element = gridContainers.get(8).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.Assignment.getType())) {
-                    element = gridContainers.get(9).findElement(By.cssSelector(selector));
-                } else if (type.equals(sectionType.ShiftNotes.getType())) {
-                    element = gridContainers.get(10).findElement(By.cssSelector(selector));
-                }
+            } else {
+                SimpleUtils.fail("Shift Details section failed to load!", false);
             }
-        } else {
-            SimpleUtils.fail("Shift Details section failed to load!", false);
+        } else{
+            if (areListElementVisible(gridContainers, 3)) {
+                if (gridContainers.size() == 7) {
+                    if (type.equals(sectionType.WorkRole.getType())) {
+                        element = gridContainers.get(0).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.ShiftName.getType())) {
+                        element = gridContainers.get(5).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.StartTime.getType())) {
+                        element = gridContainers.get(1).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.EndTime.getType())) {
+                        element = gridContainers.get(2).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Date.getType())) {
+                        element = gridContainers.get(3).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Assignment.getType())) {
+                        element = gridContainers.get(4).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.ShiftNotes.getType())) {
+                        element = gridContainers.get(6).findElement(By.cssSelector(selector));
+                    }
+                } else if (gridContainers.size() == 8) {
+                    if (type.equals(sectionType.WorkRole.getType())) {
+                        element = gridContainers.get(0).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.ShiftName.getType())) {
+                        element = gridContainers.get(6).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Location.getType())) {
+                        element = gridContainers.get(1).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.StartTime.getType())) {
+                        element = gridContainers.get(2).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.EndTime.getType())) {
+                        element = gridContainers.get(3).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Date.getType())) {
+                        element = gridContainers.get(4).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Assignment.getType())) {
+                        element = gridContainers.get(5).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.ShiftNotes.getType())) {
+                        element = gridContainers.get(7).findElement(By.cssSelector(selector));
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Shift Details section failed to load!", false);
+            }
         }
+
         return element;
     }
 
