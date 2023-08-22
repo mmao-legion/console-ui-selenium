@@ -3818,7 +3818,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         boolean infoIconLoaded = false;
         try {
             if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
-                WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
+                WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-right-top-icons"));
                 if (isElementLoaded(infoIcon, 5)) {
                     infoIconLoaded = true;
                     SimpleUtils.report("The info icon displays!");
