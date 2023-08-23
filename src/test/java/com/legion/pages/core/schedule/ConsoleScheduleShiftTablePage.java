@@ -225,7 +225,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         if (areListElementVisible(dayViewAvailableShifts, 15)) {
             for (WebElement dayViewAvailableShift : dayViewAvailableShifts) {
-                WebElement hoverInfo = dayViewAvailableShift.findElement(By.className("day-view-shift-hover-info-icon"));
+                WebElement hoverInfo = dayViewAvailableShift.findElement(By.className("day-view-shift-right-top-icons"));
                 if (hoverInfo != null) {
                     clickTheElement(hoverInfo);
                     if (isElementLoaded(timeDuration, 5)) {
@@ -615,7 +615,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         return false;
     }
 
-    @FindBy(css = "div.day-view-shift-hover-info-icon")
+    @FindBy(css = "div.day-view-shift-right-top-icons")
     private List<WebElement> scheduleInfoIconInDayView;
 
     @FindBy(xpath = "//div/shift-hover/div/div[5]/div[1]")
@@ -1058,7 +1058,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             Actions actions = new Actions(getDriver());
             actions.moveByOffset(0, 0).click().build().perform();
             if(scheduleCommonPage.isScheduleDayViewActive()){
-                clickTheElement(shift.findElement(By.className("day-view-shift-hover-info-icon")));
+                clickTheElement(shift.findElement(By.className("day-view-shift-right-top-icons")));
                 waitForSeconds(2);
             } else
                 clickTheElement(shift.findElement(By.className("week-schedule-shift-open-popover")));
@@ -1107,7 +1107,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             waitForSeconds(3);
             scrollToElement(shift);
             if(scheduleCommonPage.isScheduleDayViewActive()){
-                click(shift.findElement(By.cssSelector(".day-view-shift-hover-info-icon img")));
+                click(shift.findElement(By.cssSelector(".day-view-shift-right-top-icons img")));
                 waitForSeconds(2);
             } else
                 click(shift.findElement(By.cssSelector("img.week-schedule-shift-open-popover")));
@@ -1185,7 +1185,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             for (WebElement shiftWeekView : shiftsWeekView) {
                 scrollToElement(shiftWeekView);
                 if(scheduleCommonPage.isScheduleDayViewActive()){
-                    iIcon = shiftWeekView.findElement(By.cssSelector("div.day-view-shift-hover-info-icon img"));
+                    iIcon = shiftWeekView.findElement(By.cssSelector("div.day-view-shift-right-top-icons img"));
                     waitForSeconds(2);
                 } else
                     iIcon = shiftWeekView.findElement(By.cssSelector("img.week-schedule-shift-open-popover"));
@@ -1224,7 +1224,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 clickTheElement(shift);
             }
             if(scheduleCommonPage.isScheduleDayViewActive()){
-                click(shift.findElement(By.cssSelector(".day-view-shift-hover-info-icon img")));
+                click(shift.findElement(By.cssSelector(".day-view-shift-right-top-icons img")));
                 waitForSeconds(2);
             } else
                 click(shift.findElement(By.cssSelector("img.week-schedule-shift-open-popover")));
@@ -1615,7 +1615,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(css = "div.sch-day-view-grid-header span")
     private List<WebElement> scheduleShiftTimeOnHeader;
 
-    @FindBy(css = ".day-view-shift-hover-info-icon")
+    @FindBy(css = ".day-view-shift-right-top-icons")
     private List<WebElement> hoverIcons;
 
     @FindBy(css = ".card-carousel-card-default")

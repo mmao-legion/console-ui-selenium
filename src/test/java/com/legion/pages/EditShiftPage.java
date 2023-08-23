@@ -40,7 +40,7 @@ public interface EditShiftPage {
     public void verifyEditableTypesShowOnSingleEditShiftDetail() throws Exception;
     public void verifyTheTextInCurrentColumnOnSingleEditShiftPage(String type, String value) throws Exception;
     public void removeAllMealBreaks();
-    public void removeAllRestBreaks();
+    public void removeAllRestBreaks() throws Exception;
     public List<String> getErrorMessageOfTime() throws Exception;
     public void inputMealBreakTimes(String startMealTime, String endMealTime, int index) throws Exception;
     public void inputRestBreakTimes(String startRestTime, String endRestTime, int index) throws Exception;
@@ -53,4 +53,5 @@ public interface EditShiftPage {
     public int getMealBreakCount () throws Exception;
     public int getRestBreakCount () throws Exception;
     public void clickOnUpdateAnywayButton() throws Exception;
+    public void checkOrUncheckAutomaticallyScheduleOptimizedBreak(boolean isCheck) throws Exception;
 }

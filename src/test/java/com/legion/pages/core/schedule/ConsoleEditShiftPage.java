@@ -921,7 +921,8 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
 
     @Override
-    public void removeAllRestBreaks() {
+    public void removeAllRestBreaks() throws Exception {
+        checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
         if (areListElementVisible(removeRestBreakButtons, 3)){
             for (WebElement button: removeRestBreakButtons) {
                 scrollToElement(button);
@@ -986,6 +987,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public void inputMealBreakTimes(String startMealTime, String endMealTime, int index) throws Exception {
+        checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
         if (areListElementVisible(mealBreaksStartInputs, 3)
                 && areListElementVisible(mealBreaksEndInputs, 3)){
             mealBreaksStartInputs.get(index).clear();
@@ -1001,6 +1003,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public void inputRestBreakTimes(String startRestTime, String endRestTime, int index) throws Exception {
+        checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
         if (areListElementVisible(restBreaksEndInputs, 3)
                 && areListElementVisible(restBreaksEndInputs, 3)){
             restBreaksEndInputs.get(index).clear();
@@ -1061,6 +1064,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public void clickOnAddMealBreakButton() throws Exception {
+        checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
         if (isElementLoaded(addMealBreakButton, 5)) {
             scrollToElement(addMealBreakButton);
             click(addMealBreakButton);
@@ -1110,6 +1114,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public int getMealBreakCount () throws Exception {
+        checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
         int count = 0;
         if (mealBreaksStartInputs.size() == mealBreaksEndInputs.size()) {
             count = mealBreaksStartInputs.size();
@@ -1121,6 +1126,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public int getRestBreakCount () throws Exception {
+        checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
         int count = 0;
         if (restBreaksStartInputs.size() == restBreaksEndInputs.size()) {
             count = restBreaksStartInputs.size();
@@ -1140,5 +1146,37 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         if (isElementLoaded(updateAnywayButton, 3)) {
             clickTheElement(updateAnywayButton);
         }
+    }
+
+
+    @FindBy (css = "span.MuiCheckbox-colorPrimary")
+    private WebElement automaticallyScheduleOptimizedBreak;
+    @Override
+    public void checkOrUncheckAutomaticallyScheduleOptimizedBreak(boolean isCheck) throws Exception {
+        if (isElementLoaded(automaticallyScheduleOptimizedBreak, 5)) {
+            if (isCheck) {
+                if (automaticallyScheduleOptimizedBreak.getAttribute("class").contains("checked")){
+                    SimpleUtils.pass("The checkbox already checked");
+                } else {
+                    click(automaticallyScheduleOptimizedBreak);
+                    if (automaticallyScheduleOptimizedBreak.getAttribute("class").contains("checked")){
+                        SimpleUtils.pass("The checkbox been checked successfully! ");
+                    } else
+                        SimpleUtils.fail("Fail to check the check box!", false);
+                }
+            } else {
+                if (automaticallyScheduleOptimizedBreak.getAttribute("class").contains("checked")){
+                    click(automaticallyScheduleOptimizedBreak);
+                    if (automaticallyScheduleOptimizedBreak.getAttribute("class").contains("checked")){
+                        SimpleUtils.fail("Fail to uncheck the check box!", false);
+                    } else
+                        SimpleUtils.pass("The checkbox been unchecked successfully! ");
+
+                } else {
+                    SimpleUtils.pass("The checkbox already unchecked");
+                }
+            }
+        }else
+            SimpleUtils.fail("The Automatically schedule optimized break(s) fail to load! ", false);
     }
 }
