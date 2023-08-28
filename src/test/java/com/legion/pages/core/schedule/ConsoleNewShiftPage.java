@@ -3098,7 +3098,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement greyAvailableIcon;
     @FindBy(css = "[color=\"#37cf3f\"]")
     private WebElement greenAvailableIcon;
-    @FindBy(css = "[class=\"sc-karCPZ pJskc\"]")
+    @FindBy(css = "[data-testid=\"ThumbDownIcon\"]")
     private WebElement redAvailableIcon;
     @Override
     public String getTMAvailableColourForAssignedShift () throws Exception {
