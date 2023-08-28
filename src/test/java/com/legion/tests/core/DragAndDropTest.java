@@ -1355,7 +1355,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(3);
-        shiftOperatePage.deleteAllShiftsInDayView();
+        scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
         scheduleCommonPage.clickOnWeekView();
         scheduleMainPage.saveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1467,7 +1467,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(3);
-        shiftOperatePage.deleteAllShiftsInDayView();
+        scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
         scheduleCommonPage.clickOnWeekView();
         scheduleMainPage.saveSchedule();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1574,7 +1574,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(0);
-        shiftOperatePage.deleteAllShiftsInDayView();
+        scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
         scheduleCommonPage.clickOnWeekView();
         scheduleMainPage.saveSchedule();
 
@@ -1676,7 +1676,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(0);
-        shiftOperatePage.deleteAllShiftsInDayView();
+        scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
         scheduleCommonPage.clickOnWeekView();
         scheduleMainPage.saveSchedule();
 
@@ -1778,7 +1778,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(6);
-        shiftOperatePage.deleteAllShiftsInDayView();
+        scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
         scheduleCommonPage.clickOnWeekView();
         scheduleMainPage.saveSchedule();
 
@@ -1880,7 +1880,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(6);
-        shiftOperatePage.deleteAllShiftsInDayView();
+        scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
         scheduleCommonPage.clickOnWeekView();
         scheduleMainPage.saveSchedule();
 
@@ -1940,7 +1940,7 @@ public class DragAndDropTest extends TestBase {
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleCommonPage.navigateDayViewWithIndex(1);
-        shiftOperatePage.deleteAllShiftsInDayView();
+        scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
         scheduleCommonPage.clickOnWeekView();
         scheduleMainPage.saveSchedule();
 

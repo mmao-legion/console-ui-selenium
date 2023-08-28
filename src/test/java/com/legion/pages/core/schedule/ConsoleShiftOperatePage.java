@@ -43,19 +43,6 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
     }
 
-    public void deleteAllShiftsInDayView() throws Exception {
-        if (areListElementVisible(dayViewAvailableShifts,10)){
-            int count = dayViewAvailableShifts.size();
-            for (int i = 0; i < count; i++) {
-                WebElement tempShift = dayViewAvailableShifts.get(i).findElement(By.cssSelector(".sch-day-view-shift-outer .right-shift-box>div:nth-child(2)"));
-                scrollToElement(tempShift);
-                waitForSeconds(1);
-                moveToElementAndClick(tempShift);
-                deleteShift();
-            }
-        }
-    }
-
     @Override
     public void convertAllUnAssignedShiftToOpenShift() throws Exception {
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();

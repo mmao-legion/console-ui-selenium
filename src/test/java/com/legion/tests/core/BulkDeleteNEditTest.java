@@ -1158,7 +1158,7 @@ public class BulkDeleteNEditTest extends TestBase {
             String activeWeek = scheduleCommonPage.getActiveWeekText();
             scheduleCommonPage.clickOnDayView();
             scheduleCommonPage.navigateDayViewWithDayName(activeWeek.replace("\n", " ").substring(0,3));
-            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
             scheduleMainPage.saveSchedule();
             scheduleCommonPage.clickOnWeekView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

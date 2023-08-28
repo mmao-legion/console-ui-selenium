@@ -1632,7 +1632,8 @@ public class FTSERelevantTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             scheduleCommonPage.clickOnDayView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteAllShiftsInDayView();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
             scheduleMainPage.saveSchedule();
 
             //Create the particular shift and verify the face bubble is displayed
@@ -1649,7 +1650,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             Thread.sleep(5000);
             SimpleUtils.assertOnFail("The shift's info doesn't include face bubble!", scheduleShiftTablePage.isInfoIconLoaded(0)
                     &&scheduleShiftTablePage.isProfileIconLoaded(0), false);

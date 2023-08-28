@@ -533,7 +533,7 @@ public class P2PLGTest extends TestBase {
                 scheduleMainPage.saveSchedule();
             }
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();

@@ -3611,6 +3611,63 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     }
 
     @Override
+    public void bulkDeleteAllShiftsInDayView() throws Exception {
+        try {
+            if (isElementLoaded(getDriver().findElement(By.cssSelector(".edit-border")), 5)) {
+                scrollToElement(getDriver().findElement(By.cssSelector(".edit-border")));
+            }
+        } catch (Exception e) {
+            scrollToBottom();
+        }
+        waitForSeconds(2);
+        if (!areListElementVisible(selectedShifts, 5)) {
+            if (namesDayView.size() >= dayViewAvailableShifts.size()) {
+                Actions action = new Actions(getDriver());
+                action.keyDown(Keys.CONTROL).build().perform();
+                for (int i = 0; i < dayViewAvailableShifts.size(); i++) {
+                    scrollToElement(namesDayView.get(i));
+                    waitForSeconds(1);
+                    action.moveToElement(namesDayView.get(i)).click(namesDayView.get(i));
+                }
+                action.keyUp(Keys.CONTROL).build().perform();
+                if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == dayViewAvailableShifts.size()) {
+                    SimpleUtils.pass("Selected " + dayViewAvailableShifts.size() + " shifts successfully");
+                } else {
+                    SimpleUtils.fail("Expected to select " + dayViewAvailableShifts.size() + " shifts, but actually selected " +
+                            getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+                }
+            } else {
+                SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+            }
+        } else {
+            if (namesDayView.size() >= dayViewAvailableShifts.size()) {
+                Actions action = new Actions(getDriver());
+                action.keyDown(Keys.CONTROL).build().perform();
+                for (int i = 0; i < dayViewAvailableShifts.size(); i++) {
+                    scrollToElement(namesDayView.get(i));
+                    waitForSeconds(1);
+                    if (!shifts.get(i).getAttribute("class").contains("shift-selected-multi")) {
+                        action.moveToElement(namesDayView.get(i)).click(namesDayView.get(i));
+                    }
+                }
+                action.keyUp(Keys.CONTROL).build().perform();
+                if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == dayViewAvailableShifts.size()) {
+                    SimpleUtils.pass("Selected " + dayViewAvailableShifts.size() + " shifts successfully");
+                } else {
+                    SimpleUtils.fail("Expected to select " + dayViewAvailableShifts.size() + " shifts, but actually selected " +
+                            getDriver().findElements(By.cssSelector("shift-selected-multi")).size() + " shifts!", false);
+                }
+            } else {
+                SimpleUtils.fail("Selected number is larger than the shifts' count!", false);
+            }
+        }
+        HashSet<Integer> index = new HashSet<>();
+        index.add(0);
+        rightClickOnSelectedShifts(index);
+        clickOnBtnOnBulkActionMenuByText("Delete");
+    }
+
+    @Override
     public void rightClickOnSelectedShifts(HashSet<Integer> selectedIndex) throws Exception {
         if (selectedIndex.size() > 0) {
             List<WebElement> names = null;
