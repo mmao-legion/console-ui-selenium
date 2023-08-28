@@ -2845,7 +2845,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             }
         }
     }
-    @FindBy(css = "button.MuiButtonBase-root")
+    @FindBy(css = ".MuiTabs-scroller button.MuiButtonBase-root")
     private List<WebElement> searchAndRecommendedTMTabs;
 
     @FindBy(css = "[placeholder=\"Search by Team Member, Role, Location or any combination.\"]")
