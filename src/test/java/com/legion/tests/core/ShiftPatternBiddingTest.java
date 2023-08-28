@@ -158,6 +158,10 @@ public class ShiftPatternBiddingTest extends TestBase {
             configurationPage.publishNowTemplate();
             locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
             refreshCachesAfterChangeTemplate();
+            Thread.sleep(60000);
+            refreshCachesAfterChangeTemplate();
+            Thread.sleep(60000);
+            refreshCachesAfterChangeTemplate();
             //Verify employee can see the bidding after bidding started
             loginPage.logOut();
             Thread.sleep(60000);
