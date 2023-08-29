@@ -4278,6 +4278,7 @@ public class P2PLGTest extends TestBase {
                 scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
                 scheduleMainPage.saveSchedule();
             }
+            createSchedulePage.publishActiveSchedule();
             scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
             scheduleShiftTablePage.expandSpecificCountGroup(2);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

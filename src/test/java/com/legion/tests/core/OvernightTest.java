@@ -590,6 +590,7 @@ public class OvernightTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             Thread.sleep(5000);
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isActiveWeekGenerated) {
