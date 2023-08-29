@@ -744,7 +744,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 //        waitForSeconds(10);
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
-            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover")));
+            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover")));
             String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
             waitForSeconds(3);
 //            String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
@@ -762,7 +762,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.pass("Get user job title successfully! The job tile is: "+ jobTitle);
                 String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
                 SimpleUtils.pass("Get shift time in shift card successfully! The shift time is: "+ shiftTimeWeekView);
-                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
+                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
                 clickTheElement(infoIcon);
                 String shiftNameOnIIconPopUp = "";
                 String shiftNotesOnIIconPopUp = "";
@@ -807,7 +807,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 } else
                     lastName = "open";
                 String jobTitle = "";
-                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shit-open-popover"));
+                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
                 clickTheElement(infoIcon);
                 String workRole = shiftJobTitleAsWorkRole.getText().trim();
                 String shiftTime = "";
