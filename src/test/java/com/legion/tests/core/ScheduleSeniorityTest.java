@@ -330,10 +330,6 @@ public class ScheduleSeniorityTest extends TestBase {
 			controlsNewUIPage.isSenioritySectionLoaded();
 			controlsNewUIPage.selectSeniorityType("No Seniority");
 			configurationPage.publishNowTheTemplate();
-//			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
-//			Thread.sleep(10000);
-//			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
-//			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("No"),false);
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(200000);
