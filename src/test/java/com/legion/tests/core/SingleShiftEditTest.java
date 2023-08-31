@@ -284,8 +284,8 @@ public class SingleShiftEditTest extends TestBase {
     public void verifyChangingWorkRoleOnSingleEditShiftWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-            setOverRideAssignmentRule(isLocationUsingControlsConfiguration, location, false);
+//            boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+            setOverRideAssignmentRule(false, location, false);
             // Go to Schedule page, Schedule tab
             goToSchedulePageScheduleTab();
 
@@ -353,7 +353,7 @@ public class SingleShiftEditTest extends TestBase {
                             Integer.parseInt(shiftIndexes.toArray()[0].toString())
                     )).contains("Role Violation"), false);
             // Verify all available work roles will show when clicking on Change Shift Role and override assignment rule is set to Yes
-            setOverRideAssignmentRule(isLocationUsingControlsConfiguration, location, true);
+            setOverRideAssignmentRule(false, location, true);
 
             goToSchedulePageScheduleTab();
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
@@ -392,8 +392,8 @@ public class SingleShiftEditTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         } finally {
             newShiftPage.closeNewCreateShiftPage();
-            boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-            setOverRideAssignmentRule(isLocationUsingControlsConfiguration, location, true);
+//            boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+            setOverRideAssignmentRule(false, location, true);
         }
     }
 
