@@ -3507,9 +3507,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (names.size() >= shiftCount) {
             SimpleUtils.randomSet(0, names.size() - 1, shiftCount, set);
             try {
-                if (isElementLoaded(getDriver().findElement(By.cssSelector(".edit-border")), 5)) {
-                    scrollToElement(getDriver().findElement(By.cssSelector(".edit-border")));
-                } else if (isElementLoaded(getDriver().findElement(By.cssSelector("[ng-href=\"mailto:help@legion.co\"]")), 5)) {
+                if (isElementLoaded(getDriver().findElement(By.cssSelector("[ng-href=\"mailto:help@legion.co\"]")), 5)) {
                     scrollToElement(getDriver().findElement(By.cssSelector("[ng-href=\"mailto:help@legion.co\"]")));
                 }
             } catch (Exception e) {

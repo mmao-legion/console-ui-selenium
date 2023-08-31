@@ -838,7 +838,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
 
     @FindBy (css = "div.card-carousel-card-blue")
     private WebElement masterTemplateSmartCard;
-    @FindBy (css = "[ng-click=\"toggleTemplateView()\"]")
+    @FindBy (css = "[ng-click*=\"toggleTemplateView(\"]")
     private WebElement viewTemplateLinkOnMasterTemplateSmartCard;
 
     public void clickViewTemplateLinkOnMasterTemplateSmartCard() throws Exception {
