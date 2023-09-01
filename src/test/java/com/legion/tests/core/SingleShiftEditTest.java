@@ -300,9 +300,9 @@ public class SingleShiftEditTest extends TestBase {
             ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
             String workRole1 = workRoles.get(0).get("optionName");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.clickOnProfileIconByIndex(0);
-            shiftOperatePage.clickOnChangeRole();
-            List<String> workRoleList = shiftOperatePage.getWorkRoleListFromChangeShiftRoleOption();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            List<String> workRoleList = newShiftPage.getWorkRoleList();
+            scheduleMainPage.clickOnCancelButtonOnEditMode();
             scheduleMainPage.clickOnCancelButtonOnEditMode();
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyAll.getValue());
 
