@@ -77,6 +77,10 @@ public class ConsoleNewShiftPatternBiddingPage extends BasePage implements NewSh
     @FindBy(css = ".lg-new-time-input-text input")
     private List<WebElement> shiftBiddingWindowTimeInputs;
 
+    @FindBy(css = "[ng-click=\"$ctrl.changeMonth(1)\"]")
+    private List<WebElement> goToNextMonthButtons;
+
+
     @Override
     public void setShiftBiddingWindowStartAndEndDateAndTime() throws Exception {
 
@@ -85,7 +89,13 @@ public class ConsoleNewShiftPatternBiddingPage extends BasePage implements NewSh
                 && areListElementVisible(shiftBiddingWindowTimeInputs, 5)){
             //Set shift bidding window end date
             click(shiftBiddingWindowDateInputs.get(1));
-            click(availableBiddingDates.get(availableBiddingDates.size()/2+1));
+            if (availableBiddingDates.size()==2){
+                click(goToNextMonthButtons.get(1));
+                waitForSeconds(2);
+                click(availableBiddingDates.get(1));
+            } else{
+                click(availableBiddingDates.get(availableBiddingDates.size()/2+1));
+            }
 
             //Set shift bidding window start date
             click(shiftBiddingWindowDateInputs.get(0));
