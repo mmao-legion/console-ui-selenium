@@ -2160,9 +2160,9 @@ public class FTSERelevantTest extends TestBase {
 //            createSchedulePage.createScheduleForNonDGFlowNewUI();
 
             //Delete all existed shifts, then switch to the Day View.
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteAllShiftsInWeekView();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.saveSchedule();
             scheduleCommonPage.clickOnDayView();
 
@@ -2180,7 +2180,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
-            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             scheduleMainPage.saveSchedule();
 
             Thread.sleep(3000);
