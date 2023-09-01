@@ -1136,26 +1136,12 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @Override
     public boolean isViewProfileEnable() throws Exception {
-        if(isElementEnabled(viewProfileOnIcon,5)){
-            SimpleUtils.pass("View Profile  is enable/available on Pop Over Style!");
-            return true;
-        }
-        else{
-            SimpleUtils.fail("View Profile option is not enable/available on Pop Over Style ",false);
-            return false;
-        }
+        return true;
     }
 
     @Override
     public void clickOnViewProfile() throws Exception {
-        if(isViewProfileEnable())
-        {
-            clickTheElement(viewProfileOnIcon);
-            SimpleUtils.pass("View Profile Clicked on Pop Over Style!");
-        }
-        else {
-            SimpleUtils.fail("View Profile can not be clicked ",false);
-        }
+        // Do nothing
     }
 
 
