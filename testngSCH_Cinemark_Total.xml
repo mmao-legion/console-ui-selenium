@@ -608,7 +608,7 @@
         <classes>
             <class name="com.legion.tests.core.MealAndRestBreakTest">
                 <methods>
-                    <include name="verifyEditBreaksOptionIsAvailableAsInternalAdmin" />
+<!--                    <include name="verifyEditBreaksOptionIsAvailableAsInternalAdmin" Old Flow/>-->
                     <include name="verifyTheFunctionalityOfEditBreaksWeekViewAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" />
                     <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" />
