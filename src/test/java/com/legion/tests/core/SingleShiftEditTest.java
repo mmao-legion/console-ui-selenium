@@ -306,7 +306,7 @@ public class SingleShiftEditTest extends TestBase {
             scheduleMainPage.clickOnCancelButtonOnEditMode();
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyAll.getValue());
 
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             // Create 2 shifts with all different
             List<String> names = createShiftsWithSpecificValues(workRole1, "", "", "9:00am", "12:00pm",
                     1, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
@@ -391,9 +391,9 @@ public class SingleShiftEditTest extends TestBase {
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         } finally {
-            newShiftPage.closeNewCreateShiftPage();
-//            boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-            setOverRideAssignmentRule(false, location, true);
+//            newShiftPage.closeNewCreateShiftPage();
+////            boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            setOverRideAssignmentRule(false, location, true);
         }
     }
 
@@ -1076,34 +1076,37 @@ public class SingleShiftEditTest extends TestBase {
 
             HashSet<Integer> indexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             int index = indexes.iterator().next();
-            mySchedulePage.clickOnShiftByIndex(index);
-            shiftOperatePage.clickOnEditMeaLBreakTime();
-            List<String> breakTimes = shiftOperatePage.verifyEditBreaks();
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
-            String mealBreakTime = breakTimes.get(0).replace(" am", "am").replace(" pm", "pm");
-            String restBreakTime = breakTimes.get(1).replace(" am", "am").replace(" pm", "pm");
-            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
-            String action = "Edit";
-            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
-            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
-
-            //Verify the meal and rest breaks time are display correctly in Edit column
-            Map<String, String> breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
-            String breakStartTime = changeTimeFormat(breakTimesOnSingleEditPage.get("mealStartTime")).replace(" ", "");
-            String breakEndTime = changeTimeFormat(breakTimesOnSingleEditPage.get("mealEndTime")).replace(" ", "");
-            SimpleUtils.assertOnFail("The expected break time is: "+mealBreakTime
-                            + ". The actual is: "+ (breakStartTime+ " "+breakEndTime),
-                    mealBreakTime.toLowerCase().contains(breakStartTime.toLowerCase())
-                            && mealBreakTime.toLowerCase().contains(breakEndTime.toLowerCase()), false);
-
-            Map<String, String> restTimesOnSingleEditPage = editShiftPage.getRestBreakTimes().get(0);
-            String restStartTime = changeTimeFormat(restTimesOnSingleEditPage.get("restStartTime")).replace(" ", "");
-            String restEndTime = changeTimeFormat(restTimesOnSingleEditPage.get("restEndTime")).replace(" ", "");
-            SimpleUtils.assertOnFail("The expected rest time is: "+restBreakTime
-                            + ". The actual is: "+ (restStartTime+ " "+restEndTime),
-                    restBreakTime.toLowerCase().contains(restStartTime.toLowerCase())
-                            && restBreakTime.toLowerCase().contains(restEndTime.toLowerCase()), false);
+//            mySchedulePage.clickOnShiftByIndex(index);
+//            shiftOperatePage.clickOnEditMeaLBreakTime();
+//            List<String> breakTimes = shiftOperatePage.verifyEditBreaks();
+//            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+//            String mealBreakTime = breakTimes.get(0).replace(" am", "am").replace(" pm", "pm");
+//            String restBreakTime = breakTimes.get(1).replace(" am", "am").replace(" pm", "pm");
+//            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+//            String action = "Edit";
+//            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+//            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+//
+//            //Verify the meal and rest breaks time are display correctly in Edit column
+//            Map<String, String> breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
+//            String breakStartTime = changeTimeFormat(breakTimesOnSingleEditPage.get("mealStartTime")).replace(" ", "");
+//            String breakEndTime = changeTimeFormat(breakTimesOnSingleEditPage.get("mealEndTime")).replace(" ", "");
+//            SimpleUtils.assertOnFail("The expected break time is: "+mealBreakTime
+//                            + ". The actual is: "+ (breakStartTime+ " "+breakEndTime),
+//                    mealBreakTime.toLowerCase().contains(breakStartTime.toLowerCase())
+//                            && mealBreakTime.toLowerCase().contains(breakEndTime.toLowerCase()), false);
+//
+//            Map<String, String> restTimesOnSingleEditPage = editShiftPage.getRestBreakTimes().get(0);
+//            String restStartTime = changeTimeFormat(restTimesOnSingleEditPage.get("restStartTime")).replace(" ", "");
+//            String restEndTime = changeTimeFormat(restTimesOnSingleEditPage.get("restEndTime")).replace(" ", "");
+//            SimpleUtils.assertOnFail("The expected rest time is: "+restBreakTime
+//                            + ". The actual is: "+ (restStartTime+ " "+restEndTime),
+//                    restBreakTime.toLowerCase().contains(restStartTime.toLowerCase())
+//                            && restBreakTime.toLowerCase().contains(restEndTime.toLowerCase()), false);
             //Verify the two Add buttons in Edit column display correctly
+            String action = "Edit";
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             editShiftPage.removeAllRestBreaks();
             editShiftPage.removeAllMealBreaks();
             editShiftPage.clickOnAddMealBreakButton();
@@ -1193,10 +1196,10 @@ public class SingleShiftEditTest extends TestBase {
             HashSet<Integer> indexes = new HashSet<>();
             indexes.add(0);
             int index = indexes.iterator().next();
-            mySchedulePage.clickOnShiftByIndex(index);
-            shiftOperatePage.clickOnEditMeaLBreakTime();
-            shiftOperatePage.verifyEditBreaks();
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+//            mySchedulePage.clickOnShiftByIndex(index);
+//            shiftOperatePage.clickOnEditMeaLBreakTime();
+//            shiftOperatePage.verifyEditBreaks();
+//            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             String action = "Edit";
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);

@@ -4749,19 +4749,20 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 			newShiftPage.closeCustomizeNewShiftWindow();
 
-			shiftOperatePage.clickOnProfileIcon();
-			shiftOperatePage.clickOnEditShiftTime();
-			Thread.sleep(5000);
-			shiftOperatePage.verifyEditShiftTimePopUpDisplay();
-			if (!shiftOperatePage.isEditShiftTimeNewUIDisplay()) {
-				List<String> startAndEndHrsOnEditShiftPage = shiftOperatePage.getStartAndEndOperatingHrsOnEditShiftPage();
-				SimpleUtils.assertOnFail("The operating hours on create shift page display incorrectly! ",
-						startAndEndHrsOnEditShiftPage.get(0).equalsIgnoreCase("6")
-								&& startAndEndHrsOnEditShiftPage.get(1).equalsIgnoreCase("11"),false);
-			}
-			shiftOperatePage.clickOnCancelEditShiftTimeButton();
-			Thread.sleep(5000);
-			scheduleMainPage.clickOnCancelButtonOnEditMode();
+			//Profile option been disabled
+//			shiftOperatePage.clickOnProfileIcon();
+//			shiftOperatePage.clickOnEditShiftTime();
+//			Thread.sleep(5000);
+//			shiftOperatePage.verifyEditShiftTimePopUpDisplay();
+//			if (!shiftOperatePage.isEditShiftTimeNewUIDisplay()) {
+//				List<String> startAndEndHrsOnEditShiftPage = shiftOperatePage.getStartAndEndOperatingHrsOnEditShiftPage();
+//				SimpleUtils.assertOnFail("The operating hours on create shift page display incorrectly! ",
+//						startAndEndHrsOnEditShiftPage.get(0).equalsIgnoreCase("6")
+//								&& startAndEndHrsOnEditShiftPage.get(1).equalsIgnoreCase("11"),false);
+//			}
+//			shiftOperatePage.clickOnCancelEditShiftTimeButton();
+//			Thread.sleep(5000);
+//			scheduleMainPage.clickOnCancelButtonOnEditMode();
 
 			scheduleCommonPage.clickOnDayView();
 			List<String> gridHeaderTimes = new ArrayList();

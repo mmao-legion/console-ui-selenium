@@ -745,6 +745,7 @@ public class SplitAndSpreadTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
@@ -804,7 +805,20 @@ public class SplitAndSpreadTest extends TestBase {
                 SimpleUtils.fail("Get new added shift failed! ", false);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.editTheShiftTimeForSpecificShift(newAddedShift, "8am", "8pm");
+//            shiftOperatePage.editTheShiftTimeForSpecificShift(newAddedShift, "8am", "8pm");
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(scheduleShiftTablePage.getShiftIndexById(newAddedShift.getAttribute("id").toString()));
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!",
+                    editShiftPage.isEditShiftWindowLoaded(), false);
+            String inputStartTime = "8:00 AM";
+            editShiftPage.inputStartOrEndTime(inputStartTime, true);
+            String inputEndTime = "8:00 PM";
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
+            editShiftPage.clickOnUpdateButton();
+            shiftOperatePage.clickOnAssignAnywayButton();
             scheduleMainPage.saveSchedule();
 
             if (newAddedShift != null) {

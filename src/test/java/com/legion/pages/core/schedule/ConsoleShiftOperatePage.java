@@ -949,10 +949,10 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @Override
     public void clickOnEditMeaLBreakTime() throws Exception{
-        if (!isElementLoaded(editMealBreakTime, 5)) {
-            clickOnProfileIcon();
-            waitForSeconds(1);
-        }
+//        if (!isElementLoaded(editMealBreakTime, 5)) {
+//            clickOnProfileIcon();
+//            waitForSeconds(1);
+//        }
         if(isElementLoaded(editMealBreakTime,5))
         {
             clickTheElement(editMealBreakTime);
