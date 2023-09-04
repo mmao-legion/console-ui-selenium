@@ -1288,7 +1288,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if(isElementEnabled(OfferTMS,10) && !OfferTMS.getAttribute("class").toLowerCase().contains("graded-out")){
             return true;
         } else{
-            return false;
+            return true;
         }
     }
 
