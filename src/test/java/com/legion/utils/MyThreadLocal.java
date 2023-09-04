@@ -76,6 +76,7 @@ public class MyThreadLocal {
 	public static final ThreadLocal<Integer> budgetTolerance = new ThreadLocal<>();
 	public static final ThreadLocal<String> testRailReporting = new ThreadLocal<>();
 	public static final ThreadLocal<String> location = new ThreadLocal<>();
+	public static final ThreadLocal<HashMap<String, String>> templateTypeName = new ThreadLocal<>();
 	public static final ThreadLocal<String> LGMSLocationName = new ThreadLocal<>();
 	public static final ThreadLocal<String> LGMSChildLocationName = new ThreadLocal<>();
 	public static final ThreadLocal<String> LGPTPLocationName = new ThreadLocal<>();
@@ -517,6 +518,9 @@ public class MyThreadLocal {
 	public static void setLocationName(String locationName) { location.set(locationName); }
 
 	public static String getLocationName() { return location.get(); }
+
+	public static void setTemplateTypeAndName(HashMap<String, String> templateTypeAndName) {templateTypeName.set(templateTypeAndName); }
+	public static HashMap<String, String> getTemplateTypeAndName() { return templateTypeName.get(); }
 
 	public static void setLGMSLocationName(String value) { LGMSLocationName.set(value); }
 	public static void setLGMSChildLocationName(String value) { LGMSChildLocationName.set(value); }

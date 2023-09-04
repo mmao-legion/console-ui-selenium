@@ -1658,8 +1658,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	//Haya: the old method updatePreferredOrBusyHoursDuration has problem with xOffSet. So add copied one and update it.
 	private void updatePreferredOrBusyHoursDurationNew(int rowIndex, double durationhours, String leftOrRightDuration, String hoursType) throws Exception {
-		String preferredHoursTabText = "Preferred";
-		String busyHoursTabText = "Busy";
+		String preferredHoursTabText = "When I prefer to work";
+		String busyHoursTabText = "When I prefer not to work";
 		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase()))
 			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
 		else
@@ -1776,8 +1776,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 
 	private void updatePreferredOrBusyHoursDuration(int rowIndex, int durationMinutes, String leftOrRightDuration, String hoursType) throws Exception {
-		String preferredHoursTabText = "Preferred";
-		String busyHoursTabText = "Busy";
+		String preferredHoursTabText = "When I prefer to work";
+		String busyHoursTabText = "When I prefer not to work";
 		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase()))
 			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
 		else
@@ -2388,10 +2388,12 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			waitForSeconds(3);
 			if(isElementLoaded(userProfileImage, 5)){
 				clickTheElement(userProfileImage);
+				waitForSeconds(1);
 				clickTheElement(getDriver().findElement(By.id("legion_Profile_MyProfile")));
 				WebElement nameElement = null;
-				if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 5)) {
-					nameElement = getDriver().findElement(By.cssSelector(".userProfileText"));
+				waitForSeconds(5);
+				if (areListElementVisible(getDriver().findElements(By.cssSelector(".userProfileText")), 25)) {
+					nameElement = getDriver().findElements(By.cssSelector(".userProfileText")).get(0);
 				} else if (areListElementVisible(getDriver().findElements(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)")),5)) {
 					nameElement = getDriver().findElement(By.cssSelector(".sc-eJKagG+div>div>div:nth-child(2)"));
 				}
@@ -2974,7 +2976,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void selectAGivenCalendarForMinor(String givenCalendar) throws Exception {
-		if (isElementLoaded(editBtnOfProfile,5)) {
+		if (isElementLoaded(editBtnOfProfile,15)) {
 			clickTheElement(editBtnOfProfile);
 			selectByVisibleText(schoolCalendarSelect, givenCalendar);
 			if (areListElementVisible(saveBtnsOfProfile,5)) {
@@ -3855,8 +3857,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	public void updatePreferredOrBusyHoursToAllDay(int dayIndex, String hoursType) throws Exception {
 
-		String preferredHoursTabText = "Preferred";
-		String busyHoursTabText = "Busy";
+		String preferredHoursTabText = "When I prefer to work";
+		String busyHoursTabText = "When I prefer not to work";
 		WebElement availabilityToolTip = null;
 		if(hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase())) {
 			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
@@ -4074,8 +4076,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 
 	public void deleteAllAvailabilitiesForCurrentWeek() throws Exception {
-		String preferredHoursTabText = "Preferred";
-		String busyHoursTabText = "Busy";
+		String preferredHoursTabText = "When I prefer to work";
+		String busyHoursTabText = "When I prefer not to work";
 		selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);
 		//Delete all preferred availabilities in the day
 		if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
@@ -4337,8 +4339,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 
 	@Override
 	public void updateSpecificPreferredOrBusyHoursToAllWeek(String hoursType) throws Exception {
-		String preferredHoursTabText = "Preferred";
-		String busyHoursTabText = "Busy";
+		String preferredHoursTabText = "When I prefer to work";
+		String busyHoursTabText = "When I prefer not to work";
 		WebElement availabilityToolTip = null;
 		if (hoursType.toLowerCase().contains(preferredHoursTabText.toLowerCase())) {
 			selectMyAvaliabilityEditHoursTabByLabel(preferredHoursTabText);

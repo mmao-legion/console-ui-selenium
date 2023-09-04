@@ -26,8 +26,7 @@ import java.util.List;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class CopyScheduleWithoutAssignmentsTest extends TestBase {
-    private static String controlEnterprice = "Vailqacn_Enterprise";
-    private static String opEnterprice = "CinemarkWkdy_Enterprise";
+
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) {
@@ -196,41 +195,26 @@ public class CopyScheduleWithoutAssignmentsTest extends TestBase {
         }
     }
     private void changeConvertToOpenShiftsSettings(String option, String location) throws Exception {
-        if (getDriver().getCurrentUrl().contains(propertyMap.get(controlEnterprice))){
-            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            controlsPage.gotoControlsPage();
-            SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-            controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
-            SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
-            controlsNewUIPage.clickOnScheduleCollaborationOpenShiftAdvanceBtn();
-
-            //Set 'Automatically convert unassigned shifts to open shifts when generating the schedule?' set as Yes, all unassigned shifts
-            controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption(option);
-
-        } else if (getDriver().getCurrentUrl().contains(propertyMap.get(opEnterprice))) {
-
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-            locationsPage.clickOnLocationsTab();
-            locationsPage.goToSubLocationsInLocationsPage();
-            locationsPage.searchLocation(location);               ;
-            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
-            locationsPage.clickOnLocationInLocationResult(location);
-            locationsPage.clickOnConfigurationTabOfLocation();
-            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
-            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
-            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
-            configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
-            configurationPage.publishNowTheTemplate();
-            Thread.sleep(3000);
-            switchToConsoleWindow();
-        }
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.searchLocation(location);               ;
+        SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+        locationsPage.clickOnLocationInLocationResult(location);
+        locationsPage.clickOnConfigurationTabOfLocation();
+        HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        configurationPage.goToConfigurationPage();
+        configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
+        configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+        configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
+        configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
+        configurationPage.publishNowTheTemplate();
+        Thread.sleep(3000);
+        switchToConsoleWindow();
     }
 
 

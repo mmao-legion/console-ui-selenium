@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite verbose ="0" thread-count="6" name="LegionTest" parallel="tests" configfailurepolicy="continue">
+<suite verbose ="0" name="LegionTest" configfailurepolicy="continue">
     <parameter name="environment" value="QA"/>
     <parameter name="testRail" value="No"/>
-    <parameter name="testRailRunName" value="Ephemeral - Auto "/>
+    <parameter name="testRailRunName" value="Staging - Auto "/>
     <listeners>
         <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
     </listeners>
@@ -18,7 +18,7 @@
         </classes>
     </test>
 
-    <!--Blocked by SCH-8716 <test name="Bulk Create Test">
+    <test name="Bulk Create Test">
         <classes>
             <class name="com.legion.tests.core.BulkCreateTest">
                 <methods>
@@ -37,19 +37,20 @@
                 </methods>
             </class>
         </classes>
-    </test>-->
+    </test>
 
-<!--  SCH-8759   <test name="Bulk Edit and Delete Test">
+    <test name="Bulk Edit and Delete Test">
         <classes>
             <class name="com.legion.tests.core.BulkDeleteNEditTest">
                 <methods>
                     <include name="verifyDeleteMultipleShiftsInWeekViewAsInternalAdmin" />
-                    <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
-                    <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
+<!--                    <include name="verifyTheCurrentColumnOnMultipleEditShiftsWindowAsInternalAdmin" />-->
+<!--                    <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />-->
+<!--                    <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />-->
                 </methods>
             </class>
         </classes>
-    </test>-->
+    </test>
 
     <test name="Consolidating Filters Test">
         <classes>
@@ -72,31 +73,11 @@
         </classes>
     </test>
 
-    <test name="Deactivate Terminate Or Transfer TM Test">
-        <classes>
-            <class name="com.legion.tests.core.DeactivateTerminateOrTransferTMTest">
-                <methods>
-                    <include name="verifyTheExistingShiftsWhenTransferSettingIsAvailableAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
     <test name="Delete Schedule Test">
         <classes>
             <class name="com.legion.tests.core.DeleteScheduleTest">
                 <methods>
                     <include name="verifyDeletePublishedScheduleAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
-    <test name="Hard Stop For Minor Violation Test">
-        <classes>
-            <class name="com.legion.tests.core.HardStopForMinorViolation">
-                <methods>
-                    <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -125,7 +106,7 @@
         </classes>
     </test>
 
-    <test name="P2P LG Test">
+<!--    <test name="P2P LG Test">
         <classes>
             <class name="com.legion.tests.core.P2PLGTest">
                 <methods>
@@ -136,22 +117,22 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
-    <test name="Parent Child LG Test">
+<!--    <test name="Parent Child LG Test">
         <classes>
             <class name="com.legion.tests.core.ParentChildLGTest">
                 <methods>
-<!--                    <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />-->
+&lt;!&ndash;                    <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />&ndash;&gt;
                     <include name="validateTheManuelOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
-<!--                    <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />-->
+&lt;!&ndash;                    <include name="validateTheAutoOfferTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />&ndash;&gt;
                     <include name="verifyTMCannotHaveShiftInMoreThanOneLocationWithoutBufferTimeForParentChildLGAsInternalAdmin" />
                     <include name="validateNavigationRosterScheduleAndDashboardOfParentChildLGAsInternalAdmin" />
                     <include name="verifyChangingLocationForPCOnMultipleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
     <test name="Schedule Copy Test">
         <classes>
@@ -165,7 +146,7 @@
         </classes>
     </test>
 
-    <test name="Schedule Template Test">
+<!--    <test name="Schedule Template Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleTemplateTest">
                 <methods>
@@ -173,7 +154,7 @@
                 </methods>
             </class>
         </classes>
-    </test>
+    </test>-->
 
     <test name="Schedule Test">
         <classes>

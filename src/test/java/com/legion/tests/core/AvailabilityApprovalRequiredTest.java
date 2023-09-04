@@ -1,11 +1,14 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
+import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
@@ -105,8 +108,8 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
                 profileNewUIPage.clickNextWeek();
             }
             profileNewUIPage.clickAvailabilityEditButton();
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "Busy");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer to work");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "When I prefer not to work");
             profileNewUIPage.saveMyAvailabilityEditMode("This week only");
             List<WebElement> changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
             List<WebElement> changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();
@@ -118,8 +121,8 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
 
             profileNewUIPage.clickNextWeek();
             profileNewUIPage.clickAvailabilityEditButton();
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "Busy");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer to work");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "When I prefer not to work");
             profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 
             //Check the dotted line
@@ -283,8 +286,8 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             Thread.sleep(2000);
         }
         profileNewUIPage.clickAvailabilityEditButton();
-        profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
-        profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "Busy");
+        profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer to work");
+        profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "When I prefer not to work");
         profileNewUIPage.saveMyAvailabilityEditMode("Repeat Forward");
         List<WebElement> changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
         List<WebElement> changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();
@@ -427,7 +430,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             String weekInfo = profileNewUIPage.getAvailabilityWeek();
             String repeatChanges = "This week only";
             String leftOrRightDuration = "Right";
-            String hoursType = "Preferred";
+            String hoursType = "When I prefer to work";
             HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
             if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
                 int sliderIndex = 0;
@@ -513,7 +516,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             String weekInfo = profileNewUIPage.getAvailabilityWeek();
             String repeatChanges = "This week only";
             String leftOrRightDuration = "Right";
-            String hoursType = "Preferred";
+            String hoursType = "When I prefer to work";
             HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
             if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
                 int sliderIndex = 0;
@@ -604,7 +607,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             String weekInfo = profileNewUIPage.getAvailabilityWeek();
             String repeatChanges = "This week only";
             String leftOrRightDuration = "Right";
-            String hoursType = "Preferred";
+            String hoursType = "When I prefer to work";
             HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
             if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
                 int sliderIndex = 1;
@@ -698,7 +701,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
             String weekInfo = profileNewUIPage.getAvailabilityWeek();
             String repeatChanges = "This week only";
             String leftOrRightDuration = "Right";
-            String hoursType = "Preferred";
+            String hoursType = "When I prefer to work";
             HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
             if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
                 int sliderIndex = 1;
@@ -777,7 +780,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         int sliderIndex = 1;
         double hours = 0.5;//move 1 metric 0.5h right----increase
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         String repeatChanges = "This week only";
         profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -790,7 +793,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         profileNewUIPage.cancelAllPendingAvailabilityRequest();
         hours = -0.5;//move 1 metric 0.5h left----decrease
         leftOrRightDuration = "Left";
-        hoursType = "Preferred";
+        hoursType = "When I prefer to work";
         repeatChanges = "repeat forward";
         profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -845,7 +848,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         int sliderIndex = 1;
         double hours = 0.5;//move 1 metric 0.5h right----increase
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         String repeatChanges = "This week only";
         profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -866,21 +869,29 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         // Set availability policy
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        controlsPage.gotoControlsPage();
+        //Go to OP page
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.searchLocation(location);               ;
+        SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+        locationsPage.clickOnLocationInLocationResult(location);
+        locationsPage.clickOnConfigurationTabOfLocation();
+        HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
 
-        dashboardPage.navigateToDashboard();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
+        configurationPage.goToConfigurationPage();
         controlsNewUIPage.clickOnControlsSchedulingPolicies();
-        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-        controlsNewUIPage.clickOnGlobalLocationButton();
-//        String isApprovalRequired = "Required for all changes";
+        cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Scheduling Policies"));
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
         controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(AvailabilityApprovalRequiredOptions.RequiredForAllChanged.getValue());
+        configurationPage.publishNowTheTemplate();
+        Thread.sleep(3000);
+        switchToConsoleWindow();
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
 
@@ -899,7 +910,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         String weekInfo = profileNewUIPage.getAvailabilityWeek();
         String repeatChanges = "This week only";
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
 
         if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
@@ -949,26 +960,34 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
     @Enterprise(name = "Vailqacn_Enterprise")
     @TestName(description = "Validate cancelled/approved/rejected and dated request has no option when clicking the request")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass=CredentialDataProviderSource.class)
-    public void validateCancelledAvailabilityHasNoOptionRequestAsStoreManager(String browser, String username, String password, String location) throws Exception {
+    public void validateCancelledAvailabilityHasNoOptionRequestAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         // Login with Store Manager Credentials
         DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         // Set availability policy
-        ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-        controlsPage.gotoControlsPage();
+        //Go to OP page
         ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
+        LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+        locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+        SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+        locationsPage.clickOnLocationsTab();
+        locationsPage.goToSubLocationsInLocationsPage();
+        locationsPage.searchLocation(location);               ;
+        SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+        locationsPage.clickOnLocationInLocationResult(location);
+        locationsPage.clickOnConfigurationTabOfLocation();
+        HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
 
-        dashboardPage.navigateToDashboard();
-        SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
-        controlsPage.gotoControlsPage();
-        SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-
+        configurationPage.goToConfigurationPage();
         controlsNewUIPage.clickOnControlsSchedulingPolicies();
-        SimpleUtils.assertOnFail("Scheduling policy page not loaded successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-        controlsNewUIPage.clickOnGlobalLocationButton();
-//        String isApprovalRequired = "Required for all changes";
+        cinemarkMinorPage.findDefaultTemplate(templateTypeAndName.get("Scheduling Policies"));
+        configurationPage.clickOnEditButtonOnTemplateDetailsPage();
         controlsNewUIPage.updateAvailabilityManagementIsApprovalRequired(AvailabilityApprovalRequiredOptions.RequiredForAllChanged.getValue());
+        configurationPage.publishNowTheTemplate();
+        Thread.sleep(3000);
+        switchToConsoleWindow();
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
 
@@ -986,7 +1005,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         }
         String repeatChanges = "This week only";
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         HashMap<String, Object> myAvailabilityData =  profileNewUIPage.getMyAvailabilityData();
         if (Float.parseFloat(myAvailabilityData.get("totalHoursValue").toString()) != 0) {
             int sliderIndex = 1;
@@ -1057,7 +1076,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         int sliderIndex = 1;
         double hours = 0.5;//move 1 metric 0.5h left----decrease
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         String repeatChanges = "This week only";
         String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -1125,7 +1144,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         int sliderIndex = 1;
         double hours = 0.5;//move 1 metric 0.5h left----decrease
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         String repeatChanges = "This week only";
         String newAvailableHrs = profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -1198,7 +1217,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         int sliderIndex = 1;
         double hours = 0.5;//move 1 metric 0.5h right----increase
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         String repeatChanges = "repeat forward";
         profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -1259,7 +1278,7 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
         int sliderIndex = 1;
         double hours = 0.5;//move 1 metric 0.5h right----increase
         String leftOrRightDuration = "Right";
-        String hoursType = "Preferred";
+        String hoursType = "When I prefer to work";
         String repeatChanges = "This week only";
         profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
                 hours, repeatChanges);
@@ -1326,8 +1345,8 @@ public class AvailabilityApprovalRequiredTest extends TestBase {
                 profileNewUIPage.clickNextWeek();
             }
             profileNewUIPage.clickAvailabilityEditButton();
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
-            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "Busy");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer to work");
+            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(1, "When I prefer not to work");
             profileNewUIPage.saveMyAvailabilityEditMode("Repeat Forward");
             List<WebElement> changedPreferredAvailabilities = profileNewUIPage.getChangedPreferredAvailabilities();
             List<WebElement> changedBusyAvailabilities = profileNewUIPage.getChangedBusyAvailabilities();

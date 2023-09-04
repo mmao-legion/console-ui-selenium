@@ -43,8 +43,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
 	private static String opWorkRole = scheduleWorkRoles.get("RETAIL_ASSOCIATE");
 	private static String controlWorkRole = scheduleWorkRoles.get("RETAIL_RENTAL_MGMT");
-	private static String controlEnterprice = "Vailqacn_Enterprise";
-	private static String opEnterprice = "CinemarkWkdy_Enterprise";
 
 	public enum weekCount {
 		Zero(0),
@@ -941,18 +939,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
 			String nickName = profileNewUIPage.getNickNameFromProfile();
 
-			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-
-			//T1838610 Validate the click ability of forward and backward button.
-			scheduleCommonPage.validateForwardAndBackwardButtonClickable();
-
-			//T1838611 Validate the data according to the selected week.
-			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
-			mySchedulePage.validateTheDataAccordingToTheSelectedWeek();
-
-			//T1838612 Validate the seven days - Sunday to Saturday is available in schedule table.
-			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-			mySchedulePage.validateTheSevenDaysIsAvailableInScheduleTable();
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 
@@ -960,15 +946,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
-			// Go to Scheduling Policies to get the additional Scheduled Hour
-			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-			ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-			controlsPage.gotoControlsPage();
-			SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-			controlsNewUIPage.clickOnControlsSchedulingPolicies();
-			SimpleUtils.assertOnFail("Scheduling Policies Page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-			HashMap<String, Integer> schedulePoliciesBufferHours = controlsNewUIPage.getScheduleBufferHours();
 
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab("Schedule");
@@ -994,21 +971,26 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			createSchedulePage.publishActiveSchedule();
 			if (!toggleSummaryPage.isSummaryViewLoaded())
 				toggleSummaryPage.toggleSummaryView();
-			String theEarliestAndLatestTimeInSummaryView = toggleSummaryPage.getTheEarliestAndLatestTimeInSummaryView(schedulePoliciesBufferHours);
-			SimpleUtils.report("theEarliestAndLatestOperationHoursInSummaryView is " + theEarliestAndLatestTimeInSummaryView);
 			loginPage.logOut();
 
 			///Log in as team member again to compare the operation hours
 			loginToLegionAndVerifyIsLoginDone(username, password, location);
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.navigateToNextWeek();
-			String theEarliestAndLatestTimeInScheduleTable = mySchedulePage.getTheEarliestAndLatestTimeInScheduleTable();
-			SimpleUtils.report("theEarliestAndLatestOperationHoursInScheduleTable is " + theEarliestAndLatestTimeInScheduleTable);
-			// mySchedulePage.compareOperationHoursBetweenAdminAndTM(theEarliestAndLatestTimeInSummaryView, theEarliestAndLatestTimeInScheduleTable);
-			// todo: BLocked by https://legiontech.atlassian.net/browse/SCH-4413
 
 			//T1838613 Validate that hours and date is visible of shifts.
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 			mySchedulePage.validateThatHoursAndDateIsVisibleOfShifts();
+
+			//T1838610 Validate the click ability of forward and backward button.
+			scheduleCommonPage.validateForwardAndBackwardButtonClickable();
+
+			//T1838611 Validate the data according to the selected week.
+			mySchedulePage.validateTheDataAccordingToTheSelectedWeek();
+
+			//T1838612 Validate the seven days - Sunday to Saturday is available in schedule table.
+			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			mySchedulePage.validateTheSevenDaysIsAvailableInScheduleTable();
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(),false);
 		}
@@ -2475,6 +2457,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
 					scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
+			scheduleCommonPage.navigateToNextWeek();
 			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
 			if (isWeekGenerated){
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -2552,6 +2535,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
 			SimpleUtils.assertOnFail("Scheduling collaboration page not loaded successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
 			controlsNewUIPage.updateCanManagerAddAnotherLocationsEmployeeInScheduleBeforeTheEmployeeHomeLocationHasPublishedTheSchedule("Yes, anytime");
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			configurationPage.publishNowTheTemplate();
+			Thread.sleep(3000);
+			switchToConsoleWindow();
+			refreshCachesAfterChangeTemplate();
 
 			dashboardPage.navigateToDashboard();
 			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
@@ -4761,19 +4749,20 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 			newShiftPage.closeCustomizeNewShiftWindow();
 
-			shiftOperatePage.clickOnProfileIcon();
-			shiftOperatePage.clickOnEditShiftTime();
-			Thread.sleep(5000);
-			shiftOperatePage.verifyEditShiftTimePopUpDisplay();
-			if (!shiftOperatePage.isEditShiftTimeNewUIDisplay()) {
-				List<String> startAndEndHrsOnEditShiftPage = shiftOperatePage.getStartAndEndOperatingHrsOnEditShiftPage();
-				SimpleUtils.assertOnFail("The operating hours on create shift page display incorrectly! ",
-						startAndEndHrsOnEditShiftPage.get(0).equalsIgnoreCase("6")
-								&& startAndEndHrsOnEditShiftPage.get(1).equalsIgnoreCase("11"),false);
-			}
-			shiftOperatePage.clickOnCancelEditShiftTimeButton();
-			Thread.sleep(5000);
-			scheduleMainPage.clickOnCancelButtonOnEditMode();
+			//Profile option been disabled
+//			shiftOperatePage.clickOnProfileIcon();
+//			shiftOperatePage.clickOnEditShiftTime();
+//			Thread.sleep(5000);
+//			shiftOperatePage.verifyEditShiftTimePopUpDisplay();
+//			if (!shiftOperatePage.isEditShiftTimeNewUIDisplay()) {
+//				List<String> startAndEndHrsOnEditShiftPage = shiftOperatePage.getStartAndEndOperatingHrsOnEditShiftPage();
+//				SimpleUtils.assertOnFail("The operating hours on create shift page display incorrectly! ",
+//						startAndEndHrsOnEditShiftPage.get(0).equalsIgnoreCase("6")
+//								&& startAndEndHrsOnEditShiftPage.get(1).equalsIgnoreCase("11"),false);
+//			}
+//			shiftOperatePage.clickOnCancelEditShiftTimeButton();
+//			Thread.sleep(5000);
+//			scheduleMainPage.clickOnCancelButtonOnEditMode();
 
 			scheduleCommonPage.clickOnDayView();
 			List<String> gridHeaderTimes = new ArrayList();
@@ -4884,6 +4873,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			controlsNewUIPage.clickOnGlobalLocationButton();
 			OpsPortalConfigurationPage opsPortalConfigurationPage = (OpsPortalConfigurationPage) pageFactory.createOpsPortalConfigurationPage();
 			opsPortalConfigurationPage.setWFS("No");
+			ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+			configurationPage.publishNowTheTemplate();
+			Thread.sleep(3000);
+			switchToConsoleWindow();
 
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -5040,14 +5033,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Login as admin
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			//Enable ScheduleShowFullNames toggle
+			refreshCachesAfterChangeToggleOrABSwitch();
+			Thread.sleep(3000);
+			loginPage.logOut();
+			//Login as admin
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-
 			//Go to one schedule page week view
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -5056,10 +5052,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.navigateToNextWeek();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-			if (!isActiveWeekGenerated) {
-				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
-
+			createSchedulePage.createScheduleForNonDGFlowNewUI();
 			//Delete all unassigned shifts and tm's shifts
 			shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -5162,7 +5158,12 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String firstAndInitialSecondName = tmFullName.split(" ")[0] + " " + tmFullName.split(" ")[1].substring(0, 1) + ".";
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-
+			//Login as admin
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+			//Enable ScheduleShowFullNames toggle
+			refreshCachesAfterChangeToggleOrABSwitch();
+			Thread.sleep(3000);
+			loginPage.logOut();
 			//Login as admin
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			//Enable ScheduleShowFullNames toggle
@@ -5200,6 +5201,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.clickOnDayViewAddNewShiftButton();
 			newShiftPage.customizeNewShiftPage();
 			newShiftPage.clearAllSelectedDays();
+			newShiftPage.selectDaysByIndex(0,0,1);
 			newShiftPage.selectSpecificWorkDay(1);
 			newShiftPage.moveSliderAtCertainPoint("4pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
 			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
@@ -5287,12 +5289,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			TeamPage teamPage = pageFactory.createConsoleTeamPage();
 
-			controlsPage.gotoControlsPage();
-			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-			SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-			controlsNewUIPage.clickOnControlsSchedulingPolicies();
-			controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
-			int advancedDays = controlsNewUIPage.getDaysInAdvanceCreateTimeOff();
+			int advancedDays = 2;
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 
@@ -5612,6 +5609,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
 			//Go to one schedule page day view
@@ -5625,6 +5623,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			if (!isActiveWeekGenerated) {
 				createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("06:00AM", "06:00PM");
 			}
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+			scheduleMainPage.saveSchedule();
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
@@ -6084,6 +6085,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Disable the ScheduleEditShiftTimeNew
 			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
 					getUserNameNPwdForCallingAPI().get(1), false);
+			refreshCachesAfterChangeToggleOrABSwitch();
+			Thread.sleep(3000);
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
@@ -6120,6 +6123,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			shiftOperatePage.clickOnCancelEditShiftTimeButton();
 			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
 					getUserNameNPwdForCallingAPI().get(1), true);
+			refreshCachesAfterChangeToggleOrABSwitch();
+			Thread.sleep(3000);
 			loginPage.logOut();
 			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			//Go to one schedule page day view
@@ -6157,7 +6162,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	public void verifyTheShiftTimesConsistentOnInputAndShiftCardAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
 		try {
 			//Enable the ScheduleEditShiftTimeNew
-			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
+					getUserNameNPwdForCallingAPI().get(1), true);
+			refreshCachesAfterChangeToggleOrABSwitch();
+			Thread.sleep(3000);
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			//Login as admin
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -6242,7 +6254,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	public void verifyTheShiftTimeCanBeSetMoreThan24HrsThatSetByShiftTimeInputAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
 		try {
 			//Enable the ScheduleEditShiftTimeNew
-			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
+					getUserNameNPwdForCallingAPI().get(1), true);
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -6291,7 +6304,14 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	public void verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
 		try {
 			//Enable the ScheduleEditShiftTimeNew
-			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
+					getUserNameNPwdForCallingAPI().get(1), true);
+			refreshCachesAfterChangeToggleOrABSwitch();
+			Thread.sleep(3000);
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			loginPage.logOut();
+			//Login as admin
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -6356,7 +6376,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	public void verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin(String username, String password, String browser, String location) throws Exception {
 		try {
 			//Enable the ScheduleEditShiftTimeNew
-			ABSwitchAPI.enableABSwitch(AbSwitches.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0), getUserNameNPwdForCallingAPI().get(1));
+			ToggleAPI.updateToggle(Toggles.ScheduleEditShiftTimeNew.getValue(), getUserNameNPwdForCallingAPI().get(0),
+					getUserNameNPwdForCallingAPI().get(1), true);
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -6605,10 +6626,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				locationsPage.selectBudgetGroup("By Location");
 				locationsPage.saveTheGlobalConfiguration();
 				Thread.sleep(240000);
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				//Back to the console page
+				switchToConsoleWindow();
 			}
 
 			//Go to the forecast labor tab
@@ -6736,10 +6755,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
 				Thread.sleep(240000);
 
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				//Back to the console page
+				switchToConsoleWindow();
 			}
 
 			//Go to forecast page, clear the budget value
@@ -6806,10 +6823,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(permissionSection,permission,actionOn);
 				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
 				Thread.sleep(240000);
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				//Back to the console page
+				switchToConsoleWindow();
 
 				//Login as SM, check the Create Schedule button is enabled
 				loginPage.logOut();
@@ -6869,10 +6884,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				compliancePage.editDayOTSetting("8 hours", "single work day", true);
 				configurationPage.publishNowTheTemplate();
 				Thread.sleep(240000);
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				//Back to the console page
+				switchToConsoleWindow();
 			}
 
 			//Go to the schedule view table
@@ -7018,10 +7031,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				controlsNewUIPage.selectClopeningHoursOP("12");
 				configurationPage.publishNowTheTemplate();
 				Thread.sleep(240000);
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				//Back to the console page
+				switchToConsoleWindow();
 			}
 
 			//Go to the schedule view table
@@ -7507,10 +7518,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				controlsNewUIPage.enableOverRideAssignmentRuleAsYesForOP();
 				configurationPage.publishNowTheTemplate();
 				Thread.sleep(240000);
-				if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-					//Back to the console page
-					switchToConsoleWindow();
-				}
+				//Back to the console page
+				switchToConsoleWindow();
 			}
 		}
 	}
@@ -7537,7 +7546,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-			boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//			boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
 //			if (!isLocationUsingControlsConfiguration) {
 //				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
 //				locationsPage.clickOnLocationsTab();
@@ -8245,7 +8254,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			Thread.sleep(5000);
-			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "09:00pm");
+			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("07:00am", "09:00pm");
 
 			//Edit the operating day and cancel all actions.
 			scheduleMainPage.goToToggleSummaryView();
@@ -8305,9 +8314,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			scheduleMainPage.goToEditOperatingHoursView();
 			List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
-			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "08:00AM","09:00PM");
+			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "07:00AM","09:00PM");
 			scheduleMainPage.clickSaveBtnOnEditOpeHoursPage();
-			scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "8AM-9PM");
+			scheduleMainPage.checkOpeHrsOfParticualrDayOnToggleSummary(weekDays, "7AM-9PM");
 		}
 	}
 
@@ -8393,17 +8402,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
 			ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
 			String tmPartialName = "WMTester";
 			String workRole;
-			if (isLocationUsingControlsConfiguration){
-				//Go to compliance page and set week OT violation
-				workRole = "Retail Associate";
-				controlsNewUIPage.clickOnControlsConsoleMenu();
-				controlsNewUIPage.clickOnControlsComplianceSection();
-				compliancePage.turnOnOrTurnOffWeeklyOTToggle(true);
-				compliancePage.editWeeklyOTSetting("40 hours");
-			}else {
+//			if (isLocationUsingControlsConfiguration){
+//				//Go to compliance page and set week OT violation
+//				workRole = "Retail Associate";
+//				controlsNewUIPage.clickOnControlsConsoleMenu();
+//				controlsNewUIPage.clickOnControlsComplianceSection();
+//				compliancePage.turnOnOrTurnOffWeeklyOTToggle(true);
+//				compliancePage.editWeeklyOTSetting("40 hours");
+//			}else {
 				workRole = "TEAM MEMBER CORPORATE-THEATRE";
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
 				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -8425,7 +8434,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				compliancePage.editWeeklyOTSetting("40");
 				configurationPage.publishNowTheTemplate();
 				switchToConsoleWindow();
-			}
+//			}
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(60000);
 
@@ -8667,31 +8676,31 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String role = "Team Member";
 			String actionOn = "on";
 			String actionOff = "off";
-			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-			if (isLocationUsingControlsConfiguration){
-				//Go to Users and Roles page
-				controlsNewUIPage.clickOnControlsConsoleMenu();
-				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-				controlsNewUIPage.clickOnGlobalLocationButton();
-				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
-
-				//Check the View Team Schedule permission for SM and TM
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOff);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOff);
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-
-			}else {
+//			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//			if (isLocationUsingControlsConfiguration){
+//				//Go to Users and Roles page
+//				controlsNewUIPage.clickOnControlsConsoleMenu();
+//				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+//				controlsNewUIPage.clickOnGlobalLocationButton();
+//				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+//
+//				//Check the View Team Schedule permission for SM and TM
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+//
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOff);
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOff);
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+//
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+//
+//			}else {
 				//Go to Users and Roles page and switch to the Access Roles sub tab
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
 				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -8717,7 +8726,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
 				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
 				switchToConsoleWindow();
-			}
+//			}
 		} catch (Exception e) {
 			SimpleUtils.fail(e.getMessage(), false);
 		} finally {
@@ -8729,20 +8738,20 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			String permission = "View Team Schedule";
 			String role = "Team Member";
 			String actionOn = "on";
-			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-			if (isLocationUsingControlsConfiguration){
-				//Go to Users and Roles page
-				controlsNewUIPage.clickOnControlsConsoleMenu();
-				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
-				controlsNewUIPage.clickOnGlobalLocationButton();
-				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
-
-				//Add the View Team Schedule permission for SM and TM
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
-				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
-				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-			}else {
+//			Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//			if (isLocationUsingControlsConfiguration){
+//				//Go to Users and Roles page
+//				controlsNewUIPage.clickOnControlsConsoleMenu();
+//				controlsNewUIPage.clickOnControlsUsersAndRolesSection();
+//				controlsNewUIPage.clickOnGlobalLocationButton();
+//				controlsNewUIPage.selectUsersAndRolesSubTabByLabel(accessRoleTab);
+//
+//				//Add the View Team Schedule permission for SM and TM
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Edit.getValue());
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section, permission, actionOn);
+//				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
+//				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
+//			}else {
 				//Go to Users and Roles page and switch to the Access Roles sub tab
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
 				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -8757,7 +8766,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForSM(section,permission,actionOn);
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(section, role, permission, actionOn);
 				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
-			}
+//			}
 		}
 	}
 
@@ -9378,6 +9387,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if(isActiveWeekGenerated){
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();

@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface ShiftOperatePage {
     public void deleteShift() throws Exception;
-	public void deleteAllShiftsInDayView() throws Exception;
     public void convertAllUnAssignedShiftToOpenShift() throws Exception;
     public void convertUnAssignedShiftToOpenShift(WebElement unAssignedShift) throws Exception;
     public void  verifyDeleteShift() throws Exception;

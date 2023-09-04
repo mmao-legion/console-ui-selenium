@@ -12,6 +12,7 @@ import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.Constants;
 import com.legion.utils.JsonUtil;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -187,8 +188,8 @@ public class ActivityTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(swapCoverNames.get(0));
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(swapCoverNames.get(1));
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
-            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
             // Add the new shifts for swap team members
             Thread.sleep(5000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -216,8 +217,13 @@ public class ActivityTest extends TestBase {
         SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
         controlsNewUIPage.clickOnControlsScheduleCollaborationSection();
         SimpleUtils.assertOnFail("Schedule Collaboration Page not loaded Successfully!", controlsNewUIPage.isControlsScheduleCollaborationLoaded(), false);
-        String option = "Always";
+        String option = "Yes";
         controlsNewUIPage.updateSwapAndCoverRequestIsApprovalRequired(option);
+        ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+        configurationPage.publishNowTheTemplate();
+        Thread.sleep(3000);
+        switchToConsoleWindow();
+        refreshCachesAfterChangeTemplate();
 
         LoginPage loginPage = pageFactory.createConsoleLoginPage();
         loginPage.logOut();
@@ -1559,12 +1565,18 @@ public class ActivityTest extends TestBase {
     public void verifyTheNotificationForRequestTimeOffAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
             ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
-            controlsPage.gotoControlsPage();
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-            controlsNewUIPage.clickOnControlsSchedulingPolicies();
-            controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
-            int advancedDays = controlsNewUIPage.getDaysInAdvanceCreateTimeOff();
+            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+//            controlsPage.gotoControlsPage();
+//            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+//            SimpleUtils.assertOnFail("Controls Page not loaded Successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
+//            configurationPage.clickOnConfigurationCrad("Scheduling Policies");
+//            configurationPage.clickOnSpecifyTemplateName(MyThreadLocal.getTemplateTypeAndName().get("Scheduling Policies"), "edit");
+
+//            controlsNewUIPage.clickOnControlsSchedulingPolicies();
+//            controlsNewUIPage.clickOnSchedulingPoliciesTimeOffAdvanceBtn();
+//            int advancedDays = controlsNewUIPage.getDaysInAdvanceCreateTimeOff();
+            int advancedDays =0;
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
 

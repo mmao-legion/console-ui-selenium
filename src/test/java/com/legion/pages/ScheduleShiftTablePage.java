@@ -135,6 +135,7 @@ public interface ScheduleShiftTablePage {
     public void verifySelectedShiftsAreMarkedWithX(HashSet<Integer> selectedIndexes) throws Exception;
     public LinkedHashMap<String, Integer> getWeekDayAndDate() throws Exception;
     public void bulkDeleteTMShiftsInWeekView(String teamMemberName) throws Exception;
+    public void bulkDeleteAllShiftsInDayView() throws Exception;
     public List<String> getSelectedWorkDays(HashSet<Integer> set) throws Exception;
     public List<WebElement> selectMultipleDifferentAssignmentShiftsOnOneDay(int shiftCount, int dayIndex) throws Exception;
     public List<WebElement> selectMultipleSameAssignmentShifts(int shiftCount, String tmName) throws Exception;

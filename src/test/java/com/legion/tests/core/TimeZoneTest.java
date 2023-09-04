@@ -41,32 +41,23 @@ public class TimeZoneTest extends TestBase {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             String enterprise = System.getProperty("enterprise").toLowerCase();
-            if (enterprise.equalsIgnoreCase("vailqacn")) {
-                // Check UTC time format in Controls-->Location Profile-->Edit
-                controlsPage.gotoControlsPage();
-                SimpleUtils.assertOnFail("Controls page not loaded successfully!", controlsNewUIPage.isControlsPageLoaded(), false);
-                controlsNewUIPage.clickOnControlsLocationProfileSection();
-                SimpleUtils.assertOnFail("Scheduling Location Profile page not loaded successfully!", controlsNewUIPage.isControlsLocationProfileLoaded(), false);
-                controlsNewUIPage.clickOnLocationProfileEditLocationBtn();
-                controlsNewUIPage.checkTimeZoneDropdownOptions(593, "UTC");
-            } else if (enterprise.equalsIgnoreCase("cinemark-wkdy")) {
-                // Check UTC time format in Control Center-->Locations-->Enterprise Configuration-->Edit
-                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-                locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-                SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-                locationsPage.clickOnLocationsTab();
-                locationsPage.clickEditEnterpriseProfile();
-                controlsNewUIPage.checkTimeZoneDropdownOptions(593, "UTC");
 
-                // Check UTC time format in Control Center-->Locations-->Location Configuration-->Edit
-                locationsPage.clickOnLocationsTab();
-                locationsPage.goToSubLocationsInLocationsPage();
-                locationsPage.searchLocation(location);
-                SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
-                locationsPage.clickOnLocationInLocationResult(location);
-                locationsPage.editLocationBtnIsClickableInLocationDetails();
-                controlsNewUIPage.checkTimeZoneDropdownOptions(601, "UTC");
-            }
+            // Check UTC time format in Control Center-->Locations-->Enterprise Configuration-->Edit
+            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.clickEditEnterpriseProfile();
+            controlsNewUIPage.checkTimeZoneDropdownOptions(593, "UTC");
+
+            // Check UTC time format in Control Center-->Locations-->Location Configuration-->Edit
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.editLocationBtnIsClickableInLocationDetails();
+            controlsNewUIPage.checkTimeZoneDropdownOptions(601, "UTC");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

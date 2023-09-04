@@ -40,7 +40,6 @@ public class FTSERelevantTest extends TestBase {
     private static HashMap<String, Object[][]> cinemarkWkdyTeamMembers = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson("CinemarkWkdyTeamMembers.json");
     private static String opWorkRole = scheduleWorkRoles.get("RETAIL_ASSOCIATE");
     private static String controlWorkRole = scheduleWorkRoles.get("RETAIL_RENTAL_MGMT");
-    private static String controlEnterprice = "Vailqacn_Enterprise";
     private static String opEnterprice = "CinemarkWkdy_Enterprise";
 
     public enum weekCount {
@@ -313,17 +312,17 @@ public class FTSERelevantTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
-            if (isLocationUsingControlsConfiguration){
-                //Go to compliance page and set day OT violation
-                workRole = "Training";
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-                compliancePage.turnOnOrTurnOffDayOTToggle(true);
-                compliancePage.editDayOTSetting("8 hours", "single work day", true);
-            }else {
+//            if (isLocationUsingControlsConfiguration){
+//                //Go to compliance page and set day OT violation
+//                workRole = "Training";
+//                controlsNewUIPage.clickOnControlsConsoleMenu();
+//                controlsNewUIPage.clickOnControlsComplianceSection();
+//                compliancePage.turnOnOrTurnOffDayOTToggle(true);
+//                compliancePage.editDayOTSetting("8 hours", "single work day", true);
+//            }else {
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -348,7 +347,6 @@ public class FTSERelevantTest extends TestBase {
                     //Back to the console page
                     switchToConsoleWindow();
                 }
-            }
 
             //Go to the schedule page
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -409,17 +407,17 @@ public class FTSERelevantTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
-            if (isLocationUsingControlsConfiguration){
-                //Go to compliance page and set week OT violation
-                workRole = "Training";
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-                compliancePage.turnOnOrTurnOffWeeklyOTToggle(true);
-                compliancePage.editWeeklyOTSetting("40 hours");
-            }else {
+//            if (isLocationUsingControlsConfiguration){
+//                //Go to compliance page and set week OT violation
+//                workRole = "Training";
+//                controlsNewUIPage.clickOnControlsConsoleMenu();
+//                controlsNewUIPage.clickOnControlsComplianceSection();
+//                compliancePage.turnOnOrTurnOffWeeklyOTToggle(true);
+//                compliancePage.editWeeklyOTSetting("40 hours");
+//            }else {
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -445,7 +443,6 @@ public class FTSERelevantTest extends TestBase {
                     //Back to the console page
                     switchToConsoleWindow();
                 }
-            }
 
             //Go to the schedule view table
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -512,17 +509,17 @@ public class FTSERelevantTest extends TestBase {
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
-            if (isLocationUsingControlsConfiguration){
-                //Go to the compliance page and set the 7th Consecutive OT
-                workRole = "Training";
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-                compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
-                compliancePage.editConsecutiveOTSetting("7th","always", true);
-            }else {
+//            if (isLocationUsingControlsConfiguration){
+//                //Go to the compliance page and set the 7th Consecutive OT
+//                workRole = "Training";
+//                controlsNewUIPage.clickOnControlsConsoleMenu();
+//                controlsNewUIPage.clickOnControlsComplianceSection();
+//                compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
+//                compliancePage.editConsecutiveOTSetting("7th","always", true);
+//            }else {
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -548,7 +545,6 @@ public class FTSERelevantTest extends TestBase {
                     //Back to the console page
                     switchToConsoleWindow();
                 }
-            }
 
             //Go to the schedule view table
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -617,18 +613,18 @@ public class FTSERelevantTest extends TestBase {
             CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
 
             //Go to the compliance page and set the 24Hrs OT
-            if (isLocationUsingControlsConfiguration){
-                workRole = "Training";
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-                compliancePage.turnOnOrTurnOffDayOTToggle(true);
-                compliancePage.editDayOTSetting("8 hours","24 hour period",true);
-            }else {
+//            if (isLocationUsingControlsConfiguration){
+//                workRole = "Training";
+//                controlsNewUIPage.clickOnControlsConsoleMenu();
+//                controlsNewUIPage.clickOnControlsComplianceSection();
+//                compliancePage.turnOnOrTurnOffDayOTToggle(true);
+//                compliancePage.editDayOTSetting("8 hours","24 hour period",true);
+//            }else {
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -653,7 +649,6 @@ public class FTSERelevantTest extends TestBase {
                     //Back to the console page
                     switchToConsoleWindow();
                 }
-            }
 
             //Go to the schedule view table
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -714,19 +709,19 @@ public class FTSERelevantTest extends TestBase {
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
 
             //Set the clopening violation
-            if (isLocationUsingControlsConfiguration) {
-                workRole = "Training";
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsSchedulingPolicies();
-                SimpleUtils.assertOnFail("Scheduling Policies Page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
-                controlsNewUIPage.selectClopeningHours(12);
-
-            }else {
+//            if (isLocationUsingControlsConfiguration) {
+//                workRole = "Training";
+//                controlsNewUIPage.clickOnControlsConsoleMenu();
+//                controlsNewUIPage.clickOnControlsSchedulingPolicies();
+//                SimpleUtils.assertOnFail("Scheduling Policies Page not loaded Successfully!", controlsNewUIPage.isControlsSchedulingPoliciesLoaded(), false);
+//                controlsNewUIPage.selectClopeningHours(12);
+//
+//            }else {
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -750,7 +745,6 @@ public class FTSERelevantTest extends TestBase {
                     //Back to the console page
                     switchToConsoleWindow();
                 }
-            }
 
             //Go to the schedule view table
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -813,16 +807,16 @@ public class FTSERelevantTest extends TestBase {
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
 
             //Go to the schedule view table
-            if (isLocationUsingControlsConfiguration) {
-                workRole = "Training";
-            }else {
+//            if (isLocationUsingControlsConfiguration) {
+//                workRole = "Training";
+//            }else {
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
-            }
+//            }
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -885,16 +879,16 @@ public class FTSERelevantTest extends TestBase {
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
 
             //Go to the schedule view table
-            if (isLocationUsingControlsConfiguration) {
-                workRole = "Rental Service Tech";
-            }else {
+//            if (isLocationUsingControlsConfiguration) {
+//                workRole = "Rental Service Tech";
+//            }else {
                 workRole = "2ND JOB–ASSISTANT MANAGER";
-            }
+//            }
 
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -954,16 +948,16 @@ public class FTSERelevantTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
 
             //Go to the schedule view table
-            if (isLocationUsingControlsConfiguration) {
-                workRole = "Training";
-            }else {
+//            if (isLocationUsingControlsConfiguration) {
+//                workRole = "Training";
+//            }else {
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
-            }
+//            }
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -1025,16 +1019,16 @@ public class FTSERelevantTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester2";
             String workRole;
 
             //Go to the schedule view table
-            if (isLocationUsingControlsConfiguration) {
-                workRole = "Training";
-            }else {
+//            if (isLocationUsingControlsConfiguration) {
+//                workRole = "Training";
+//            }else {
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
-            }
+//            }
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -1095,16 +1089,16 @@ public class FTSERelevantTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester3";
             String workRole;
 
             //Go to the schedule view table
-            if (isLocationUsingControlsConfiguration) {
-                workRole = "Training";
-            }else {
+//            if (isLocationUsingControlsConfiguration) {
+//                workRole = "Training";
+//            }else {
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
-            }
+//            }
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -1165,16 +1159,16 @@ public class FTSERelevantTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester4";
             String workRole;
 
             //Go to the schedule view table
-            if (isLocationUsingControlsConfiguration) {
-                workRole = "Training";
-            }else {
+//            if (isLocationUsingControlsConfiguration) {
+//                workRole = "Training";
+//            }else {
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
-            }
+//            }
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -1235,16 +1229,16 @@ public class FTSERelevantTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester5";
             String workRole;
 
             //Go to the schedule view table
-            if (isLocationUsingControlsConfiguration) {
-                workRole = "Training";
-            }else {
+//            if (isLocationUsingControlsConfiguration) {
+//                workRole = "Training";
+//            }else {
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
-            }
+//            }
 
             //Go to the schedule view table
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
@@ -1307,16 +1301,16 @@ public class FTSERelevantTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester6";
             String workRole;
 
             //Go to the schedule view table
-            if (isLocationUsingControlsConfiguration) {
-                workRole = "Training";
-            }else {
+//            if (isLocationUsingControlsConfiguration) {
+//                workRole = "Training";
+//            }else {
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
-            }
+//            }
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
@@ -1375,19 +1369,19 @@ public class FTSERelevantTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
 
             //Set the split shifts violation
-            if (isLocationUsingControlsConfiguration){
-                //Go to Controls page and set split shift violation
-                workRole = "Training";
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-                controlsNewUIPage.turnOnOrTurnOffSplitShiftToggle(true);
-                controlsNewUIPage.editSplitShiftPremium("1", "60", true);
-            }else {
+//            if (isLocationUsingControlsConfiguration){
+//                //Go to Controls page and set split shift violation
+//                workRole = "Training";
+//                controlsNewUIPage.clickOnControlsConsoleMenu();
+//                controlsNewUIPage.clickOnControlsComplianceSection();
+//                controlsNewUIPage.turnOnOrTurnOffSplitShiftToggle(true);
+//                controlsNewUIPage.editSplitShiftPremium("1", "60", true);
+//            }else {
                 //Go to OP page
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1415,7 +1409,7 @@ public class FTSERelevantTest extends TestBase {
                     //Back to the console page
                     switchToConsoleWindow();
                 }
-            }
+//            }
 
             //Go to the schedule view table
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
@@ -1498,17 +1492,17 @@ public class FTSERelevantTest extends TestBase {
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
-            if (isLocationUsingControlsConfiguration){
-                //Go to Controls page
-                workRole = "Training";
-                controlsNewUIPage.clickOnControlsConsoleMenu();
-                controlsNewUIPage.clickOnControlsComplianceSection();
-                controlsNewUIPage.turnOnOrTurnOffSpreadOfHoursToggle(true);
-                controlsNewUIPage.editSpreadOfHoursPremium("1", "10", true);
-            } else {
+//            if (isLocationUsingControlsConfiguration){
+//                //Go to Controls page
+//                workRole = "Training";
+//                controlsNewUIPage.clickOnControlsConsoleMenu();
+//                controlsNewUIPage.clickOnControlsComplianceSection();
+//                controlsNewUIPage.turnOnOrTurnOffSpreadOfHoursToggle(true);
+//                controlsNewUIPage.editSpreadOfHoursPremium("1", "10", true);
+//            } else {
                 //Go to OP page
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
@@ -1536,7 +1530,7 @@ public class FTSERelevantTest extends TestBase {
                     //Back to the console page
                     switchToConsoleWindow();
                 }
-            }
+//            }
 
             //Go to the schedule view table
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
@@ -1602,20 +1596,20 @@ public class FTSERelevantTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
-            if (isLocationUsingControlsConfiguration){
-                //Go to Controls page
-                workRole = "Training";
-            } else {
+//            if (isLocationUsingControlsConfiguration){
+//                //Go to Controls page
+//                workRole = "Training";
+//            } else {
                 //Go to OP page
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
                 if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
                     //Back to the console page
                     switchToConsoleWindow();
                 }
-            }
+//            }
             //Go to the schedule view table
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -1636,7 +1630,8 @@ public class FTSERelevantTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             scheduleCommonPage.clickOnDayView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            shiftOperatePage.deleteAllShiftsInDayView();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
             scheduleMainPage.saveSchedule();
 
             //Create the particular shift and verify the face bubble is displayed
@@ -1653,7 +1648,6 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             Thread.sleep(5000);
             SimpleUtils.assertOnFail("The shift's info doesn't include face bubble!", scheduleShiftTablePage.isInfoIconLoaded(0)
                     &&scheduleShiftTablePage.isProfileIconLoaded(0), false);
@@ -1722,20 +1716,20 @@ public class FTSERelevantTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
-            if (isLocationUsingControlsConfiguration){
-                //Go to Controls page
-                workRole = "Training";
-            } else {
+//            if (isLocationUsingControlsConfiguration){
+//                //Go to Controls page
+//                workRole = "Training";
+//            } else {
                 //Go to OP page
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
                 if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
                     //Back to the console page
                     switchToConsoleWindow();
                 }
-            }
+//            }
 
             //Go to the schedule view table
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
@@ -1839,20 +1833,20 @@ public class FTSERelevantTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
-            if (isLocationUsingControlsConfiguration){
-                //Go to Controls page
-                workRole = "Training";
-            } else {
+//            if (isLocationUsingControlsConfiguration){
+//                //Go to Controls page
+//                workRole = "Training";
+//            } else {
                 //Go to OP page
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
                 if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
                     //Back to the console page
                     switchToConsoleWindow();
                 }
-            }
+//            }
 
             //Go to the schedule view table
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
@@ -2001,16 +1995,19 @@ public class FTSERelevantTest extends TestBase {
 //            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
 //            String tmPartialName = "Tester1";
 //            String workRole;
+
 //            if (isLocationUsingControlsConfiguration){
 //                //Go to Controls page
 //                workRole = "Training";
 //            } else {
+
 //                //Go to OP page
 //                workRole = "TEAM MEMBER CORPORATE-THEATRE";
 //                if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
 //                    //Back to the console page
 //                    switchToConsoleWindow();
 //                }
+
 //            }
 
             //Go to the schedule view table
@@ -2121,20 +2118,20 @@ public class FTSERelevantTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
-            if (isLocationUsingControlsConfiguration){
-                //Go to Controls page
-                workRole = "Training";
-            } else {
+//            if (isLocationUsingControlsConfiguration){
+//                //Go to Controls page
+//                workRole = "Training";
+//            } else {
                 //Go to OP page
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
                 if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
                     //Back to the console page
                     switchToConsoleWindow();
                 }
-            }
+//            }
 
             //Go to the schedule view table
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
@@ -2211,20 +2208,20 @@ public class FTSERelevantTest extends TestBase {
             TeamPage consoleTeamPage = pageFactory.createConsoleTeamPage();
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
+//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
             String workRole;
-            if (isLocationUsingControlsConfiguration) {
-                //Go to Controls page
-                workRole = "Training";
-            } else {
+//            if (isLocationUsingControlsConfiguration) {
+//                //Go to Controls page
+//                workRole = "Training";
+//            } else {
                 //Go to OP page
                 workRole = "TEAM MEMBER CORPORATE-THEATRE";
                 if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
                     //Back to the console page
                     switchToConsoleWindow();
                 }
-            }
+//            }
 
             //Go to the schedule view table and un-generate the schedule
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -2243,7 +2240,7 @@ public class FTSERelevantTest extends TestBase {
             consoleTeamPage.searchAndSelectTeamMemberByName(tmPartialName);
             consoleTeamPage.navigateToWorkPreferencesTab();
             consoleTeamPage.editOrUnLockAvailability();
-            String hoursType = "Preferred";
+            String hoursType = "When I prefer to work";
             String availabilityChangesRepeat = "repeat forward";
             profileNewUIPage.deleteAllAvailabilitiesForCurrentWeek();
             profileNewUIPage.updateSpecificPreferredOrBusyHoursToAllWeek(hoursType);

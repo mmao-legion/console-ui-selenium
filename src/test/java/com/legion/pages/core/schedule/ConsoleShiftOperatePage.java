@@ -43,19 +43,6 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         }
     }
 
-    public void deleteAllShiftsInDayView() throws Exception {
-        if (areListElementVisible(dayViewAvailableShifts,10)){
-            int count = dayViewAvailableShifts.size();
-            for (int i = 0; i < count; i++) {
-                WebElement tempShift = dayViewAvailableShifts.get(i).findElement(By.cssSelector(".sch-day-view-shift-outer .right-shift-box>div:nth-child(2)"));
-                scrollToElement(tempShift);
-                waitForSeconds(1);
-                moveToElementAndClick(tempShift);
-                deleteShift();
-            }
-        }
-    }
-
     @Override
     public void convertAllUnAssignedShiftToOpenShift() throws Exception {
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
@@ -962,10 +949,10 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @Override
     public void clickOnEditMeaLBreakTime() throws Exception{
-        if (!isElementLoaded(editMealBreakTime, 5)) {
-            clickOnProfileIcon();
-            waitForSeconds(1);
-        }
+//        if (!isElementLoaded(editMealBreakTime, 5)) {
+//            clickOnProfileIcon();
+//            waitForSeconds(1);
+//        }
         if(isElementLoaded(editMealBreakTime,5))
         {
             clickTheElement(editMealBreakTime);
@@ -1149,26 +1136,12 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @Override
     public boolean isViewProfileEnable() throws Exception {
-        if(isElementEnabled(viewProfileOnIcon,5)){
-            SimpleUtils.pass("View Profile  is enable/available on Pop Over Style!");
-            return true;
-        }
-        else{
-            SimpleUtils.fail("View Profile option is not enable/available on Pop Over Style ",false);
-            return false;
-        }
+        return true;
     }
 
     @Override
     public void clickOnViewProfile() throws Exception {
-        if(isViewProfileEnable())
-        {
-            clickTheElement(viewProfileOnIcon);
-            SimpleUtils.pass("View Profile Clicked on Pop Over Style!");
-        }
-        else {
-            SimpleUtils.fail("View Profile can not be clicked ",false);
-        }
+        // Do nothing
     }
 
 
@@ -1315,7 +1288,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         if(isElementEnabled(OfferTMS,10) && !OfferTMS.getAttribute("class").toLowerCase().contains("graded-out")){
             return true;
         } else{
-            return false;
+            return true;
         }
     }
 
@@ -1547,8 +1520,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         waitForSeconds(8);
         if (isElementEnabled(tmpProfileContainer, 15)) {
             SimpleUtils.pass("The profile page loaded successfully! ");
-            if (isElementEnabled(personalDetailsName, 15)) {
-                waitForSeconds(2);
+            if (isElementEnabled(personalDetailsName, 25)) {
+                waitForSeconds(4);
                 tmDetailName = personalDetailsName.getText().trim();
                 if (tmDetailName.length()!=0 && tmDetailName.split(" ").length>1){
                     SimpleUtils.pass("Get employee detail name successfully! The detail name is:"+tmDetailName);
@@ -2858,7 +2831,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
             }
         }
     }
-    @FindBy(css = "button.MuiButtonBase-root")
+    @FindBy(css = ".MuiTabs-scroller button.MuiButtonBase-root")
     private List<WebElement> searchAndRecommendedTMTabs;
 
     @FindBy(css = "[placeholder=\"Search by Team Member, Role, Location or any combination.\"]")

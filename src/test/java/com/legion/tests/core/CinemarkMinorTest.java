@@ -188,7 +188,9 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.clickOnCreateNewCalendarButton();
             teamPage.selectSchoolYear();
             teamPage.clickOnSchoolSessionStart();
-            if (!dayInfo.get("month").contains("Jul")) {
+            Calendar calendar = Calendar.getInstance();
+            int month = calendar.get(Calendar.MONTH) + 1;
+            if (month < 6) {
                 //First half of the year
                 teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year")) - 1) + " Aug 1",
                         (Integer.parseInt(dayInfo.get("year"))) + " " + dayInfo.get("month") + " " + dayInfo.get("day"));
@@ -1988,8 +1990,8 @@ public class CinemarkMinorTest extends TestBase {
             configurationPage.goToUserManagementPage();
             configurationPage.goToDynamicEmployeeGroupPage();
             //delete all dynamic employee group
-            String minor15GroupTitle = "Minor15Group-ForAuto";
-            configurationPage.deleteSpecifyDynamicEmployeeGroupsInList(minor15GroupTitle);
+            String minor16GroupTitle = "Minor16Group-ForAuto";
+            configurationPage.deleteSpecifyDynamicEmployeeGroupsInList(minor16GroupTitle);
             //create a User Group for 13 year old minors
             List<String> groupCriteriaList = new ArrayList<>();
 //            groupCriteriaList.clear();
@@ -2008,21 +2010,21 @@ public class CinemarkMinorTest extends TestBase {
 //            configurationPage.createNewDynamicEmployeeGroup(minor14GroupTitle, minor14GroupDescription,
 //                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
 //            Thread.sleep(10000);
-
-            String minor15GroupDescription = "Minor15-Description-ForAuto";
-            groupCriteriaList.clear();
-            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
-                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals15.getValue());
-            configurationPage.createNewDynamicEmployeeGroup(minor15GroupTitle, minor15GroupDescription,
-                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
-//            Thread.sleep(10000);
-//            String minor16GroupTitle = "Minor16Group-ForAuto";
-//            String minor16GroupDescription = "Minor16-Description-ForAuto";
+//
+//            String minor15GroupDescription = "Minor15-Description-ForAuto";
 //            groupCriteriaList.clear();
 //            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
-//                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals16.getValue());
-//            configurationPage.createNewDynamicEmployeeGroup(minor16GroupTitle, minor16GroupDescription,
+//                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals15.getValue());
+//            configurationPage.createNewDynamicEmployeeGroup(minor15GroupTitle, minor15GroupDescription,
 //                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
+//            Thread.sleep(10000);
+//            String minor16GroupTitle = "Minor16Group-ForAuto";
+            String minor16GroupDescription = "Minor16-Description-ForAuto";
+            groupCriteriaList.clear();
+            groupCriteriaList.add(OpsPortalConfigurationPage.DynamicEmployeeGroupCriteria.Minor.getValue()+ "-"
+                    +OpsPortalConfigurationPage.DynamicEmployeeGroupMinorCriteria.Equals16.getValue());
+            configurationPage.createNewDynamicEmployeeGroup(minor16GroupTitle, minor16GroupDescription,
+                    OpsPortalConfigurationPage.DynamicEmployeeGroupLabels.MinorRule.getValue(), groupCriteriaList);
 //            Thread.sleep(10000);
 //            String minor17GroupTitle = "Minor17Group-ForAuto";
 //            String minor17GroupDescription = "Minor17-Description-ForAuto";
@@ -2034,8 +2036,8 @@ public class CinemarkMinorTest extends TestBase {
 //            Thread.sleep(10000);
             configurationPage.goToConfigurationPage();
             configurationPage.clickOnConfigurationCrad(OpsPortalConfigurationPage.configurationLandingPageTemplateCards.MinorsRules.getValue());
-            String minor15TemplateName = "Minor15Template-ForAuto";
-            configurationPage.archiveOrDeleteTemplate(minor15TemplateName);
+//            String minor15TemplateName = "Minor15Template-ForAuto";
+//            configurationPage.archiveOrDeleteTemplate(minor15TemplateName);
 //            String minor17TemplateName = "Minor17Template-ForAuto";
 //            createMinor16N17TemplateAndSetMinorSettings(minor17TemplateName, minor17GroupTitle);
 //            String minor14TemplateName = "Minor14Template-ForAuto";
@@ -2043,9 +2045,10 @@ public class CinemarkMinorTest extends TestBase {
 //            String minor13TemplateName = "Minor13Template-ForAuto";
 //            createMinor13N14N15TemplateAndSetMinorSettings(minor13TemplateName, minor13GroupTitle);
 
-            createMinor13N14N15TemplateAndSetMinorSettings(minor15TemplateName, minor15GroupTitle);
-//            String minor16TemplateName = "Minor16Template-ForAuto";
-//            createMinor16N17TemplateAndSetMinorSettings(minor16TemplateName, minor16GroupTitle);
+//            createMinor13N14N15TemplateAndSetMinorSettings(minor15TemplateName, minor15GroupTitle);
+            String minor16TemplateName = "Minor16Template-ForAuto";
+            configurationPage.archiveOrDeleteTemplate(minor16TemplateName);
+            createMinor16N17TemplateAndSetMinorSettings(minor16TemplateName, minor16GroupTitle);
 
 //            Thread.sleep(3000);
 //            switchToConsoleWindow();

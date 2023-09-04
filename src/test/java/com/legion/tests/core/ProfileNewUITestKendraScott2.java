@@ -79,7 +79,7 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
             profileNewUIPage.validateTheUpdateOfShiftPreferences(true, false);
 
             //T1838599 Validate the update of Availability.
-            profileNewUIPage.validateTheUpdateOfAvailability("Preferred", 1, "Right",
+            profileNewUIPage.validateTheUpdateOfAvailability("When I prefer to work", 1, "Right",
                     120, "This week only");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -405,12 +405,12 @@ public class ProfileNewUITestKendraScott2 extends TestBase {
 //            }
 //            String availabilityWeek1 = profileNewUIPage.getAvailabilityWeek();
 //            profileNewUIPage.clickAvailabilityEditButton();
-//            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+//            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer to work");
 //            profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 //            profileNewUIPage.clickNextWeek();
 //            String availabilityWeek2 = profileNewUIPage.getAvailabilityWeek();
 //            profileNewUIPage.clickAvailabilityEditButton();
-//            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "Preferred");
+//            profileNewUIPage.updatePreferredOrBusyHoursToAllDay(0, "When I prefer to work");
 //            profileNewUIPage.saveMyAvailabilityEditMode("This week only");
 //            String pendingCount = profileNewUIPage.getCountForStatus("pending").trim();
 //            SimpleUtils.assertOnFail("There should have 2 pending Availability Change Requests, but it actual has: "+ pendingCount,

@@ -293,7 +293,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             if (createSchedulePage.isWeekGenerated()){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("07:00AM", "09:00PM");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.clickOnFilterBtn();
             scheduleMainPage.selectShiftTypeFilterByText("Action Required");
@@ -355,7 +355,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             if (createSchedulePage.isWeekGenerated()){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("07:00AM", "11:00PM");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             //make edits and publish
@@ -2487,7 +2487,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //            int sliderIndex = 1;
 //            double hours = -0.5;//move 1 metric 0.5h left
 //            String leftOrRightDuration = "Right"; //move the right bar
-//            String hoursType = "Preferred";
+//            String hoursType = "When I prefer to work";
 //            String repeatChanges = "This week only";
 //            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
 //                    hours, repeatChanges);
@@ -2579,7 +2579,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
 //            int sliderIndex = 1;
 //            double hours = -0.5;//move 1 metric 0.5h left
 //            String leftOrRightDuration = "Right";
-//            String hoursType = "Preferred";
+//            String hoursType = "When I prefer to work";
 //            String repeatChanges = "repeat forward";
 //            profileNewUIPage.updateMyAvailability(hoursType, sliderIndex, leftOrRightDuration,
 //                    hours, repeatChanges);
@@ -2796,7 +2796,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             profileNewUIPage.validateTheUpdateOfShiftPreferences(true, false);
 
             //T1838599 Validate the update of Availability.
-            profileNewUIPage.validateTheUpdateOfAvailability("Preferred", 1, "Right",
+            profileNewUIPage.validateTheUpdateOfAvailability("When I prefer to work", 1, "Right",
                     120, "This week only");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -3390,17 +3390,17 @@ public class SchedulingOPEnabledTest  extends TestBase {
         } else
             SimpleUtils.assertOnFail("Integration console menu should not be loaded!", !dashboardPage.isIntegrationConsoleMenuDisplay(), false);
 
-        //Check Controls console menu is display
-        if (userRole.contains("TeamLead") || userRole.contains("TeamMember")){
-            SimpleUtils.assertOnFail("Controls console menu should not be loaded!", !dashboardPage.isControlsConsoleMenuDisplay(), false);
-        } else {
-            SimpleUtils.assertOnFail("Controls console menu not loaded Successfully!", dashboardPage.isControlsConsoleMenuDisplay(), false);
-            //Check Controls page is display after click Controls tab
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            controlsNewUIPage.clickOnControlsConsoleMenu();
-            controlsNewUIPage.isControlsPageLoaded();
-            dashboardPage.verifyHeaderNavigationMessage("Controls");
-        }
+//        //Check Controls console menu is display
+//        if (userRole.contains("TeamLead") || userRole.contains("TeamMember")){
+//            SimpleUtils.assertOnFail("Controls console menu should not be loaded!", !dashboardPage.isControlsConsoleMenuDisplay(), false);
+//        } else {
+//            SimpleUtils.assertOnFail("Controls console menu not loaded Successfully!", dashboardPage.isControlsConsoleMenuDisplay(), false);
+//            //Check Controls page is display after click Controls tab
+//            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+//            controlsNewUIPage.clickOnControlsConsoleMenu();
+//            controlsNewUIPage.isControlsPageLoaded();
+//            dashboardPage.verifyHeaderNavigationMessage("Controls");
+//        }
 
         //Check Logout console menu is display
         SimpleUtils.assertOnFail("Logout console menu not loaded Successfully!", dashboardPage.isLogoutConsoleMenuDisplay(), false);

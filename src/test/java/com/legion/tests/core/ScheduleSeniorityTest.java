@@ -35,10 +35,6 @@ import static com.legion.utils.MyThreadLocal.*;
 public class ScheduleSeniorityTest extends TestBase {
 
 	private static HashMap<String, String> scheduleWorkRoles = JsonUtil.getPropertiesFromJsonFile("src/test/resources/WorkRoleOptions.json");
-	private static String opWorkRole = scheduleWorkRoles.get("RETAIL_ASSOCIATE");
-	private static String controlWorkRole = scheduleWorkRoles.get("RETAIL_RENTAL_MGMT");
-	private static String controlEnterprice = "Vailqacn_Enterprise";
-	private static String opEnterprice = "CinemarkWkdy_Enterprise";
 
 	@Override
 	@BeforeMethod()
@@ -245,7 +241,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteAllShiftsInDayView();
+			scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
 			scheduleMainPage.saveSchedule();
 
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -265,7 +261,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.searchTeamMemberByName(firstNameOfTM);
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteAllShiftsInDayView();
+			scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
 			scheduleMainPage.saveSchedule();
 
 			//Create a new shift which using the TM name & role above, check the Seniority Column
@@ -372,7 +368,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteAllShiftsInDayView();
+			scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
 			scheduleMainPage.saveSchedule();
 
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -392,7 +388,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			SimpleUtils.assertOnFail("The Seniority Column is displayed on searching dialog!", !(shiftOperatePage.isSeniorityColumnLoaded()), false);
 			newShiftPage.clickCloseBtnForOfferShift();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteAllShiftsInDayView();
+			scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
 			scheduleMainPage.saveSchedule();
 
 			//Create a new shift which using the TM name & role above, check the Seniority Column
@@ -514,7 +510,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteAllShiftsInDayView();
+			scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
 			scheduleMainPage.saveSchedule();
 
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -533,7 +529,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			SimpleUtils.assertOnFail("The Seniority Column is not displayed on searching dialog!", shiftOperatePage.isSeniorityColumnLoaded(), false);
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteAllShiftsInDayView();
+			scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
 			scheduleMainPage.saveSchedule();
 
 			//Create a new shift which using the TM name & role above, check the Seniority Column
@@ -649,7 +645,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteAllShiftsInDayView();
+			scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
 			scheduleMainPage.saveSchedule();
 
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -671,7 +667,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			SimpleUtils.assertOnFail("The Seniority Column is not displayed on searching dialog!", shiftOperatePage.isSeniorityColumnLoaded(), false);
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteAllShiftsInDayView();
+			scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
 			scheduleMainPage.saveSchedule();
 
 			//Create a new shift which using the TM name & role above, check the Seniority Column
@@ -808,7 +804,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			SimpleUtils.assertOnFail("The Seniority Column is not displayed on recommend dialog!", shiftOperatePage.isSeniorityColumnLoaded(), false);
 			newShiftPage.clickCloseBtnForOfferShift();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteAllShiftsInDayView();
+			scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
 			scheduleMainPage.saveSchedule();
 
 			//Create a new shift which using the TM name & role above, check the Seniority Column

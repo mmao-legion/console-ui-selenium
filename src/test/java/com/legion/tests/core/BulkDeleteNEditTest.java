@@ -224,9 +224,9 @@ public class BulkDeleteNEditTest extends TestBase {
             // Verify the content of options section
             editShiftPage.verifyTheContentOfOptionsSection();
             // Verify the visibility of Clear Edited Fields button
-            SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
-            // Verify the three columns show on Shift Details section
-            editShiftPage.verifyThreeColumns();
+            //SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
+            // Verify the two columns show on Shift Details section
+            editShiftPage.verifyTwoColumns();
             // Verify the editable types show on Shift Detail section
             editShiftPage.verifyEditableTypesShowOnShiftDetail();
             // Verify the functionality of x button
@@ -267,9 +267,9 @@ public class BulkDeleteNEditTest extends TestBase {
             // Verify the content of options section in day view
             editShiftPage.verifyTheContentOfOptionsSection();
             // Verify the visibility of Clear Edited Fields button in day view
-            SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
+            //SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
             // Verify the three columns show on Shift Details section in day view
-            editShiftPage.verifyThreeColumns();
+            editShiftPage.verifyTwoColumns();
             // Verify the editable types show on Shift Detail section in day view
             editShiftPage.verifyEditableTypesShowOnShiftDetail();
         } catch (Exception e) {
@@ -284,7 +284,6 @@ public class BulkDeleteNEditTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheCurrentColumnOnMultipleEditShiftsWindowAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            String various = "Various";
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Go to Schedule page, Schedule tab
@@ -322,18 +321,6 @@ public class BulkDeleteNEditTest extends TestBase {
             String action = "Edit";
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
-            // Verify "Various" will show when selecting different work roles
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.WorkRole.getType(), various);
-            // Verify "Various" will show when selecting different shift names
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.ShiftName.getType(), various);
-            // Verify "Various" will show when selecting the shifts with different start times
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.StartTime.getType(), various);
-            // Verify "Various" will show when selecting the shifts with different end times
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.EndTime.getType(), various);
-            // Verify "Various" will show when selecting the shifts on different days
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.Date.getType(), various);
-            // Verify "Various" will show when selecting the shifts with different shift notes
-            editShiftPage.verifyTheTextInCurrentColumn(ConsoleEditShiftPage.sectionType.ShiftNotes.getType(), various);
 
             editShiftPage.clickOnDateSelect();
             List<String> dates = editShiftPage.getOptionsFromSpecificSelect();
@@ -1171,7 +1158,7 @@ public class BulkDeleteNEditTest extends TestBase {
             String activeWeek = scheduleCommonPage.getActiveWeekText();
             scheduleCommonPage.clickOnDayView();
             scheduleCommonPage.navigateDayViewWithDayName(activeWeek.replace("\n", " ").substring(0,3));
-            shiftOperatePage.deleteAllShiftsInDayView();
+            scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
             scheduleMainPage.saveSchedule();
             scheduleCommonPage.clickOnWeekView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

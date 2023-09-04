@@ -124,7 +124,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
 
 //    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/form/div/div[1]/div[7]//div[contains(@class,'react-select__placeholder')]")
-    @FindBy(xpath = "//textarea//parent::div//parent::div//parent::div//parent::div/preceding-sibling::div[1]//div[contains(@class,'react-select__value-container')]/div[1]")
+    @FindBy(xpath = "//div[contains(@id,\"legion_cons_Schedule_Schedule_CreateShift_Assignment_menu\")]/div/div[contains(@class,'react-select__value-container')]/div[1]")
     private WebElement assignmentDropDownOnNewCreateShiftPage;
     @FindBy(className = "react-select__option")
     private List<WebElement> assignmentOptionsInDropDownList;
@@ -826,7 +826,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     getActiveWeekText() + "'", false);
     }
 
-    @FindBy(css = "[class*=\"MuiGrid-root MuiGrid-item MuiGrid-grid-xs-10\"] [class*=\"MuiGrid-root MuiGrid-item MuiGrid-grid-xs-2\"]")
+    @FindBy(css = "[id*=\"legion_cons_Schedule_Schedule_CreateShift\"] label")
     private List<WebElement> weekDaysInNewCreateShiftPage;
     public void clearAllSelectedDays() throws Exception {
         if (areListElementVisible(weekDays, 5) && weekDays.size() == 7) {
@@ -943,6 +943,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private List<WebElement> listLocationGroup;
     @Override
     public void addNewShiftsByNames(List<String> names, String workRole) throws Exception {
+        scrollToTop();
+        waitForSeconds(2);
         for(int i = 0; i < 2; i++) {
             clickOnDayViewAddNewShiftButton();
             customizeNewShiftPage();
@@ -993,7 +995,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = "[placeholder=\"Search by Team Member, Role, Location or any combination.\"]")
     private WebElement textSearchOnNewCreateShiftPage;
 
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-container')]/div/div/div/p/parent::*/parent::*/parent::*/parent::*/parent::*/div[contains(@class,'MuiGrid-container')]")
+    @FindBy(xpath = "//div[contains(@class,'MuiGrid-container')]/div/div/div/button/parent::*/parent::*/parent::*/parent::*/parent::*/div[contains(@class,'MuiGrid-container')]")
     private List<WebElement> searchResultsOnNewCreateShiftPage;
 
     @FindBy(css = ".MuiDialogContent-root button")
@@ -2214,7 +2216,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(css = "div.week-day-multi-picker-day-selected")
     private List<WebElement> selectedDaysOnCreateShiftPage;
-    @FindBy(css = "span.Mui-checked")
+    @FindBy(css = "[id*=\"legion_cons_Schedule_Schedule_CreateShift\"] span.Mui-checked")
     private List<WebElement> selectedDaysOnNewCreateShiftPage;
 
     @Override
@@ -2227,7 +2229,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.pass("Get selected days info successfully");
         }else if (areListElementVisible(selectedDaysOnNewCreateShiftPage, 5) && selectedDaysOnNewCreateShiftPage.size()>0) {
             for (int i=0;i< selectedDaysOnNewCreateShiftPage.size();i++){
-                selectedDates.add(getDriver().findElements(By.xpath("//span[contains(@class,'Mui-checked')]/following-sibling::span")).get(i).getText().split(",")[0].trim());
+                selectedDates.add(getDriver().findElements(By.xpath("//div[contains(@class,'MuiGrid-item')]/label/span[contains(@class,'Mui-checked')]/following-sibling::span")).get(i).getText().split(",")[0].trim());
             }
             SimpleUtils.pass("Get selected days info successfully");
         }else
@@ -2495,7 +2497,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public boolean checkIfNextButtonIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
         if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5) &&
-                btnSaveOnNewCreateShiftPage.getText().equals("NEXT")) {
+                btnSaveOnNewCreateShiftPage.getText().equalsIgnoreCase("NEXT")) {
             isLoaded = true;
             SimpleUtils.report("The Next button is loaded on New Create Shift page! ");
         } else
@@ -2506,7 +2508,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public boolean checkIfCreateButtonIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
         if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5) &&
-                btnSaveOnNewCreateShiftPage.getText().equals("CREATE")) {
+                btnSaveOnNewCreateShiftPage.getText().equalsIgnoreCase("CREATE")) {
             isLoaded = true;
             SimpleUtils.report("The Create button is loaded on New Create Shift page! ");
         } else
@@ -2517,7 +2519,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public boolean checkIfCancelButtonIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
         if (isElementLoaded(backButtonOnNewCreateShiftPage, 5) &&
-                backButtonOnNewCreateShiftPage.getText().equals("CANCEL")) {
+                backButtonOnNewCreateShiftPage.getText().equalsIgnoreCase("CANCEL")) {
             isLoaded = true;
             SimpleUtils.report("The Cancel button is loaded on New Create Shift page! ");
         } else
@@ -2528,7 +2530,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     public boolean checkIfBackButtonIsLoadedOnNewCreateShiftPage () throws Exception {
         boolean isLoaded = false;
         if (isElementLoaded(backButtonOnNewCreateShiftPage, 5) &&
-                backButtonOnNewCreateShiftPage.getText().equals("BACK")) {
+                backButtonOnNewCreateShiftPage.getText().equalsIgnoreCase("BACK")) {
             isLoaded = true;
             SimpleUtils.report("The Back button is loaded on New Create Shift page! ");
         } else
@@ -2632,7 +2634,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return isLoaded;
     }
 
-    @FindBy(xpath = "//div[@id='create-new-shift-react']/div/div/form/div/div/div[7]/div[2]/div/p")
+    @FindBy(xpath = "//div[@id='create-new-shift-react']/div/div/form/div/div/div[9]/div[2]/div/p")
     private WebElement assignmentWarningMessageOnNewShiftPage;
     public boolean checkIfAssignmentWarningMessageIsLoaded() throws Exception {
         boolean isLoaded = false;
@@ -3096,7 +3098,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement greyAvailableIcon;
     @FindBy(css = "[color=\"#37cf3f\"]")
     private WebElement greenAvailableIcon;
-    @FindBy(css = "[class=\"sc-karCPZ pJskc\"]")
+    @FindBy(css = "[data-testid=\"ThumbDownIcon\"]")
     private WebElement redAvailableIcon;
     @Override
     public String getTMAvailableColourForAssignedShift () throws Exception {

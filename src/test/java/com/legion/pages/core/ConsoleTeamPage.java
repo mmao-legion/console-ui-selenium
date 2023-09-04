@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.legion.pages.LoginPage;
 import com.legion.pages.ProfileNewUIPage;
 import com.legion.tests.core.TeamTest;
 import org.openqa.selenium.By;
@@ -382,6 +383,8 @@ public class ConsoleTeamPage extends BasePage implements TeamPage{
 			}
 			if(!isTeamMemberFound)
 				SimpleUtils.report("Team Page: Team Member '"+username+"' not found.");
+			LoginPage loginPage= new ConsoleLoginPage();
+			loginPage.closeIntroductionMode();
 			return selectedName;
 		}
 

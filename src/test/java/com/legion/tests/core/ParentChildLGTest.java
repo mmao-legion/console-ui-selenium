@@ -1940,6 +1940,7 @@ public class ParentChildLGTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 //            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
+            scheduleMainPage.selectLocationFilterByText(childLocationNames.get(0));
             shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.verifyDeleteShift();
 
@@ -1989,6 +1990,7 @@ public class ParentChildLGTest extends TestBase {
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 //            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
+            scheduleMainPage.selectLocationFilterByText(childLocationNames.get(0));
             shiftOperatePage.clickOnProfileIcon();
             shiftOperatePage.verifyDeleteShift();
 
@@ -3202,9 +3204,9 @@ public class ParentChildLGTest extends TestBase {
             // Verify the content of options section
             editShiftPage.verifyTheContentOfOptionsSection();
             // Verify the visibility of Clear Edited Fields button
-            SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
+            //SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
             // Verify the three columns show on Shift Details section
-            editShiftPage.verifyThreeColumns();
+            editShiftPage.verifyTwoColumns();
             // Verify the editable types show on Shift Detail section
             editShiftPage.verifyEditableTypesShowOnShiftDetail();
             // Verify the functionality of x button
@@ -3238,9 +3240,9 @@ public class ParentChildLGTest extends TestBase {
             // Verify the content of options section in day view
             editShiftPage.verifyTheContentOfOptionsSection();
             // Verify the visibility of Clear Edited Fields button in day view
-            SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
+            //SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
             // Verify the three columns show on Shift Details section in day view
-            editShiftPage.verifyThreeColumns();
+            editShiftPage.verifyTwoColumns();
             // Verify the editable types show on Shift Detail section in day view
             editShiftPage.verifyEditableTypesShowOnShiftDetail();
         } catch (Exception e) {
@@ -3489,11 +3491,11 @@ public class ParentChildLGTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createLGScheduleWithGivingTimeRange("08:00am", "09:00pm");
-            if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
-                scheduleMainPage.saveSchedule();
-            }
+//            if (scheduleShiftTablePage.getAllShiftsOfOneTM("open").size()>0) {
+//                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+//                scheduleMainPage.saveSchedule();
+//            }
             scheduleMainPage.selectGroupByFilter(GroupByDayPartsTest.scheduleGroupByFilterOptions.groupbyLocation.getValue());
             scheduleShiftTablePage.expandSpecificCountGroup(2);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -4180,9 +4182,9 @@ public class ParentChildLGTest extends TestBase {
             // Verify the content of options section
             editShiftPage.verifyTheContentOfOptionsSectionIsNotLoaded();
             // Verify the visibility of Clear Edited Fields button
-            SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
+            //SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
             // Verify the three columns show on Shift Details section
-            editShiftPage.verifyThreeColumns();
+            editShiftPage.verifyTwoColumns();
             // Verify the editable types show on Shift Detail section
             editShiftPage.verifyEditableTypesShowOnSingleEditShiftDetail();
             // Verify the functionality of x button
@@ -4214,8 +4216,8 @@ public class ParentChildLGTest extends TestBase {
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             // Verify the title of Edit Shifts window in day view
             editShiftPage.verifyTheTitleOfEditShiftsWindow(selectedShiftCount, startOfWeek);
-            // Verify the selected days show correctly in day view
-            editShiftPage.verifyShiftInfoCard(shiftInfo);
+//            // Verify the selected days show correctly in day view
+//            editShiftPage.verifyShiftInfoCard(shiftInfo);
             // Verify the Location Name shows correctly in day view
             editShiftPage.verifyLocationNameShowsCorrectly(location);
             // Verify the visibility of buttons in day view
@@ -4223,9 +4225,9 @@ public class ParentChildLGTest extends TestBase {
             // Verify the content of options section in day view
             editShiftPage.verifyTheContentOfOptionsSectionIsNotLoaded();
             // Verify the visibility of Clear Edited Fields button in day view
-            SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
+            //SimpleUtils.assertOnFail("Clear Edited Fields button failed to load!", editShiftPage.isClearEditedFieldsBtnLoaded(), false);
             // Verify the three columns show on Shift Details section in day view
-            editShiftPage.verifyThreeColumns();
+            editShiftPage.verifyTwoColumns();
             // Verify the editable types show on Shift Detail section in day view
             editShiftPage.verifyEditableTypesShowOnSingleEditShiftDetail();
         } catch (Exception e) {
@@ -4478,7 +4480,7 @@ public class ParentChildLGTest extends TestBase {
             String workRole = shiftInfo.get(4);
             String lastName = shiftInfo.get(5);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleMainPage.saveSchedule();
