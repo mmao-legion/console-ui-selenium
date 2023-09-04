@@ -300,7 +300,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         List<String> options = new ArrayList<>();
         if (areListElementVisible(dropDownListOnReact, 5)) {
             for (WebElement option : dropDownListOnReact) {
-                options.add(option.getText());
+                options.add(option.getText().toLowerCase());
             }
         } else {
             SimpleUtils.fail("Options failed to load!", false);
