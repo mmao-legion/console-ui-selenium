@@ -22,6 +22,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class HardStopForMinorViolation extends TestBase {
@@ -440,7 +441,23 @@ public class HardStopForMinorViolation extends TestBase {
             List<WebElement> minorShifts = scheduleShiftTablePage.getAllShiftsOfOneTM(minorName.split(" ")[0]);
             SimpleUtils.assertOnFail("The minor shift fail to created! ",
                     minorShifts.size()>0, false);
-            shiftOperatePage.editTheShiftTimeForSpecificShift(minorShifts.get(0), "8am", "8pm");
+//            shiftOperatePage.editTheShiftTimeForSpecificShift(minorShifts.get(0), "8am", "8pm");
+
+            EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(scheduleShiftTablePage.getShiftIndexById(minorShifts.get(0).getAttribute("id").toString()));
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!",
+                    editShiftPage.isEditShiftWindowLoaded(), false);
+            String inputStartTime = "8:00 AM";
+            editShiftPage.inputStartOrEndTime(inputStartTime, true);
+            String inputEndTime = "8:00 PM";
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
+            editShiftPage.clickOnUpdateButton();
+            shiftOperatePage.clickOnAssignAnywayButton();
+
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
             String minorMessage = smartCardPage.getMessageFromActionRequiredSmartCard().get("minorViolation").replace("\n", " ");
@@ -482,7 +499,18 @@ public class HardStopForMinorViolation extends TestBase {
             //Edit the open shift to has minor violation
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             minorShifts = scheduleShiftTablePage.getAllShiftsOfOneTM(minorName.split(" ")[0]);
-            shiftOperatePage.editTheShiftTimeForSpecificShift(minorShifts.get(0),"8am", "8pm");
+//            shiftOperatePage.editTheShiftTimeForSpecificShift(minorShifts.get(0),"8am", "8pm");
+
+            indexes.clear();
+            indexes.add(scheduleShiftTablePage.getShiftIndexById(minorShifts.get(0).getAttribute("id").toString()));
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!",
+                    editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.inputStartOrEndTime(inputStartTime, true);
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
+            editShiftPage.clickOnUpdateButton();
+            shiftOperatePage.clickOnAssignAnywayButton();
             scheduleMainPage.saveSchedule();
             createSchedulePage.publishActiveSchedule();
             minorMessage = smartCardPage.getMessageFromActionRequiredSmartCard().get("minorViolation").replace("\n", " ");

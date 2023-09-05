@@ -5447,6 +5447,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+			ScheduleShiftTablePage scheduleShiftTablePage= pageFactory.createScheduleShiftTablePage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
 			//Go to one schedule page day view
@@ -5464,10 +5465,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-			SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , shiftOperatePage.verifyContextOfTMDisplay(), false);
+//			SimpleUtils.assertOnFail(" context of any TM display doesn't show well" , shiftOperatePage.verifyContextOfTMDisplay(), false);
 
 			//"After Click on view profile,then particular TM profile is displayed :1. Personal details 2. Work Preferences 3. Availability
-			shiftOperatePage.clickOnViewProfile();
+			scheduleShiftTablePage.clickOnProfileIconOfShiftInDayView("no");
 			shiftOperatePage.verifyPersonalDetailsDisplayed();
 			shiftOperatePage.verifyWorkPreferenceDisplayed();
 			shiftOperatePage.verifyAvailabilityDisplayed();

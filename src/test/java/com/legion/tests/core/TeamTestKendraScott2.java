@@ -1680,7 +1680,7 @@ public class TeamTestKendraScott2 extends TestBase{
 //			}
 //			String timeOffReasonLabel = "VACATION";
 			Thread.sleep(5000);
-			profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.Holiday.getValue(), timeOffExplanationText, fromDate1, 0);
+			profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.JuryDuty.getValue(), timeOffExplanationText, fromDate1, 0);
 
 			//Go the Preference and check the time off will display
 			profileNewUIPage.selectProfilePageSubSectionByLabel(workPreferencesLabel);
