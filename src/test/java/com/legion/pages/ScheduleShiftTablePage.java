@@ -179,4 +179,5 @@ public interface ScheduleShiftTablePage {
     public void bulkEditTMShiftsInWeekView(String teamMemberName) throws Exception;
     public List<WebElement> selectMultipleSameAssignmentShiftsOnOneDay(int shiftCount, String tmName, int dayIndex) throws Exception;
     public HashSet<Integer> verifyCanSelectMultipleShiftsOnOneDay(int shiftCount, int dayIndex) throws Exception;
+    public void rightClickOnSelectedShiftInDayView(int index) throws Exception;
 }
