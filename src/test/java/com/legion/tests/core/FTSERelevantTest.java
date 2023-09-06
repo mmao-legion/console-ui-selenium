@@ -1595,21 +1595,9 @@ public class FTSERelevantTest extends TestBase {
             //Set different role for different enterprises
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-//            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
             String tmPartialName = "Tester1";
-            String workRole;
-//            if (isLocationUsingControlsConfiguration){
-//                //Go to Controls page
-//                workRole = "Training";
-//            } else {
-                //Go to OP page
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
-                if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
-                    //Back to the console page
-                    switchToConsoleWindow();
-                }
-//            }
+            String workRole= "TEAM MEMBER CORPORATE-THEATRE";
+
             //Go to the schedule view table
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -1627,7 +1615,6 @@ public class FTSERelevantTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
 
             //Switch to the DayView and delete all existed shifts.
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             scheduleCommonPage.clickOnDayView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
@@ -1654,11 +1641,16 @@ public class FTSERelevantTest extends TestBase {
 
 
             //Modify the shift's box to cover the shift length & shift duration
+            EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
-            shiftOperatePage.clickOnEditShiftTime();
-            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","11:45am",false);
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(0);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            String inputStartTime = "08:00 AM";
+            String inputEndTime = "11:45 AM";
+            editShiftPage.inputStartOrEndTime(inputStartTime, true);
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
+            editShiftPage.clickOnUpdateButton();
             scheduleMainPage.saveSchedule();
             SimpleUtils.assertOnFail("The shift's info doesn't include shift length or shift duration!",
                     scheduleShiftTablePage.isInfoIconLoaded(0)&&scheduleShiftTablePage.isProfileIconLoaded(0)
@@ -1666,10 +1658,13 @@ public class FTSERelevantTest extends TestBase {
 
             //Modify the shift's box to cover the total shift length
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
-            shiftOperatePage.clickOnEditShiftTime();
-            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","12:00pm",false);
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(0);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            inputStartTime = "08:00 AM";
+            inputEndTime = "12:00 PM";
+            editShiftPage.inputStartOrEndTime(inputStartTime, true);
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
+            editShiftPage.clickOnUpdateButton();
             scheduleMainPage.saveSchedule();
             SimpleUtils.assertOnFail("The shift's info doesn't include total shift length!",
                     scheduleShiftTablePage.isInfoIconLoaded(0)&&scheduleShiftTablePage.isProfileIconLoaded(0)
@@ -1678,11 +1673,13 @@ public class FTSERelevantTest extends TestBase {
 
             //Modify the shift's box to cover the profile name, work role and job title
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
-            shiftOperatePage.clickOnEditShiftTime();
-            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","02:00PM",false);
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
-            scheduleMainPage.saveSchedule();
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(0);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            inputStartTime = "08:00 AM";
+            inputEndTime = "02:00 PM";
+            editShiftPage.inputStartOrEndTime(inputStartTime, true);
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
+            editShiftPage.clickOnUpdateButton();
             SimpleUtils.assertOnFail("The shift's info doesn't include TM name,work role and job title!",
                     scheduleShiftTablePage.isInfoIconLoaded(0)&&scheduleShiftTablePage.isProfileIconLoaded(0)
                             &&scheduleShiftTablePage.isShiftLengthLoaded(0)&&scheduleShiftTablePage.isShiftDurationInBoxLoaded(0)
@@ -1691,10 +1688,13 @@ public class FTSERelevantTest extends TestBase {
 
             //Modify the shift's box to the minimum, verify the info icon is displayed
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
-            shiftOperatePage.clickOnEditShiftTime();
-            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","08:15am",false);
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(0);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            inputStartTime = "08:00 AM";
+            inputEndTime = "08:15 AM";
+            editShiftPage.inputStartOrEndTime(inputStartTime, true);
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
+            editShiftPage.clickOnUpdateButton();
             scheduleMainPage.saveSchedule();
             SimpleUtils.assertOnFail("The shift's info doesn't include TM's info icon!",
                     scheduleShiftTablePage.isInfoIconLoaded(0), false);

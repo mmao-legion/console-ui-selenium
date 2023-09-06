@@ -12,9 +12,11 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.server.handler.DeleteSession;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.awt.image.SinglePixelPackedSampleModel;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -3690,6 +3692,26 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     }
 
     @Override
+    public void rightClickOnSelectedShiftInDayView(int index) throws Exception {
+        if (index >= 0) {
+            List<WebElement> names = null;
+            if (areListElementVisible(shiftOuterInDayView, 10)) {
+                names = shiftOuterInDayView;
+                Actions action = new Actions(getDriver());
+                scrollToElement(names.get(index));
+                waitForSeconds(1);
+                action.contextClick(names.get(index)).build().perform();
+                if (isBulkActionMenuPopup())
+                    SimpleUtils.pass("Right Click on the Selected Shifts successfully!");
+                else
+                    SimpleUtils.fail("Right Click on the Selected Shifts not shown correctly!",false);
+            }else
+                SimpleUtils.fail("No any shifts in day view!", false);
+        } else
+            SimpleUtils.fail("There is no selected shifts' index!", false);
+    }
+
+    @Override
     public void verifyTheContentOnBulkActionMenu(int selectedShiftCount) throws Exception {
         if (isElementLoaded(bulkActionMenu, 5) && bulkActionMenu.getText().contains(String.valueOf(selectedShiftCount))
         && (bulkActionMenu.getText().contains("Shifts Selected") || bulkActionMenu.getText().contains("Shift Selected") ) && bulkActionMenu.getText().contains("Delete")) {
@@ -4712,4 +4734,5 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         }
         return set;
     }
+
 }

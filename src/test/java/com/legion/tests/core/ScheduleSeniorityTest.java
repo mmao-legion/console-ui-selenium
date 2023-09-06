@@ -10,6 +10,7 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
+import com.legion.pages.core.schedule.ConsoleEditShiftPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -198,10 +199,6 @@ public class ScheduleSeniorityTest extends TestBase {
 			controlsNewUIPage.isSenioritySectionLoaded();
 			controlsNewUIPage.selectSeniorityType("No Seniority");
 			configurationPage.publishNowTheTemplate();
-//			configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Scheduling Policies"), "edit");
-//			Thread.sleep(10000);
-//			String activeBtnLabel = controlsNewUIPage.getSeniorityToggleActiveBtnLabel();
-//			SimpleUtils.assertOnFail("The selected button is not expected!", activeBtnLabel.equalsIgnoreCase("No"),false);
 			switchToConsoleWindow();
 			refreshCachesAfterChangeTemplate();
 			Thread.sleep(180000);
@@ -254,8 +251,18 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();
 			scheduleMainPage.publishOrRepublishSchedule();
-			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
-			shiftOperatePage.clickOnOfferTMOption();
+
+			EditShiftPage editShiftPage =pageFactory.createEditShiftPage();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(0);
+			String action = "Edit";
+			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+			editShiftPage.clickOnAssignmentSelect();
+			editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption());
+			editShiftPage.clickOnUpdateButton();
+//
+//			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+//			shiftOperatePage.clickOnOfferTMOption();
 			newShiftPage.searchText(firstNameOfTM);
 			SimpleUtils.assertOnFail("The Seniority Column is displayed on searching dialog!", !(shiftOperatePage.isSeniorityColumnLoaded()), false);
 			newShiftPage.searchTeamMemberByName(firstNameOfTM);
@@ -380,9 +387,17 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();
-			scheduleMainPage.publishOrRepublishSchedule();
-			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
-			shiftOperatePage.clickOnOfferTMOption();
+//			scheduleMainPage.publishOrRepublishSchedule();
+			EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
+			scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(0);
+			String action = "Edit";
+			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+			editShiftPage.clickOnAssignmentSelect();
+			editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption());
+			editShiftPage.clickOnUpdateButton();
+
+//			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+//			shiftOperatePage.clickOnOfferTMOption();
 			shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
 			shiftOperatePage.verifyRecommendedTableHasTM();
 			SimpleUtils.assertOnFail("The Seniority Column is displayed on searching dialog!", !(shiftOperatePage.isSeniorityColumnLoaded()), false);

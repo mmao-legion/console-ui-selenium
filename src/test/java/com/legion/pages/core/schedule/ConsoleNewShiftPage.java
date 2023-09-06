@@ -186,7 +186,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     public void clickOnCreateOrNextBtn() throws Exception {
         if (isElementLoaded(btnSave, 10)) {
-            clickTheElement(btnSave);
+            click(btnSave);
             SimpleUtils.pass("Create or Next Button clicked Successfully on Customize new Shift page!");
         }else if (isElementLoaded(btnSaveOnNewCreateShiftPage, 5)) {
             try {
