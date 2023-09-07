@@ -399,7 +399,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     public void clickOnUpdateButton() throws Exception {
         waitForSeconds(2);
         if (isElementLoaded(updateButton, 5)) {
-            click(updateButton);
+            clickTheElement(updateButton);
         }
     }
 
