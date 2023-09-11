@@ -3705,8 +3705,18 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     SimpleUtils.pass("Right Click on the Selected Shifts successfully!");
                 else
                     SimpleUtils.fail("Right Click on the Selected Shifts not shown correctly!",false);
+            }else if (areListElementVisible(shiftsWeekView,20)) {
+                names = shiftsWeekView;
+                Actions action = new Actions(getDriver());
+                scrollToElement(names.get(index));
+                waitForSeconds(1);
+                action.contextClick(names.get(index)).build().perform();
+                if (isBulkActionMenuPopup())
+                    SimpleUtils.pass("Right Click on the Selected Shifts successfully!");
+                else
+                    SimpleUtils.fail("Right Click on the Selected Shifts not shown correctly!",false);
             }else
-                SimpleUtils.fail("No any shifts in day view!", false);
+                SimpleUtils.fail("No any shifts in week view!", false);
         } else
             SimpleUtils.fail("There is no selected shifts' index!", false);
     }
