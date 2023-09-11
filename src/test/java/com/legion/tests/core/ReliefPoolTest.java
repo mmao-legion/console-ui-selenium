@@ -6,6 +6,7 @@ import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
+import com.legion.pages.core.schedule.ConsoleEditShiftPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -414,7 +415,6 @@ public class ReliefPoolTest extends TestBase {
 
 			shiftPatternPage.selectAddOnOrOffWeek(true);
 			shiftPatternPage.clickOnAddShiftButton();
-			shiftPatternPage.verifyWorkRoleNameShows(patternName1);
 
 			List<String> workDays = new ArrayList<>(Arrays.asList("Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday","Sunday"));
 			shiftPatternPage.selectWorkDays(workDays);
@@ -422,19 +422,18 @@ public class ReliefPoolTest extends TestBase {
 			shiftPatternPage.inputStartOrEndTime("5", "0", "p", false);
 			shiftPatternPage.clickOnCreateButton();
 			configurationPage.verifyCheckMarkButtonOnAdvanceStaffingRulePage();
-//			configurationPage.clickOnSaveButtonOnScheduleRulesListPage();
 			locationsPage.clickOnSaveButton();
 
 			//Add new Deckhand shift pattern
 			configurationPage.selectWorkRoleToEdit(patternName2);
 			configurationPage.checkTheEntryOfAddShiftPatternRule();
-
 			shiftPatternPage.inputNameDescriptionNInstances(patternName2, patternDescription, patternInstances);
 			shiftPatternPage.selectTheCurrentWeek();
+
 			// Verify the work role should in role input
 			shiftPatternPage.selectAddOnOrOffWeek(true);
 			shiftPatternPage.clickOnAddShiftButton();
-			shiftPatternPage.verifyWorkRoleNameShows(patternName2);
+
 			// Verify can create the shift pattern rule
 			shiftPatternPage.selectWorkDays(workDays);
 			shiftPatternPage.inputStartOrEndTime("7", "0", "a", true);
@@ -463,8 +462,17 @@ public class ReliefPoolTest extends TestBase {
 			scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
 			scheduleMainPage.clickOnOpenSearchBoxButton();
 			scheduleMainPage.searchShiftOnSchedulePage(patternName1);
-			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
-			shiftOperatePage.clickOnOfferTMOption();
+
+			EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(0);
+			String action = "Edit";
+			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+			editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption());
+			editShiftPage.clickOnUpdateButton();
+
+//			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+//			shiftOperatePage.clickOnOfferTMOption();
 			String tmName = "Sebastian";
 			newShiftPage.searchTeamMemberByName(tmName);
 			newShiftPage.clickOnOfferOrAssignBtn();

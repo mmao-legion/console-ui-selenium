@@ -125,6 +125,8 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
     private WebElement checkMarkButton;
     @FindBy(css = ".settings-work-rule-staffing-string-format")
     private WebElement staffingRuleContent;
+    @FindBy (css = "[id*=\"legion_cons_Schedule_Schedule_CreateShift\"] .MuiCheckbox-root+span")
+    private List<WebElement> dayLabelsForCreation;
 
     private WebElement getSpecificSectionByName(String name) throws Exception {
         if (name.equalsIgnoreCase(sectionType.WorkRole.getType())) {
@@ -323,13 +325,13 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
     @Override
     public List<String> selectWorkDays(List<String> daysNeedSelect) throws Exception {
         List<String> selectedDays = new ArrayList<>();
-        if (daysNeedSelect != null && daysNeedSelect.size() > 0 && areListElementVisible(dayInputs, 3) && areListElementVisible(dayLabels, 3)) {
-            for (int i = 0; i < dayLabels.size(); i++) {
-                if (daysNeedSelect.contains(dayLabels.get(i).getText())) {
+        if (daysNeedSelect != null && daysNeedSelect.size() > 0 && areListElementVisible(dayInputs, 3) && areListElementVisible(dayLabelsForCreation, 3)) {
+            for (int i = 0; i < dayLabelsForCreation.size(); i++) {
+                if (daysNeedSelect.contains(dayLabelsForCreation.get(i).getText())) {
                     if (dayInputs.get(i).getAttribute("checked") == null) {
                         clickTheElement(dayInputs.get(i));
                     }
-                    selectedDays.add(dayLabels.get(i).getText().substring(0, 3));
+                    selectedDays.add(dayLabelsForCreation.get(i).getText().substring(0, 3));
                 }
             }
         }

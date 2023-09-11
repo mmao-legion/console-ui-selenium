@@ -146,7 +146,7 @@ public class ConsoleAdminPage extends BasePage implements AdminPage {
 				System.out.println("The cache name in list is:"+cacheNameInList);
 				if (cacheNameInList.equalsIgnoreCase(cacheName)) {
 					isTemplateExist = true;
-					click(cache.findElement(By.tagName("button")));
+					clickTheElement(cache.findElement(By.tagName("button")));
 					waitForSeconds(2);
 					SimpleUtils.pass("Click the Refresh button successfully! ");
 					try{
