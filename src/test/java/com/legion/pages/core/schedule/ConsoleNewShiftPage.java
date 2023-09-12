@@ -3209,4 +3209,24 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.fail("Shift creation dialog is not loaded correctly!",false);
     }
 
+    public void searchEmployee(String searchInput) throws Exception {
+        String[] searchAssignTeamMember = searchInput.split(",");
+        if (isElementLoaded(textSearch, 10) && isElementLoaded(searchIcon, 10)) {
+            for (int i = 0; i < searchAssignTeamMember.length; i++) {
+                String[] searchTM = searchAssignTeamMember[i].split("\\.");
+                textSearch.sendKeys(searchTM[0]);
+                click(searchIcon);
+            }
+        } else if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+            for (int i = 0; i < searchAssignTeamMember.length; i++) {
+                String[] searchTM = searchAssignTeamMember[i].split("\\.");
+                textSearchOnNewCreateShiftPage.sendKeys(searchTM[0]);
+                waitForSeconds(3);
+            }
+        }else {
+            SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+        }
+
+    }
+
 }
