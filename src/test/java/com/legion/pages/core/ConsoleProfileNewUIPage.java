@@ -3001,7 +3001,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		HashMap<String, String> userProfileNames = new HashMap<>();
 		String fullName = "";
 		String nickName = "";
-		if (isElementLoaded(nameOfProfile, 15)) {
+		if (isElementLoaded(nameOfProfile, 25)) {
 			waitForSeconds(3);
 			String names = nameOfProfile.getText().trim();
 			if (names.contains("\"")) {

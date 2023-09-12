@@ -4262,7 +4262,7 @@ public class ParentChildLGTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             List<String> locations = toggleSummaryPage.getChildLocationList();
-            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            createSchedulePage.createLGScheduleWithGivingTimeRange("06:00am", "06:00am");
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> shiftInfoList1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
