@@ -120,4 +120,5 @@ public interface NewShiftPage {
     public List<String> getWorkRoleList() throws Exception;
     public void clickOnOkButtonOnErrorDialog () throws Exception;
     public void inputTeamMember(String name) throws Exception;
+    public void searchEmployee(String searchInput) throws Exception;
 }

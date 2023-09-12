@@ -250,7 +250,6 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();
-			scheduleMainPage.publishOrRepublishSchedule();
 
 			EditShiftPage editShiftPage =pageFactory.createEditShiftPage();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -260,14 +259,11 @@ public class ScheduleSeniorityTest extends TestBase {
 			editShiftPage.clickOnAssignmentSelect();
 			editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption());
 			editShiftPage.clickOnUpdateButton();
-//
-//			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
-//			shiftOperatePage.clickOnOfferTMOption();
-			newShiftPage.searchText(firstNameOfTM);
+
+			newShiftPage.searchEmployee(firstNameOfTM);
 			SimpleUtils.assertOnFail("The Seniority Column is displayed on searching dialog!", !(shiftOperatePage.isSeniorityColumnLoaded()), false);
-			newShiftPage.searchTeamMemberByName(firstNameOfTM);
+			newShiftPage.searchTeamMemberByNameAndAssignOrOfferShift(firstNameOfTM, false);
 			newShiftPage.clickOnOfferOrAssignBtn();
-			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
 			scheduleMainPage.saveSchedule();
 
@@ -281,10 +277,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
-			newShiftPage.searchTeamMemberByName(firstNameOfTM);
-			newShiftPage.clickClearAssignmentsLink();
+			newShiftPage.searchEmployee(firstNameOfTM);
 			SimpleUtils.assertOnFail("The Seniority Column is displayed on searching dialog!", !(shiftOperatePage.isSeniorityColumnLoaded()), false);
-			newShiftPage.searchTeamMemberByName(firstNameOfTM);
+			newShiftPage.searchTeamMemberByNameAndAssignOrOfferShift(firstNameOfTM, false);
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
 
@@ -292,9 +287,11 @@ public class ScheduleSeniorityTest extends TestBase {
 			scheduleMainPage.clickOnOpenSearchBoxButton();
 			scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
-			shiftOperatePage.clickonAssignTM();
-			newShiftPage.searchText(firstNameOfTM);
+			scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(0);
+			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+			editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption());
+			editShiftPage.clickOnUpdateButton();
+			newShiftPage.searchEmployee(firstNameOfTM);
 			SimpleUtils.assertOnFail("The Seniority Column is displayed on searching dialog!", !(shiftOperatePage.isSeniorityColumnLoaded()), false);
 
 		} catch (Exception e) {
