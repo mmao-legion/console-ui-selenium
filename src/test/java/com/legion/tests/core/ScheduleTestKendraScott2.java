@@ -14,6 +14,7 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
+import com.legion.pages.core.schedule.ConsoleEditShiftPage;
 import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.utils.JsonUtil;
 import org.openqa.selenium.By;
@@ -9310,28 +9311,41 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Create an open shift, then offer it to the TMs
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteAllShiftsInWeekView();
+//			shiftOperatePage.deleteAllShiftsInWeekView();
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
 			scheduleMainPage.saveSchedule();
+			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			newShiftPage.clickOnDayViewAddNewShiftButton();
-			newShiftPage.customizeNewShiftPage();
+//			newShiftPage.customizeNewShiftPage();
 			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
 			newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();
-			scheduleMainPage.publishOrRepublishSchedule();
+//			scheduleMainPage.publishOrRepublishSchedule();
 
+			EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleMainPage.clickOnOpenSearchBoxButton();
 			scheduleMainPage.searchShiftOnSchedulePage("Open");
-			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
-			shiftOperatePage.clickOnOfferTMOption();
+			scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(0);
+			String action = "Edit";
+			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+			editShiftPage.clickOnAssignmentSelect();
+			editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption());
+			editShiftPage.clickOnUpdateButton();
+//			scheduleMainPage.saveSchedule();
+//
+//			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+//			shiftOperatePage.clickOnOfferTMOption();
 			shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
 			SimpleUtils.assertOnFail("Recommended tab is empty!", newShiftPage.isRecommendedTabHasTMs(), false);
 			newShiftPage.clickCloseBtnForOfferShift();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.deleteAllShiftsInWeekView();
+//			shiftOperatePage.deleteAllShiftsInWeekView();
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
 			scheduleMainPage.saveSchedule();
 
 			//Create a new shift which using the TM name & role above, check the recommend tab
@@ -9355,8 +9369,13 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			//Pick up one exist shift and assign it to other TM, check the recommend tab
 			scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
-			shiftOperatePage.clickonAssignTM();
+			scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(0);
+			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+			editShiftPage.clickOnAssignmentSelect();
+			editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption());
+			editShiftPage.clickOnUpdateButton();
+//			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+//			shiftOperatePage.clickonAssignTM();
 			shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
 			SimpleUtils.assertOnFail("Recommended tab is empty!", newShiftPage.isRecommendedTabHasTMs(), false);
 

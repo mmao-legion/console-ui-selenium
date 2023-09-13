@@ -2180,8 +2180,9 @@ public class TeamTestKendraScott2 extends TestBase{
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 			scheduleCommonPage.clickOnDayView();
+			String action = "Edit";
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.convertAllShiftsToOpenInDayView();
+			shiftOperatePage.convertAllShiftsToOpenInDayView(action);
 			scheduleMainPage.saveSchedule();
 
 			//Switch the previous week and convert one past shift to the Open Shift.
@@ -2189,7 +2190,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			scheduleCommonPage.navigateToPreviousWeek();
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.convertAllShiftsToOpenInDayView();
+			shiftOperatePage.convertAllShiftsToOpenInDayView(action);
 			scheduleMainPage.saveSchedule();
 
 			//Login as DM, generate the schedule
@@ -2203,7 +2204,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			//Switch to the DayView and convert one shift to the Open Shift.
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.convertAllShiftsToOpenInDayView();
+			shiftOperatePage.convertAllShiftsToOpenInDayView(action);
 			scheduleMainPage.saveSchedule();
 
 			//Switch the previous week and convert one past shift to the Open Shift.
@@ -2211,7 +2212,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			scheduleCommonPage.navigateToPreviousWeek();
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			shiftOperatePage.convertAllShiftsToOpenInDayView();
+			shiftOperatePage.convertAllShiftsToOpenInDayView(action);
 			scheduleMainPage.saveSchedule();
 
 		} catch (Exception e) {

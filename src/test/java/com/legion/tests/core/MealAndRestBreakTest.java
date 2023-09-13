@@ -1168,12 +1168,13 @@ public class MealAndRestBreakTest extends TestBase {
 
             //Delete all auto-generated open shifts in the week
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage("Open");
-            shiftOperatePage.deleteAllShiftsInWeekView();
-            scheduleMainPage.clickOnCloseSearchBoxButton();
+//            shiftOperatePage.deleteAllShiftsInWeekView();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnCloseSearchBoxButton();
+
 
             //Create a 5hrs new open shift
             scheduleCommonPage.clickOnDayView();
@@ -1211,9 +1212,10 @@ public class MealAndRestBreakTest extends TestBase {
 //            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
             scheduleCommonPage.clickOnWeekView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+
             scheduleMainPage.searchShiftOnSchedulePage("Open");
-            shiftOperatePage.deleteAllShiftsInWeekView();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
+//            shiftOperatePage.deleteAllShiftsInWeekView();
             scheduleMainPage.saveSchedule();
             scheduleCommonPage.clickOnDayView();
 
@@ -1248,9 +1250,9 @@ public class MealAndRestBreakTest extends TestBase {
 //            shiftOperatePage.clickOnOKBtnOnMealBreakDialog();
             scheduleCommonPage.clickOnWeekView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.searchShiftOnSchedulePage("Open");
-            shiftOperatePage.deleteAllShiftsInWeekView();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
+//            shiftOperatePage.deleteAllShiftsInWeekView();
             scheduleMainPage.saveSchedule();
             scheduleCommonPage.clickOnDayView();
 
@@ -1287,8 +1289,8 @@ public class MealAndRestBreakTest extends TestBase {
             scheduleCommonPage.clickOnWeekView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.searchShiftOnSchedulePage("Open");
-            shiftOperatePage.deleteAllShiftsInWeekView();
-//            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+//            shiftOperatePage.deleteAllShiftsInWeekView();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
             scheduleMainPage.saveSchedule();
 
             scheduleCommonPage.clickOnDayView();

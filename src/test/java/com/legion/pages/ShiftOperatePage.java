@@ -123,7 +123,7 @@ public interface ShiftOperatePage {
     public void clickOnProfileIconByIndex(int indexOfProfIcon) throws Exception;
     public List<String> getWorkRoleListFromChangeShiftRoleOption() throws Exception;
     public void checkBadgeOnProfilePopup(String tmA, String tmB) throws Exception;
-    public void convertAllShiftsToOpenInDayView() throws Exception;
+    public void convertAllShiftsToOpenInDayView(String action) throws Exception;
     public boolean isAssignTeamMemberShowWell() throws Exception;
     public void searchTMOnAssignPage(String NameOfTM) throws Exception;
     public void verifyMultipleAlertMessageIsExpected(String messageExpected1, String messageExpected2, String messageExpected3) throws Exception;

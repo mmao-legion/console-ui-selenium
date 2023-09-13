@@ -3164,7 +3164,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         }
     }
   
-    @FindBy(css = "[ng-click =\"cancelAction()\"]")
+    @FindBy(id = "legion_cons_Schedule_Schedule_EditShifts_Exit_button")
     private WebElement closeBtnForOfferShift;
     @FindBy(css = ".tma-header-text.fl-left.ng-binding")
     private WebElement offerShiftdialogTitle;

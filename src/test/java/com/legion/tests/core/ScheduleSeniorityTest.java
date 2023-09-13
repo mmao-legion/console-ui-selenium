@@ -384,8 +384,9 @@ public class ScheduleSeniorityTest extends TestBase {
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();
-//			scheduleMainPage.publishOrRepublishSchedule();
+
 			EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(0);
 			String action = "Edit";
 			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
@@ -399,7 +400,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			shiftOperatePage.verifyRecommendedTableHasTM();
 			SimpleUtils.assertOnFail("The Seniority Column is displayed on searching dialog!", !(shiftOperatePage.isSeniorityColumnLoaded()), false);
 			newShiftPage.clickCloseBtnForOfferShift();
-			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
 			scheduleMainPage.saveSchedule();
 
@@ -432,8 +433,14 @@ public class ScheduleSeniorityTest extends TestBase {
 			scheduleMainPage.clickOnOpenSearchBoxButton();
 			scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
-			shiftOperatePage.clickonAssignTM();
+			scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(0);
+			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+			editShiftPage.clickOnAssignmentSelect();
+			editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption());
+			editShiftPage.clickOnUpdateButton();
+
+//			scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
+//			shiftOperatePage.clickonAssignTM();
 			shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
 			SimpleUtils.assertOnFail("The Seniority Column is displayed on searching dialog!", !(shiftOperatePage.isSeniorityColumnLoaded()), false);
 

@@ -2975,7 +2975,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     }
 
 
-    @FindBy(css = "div.tma-scroll-table tr")
+    @FindBy(css = "div[class*=\"MuiAvatar-root MuiAvatar-circular\"]")
     private List<WebElement> recommendedScrollTable;
     @Override
     public void verifyRecommendedTableHasTM() throws Exception{
@@ -3540,20 +3540,26 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
     }
 
     @Override
-    public void convertAllShiftsToOpenInDayView() throws Exception {
+    public void convertAllShiftsToOpenInDayView(String action) throws Exception {
         ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
+        EditShiftPage editShiftPage = new ConsoleEditShiftPage();
         if (areListElementVisible(dayViewAvailableShifts,10)){
             int count = dayViewAvailableShifts.size();
             for (int i = 0; i < count; i++) {
-                scheduleShiftTablePage.clickProfileIconOfShiftByIndex(i);
-                if(isConvertToOpenEnable()){
-                    clickOnConvertToOpenShift();
-                    convertToOpenShiftDirectly();
-                    SimpleUtils.pass("The shift is converted to the Open Shift successfully!");
-                    waitForSeconds(2);
-                }else{
-                    continue;
-                }
+                scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(i);
+//                scheduleShiftTablePage.clickProfileIconOfShiftByIndex(i);
+                scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+                editShiftPage.clickOnAssignmentSelect();
+                editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.OpenShift.getOption());
+                editShiftPage.clickOnUpdateButton();
+//                if(isConvertToOpenEnable()){
+//                    clickOnConvertToOpenShift();
+//                    convertToOpenShiftDirectly();
+//                    SimpleUtils.pass("The shift is converted to the Open Shift successfully!");
+//                    waitForSeconds(2);
+//                }else{
+//                    continue;
+//                }
             }
         }else{
             SimpleUtils.fail("No available shifts in the Day View", false);
