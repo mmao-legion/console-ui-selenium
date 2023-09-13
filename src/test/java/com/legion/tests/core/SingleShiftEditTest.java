@@ -381,16 +381,18 @@ public class SingleShiftEditTest extends TestBase {
                 SimpleUtils.fail("Work role list is incorrect when override assignment rule is set to Yes!", false);
             }
             // Verify work role is upated
-            actualWorkRoleList2.remove(workRole1);
+            actualWorkRoleList2.remove(actualWorkRoleList.get(0));
             editShiftPage.selectSpecificOptionByText(actualWorkRoleList2.get(0));
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
-            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
+            SimpleUtils.assertOnFail("Work role is not updated! the expected is:"+actualWorkRoleList2.get(0)
+                    +" the actual is:"+shiftInfo1.get(4), actualWorkRoleList2.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
             // Verify work role is saved
             scheduleMainPage.saveSchedule();
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
-            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
+            SimpleUtils.assertOnFail("Work role is not updated! the expected is:"+actualWorkRoleList2.get(0)
+                    +" the actual is:"+shiftInfo1.get(4), actualWorkRoleList2.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         } finally {
