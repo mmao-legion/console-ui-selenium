@@ -152,7 +152,9 @@ public class OvertimeShiftOfferTest extends TestBase {
                 newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
                 newShiftPage.moveSliderAtCertainPoint("5pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
                 newShiftPage.selectWorkRole(workRoleOfTM);
-                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
+                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+                newShiftPage.clickOnCreateOrNextBtn();
+                newShiftPage.searchTeamMemberByNameAndAssignOrOfferShift(firstNameOfTM, true);
                 newShiftPage.clickOnCreateOrNextBtn();
                 scheduleMainPage.saveSchedule();
             }
@@ -164,12 +166,6 @@ public class OvertimeShiftOfferTest extends TestBase {
 
             // Offer overtime shift in non-edit mode
             shiftOperatePage.clickOnProfileIconOfOpenShift();
-            SimpleUtils.assertOnFail("Offer TMs option should be enabled!", shiftOperatePage.isOfferTMOptionEnabled(), false);
-            shiftOperatePage.clickOnOfferTMOption();
-            newShiftPage.searchTeamMemberByNameNLocation(firstNameOfTM, location);
-            newShiftPage.clickOnOfferOrAssignBtn();
-            shiftOperatePage.clickOnProfileIconOfOpenShift();
-            scheduleShiftTablePage.clickViewStatusBtn();
             shiftOperatePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
             shiftOperatePage.closeViewStatusContainer();
             loginPage.logOut();

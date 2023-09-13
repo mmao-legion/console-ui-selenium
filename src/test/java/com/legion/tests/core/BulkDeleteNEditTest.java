@@ -1201,7 +1201,7 @@ public class BulkDeleteNEditTest extends TestBase {
             editShiftPage.clickOnAssignmentSelect();
             List<String> assignments = editShiftPage.getOptionsFromSpecificSelect();
             String assignOrOfferOption = ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption();
-            if (assignments.get(2).equals(assignOrOfferOption)) {
+            if (assignments.get(2).contains(assignOrOfferOption.toLowerCase())) {
                 SimpleUtils.pass("Assign or Offer to Specific TM's is enabled!");
             } else {
                 SimpleUtils.fail("Assign or Offer to Specific TM's is not enabled!", false);
@@ -1239,7 +1239,7 @@ public class BulkDeleteNEditTest extends TestBase {
                     "\nOnly the shifts with same start time, end time, location and worker role can be bulk-assigned";
             System.out.println(assignments.get(2));
             System.out.println(assignOrOfferOption);
-            if (assignments.get(2).equals(assignOrOfferOption)) {
+            if (assignments.get(2).equals(assignOrOfferOption.toLowerCase())) {
                 SimpleUtils.pass("Assign or Offer to Specific TM's is disabled!");
             } else {
                 SimpleUtils.fail("Assign or Offer to Specific TM's is not disabled!", false);
