@@ -2781,7 +2781,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return openShiftCount;
     }
 
-    @FindBy(css = "div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-5")
+    @FindBy(css = "div.MuiGrid-root.MuiGrid-item.MuiGrid-grid-xs-6")
     private WebElement shiftCardOnSearchTMPage;
     @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/div/div/p")
     private WebElement noOfShiftPerDayAndDaysScheduled;
