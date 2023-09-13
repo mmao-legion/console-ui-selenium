@@ -8,6 +8,7 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleCompliancePage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
+import com.legion.pages.core.schedule.ConsoleEditShiftPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -1917,21 +1918,30 @@ public class P2PLGTest extends TestBase {
             newShiftPage.addOpenShiftWithDefaultTime(shiftOperatePage.getRandomWorkRole(),childLocationNames.get(0));
 
             /// Edit shifts(include edit shift time, assign TM, delete...)
-            shiftOperatePage.clickOnProfileIcon();
-            shiftOperatePage.clickOnEditShiftTime();
-            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","11:00am",false);
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(0);
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.inputStartOrEndTime("11:00 AM", false);
+            editShiftPage.inputStartOrEndTime("08:00 AM", true);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
 
-            shiftOperatePage.clickOnProfileIcon();
-            shiftOperatePage.clickonAssignTM();
-            newShiftPage.selectTeamMembers();
-            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.clickOnAssignmentSelect();
+            String assignOrOfferOption = ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption();
+            editShiftPage.selectSpecificOptionByText(assignOrOfferOption);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            newShiftPage.searchTeamMemberByNameAndAssignOrOfferShift("a", false);
+            newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
-
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-//            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
-            shiftOperatePage.clickOnProfileIcon();
-            shiftOperatePage.verifyDeleteShift();
 
             /// Republish schedule
             createSchedulePage.publishActiveSchedule();
@@ -1966,21 +1976,24 @@ public class P2PLGTest extends TestBase {
             newShiftPage.addOpenShiftWithDefaultTime(shiftOperatePage.getRandomWorkRole(),childLocationNames.get(1));
 
             /// Edit shifts(include edit shift time, assign TM, delete...)
-            shiftOperatePage.clickOnProfileIcon();
-            shiftOperatePage.clickOnEditShiftTime();
-            shiftOperatePage.setShiftTimesOnEditShiftTimePage("08:00am","11:00am",false);
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.inputStartOrEndTime("11:00 AM", false);
+            editShiftPage.inputStartOrEndTime("08:00 AM", true);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
 
-            shiftOperatePage.clickOnProfileIcon();
-            shiftOperatePage.clickonAssignTM();
-            newShiftPage.selectTeamMembers();
-            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.clickOnAssignmentSelect();
+            editShiftPage.selectSpecificOptionByText(assignOrOfferOption);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            newShiftPage.searchTeamMemberByNameAndAssignOrOfferShift("a", false);
+            newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
-
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-//            scheduleMainPage.selectShiftTypeFilterByText("Compliance Review");
-            shiftOperatePage.clickOnProfileIcon();
-            shiftOperatePage.verifyDeleteShift();
 
             /// Republish schedule
             createSchedulePage.publishActiveSchedule();
