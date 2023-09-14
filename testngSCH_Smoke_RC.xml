@@ -56,7 +56,7 @@
             <class name="com.legion.tests.core.BulkDeleteNEditTest">
                 <methods>
                     <include name="verifyDeleteMultipleShiftsInWeekViewAsInternalAdmin" />
-                    <include name="verifyChangingWorkRoleOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
@@ -99,7 +99,7 @@
         <classes>
             <class name="com.legion.tests.core.SingleShiftEditTest">
                 <methods>
-                    <include name="verifyChangingStartTimeOnSingleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyTheContentOfBreaksSectionsAsInternalAdmin" />
                     <include name="verifyChangingAssignmentOnSingleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
