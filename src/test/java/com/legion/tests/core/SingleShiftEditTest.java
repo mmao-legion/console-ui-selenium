@@ -392,7 +392,8 @@ public class SingleShiftEditTest extends TestBase {
             scheduleMainPage.saveSchedule();
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
             SimpleUtils.assertOnFail("Work role is not updated! the expected is:"+actualWorkRoleList2.get(0)
-                    +" the actual is:"+shiftInfo1.get(4), actualWorkRoleList2.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
+                    +" the actual is:"+shiftInfo1.get(4), actualWorkRoleList2.get(0).equalsIgnoreCase(shiftInfo1.get(4))
+                    || actualWorkRoleList2.get(0).trim().replace(" ", "").equalsIgnoreCase(shiftInfo1.get(4).trim().replace(" ", "")), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         } finally {

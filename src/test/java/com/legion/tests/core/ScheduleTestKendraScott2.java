@@ -5052,6 +5052,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 			scheduleCommonPage.navigateToNextWeek();
+			scheduleCommonPage.navigateToNextWeek();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if (isActiveWeekGenerated) {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -5099,6 +5100,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			loginAsDifferentRole(AccessRoles.TeamMember.getValue());
 			//Get employee full name on TM schedule view
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+			scheduleCommonPage.navigateToNextWeek();
 			scheduleCommonPage.navigateToNextWeek();
 			String fullNameInMySchedulePage = scheduleShiftTablePage.getFullNameOfOneShiftByIndex(0);
 			SimpleUtils.assertOnFail("The full name display incorrectly in my schedule page, the expected full name is: "+ tmFullName +" The actual full name is: " + fullNameInMySchedulePage,
@@ -9343,7 +9345,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
 			SimpleUtils.assertOnFail("Recommended tab is empty!", newShiftPage.isRecommendedTabHasTMs(), false);
 			newShiftPage.clickCloseBtnForOfferShift();
-			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 //			shiftOperatePage.deleteAllShiftsInWeekView();
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
 			scheduleMainPage.saveSchedule();
