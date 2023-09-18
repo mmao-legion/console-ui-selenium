@@ -1327,8 +1327,8 @@ public class CinemarkMinorTest extends TestBase {
         scheduleMainPage.saveSchedule();
         if(smartCardPage.isRequiredActionSmartCardLoaded()){
 //            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             shiftOperatePage.deleteAllOOOHShiftInWeekView();
             scheduleMainPage.saveSchedule();
         }

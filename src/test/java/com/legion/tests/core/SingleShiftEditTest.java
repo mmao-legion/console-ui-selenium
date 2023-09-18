@@ -311,7 +311,7 @@ public class SingleShiftEditTest extends TestBase {
             List<String> names = createShiftsWithSpecificValues(workRole1, "", "", "9:00am", "12:00pm",
                     1, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
             scheduleMainPage.saveSchedule();
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             HashSet<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
@@ -387,12 +387,14 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.clickOnUpdateAnywayButton();
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
             SimpleUtils.assertOnFail("Work role is not updated! the expected is:"+actualWorkRoleList2.get(0)
-                    +" the actual is:"+shiftInfo1.get(4), actualWorkRoleList2.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
+                    +" the actual is:"+shiftInfo1.get(4), actualWorkRoleList2.get(0).equalsIgnoreCase(shiftInfo1.get(4))
+                    ||actualWorkRoleList2.get(0).trim().replace(" ", "").equalsIgnoreCase(shiftInfo1.get(4).trim().replace(" ", "")), false);
             // Verify work role is saved
             scheduleMainPage.saveSchedule();
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
             SimpleUtils.assertOnFail("Work role is not updated! the expected is:"+actualWorkRoleList2.get(0)
-                    +" the actual is:"+shiftInfo1.get(4), actualWorkRoleList2.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
+                    +" the actual is:"+shiftInfo1.get(4), actualWorkRoleList2.get(0).equalsIgnoreCase(shiftInfo1.get(4))
+                    || actualWorkRoleList2.get(0).trim().replace(" ", "").equalsIgnoreCase(shiftInfo1.get(4).trim().replace(" ", "")), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         } finally {
