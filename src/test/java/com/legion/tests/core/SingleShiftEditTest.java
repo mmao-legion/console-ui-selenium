@@ -983,7 +983,7 @@ public class SingleShiftEditTest extends TestBase {
             newShiftPage.searchTeamMemberByNameAndAssignOrOfferShift(assignedNames.get(0), true);
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
-
+            scheduleMainPage.publishOrRepublishSchedule();
             // Verify the offers are in draft status after saving the schedule
             int index = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon().iterator().next();
             shiftOperatePage.clickOnProfileIconByIndex(index);
