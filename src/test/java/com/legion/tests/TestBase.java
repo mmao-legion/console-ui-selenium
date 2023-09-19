@@ -488,6 +488,7 @@ public abstract class TestBase {
         SimpleUtils.assertOnFail("Failed to login to the application!", loginPage.isLoginSuccess(), false);
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
+        loginPage.closeIntroductionMode();
 //        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
 //        locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();
