@@ -514,6 +514,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private List<WebElement> namesWeekView;
     @FindBy(css = ".sch-day-view-shift-worker-name")
     private List<WebElement> namesDayView;
+    @FindBy(css = ".right-shift-box")
+    private List<WebElement> rightShiftBoxes;
     @FindBy(css = ".shift-selected-multi")
     private List<WebElement> selectedShifts;
     @FindBy(css = "._pendo-button-tertiaryButton")
@@ -3627,9 +3629,15 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 Actions action = new Actions(getDriver());
                 action.keyDown(Keys.CONTROL).build().perform();
                 for (int i = 0; i < dayViewAvailableShifts.size(); i++) {
-                    scrollToElement(namesDayView.get(i));
-                    waitForSeconds(1);
-                    action.moveToElement(namesDayView.get(i)).click(namesDayView.get(i));
+                    if (isElementLoaded(namesDayView.get(i), 3)) {
+                        scrollToElement(namesDayView.get(i));
+                        waitForSeconds(1);
+                        action.moveToElement(namesDayView.get(i)).click(namesDayView.get(i));
+                    } else if (isElementLoaded(rightShiftBoxes.get(i), 3)) {
+                        scrollToElement(rightShiftBoxes.get(i));
+                        waitForSeconds(1);
+                        action.moveToElement(rightShiftBoxes.get(i)).click(rightShiftBoxes.get(i));
+                    }
                 }
                 action.keyUp(Keys.CONTROL).build().perform();
                 if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == dayViewAvailableShifts.size()) {

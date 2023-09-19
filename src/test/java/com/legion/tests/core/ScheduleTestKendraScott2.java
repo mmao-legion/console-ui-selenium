@@ -9347,7 +9347,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			newShiftPage.clickCloseBtnForOfferShift();
 //			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 //			shiftOperatePage.deleteAllShiftsInWeekView();
-			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
+			scheduleShiftTablePage.bulkDeleteAllShiftsInDayView();
 			scheduleMainPage.saveSchedule();
 
 			//Create a new shift which using the TM name & role above, check the recommend tab

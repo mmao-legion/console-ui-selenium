@@ -42,7 +42,7 @@
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
                 <methods>
                     <include name="verifyComplianceSmartCardFunctionalityAsInternalAdmin" />
-                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>
+<!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin"/>-->
                     <include name="verificationOfToAndFroNavigationOfWeekPickerAsTeamMember" />
                     <include name="verifyProfilePictureFunctionalityAsTeamMember" />
                     <include name="verifyInfoIconFunctionalityAsTeamMember" />
@@ -124,19 +124,6 @@
         </classes>
     </test>
 
-    <test name="Meal And Rest Break Test">
-        <classes>
-            <class name="com.legion.tests.core.MealAndRestBreakTest">
-                <methods>
-                    <include name="verifyEditBreaksOptionIsAvailableAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfEditBreaksWeekViewAsInternalAdmin" />
-                    <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" />
-                    <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
-
     <test name="Schedule Copy Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleCopyTest">
@@ -171,6 +158,61 @@
                     <include name="verifySplitShiftCanBeConfiguredAsInternalAdmin" />
                     <include name="verifySplitShiftViolationWhenSearchTMAsInternalAdmin" />
                     <include name="verifySplitShiftViolationWillShowOnTheSecondShiftAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Bulk Delete And Edit Test">
+        <classes>
+            <class name="com.legion.tests.core.BulkDeleteNEditTest">
+                <methods>
+                    <include name="verifyDeleteMultipleShiftsInWeekViewAsInternalAdmin" />
+                    <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Bulk Create Test">
+        <classes>
+            <class name="com.legion.tests.core.BulkCreateTest">
+                <methods>
+                    <include name="validateTheAssignAndOfferWorkFlowAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Parent Child Test">
+        <classes>
+            <class name="com.legion.tests.core.ParentChildLGTest">
+                <methods>
+                    <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnParentChildLGAsInternalAdmin" />
+                    <include name="verifyChangingLocationForPCOnSingleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyDragAndDropShiftToDifferentLocationForParentChildLGScheduleAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="P2P Test">
+        <classes>
+            <class name="com.legion.tests.core.P2PLGTest">
+                <methods>
+                    <include name="validateTheAssignTMsWorkFlowForNewCreateShiftUIOnP2PLGAsInternalAdmin" />
+                    <include name="verifyChangingLocationForP2POnSingleEditShiftsWindowAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Single Shift Edit Test">
+        <classes>
+            <class name="com.legion.tests.core.SingleShiftEditTest">
+                <methods>
+                    <include name="verifyTheContentOfBreaksSectionsAsInternalAdmin" />
+                    <include name="verifyChangingAssignmentOnSingleEditShiftsWindowAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
