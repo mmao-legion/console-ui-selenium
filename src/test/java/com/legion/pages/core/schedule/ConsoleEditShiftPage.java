@@ -801,30 +801,30 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     @Override
     public void verifyEditableTypesShowOnSingleEditShiftDetail() throws Exception {
         if (areListElementVisible(gridContainers, 3)) {
-            if (gridContainers.size() == 10) {
-                if (gridContainers.get(1).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Work Role")
-                        && gridContainers.get(2).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Name")
+            if (gridContainers.size() == 9) {
+                if (gridContainers.get(0).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Work Role")
+                        && gridContainers.get(7).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Name")
                         && gridContainers.get(3).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Start Time")
                         && gridContainers.get(4).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("End Time")
-                        && gridContainers.get(5).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Breaks")
-                        && gridContainers.get(7).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Date")
-                        && gridContainers.get(8).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Assignment")
-                        && gridContainers.get(9).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Notes")) {
+                        && gridContainers.get(1).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Breaks")
+                        && gridContainers.get(5).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Date")
+                        && gridContainers.get(6).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Assignment")
+                        && gridContainers.get(8).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Notes")) {
                     SimpleUtils.pass("'Work Role', 'Shift Name', 'Start Time', 'End Time', 'Breaks', 'Date', 'Assignment', 'Shift Notes' " +
                             "sections are loaded successfully!");
                 } else {
                     SimpleUtils.fail("Sections on Shift Details is incorrect!", false);
                 }
-            } else if (gridContainers.size() == 11) {
-                if (gridContainers.get(1).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Work Role")
-                        && gridContainers.get(2).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Name")
+            } else if (gridContainers.size() == 10) {
+                if (gridContainers.get(0).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Work Role")
+                        && gridContainers.get(8).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Name")
                         && gridContainers.get(3).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Location")
                         && gridContainers.get(4).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Start Time")
                         && gridContainers.get(5).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("End Time")
-                        && gridContainers.get(6).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Breaks")
-                        && gridContainers.get(8).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Date")
-                        && gridContainers.get(9).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Assignment")
-                        && gridContainers.get(10).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Notes")) {
+                        && gridContainers.get(1).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Breaks")
+                        && gridContainers.get(6).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Date")
+                        && gridContainers.get(7).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Assignment")
+                        && gridContainers.get(9).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Notes")) {
                     SimpleUtils.pass("'Work Role', 'Shift Name', 'Location', 'Start Time', 'End Time', 'Breaks', 'Date', 'Assignment', 'Shift Notes' " +
                             "sections are loaded successfully for Location Group!");
                 } else {
