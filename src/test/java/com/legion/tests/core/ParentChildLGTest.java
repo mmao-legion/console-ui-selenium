@@ -4596,6 +4596,7 @@ public class ParentChildLGTest extends TestBase {
             MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 
             goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
 
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(!isActiveWeekGenerated) {
