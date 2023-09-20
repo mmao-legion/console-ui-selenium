@@ -1635,7 +1635,7 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.searchTeamMemberByName(tmPartialName);
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();
-            Thread.sleep(5000);
+            Thread.sleep(8000);
             SimpleUtils.assertOnFail("The shift's info doesn't include face bubble!", scheduleShiftTablePage.isInfoIconLoaded(0)
                     &&scheduleShiftTablePage.isProfileIconLoaded(0), false);
 
@@ -1685,6 +1685,7 @@ public class FTSERelevantTest extends TestBase {
                             &&scheduleShiftTablePage.isShiftLengthLoaded(0)&&scheduleShiftTablePage.isShiftDurationInBoxLoaded(0)
                             &&scheduleShiftTablePage.isShiftTotalLengthLoaded(0)&&scheduleShiftTablePage.isProfileNameAndWorkRoleLoaded(0)
                             &&scheduleShiftTablePage.isShiftJobTitleLoaded(0), false);
+            scheduleMainPage.saveSchedule();
 
             //Modify the shift's box to the minimum, verify the info icon is displayed
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
