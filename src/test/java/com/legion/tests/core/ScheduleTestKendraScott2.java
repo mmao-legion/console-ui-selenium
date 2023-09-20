@@ -2229,6 +2229,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
 		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+		EditShiftPage editShiftPage = pageFactory.createEditShiftPage();
 		SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
 
@@ -2264,9 +2265,17 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		scheduleMainPage.clickOnFilterBtn();
 		scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-		shiftOperatePage.clickOnProfileIcon();
-		shiftOperatePage.clickOnConvertToOpenShift();
-		shiftOperatePage.convertToOpenShiftDirectly();
+		HashSet<Integer> indexes = scheduleShiftTablePage.verifyCanSelectMultipleShifts(1);
+		scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+		String action = "Edit";
+		scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+		editShiftPage.clickOnAssignmentSelect();
+		List<String> assignments = editShiftPage.getOptionsFromSpecificSelect();
+		String assignOrOfferOption = ConsoleEditShiftPage.assignmentOptions.OpenShift.getOption();
+		editShiftPage.selectSpecificOptionByText(assignOrOfferOption);
+		editShiftPage.clickOnUpdateButton();
+		editShiftPage.clickOnUpdateAnywayButton();
+
 		scheduleMainPage.saveSchedule();
 		createSchedulePage.publishActiveSchedule();
 		int i = 0;

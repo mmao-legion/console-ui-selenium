@@ -1414,6 +1414,7 @@ public class BulkCreateTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             Thread.sleep(5000);
             scheduleMainPage.saveSchedule();
+            scheduleMainPage.publishOrRepublishSchedule();
             List<WebElement> openShiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(0, "Open");
             SimpleUtils.assertOnFail("The open shift is not exist on the first day! ",
                     openShiftsOfOneDay.size()==1, false);
@@ -1434,7 +1435,7 @@ public class BulkCreateTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
-
+            scheduleMainPage.publishOrRepublishSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             SimpleUtils.assertOnFail("New create shift page is not display! ",
