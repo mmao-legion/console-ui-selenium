@@ -921,6 +921,7 @@ public class SingleShiftEditTest extends TestBase {
                 scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
                 scheduleMainPage.saveSchedule();
             }
+            scheduleMainPage.publishOrRepublishSchedule();
             String workRole = shiftOperatePage.getRandomWorkRole();
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -983,9 +984,8 @@ public class SingleShiftEditTest extends TestBase {
             newShiftPage.searchTeamMemberByNameAndAssignOrOfferShift(assignedNames.get(0), true);
             newShiftPage.clickOnCreateOrNextBtn();
             scheduleMainPage.saveSchedule();
-            scheduleMainPage.publishOrRepublishSchedule();
-            // Verify the offers are in draft status after saving the schedule
             int index = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon().iterator().next();
+            // Verify the offers are in draft status after saving the schedule
             shiftOperatePage.clickOnProfileIconByIndex(index);
             scheduleShiftTablePage.clickViewStatusBtn();
             shiftOperatePage.verifyTMInTheOfferList(assignedNames.get(0), "Draft Offer");
