@@ -4597,7 +4597,6 @@ public class ParentChildLGTest extends TestBase {
 
             goToSchedulePageScheduleTab();
             scheduleCommonPage.navigateToNextWeek();
-
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(!isActiveWeekGenerated) {
                 createSchedulePage.createLGScheduleWithGivingTimeRange("08:00am", "09:00pm");
@@ -4643,6 +4642,7 @@ public class ParentChildLGTest extends TestBase {
                     null, firstNameOfTM2+ " "+ lastName2);
             scheduleMainPage.saveSchedule();
             goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
             //Verify shift will be covered to open when copy shift to same day and different location
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<WebElement> selectedShifts = scheduleShiftTablePage.selectMultipleSameAssignmentShifts(1, firstNameOfTM2);
@@ -4659,6 +4659,7 @@ public class ParentChildLGTest extends TestBase {
                 SimpleUtils.fail("Fail to drag and drop! ", false);
             scheduleMainPage.saveSchedule();
             goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
             //Verify shift will be covered to open when copy shift to same day and different location
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             selectedShifts = scheduleShiftTablePage.selectMultipleSameAssignmentShifts(1, firstNameOfTM);
@@ -4674,6 +4675,7 @@ public class ParentChildLGTest extends TestBase {
             scheduleMainPage.clickOnCancelButtonOnEditMode();
             //Verify shift can be copied to different day and different location by drag and drop
             goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             selectedShifts = scheduleShiftTablePage.selectMultipleSameAssignmentShifts(1, firstNameOfTM);
             scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 1, true);
@@ -4682,6 +4684,7 @@ public class ParentChildLGTest extends TestBase {
             scheduleShiftTablePage.verifyShiftIsCopiedToAnotherDay(0,firstNameOfTM,1);
             scheduleMainPage.saveSchedule();
             goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //Verify shift can be moved to different day and different location by drag and drop
             selectedShifts = scheduleShiftTablePage.selectMultipleSameAssignmentShifts(1, firstNameOfTM);
