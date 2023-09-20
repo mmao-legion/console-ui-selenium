@@ -1735,7 +1735,7 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.clickOnOfferOrAssignBtn();
         Thread.sleep(3000);
         scheduleMainPage.saveSchedule();
-
+        Thread.sleep(3000);
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         newShiftPage.clickOnDayViewAddNewShiftButton();
         newShiftPage.customizeNewShiftPage();
