@@ -3220,7 +3220,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     public void clickOnShiftInDayView (WebElement shiftInDayView) throws Exception {
         if (isElementLoaded(shiftInDayView, 10)) {
             moveElement(shiftInDayView.findElement(By.cssSelector(".break-container")), 0);
-            if (isElementLoaded(btnDelete) && areListElementVisible(shiftTimeInDayViewPopUp)) {
+            if (areListElementVisible(shiftTimeInDayViewPopUp, 5)) {
                 SimpleUtils.pass("Click the shift successfully! ");
             } else
                 SimpleUtils.fail("Fail to click the shift! ", false);

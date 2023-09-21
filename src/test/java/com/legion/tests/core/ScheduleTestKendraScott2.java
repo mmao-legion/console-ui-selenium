@@ -5916,7 +5916,11 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					shiftInfo.contains(shiftTimeInDayViewPopUp.get(0))
 							&&shiftInfo.contains(shiftTimeInDayViewPopUp.get(1)), false);
 			//Delete the shift by click the X button
-			scheduleShiftTablePage.clickOnXButtonInDayView();
+			HashSet<Integer> needDelete = new HashSet<>();
+			needDelete.add(index);
+			scheduleShiftTablePage.rightClickOnSelectedShifts(needDelete);
+			String option = "Delete";
+			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(option);
 			SimpleUtils.assertOnFail("The shift should been marked as deleted! ",
 					scheduleShiftTablePage.checkIfShiftInDayViewBeenMarkAsDeletedByIndex(index), false);;
 
@@ -5925,7 +5929,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			//Delete the shift by click the X button and save the schedule, the shift can be deleted
 			int shiftCountBeforeDelete = scheduleShiftTablePage.getAvailableShiftsInDayView().size();
-			scheduleShiftTablePage.clickOnXButtonInDayView();
+			scheduleShiftTablePage.clickOnShiftInDayView(scheduleShiftTablePage.
+					getAvailableShiftsInDayView().get(index));
+			scheduleShiftTablePage.rightClickOnSelectedShifts(needDelete);
+			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(option);
 			scheduleMainPage.saveSchedule();
 			SimpleUtils.assertOnFail("The shift not been deleted successfully! ",
 					scheduleShiftTablePage.getAvailableShiftsInDayView().size()+1 == shiftCountBeforeDelete, false);
