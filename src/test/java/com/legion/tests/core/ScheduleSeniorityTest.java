@@ -289,6 +289,7 @@ public class ScheduleSeniorityTest extends TestBase {
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(0);
 			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+			editShiftPage.clickOnAssignmentSelect();
 			editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.AssignOrOffer.getOption());
 			editShiftPage.clickOnUpdateButton();
 			newShiftPage.searchEmployee(firstNameOfTM);
