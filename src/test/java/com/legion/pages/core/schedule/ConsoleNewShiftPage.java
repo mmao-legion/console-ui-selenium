@@ -3118,6 +3118,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private WebElement createShiftTitle;
     @Override
     public void clickCloseBtnForCreateShift() throws Exception {
+        waitForSeconds(2);
         if (isElementLoaded(closeBtnForCreateShift,5)) {
             clickTheElement(closeBtnForCreateShift);
             if (!isElementLoaded(createShiftTitle))
