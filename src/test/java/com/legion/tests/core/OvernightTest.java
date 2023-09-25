@@ -132,7 +132,7 @@ public class OvernightTest extends TestBase {
             scheduleMainPage.saveSchedule();
             //Verify the overnight shift can display on next day
             scheduleCommonPage.navigateDayViewWithIndex(3);
-            SimpleUtils.assertOnFail("The overnight shift also display on the next day! ",
+            SimpleUtils.assertOnFail(firstNameOfTM1+"'s overnight shift should display on the next day! ",
                     scheduleShiftTablePage.getShiftsByNameOnDayView(firstNameOfTM1).size()>0, false);
             //Verify the overnight shift can be dragged to other days
             scheduleCommonPage.clickOnWeekView();

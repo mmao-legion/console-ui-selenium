@@ -996,7 +996,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     @FindBy(css = "[placeholder=\"Search by Team Member, Role, Location or any combination.\"]")
     private WebElement textSearchOnNewCreateShiftPage;
 
-    @FindBy(xpath = "//div[contains(@class,'MuiGrid-container')]/div/div/div/button/parent::*/parent::*/parent::*/parent::*/parent::*/div[contains(@class,'MuiGrid-container')]")
+    @FindBy(xpath = "//div[contains(@class,'MuiAvatar-root MuiAvatar-circular')]/parent::*//parent::*/parent::*/parent::*/parent::*/parent::*/div[contains(@class,'MuiGrid-container')]")
     private List<WebElement> searchResultsOnNewCreateShiftPage;
 
     @FindBy(css = ".MuiDialogContent-root button")
@@ -1631,8 +1631,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             for (int i = 0; i < searchAssignTeamMember.length; i++) {
                 String[] searchTM = searchAssignTeamMember[i].split("\\.");
                 String searchText = searchTM[0];
-                textSearchOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
-                textSearchOnNewCreateShiftPage.sendKeys(Keys.DELETE);
+//                textSearchOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+//                textSearchOnNewCreateShiftPage.sendKeys(Keys.DELETE);
+                textSearchOnNewCreateShiftPage.clear();
                 textSearchOnNewCreateShiftPage.sendKeys(searchText);
                 waitForSeconds(3);
                 selectedTMName = newShiftPage.selectAndGetTheSelectedTM();
