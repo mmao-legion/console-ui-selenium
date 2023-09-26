@@ -736,6 +736,7 @@ public class ForecastTest extends TestBase{
 			Thread.sleep(5000);
 			loginAsDifferentRole(accessRole);
 			dashboardPage.clickOnDashboardConsoleMenu();
+			Thread.sleep(10000);
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
 			SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",

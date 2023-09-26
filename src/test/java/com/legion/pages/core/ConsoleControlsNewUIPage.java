@@ -6963,7 +6963,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 		}
 	}
 
-	@FindBy(css = "[form-title=\"Meal & Rest Breaks\"]")
+	@FindBy(css = "[form-title=\"Meal Breaks\"]")
 	private WebElement mealRestBreaksSection;
 
 	@FindBy(xpath = "//question-input[contains(@question-title, 'Meal Break for every')]/div")
@@ -6976,7 +6976,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 	public void turnOnOrTurnOffMealBreakToggle(boolean action) throws Exception {
 		String content = getMealBreakContent();
 		if (isElementLoaded(mealRestBreaksSection, 10)
-				&&mealRestBreaksSection.findElement(By.cssSelector(".info")).getText().equalsIgnoreCase("Meal & Rest Breaks")
+				&&mealRestBreaksSection.findElement(By.cssSelector(".info")).getText().equalsIgnoreCase("Meal Breaks")
 				&&content.contains("An employee should be scheduled for")
 				&&content.contains("Meal Break for every")
 				&&content.contains(" of work.")){
