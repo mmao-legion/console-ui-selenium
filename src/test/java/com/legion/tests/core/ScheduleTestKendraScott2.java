@@ -8331,7 +8331,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			goToSchedulePageScheduleTab();
-			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isActiveWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			}
 			scheduleMainPage.goToEditOperatingHoursView();
 			List<String> weekDays = new ArrayList<>(Arrays.asList("Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"));
 			scheduleMainPage.editTheOperatingHoursWithFixedValue(weekDays, "07:00AM","09:00PM");
