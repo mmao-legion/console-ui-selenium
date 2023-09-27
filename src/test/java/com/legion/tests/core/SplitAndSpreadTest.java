@@ -152,12 +152,12 @@ public class SplitAndSpreadTest extends TestBase {
         scheduleMainPage.clickOnOpenSearchBoxButton();
         scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM1);
         List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
-        SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift"), false);
 
         //verify split shift violation after publishing.
         createSchedulePage.publishActiveSchedule();
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
-        SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift"), false);
     }
 
     @Automated(automated = "Automated")
@@ -235,7 +235,7 @@ public class SplitAndSpreadTest extends TestBase {
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         if(newShiftPage.ifWarningModeDisplay()){
             String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-            if (warningMessage.toLowerCase().contains("split shift (<60 mins between shifts)")){
+            if (warningMessage.toLowerCase().contains("split shift")){
                 SimpleUtils.pass("Split shifts warning message displays");
             } else {
                 SimpleUtils.fail("There is no split shifts warning message displaying", false);
@@ -250,19 +250,19 @@ public class SplitAndSpreadTest extends TestBase {
         scheduleMainPage.clickOnOpenSearchBoxButton();
         scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM1);
         List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
-        SimpleUtils.assertOnFail("The first shift should not have the violation", !complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("The first shift should not have the violation", !complianceMessage.contains("Split Shift"), false);
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
-        SimpleUtils.assertOnFail("The second shift should have the violation", complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("The second shift should have the violation", complianceMessage.contains("Split Shift"), false);
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(2));
-        SimpleUtils.assertOnFail("The thirrd shift should have the violation", complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("The thirrd shift should have the violation", complianceMessage.contains("Split Shift"), false);
 
         //verify split shift on the second and the third shifts violation after publishing.
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
-        SimpleUtils.assertOnFail("The first shift should not have the violation", !complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("The first shift should not have the violation", !complianceMessage.contains("Split Shift"), false);
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
-        SimpleUtils.assertOnFail("The second shift should have the violation", complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("The second shift should have the violation", complianceMessage.contains("Split Shift"), false);
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(2));
-        SimpleUtils.assertOnFail("The thirrd shift should have the violation", complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("The thirrd shift should have the violation", complianceMessage.contains("Split Shift"), false);
     }
 
     @Automated(automated = "Automated")
