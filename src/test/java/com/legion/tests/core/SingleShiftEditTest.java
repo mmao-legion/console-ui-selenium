@@ -1777,11 +1777,10 @@ public class SingleShiftEditTest extends TestBase {
             List<String> complianceMessages = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
                     (scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM1).get(0));
             SimpleUtils.assertOnFail("The Clopening Violation should display! ",
-                    complianceMessages.contains("Clopening (<15)"), false);
-            complianceMessages = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
+                    complianceMessages.contains("Clopening"), false);complianceMessages = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
                     (scheduleShiftTablePage.getOneDayShiftByName(1, firstNameOfTM1).get(0));
             SimpleUtils.assertOnFail("The Clopening Violation should display! ",
-                    complianceMessages.contains("Clopening (<15)"), false);
+                    complianceMessages.contains("Clopening"), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1866,7 +1865,7 @@ public class SingleShiftEditTest extends TestBase {
             List<String> complianceMessages = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
                     (scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM1).get(1));
             SimpleUtils.assertOnFail("The Split Shift Violation should display! ",
-                    complianceMessages.contains("Split Shift (<60 mins between shifts)"), false);
+                    complianceMessages.contains("Split Shift"), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -1946,7 +1945,7 @@ public class SingleShiftEditTest extends TestBase {
             List<String> complianceMessages = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
                     (scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM1).get(1));
             SimpleUtils.assertOnFail("The Spread Violation should display! ",
-                    complianceMessages.contains("Spread of hours (>600 between start and end)"), false);
+                    complianceMessages.contains("Spread of hours"), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
