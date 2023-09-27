@@ -10430,7 +10430,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				float scheduledHrs = smartCardPage.getScheduleBudgetedHoursInScheduleSmartCard().get("scheduledHours");
 				SimpleUtils.assertOnFail("The total scheduled hrs is "+totalScheduledHrs
 								+", the scheduled hrs for every job title option is "+scheduledHrs,
-						scheduledHrs =< totalScheduledHrs, false);
+						scheduledHrs <= totalScheduledHrs, false);
 				scheduledHrsForEveryOptions = scheduledHrsForEveryOptions + scheduledHrs;
 				SimpleUtils.pass("Get "+jobTitle+"'s scheduled hrs successfully! ");
 			}
