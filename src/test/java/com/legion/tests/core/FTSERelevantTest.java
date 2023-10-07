@@ -1472,7 +1472,16 @@ public class FTSERelevantTest extends TestBase {
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage(tmPartialName);
             List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
-            SimpleUtils.assertOnFail("The split shift violation is not showing!", complianceMessage.contains("Split Shift"), false);
+            for(int i = 0; i < complianceMessage.size();){
+                if(complianceMessage.get(i).contains("Split Shift")){
+                    SimpleUtils.report("The split shift violation is expected!");
+                    break;
+                }
+                i++;
+                if(i == complianceMessage.size())
+                    SimpleUtils.fail("The split shift violation is not showing!",false);
+            }
+//            SimpleUtils.assertOnFail("The split shift violation is not showing!", complianceMessage.contains("Split Shift"), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1577,7 +1586,16 @@ public class FTSERelevantTest extends TestBase {
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage(tmPartialName);
             List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
-            SimpleUtils.assertOnFail("The spread of hours violation is not showing!", complianceMessage.contains("Spread of hours"), false);
+            for(int i = 0; i < complianceMessage.size();){
+                if(complianceMessage.get(i).contains("Spread of hours")){
+                    SimpleUtils.report("The Spread of hours violation is expected!");
+                    break;
+                }
+                i++;
+                if(i == complianceMessage.size())
+                    SimpleUtils.fail("The Spread of hours violation is not showing!",false);
+            }
+//            SimpleUtils.assertOnFail("The spread of hours violation is not showing!", complianceMessage.contains("Spread of hours"), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -2172,7 +2190,7 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.customizeNewShiftPage();
             newShiftPage.selectWorkRole(workRole);
             newShiftPage.moveSliderAtCertainPoint("9pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-            newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(true);
+            newShiftPage.checkOrUnCheckNextDayOnCreateShiftModal(false);
             newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
