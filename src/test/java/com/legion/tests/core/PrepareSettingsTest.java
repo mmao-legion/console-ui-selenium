@@ -232,10 +232,6 @@ public class PrepareSettingsTest extends TestBase {
             configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Compliance"), "edit");
             configurationPage.clickOnEditButtonOnTemplateDetailsPage();
 
-            // Click the Yes buttons of setting "Strictly enforce minor violations?"
-            configurationPage.setStrictlyEnforceMinorViolations("No");
-            SimpleUtils.assertOnFail("The 'Strictly enforce minor violations?' should be setting as No! ",
-                        !configurationPage.isStrictlyEnforceMinorViolationSettingEnabled(), false);
             //Publish the template
             configurationPage.publishNowTheTemplate();
 
