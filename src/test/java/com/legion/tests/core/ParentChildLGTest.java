@@ -1353,7 +1353,7 @@ public class ParentChildLGTest extends TestBase {
                     shiftWarningMessage.toLowerCase().contains(shiftStartTime.toLowerCase()) && shiftWarningMessage.toLowerCase()
                     .contains(shiftEndTime.toLowerCase()), false);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
-            String expectedWarningMessage = firstNameOfTM+ " is scheduled "+ shiftStartTime+ " - "+shiftEndTime+ " on "+ weekDay;
+            String expectedWarningMessage = "TM scheduled at this time";
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
                 if (warningMessage.toLowerCase().contains(expectedWarningMessage.toLowerCase())){
@@ -1361,16 +1361,10 @@ public class ParentChildLGTest extends TestBase {
                 } else {
                     SimpleUtils.fail("There is no Overlapping warning message displaying, the actual is:"+warningMessage, false);
                 }
-                shiftOperatePage.clickOnAssignAnywayButton();
+                newShiftPage.clickOnOkButtonOnWarningModal();
             } else {
                 SimpleUtils.fail("There is no Overlapping warning modal displaying!",false);
             }
-            newShiftPage.clickOnOfferOrAssignBtn();
-            scheduleMainPage.saveSchedule();
-            List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
-            List<WebElement> openShiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, "open");
-            SimpleUtils.assertOnFail("New shift display failed", shiftsOfFirstDay.size() == 1, false);
-            SimpleUtils.assertOnFail("Covert to open shift display failed", openShiftsOfFirstDay.size() == 1, false);
         }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
