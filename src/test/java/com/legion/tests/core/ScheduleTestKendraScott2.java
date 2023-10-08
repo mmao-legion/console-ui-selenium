@@ -8398,7 +8398,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();

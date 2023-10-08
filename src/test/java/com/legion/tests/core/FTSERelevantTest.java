@@ -665,7 +665,7 @@ public class FTSERelevantTest extends TestBase {
 
             //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE T.");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
             scheduleMainPage.saveSchedule();
 
             //Create a new shift and assign it to the FTSE employee
@@ -804,7 +804,6 @@ public class FTSERelevantTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
             ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 //            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
@@ -857,8 +856,18 @@ public class FTSERelevantTest extends TestBase {
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage(tmPartialName);
             List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(6));
-            SimpleUtils.assertOnFail("The Max Shifts violation message is not showing!",
-                    complianceMessage.contains("Max shift per week violation") || complianceMessage.contains("Max days per week"), false);
+            for(int i = 0; i < complianceMessage.size();){
+                if(complianceMessage.get(i).contains("Max shift per week violation") || complianceMessage.get(i).contains("Max days per week")){
+                    SimpleUtils.report("The Max Shifts violation message is expected!");
+                    break;
+                }
+                i++;
+                if(i == complianceMessage.size())
+                    SimpleUtils.fail("The Max Shifts violation message is not showing!",false);
+            }
+
+//            SimpleUtils.assertOnFail("The Max Shifts violation message is not showing!",
+//                    complianceMessage.contains("Max shift per week violation") || complianceMessage.contains("Max days per week"), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
@@ -1045,7 +1054,7 @@ public class FTSERelevantTest extends TestBase {
             //Delete all auto-generated shifts for the FTSE employee
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE T.");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
             scheduleMainPage.saveSchedule();
 
             //Create multiple shifts and assign them to the FTSE employee
@@ -1114,7 +1123,7 @@ public class FTSERelevantTest extends TestBase {
 
             //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE T.");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
             scheduleMainPage.saveSchedule();
 
             //Create multiple shifts and assign them to the FTSE employee
