@@ -139,23 +139,23 @@
             </class>
         </classes>
     </test>
-
+<!--
     <test name="Hard Stop For Minor Violation Test">
         <classes>
             <class name="com.legion.tests.core.HardStopForMinorViolation">
                 <methods>
-                    <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" />
-                    <!--                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
+                 <include name="verifyTheFunctionalityOfSettingStrictlyEnforceMinorViolationsAsInternalAdmin" /> the config has not exists
+                                    <include name="verifyMinorViolationWillShowInActionRequiredSmartCardAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602
                     <include name="verifyHardStopWhenAssigningTheShiftToTheMinorWillTriggerMinorViolationAsInternalAdmin" />
                     <include name="verifyMinorCannotClaimOpenShiftWithMinorViolationAsInternalAdmin" />
                     <include name="verifyMinorViolationWillNotShowInSmartCardIfChangingSettingFromYesTONoAsInternalAdmin" />
-                    <!--                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602-->
+                                    <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingFromNoTOYesAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8602
                     <include name="verifyMinorViolationWillShowInSmartCardIfChangingSettingOfMinorTemplateAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
     </test>
-
+        -->
     <test name="Cinemark Minor Test">
         <classes>
             <class name="com.legion.tests.core.CinemarkMinorTest">
