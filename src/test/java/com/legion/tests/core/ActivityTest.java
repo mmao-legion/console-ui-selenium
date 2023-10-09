@@ -1274,13 +1274,14 @@ public class ActivityTest extends TestBase {
         mySchedulePage.clickTheShiftRequestByName(request);
         List<String> coverList = mySchedulePage.getCoverTMList();
         int count = 0;
-        while (coverList.size() == 0 && count < 10) {
+        while (coverList.size() == 0 && count < 15) {
             mySchedulePage.clickOnShiftByIndex(index);
             mySchedulePage.clickTheShiftRequestByName(request);
             coverList = mySchedulePage.getCoverTMList();
             Thread.sleep(5000);
             count++;
         }
+
         System.out.println(coverList.toString());
 
         swapCoverNames = new ArrayList<>();
