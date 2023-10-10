@@ -4560,8 +4560,10 @@ public class P2PLGTest extends TestBase {
                     break;
                 }
             }
-            // Verify can change the location without selecting the two options
+
             editShiftPage.selectSpecificOptionByText(actualLocations.get(1));
+            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowConflicts.getOption(),true);
+            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowComplianceErrors.getOption(),true);
             editShiftPage.clickOnUpdateButton();
             // mySchedulePage.verifyThePopupMessageOnTop("Success");
             // Verify the shifts are moved to the selected child location

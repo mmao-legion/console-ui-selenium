@@ -1278,7 +1278,7 @@ public class ActivityTest extends TestBase {
             mySchedulePage.clickOnShiftByIndex(index);
             mySchedulePage.clickTheShiftRequestByName(request);
             coverList = mySchedulePage.getCoverTMList();
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             count++;
         }
 
