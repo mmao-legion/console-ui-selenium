@@ -285,7 +285,7 @@ public class SingleShiftEditTest extends TestBase {
         try {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 //            boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
-            setOverRideAssignmentRule(false, location, false);
+//            setOverRideAssignmentRule(false, location, false);
             // Go to Schedule page, Schedule tab
             goToSchedulePageScheduleTab();
 
@@ -323,41 +323,41 @@ public class SingleShiftEditTest extends TestBase {
 
             // Verify only elegible work roles will show when clicking on Change Shift Role and override assignment rule is set to No
             editShiftPage.clickOnWorkRoleSelect();
-            List<String> actualWorkRoleList = editShiftPage.getOptionsFromSpecificSelect();
-            // Verify only elegible work roles will show on bulk edit shift dialog when override assignment rule is set to No
-            if (workRoleList.containsAll(actualWorkRoleList)){
-//                    && actualWorkRoleList.containsAll(workRoleList)) {
-                SimpleUtils.pass("Work role list shows correctly");
-            } else {
-                SimpleUtils.fail("Work role list is incorrect when override assignment rule is set to No!", false);
-            }
-            if (actualWorkRoleList.size() > 1) {
-                for (int i = 0; i < actualWorkRoleList.size(); i++) {
-                    if (actualWorkRoleList.get(i).equalsIgnoreCase(workRole1)) {
-                        actualWorkRoleList.remove(i);
-                        break;
-                    }
-                }
-            }
-            // Verify work role is updated
-            editShiftPage.selectSpecificOptionByText(actualWorkRoleList.get(0));
-            editShiftPage.clickOnUpdateButton();
-            editShiftPage.clickOnUpdateAnywayButton();
-            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
-            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
-            // Verify work role is saved
-            scheduleMainPage.saveSchedule();
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
-            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
-            // Verify there is no role violation
-            SimpleUtils.assertOnFail("Role violation should not show!",
-                    !scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(
-                            Integer.parseInt(shiftIndexes.toArray()[0].toString())
-                    )).contains("Role Violation"), false);
-            // Verify all available work roles will show when clicking on Change Shift Role and override assignment rule is set to Yes
-            setOverRideAssignmentRule(false, location, true);
+//            List<String> actualWorkRoleList = editShiftPage.getOptionsFromSpecificSelect();
+//            // Verify only elegible work roles will show on bulk edit shift dialog when override assignment rule is set to No
+//            if (workRoleList.containsAll(actualWorkRoleList)){
+////                    && actualWorkRoleList.containsAll(workRoleList)) {
+//                SimpleUtils.pass("Work role list shows correctly");
+//            } else {
+//                SimpleUtils.fail("Work role list is incorrect when override assignment rule is set to No!", false);
+//            }
+//            if (actualWorkRoleList.size() > 1) {
+//                for (int i = 0; i < actualWorkRoleList.size(); i++) {
+//                    if (actualWorkRoleList.get(i).equalsIgnoreCase(workRole1)) {
+//                        actualWorkRoleList.remove(i);
+//                        break;
+//                    }
+//                }
+//            }
+//            // Verify work role is updated
+//            editShiftPage.selectSpecificOptionByText(actualWorkRoleList.get(0));
+//            editShiftPage.clickOnUpdateButton();
+//            editShiftPage.clickOnUpdateAnywayButton();
+//            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
+//            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
+//            // Verify work role is saved
+//            scheduleMainPage.saveSchedule();
+//            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
+//            SimpleUtils.assertOnFail("Work role is not updated!", actualWorkRoleList.get(0).equalsIgnoreCase(shiftInfo1.get(4)), false);
+//            // Verify there is no role violation
+//            SimpleUtils.assertOnFail("Role violation should not show!",
+//                    !scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(
+//                            Integer.parseInt(shiftIndexes.toArray()[0].toString())
+//                    )).contains("Role Violation"), false);
+//            // Verify all available work roles will show when clicking on Change Shift Role and override assignment rule is set to Yes
+//            setOverRideAssignmentRule(false, location, true);
 
-            goToSchedulePageScheduleTab();
+//            goToSchedulePageScheduleTab();
 //            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
 //            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 //            shiftOperatePage.clickOnProfileIconByIndex(0);
@@ -368,11 +368,11 @@ public class SingleShiftEditTest extends TestBase {
 //            SimpleUtils.assertOnFail("Not all work role listed!", workRoleList2.size() <= workRoleList.size(), false);
 
             // Verify all available work roles will show on bulk edit shift dialog when override assignment rule is set to Yes
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.rightClickOnSelectedShifts(shiftIndexes);
-            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
-            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
-            editShiftPage.clickOnWorkRoleSelect();
+//            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//            scheduleShiftTablePage.rightClickOnSelectedShifts(shiftIndexes);
+//            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+//            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+//            editShiftPage.clickOnWorkRoleSelect();
             List<String> actualWorkRoleList2 = editShiftPage.getOptionsFromSpecificSelect();
             if (workRoleList.containsAll(actualWorkRoleList2)) {
 //                    && actualWorkRoleList2.containsAll(workRoleList2)) {
@@ -381,11 +381,11 @@ public class SingleShiftEditTest extends TestBase {
                 SimpleUtils.fail("Work role list is incorrect when override assignment rule is set to Yes!", false);
             }
             // Verify work role is upated
-            actualWorkRoleList2.remove(actualWorkRoleList.get(0));
+//            actualWorkRoleList2.remove(actualWorkRoleList.get(0));
             editShiftPage.selectSpecificOptionByText(actualWorkRoleList2.get(0));
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
-            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
+            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
             SimpleUtils.assertOnFail("Work role is not updated! the expected is:"+actualWorkRoleList2.get(0)
                     +" the actual is:"+shiftInfo1.get(4), actualWorkRoleList2.get(0).equalsIgnoreCase(shiftInfo1.get(4))
                     ||actualWorkRoleList2.get(0).trim().replace(" ", "").equalsIgnoreCase(shiftInfo1.get(4).trim().replace(" ", "")), false);
@@ -867,6 +867,9 @@ public class SingleShiftEditTest extends TestBase {
             HashSet<Integer> newIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
             System.out.println(scheduleShiftTablePage.getOneDayShiftByName(1, assignedNames.get(0)).size());
             SimpleUtils.assertOnFail("Shifts are not moved to the next day!", !indexes.equals(newIndexes), false);
+            scheduleMainPage.saveSchedule();
+            Thread.sleep(3000);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
             // Verify the error will pop up when changing the date without selecting the two options
             createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",

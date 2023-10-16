@@ -1220,6 +1220,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                                 clickTheElement(buttonsOnWarningMode.get(1));
                                                 SimpleUtils.report("Assign Team Member: Click on 'ASSIGN ANYWAY' button Successfully!");
                                             }
+                                        } else if (buttonsOnWarningMode.size() == 1 && buttonsOnWarningMode.get(0).getText().toLowerCase().equalsIgnoreCase("ok")) {
+                                            clickTheElement(buttonsOnWarningMode.get(0));
+                                            continue;
                                         }
                                     }
                                     if (!areListElementVisible(shiftOffersOnShiftAssignedSections, 3)
@@ -1229,7 +1232,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                                         SimpleUtils.pass("TM been added to assign or offer section successfully! ");
                                     break;
                                 }
-                            }else {
+                            } else {
                                 SimpleUtils.fail("Worker name or buttons not loaded Successfully!", false);
                             }
                         }

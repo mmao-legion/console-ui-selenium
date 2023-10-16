@@ -1870,14 +1870,16 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
                 moveToElementAndClick(tmIcon);
                 try {
                     if (isPopOverLayoutLoaded() && isElementLoaded(popOverLayout.findElement(By.cssSelector(".sch-worker-comment-comment")), 5)
-                            && popOverLayout.findElement(By.cssSelector(".sch-worker-comment-comment")).getText().contains("Hey, I have a commitment")) {
+                            && popOverLayout.findElement(By.cssSelector(".sch-worker-comment-comment")).getText().contains("I have a commitment")) {
                         isCoverRequest = true;
                         clickTheElement(popOverLayout.findElement(By.cssSelector("span.sch-worker-action-label")));
                         SimpleUtils.pass("Click " + requestName + " button Successfully!");
                         break;
+                    } else {
+                        moveToElementAndClick(tmIcon);
                     }
                 } catch (Exception e) {
-                    // Do nothing
+                    moveToElementAndClick(tmIcon);
                 }
             }
             if (!isCoverRequest) {

@@ -242,6 +242,10 @@ public class ScheduleTemplateTest extends TestBase {
             String workRole = shiftOperatePage.getRandomWorkRole();
             //Verify the SCHEDULE ACKNOWLEDGEMENT smart card will not display after edit but not publish schedule
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleMainPage.saveSchedule();
+            Thread.sleep(3000);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             createShiftsWithSpecificValues(workRole, "", "", "9:00am", "12:00pm",
                     1, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", firstName);
             scheduleMainPage.saveSchedule();

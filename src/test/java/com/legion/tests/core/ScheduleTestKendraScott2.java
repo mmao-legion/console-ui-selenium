@@ -8316,6 +8316,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			Thread.sleep(3000);
 
 			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+			Thread.sleep(3000);
 			createSchedulePage.createScheduleForNonDGFlowNewUIWithoutUpdate();
 
 			//Check the closed operating day.
@@ -8419,7 +8420,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
@@ -8477,7 +8477,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			//Delete all auto-generated shifts for the TM
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("WMTester C.");
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("WMTester");
 			scheduleMainPage.saveSchedule();
 
 			//Create multiple shifts and assign it to the same TM
@@ -8555,7 +8555,6 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		try {
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
-			ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
 			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
 			CompliancePage compliancePage = pageFactory.createConsoleCompliancePage();
@@ -8612,7 +8611,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 
 			//Delete all auto-generated shifts for the TM
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("WMTester C.");
+			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("WMTester");
 			scheduleMainPage.saveSchedule();
 
 			//Create multiple shifts and assign it to the same TM
