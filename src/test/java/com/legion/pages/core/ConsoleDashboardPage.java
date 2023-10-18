@@ -1496,7 +1496,7 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateThePresenceOfRefreshButton() throws Exception {
 		if (isElementLoaded(refreshButton,10)) {
 			if (refreshButton.isDisplayed() && !refreshButton.getText().isEmpty() && refreshButton.getText() != null) {
-				if (getDriver().findElement(By.xpath("//*[@id=\"legion-app\"]/div/div[3]/div/div/div/div[2]/div/div/div/last-updated-countdown/div/lg-button")).equals(refreshButton)) {
+				if (getDriver().findElement(By.xpath("//*[contains(text(),'Refresh')]")).equals(refreshButton)) {
 					SimpleUtils.pass("Dashboard Page: Refresh button shows above welcome section successfully");
 				} else {
 					SimpleUtils.fail("Dashboard Page: Refresh button is not above welcome section", false);
@@ -1549,13 +1549,13 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 			return false;
 	}
 
-	@FindBy (css = "last-updated-countdown span[ng-if^=\"$ctrl.minutes === 0\"]")
+	@FindBy (css = "div.legion-ui-react p")
 	private WebElement justUpdated;
 
 	@FindBy (css = "last-updated-countdown span[ng-if^=\"$ctrl.minutes > 0\"]")
 	private WebElement lastUpdated;
 
-	@FindBy (css = "last-updated-countdown span[ng-if^=\"$ctrl.minutes > 0\"] span")
+	@FindBy (css = "div.legion-ui-react p span")
 	private WebElement lastUpdatedMinutes;
 
 	@Override
@@ -1628,10 +1628,12 @@ public class ConsoleDashboardPage extends BasePage implements DashboardPage {
 	public void validateRefreshPerformance() throws Exception {
 		if (isElementLoaded(refreshButton, 10)) {
 			clickTheElement(refreshButton);
-			if (refreshButton.getAttribute("label").equals("Refreshing...")) {
+			String text= refreshButton.getText();
+//			String label = refreshButton.getAttribute("label").equals("Refreshing...");
+			if (text.equalsIgnoreCase("Refresh") ||text.equalsIgnoreCase("Refreshing...")) {
 				SimpleUtils.pass("Dashboard Page: After clicking Refresh button, the button becomes 'Refreshing...'");
 				WebElement element = (new WebDriverWait(getDriver(), 60))
-						.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[label=\"Refresh\"]")));
+						.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[contains(text(),'Refresh')]")));
 				if (element.isDisplayed()) {
 					SimpleUtils.pass("Dashboard Page: Page refreshes within 1 minute successfully");
 				} else {
