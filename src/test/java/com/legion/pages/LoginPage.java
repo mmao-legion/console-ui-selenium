@@ -26,4 +26,5 @@ public interface LoginPage {
     public boolean isInvalidLoginErrorShowing() throws Exception;
     public void verifyLegionTermsOfService() throws Exception;
     public void closeIntroductionMode() throws Exception;
+    public void closeTheScheduleEditMenuMode() throws Exception;
 }

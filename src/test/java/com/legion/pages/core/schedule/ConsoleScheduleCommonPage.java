@@ -1,9 +1,7 @@
 package com.legion.pages.core.schedule;
 
-import com.legion.pages.BasePage;
-import com.legion.pages.CreateSchedulePage;
-import com.legion.pages.ScheduleCommonPage;
-import com.legion.pages.ScheduleMainPage;
+import com.legion.pages.*;
+import com.legion.pages.core.ConsoleLoginPage;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
@@ -367,6 +365,8 @@ public class ConsoleScheduleCommonPage extends BasePage implements ScheduleCommo
         } else {
             SimpleUtils.fail("Schedule Page: '" + subTabString + "' tab not loaded Successfully!", true);
         }
+        LoginPage loginPage= new ConsoleLoginPage();
+        loginPage.closeTheScheduleEditMenuMode();
     }
 
     @Override

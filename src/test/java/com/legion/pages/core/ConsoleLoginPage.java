@@ -407,4 +407,15 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		}else
 			SimpleUtils.report("There is no Introduction mode display!");
 	}
+
+
+	@FindBy(css = "button[data-_pendo-button-secondarybutton-1]")
+	private WebElement noButtonOnEditScheduleEditMode;
+	@Override
+	public void closeTheScheduleEditMenuMode() throws Exception {
+		if (isElementLoaded(noButtonOnEditScheduleEditMode,8)) {
+			clickTheElement(noButtonOnEditScheduleEditMode);
+		}else
+			SimpleUtils.report("There is no THE SCHEDULE EDIT MENU mode display!");
+	}
 }
