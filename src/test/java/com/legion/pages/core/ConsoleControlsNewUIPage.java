@@ -8031,6 +8031,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 					if (!accessSection.findElement(By.cssSelector("div")).getAttribute("class").contains("expand")){
 						clickTheElement(accessSection.findElement(By.tagName("span")));
 					}
+					waitForSeconds(3);
 					int index = getTheIndexByAccessRolesName(roles, accessSection);
 					List<WebElement> permissions = accessSection.findElements(By.cssSelector(".table-row"));
 					for (WebElement permissionTemp : permissions){

@@ -138,6 +138,9 @@ public class ScheduleAcknowledgementTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUI();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleMainPage.saveSchedule();
             String smartCardName = "SCHEDULE ACKNOWLEDGEMENT";
             //Verify the SCHEDULE ACKNOWLEDGEMENT smart card will not display after generate but not publish schedule
             SimpleUtils.assertOnFail("The SCHEDULE ACKNOWLEDGEMENT smart card should not display before publish schedule! ",

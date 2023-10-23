@@ -1216,9 +1216,11 @@ public class SingleShiftEditTest extends TestBase {
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
 
-            //Delete all the meal and rest breaks
+            //Delete all the meal and rest breaks and set Shift time
             editShiftPage.removeAllRestBreaks();
             editShiftPage.removeAllMealBreaks();
+            editShiftPage.inputStartOrEndTime("7:00 AM", true);
+            editShiftPage.inputStartOrEndTime("2:00 PM", false);
             //Click Update button
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
