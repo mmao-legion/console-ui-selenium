@@ -4275,6 +4275,11 @@ public class ParentChildLGTest extends TestBase {
             Thread.sleep(3000);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleMainPage.saveSchedule();
+            Thread.sleep(3000);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> shiftInfoList1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
 
             HashSet<Integer> indexes = new HashSet<>();
@@ -4306,7 +4311,8 @@ public class ParentChildLGTest extends TestBase {
                         mySchedulePage.checkIfThePopupMessageOnTop("Success"), false);
             }
             // Verify the shifts are moved to the selected child location
-            scheduleMainPage.selectGroupByFilter(actualLocations.get(1));
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyLocation.getValue());
+//            scheduleMainPage.selectGroupByFilter(actualLocations.get(1));
             SimpleUtils.assertOnFail("Shift is not moved the child location: " + actualLocations.get(1),
                     scheduleShiftTablePage.getOneDayShiftByName(0, shiftInfoList1.get(0)).size() == 1, false);
             // Verify the shifts are saved successfully
