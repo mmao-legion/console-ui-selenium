@@ -1770,9 +1770,11 @@ public class TeamTestKendraScott2 extends TestBase{
 			scheduleMainPage.clickOnFilterBtn();
 			scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
 			scheduleMainPage.clickOnFilterBtn();
+			Thread.sleep(3000);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
 			scheduleMainPage.saveSchedule();
+			Thread.sleep(3000);
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
 			newShiftPage.clickOnDayViewAddNewShiftButton();

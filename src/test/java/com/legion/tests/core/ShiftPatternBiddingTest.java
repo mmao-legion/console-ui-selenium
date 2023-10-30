@@ -108,6 +108,7 @@ public class ShiftPatternBiddingTest extends TestBase {
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 
             goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(!isActiveWeekGenerated){
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -239,6 +240,7 @@ public class ShiftPatternBiddingTest extends TestBase {
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 
             goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(!isActiveWeekGenerated){
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -440,6 +442,7 @@ public class ShiftPatternBiddingTest extends TestBase {
                     getUserNameNPwdForCallingAPI().get(1));
             //Verify employee can be assign to the shifts after generated schedule
             goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
             rulePage.clickRuleButton();
 
             //Check the assignment of work role 1 + shift pattern 1

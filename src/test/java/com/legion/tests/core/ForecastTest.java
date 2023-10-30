@@ -704,7 +704,8 @@ public class ForecastTest extends TestBase{
 			UserManagementPage userManagementPage = pageFactory.createOpsPortalUserManagementPage();
 			CinemarkMinorPage cinemarkMinorPage = pageFactory.createConsoleCinemarkMinorPage();
 			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-			int count = (int)(Math.random()*6+1);
+			Random random = new Random();
+			int count = random.nextInt(5) + 1;
 			String accessRole = "";
 			String roleName = "";
 			switch(count) {
