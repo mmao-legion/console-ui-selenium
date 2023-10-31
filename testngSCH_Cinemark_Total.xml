@@ -616,11 +616,11 @@
                     <include name="VerifyOpenShiftMealBreakAsInternalAdmin" />
 <!--                    <include name="verifyTheMealPlacementViolationAsInternalAdmin" /> -->
 <!--                    <include name="verifySettingsAreAppliedAsInternalAdmin" Blocked by new feature/>-->
-<!--                    <include name="verifyMissedMealBreakWhenUsingTemplateAsInternalAdmin" />-->
-<!--                    <include name="verifyMealDurationWhenUsingTemplateAsInternalAdmin" />-->
+                    <include name="verifyMissedMealBreakWhenUsingTemplateAsInternalAdmin" />
+                    <include name="verifyMealDurationWhenUsingTemplateAsInternalAdmin" />
 <!--                    <include name="verifyMealPlacementWhenUsingTemplateAsInternalAdmin" />-->
-<!--                    <include name="verifyMissedRestBreakWhenUsingTemplateAsInternalAdmin" />-->
-<!--                    <include name="verifyShortRestBreakWhenUsingTemplateAsInternalAdmin" />-->
+                   <include name="verifyMissedRestBreakWhenUsingTemplateAsInternalAdmin" />
+                    <include name="verifyShortRestBreakWhenUsingTemplateAsInternalAdmin" />
 <!--                    <include name="verifyRestTimeNotIdealWhenUsingTemplateAsInternalAdmin" />-->
                 </methods>
             </class>
