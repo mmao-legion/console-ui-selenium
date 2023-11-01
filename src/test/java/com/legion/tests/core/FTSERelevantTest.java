@@ -1678,6 +1678,7 @@ public class FTSERelevantTest extends TestBase {
             editShiftPage.inputStartOrEndTime(inputStartTime, true);
             editShiftPage.inputStartOrEndTime(inputEndTime, false);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             scheduleMainPage.saveSchedule();
             SimpleUtils.assertOnFail("The shift's info doesn't include shift length or shift duration!",
                     scheduleShiftTablePage.isInfoIconLoaded(0)&&scheduleShiftTablePage.isProfileIconLoaded(0)
@@ -1692,6 +1693,7 @@ public class FTSERelevantTest extends TestBase {
             editShiftPage.inputStartOrEndTime(inputStartTime, true);
             editShiftPage.inputStartOrEndTime(inputEndTime, false);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             scheduleMainPage.saveSchedule();
             SimpleUtils.assertOnFail("The shift's info doesn't include total shift length!",
                     scheduleShiftTablePage.isInfoIconLoaded(0)&&scheduleShiftTablePage.isProfileIconLoaded(0)
@@ -1707,6 +1709,7 @@ public class FTSERelevantTest extends TestBase {
             editShiftPage.inputStartOrEndTime(inputStartTime, true);
             editShiftPage.inputStartOrEndTime(inputEndTime, false);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             SimpleUtils.assertOnFail("The shift's info doesn't include TM name,work role and job title!",
                     scheduleShiftTablePage.isInfoIconLoaded(0)&&scheduleShiftTablePage.isProfileIconLoaded(0)
                             &&scheduleShiftTablePage.isShiftLengthLoaded(0)&&scheduleShiftTablePage.isShiftDurationInBoxLoaded(0)
@@ -1723,6 +1726,7 @@ public class FTSERelevantTest extends TestBase {
             editShiftPage.inputStartOrEndTime(inputStartTime, true);
             editShiftPage.inputStartOrEndTime(inputEndTime, false);
             editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             scheduleMainPage.saveSchedule();
             SimpleUtils.assertOnFail("The shift's info doesn't include TM's info icon!",
                     scheduleShiftTablePage.isInfoIconLoaded(0), false);

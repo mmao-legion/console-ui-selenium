@@ -2024,13 +2024,12 @@ public class SimpleUtils {
 		if (n > (max - min + 1) || max < min) {
 			return;
 		}
-		for (int i = 0; i < n; i++) {
-			int num = (int) (Math.random() * (max - min)) + min;
-			set.add(num);
-		}
-		int setSize = set.size();
-		if (setSize < n) {
-			randomSet(min, max, n - setSize, set);
+		Random random = new Random();
+		while (set.size() < n) {
+			int next = random.nextInt(max + 1 - min) + min;
+			if (!set.contains(next)) {
+				set.add(next);
+			}
 		}
 	}
 

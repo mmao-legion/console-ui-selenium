@@ -234,8 +234,7 @@ public class PrepareSettingsTest extends TestBase {
 
             //Publish the template
             configurationPage.publishNowTheTemplate();
-
-            RemoveTemplateSnapShotForLocationsAPI.removeTemplateSnapShotForLocationsAPI(username, password);
+            
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

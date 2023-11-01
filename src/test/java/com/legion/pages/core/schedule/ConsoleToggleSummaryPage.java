@@ -325,7 +325,7 @@ public class ConsoleToggleSummaryPage extends BasePage implements ToggleSummaryP
         return result;
     }
 
-    @FindBy(css = "[ng-class=\"hideItem('projected.sales')\"]")
+    @FindBy(xpath = "//div[contains(@class,'generate-schedule-stats generate-schedule-stats-new')]/div[1]")
     private WebElement operatingHoursSection;
     @FindBy(css = "[ng-class=\"hideItem('staffing.guidance')\"]")
     private WebElement staffSection;

@@ -31,7 +31,8 @@ public class MealAndRestBreakTest extends TestBase {
     private String editBreakOption = "Edit Breaks";
     private String meal = "Meal";
     private String rest = "Rest";
-
+    private EditShiftPage editShiftPage;
+    private ScheduleShiftTablePage scheduleShiftTablePage;
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) throws Exception{
@@ -39,6 +40,8 @@ public class MealAndRestBreakTest extends TestBase {
             this.createDriver((String) params[0], "83", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+            editShiftPage = pageFactory.createEditShiftPage();
+            scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -432,43 +435,91 @@ public class MealAndRestBreakTest extends TestBase {
              *
              * */
             //Get the index new added shift
+//            String firstNameOfTM = "Coverage";
             List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //Set the meal break time for the first shift to earlier than expected range
             int index = shiftIndexes.get(0);
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
-            shiftOperatePage.clickOnEditMeaLBreakTime();
-            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
-            shiftOperatePage.moveMealAndRestBreaksOnEditBreaksPage("10:00am",0,true);
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+//            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+//            shiftOperatePage.clickOnEditMeaLBreakTime();
+//            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+//            shiftOperatePage.moveMealAndRestBreaksOnEditBreaksPage("10:00am",0,true);
+//            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+
+
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(index);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            String mealBreakStartTime = "10:00 AM";
+            String mealBreakEndTime = "10:30 AM";
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+
             //Set the meal break time for the second shift in expected range
             index = shiftIndexes.get(1);
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
-            shiftOperatePage.clickOnEditMeaLBreakTime();
-            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
-            shiftOperatePage.moveMealAndRestBreaksOnEditBreaksPage("11:00am",0,true);
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+//            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+//            shiftOperatePage.clickOnEditMeaLBreakTime();
+//            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+//            shiftOperatePage.moveMealAndRestBreaksOnEditBreaksPage("11:00am",0,true);
+//            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(index);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            mealBreakStartTime = "11:00 AM";
+            mealBreakEndTime = "11:30 AM";
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+
             //Set the meal break time for the third shift to later than expected range
             index = shiftIndexes.get(2);
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
-            shiftOperatePage.clickOnEditMeaLBreakTime();
-            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
-            shiftOperatePage.moveMealAndRestBreaksOnEditBreaksPage("1:00pm",0,true);
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+//            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+//            shiftOperatePage.clickOnEditMeaLBreakTime();
+//            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+//            shiftOperatePage.moveMealAndRestBreaksOnEditBreaksPage("1:00pm",0,true);
+//            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(index);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            mealBreakStartTime = "1:00 PM";
+            mealBreakEndTime = "1:30 PM";
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+
             //Set the meal break time for the fourth shift to equal to expected range
             index = shiftIndexes.get(3);
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
-            shiftOperatePage.clickOnEditMeaLBreakTime();
-            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
-            shiftOperatePage.moveMealAndRestBreaksOnEditBreaksPage("12:00pm",0,true);
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+//            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+//            shiftOperatePage.clickOnEditMeaLBreakTime();
+//            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+//            shiftOperatePage.moveMealAndRestBreaksOnEditBreaksPage("12:00pm",0,true);
+//            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(index);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            mealBreakStartTime = "12:00 PM";
+            mealBreakEndTime = "12:30 PM";
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+
             //Set the meal break time for the fifth shift to equal to expected range
             index = shiftIndexes.get(4);
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
-            shiftOperatePage.clickOnEditMeaLBreakTime();
-            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
-            shiftOperatePage.moveMealAndRestBreaksOnEditBreaksPage("10:30am",0,true);
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+//            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+//            shiftOperatePage.clickOnEditMeaLBreakTime();
+//            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+//            shiftOperatePage.moveMealAndRestBreaksOnEditBreaksPage("10:30am",0,true);
+//            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(index);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            mealBreakStartTime = "10:00 AM";
+            mealBreakEndTime = "10:30 AM";
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             scheduleMainPage.saveSchedule();
             //check compliance smart card display
             SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
@@ -584,10 +635,20 @@ public class MealAndRestBreakTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             int count = scheduleShiftTablePage.getShiftsCount();
             int index = (new Random()).nextInt(count);
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
-            shiftOperatePage.clickOnEditMeaLBreakTime();
-            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
-            shiftOperatePage.deleteMealOrRestBreaks(true);
+//            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+//            shiftOperatePage.clickOnEditMeaLBreakTime();
+//            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+//            shiftOperatePage.deleteMealOrRestBreaks(true);
+
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(index);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
+            editShiftPage.removeAllMealBreaks();
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+
             scheduleMainPage.saveSchedule();
             // Verify "Missed Meal Break" violation
             scheduleShiftTablePage.verifyComplianceForShiftByIndex(MealRestBreakViolations.MissedMealBreak.value, index);
@@ -619,18 +680,63 @@ public class MealAndRestBreakTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
-            // Verify warning dialog will show up when deleting the meal break
+            List<String> shiftInfo = new ArrayList<>();
+            String firstNameOfTM = "";
+            int i = 0;
+            while (i< 40 &&firstNameOfTM.equals("") || firstNameOfTM.equals("Open") || firstNameOfTM.equals("Unassigned")) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM = shiftInfo.get(0);
+                i++;
+            }
+            String workRole = shiftInfo.get(4);
+            //Delete the shift of the TM
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            int count = scheduleShiftTablePage.getShiftsCount();
-            int index = (new Random()).nextInt(count);
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
-            shiftOperatePage.clickOnEditMeaLBreakTime();
-            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
-            // Verify warning dialog will show up when shortening the meal break
-            shiftOperatePage.shortenMealOrRestBreak(true);
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
-            // Verify the pencil icon will show
-            shiftOperatePage.verifySpecificShiftHaveEditIcon(index);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+            scheduleMainPage.saveSchedule();
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectSpecificWorkDay(5);
+            newShiftPage.moveSliderAtCertainPoint("3pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
+
+            List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            int index = shiftIndexes.get(0);
+
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(index);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            String mealBreakStartTime = "10:10 AM";
+            String mealBreakEndTime = "10:30 AM";
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+
+
+            // Verify warning dialog will show up when deleting the meal break
+//            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//            int count = scheduleShiftTablePage.getShiftsCount();
+//            int index = (new Random()).nextInt(count);
+//            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+//            shiftOperatePage.clickOnEditMeaLBreakTime();
+//            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+//            // Verify warning dialog will show up when shortening the meal break
+//            shiftOperatePage.shortenMealOrRestBreak(true);
+//            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+//            // Verify the pencil icon will show
+//            shiftOperatePage.verifySpecificShiftHaveEditIcon(index);
             scheduleMainPage.saveSchedule();
             // Verify "Meal Duration" violation
             scheduleShiftTablePage.verifyComplianceForShiftByIndex(MealRestBreakViolations.MealDuration.value, index);
@@ -710,12 +816,21 @@ public class MealAndRestBreakTest extends TestBase {
             scheduleMainPage.selectWorkRoleFilterByText(WorkRoles.GeneralManager.value, true);
             int count = scheduleShiftTablePage.getShiftsCount();
             int index = (new Random()).nextInt(count);
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
-            shiftOperatePage.clickOnEditMeaLBreakTime();
-            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
-            shiftOperatePage.deleteMealOrRestBreaks(false);
-            // Verify the pencil icon will show
-            shiftOperatePage.verifySpecificShiftHaveEditIcon(index);
+//            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+//            shiftOperatePage.clickOnEditMeaLBreakTime();
+//            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+//            shiftOperatePage.deleteMealOrRestBreaks(false);
+//            // Verify the pencil icon will show
+//            shiftOperatePage.verifySpecificShiftHaveEditIcon(index);
+
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(index);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            editShiftPage.checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
+            editShiftPage.removeAllRestBreaks();
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
             scheduleMainPage.saveSchedule();
             // Verify "Missed Rest Break" violation
             scheduleShiftTablePage.verifyComplianceForShiftByIndex(MealRestBreakViolations.MissedRestBreak.value, index);
@@ -747,18 +862,63 @@ public class MealAndRestBreakTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
-            // Verify warning dialog will show up when deleting the meal break
+//            // Verify warning dialog will show up when deleting the meal break
+//            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//            scheduleMainPage.selectWorkRoleFilterByText(WorkRoles.GeneralManager.value, true);
+//            int count = scheduleShiftTablePage.getShiftsCount();
+//            int index = (new Random()).nextInt(count);
+//            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
+//            shiftOperatePage.clickOnEditMeaLBreakTime();
+//            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
+//            shiftOperatePage.shortenMealOrRestBreak(false);
+//            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
+//            // Verify the pencil icon will show
+//            shiftOperatePage.verifySpecificShiftHaveEditIcon(index);
+
+            List<String> shiftInfo = new ArrayList<>();
+            String firstNameOfTM = "";
+            int i = 0;
+            while (i< 40 &&firstNameOfTM.equals("") || firstNameOfTM.equals("Open") || firstNameOfTM.equals("Unassigned")) {
+                shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(scheduleShiftTablePage.getRandomIndexOfShift());
+                firstNameOfTM = shiftInfo.get(0);
+                i++;
+            }
+            String workRole = shiftInfo.get(4);
+            //Delete the shift of the TM
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleMainPage.selectWorkRoleFilterByText(WorkRoles.GeneralManager.value, true);
-            int count = scheduleShiftTablePage.getShiftsCount();
-            int index = (new Random()).nextInt(count);
-            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
-            shiftOperatePage.clickOnEditMeaLBreakTime();
-            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
-            shiftOperatePage.shortenMealOrRestBreak(false);
-            shiftOperatePage.clickOnUpdateEditShiftTimeButton();
-            // Verify the pencil icon will show
-            shiftOperatePage.verifySpecificShiftHaveEditIcon(index);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+            scheduleMainPage.saveSchedule();
+            shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.selectWorkRole(workRole);
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectSpecificWorkDay(5);
+            newShiftPage.moveSliderAtCertainPoint("3pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("8am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnOfferOrAssignBtn();
+            scheduleMainPage.saveSchedule();
+
+            List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstNameOfTM);
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            int index = shiftIndexes.get(0);
+
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(index);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            String restBreakStartTime = "2:10 PM";
+            String restBreakEndTime = "2:20 PM";
+            editShiftPage.inputRestBreakTimes(restBreakStartTime, restBreakEndTime, 0);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+
             scheduleMainPage.saveSchedule();
             // Verify "Short Rest Break" violation
             scheduleShiftTablePage.verifyComplianceForShiftByIndex(MealRestBreakViolations.ShortRestBreak.value, index);

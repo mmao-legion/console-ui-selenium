@@ -1166,7 +1166,7 @@ public class BulkCreateTest extends TestBase {
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
-
+            Thread.sleep(5000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             SimpleUtils.assertOnFail("New create shift page is not display! ",
@@ -1391,6 +1391,7 @@ public class BulkCreateTest extends TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleMainPage.saveSchedule();
+            Thread.sleep(3000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             SimpleUtils.assertOnFail("New create shift page is not display! ",
@@ -1718,9 +1719,9 @@ public class BulkCreateTest extends TestBase {
             newShiftPage.clickOnBackButton();
             //Update the shift times, shift per day and select days check boxes
             shiftStartTime = "9:00am";
-            shiftEndTime = "2:00pm";
-            String totalHrs = "4.5 Hrs";
-            double totalWeekHrs = 31.5;
+            shiftEndTime = "11:00am";
+            String totalHrs = "2 Hrs";
+            double totalWeekHrs = 14;
             newShiftPage.moveSliderAtCertainPoint(shiftEndTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint(shiftStartTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
