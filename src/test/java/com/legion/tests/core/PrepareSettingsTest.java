@@ -234,6 +234,7 @@ public class PrepareSettingsTest extends TestBase {
 
             //Publish the template
             configurationPage.publishNowTheTemplate();
+            
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -13,6 +13,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
+import cucumber.api.java8.Th;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -1405,6 +1406,7 @@ public class SingleShiftEditTest extends TestBase {
             }
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
+            Thread.sleep(3000);
             //Edit the shift again and check the breaks
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
@@ -1826,7 +1828,7 @@ public class SingleShiftEditTest extends TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
             scheduleMainPage.saveSchedule();
-
+            Thread.sleep(3000);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM1);
             scheduleMainPage.saveSchedule();

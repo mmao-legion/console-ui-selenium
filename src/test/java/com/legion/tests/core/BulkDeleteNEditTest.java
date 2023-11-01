@@ -1162,6 +1162,9 @@ public class BulkDeleteNEditTest extends TestBase {
             scheduleMainPage.saveSchedule();
             scheduleCommonPage.clickOnWeekView();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             List<String> assignedNames = createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
                     2, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
 
@@ -1179,6 +1182,8 @@ public class BulkDeleteNEditTest extends TestBase {
 
             // Verify the functionality of "Do not change assignments"
             editShiftPage.selectSpecificOptionByText(ConsoleEditShiftPage.assignmentOptions.DoNotChangeAssignments.getOption());
+            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowConflicts.getOption(), true);
+            editShiftPage.checkOrUncheckOptionsByName(ConsoleEditShiftPage.twoOptions.AllowComplianceErrors.getOption(), true);
             editShiftPage.clickOnUpdateButton();
             mySchedulePage.verifyThePopupMessageOnTop("Success");
 
