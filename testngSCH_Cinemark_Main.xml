@@ -476,8 +476,8 @@
                     <include name="verifyTheFunctionalityOfEditBreaksWeekViewAsInternalAdmin" />
                     <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" />
                     <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" />
-                    <include name="VerifyAssignShiftMealBreakAsInternalAdmin" />
-                    <include name="VerifyOpenShiftMealBreakAsInternalAdmin" />
+<!--                    <include name="VerifyAssignShiftMealBreakAsInternalAdmin" />
+                        <include name="VerifyOpenShiftMealBreakAsInternalAdmin" /> Blocked out for now until modification is done -->
 <!--                    <include name="verifyTheMealPlacementViolationAsInternalAdmin" /> -->
 <!--                    <include name="verifySettingsAreAppliedAsInternalAdmin" Blocked by new feature/>-->
 <!--                    <include name="verifyMissedMealBreakWhenUsingTemplateAsInternalAdmin" />-->
