@@ -718,8 +718,8 @@ public class MealAndRestBreakTest extends TestBase {
             String action = "Edit";
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
-            String mealBreakStartTime = "10:10 AM";
-            String mealBreakEndTime = "10:30 AM";
+            String mealBreakStartTime = "11:10 AM";
+            String mealBreakEndTime = "11:30 AM";
             editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
