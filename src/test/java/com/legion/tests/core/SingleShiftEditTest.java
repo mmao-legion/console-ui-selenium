@@ -1220,7 +1220,7 @@ public class SingleShiftEditTest extends TestBase {
             //Delete all the meal and rest breaks and set Shift time
             editShiftPage.removeAllRestBreaks();
             editShiftPage.removeAllMealBreaks();
-            editShiftPage.inputStartOrEndTime("7:00 AM", true);
+            editShiftPage.inputStartOrEndTime("6:00 AM", true);
             editShiftPage.inputStartOrEndTime("2:00 PM", false);
             //Click Update button
             editShiftPage.clickOnUpdateButton();
@@ -1325,6 +1325,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.clickOnUpdateAnywayButton();
             scheduleMainPage.saveSchedule();
             scheduleCommonPage.clickOnDayView();
+            scheduleCommonPage.navigateDayViewWithIndex(0);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             indexes.clear();
             indexes.add(0);
@@ -1487,12 +1488,19 @@ public class SingleShiftEditTest extends TestBase {
             scheduleMainPage.saveSchedule();
             List<String> complianceMessages = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup
                     (scheduleShiftTablePage.getTheShiftByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString())));
+            boolean containsRoleViolation = false;
+            for (String message: complianceMessages){
+                if (message.contains("Role Violation")) {
+                    containsRoleViolation = true;
+                    break;
+                }
+            }
             if (hasRoleViolation){
                 SimpleUtils.assertOnFail("The Role Violation should display! ",
-                        complianceMessages.contains("Role Violation"), false);
+                        containsRoleViolation, false);
             } else {
                 SimpleUtils.assertOnFail("The Role Violation should not display! ",
-                        !complianceMessages.contains("Role Violation"), false);
+                        !containsRoleViolation, false);
             }
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
