@@ -646,6 +646,8 @@ public class MealAndRestBreakTest extends TestBase {
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             editShiftPage.checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
             editShiftPage.removeAllMealBreaks();
+            editShiftPage.inputStartOrEndTime("08:00 AM", true);
+            editShiftPage.inputStartOrEndTime("04:00 PM", false);
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
 
