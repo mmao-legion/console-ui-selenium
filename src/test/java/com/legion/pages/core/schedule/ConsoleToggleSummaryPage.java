@@ -298,8 +298,8 @@ public class ConsoleToggleSummaryPage extends BasePage implements ToggleSummaryP
     private WebElement scheduleSummary;
     @Override
     public void verifyOperatingHrsInToggleSummary(String day, String startTime, String endTime) throws Exception {
-        if (isElementLoaded(scheduleSummary) && isElementLoaded(scheduleSummary.findElement(By.cssSelector("div[ng-class=\"hideItem('projected.sales')\"] table")))){
-            List<WebElement> dayInSummary = scheduleSummary.findElements(By.cssSelector("div[ng-class=\"hideItem('projected.sales')\"] tr[ng-repeat=\"day in summary.workingHours\"]"));
+        if (isElementLoaded(scheduleSummary) && isElementLoaded(scheduleSummary.findElement(By.cssSelector("div[class=\"generate-schedule-stats-col\"]")))){
+            List<WebElement> dayInSummary = scheduleSummary.findElements(By.cssSelector("div[class=\"generate-schedule-stats-col\"] tr[ng-repeat=\"day in summary.workingHours\"]"));
             for (WebElement e : dayInSummary){
                 if (e.getText().contains(day) && e.getText().contains(getTimeFormat(startTime)) && e.getText().contains(getTimeFormat(endTime))){
                     SimpleUtils.pass("Operating Hours is consistent with setting!");
