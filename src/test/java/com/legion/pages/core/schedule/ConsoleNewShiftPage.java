@@ -927,11 +927,17 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             if(startingPoint.equalsIgnoreCase("Start")){
                 click(shiftEndInputOnNewCreateShiftPage);
                 click(shiftStartInputOnNewCreateShiftPage);
+                shiftStartInputOnNewCreateShiftPage.clear();
+                shiftStartInputOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+                shiftStartInputOnNewCreateShiftPage.sendKeys(Keys.DELETE);
                 shiftStartInputOnNewCreateShiftPage.sendKeys(shiftTime);
                 SimpleUtils.pass("Set shift start time successfully! ");
             } else {
                 click(shiftStartInputOnNewCreateShiftPage);
                 click(shiftEndInputOnNewCreateShiftPage);
+                shiftEndInputOnNewCreateShiftPage.clear();
+                shiftEndInputOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+                shiftEndInputOnNewCreateShiftPage.sendKeys(Keys.DELETE);
                 shiftEndInputOnNewCreateShiftPage.sendKeys(shiftTime);
                 SimpleUtils.pass("Set shift end time successfully! ");
             }
