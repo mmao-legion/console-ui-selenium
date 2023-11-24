@@ -741,6 +741,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private WebElement shiftName;
     @FindBy (xpath = "//div[contains(@ng-if-start,'shift.notes')]/following-sibling::div/div")
     private WebElement shiftNotes;
+    @FindBy (css = "[ng-repeat=\"break in mealBreaks\"] span")
+    private WebElement mealBreakTimeInIIcon;
+    @FindBy (css = "[ng-repeat=\"break in restBreaks\"] span")
+    private WebElement restBreakTimeInIIcon;
 
     @Override
     public List<String> getTheShiftInfoByIndex(int index) throws Exception {
@@ -775,6 +779,14 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     SimpleUtils.pass("Get shift name on i icon popup successfully! The shift name is:"+shiftNameOnIIconPopUp);
                 }
                 String workRole = shiftJobTitleAsWorkRole.getText().split(" as ")[1].trim();
+                String mealBreakTime = "";
+                String restBreakTime = "";
+                if (isElementLoaded(mealBreakTimeInIIcon, 5)){
+                    mealBreakTime = mealBreakTimeInIIcon.getText();
+                }
+                if (isElementLoaded(restBreakTimeInIIcon, 5)){
+                    restBreakTime = restBreakTimeInIIcon.getText();
+                }
                 SimpleUtils.pass("Get shift work role successfully! The work role is: " + workRole);
                     if (isElementLoaded(shiftNotes, 5)) {
                         shiftNotesOnIIconPopUp = shiftNotes.getText();
@@ -798,6 +810,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     shiftInfo.add(shiftHrs); //Index 8
                     shiftInfo.add(shiftNameOnIIconPopUp); //Index 9
                     shiftInfo.add(shiftNotesOnIIconPopUp); //Index 10
+                    shiftInfo.add(mealBreakTime); //Index11
+                    shiftInfo.add(restBreakTime); //Index12
                     //To close the info popup
 //                    clickTheElement(weekShifts.get(index));
             } else {

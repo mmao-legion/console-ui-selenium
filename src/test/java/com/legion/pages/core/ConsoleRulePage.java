@@ -40,7 +40,7 @@ public class ConsoleRulePage extends BasePage implements RulePage {
     private WebElement editAssignmentButton;
     @FindBy(css = "div.react-modal_assign-rules")
     private WebElement createOngoingAssignmentModal;
-    @FindBy(css = "button svg[fill=\"none\"]")
+    @FindBy(css = ".swap-modal button svg[fill=\"none\"]")
     private List<WebElement> removeAssignmentButtons;
     @FindBy(css = "[id=\"legion_cons_Schedule_Schedule_AssignRules_Create_button\"]")
     private WebElement saveButtonOnCreateOngoingAssignmentModal;
