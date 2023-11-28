@@ -4029,7 +4029,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private WebElement bulkDragAndDropConfirmChangeModal;
     public boolean checkIfBulkDragAndDropConfirmChangeModalDisplay() throws Exception {
         boolean ifModalDisplay = false;
-        if (isElementLoaded(bulkDragAndDropConfirmChangeModal, 5)) {
+        if (isElementLoaded(bulkDragAndDropConfirmChangeModal, 10)) {
             ifModalDisplay = true;
             SimpleUtils.report("Bulk action: Bulk drag and drop confirm change modal display successfully! ");
         } else

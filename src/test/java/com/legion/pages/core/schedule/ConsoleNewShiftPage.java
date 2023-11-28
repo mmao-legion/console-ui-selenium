@@ -2974,7 +2974,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private List<WebElement> buttonsOnConfirmPopup;
     @FindBy(css = "[data-testid=\"confirm-console-wrapper\"] div p")
     private WebElement titleOnConfirmPopup;
-    @FindBy(xpath = "//div[contains(@data-testid,'confirm-console-wrapper')]/div/span")
+    @FindBy(xpath = "//div[contains(@data-testid,'confirm-console-wrapper')]/div[2]/div")
     private WebElement messageOnConfirmPopup;
     public boolean checkConfirmPopupIsLoaded() throws Exception {
         boolean isLoaded = false;
