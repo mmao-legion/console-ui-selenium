@@ -73,6 +73,10 @@ public class AdvanceStaffingRuleTest  extends TestBase {
             HashMap<String, String> mealRestBreaks = new HashMap<String, String>();
             List<String> indexes = new ArrayList<String>();
 
+            if (location.equalsIgnoreCase("2707484 Spring Hill")){
+                workRoleName1 = "CSR";
+                workRoleName2 = "Assistant Manager";
+            }
             //go to schedule function
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());

@@ -166,6 +166,7 @@ public class BulkDeleteNEditTest extends TestBase {
             scheduleShiftTablePage.verifyTheContentOnBulkActionMenu(selectedShiftCount);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             scheduleShiftTablePage.verifySelectedShiftsAreMarkedWithX(set);
+            Thread.sleep(3000);
             scheduleMainPage.saveSchedule();
             int currentShiftCount = scheduleShiftTablePage.getShiftsCount();
             if (currentShiftCount == previousShiftCount - selectedShiftCount) {

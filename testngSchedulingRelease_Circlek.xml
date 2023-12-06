@@ -218,4 +218,13 @@
         </classes>
     </test>
 
+    <test name="Advance Staffing Rule Test">
+        <classes>
+            <class name="com.legion.tests.core.AdvanceStaffingRuleTest">
+                <methods>
+                    <include name="verifyAdvanceStaffingRuleShiftsCanShowCorrectlyInScheduleAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

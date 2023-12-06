@@ -1538,6 +1538,7 @@ public class MealAndRestBreakTest extends TestBase {
             editShiftPage.inputStartOrEndTime(inputStartTime, true);
             editShiftPage.inputStartOrEndTime(inputEndTime, false);
             editShiftPage.clickOnUpdateButton();
+            scheduleMainPage.saveSchedule();
 //            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(0);
 //            shiftOperatePage.clickOnEditShiftTime();
 //            shiftOperatePage.setShiftTimesOnEditShiftTimePage("10:00am","04:00pm",false);
@@ -1553,7 +1554,7 @@ public class MealAndRestBreakTest extends TestBase {
 //            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded!",
 //                    shiftOperatePage.isMealBreaksLoaded(), false);
 //            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
-            scheduleMainPage.saveSchedule();
+
 
             //Check the Meal Break block on the normal mode
             scheduleMainPage.searchShiftOnSchedulePage("Open");

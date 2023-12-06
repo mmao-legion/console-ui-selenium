@@ -2932,7 +2932,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (isElementEnabled(shiftsTable,5)) {
             List<WebElement> shiftsTableList = shiftsTable.findElements(By.cssSelector("div[data-day-index=\"" + index + "\"].week-schedule-shift"));
             for(WebElement shiftTable:shiftsTableList){
-                shiftTimeInShiftTable = shiftTable.findElement(By.cssSelector(".week-schedule-shift-time")).getText().trim();
+                shiftTimeInShiftTable = shiftTable.findElement(By.cssSelector(".week-schedule-shift-time")).getText().trim().replace(" - ", "-");
                 if(shiftTimeInShiftTable.equals(shiftTime)){
                     SimpleUtils.pass("The shift time on data-day-index: " + index + " is aligned with advance staffing rule");
                 }else {
@@ -3268,7 +3268,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     }
 
 
-    @FindBy(css = "[ng-repeat=\"shift in shiftGroup\"]")
+    @FindBy(css = "[ng-repeat=\"shift in shiftGroup track by $index\"]")
     private List<WebElement> dayViewShiftGroups;
     public boolean checkIfShiftInDayViewBeenMarkAsDeletedByIndex (int index) throws Exception {
         boolean isShiftMarkAsDeleted = false;
