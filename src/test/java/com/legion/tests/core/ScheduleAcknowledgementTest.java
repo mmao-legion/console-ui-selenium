@@ -570,6 +570,9 @@ public class ScheduleAcknowledgementTest extends TestBase {
             if (!isWeekGenerated) {
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleMainPage.saveSchedule();
             String workRole = shiftOperatePage.getRandomWorkRole();
             //Check the employee pending count on SCHEDULE ACKNOWLEDGEMENT smart card
             createSchedulePage.publishActiveSchedule();

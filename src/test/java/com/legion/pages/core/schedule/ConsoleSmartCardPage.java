@@ -392,7 +392,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     }
 
 
-    @FindBy (css = "[ng-if=\"(scheduleSmartCard.minorBlockingViolations || scheduleSmartCard.unassignedShifts || scheduleSmartCard.outsideOperatingHoursShifts) && hasSchedule()\"] .card-carousel-card")
+    @FindBy (css = "[id=\"legion_cons_Schedule_Schedule_ActionRequired_card\"] .card-carousel-card")
     private WebElement requiredActionSmartCard;
     @FindBy (css = "[ng-click=\"smartCardShiftFilter('Requires Action')\"]")
     private WebElement viewShiftsBtnOnRequiredActionSmartCard;

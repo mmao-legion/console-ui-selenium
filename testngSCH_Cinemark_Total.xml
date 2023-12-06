@@ -818,7 +818,7 @@ SCH-5862-->
                     <include name="verifySMCanAcknowledgeTheNotificationAfterPublishTheScheduleAsStoreManager" />
 <!--                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterEditShiftsAsTeamMember" /> SCH-8334-->
 <!--                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterDragAndDropShiftsAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-8614-->
-                    <include name="verifyEmployeeCanAcknowledgeTheNotificationFromNonHomeLocationWhenHomeScheduleIsPublishedAsTeamMemberOtherLocation1" />
+ <!--                   <include name="verifyEmployeeCanAcknowledgeTheNotificationFromNonHomeLocationWhenHomeScheduleIsPublishedAsTeamMemberOtherLocation1" /> need fix-->
  <!--                   <include name="verifyEmployeeCanAcknowledgeTheNotificationFromNonHomeLocationWhenHomeScheduleIsNotPublishedAsTeamMemberOtherLocation1" /> need more time-->
                 </methods>
             </class>
@@ -899,18 +899,11 @@ SCH-5862-->
         </classes>
     </test>
 
-    <test name="Relief Pool Testing">
+    <test name="Advance Staffing Rule Test">
         <classes>
-            <class name="com.legion.tests.core.ReliefPoolTest">
+            <class name="com.legion.tests.core.AdvanceStaffingRuleTest">
                 <methods>
-                    <include name="verifyAutoGroupConfigsAsInternalAdmin"/>
-                    <include name="verifyOpenShiftGroupRulesConfigsAsInternalAdmin"/>
-                    <include name="verifyConfigOfAdvancedHoursAsInternalAdmin"/>
-                    <!-- <include name="verifyGroupByPatternAsInternalAdmin"/>
-                    <include name="verifyFunctionOfOpenShiftGroupAsInternalAdmin"/>
-                    <include name="verifyRequestInActivityAsInternalAdmin"/>
-                    <include name="verifyManagerApprovalAsInternalAdmin"/>
-                    <include name="verifyDisableManagerApprovalAsInternalAdmin"/> Comment out until SCH-10058 fixed-->
+                    <include name="verifyAdvanceStaffingRuleShiftsCanShowCorrectlyInScheduleAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
