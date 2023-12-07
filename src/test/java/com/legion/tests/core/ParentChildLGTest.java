@@ -4629,6 +4629,7 @@ public class ParentChildLGTest extends TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM2);
+            Thread.sleep(3000);
             scheduleMainPage.saveSchedule();
             //Get child locations
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyLocation.getValue());
@@ -4723,7 +4724,7 @@ public class ParentChildLGTest extends TestBase {
                     && shiftCountOnThirdDayAfterDragAndDrop == 1){
                 SimpleUtils.pass("Drag and drop successfully!");
             } else
-                SimpleUtils.fail("Fail to drag and drop! The actual counts on three days are: "
+                SimpleUtils.fail("Fail to drag and drop! The actual counts on three days are: "+firstNameOfTM+", "
                         +shiftCountOnFirstDayAfterDragAndDrop + ", "
                         +shiftCountOnSecondDayAfterDragAndDrop + ", "
                         +shiftCountOnThirdDayAfterDragAndDrop, false);
@@ -4998,6 +4999,60 @@ public class ParentChildLGTest extends TestBase {
                     && scheduleShiftTablePage.verifyDayHasShiftByName(1,firstNameOfTM2)==0){
                 SimpleUtils.pass("assign successfully!");
             }
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate TM can view team schedule after generate and publish parent child schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateTMCanViewTeamScheduleAfterGenerateParentChildScheduleAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
+
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "09:00pm");
+            createSchedulePage.publishActiveSchedule();
+            int shiftCountInScheduleForAdmin = scheduleShiftTablePage.getShiftsCount();
+            SimpleUtils.assertOnFail("There is no shifts display in the schedule for admin! ",
+                    shiftCountInScheduleForAdmin > 0,false);
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            Thread.sleep(3000);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.TeamSchedule.getValue());
+            scheduleCommonPage.navigateToNextWeek();
+            mySchedulePage.selectSchedulFilter("Scheduled");
+            int shiftCountInScheduleForTM = scheduleShiftTablePage.getShiftsCount();
+            mySchedulePage.selectSchedulFilter("Open");
+            shiftCountInScheduleForTM = shiftCountInScheduleForTM+scheduleShiftTablePage.getShiftsCount();
+            SimpleUtils.assertOnFail("There is no shifts display in the schedule for admin! ",
+                    shiftCountInScheduleForTM > 0,false);
+            SimpleUtils.assertOnFail("The shift count in schedule for admin is "+shiftCountInScheduleForAdmin+
+                            " The shift count in schedule for TM is "+shiftCountInScheduleForTM,
+                    shiftCountInScheduleForTM == shiftCountInScheduleForAdmin, false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);

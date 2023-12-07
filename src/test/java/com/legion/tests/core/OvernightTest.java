@@ -360,6 +360,26 @@ public class OvernightTest extends TestBase {
             SimpleUtils.assertOnFail("The "+firstNameOfTM1+"'s shift should not display on the next day! ",
                     shiftCount == 0, false);
 
+
+            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+            locationsPage.clickOnLocationsTab();
+            locationsPage.goToSubLocationsInLocationsPage();
+            locationsPage.searchLocation(location);               ;
+            SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+            locationsPage.clickOnLocationInLocationResult(location);
+            locationsPage.clickOnConfigurationTabOfLocation();
+            configurationPage.goToConfigurationPage();
+            configurationPage.clickOnConfigurationCrad("Operating Hours");
+            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Operating Hours"), "edit");
+            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+            configurationPage.selectOperatingBufferHours("ContinuousOperation");
+            configurationPage.publishNowTheTemplate();
+            Thread.sleep(3000);
+            switchToConsoleWindow();
+            //waiting for the cache
+            refreshCachesAfterChangeTemplate();
+
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

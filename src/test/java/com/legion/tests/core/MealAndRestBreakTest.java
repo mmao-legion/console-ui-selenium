@@ -1350,6 +1350,7 @@ public class MealAndRestBreakTest extends TestBase {
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
             Thread.sleep(3000);
+            scheduleMainPage.saveSchedule();
             //Check the Meal Break block on the editing mode
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage("Open");
@@ -1362,7 +1363,7 @@ public class MealAndRestBreakTest extends TestBase {
 //            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
 //                    shiftOperatePage.isMealBreaksLoaded(), false);
 //            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
-            scheduleMainPage.saveSchedule();
+
 
             //Check the Meal Break block after save
             scheduleMainPage.searchShiftOnSchedulePage("Open");
@@ -1466,7 +1467,7 @@ public class MealAndRestBreakTest extends TestBase {
             newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
             newShiftPage.clickOnCreateOrNextBtn();
-
+            scheduleMainPage.saveSchedule();
             //Check the Meal Break block on the editing mode
             scheduleMainPage.searchShiftOnSchedulePage("Open");
             SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
@@ -1478,7 +1479,7 @@ public class MealAndRestBreakTest extends TestBase {
 //            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
 //                    shiftOperatePage.isMealBreaksLoaded(), false);
 //            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
-            scheduleMainPage.saveSchedule();
+
 
             //Check the Meal Break block after save
             scheduleMainPage.searchShiftOnSchedulePage("Open");

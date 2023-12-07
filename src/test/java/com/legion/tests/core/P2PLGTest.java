@@ -1894,7 +1894,7 @@ public class P2PLGTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
-
+            scheduleCommonPage.navigateToNextWeek();
             // Verify operate schedule by admin user
             /// Generate schedule
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
@@ -1913,7 +1913,7 @@ public class P2PLGTest extends TestBase {
 
             /// Edit shifts(include edit shift time, assign TM, delete...)
             HashSet<Integer> indexes = new HashSet<>();
-            indexes.add(0);
+            indexes.add(1);
             ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             String action = "Edit";
@@ -1954,7 +1954,7 @@ public class P2PLGTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
-
+            scheduleCommonPage.navigateToNextWeek();
             /// Generate schedule
             isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(!isActiveWeekGenerated){
@@ -2104,7 +2104,7 @@ public class P2PLGTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify automatically expand when clicking group by on P2P LG")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void verifyAutomaticallyExpandWhenGroupByInP2PLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+        public void verifyAutomaticallyExpandWhenGroupByInP2PLGAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
         CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
         ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
@@ -3796,6 +3796,7 @@ public class P2PLGTest extends TestBase {
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if(!isActiveWeekGenerated){
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
@@ -4169,6 +4170,7 @@ public class P2PLGTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), true);
 
             // Navigate to next week
+            scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();
             // create the schedule.
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
@@ -5892,6 +5894,65 @@ public class P2PLGTest extends TestBase {
                     !(forecastPage.isLaborBudgetEditBtnLoaded()),false);
                     
         }catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Validate TM can view team schedule after generate and publish P2P schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void validateTMCanViewTeamScheduleAfterGenerateP2PScheduleAsInternalAdmin (String username, String password, String browser, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
+
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "09:00pm");
+            createSchedulePage.publishActiveSchedule();
+            scheduleMainPage.clickOnFilterBtn();
+            List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+            scheduleMainPage.selectLocationFilterByText(childLocationNames.get(0));
+            scheduleMainPage.clickOnFilterBtn();
+            int shiftCountInScheduleForAdmin = scheduleShiftTablePage.getShiftsCount();
+            SimpleUtils.assertOnFail("There is no shifts display in the schedule for admin! ",
+                    shiftCountInScheduleForAdmin > 0,false);
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            Thread.sleep(3000);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.TeamSchedule.getValue());
+            scheduleCommonPage.navigateToNextWeek();
+            mySchedulePage.selectSchedulFilter("Scheduled");
+            int shiftCountInScheduleForTM = scheduleShiftTablePage.getShiftsCount();
+            mySchedulePage.selectSchedulFilter("Open");
+            shiftCountInScheduleForTM = shiftCountInScheduleForTM+scheduleShiftTablePage.getShiftsCount();
+            SimpleUtils.assertOnFail("There is no shifts display in the schedule for admin! ",
+                    shiftCountInScheduleForTM > 0,false);
+            SimpleUtils.assertOnFail("The shift count in schedule for admin is "+shiftCountInScheduleForAdmin+
+                            " The shift count in schedule for TM is "+shiftCountInScheduleForTM,
+                    shiftCountInScheduleForTM == shiftCountInScheduleForAdmin, false);
+
+        } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
