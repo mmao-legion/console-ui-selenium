@@ -1333,8 +1333,8 @@ public class P2PLGTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(firstNameOfTM+ " "+ lastNameOfTM);
             newShiftPage.clickOnCreateOrNextBtn();
-            scheduleMainPage.saveSchedule();
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//            scheduleMainPage.saveSchedule();
+//            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.selectChildLocInCreateShiftWindow(childLocationNames.get(0));
@@ -1350,7 +1350,7 @@ public class P2PLGTest extends TestBase {
             SimpleUtils.assertOnFail("Overlapping violation message fail to load! The actual message is: "+shiftWarningMessage,
                     shiftWarningMessage.contains(shiftStartTime) && shiftWarningMessage.contains(shiftEndTime), false);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
-            String expectedWarningMessage = "TM scheduled at this time";
+            String expectedWarningMessage = "scheduled 8am - 11am";
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
                 if (warningMessage.toLowerCase().contains(expectedWarningMessage.toLowerCase())){

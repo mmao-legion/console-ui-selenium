@@ -1335,8 +1335,8 @@ public class ParentChildLGTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(firstNameOfTM+" "+lastName);
             newShiftPage.clickOnCreateOrNextBtn();
-            scheduleMainPage.saveSchedule();
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+//            scheduleMainPage.saveSchedule();
+//            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             newShiftPage.customizeNewShiftPage();
             newShiftPage.selectChildLocInCreateShiftWindow(childLocationNames.get(0));
@@ -1353,7 +1353,7 @@ public class ParentChildLGTest extends TestBase {
                     shiftWarningMessage.toLowerCase().contains(shiftStartTime.toLowerCase()) && shiftWarningMessage.toLowerCase()
                     .contains(shiftEndTime.toLowerCase()), false);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
-            String expectedWarningMessage = "TM scheduled at this time";
+            String expectedWarningMessage = firstNameOfTM+ " is scheduled 8am - 11am";
             if(newShiftPage.ifWarningModeDisplay()){
                 String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
                 if (warningMessage.toLowerCase().contains(expectedWarningMessage.toLowerCase())){
