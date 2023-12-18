@@ -117,4 +117,6 @@ public interface PageFactory {
     BidShiftPatternBiddingPage createBidShiftPatternBiddingPage();
 
     RulePage createRulePage();
+
+    SmartTemplatePage createSmartTemplatePage();
 }

@@ -227,4 +227,9 @@ public class ConsoleWebPageFactory implements PageFactory {
 	public RulePage createRulePage() {
 		return new ConsoleRulePage();
 	}
+
+	@Override
+	public SmartTemplatePage createSmartTemplatePage() {
+		return new ConsoleSmartTemplatePage();
+	}
 }

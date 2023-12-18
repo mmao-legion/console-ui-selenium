@@ -909,7 +909,15 @@ SCH-5862-->
         </classes>
     </test>
 
-
+    <test name="Smart Template Test">
+        <classes>
+            <class name="com.legion.tests.core.SmartTemplateTest">
+                <methods>
+                    <include name="verifyFixedStaffingRuleShiftsCanShowInSmartTemplateAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 
 
 </suite> <!-- Suite -->

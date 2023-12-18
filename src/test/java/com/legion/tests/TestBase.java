@@ -856,4 +856,15 @@ public abstract class TestBase {
         adminPage.clickOnCacheTab();
         adminPage.refreshCacheStatus(ConsoleAdminPage.CacheNames.ABSwitch.getValue());
     }
+
+    protected void goToSmartTemplatePage() throws Exception {
+        // Go to Schedule page, Schedule tab
+        ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+        CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+        SmartTemplatePage smartTemplatePage = pageFactory.createSmartTemplatePage();
+        //Click Generate schedule button
+        createSchedulePage.clickCreateScheduleButton();
+        //Click Edit
+        smartTemplatePage.clickOnEditSmartTemplateBtn();
+    }
 }
