@@ -180,4 +180,5 @@ public interface ScheduleShiftTablePage {
     public List<WebElement> selectMultipleSameAssignmentShiftsOnOneDay(int shiftCount, String tmName, int dayIndex) throws Exception;
     public HashSet<Integer> verifyCanSelectMultipleShiftsOnOneDay(int shiftCount, int dayIndex) throws Exception;
     public void rightClickOnSelectedShiftInDayView(int index) throws Exception;
+    public boolean verifyCopyAndMoveWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception;
 }

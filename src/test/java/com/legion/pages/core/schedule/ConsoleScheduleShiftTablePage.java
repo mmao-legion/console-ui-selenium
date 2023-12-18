@@ -4769,4 +4769,42 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         return set;
     }
 
+    @FindBy(xpath = "//*[contains(@class,'copy-shift-choice-move')]//parent::div//div[contains(@class,'swap-modal-error')]")
+    private List<WebElement> warningMessagesInCopy;
+    @FindBy(xpath = "//*[contains(@class,'copy-shift-choice-copy')]//parent::div//div[contains(@class,'swap-modal-error')]")
+    private List<WebElement> warningMessagesInMove;
+
+    @Override
+    public boolean verifyCopyAndMoveWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception {
+        boolean canFindTheExpectedMessage = false;
+        if (action.equalsIgnoreCase("copy")) {
+            if (areListElementVisible(warningMessagesInCopy, 15) && warningMessagesInCopy.size() > 0) {
+                for (int i = 0; i < warningMessagesInCopy.size(); i++) {
+                    SimpleUtils.pass("The warning message is : "+warningMessagesInCopy.get(i).getText().toLowerCase());
+                    if (warningMessagesInCopy.get(i).getText().toLowerCase().replace("\\-", "").contains(expectedMessage.toLowerCase().replace("\\-", ""))) {
+                        canFindTheExpectedMessage = true;
+                        SimpleUtils.pass("The expected message can be find successfully");
+                        break;
+                    }
+                }
+            } else {
+                SimpleUtils.report("There is no warning message in swap section");
+            }
+        } else if (action.equalsIgnoreCase("move")) {
+            if (areListElementVisible(warningMessagesInMove, 15) && warningMessagesInMove.size() > 0) {
+                for (int i = 0; i < warningMessagesInMove.size(); i++) {
+                    if (warningMessagesInMove.get(i).getText().contains(expectedMessage)) {
+                        canFindTheExpectedMessage = true;
+                        SimpleUtils.pass("The expected message can be find successfully");
+                        break;
+                    }
+                }
+            } else {
+                SimpleUtils.report("There is no warning message in assign section");
+            }
+        } else
+            SimpleUtils.fail("No this action on drag&drop confirm page", true);
+
+        return canFindTheExpectedMessage;
+    }
 }
