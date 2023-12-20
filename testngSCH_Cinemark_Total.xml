@@ -914,6 +914,8 @@ SCH-5862-->
             <class name="com.legion.tests.core.SmartTemplateTest">
                 <methods>
                     <include name="verifyFixedStaffingRuleShiftsCanShowInSmartTemplateAsInternalAdmin"/>
+                    <include name="verifyShiftPatternShiftsCanShowInSmartTemplateAsInternalAdmin"/>
+                    <include name="verifyRecurringShiftCanDisplayInSmartTemplateAsInternalAdmin"/>
                 </methods>
             </class>
         </classes>
