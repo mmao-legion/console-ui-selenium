@@ -3043,6 +3043,11 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                         }
                     }
                 }
+//                else {
+//                    if (getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i).getAttribute("class").contains("closed")){
+//                        clickTheElement(getDriver().findElements(By.cssSelector(".week-schedule-ribbon-group-toggle")).get(i));
+//                    }
+//                }
             }
         } else {
             SimpleUtils.fail("No group title show up!", false);

@@ -114,7 +114,8 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         if (isElementLoaded(windowTitle, 5) && windowTitle.getText().trim().equalsIgnoreCase(expectedTitle)) {
             SimpleUtils.pass("The title of the Edit Shift window is correct: " + expectedTitle);
         } else {
-            SimpleUtils.fail("The title of the Edit Shift window is incorrect!", false);
+            SimpleUtils.fail("The title of the Edit Shift window is incorrect! The expected is: "+ expectedTitle
+                    +". The actual is: "+windowTitle.getText().trim(), false);
         }
     }
 
