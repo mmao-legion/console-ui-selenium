@@ -325,7 +325,7 @@ public class ShiftPatternBiddingTest extends TestBase {
             //Verify employee can submit shift bidding
             bidShiftPatternBiddingPage.clickSubmitButton();
             loginPage.logOut();
-
+            Thread.sleep(3000);
             loginAsDifferentRole(AccessRoles.TeamMember2.getValue());
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
@@ -350,7 +350,7 @@ public class ShiftPatternBiddingTest extends TestBase {
             //Verify employee can submit shift bidding
             bidShiftPatternBiddingPage.clickSubmitButton();
             loginPage.logOut();
-
+            Thread.sleep(3000);
             loginAsDifferentRole(AccessRoles.TeamMember3.getValue());
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
@@ -375,7 +375,7 @@ public class ShiftPatternBiddingTest extends TestBase {
             bidShiftPatternBiddingPage.clickSubmitButton();
             loginPage.logOut();
 
-
+            Thread.sleep(3000);
             loginAsDifferentRole(AccessRoles.TeamMember4.getValue());
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
@@ -404,7 +404,7 @@ public class ShiftPatternBiddingTest extends TestBase {
             //Verify employee can submit shift bidding
             bidShiftPatternBiddingPage.clickSubmitButton();
             loginPage.logOut();
-
+            Thread.sleep(3000);
             loginAsDifferentRole(AccessRoles.TeamMember6.getValue());
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
@@ -436,6 +436,7 @@ public class ShiftPatternBiddingTest extends TestBase {
 //        String tm6FirstName = "Cecelia";
 
             loginPage.logOut();
+            Thread.sleep(3000);
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             //Verify employee can be assign to the shift pattern after run auto assignment task API
             AutoAssignmentTaskAPI.runAutoAssignmentTaskAPI(getUserNameNPwdForCallingAPI().get(0),

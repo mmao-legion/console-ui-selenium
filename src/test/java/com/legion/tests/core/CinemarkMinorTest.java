@@ -196,7 +196,7 @@ public class CinemarkMinorTest extends TestBase {
                         (Integer.parseInt(dayInfo.get("year"))) + " " + dayInfo.get("month") + " " + dayInfo.get("day"));
             } else {
                 //second half
-                teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))) + " Aug 1",
+                teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year"))) + " Jan 1",
                         (Integer.parseInt(dayInfo.get("year"))) + " " + dayInfo.get("month") + " " + dayInfo.get("day"));
             }
 
