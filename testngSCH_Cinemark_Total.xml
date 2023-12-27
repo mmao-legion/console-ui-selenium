@@ -916,6 +916,7 @@ SCH-5862-->
                     <include name="verifyFixedStaffingRuleShiftsCanShowInSmartTemplateAsInternalAdmin"/>
                     <include name="verifyShiftPatternShiftsCanShowInSmartTemplateAsInternalAdmin"/>
                     <include name="verifyRecurringShiftCanDisplayInSmartTemplateAsInternalAdmin"/>
+                    <include name="verifyNonRecurringShiftCanDisplayInSmartTemplateAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

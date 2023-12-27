@@ -10538,7 +10538,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
 			goToSchedulePageScheduleTab();
 			scheduleCommonPage.navigateToNextWeek();
-
+			scheduleCommonPage.navigateToNextWeek();
 			boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
 			if (isActiveWeekGenerated) {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -10546,6 +10546,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			loginPage.logOut();
 			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
 			scheduleCommonPage.navigateToNextWeek();
 			createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00am", "09:00pm");
 			createSchedulePage.publishActiveSchedule();
@@ -10557,6 +10558,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			dashboardPage.clickOnSwitchToEmployeeView();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.TeamSchedule.getValue());
+			scheduleCommonPage.navigateToNextWeek();
 			scheduleCommonPage.navigateToNextWeek();
 			mySchedulePage.selectSchedulFilter("Scheduled");
 			int shiftCountInScheduleForTM = scheduleShiftTablePage.getShiftsCount();
