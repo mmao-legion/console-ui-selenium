@@ -14,6 +14,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.legion.utils.MyThreadLocal.getDriver;
@@ -63,9 +64,8 @@ public class ConsoleSmartTemplatePage extends BasePage implements SmartTemplateP
     }
 
     @Override
-    public List<String> createShiftsWithSpecificValues(String workRole, String shiftName, String location, String startTime,
-                                                          String endTime, int shiftPerDay, List<Integer> workDays, String assignment,
-                                                          String shiftNotes, String tmName, boolean recurringShift) throws Exception {
+    public List<String> createShiftsWithWorkRoleTransition(List<HashMap<String, String>> segments, String shiftName, int shiftPerDay, List<Integer> workDays, String assignment,
+                                                           String shiftNotes, String tmName, boolean recurringShift) throws Exception {
         List<String> selectedTMs = new ArrayList<>();
         NewShiftPage newShiftPage = new ConsoleNewShiftPage();
         ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();
@@ -74,23 +74,25 @@ public class ConsoleSmartTemplatePage extends BasePage implements SmartTemplateP
         Thread.sleep(5000);
 //        SimpleUtils.assertOnFail("New create shift page is not display! ",
 //                newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
-        // Select work role
-        newShiftPage.selectWorkRole(workRole);
+//        // Select work role
+//        newShiftPage.selectWorkRole(workRole);
+//        // Select location
+//        if (location != null && !location.isEmpty()) {
+//            newShiftPage.selectChildLocInCreateShiftWindow(location);
+//        }
+//        // Set end time
+//        if (endTime != null && !endTime.isEmpty()) {
+//            newShiftPage.moveSliderAtCertainPoint(endTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+//        }
+//        // Set start time
+//        if (startTime != null && !startTime.isEmpty()) {
+//            newShiftPage.moveSliderAtCertainPoint(startTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+//        }
+        //Set segments
+        newShiftPage.setShiftSegments(segments, true);
         // Set shift name
         if (shiftName != null && !shiftName.isEmpty()) {
             newShiftPage.setShiftNameOnNewCreateShiftPage(shiftName);
-        }
-        // Select location
-        if (location != null && !location.isEmpty()) {
-            newShiftPage.selectChildLocInCreateShiftWindow(location);
-        }
-        // Set end time
-        if (endTime != null && !endTime.isEmpty()) {
-            newShiftPage.moveSliderAtCertainPoint(endTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-        }
-        // Set start time
-        if (startTime != null && !startTime.isEmpty()) {
-            newShiftPage.moveSliderAtCertainPoint(startTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         }
         // Set recurring shift
         checkOrUnCheckRecurringShift(recurringShift);

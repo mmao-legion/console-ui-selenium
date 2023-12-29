@@ -121,4 +121,5 @@ public interface NewShiftPage {
     public void clickOnOkButtonOnErrorDialog () throws Exception;
     public void inputTeamMember(String name) throws Exception;
     public void searchEmployee(String searchInput) throws Exception;
+    public void setShiftSegments(List<HashMap<String, String>> segmentsInfo, boolean replaceEastingSegments) throws Exception;
 }

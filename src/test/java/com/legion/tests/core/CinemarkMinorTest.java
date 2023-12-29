@@ -1361,18 +1361,19 @@ public class CinemarkMinorTest extends TestBase {
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
         Thread.sleep(5000);
         //check the message in warning mode
-        if(newShiftPage.ifWarningModeDisplay()){
-//            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+" should be scheduled from "+ scheduleFromToTime;
-            String warningMessage2 = "Please confirm that you want to make this change.";
-            String messageInWarningMode = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
-            if (messageInWarningMode.toLowerCase().contains(("Minor working hrs "+ scheduleFromToTime).toLowerCase())&& messageInWarningMode.contains(warningMessage2)){
-                SimpleUtils.pass("The message in warning mode display correctly!");
-            } else
-                SimpleUtils.fail("The message in warning mode display incorrectly!  The expected message is :"+
-                        ("Minor working hrs "+ scheduleFromToTime).toLowerCase() + warningMessage2+" The actual message is : " + messageInWarningMode, false);
-            shiftOperatePage.clickOnAssignAnywayButton();
-        } else
-            SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
+        //https://legiontech.atlassian.net/browse/SCH-12072 remove the second for violation
+//        if(newShiftPage.ifWarningModeDisplay()){
+////            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+" should be scheduled from "+ scheduleFromToTime;
+//            String warningMessage2 = "Please confirm that you want to make this change.";
+//            String messageInWarningMode = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
+//            if (messageInWarningMode.toLowerCase().contains(("Minor working hrs "+ scheduleFromToTime).toLowerCase())&& messageInWarningMode.contains(warningMessage2)){
+//                SimpleUtils.pass("The message in warning mode display correctly!");
+//            } else
+//                SimpleUtils.fail("The message in warning mode display incorrectly!  The expected message is :"+
+//                        ("Minor working hrs "+ scheduleFromToTime).toLowerCase() + warningMessage2+" The actual message is : " + messageInWarningMode, false);
+//            shiftOperatePage.clickOnAssignAnywayButton();
+//        } else
+//            SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
@@ -1422,21 +1423,22 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.searchText(firstNameOfTM1);
 
         //check the message in warning mode
-        if(newShiftPage.ifWarningModeDisplay()){
-//            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+"'s daily schedule should not exceed "+ scheduleMaxHours +" hours";
-            String warningMessage1 = "Minor daily max "+ scheduleMaxHours +" hrs";
-            String warningMessage2 = "Please confirm that you want to make this change.";
-            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().replace(".0","").contains(warningMessage1)){
-                SimpleUtils.pass("The message in warning mode display correctly! ");
-            } else
-                SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
-            shiftOperatePage.clickOnAssignAnywayButton();
-        } else
-            SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
-
-        //check the violation message in Status column
-        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor daily max "+scheduleMaxHours+" hrs! ",
-                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor daily max "+scheduleMaxHours+" hrs"), false);
+        //https://legiontech.atlassian.net/browse/SCH-12072 remove the second for violation
+//        if(newShiftPage.ifWarningModeDisplay()){
+////            String warningMessage1 = "As a minor, "+firstNameOfTM1.split(" ")[0]+"'s daily schedule should not exceed "+ scheduleMaxHours +" hours";
+//            String warningMessage1 = "Minor daily max "+ scheduleMaxHours +" hrs";
+//            String warningMessage2 = "Please confirm that you want to make this change.";
+//            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().replace(".0","").contains(warningMessage1)){
+//                SimpleUtils.pass("The message in warning mode display correctly! ");
+//            } else
+//                SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
+//            shiftOperatePage.clickOnAssignAnywayButton();
+//        } else
+//            SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
+//
+//        //check the violation message in Status column
+//        SimpleUtils.assertOnFail("There should have minor warning message display as: Minor daily max "+scheduleMaxHours+" hrs! ",
+//                shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor daily max "+scheduleMaxHours+" hrs"), false);
 
         newShiftPage.clickOnOfferOrAssignBtn();
         Thread.sleep(5000);
@@ -1480,15 +1482,16 @@ public class CinemarkMinorTest extends TestBase {
         SimpleUtils.assertOnFail("There should no minor warning message display when shift is not avoid the minor setting! ",
                 !shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Minor"), false);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
-        if(newShiftPage.ifWarningModeDisplay()){
-            warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
-            if (!warningMessage.contains("Minor ")){
-                SimpleUtils.pass("There is no minor warning message display on the warning mode when shift is not avoid the minor setting! ");
-            } else
-                SimpleUtils.fail("There should no minor warning message display warning mode when shift is not avoid the minor setting! ", false);
-            shiftOperatePage.clickOnAssignAnywayButton();
-        } else
-            SimpleUtils.pass("There is no minor warning message display on search TM page shift is not avoid the minor setting! ");
+        //https://legiontech.atlassian.net/browse/SCH-12072 remove the second for violation
+//        if(newShiftPage.ifWarningModeDisplay()){
+//            warningMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
+//            if (!warningMessage.contains("Minor ")){
+//                SimpleUtils.pass("There is no minor warning message display on the warning mode when shift is not avoid the minor setting! ");
+//            } else
+//                SimpleUtils.fail("There should no minor warning message display warning mode when shift is not avoid the minor setting! ", false);
+//            shiftOperatePage.clickOnAssignAnywayButton();
+//        } else
+//            SimpleUtils.pass("There is no minor warning message display on search TM page shift is not avoid the minor setting! ");
 
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
@@ -1750,19 +1753,20 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.searchText(firstNameOfTM1);
 
         //check the message in warning mode
-        if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage1 = "Minor weekly max "+ maxOfDays +" days";
-            String warningMessage2 = "Please confirm that you want to make this change.";
-            String actualMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
-            if (actualMessage.contains(warningMessage1)
-                    && actualMessage.contains(warningMessage2)){
-                SimpleUtils.pass("The message in warning mode display correctly! ");
-            } else
-                SimpleUtils.fail("The message in warning mode display incorrectly! "+ "the expect is:" +warningMessage1 +" and "+ warningMessage2
-                        + " the actual is: "+ actualMessage, false);
-            shiftOperatePage.clickOnAssignAnywayButton();
-        } else
-            SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
+        //https://legiontech.atlassian.net/browse/SCH-12072 remove the second for violation
+//        if(newShiftPage.ifWarningModeDisplay()){
+//            String warningMessage1 = "Minor weekly max "+ maxOfDays +" days";
+//            String warningMessage2 = "Please confirm that you want to make this change.";
+//            String actualMessage = scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode();
+//            if (actualMessage.contains(warningMessage1)
+//                    && actualMessage.contains(warningMessage2)){
+//                SimpleUtils.pass("The message in warning mode display correctly! ");
+//            } else
+//                SimpleUtils.fail("The message in warning mode display incorrectly! "+ "the expect is:" +warningMessage1 +" and "+ warningMessage2
+//                        + " the actual is: "+ actualMessage, false);
+//            shiftOperatePage.clickOnAssignAnywayButton();
+//        } else
+//            SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
 
         //check the violation message in Status column
@@ -1821,17 +1825,18 @@ public class CinemarkMinorTest extends TestBase {
         newShiftPage.searchText(firstNameOfTM1);
 
         //check the message in warning mode
-        if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage1 = "Minor weekly max "+ maxOfScheduleHours +" hrs";
-            String warningMessage2 = "Please confirm that you want to make this change.";
-            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
-                    && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
-                SimpleUtils.pass("The message in warning mode display correctly! ");
-            } else
-                SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
-            shiftOperatePage.clickOnAssignAnywayButton();
-        } else
-            SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
+        //https://legiontech.atlassian.net/browse/SCH-12072 remove the second for violation
+//        if(newShiftPage.ifWarningModeDisplay()){
+//            String warningMessage1 = "Minor weekly max "+ maxOfScheduleHours +" hrs";
+//            String warningMessage2 = "Please confirm that you want to make this change.";
+//            if (scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage1)
+//                    && scheduleShiftTablePage.getWarningMessageInDragShiftWarningMode().contains(warningMessage2)){
+//                SimpleUtils.pass("The message in warning mode display correctly! ");
+//            } else
+//                SimpleUtils.fail("The message in warning mode display incorrectly! ", false);
+//            shiftOperatePage.clickOnAssignAnywayButton();
+//        } else
+//            SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
         //check the violation message in Status column
         SimpleUtils.assertOnFail("There should have minor warning message display as: Minor weekly max "+maxOfScheduleHours+" hrs! ",

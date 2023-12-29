@@ -1425,7 +1425,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         waitForSeconds(2);
         if (isElementLoaded(dropdownToggle,10)){
             click(dropdownToggle);
-            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==3 ){
+            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==4 ){
                 waitForSeconds(3);
                 click(dropdownMenuFormDropdownToggle.get(2));
                 SimpleUtils.pass("Toggle Summary View has been clicked!");
@@ -1439,7 +1439,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     @Override
     public void clickToggleSummaryViewButton() throws Exception {
-        if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==3 ){
+        if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==4 ){
             click(dropdownMenuFormDropdownToggle.get(2));
             SimpleUtils.pass("Toggle Summary View has been clicked!");
         } else {
@@ -1483,7 +1483,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         String subTitle = "Edit operating hours";
         if (isElementLoaded(dropdownToggle,10)){
             click(dropdownToggle);
-            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==3 ){
+            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==4 ){
                 waitForSeconds(3);
                 click(dropdownMenuFormDropdownToggle.get(1));
                 SimpleUtils.pass("Edit operating hours has been clicked!");

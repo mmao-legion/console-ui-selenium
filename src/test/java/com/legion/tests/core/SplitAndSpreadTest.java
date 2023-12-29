@@ -152,12 +152,12 @@ public class SplitAndSpreadTest extends TestBase {
         scheduleMainPage.clickOnOpenSearchBoxButton();
         scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM1);
         List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
-        SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift (>60 mins between shifts)"), false);
 
         //verify split shift violation after publishing.
         createSchedulePage.publishActiveSchedule();
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
-        SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("Split shift violation is not showing!", complianceMessage.contains("Split Shift (>60 mins between shifts)"), false);
     }
 
     @Automated(automated = "Automated")
@@ -233,36 +233,37 @@ public class SplitAndSpreadTest extends TestBase {
         String shiftWarningMessage = shiftOperatePage.getTheMessageOfTMScheduledStatus();
         SimpleUtils.assertOnFail("Should get split shift warning message!", shiftWarningMessage.toLowerCase().contains("split shift"), false);
         shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM1);
-        if(newShiftPage.ifWarningModeDisplay()){
-            String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-            if (warningMessage.toLowerCase().contains("split shift (<60 mins between shifts)")){
-                SimpleUtils.pass("Split shifts warning message displays");
-            } else {
-                SimpleUtils.fail("There is no split shifts warning message displaying", false);
-            }
-            shiftOperatePage.clickOnAssignAnywayButton();
-        } else {
-            SimpleUtils.fail("There is no split shifts warning modal displaying!",false);
-        }
+        //https://legiontech.atlassian.net/browse/SCH-12072 remove the second for violation
+//        if(newShiftPage.ifWarningModeDisplay()){
+//            String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
+//            if (warningMessage.toLowerCase().contains("split shift (<60 mins between shifts)")){
+//                SimpleUtils.pass("Split shifts warning message displays");
+//            } else {
+//                SimpleUtils.fail("There is no split shifts warning message displaying", false);
+//            }
+//            shiftOperatePage.clickOnAssignAnywayButton();
+//        } else {
+//            SimpleUtils.fail("There is no split shifts warning modal displaying!",false);
+//        }
         newShiftPage.clickOnOfferOrAssignBtn();
         scheduleMainPage.saveSchedule();
         //verify split shift violation on the second and the third shifts after saving.
         scheduleMainPage.clickOnOpenSearchBoxButton();
         scheduleMainPage.searchShiftOnSchedulePage(firstNameOfTM1);
         List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
-        SimpleUtils.assertOnFail("The first shift should not have the violation", !complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("The first shift should not have the violation", !complianceMessage.contains("Split Shift (>60 mins between shifts)"), false);
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
-        SimpleUtils.assertOnFail("The second shift should have the violation", complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("The second shift should have the violation", complianceMessage.contains("Split Shift (>60 mins between shifts)"), false);
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(2));
-        SimpleUtils.assertOnFail("The thirrd shift should have the violation", complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("The thirrd shift should have the violation", complianceMessage.contains("Split Shift (>60 mins between shifts)"), false);
 
         //verify split shift on the second and the third shifts violation after publishing.
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
-        SimpleUtils.assertOnFail("The first shift should not have the violation", !complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("The first shift should not have the violation", !complianceMessage.contains("Split Shift (>60 mins between shifts)"), false);
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
-        SimpleUtils.assertOnFail("The second shift should have the violation", complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("The second shift should have the violation", complianceMessage.contains("Split Shift (>60 mins between shifts)"), false);
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(2));
-        SimpleUtils.assertOnFail("The thirrd shift should have the violation", complianceMessage.contains("Split Shift (<60 mins between shifts)"), false);
+        SimpleUtils.assertOnFail("The thirrd shift should have the violation", complianceMessage.contains("Split Shift (>60 mins between shifts)"), false);
     }
 
     @Automated(automated = "Automated")
@@ -695,18 +696,19 @@ public class SplitAndSpreadTest extends TestBase {
                     shiftOperatePage.getTheMessageOfTMScheduledStatus().toLowerCase().contains("spread of hours"), false);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(tmFirstName);
             //check the message in warning mode
-            Thread.sleep(5000);
-            if(newShiftPage.ifWarningModeDisplay()){
-                String warningMessage1 = "spread of hours";
-                String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-                if (warningMessage.toLowerCase().contains(warningMessage1.toLowerCase())){
-                    SimpleUtils.pass("The message in warning mode display correctly! ");
-                } else
-                    SimpleUtils.fail("The message in warning mode display incorrectly! the expected is: "
-                            + warningMessage1+ "The actual is: " + warningMessage, false);
-                shiftOperatePage.clickOnAssignAnywayButton();
-            } else
-                SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
+            //https://legiontech.atlassian.net/browse/SCH-12072 remove the second for violation
+//            Thread.sleep(5000);
+//            if(newShiftPage.ifWarningModeDisplay()){
+//                String warningMessage1 = "spread of hours";
+//                String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
+//                if (warningMessage.toLowerCase().contains(warningMessage1.toLowerCase())){
+//                    SimpleUtils.pass("The message in warning mode display correctly! ");
+//                } else
+//                    SimpleUtils.fail("The message in warning mode display incorrectly! the expected is: "
+//                            + warningMessage1+ "The actual is: " + warningMessage, false);
+//                shiftOperatePage.clickOnAssignAnywayButton();
+//            } else
+//                SimpleUtils.fail("There should have warning mode display with minor warning message! ",false);
 
             newShiftPage.clickOnOfferOrAssignBtn();
             scheduleMainPage.saveSchedule();

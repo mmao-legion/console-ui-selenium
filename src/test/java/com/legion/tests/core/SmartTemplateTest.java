@@ -14,7 +14,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.Method;
+import java.time.LocalDate;
 import java.util.*;
+
+import static java.time.LocalDate.now;
 
 public class SmartTemplateTest extends TestBase {
     private DashboardPage dashboardPage;
@@ -164,7 +167,7 @@ public class SmartTemplateTest extends TestBase {
     @TestName(description = "Verify the recurring shifts can display in smart template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyRecurringShiftCanDisplayInSmartTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-        try {
+//        try {
             goToSchedulePageScheduleTab();
             BasePage basePage = new BasePage();
             String activeWeek = basePage.getActiveWeekText();
@@ -184,7 +187,23 @@ public class SmartTemplateTest extends TestBase {
             String endTime = "11:00pm";
             smartTemplatePage.clickOnEditBtn();
             //Create one group of recurring shifts
-            smartTemplatePage.createShiftsWithSpecificValues(workRole1, shiftName, "", startTime, endTime, 2, Arrays.asList(0,1,2,3,4,5),
+            List<HashMap<String, String>> segments = new ArrayList<>();
+            HashMap<String, String> segment = new HashMap<>();
+            segment.put("startTime", "8:00am");
+            segment.put("endTime", "11:00am");
+            segment.put("workRole", workRoles.get(0).get("optionName"));
+            segments.add(new HashMap<>(segment));
+            segment.clear();
+            segment.put("startTime", "11:00am");
+            segment.put("endTime", "1:00pm");
+            segment.put("workRole", workRoles.get(1).get("optionName"));
+            segments.add(new HashMap<>(segment));
+            segment.clear();
+            segment.put("startTime", "1:00pm");
+            segment.put("endTime", "3:00pm");
+            segment.put("workRole", workRoles.get(2).get("optionName"));
+            segments.add(new HashMap<>(segment));
+            smartTemplatePage.createShiftsWithWorkRoleTransition(segments, shiftName, 2, Arrays.asList(0,1,2,3,4,5),
                     ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", true);
             scheduleMainPage.saveSchedule();
 
@@ -263,9 +282,9 @@ public class SmartTemplateTest extends TestBase {
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             editShiftPage.verifyTheTitleOfEditShiftsWindow(12, startOfWeek);
             editShiftPage.clickOnCancelButton();
-        } catch (Exception e) {
-            SimpleUtils.fail(e.getMessage(), false);
-        }
+//        } catch (Exception e) {
+//            SimpleUtils.fail(e.getMessage(), false);
+//        }
     }
 
     @Automated(automated ="Automated")
@@ -287,15 +306,30 @@ public class SmartTemplateTest extends TestBase {
             smartTemplatePage.clickOnResetBtn();
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
             ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
-            String workRole1 = workRoles.get(0).get("optionName");
             String shiftName = "No Pattern";
             String shiftNote = "NonRecurringShiftsNote";
-            String startTime = "9:00pm";
-            String endTime = "11:00pm";
             smartTemplatePage.clickOnEditBtn();
-            //Create one group of recurring shifts
-            smartTemplatePage.createShiftsWithSpecificValues(workRole1, shiftName, "", startTime, endTime, 2, Arrays.asList(0,1,2,3,4,5),
+            //Create one group of non-recurring shifts
+            List<HashMap<String, String>> segments = new ArrayList<>();
+            HashMap<String, String> segment = new HashMap<>();
+            segment.put("startTime", "8:00am");
+            segment.put("endTime", "11:00am");
+            segment.put("workRole", workRoles.get(0).get("optionName"));
+            segments.add(new HashMap<>(segment));
+            segment.clear();
+            segment.put("startTime", "11:00am");
+            segment.put("endTime", "1:00pm");
+            segment.put("workRole", workRoles.get(1).get("optionName"));
+            segments.add(new HashMap<>(segment));
+            segment.clear();
+            segment.put("startTime", "1:00pm");
+            segment.put("endTime", "3:00pm");
+            segment.put("workRole", workRoles.get(2).get("optionName"));
+            segments.add(new HashMap<>(segment));
+            smartTemplatePage.createShiftsWithWorkRoleTransition(segments, shiftName, 2, Arrays.asList(0,1,2,3,4,5),
                     ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", false);
+//            smartTemplatePage.createShiftsWithSpecificValues(workRole1, shiftName, "", startTime, endTime, 2, Arrays.asList(0,1,2,3,4,5),
+//                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", false);
             scheduleMainPage.saveSchedule();
 
             //Verify the recurring shifts can display in smart template in current week
@@ -366,6 +400,71 @@ public class SmartTemplateTest extends TestBase {
                 SimpleUtils.pass("The shift pattern shifts can show in smart template! ");
             } else
                 SimpleUtils.fail("Shift pattern shifts fail to show in smart template! ", false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the shift segment on edit shift page")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheShiftSegmentOnEditShiftPageAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            goToSchedulePageScheduleTab();
+            BasePage basePage = new BasePage();
+            String activeWeek = basePage.getActiveWeekText();
+            String startOfWeek = activeWeek.split(" ")[3] + " " + activeWeek.split(" ")[4];
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            goToSmartTemplatePage();
+            smartTemplatePage.clickOnResetBtn();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole1 = workRoles.get(0).get("optionName");
+            String shiftName = "NewCreatedShifts";
+            String shiftNote = "NewCreatedShiftsNote";
+            String startTime = "9:00pm";
+            String endTime = "11:00pm";
+            boolean recurringShift = false;
+            LocalDate date = now();
+            String dayOfWeek = date.getDayOfWeek().toString();
+            if (dayOfWeek.equalsIgnoreCase("Monday")
+                    ||dayOfWeek.equalsIgnoreCase("Tuesday")
+                    ||dayOfWeek.equalsIgnoreCase("Wednesday") ) {
+                recurringShift = true;
+            }
+            smartTemplatePage.clickOnEditBtn();
+            //Create one group of recurring shifts
+//            smartTemplatePage.createShiftsWithSpecificValues(workRole1, shiftName, "", startTime, endTime, 2, Arrays.asList(0,1,2,3,4,5),
+//                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", recurringShift);
+            scheduleMainPage.saveSchedule();
+
+            //Group by pattern
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+            //Edit the new created shift
+            smartTemplatePage.clickOnEditBtn();
+            if (recurringShift){
+                scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
+            } else{
+                scheduleShiftTablePage.expandOnlyOneGroup("No Pattern");
+            }
+
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(0);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+
+            //Verify we can add one or more shift segments
+            editShiftPage.verifyTheTitleOfEditShiftsWindow(1, startOfWeek);
+            editShiftPage.clickOnCancelButton();
+
+
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

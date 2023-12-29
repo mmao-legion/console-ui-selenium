@@ -1353,18 +1353,19 @@ public class ParentChildLGTest extends TestBase {
                     shiftWarningMessage.toLowerCase().contains(shiftStartTime.toLowerCase()) && shiftWarningMessage.toLowerCase()
                     .contains(shiftEndTime.toLowerCase()), false);
             shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
-            String expectedWarningMessage = firstNameOfTM+ " is scheduled 8am - 11am";
-            if(newShiftPage.ifWarningModeDisplay()){
-                String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-                if (warningMessage.toLowerCase().contains(expectedWarningMessage.toLowerCase())){
-                    SimpleUtils.pass("Overlapping violation message displays");
-                } else {
-                    SimpleUtils.fail("There is no Overlapping warning message displaying, the actual is:"+warningMessage, false);
-                }
-                newShiftPage.clickOnOkButtonOnWarningModal();
-            } else {
-                SimpleUtils.fail("There is no Overlapping warning modal displaying!",false);
-            }
+//            String expectedWarningMessage = firstNameOfTM+ " is scheduled 8am - 11am";
+            //https://legiontech.atlassian.net/browse/SCH-12072 remove the second for violation
+//            if(newShiftPage.ifWarningModeDisplay()){
+//                String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
+//                if (warningMessage.toLowerCase().contains(expectedWarningMessage.toLowerCase())){
+//                    SimpleUtils.pass("Overlapping violation message displays");
+//                } else {
+//                    SimpleUtils.fail("There is no Overlapping warning message displaying, the actual is:"+warningMessage, false);
+//                }
+//                newShiftPage.clickOnOkButtonOnWarningModal();
+//            } else {
+//                SimpleUtils.fail("There is no Overlapping warning modal displaying!",false);
+//            }
         }catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

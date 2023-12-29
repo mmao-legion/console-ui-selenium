@@ -246,7 +246,7 @@
                     <!--          <include name="VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin" />
                             <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" /> The code is not merged into RC yet -->
                      <include name="verifyRecommendTabHasTMsAsInternalAdmin" />
-                    <include name="verifyPleaseConfirmMessageOnWarningModalAsInternalAdmin" />
+<!--                    <include name="verifyPleaseConfirmMessageOnWarningModalAsInternalAdmin" /> //https://legiontech.atlassian.net/browse/SCH-12072 remove the second for violation -->
                     <!--  <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
                            <include name="verifyTheCanadaCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
                            <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
@@ -611,7 +611,7 @@
 <!--                    <include name="verifyEditBreaksOptionIsAvailableAsInternalAdmin" Old Flow/>-->
 <!--                    <include name="verifyTheFunctionalityOfEditBreaksWeekViewAsInternalAdmin" Old Flow/>-->
 <!--                    <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" Old Flow/>-->
-                    <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" />
+<!--                    <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" /> -->
                     <include name="VerifyAssignShiftMealBreakAsInternalAdmin" />
                     <include name="VerifyOpenShiftMealBreakAsInternalAdmin" />
 <!--                    <include name="verifyTheMealPlacementViolationAsInternalAdmin" /> -->

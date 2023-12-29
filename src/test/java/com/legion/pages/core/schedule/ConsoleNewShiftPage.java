@@ -9,6 +9,7 @@ import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -3225,4 +3226,127 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     }
 
+
+    @FindBy(css = "input[name=\"multiSegmentSelects.0.startMin\"]")
+    private WebElement firstStartTimeInSegment;
+    @FindBy(css = "input[name=\"multiSegmentSelects.0.endMin\"]")
+    private WebElement firstEndTimeInSegment;
+    @FindBy(css = "input[name=\"multiSegmentSelects.0.roleSelect\"]")
+    private WebElement firstWorkRoleInSegment;
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/form/div/div/div[1]/div[2]/div/div[2]/div/div")
+    private List<WebElement> segments;
+    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/form/div/div/div[1]/div[2]/div/div[2]/div/div/div[last()]")
+    private List<WebElement> segmentRemoveButtons;
+    @FindBy(xpath = "//span/span[2]")
+    private WebElement addSegmentButton;
+    public void setShiftSegments(List<HashMap<String, String>> segmentsInfo, boolean replaceEastingSegments) throws Exception {
+        if (areListElementVisible(segments, 10)){
+            if (segmentsInfo.size() == 0){
+                SimpleUtils.fail("Segments is empty!"+segments, false);
+            }
+            if (replaceEastingSegments){
+                removeAllSegments();
+                WebElement shiftStartTimeElment = null;
+                WebElement shiftEndTimeElment = null;
+                WebElement shiftWorkRoleElment = null;
+                String shiftStartTime = "";
+                String shiftEndTime = "";
+                String shiftWorkRole = "";
+                for (int i=0; i<segmentsInfo.size(); i++){
+                    shiftStartTime = segmentsInfo.get(i).get("startTime");
+                    shiftEndTime = segmentsInfo.get(i).get("endTime");
+                    shiftWorkRole = segmentsInfo.get(i).get("workRole");
+                    waitForSeconds(2);
+                    clickTheElement(getDriver().findElement(By.xpath("//span[contains(text(), \"Add Segment\")]")));
+                    waitForSeconds(2);
+                    shiftStartTimeElment = getDriver().findElement(By.cssSelector("input[name=\"multiSegmentSelects."+i+".startMin\"]"));
+                    shiftEndTimeElment = getDriver().findElement(By.cssSelector("input[name=\"multiSegmentSelects."+i+".endMin\"]"));
+                    shiftWorkRoleElment = getDriver().findElement(By.xpath("//div[contains(@class,'legion-ui-react')]/div/form/div/div/div[1]/div[2]/div/div[2]/div["+(i+1)+"]//div[contains(@class,'react-select__indicator react-select__dropdown-indicator')]"));
+                    //set shift start time
+                    shiftStartTimeElment.clear();
+                    shiftStartTimeElment.sendKeys(Keys.CONTROL, "a");
+                    shiftStartTimeElment.sendKeys(Keys.DELETE);
+                    shiftStartTimeElment.sendKeys(shiftStartTime);
+                    //set shift end time
+                    shiftEndTimeElment.clear();
+                    shiftEndTimeElment.sendKeys(Keys.CONTROL, "a");
+                    shiftEndTimeElment.sendKeys(Keys.DELETE);
+                    shiftEndTimeElment.sendKeys(shiftEndTime);
+                    //set shift work role
+                    click(shiftWorkRoleElment);
+                    SimpleUtils.pass("Work Role button clicked Successfully");
+                    waitForSeconds(3);
+                    if (dropDownListOnNewCreateShiftPage.size() > 0) {
+                        for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
+                            if (listWorkRole.getText().toLowerCase().trim().contains(shiftWorkRole.toLowerCase().trim())) {
+                                click(listWorkRole);
+                                SimpleUtils.pass("Work Role " + shiftWorkRole + "selected Successfully");
+                                break;
+                            }
+                        }
+                    } else {
+                        SimpleUtils.fail("Work Roles size are empty", false);
+                    }
+                }
+            } else{
+                //Get existing segments count
+                int segmentCount = segments.size();
+                WebElement shiftStartTimeElment = null;
+                WebElement shiftEndTimeElment = null;
+                WebElement shiftWorkRoleElment = null;
+                String shiftStartTime = "";
+                String shiftEndTime = "";
+                String shiftWorkRole = "";
+                for (int i=0; i<segmentsInfo.size(); i++){
+                    shiftStartTime = segmentsInfo.get(i).get("startTime");
+                    shiftEndTime = segmentsInfo.get(i).get("endTime");
+                    shiftWorkRole = segmentsInfo.get(i).get("workRole");
+                    clickTheElement(addSegmentButton);
+                    shiftStartTimeElment = getDriver().findElement(By.xpath("input[name=\"multiSegmentSelects."+(i+segmentCount)+".startMin\"]"));
+                    shiftEndTimeElment = getDriver().findElement(By.xpath("input[name=\"multiSegmentSelects."+(i+segmentCount)+".startMin\"]"));
+                    shiftWorkRoleElment = getDriver().findElement(By.xpath("input[name=\"multiSegmentSelects."+(i+segmentCount)+".startMin\"]"));
+                    //set shift start time
+                    shiftStartTimeElment.clear();
+                    shiftStartTimeElment.sendKeys(Keys.CONTROL, "a");
+                    shiftStartTimeElment.sendKeys(Keys.DELETE);
+                    shiftStartTimeElment.sendKeys(shiftStartTime);
+                    //set shift end time
+                    shiftEndTimeElment.clear();
+                    shiftEndTimeElment.sendKeys(Keys.CONTROL, "a");
+                    shiftEndTimeElment.sendKeys(Keys.DELETE);
+                    shiftEndTimeElment.sendKeys(shiftEndTime);
+                    //set shift work role
+                    clickTheElement(shiftWorkRoleElment);
+                    SimpleUtils.pass("Work Role button clicked Successfully");
+                    waitForSeconds(1);
+                    if (dropDownListOnNewCreateShiftPage.size() > 0) {
+                        for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
+                            if (listWorkRole.getText().toLowerCase().trim().contains(shiftWorkRole.toLowerCase().trim())) {
+                                click(listWorkRole);
+                                SimpleUtils.pass("Work Role " + shiftWorkRole + "selected Successfully");
+                                break;
+                            }
+                        }
+                    } else {
+                        SimpleUtils.fail("Work Roles size are empty", false);
+                    }
+                }
+            }
+        } else
+            SimpleUtils.fail("Segments fail to load! ", false);
+    }
+
+    public void removeAllSegments(){
+        if (areListElementVisible(segments, 10)
+                && areListElementVisible(segmentRemoveButtons, 10)){
+            int i=0;
+            while (segmentRemoveButtons.size() >0 && i< 10){
+                click(segmentRemoveButtons.get(0));
+                SimpleUtils.pass("Remove one segment successfully! ");
+                i++;
+            }
+            SimpleUtils.pass("Remove all segments successfully! ");
+        } else
+            SimpleUtils.fail("Segments fail to load! ", false);
+    }
 }
