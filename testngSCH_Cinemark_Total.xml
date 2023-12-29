@@ -407,7 +407,7 @@
                     <include name="verifyTheNotificationForRequestTimeOffAsInternalAdmin" />
                     <include name="verifyToCloseActivityFeedAsStoreManager" />
                     <include name="verifyNavigationOfEachTabOnActivityAsStoreManager" />
-                    <include name="verifyAccessControlsOnActivitiesPage" />
+                    <include name="verifyAccessControlsOnActivitiesPageAsInternalAdmin" />
                     <include name="verifyTheContentOnActivityAsStoreManager" />
 <!--                    <include name="verifyTheFirstApprovedTMWillGetTheShiftWhenMultipleTMsClaimTheSameOfferAsTeamLead" /> -->
 <!--                    <include name="validateActivityForCancelClaimTheOpenShiftAsTeamMember" />https://legiontech.atlassian.net/browse/SCH-7699 -->

@@ -1228,6 +1228,8 @@ public class ActivityTest extends TestBase {
         loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
         goToSchedulePageScheduleTab();
         scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
         boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
         if (isWeekGenerated) {
             createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -1259,6 +1261,9 @@ public class ActivityTest extends TestBase {
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
         scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
+
 
         mySchedulePage.selectSchedulFilter("Scheduled");
         int index = mySchedulePage.verifyClickOnAnyShift();
@@ -1314,6 +1319,8 @@ public class ActivityTest extends TestBase {
         SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
         scheduleCommonPage.clickOnScheduleConsoleMenuItem();
         scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        scheduleCommonPage.navigateToNextWeek();
+        scheduleCommonPage.navigateToNextWeek();
         scheduleCommonPage.navigateToNextWeek();
 
         // Validate that smartcard is available to recipient team member
@@ -1587,7 +1594,10 @@ public class ActivityTest extends TestBase {
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
             ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            String requestUserName = profileNewUIPage.getNickNameFromProfile();
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+//            String requestUserName = profileNewUIPage.getNickNameFromProfile();
+            String requestUserName = profileNewUIPage.getUserProfileName().get("fullName");
             String myTimeOffLabel = "My Time Off";
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage(myTimeOffLabel);
             profileNewUIPage.cancelAllTimeOff();
