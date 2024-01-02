@@ -7950,7 +7950,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Add button is not loaded!", false);
 	}
 
-	@FindBy(css = "input-field[placeholder=\"Select...\"]")
+	@FindBy(css = "[form-title=\"Schedule Restrictions\"] input-field[placeholder=\"Select...\"]")
 	private WebElement timeOffReasonInputBox;
 	@FindBy(css = "div [class*=\"lg-search-options__subLabel\"]")
 	private List<WebElement> timeOffReasonList;

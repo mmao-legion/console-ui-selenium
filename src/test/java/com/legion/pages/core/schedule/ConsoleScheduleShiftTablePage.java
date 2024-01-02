@@ -4812,4 +4812,27 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
         return canFindTheExpectedMessage;
     }
+
+    @FindBy (css = "div[class=\"shift-segment ng-scope\"]")
+    private List<WebElement> segmentsOnInfoPopup;
+    @Override
+    public List<HashMap<String, String>> getSegmentFromInfoPopupByIndex(int index){
+        List<HashMap<String, String>> segments = new ArrayList<>();
+        if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
+            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover")));
+        } else if (areListElementVisible(dayViewAvailableShifts, 5)
+                && index <dayViewAvailableShifts.size()){
+            click(dayViewAvailableShifts.get(index).findElement(By.cssSelector(".day-view-shift-right-top-icons img")));
+        }
+
+        for (WebElement segment : segmentsOnInfoPopup){
+            HashMap<String, String> segmentInfo = new HashMap<>();
+            String segmentTime = segment.findElement(By.cssSelector("[class=\"shift-hover-subheading ng-binding\"]")).getText();
+            String segmentWorkRole = segment.findElement(By.cssSelector("[class=\"shift-hover-subheading d-flex-align-center ng-binding\"]")).getText();
+            segmentInfo.put("shiftTime", segmentTime);
+            segmentInfo.put("workRole", segmentWorkRole);
+            segments.add(segmentInfo);
+        }
+        return segments;
+    }
 }

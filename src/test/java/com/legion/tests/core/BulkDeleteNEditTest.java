@@ -1272,10 +1272,10 @@ public class BulkDeleteNEditTest extends TestBase {
 
             // Create schedule if it is not created
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isWeekGenerated) {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
             scheduleMainPage.selectShiftTypeFilterByText("Assigned");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 

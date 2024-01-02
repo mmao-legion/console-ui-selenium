@@ -94,7 +94,7 @@ public class OvertimeShiftOfferTest extends TestBase {
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 
             scheduleCommonPage.navigateToNextWeek();
-
+            scheduleCommonPage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated){
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
@@ -200,6 +200,7 @@ public class OvertimeShiftOfferTest extends TestBase {
             loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
             smartCardPage.clickLinkOnSmartCardByName("View Shifts");
             SimpleUtils.assertOnFail("Didn't get open shift offer!", scheduleShiftTablePage.getShiftsCount()>=1, false);
 
@@ -226,6 +227,7 @@ public class OvertimeShiftOfferTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
                     scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.navigateToNextWeek();
             int shiftsCountAfter = shiftOperatePage.countShiftsByUserName(firstNameOfTM);
             SimpleUtils.assertOnFail("Failed for approving overtime shift offer! shiftsCountBefore: " + shiftsCountBefore +

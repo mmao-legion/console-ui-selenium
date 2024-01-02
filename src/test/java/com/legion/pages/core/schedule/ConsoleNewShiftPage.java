@@ -3237,9 +3237,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
     private List<WebElement> segments;
     @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/form/div/div/div[1]/div[2]/div/div[2]/div/div/div[last()]")
     private List<WebElement> segmentRemoveButtons;
-    @FindBy(xpath = "//span/span[2]")
+    @FindBy(xpath = "//span[contains(text(), \"Add Segment\")]")
     private WebElement addSegmentButton;
-    public void setShiftSegments(List<HashMap<String, String>> segmentsInfo, boolean replaceEastingSegments) throws Exception {
+    public void addShiftSegments(List<HashMap<String, String>> segmentsInfo, boolean replaceEastingSegments) throws Exception {
         if (areListElementVisible(segments, 10)){
             if (segmentsInfo.size() == 0){
                 SimpleUtils.fail("Segments is empty!"+segments, false);
@@ -3301,10 +3301,10 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     shiftStartTime = segmentsInfo.get(i).get("startTime");
                     shiftEndTime = segmentsInfo.get(i).get("endTime");
                     shiftWorkRole = segmentsInfo.get(i).get("workRole");
-                    clickTheElement(addSegmentButton);
-                    shiftStartTimeElment = getDriver().findElement(By.xpath("input[name=\"multiSegmentSelects."+(i+segmentCount)+".startMin\"]"));
-                    shiftEndTimeElment = getDriver().findElement(By.xpath("input[name=\"multiSegmentSelects."+(i+segmentCount)+".startMin\"]"));
-                    shiftWorkRoleElment = getDriver().findElement(By.xpath("input[name=\"multiSegmentSelects."+(i+segmentCount)+".startMin\"]"));
+                    clickTheElement(getDriver().findElement(By.xpath("//span[contains(text(), \"Add Segment\")]")));
+                    shiftStartTimeElment = getDriver().findElement(By.cssSelector("input[name=\"multiSegmentSelects."+(i+segmentCount)+".startMin\"]"));
+                    shiftEndTimeElment = getDriver().findElement(By.cssSelector("input[name=\"multiSegmentSelects."+(i+segmentCount)+".endMin\"]"));
+                    shiftWorkRoleElment = getDriver().findElement(By.xpath("//div[contains(@class,'legion-ui-react')]/div/form/div/div/div[1]/div[2]/div/div[2]/div["+(i+segmentCount+1)+"]//div[contains(@class,'react-select__indicator react-select__dropdown-indicator')]"));
                     //set shift start time
                     shiftStartTimeElment.clear();
                     shiftStartTimeElment.sendKeys(Keys.CONTROL, "a");
@@ -3316,13 +3316,15 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                     shiftEndTimeElment.sendKeys(Keys.DELETE);
                     shiftEndTimeElment.sendKeys(shiftEndTime);
                     //set shift work role
-                    clickTheElement(shiftWorkRoleElment);
+                    click(shiftWorkRoleElment);
                     SimpleUtils.pass("Work Role button clicked Successfully");
                     waitForSeconds(1);
                     if (dropDownListOnNewCreateShiftPage.size() > 0) {
                         for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
                             if (listWorkRole.getText().toLowerCase().trim().contains(shiftWorkRole.toLowerCase().trim())) {
-                                click(listWorkRole);
+                                scrollToElement(listWorkRole);
+                                waitForSeconds(1);
+                                clickTheElement(listWorkRole);
                                 SimpleUtils.pass("Work Role " + shiftWorkRole + "selected Successfully");
                                 break;
                             }
@@ -3348,5 +3350,71 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.pass("Remove all segments successfully! ");
         } else
             SimpleUtils.fail("Segments fail to load! ", false);
+    }
+
+    @Override
+    public void removeSpecificCountSegments(int count){
+        if (areListElementVisible(segments, 10)
+                && areListElementVisible(segmentRemoveButtons, 10)){
+            if (segmentRemoveButtons.size()< count){
+                SimpleUtils.fail("No enough segment can be removed!", false);
+            }
+            int i=0;
+            while (i<count){
+                click(segmentRemoveButtons.get(segmentRemoveButtons.size()-1));
+                SimpleUtils.pass("Remove one segment successfully! ");
+                i++;
+            }
+            SimpleUtils.pass("Remove all segments successfully! ");
+        } else
+            SimpleUtils.fail("Segments fail to load! ", false);
+    }
+
+    @Override
+    public List<HashMap<String, String>> getAllSegmentsOnNewOrEditPage (){
+        List<HashMap<String, String>> segmentsInfo = new ArrayList<>();
+        for (int i=0; i<segments.size(); i++){
+            HashMap<String, String> segmentInfo = new HashMap<>();
+            WebElement shiftStartTimeElement;
+            WebElement shiftEndTimeElement;
+            WebElement shiftWorkRoleElement;
+//            try {
+                shiftStartTimeElement = getDriver().findElement(By.cssSelector("input[name=\"multiSegmentSelects."+i+".startMin\"]"));
+//            } catch (Exception e) {
+//                continue;
+//            }
+//            try {
+                shiftEndTimeElement = getDriver().findElement(By.cssSelector("input[name=\"multiSegmentSelects."+i+".endMin\"]"));
+//            } catch (Exception e) {
+//                continue;
+//            }
+//            try {
+                shiftWorkRoleElement = getDriver().findElement(By.xpath("//div[contains(@class,'legion-ui-react')]/div/form/div/div/div[1]/div[2]/div/div[2]/div["+(i+1)+"]//div[contains(@class,'react-select__value-container')]"));
+//            } catch (Exception e) {
+//                continue;
+//            }
+
+
+            //set shift start time
+            segmentInfo.put("startTime", shiftStartTimeElement.getAttribute("value"));
+            //set shift end time
+            segmentInfo.put("endTime", shiftEndTimeElement.getAttribute("value"));
+            //set shift work role
+            segmentInfo.put("workRole", shiftWorkRoleElement.getText().equalsIgnoreCase("Select")?"":shiftWorkRoleElement.getText());
+
+            segmentsInfo.add(segmentInfo);
+            SimpleUtils.pass("Get one segment info successfully! ");
+        }
+        return segmentsInfo;
+    }
+
+
+    @Override
+    public void clickOnAddSegmentBtnOnNewOrEditPage () throws Exception {
+        if (isElementLoaded(addSegmentButton, 5)){
+            click(addSegmentButton);
+            SimpleUtils.pass("Click add segment button successfully! ");
+        } else
+            SimpleUtils.fail("The add segment button is not loaded on new or edit shift page! ", false);
     }
 }

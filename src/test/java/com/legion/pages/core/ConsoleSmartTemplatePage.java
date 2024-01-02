@@ -89,7 +89,7 @@ public class ConsoleSmartTemplatePage extends BasePage implements SmartTemplateP
 //            newShiftPage.moveSliderAtCertainPoint(startTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
 //        }
         //Set segments
-        newShiftPage.setShiftSegments(segments, true);
+        newShiftPage.addShiftSegments(segments, true);
         // Set shift name
         if (shiftName != null && !shiftName.isEmpty()) {
             newShiftPage.setShiftNameOnNewCreateShiftPage(shiftName);

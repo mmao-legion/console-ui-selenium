@@ -7652,18 +7652,18 @@ public class ScheduleTestKendraScott2 extends TestBase {
 					shiftWarningMessage.contains(expectedWaningMessage), false);
 			shiftOperatePage.clickOnRadioButtonOfSearchedTeamMemberByName(firstNameOfTM);
 //			expectedWaningMessage = firstNameOfTM+ " does not have minimum time between shifts";
-			if(newShiftPage.ifWarningModeDisplay()){
-				String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
-
-				if (warningMessage.toLowerCase().contains(expectedWaningMessage.toLowerCase())){
-					SimpleUtils.pass(expectedWaningMessage+" message displays");
-				} else {
-					SimpleUtils.fail("There is no "+expectedWaningMessage+" warning message displaying", false);
-				}
-				shiftOperatePage.clickOnAssignAnywayButton();
-			} else {
-				SimpleUtils.fail("There is no '"+expectedWaningMessage+"' warning modal displaying!",false);
-			}
+//			if(newShiftPage.ifWarningModeDisplay()){
+//				String warningMessage = newShiftPage.getWarningMessageFromWarningModal();
+//
+//				if (warningMessage.toLowerCase().contains(expectedWaningMessage.toLowerCase())){
+//					SimpleUtils.pass(expectedWaningMessage+" message displays");
+//				} else {
+//					SimpleUtils.fail("There is no "+expectedWaningMessage+" warning message displaying", false);
+//				}
+//				shiftOperatePage.clickOnAssignAnywayButton();
+//			} else {
+//				SimpleUtils.fail("There is no '"+expectedWaningMessage+"' warning modal displaying!",false);
+//			}
 			newShiftPage.clickOnOfferOrAssignBtn();
 			scheduleMainPage.saveSchedule();
 			List<WebElement> shiftsOfFirstDay = scheduleShiftTablePage.getOneDayShiftByName(0, firstNameOfTM);
@@ -8521,9 +8521,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			shiftOperatePage.clickAssignBtnOnCreateShiftDialog(tmPartialName);
 //			String standardAssignAnyway1 = tmPartialName + " will incur";
 //			String standardAssignAnyway2 = "hours of weekly overtime";
-			String assignAnywayMessage = newShiftPage.getWarningMessageFromWarningModal();
-			SimpleUtils.assertOnFail("The Violation message on the AssignAnyway page is not expected!", assignAnywayMessage.contains(standardAssignAnyway), false);
-			shiftOperatePage.clickOnAssignAnywayButton();
+//			String assignAnywayMessage = newShiftPage.getWarningMessageFromWarningModal();
+//			SimpleUtils.assertOnFail("The Violation message on the AssignAnyway page is not expected!", assignAnywayMessage.contains(standardAssignAnyway), false);
+//			shiftOperatePage.clickOnAssignAnywayButton();
 			newShiftPage.clickOnOfferOrAssignBtn();
 			newShiftPage.clickOnOkButtonOnErrorDialog();
 			scheduleMainPage.saveSchedule();

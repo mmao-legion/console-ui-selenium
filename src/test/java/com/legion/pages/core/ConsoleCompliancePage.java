@@ -498,12 +498,12 @@ public class ConsoleCompliancePage extends BasePage implements CompliancePage {
                 infoForEveryViolation = element.getText();
                 strList = Arrays.asList(infoForEveryViolation.split("\n"));
                 for (int i = 0; i<strList.size()-1; i++){
-                    keyTemp = keyTemp +" "+ strList.get(i);
+                    keyTemp = keyTemp +" "+ strList.get(i).replace(",","");
                 }
                 String number = strList.get(strList.size()-1).endsWith("0") ? strList.get(strList.size()-1).substring(0,
                         strList.get(strList.size()-1).length() - 1) : strList.get(strList.size()-1);
-                if (SimpleUtils.isNumeric(number)){
-                    result.put(keyTemp.trim(), Float.valueOf(strList.get(strList.size()-1)));
+                if (SimpleUtils.isNumeric(number.replace(",",""))){
+                    result.put(keyTemp.trim().replace(",",""), Float.valueOf(strList.get(strList.size()-1).replace(",","")));
                 } else {
                     SimpleUtils.fail("The violation hrs count is not numeric, please check!", false);
                 }

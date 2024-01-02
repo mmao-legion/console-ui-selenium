@@ -1225,6 +1225,15 @@ public class ActivityTest extends TestBase {
         String lastName = tmFullName.split(" ")[1];
         String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
         loginPage.logOut();
+        loginAsDifferentRole(AccessRoles.TeamMember2.getValue());
+        profileNewUIPage.clickOnUserProfileImage();
+        profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+        String tmFullName2 = profileNewUIPage.getUserProfileName().get("fullName");
+        String firstName2 = tmFullName.split(" ")[0];
+        String lastName2 = tmFullName.split(" ")[1];
+        String jobTitle2 = profileNewUIPage.getJobTitleFromProfilePage();
+        loginPage.logOut();
+
         loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
         goToSchedulePageScheduleTab();
         scheduleCommonPage.navigateToNextWeek();
@@ -1238,6 +1247,7 @@ public class ActivityTest extends TestBase {
         createSchedulePage.createScheduleForNonDGFlowNewUI();
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+        scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName2);
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("unassigned");
         scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
         scheduleMainPage.saveSchedule();

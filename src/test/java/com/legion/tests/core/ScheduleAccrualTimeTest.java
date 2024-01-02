@@ -216,7 +216,7 @@ public class ScheduleAccrualTimeTest extends TestBase {
 
 			AbsentManagePage absentManagePage = new AbsentManagePage();
 			absentManagePage.switchToSettings();
-			List<String> timeOffReasonOnOP = absentManagePage.getAllTheTimeOffReasons();
+			ArrayList<String> timeOffReasonOnOP = absentManagePage.getTimeOffReasonsInGlobalSetting();
 			for (int i = 0; i < timeOffReasonOnSchedule.size(); i++){
 				for(int j = 0; j < timeOffReasonOnOP.size(); j++){
 					if(timeOffReasonOnSchedule.get(i).trim().equals(timeOffReasonOnOP.get(j).trim())){

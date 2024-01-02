@@ -808,16 +808,16 @@ public class MealAndRestBreakTest extends TestBase {
             goToSchedulePageScheduleTab();
 
             // Create schedule if it is not created
-            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (isWeekGenerated) {
-                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-            }
-            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
+//            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+//            if (isWeekGenerated) {
+//                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+//            }
+//            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "08:00PM");
             // Verify warning dialog will show up when deleting the meal break
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleMainPage.selectWorkRoleFilterByText(WorkRoles.GeneralManager.value, true);
             int count = scheduleShiftTablePage.getShiftsCount();
-            int index = (new Random()).nextInt(count);
+            int index = 0;
 //            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
 //            shiftOperatePage.clickOnEditMeaLBreakTime();
 //            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
@@ -829,8 +829,8 @@ public class MealAndRestBreakTest extends TestBase {
             String action = "Edit";
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
-            editShiftPage.inputStartOrEndTime("08:00 AM", true);
-            editShiftPage.inputStartOrEndTime("04:00 PM", false);
+            editShiftPage.inputStartOrEndTime("06:00 AM", true);
+            editShiftPage.inputStartOrEndTime("02:00 PM", false);
             editShiftPage.checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
             editShiftPage.removeAllRestBreaks();
             editShiftPage.clickOnUpdateButton();

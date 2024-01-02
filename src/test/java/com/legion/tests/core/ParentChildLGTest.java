@@ -4520,7 +4520,9 @@ public class ParentChildLGTest extends TestBase {
             int shiftCountOnSecondDayBeforeDragAndDrop = scheduleShiftTablePage.verifyDayHasShiftByName(1, firstNameOfTM);
             int shiftCountOnThirdDayBeforeDragAndDrop = scheduleShiftTablePage.verifyDayHasShiftByName(2, firstNameOfTM);
             List<WebElement> selectedShifts = scheduleShiftTablePage.selectMultipleSameAssignmentShifts(1, firstNameOfTM);
+            Thread.sleep(3000);
             scheduleShiftTablePage.dragBulkShiftToAnotherDay(selectedShifts, 0, false);
+            Thread.sleep(3000);
             if (scheduleShiftTablePage.verifyDayHasShiftByName(0,firstNameOfTM)==shiftCountOnFirstDayBeforeDragAndDrop
                     && scheduleShiftTablePage.verifyDayHasShiftByName(0,"Open")==1){
                 SimpleUtils.pass("Drag and drop successfully!");

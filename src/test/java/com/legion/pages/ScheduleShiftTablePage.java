@@ -181,4 +181,5 @@ public interface ScheduleShiftTablePage {
     public HashSet<Integer> verifyCanSelectMultipleShiftsOnOneDay(int shiftCount, int dayIndex) throws Exception;
     public void rightClickOnSelectedShiftInDayView(int index) throws Exception;
     public boolean verifyCopyAndMoveWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception;
+    public List<HashMap<String, String>> getSegmentFromInfoPopupByIndex(int index);
 }
