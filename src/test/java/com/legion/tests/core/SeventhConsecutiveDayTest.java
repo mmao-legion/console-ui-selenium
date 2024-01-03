@@ -389,7 +389,8 @@ public class SeventhConsecutiveDayTest extends TestBase {
             createSchedulePage.publishActiveSchedule();
 
             loginPage.logOut();
-
+            refreshPage();
+            Thread.sleep(5000);
             loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.navigateToNextWeek();

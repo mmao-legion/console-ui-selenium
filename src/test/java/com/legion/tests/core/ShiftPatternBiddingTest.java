@@ -324,6 +324,8 @@ public class ShiftPatternBiddingTest extends TestBase {
             bidShiftPatternBiddingPage.clickNextButton();
             //Verify employee can submit shift bidding
             bidShiftPatternBiddingPage.clickSubmitButton();
+            dashboardPage.clickOnDashboardConsoleMenu();
+            Thread.sleep(5000);
             loginPage.logOut();
             refreshPage();
             Thread.sleep(5000);

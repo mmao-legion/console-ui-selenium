@@ -195,7 +195,8 @@ public class OvertimeShiftOfferTest extends TestBase {
             shiftOperatePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
             shiftOperatePage.closeViewStatusContainer();
             loginPage.logOut();
-
+            refreshPage();
+            Thread.sleep(3000);
             //login with TM.
             loginAsDifferentRole(AccessRoles.TeamMember.getValue());
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();

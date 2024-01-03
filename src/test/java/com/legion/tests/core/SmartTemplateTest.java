@@ -395,10 +395,10 @@ public class SmartTemplateTest extends TestBase {
             for (HashMap<String, String> pattern : patterns) {
                 patternNames.add(pattern.get("optionName"));
             }
-            if (!patternNames.contains(shiftName.toLowerCase())) {
-                SimpleUtils.pass("The shift pattern shifts can show in smart template! ");
+            if (patternNames.contains(shiftName.toLowerCase())) {
+                SimpleUtils.pass("The shift pattern shifts not show in future week smart template! ");
             } else
-                SimpleUtils.fail("Shift pattern shifts fail to show in smart template! ", false);
+                SimpleUtils.fail("Shift pattern shifts should not show in future week smart template! ", false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }

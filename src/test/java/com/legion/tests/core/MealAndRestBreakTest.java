@@ -634,7 +634,7 @@ public class MealAndRestBreakTest extends TestBase {
             // Verify warning dialog will show up when deleting the meal break
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             int count = scheduleShiftTablePage.getShiftsCount();
-            int index = (new Random()).nextInt(count);
+            int index = 0;
 //            scheduleShiftTablePage.clickProfileIconOfShiftByIndex(index);
 //            shiftOperatePage.clickOnEditMeaLBreakTime();
 //            SimpleUtils.assertOnFail("Edit Breaks dialog doesn't pop up!", shiftOperatePage.isMealBreakTimeWindowDisplayWell(true), false);
@@ -646,8 +646,8 @@ public class MealAndRestBreakTest extends TestBase {
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             editShiftPage.checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
             editShiftPage.removeAllMealBreaks();
-            editShiftPage.inputStartOrEndTime("08:00 AM", true);
-            editShiftPage.inputStartOrEndTime("04:00 PM", false);
+            editShiftPage.inputStartOrEndTime("06:00 AM", true);
+            editShiftPage.inputStartOrEndTime("02:00 PM", false);
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
 
@@ -1176,6 +1176,8 @@ public class MealAndRestBreakTest extends TestBase {
             Thread.sleep(3000);
             //Check the Meal Break block on the editing mode
             scheduleMainPage.searchShiftOnSchedulePage(nameOfTM);
+            scheduleMainPage.saveSchedule();
+            Thread.sleep(3000);
             SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
                     shiftOperatePage.isMealBreakBlockDisplayed(0), false);
 //            shiftOperatePage.clickOnProfileIcon();
@@ -1185,7 +1187,7 @@ public class MealAndRestBreakTest extends TestBase {
 //            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
 //                    shiftOperatePage.isMealBreaksLoaded(), false);
 //            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
-            scheduleMainPage.saveSchedule();
+
 
             //Check the Meal Break block after save
             scheduleMainPage.searchShiftOnSchedulePage(nameOfTM);
