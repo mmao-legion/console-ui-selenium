@@ -327,8 +327,10 @@ public class ShiftPatternBiddingTest extends TestBase {
             dashboardPage.clickOnDashboardConsoleMenu();
             Thread.sleep(5000);
             loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            loginPage.logOut();
             refreshPage();
-            Thread.sleep(5000);
+            Thread.sleep(10000);
             loginAsDifferentRole(AccessRoles.TeamMember2.getValue());
             loginPage.logOut();
             refreshPage();
