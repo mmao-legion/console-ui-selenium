@@ -920,6 +920,8 @@ SCH-5862-->
      <!--                   <include name="verifyTheShiftSegmentOnEditShiftPageAsInternalAdmin" /> -->
                     <include name="verifyBreaksOnEditShiftPageForRecurringShiftsAsInternalAdmin" />
                     <include name="verifyBreaksOnEditShiftPageForNonRecurringShiftsAsInternalAdmin" />
+                    <include name="verifyShiftNameAndNotesForRecurringShiftsAsInternalAdmin" />
+                    <include name="verifyShiftNameAndNotesForNonRecurringShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

@@ -809,4 +809,186 @@ public class SmartTemplateTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the shift name and note can be add, edit or delete for non recurring shifts")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyShiftNameAndNotesForNonRecurringShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            goToSchedulePageScheduleTab();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            goToSmartTemplatePage();
+            smartTemplatePage.clickOnResetBtn();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            smartTemplatePage.clickOnEditBtn();
+            //Create one group of non recurring shifts
+            String workRoleOfNonRecurring = workRoles.get(1).get("optionName");
+            String shiftName = "No Pattern";
+            String shiftNote = "NonRecurringShiftsNote";
+            String startTimeOfNonRecurring = "9:00am";
+            String endTimeOfNonRecurring = "5:00pm";
+            //Create one group of non-recurring shifts
+            smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRoleOfNonRecurring, shiftName, "",
+                    startTimeOfNonRecurring, endTimeOfNonRecurring, 2, Arrays.asList(0,1,2,3,4,5),
+                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", false);
+            scheduleMainPage.saveSchedule();
+            //Group by pattern
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
+            //Check the shift name and notes been added successfully
+            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            SimpleUtils.assertOnFail("Shift Notes is not updated!", shiftNote.equalsIgnoreCase(shiftInfo1.get(10)), false);
+
+            //Edit the recurring shift pattern
+            smartTemplatePage.clickOnEditBtn();
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(0);
+            String action = "Edit";
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            //Edit shift name and notes for shifts
+            shiftName = "NonRecurringShifts - Updated";
+            shiftNote = "NonRecurringShiftsNote - Updated";
+            editShiftPage.inputShiftName(shiftName);
+            editShiftPage.inputShiftNotes(shiftNote);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            SimpleUtils.assertOnFail("Shift Notes is not updated!", shiftNote.equalsIgnoreCase(shiftInfo1.get(10)), false);
+            //Delete shift name and notes for shifts
+            smartTemplatePage.clickOnEditBtn();
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            shiftName = "";
+            shiftNote = "";
+            editShiftPage.inputShiftName(shiftName);
+            editShiftPage.inputShiftNotes(shiftNote);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            SimpleUtils.assertOnFail("Shift Notes is not updated!", shiftNote.equalsIgnoreCase(shiftInfo1.get(10)), false);
+            //Add shift name and notes for shifts
+
+            smartTemplatePage.clickOnEditBtn();
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            shiftName = "New shift name";
+            shiftNote = "New shift notes";
+            editShiftPage.inputShiftName(shiftName);
+            editShiftPage.inputShiftNotes(shiftNote);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            SimpleUtils.assertOnFail("Shift Notes is not updated!", shiftNote.equalsIgnoreCase(shiftInfo1.get(10)), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the shift name and note can be add, edit or delete for recurring shifts")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyShiftNameAndNotesForRecurringShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            goToSchedulePageScheduleTab();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            goToSmartTemplatePage();
+            smartTemplatePage.clickOnResetBtn();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole1 = workRoles.get(0).get("optionName");
+            String shiftName = "RecurringShifts";
+            String shiftNote = "RecurringShiftsNote";
+            String startTime = "9:00am";
+            String endTime = "5:00pm";
+            smartTemplatePage.clickOnEditBtn();
+            //Create one group of recurring shifts
+            smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRole1, shiftName, "", startTime, endTime, 2,
+                    Arrays.asList(0,1,2,3,4,5),
+                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", true);
+
+            scheduleMainPage.saveSchedule();
+
+            //Check the shift name and notes been added successfully
+            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            SimpleUtils.assertOnFail("Shift Notes is not updated!", shiftNote.equalsIgnoreCase(shiftInfo1.get(10)), false);
+            //Verify the recurring shifts can display in smart template in current week
+            //Group by pattern
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+
+            //Edit the recurring shift pattern
+            smartTemplatePage.clickOnEditBtn();
+            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(0);
+            String action = "Edit";
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            //Edit shift name and notes for shifts
+            shiftName = "RecurringShifts - Updated";
+            shiftNote = "RecurringShiftsNote - Updated";
+            editShiftPage.inputShiftName(shiftName);
+            editShiftPage.inputShiftNotes(shiftNote);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            SimpleUtils.assertOnFail("Shift Notes is not updated!", shiftNote.equalsIgnoreCase(shiftInfo1.get(10)), false);
+            //Delete shift name and notes for shifts
+            smartTemplatePage.clickOnEditBtn();
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            shiftName = "";
+            shiftNote = "";
+            editShiftPage.inputShiftName(shiftName);
+            editShiftPage.inputShiftNotes(shiftNote);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            SimpleUtils.assertOnFail("Shift Notes is not updated!", shiftNote.equalsIgnoreCase(shiftInfo1.get(10)), false);
+            //Add shift name and notes for shifts
+
+            smartTemplatePage.clickOnEditBtn();
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            shiftName = "New shift name";
+            shiftNote = "New shift notes";
+            editShiftPage.inputShiftName(shiftName);
+            editShiftPage.inputShiftNotes(shiftNote);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            SimpleUtils.assertOnFail("Shift Notes is not updated!", shiftNote.equalsIgnoreCase(shiftInfo1.get(10)), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
