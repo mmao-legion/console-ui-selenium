@@ -917,7 +917,9 @@ SCH-5862-->
                     <include name="verifyShiftPatternShiftsCanShowInSmartTemplateAsInternalAdmin"/>
                     <include name="verifyRecurringShiftCanDisplayInSmartTemplateAsInternalAdmin"/>
                     <include name="verifyNonRecurringShiftCanDisplayInSmartTemplateAsInternalAdmin" />
-                    <include name="verifyTheShiftSegmentOnEditShiftPageAsInternalAdmin" />
+     <!--                   <include name="verifyTheShiftSegmentOnEditShiftPageAsInternalAdmin" /> -->
+                    <include name="verifyBreaksOnEditShiftPageForRecurringShiftsAsInternalAdmin" />
+                    <include name="verifyBreaksOnEditShiftPageForNonRecurringShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

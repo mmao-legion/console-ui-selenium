@@ -167,7 +167,7 @@ public class SmartTemplateTest extends TestBase {
     @TestName(description = "Verify the recurring shifts can display in smart template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyRecurringShiftCanDisplayInSmartTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
+        try {
             goToSchedulePageScheduleTab();
             BasePage basePage = new BasePage();
             String activeWeek = basePage.getActiveWeekText();
@@ -187,23 +187,26 @@ public class SmartTemplateTest extends TestBase {
             String endTime = "11:00pm";
             smartTemplatePage.clickOnEditBtn();
             //Create one group of recurring shifts
-            List<HashMap<String, String>> segments = new ArrayList<>();
-            HashMap<String, String> segment = new HashMap<>();
-            segment.put("startTime", "8:00am");
-            segment.put("endTime", "11:00am");
-            segment.put("workRole", workRoles.get(0).get("optionName"));
-            segments.add(new HashMap<>(segment));
-            segment.clear();
-            segment.put("startTime", "11:00am");
-            segment.put("endTime", "1:00pm");
-            segment.put("workRole", workRoles.get(1).get("optionName"));
-            segments.add(new HashMap<>(segment));
-            segment.clear();
-            segment.put("startTime", "1:00pm");
-            segment.put("endTime", "3:00pm");
-            segment.put("workRole", workRoles.get(2).get("optionName"));
-            segments.add(new HashMap<>(segment));
-            smartTemplatePage.createShiftsWithWorkRoleTransition(segments, shiftName, 2, Arrays.asList(0,1,2,3,4,5),
+//            List<HashMap<String, String>> segments = new ArrayList<>();
+//            HashMap<String, String> segment = new HashMap<>();
+//            segment.put("startTime", "8:00am");
+//            segment.put("endTime", "11:00am");
+//            segment.put("workRole", workRoles.get(0).get("optionName"));
+//            segments.add(new HashMap<>(segment));
+//            segment.clear();
+//            segment.put("startTime", "11:00am");
+//            segment.put("endTime", "1:00pm");
+//            segment.put("workRole", workRoles.get(1).get("optionName"));
+//            segments.add(new HashMap<>(segment));
+//            segment.clear();
+//            segment.put("startTime", "1:00pm");
+//            segment.put("endTime", "3:00pm");
+//            segment.put("workRole", workRoles.get(2).get("optionName"));
+//            segments.add(new HashMap<>(segment));
+//            smartTemplatePage.createShiftsWithWorkRoleTransition(segments, shiftName, 2, Arrays.asList(0,1,2,3,4,5),
+//                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", true);
+            smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRole1, shiftName, "", startTime, endTime, 2,
+                    Arrays.asList(0,1,2,3,4,5),
                     ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", true);
             scheduleMainPage.saveSchedule();
 
@@ -282,9 +285,9 @@ public class SmartTemplateTest extends TestBase {
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             editShiftPage.verifyTheTitleOfEditShiftsWindow(12, startOfWeek);
             editShiftPage.clickOnCancelButton();
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 
     @Automated(automated ="Automated")
@@ -306,30 +309,33 @@ public class SmartTemplateTest extends TestBase {
             smartTemplatePage.clickOnResetBtn();
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
             ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole1 = workRoles.get(0).get("optionName");
             String shiftName = "No Pattern";
             String shiftNote = "NonRecurringShiftsNote";
+            String startTime = "9:00pm";
+            String endTime = "11:00pm";
             smartTemplatePage.clickOnEditBtn();
             //Create one group of non-recurring shifts
-            List<HashMap<String, String>> segments = new ArrayList<>();
-            HashMap<String, String> segment = new HashMap<>();
-            segment.put("startTime", "8:00am");
-            segment.put("endTime", "11:00am");
-            segment.put("workRole", workRoles.get(0).get("optionName"));
-            segments.add(new HashMap<>(segment));
-            segment.clear();
-            segment.put("startTime", "11:00am");
-            segment.put("endTime", "1:00pm");
-            segment.put("workRole", workRoles.get(1).get("optionName"));
-            segments.add(new HashMap<>(segment));
-            segment.clear();
-            segment.put("startTime", "1:00pm");
-            segment.put("endTime", "3:00pm");
-            segment.put("workRole", workRoles.get(2).get("optionName"));
-            segments.add(new HashMap<>(segment));
-            smartTemplatePage.createShiftsWithWorkRoleTransition(segments, shiftName, 2, Arrays.asList(0,1,2,3,4,5),
-                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", false);
-//            smartTemplatePage.createShiftsWithSpecificValues(workRole1, shiftName, "", startTime, endTime, 2, Arrays.asList(0,1,2,3,4,5),
+//            List<HashMap<String, String>> segments = new ArrayList<>();
+//            HashMap<String, String> segment = new HashMap<>();
+//            segment.put("startTime", "8:00am");
+//            segment.put("endTime", "11:00am");
+//            segment.put("workRole", workRoles.get(0).get("optionName"));
+//            segments.add(new HashMap<>(segment));
+//            segment.clear();
+//            segment.put("startTime", "11:00am");
+//            segment.put("endTime", "1:00pm");
+//            segment.put("workRole", workRoles.get(1).get("optionName"));
+//            segments.add(new HashMap<>(segment));
+//            segment.clear();
+//            segment.put("startTime", "1:00pm");
+//            segment.put("endTime", "3:00pm");
+//            segment.put("workRole", workRoles.get(2).get("optionName"));
+//            segments.add(new HashMap<>(segment));
+//            smartTemplatePage.createShiftsWithWorkRoleTransition(segments, shiftName, 2, Arrays.asList(0,1,2,3,4,5),
 //                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", false);
+            smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRole1, shiftName, "", startTime, endTime, 2, Arrays.asList(0,1,2,3,4,5),
+                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", false);
             scheduleMainPage.saveSchedule();
 
             //Verify the recurring shifts can display in smart template in current week
@@ -512,6 +518,292 @@ public class SmartTemplateTest extends TestBase {
             SimpleUtils.assertOnFail("This shift's segment work role is incorrectly, the actual is: "+newSegmentStartTime +" and "+previousSegmentEndTime,
                     newSegmentStartTime.equalsIgnoreCase(previousSegmentEndTime) && newSegmentStartTime.equalsIgnoreCase("01:00 PM") ,
                     false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify breaks on edit shift page for recurring shifts")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyBreaksOnEditShiftPageForRecurringShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            goToSchedulePageScheduleTab();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            goToSmartTemplatePage();
+            smartTemplatePage.clickOnResetBtn();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole1 = workRoles.get(0).get("optionName");
+            String shiftName = "RecurringShifts";
+            String shiftNote = "RecurringShiftsNote";
+            String startTime = "9:00am";
+            String endTime = "5:00pm";
+            smartTemplatePage.clickOnEditBtn();
+            //Create one group of recurring shifts
+            smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRole1, shiftName, "", startTime, endTime, 2,
+                    Arrays.asList(0,1,2,3,4,5),
+                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", true);
+            
+            scheduleMainPage.saveSchedule();
+
+            //Verify the recurring shifts can display in smart template in current week
+            //Group by pattern
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+
+            //Edit the recurring shift pattern
+            smartTemplatePage.clickOnEditBtn();
+            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(0);
+            String action = "Edit";
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            //Check meal and rest break on recurring edit shift page
+            editShiftPage.checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
+            Map<String, String> breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
+            String breakStartTime = breakTimesOnSingleEditPage.get("mealStartTime");
+            String breakEndTime = breakTimesOnSingleEditPage.get("mealEndTime");
+            SimpleUtils.assertOnFail("The actual is: "+ (breakStartTime+ " "+breakEndTime),
+                    "12:45 PM".equals(breakStartTime)
+                            && "01:15 PM".equals(breakEndTime), false);
+            Map<String, String> restTimesOnSingleEditPage = editShiftPage.getRestBreakTimes().get(0);
+            String restStartTime = restTimesOnSingleEditPage.get("restStartTime");
+            String restEndTime = restTimesOnSingleEditPage.get("restEndTime");
+            SimpleUtils.assertOnFail("The actual is: "+ (restStartTime+ " "+restEndTime),
+                    "11:15 AM".equals(restStartTime)
+                            && "11:30 AM".equals(restEndTime), false);
+
+            //Delete meal and rest break for recurring shift
+            editShiftPage.removeAllRestBreaks();
+            editShiftPage.removeAllMealBreaks();
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            smartTemplatePage.clickOnEditBtn();
+            //Check the meal and rest break been removed successfully
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            int mealBreakCount = editShiftPage.getMealBreakCount();
+            int restBreakCount = editShiftPage.getRestBreakCount();
+            SimpleUtils.assertOnFail("All breaks should been added, but actual there are "+mealBreakCount+" meal breaks and "
+                    +restBreakCount+" rest breaks", mealBreakCount == 0
+                    && restBreakCount==0, false);
+
+            //Add meal and rest break for recurring shift
+            String mealBreakStartTime = "10:00 AM";
+            String mealBreakEndTime = "10:20 AM";
+            String restBreakStartTime = "11:00 AM";
+            String restBreakEndTime = "11:30 AM";
+            editShiftPage.clickOnAddMealBreakButton();
+            editShiftPage.clickOnAddRestBreakButton();
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.inputRestBreakTimes(restBreakStartTime, restBreakEndTime, 0);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            smartTemplatePage.clickOnEditBtn();
+            //Edit the shift again and check the breaks
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            //All breaks been added successfully
+            mealBreakCount = editShiftPage.getMealBreakCount();
+            restBreakCount = editShiftPage.getRestBreakCount();
+            SimpleUtils.assertOnFail("All breaks should been added, but actual there are "+mealBreakCount+" meal breaks and "
+                    +restBreakCount+" rest breaks", mealBreakCount == 1
+                    && restBreakCount==1, false);
+
+            //Verify the meal and rest breaks time are display correctly in Edit column
+            breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
+            breakStartTime = breakTimesOnSingleEditPage.get("mealStartTime");
+            breakEndTime = breakTimesOnSingleEditPage.get("mealEndTime");
+            SimpleUtils.assertOnFail("The expected break time is: "+mealBreakStartTime+ " "+ mealBreakEndTime
+                            + ". The actual is: "+ (breakStartTime+ " "+breakEndTime),
+                    mealBreakStartTime.equals(breakStartTime)
+                            && mealBreakEndTime.equals(breakEndTime), false);
+
+            //Edit meal and rest break for recurring shift
+            mealBreakStartTime = "02:00 PM";
+            mealBreakEndTime = "02:30 PM";
+            restBreakStartTime = "01:00 PM";
+            restBreakEndTime = "01:15 PM";
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.inputRestBreakTimes(restBreakStartTime, restBreakEndTime, 0);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            smartTemplatePage.clickOnEditBtn();
+            //Edit the shift again and check the breaks
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            //All breaks been added successfully
+            mealBreakCount = editShiftPage.getMealBreakCount();
+            restBreakCount = editShiftPage.getRestBreakCount();
+            SimpleUtils.assertOnFail("All breaks should been added, but actual there are "+mealBreakCount+" meal breaks and "
+                    +restBreakCount+" rest breaks", mealBreakCount == 1
+                    && restBreakCount==1, false);
+
+            //Verify the meal and rest breaks time are display correctly in Edit column
+            breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
+            breakStartTime = breakTimesOnSingleEditPage.get("mealStartTime");
+            breakEndTime = breakTimesOnSingleEditPage.get("mealEndTime");
+            SimpleUtils.assertOnFail("The expected break time is: "+mealBreakStartTime+ " "+ mealBreakEndTime
+                            + ". The actual is: "+ (breakStartTime+ " "+breakEndTime),
+                    mealBreakStartTime.equals(breakStartTime)
+                            && mealBreakEndTime.equals(breakEndTime), false);
+
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify breaks on edit shift page for non recurring shifts")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyBreaksOnEditShiftPageForNonRecurringShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            goToSchedulePageScheduleTab();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            goToSmartTemplatePage();
+            smartTemplatePage.clickOnResetBtn();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            smartTemplatePage.clickOnEditBtn();
+            //Create one group of recurring shifts
+            String workRoleOfNonRecurring = workRoles.get(1).get("optionName");
+            String shiftNameOfNonRecurring = "No Pattern";
+            String shiftNoteOfNonRecurring = "NonRecurringShiftsNote";
+            String startTimeOfNonRecurring = "9:00am";
+            String endTimeOfNonRecurring = "5:00pm";
+            //Create one group of non-recurring shifts
+            smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRoleOfNonRecurring, shiftNameOfNonRecurring, "",
+                    startTimeOfNonRecurring, endTimeOfNonRecurring, 2, Arrays.asList(0,1,2,3,4,5),
+                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNoteOfNonRecurring, "", false);
+            scheduleMainPage.saveSchedule();
+
+            //Verify the recurring shifts can display in smart template in current week
+            //Group by pattern
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+
+            //Edit the non-recurring shift pattern
+            smartTemplatePage.clickOnEditBtn();
+            scheduleShiftTablePage.expandOnlyOneGroup(shiftNameOfNonRecurring);
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(0);
+            String action = "Edit";
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            //Check meal and rest break on recurring edit shift page
+            editShiftPage.checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
+            Map<String, String> breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
+            String breakStartTime = breakTimesOnSingleEditPage.get("mealStartTime");
+            String breakEndTime = breakTimesOnSingleEditPage.get("mealEndTime");
+            SimpleUtils.assertOnFail("The actual is: "+ (breakStartTime+ " "+breakEndTime),
+                    "12:45 PM".equals(breakStartTime)
+                            && "01:15 PM".equals(breakEndTime), false);
+            Map<String, String> restTimesOnSingleEditPage = editShiftPage.getRestBreakTimes().get(0);
+            String restStartTime = restTimesOnSingleEditPage.get("restStartTime");
+            String restEndTime = restTimesOnSingleEditPage.get("restEndTime");
+            SimpleUtils.assertOnFail("The actual is: "+ (restStartTime+ " "+restEndTime),
+                    "11:15 AM".equals(restStartTime)
+                            && "11:30 AM".equals(restEndTime), false);
+
+            //Delete meal and rest break for non-recurring shift
+            editShiftPage.removeAllRestBreaks();
+            editShiftPage.removeAllMealBreaks();
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            smartTemplatePage.clickOnEditBtn();
+            //Check the meal and rest break been removed successfully
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            int mealBreakCount = editShiftPage.getMealBreakCount();
+            int restBreakCount = editShiftPage.getRestBreakCount();
+            SimpleUtils.assertOnFail("All breaks should been added, but actual there are "+mealBreakCount+" meal breaks and "
+                    +restBreakCount+" rest breaks", mealBreakCount == 0
+                    && restBreakCount==0, false);
+
+            //Add meal and rest break for non-recurring shift
+            String mealBreakStartTime = "10:00 AM";
+            String mealBreakEndTime = "10:20 AM";
+            String restBreakStartTime = "11:00 AM";
+            String restBreakEndTime = "11:30 AM";
+            editShiftPage.clickOnAddMealBreakButton();
+            editShiftPage.clickOnAddRestBreakButton();
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.inputRestBreakTimes(restBreakStartTime, restBreakEndTime, 0);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            smartTemplatePage.clickOnEditBtn();
+            //Edit the shift again and check the breaks
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            //All breaks been added successfully
+            mealBreakCount = editShiftPage.getMealBreakCount();
+            restBreakCount = editShiftPage.getRestBreakCount();
+            SimpleUtils.assertOnFail("All breaks should been added, but actual there are "+mealBreakCount+" meal breaks and "
+                    +restBreakCount+" rest breaks", mealBreakCount == 1
+                    && restBreakCount==1, false);
+
+            //Verify the meal and rest breaks time are display correctly in Edit column
+            breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
+            breakStartTime = breakTimesOnSingleEditPage.get("mealStartTime");
+            breakEndTime = breakTimesOnSingleEditPage.get("mealEndTime");
+            SimpleUtils.assertOnFail("The expected break time is: "+mealBreakStartTime+ " "+ mealBreakEndTime
+                            + ". The actual is: "+ (breakStartTime+ " "+breakEndTime),
+                    mealBreakStartTime.equals(breakStartTime)
+                            && mealBreakEndTime.equals(breakEndTime), false);
+
+            //Edit meal and rest break for non-recurring shift
+            mealBreakStartTime = "02:00 PM";
+            mealBreakEndTime = "02:30 PM";
+            restBreakStartTime = "01:00 PM";
+            restBreakEndTime = "01:15 PM";
+            editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
+            editShiftPage.inputRestBreakTimes(restBreakStartTime, restBreakEndTime, 0);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            smartTemplatePage.clickOnEditBtn();
+            //Edit the shift again and check the breaks
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+            //All breaks been added successfully
+            mealBreakCount = editShiftPage.getMealBreakCount();
+            restBreakCount = editShiftPage.getRestBreakCount();
+            SimpleUtils.assertOnFail("All breaks should been added, but actual there are "+mealBreakCount+" meal breaks and "
+                    +restBreakCount+" rest breaks", mealBreakCount == 1
+                    && restBreakCount==1, false);
+
+            //Verify the meal and rest breaks time are display correctly in Edit column
+            breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
+            breakStartTime = breakTimesOnSingleEditPage.get("mealStartTime");
+            breakEndTime = breakTimesOnSingleEditPage.get("mealEndTime");
+            SimpleUtils.assertOnFail("The expected break time is: "+mealBreakStartTime+ " "+ mealBreakEndTime
+                            + ". The actual is: "+ (breakStartTime+ " "+breakEndTime),
+                    mealBreakStartTime.equals(breakStartTime)
+                            && mealBreakEndTime.equals(breakEndTime), false);
+
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

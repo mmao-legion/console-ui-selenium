@@ -168,4 +168,73 @@ public class ConsoleSmartTemplatePage extends BasePage implements SmartTemplateP
         } else
             SimpleUtils.fail("The back button fail to load! ", false);
     }
+
+
+    @Override
+    public List<String> createShiftsWithOutWorkRoleTransition(String workRole, String shiftName, String location, String startTime,
+                                                              String endTime, int shiftPerDay, List<Integer> workDays, String assignment,
+                                                              String shiftNotes, String tmName, boolean recurringShift) throws Exception {
+        List<String> selectedTMs = new ArrayList<>();
+        NewShiftPage newShiftPage = new ConsoleNewShiftPage();
+        ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();
+
+        newShiftPage.clickOnDayViewAddNewShiftButton();
+        Thread.sleep(5000);
+        SimpleUtils.assertOnFail("New create shift page is not display! ",
+                newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
+        // Select work role
+        newShiftPage.selectWorkRole(workRole);
+        // Select location
+        if (location != null && !location.isEmpty()) {
+            newShiftPage.selectChildLocInCreateShiftWindow(location);
+        }
+        // Set end time
+        if (endTime != null && !endTime.isEmpty()) {
+            newShiftPage.moveSliderAtCertainPoint(endTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        }
+        // Set start time
+        if (startTime != null && !startTime.isEmpty()) {
+            newShiftPage.moveSliderAtCertainPoint(startTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+        }
+//        //Set segments
+//        newShiftPage.addShiftSegments(segments, true);
+        // Set shift name
+        if (shiftName != null && !shiftName.isEmpty()) {
+            newShiftPage.setShiftNameOnNewCreateShiftPage(shiftName);
+        }
+        // Set recurring shift
+        checkOrUnCheckRecurringShift(recurringShift);
+        // Set shift per day
+        newShiftPage.setShiftPerDayOnNewCreateShiftPage(shiftPerDay);
+        // Select work day
+        if (workDays.size() == 1) {
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectMultipleOrSpecificWorkDay(workDays.get(0), true);
+        } else if (workDays.size() > 1) {
+            newShiftPage.clearAllSelectedDays();
+            for (int i : workDays) {
+                newShiftPage.selectMultipleOrSpecificWorkDay(workDays.get(i), true);
+            }
+        }
+        // Select the assignment
+        newShiftPage.clickRadioBtnStaffingOption(assignment);
+        // Set shift notes
+        if (shiftNotes != null && !shiftNotes.isEmpty()) {
+            newShiftPage.setShiftNotesOnNewCreateShiftPage(shiftNotes);
+        }
+        newShiftPage.clickOnCreateOrNextBtn();
+        if (assignment.equals(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue())
+                || assignment.equals(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue()) ) {
+            if (tmName != null && !tmName.isEmpty()) {
+                newShiftPage.searchTeamMemberByName(tmName);
+            } else {
+                shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
+                for (int i = 0; i < shiftPerDay; i++) {
+                    selectedTMs.add(newShiftPage.selectTeamMembers());
+                }
+            }
+            newShiftPage.clickOnCreateOrNextBtn();
+        }
+        return selectedTMs;
+    }
 }
