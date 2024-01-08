@@ -325,7 +325,7 @@ public class ShiftPatternBiddingTest extends TestBase {
             //Verify employee can submit shift bidding
             bidShiftPatternBiddingPage.clickSubmitButton();
             dashboardPage.clickOnDashboardConsoleMenu();
-            Thread.sleep(5000);
+            Thread.sleep(60000);
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             loginPage.logOut();

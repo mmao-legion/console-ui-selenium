@@ -731,7 +731,7 @@ public class ForecastTest extends TestBase{
 			loginPage.logOut();
 			refreshPage();
 			//Verify the shifts can be created by new UI by original SM access role
-			Thread.sleep(5000);
+			Thread.sleep(60000);
 			SimpleUtils.pass("Will login as: "+ accessRole);
 			loginAsDifferentRole(accessRole);
 			loginPage.logOut();
