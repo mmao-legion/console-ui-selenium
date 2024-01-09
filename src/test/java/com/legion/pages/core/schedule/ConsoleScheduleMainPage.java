@@ -1483,7 +1483,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         String subTitle = "Edit operating hours";
         if (isElementLoaded(dropdownToggle,10)){
             click(dropdownToggle);
-            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==5 ){
+            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)){
                 waitForSeconds(3);
                 click(dropdownMenuFormDropdownToggle.get(1));
                 SimpleUtils.pass("Edit operating hours has been clicked!");

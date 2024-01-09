@@ -729,7 +729,7 @@ public class ForecastTest extends TestBase{
 			boolean status = controlsNewUIPage.getStatusOfSpecificPermissionForSpecificRoles(section, roleName, permission);
 			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
 			loginPage.logOut();
-			refreshPage();
+//			refreshPage();
 			//Verify the shifts can be created by new UI by original SM access role
 			Thread.sleep(60000);
 			SimpleUtils.pass("Will login as: "+ accessRole);

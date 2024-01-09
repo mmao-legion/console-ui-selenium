@@ -784,7 +784,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                 try {
                     List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
                     if (areListElementVisible(trs, 5) && trs.size() > 0) {
-                        WebElement budget = trs.get(trs.size() - 1).findElement(By.cssSelector("th:nth-child(4)"));
+                        WebElement budget = trs.get(trs.size() - 1).findElement(By.cssSelector("td:nth-child(3)"));
                         budgetHour = Float.parseFloat(budget == null ? "" : budget.getText());
                         SimpleUtils.report("Enter Budget Window: Get the budget hour: " + budgetHour);
                     }
@@ -2378,6 +2378,15 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
             isConfirmOpeHrsDialogShows = false;
             SimpleUtils.report("The Create Schedule window header is not loaded!");
         }return isConfirmOpeHrsDialogShows;
+    }
+
+
+    public void clickEditOperatingHoursButtonsAreShown() throws Exception {
+        if (areListElementVisible(editOperatingHousButtonOnUngenerateSchedulePage, 10)) {
+            clickTheElement(editOperatingHousButtonOnUngenerateSchedulePage.get(0));
+            SimpleUtils.pass("Click the edit operating hour button on ungenerate schedule page successfully! ");
+        } else
+            SimpleUtils.report("Edit operating hours buttons are not shown! ");
     }
 }
 

@@ -1059,6 +1059,7 @@ public class MealAndRestBreakTest extends TestBase {
             newShiftPage.clickOnOfferOrAssignBtn();
 
             //Check the Meal Break block on the editing mode
+            scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage(nameOfTM);
             SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
@@ -1070,7 +1071,7 @@ public class MealAndRestBreakTest extends TestBase {
 //            SimpleUtils.assertOnFail("The Meal Breaks block is not loaded correctly!",
 //                    shiftOperatePage.isMealBreaksLoaded(), false);
 //            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
-            scheduleMainPage.saveSchedule();
+
             Thread.sleep(10000);
 
             //Check the Meal Break block after save
