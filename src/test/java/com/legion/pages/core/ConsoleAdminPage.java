@@ -142,7 +142,7 @@ public class ConsoleAdminPage extends BasePage implements AdminPage {
 		if(areListElementVisible(cachesInCacheList,20) && cachesInCacheList.size()>0) {
 			boolean isTemplateExist = false;
 			for (WebElement cache: cachesInCacheList) {
-				String cacheNameInList = cache.findElement(By.cssSelector(":nth-child(2)")).getText();
+				String cacheNameInList = cache.findElement(By.cssSelector(":nth-child(1)")).getText();
 				System.out.println("The cache name in list is:"+cacheNameInList);
 				if (cacheNameInList.equalsIgnoreCase(cacheName)) {
 					isTemplateExist = true;

@@ -13,6 +13,7 @@ import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.Constants;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -158,9 +159,9 @@ public class OvertimeShiftOfferTest extends TestBase {
                 newShiftPage.clickOnDayViewAddNewShiftButton();
                 newShiftPage.customizeNewShiftPage();
                 newShiftPage.clearAllSelectedDays();
-                newShiftPage.selectMultipleOrSpecificWorkDay(4, false);
+                newShiftPage.selectMultipleOrSpecificWorkDay(5, false);
                 newShiftPage.moveSliderAtCertainPoint("9am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
-                newShiftPage.moveSliderAtCertainPoint("7pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+                newShiftPage.moveSliderAtCertainPoint("5pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
                 newShiftPage.selectWorkRole(workRoleOfTM);
                 newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
                 newShiftPage.clickOnCreateOrNextBtn();
@@ -174,7 +175,7 @@ public class OvertimeShiftOfferTest extends TestBase {
                 newShiftPage.clickOnDayViewAddNewShiftButton();
                 newShiftPage.customizeNewShiftPage();
                 newShiftPage.clearAllSelectedDays();
-                newShiftPage.selectMultipleOrSpecificWorkDay(5, true);
+                newShiftPage.selectMultipleOrSpecificWorkDay(6, true);
                 newShiftPage.moveSliderAtCertainPoint("10am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
                 newShiftPage.moveSliderAtCertainPoint("5pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
                 newShiftPage.selectWorkRole(workRoleOfTM);
@@ -220,7 +221,6 @@ public class OvertimeShiftOfferTest extends TestBase {
             activityPage.verifyActivityOfShiftOffer(firstNameOfTM, location);
             activityPage.approveOrRejectShiftOfferRequestOnActivity(firstNameOfTM, ActivityTest.approveRejectAction.Approve.getValue());
             activityPage.closeActivityWindow();
-
             // Double check if the approved shift offer has been assigned to the TM
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
@@ -233,6 +233,10 @@ public class OvertimeShiftOfferTest extends TestBase {
             int shiftsCountAfter = shiftOperatePage.countShiftsByUserName(firstNameOfTM);
             SimpleUtils.assertOnFail("Failed for approving overtime shift offer! shiftsCountBefore: " + shiftsCountBefore +
                     ", shiftsCountAfter: " + shiftsCountAfter, (shiftsCountAfter - shiftsCountBefore) == 1, false);
+            List<WebElement> newShifts = scheduleShiftTablePage.getOneDayShiftByName(6, firstNameOfTM);
+            String warningMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newShifts.get(0)).toString();
+            SimpleUtils.assertOnFail("The weekly OT violation message display incorrectly in i icon popup! ",
+                    warningMessage.contains("5.0 hrs weekly overtime"), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
