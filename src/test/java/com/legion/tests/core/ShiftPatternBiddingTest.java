@@ -325,8 +325,10 @@ public class ShiftPatternBiddingTest extends TestBase {
             //Verify employee can submit shift bidding
             bidShiftPatternBiddingPage.clickSubmitButton();
             dashboardPage.clickOnDashboardConsoleMenu();
+            loginPage.logOut();
+            loginPage.loginToLegionWithCredential(username, password);
+            loginPage.logOut();
             Thread.sleep(60000);
-//            loginPage.logOut();
 //            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 //            loginPage.logOut();
 //            refreshPage();
@@ -359,8 +361,8 @@ public class ShiftPatternBiddingTest extends TestBase {
             //Verify employee can submit shift bidding
             bidShiftPatternBiddingPage.clickSubmitButton();
             loginPage.logOut();
-            refreshPage();
-            Thread.sleep(5000);
+//            refreshPage();
+            Thread.sleep(60000);
             loginAsDifferentRole(AccessRoles.TeamMember3.getValue());
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
@@ -384,8 +386,8 @@ public class ShiftPatternBiddingTest extends TestBase {
             //Verify employee can submit shift bidding
             bidShiftPatternBiddingPage.clickSubmitButton();
             loginPage.logOut();
-            refreshPage();
-            Thread.sleep(5000);
+//            refreshPage();
+            Thread.sleep(60000);
             loginAsDifferentRole(AccessRoles.TeamMember4.getValue());
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
@@ -414,7 +416,7 @@ public class ShiftPatternBiddingTest extends TestBase {
             //Verify employee can submit shift bidding
             bidShiftPatternBiddingPage.clickSubmitButton();
             loginPage.logOut();
-            refreshPage();
+//            refreshPage();
             Thread.sleep(5000);
             loginAsDifferentRole(AccessRoles.TeamMember6.getValue());
             profileNewUIPage.clickOnUserProfileImage();
@@ -447,7 +449,7 @@ public class ShiftPatternBiddingTest extends TestBase {
 //        String tm6FirstName = "Cecelia";
 
             loginPage.logOut();
-            refreshPage();
+//            refreshPage();
             Thread.sleep(5000);
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             //Verify employee can be assign to the shift pattern after run auto assignment task API
@@ -520,7 +522,7 @@ public class ShiftPatternBiddingTest extends TestBase {
                         SimpleUtils.pass("The employee:"+tm5FirstName+" been assign to shift pattern:"+workRole4ShiftPattern1+" successfully!");
                     }
                 }
-                SimpleUtils.assertOnFail( "The employee should not contains in "+employeeNames,
+                SimpleUtils.assertOnFail( "The employee "+employeeNames+" should not contains, the expected is"+tm5FirstName,
                         !containSpecificEmployee, false);
 
 

@@ -4987,6 +4987,8 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 		SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
 		ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+		ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+		ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
 		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 		scheduleCommonPage.clickOnScheduleSubTab("Schedule");
 		scheduleCommonPage.navigateToNextWeek();
@@ -4994,7 +4996,9 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
 		createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("08:00AM", "05:00PM");
-		shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+		scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+		scheduleMainPage.saveSchedule();
 		createSchedulePage.publishActiveSchedule();
 
 		String firstWeekInfo = scheduleCommonPage.getActiveWeekText();
@@ -5069,7 +5073,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			}
 			createSchedulePage.createScheduleForNonDGFlowNewUI();
 			//Delete all unassigned shifts and tm's shifts
-			shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
+//			shiftOperatePage.convertAllUnAssignedShiftToOpenShift();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
 			scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmFullName.split(" ")[0]);

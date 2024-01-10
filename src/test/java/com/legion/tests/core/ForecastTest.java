@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static com.legion.utils.MyThreadLocal.getDriver;
 import static java.lang.Math.abs;
 
 public class ForecastTest extends TestBase{
@@ -728,6 +729,8 @@ public class ForecastTest extends TestBase{
 			String permission = "Manage Past Demand Forecast";
 			boolean status = controlsNewUIPage.getStatusOfSpecificPermissionForSpecificRoles(section, roleName, permission);
 			locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.Console.getValue());
+			loginPage.logOut();
+			loginPage.loginToLegionWithCredential(username, password);
 			loginPage.logOut();
 //			refreshPage();
 			//Verify the shifts can be created by new UI by original SM access role

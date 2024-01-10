@@ -320,6 +320,7 @@ public class SeventhConsecutiveDayTest extends TestBase {
             String jobTitle = profileNewUIPage.getJobTitleFromProfilePage();
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
+            Thread.sleep(5000);
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();

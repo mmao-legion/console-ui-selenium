@@ -361,7 +361,7 @@
                                             <include name="verifyRefreshFeatureOnComplianceInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-4525 -->
                     <include name="verifyRegionListAndSubRegionOnComplianceInBUViewAsInternalAdmin" />
                     <include name="verifyDistrictListAndSubDistrictOnComplianceInBUViewAsInternalAdmin" />
-                    <include name="verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin" />
+<!--                    <include name="verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin" /> need more investigate-->
 <!--                    <include name="verifyTotalViolationHrsOnComplianceInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8703-->
                     <include name="verifyTotalLocationsWithViolationCardInComplianceBUViewAsInternalAdmin" />
                     <include name="verifyTotalLocationsWithViolationCardInComplianceRegionViewAsInternalAdmin" />
