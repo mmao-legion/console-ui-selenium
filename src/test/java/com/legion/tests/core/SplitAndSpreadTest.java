@@ -660,7 +660,7 @@ public class SplitAndSpreadTest extends TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
             scheduleMainPage.saveSchedule();
-
+            Thread.sleep(3000);
             //Create first shift for tm
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();

@@ -532,7 +532,7 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
                     }
                 }
                 // Wait for the card to change the status message, such as approved or rejected
-                waitForSeconds(3);
+                waitForSeconds(5);
                 //refresh the filter and can see the approved or reject info.
 				clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ProfileUpdate.getValue(), ActivityTest.indexOfActivityType.ProfileUpdate.name());
 				clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ProfileUpdate.getValue(), ActivityTest.indexOfActivityType.ProfileUpdate.name());
