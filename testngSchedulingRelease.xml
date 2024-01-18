@@ -25,6 +25,16 @@
         </classes>
     </test>
 
+    <test name="OvertimeShiftOffer Test">
+        <classes>
+            <class name="com.legion.tests.core.OvertimeShiftOfferTest">
+                <methods>
+                    <include name="verifyAllowClaimOvertimeShiftOfferAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
     <test name="Drag And Drop Test">
         <classes>
             <class name="com.legion.tests.core.DragAndDropTest">
