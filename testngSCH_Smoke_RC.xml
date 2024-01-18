@@ -29,6 +29,16 @@
         </classes>
     </test>
 
+    <test name="Overtime Rate Shift Offer Claim Test">
+        <classes>
+            <class name="com.legion.tests.core.OvertimeShiftOfferTest">
+                <methods>
+                    <include name="verifyAllowClaimOvertimeShiftOfferAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
     <test name="Schedule Test">
         <classes>
             <class name="com.legion.tests.core.ScheduleTestKendraScott2">
