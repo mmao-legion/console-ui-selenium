@@ -323,7 +323,7 @@ public class FTSERelevantTest extends TestBase {
 //                compliancePage.turnOnOrTurnOffDayOTToggle(true);
 //                compliancePage.editDayOTSetting("8 hours", "single work day", true);
 //            }else {
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -418,7 +418,7 @@ public class FTSERelevantTest extends TestBase {
 //                compliancePage.turnOnOrTurnOffWeeklyOTToggle(true);
 //                compliancePage.editWeeklyOTSetting("40 hours");
 //            }else {
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -520,7 +520,7 @@ public class FTSERelevantTest extends TestBase {
 //                compliancePage.turnOnOrTurnOff7thConsecutiveOTToggle(true);
 //                compliancePage.editConsecutiveOTSetting("7th","always", true);
 //            }else {
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -625,7 +625,7 @@ public class FTSERelevantTest extends TestBase {
 //                compliancePage.turnOnOrTurnOffDayOTToggle(true);
 //                compliancePage.editDayOTSetting("8 hours","24 hour period",true);
 //            }else {
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -722,7 +722,7 @@ public class FTSERelevantTest extends TestBase {
 //                controlsNewUIPage.selectClopeningHours(12);
 //
 //            }else {
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -814,7 +814,7 @@ public class FTSERelevantTest extends TestBase {
 //            if (isLocationUsingControlsConfiguration) {
 //                workRole = "Training";
 //            }else {
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
 //            }
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -965,7 +965,7 @@ public class FTSERelevantTest extends TestBase {
 //            if (isLocationUsingControlsConfiguration) {
 //                workRole = "Training";
 //            }else {
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
 //            }
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -1036,7 +1036,7 @@ public class FTSERelevantTest extends TestBase {
 //            if (isLocationUsingControlsConfiguration) {
 //                workRole = "Training";
 //            }else {
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
 //            }
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -1106,7 +1106,7 @@ public class FTSERelevantTest extends TestBase {
 //            if (isLocationUsingControlsConfiguration) {
 //                workRole = "Training";
 //            }else {
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
 //            }
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -1176,7 +1176,7 @@ public class FTSERelevantTest extends TestBase {
 //            if (isLocationUsingControlsConfiguration) {
 //                workRole = "Training";
 //            }else {
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
 //            }
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -1246,7 +1246,7 @@ public class FTSERelevantTest extends TestBase {
 //            if (isLocationUsingControlsConfiguration) {
 //                workRole = "Training";
 //            }else {
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
 //            }
 
             //Go to the schedule view table
@@ -1318,7 +1318,7 @@ public class FTSERelevantTest extends TestBase {
 //            if (isLocationUsingControlsConfiguration) {
 //                workRole = "Training";
 //            }else {
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
 //            }
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
@@ -1392,7 +1392,7 @@ public class FTSERelevantTest extends TestBase {
 //                controlsNewUIPage.editSplitShiftPremium("1", "60", true);
 //            }else {
                 //Go to OP page
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -1522,7 +1522,7 @@ public class FTSERelevantTest extends TestBase {
 //                controlsNewUIPage.editSpreadOfHoursPremium("1", "10", true);
 //            } else {
                 //Go to OP page
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
@@ -1623,7 +1623,7 @@ public class FTSERelevantTest extends TestBase {
             DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             String tmPartialName = "Tester1";
-            String workRole= "TEAM MEMBER CORPORATE-THEATRE";
+            String workRole= "Team Member Corporate-Theatre";
 
             //Go to the schedule view table
             CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
@@ -1756,7 +1756,7 @@ public class FTSERelevantTest extends TestBase {
 //                workRole = "Training";
 //            } else {
                 //Go to OP page
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
                 if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
                     //Back to the console page
                     switchToConsoleWindow();
@@ -1873,7 +1873,7 @@ public class FTSERelevantTest extends TestBase {
 //                workRole = "Training";
 //            } else {
                 //Go to OP page
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
                 if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
                     //Back to the console page
                     switchToConsoleWindow();
@@ -2022,7 +2022,7 @@ public class FTSERelevantTest extends TestBase {
             ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
             ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
-            String workRole = "TEAM MEMBER CORPORATE-THEATRE";
+            String workRole = "Team Member Corporate-Theatre";
             String tmPartialName = "Tester1";
 //            Boolean isLocationUsingControlsConfiguration = controlsNewUIPage.checkIfTheLocationUsingControlsConfiguration();
 //            String tmPartialName = "Tester1";
@@ -2158,7 +2158,7 @@ public class FTSERelevantTest extends TestBase {
 //                workRole = "Training";
 //            } else {
                 //Go to OP page
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
                 if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
                     //Back to the console page
                     switchToConsoleWindow();
@@ -2248,7 +2248,7 @@ public class FTSERelevantTest extends TestBase {
 //                workRole = "Training";
 //            } else {
                 //Go to OP page
-                workRole = "TEAM MEMBER CORPORATE-THEATRE";
+                workRole = "Team Member Corporate-Theatre";
                 if (getDriver().getCurrentUrl().toLowerCase().contains(propertyMap.get(opEnterprice).toLowerCase())) {
                     //Back to the console page
                     switchToConsoleWindow();
