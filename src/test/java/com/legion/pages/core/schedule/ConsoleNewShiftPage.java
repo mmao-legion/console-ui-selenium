@@ -14,6 +14,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import com.legion.tests.core.ScheduleTestKendraScott2.staffingOption;
+import org.testng.Assert;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -266,6 +267,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     @FindBy(css = "button.lgn-dropdown-button:nth-child(1)")
     private WebElement btnWorkRole;
+
+    @FindBy(css = ".react-select__value-container")
+    private List<WebElement> btnWorkRoles;
 
     @FindBy(css = " [ng-click=\"selectChoice($event, choice)\"]")
     private List<WebElement> listWorkRoles;
@@ -587,7 +591,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             } else {
                 SimpleUtils.fail("Work Roles size are empty", false);
             }
-        } else if (isElementLoaded(workRoleOnNewShiftPage, 25)) {
+        } /*else if (isElementLoaded(workRoleOnNewShiftPage, 25)) {
             waitForSeconds(2);
             if (!areListElementVisible(dropDownListOnNewCreateShiftPage, 5) && dropDownListOnNewCreateShiftPage.size() == 0) {
                 click(workRoleOnNewShiftPage);
@@ -604,12 +608,24 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 }
             } else {
                 SimpleUtils.fail("Work Roles size are empty", false);
-            }
+            }*/
+        else if (areListElementVisible(btnWorkRoles, 25)) {
+            waitForSeconds(2);
+            WebElement elm = getDriver().findElements(By.cssSelector(".react-select__value-container")).get(0);
+            elm.click();
+            waitForSeconds(2);
+            String locatorStr = "//div[contains(@class, 'react-select__menu')]//*[text()='" + workRoles + "']";
+            WebElement targetWorkRole = getDriver().findElement(By.xpath(locatorStr));
+            targetWorkRole.click();
+            waitForSeconds(2);
+            String selectedWorkRoleOption = elm.getAttribute("innerText");
+            Assert.assertTrue(selectedWorkRoleOption.contains(workRoles), "Selected work role: " + selectedWorkRoleOption);
         } else {
             SimpleUtils.fail("Work Role button is not clickable", false);
         }
 
     }
+
 
     @Override
     public List<String> getWorkRoleList() throws Exception {

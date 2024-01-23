@@ -2916,13 +2916,13 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 			SimpleUtils.fail("Controls Page: - Schedule Collaboration section: 'Open Shift' form section not loaded.", false);
 	}
 
-	@FindBy(xpath = "//*[text()=\"Allow employees to claim open shift at overtime rate?\"]")
+	@FindBy(xpath = "//*[text()=\"Allow employees claim open shift at overtime rate?\"]")
 	private WebElement allowEmployeesClaimOpenShiftOption;
 
-	@FindBy(css = "[question-title=\"Allow employees to claim open shift at overtime rate?\"] .lg-button-group-first")
+	@FindBy(css = "[question-title=\"Allow employees claim open shift at overtime rate?\"] .lg-button-group-first")
 	private WebElement allowEmployeesClaimOpenShiftOptionYesBtn;
 
-	@FindBy(css = "[question-title=\"Allow employees to claim open shift at overtime rate?\"] .lg-button-group-last")
+	@FindBy(css = "[question-title=\"Allow employees claim open shift at overtime rate?\"] .lg-button-group-last")
 	private WebElement allowEmployeesClaimOpenShiftOptionNoBtn;
 
 	@Override
