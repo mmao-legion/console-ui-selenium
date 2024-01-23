@@ -3164,7 +3164,7 @@ public class SchedulingOPEnabledTest  extends TestBase {
             newShiftPage.customizeNewShiftPage();
             newShiftPage.clearAllSelectedDays();
             newShiftPage.selectDaysByIndex(6,6,6);
-            newShiftPage.selectWorkRole("GENERAL MANAGER");
+            newShiftPage.selectWorkRole("General Manager");
             newShiftPage.moveSliderAtCertainPoint("5pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
             newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
             newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
