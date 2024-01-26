@@ -739,7 +739,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private List<WebElement> infoContainers;
     @FindBy (css = "[ng-if-start=\"shift.name\"]")
     private WebElement shiftName;
-    @FindBy (xpath = "//div[contains(@ng-if-start,'shift.notes')]/following-sibling::div/div")
+    //@FindBy (xpath = "//div[contains(@ng-if-start,'shift.notes')]/following-sibling::div/div")
+    @FindBy (xpath = "(//div[@class='hover-sub-container ng-scope'])[1]/div")
     private WebElement shiftNotes;
     @FindBy (css = "[ng-repeat=\"break in mealBreaks\"] span")
     private WebElement mealBreakTimeInIIcon;
@@ -790,6 +791,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.pass("Get shift work role successfully! The work role is: " + workRole);
                     if (isElementLoaded(shiftNotes, 5)) {
                         shiftNotesOnIIconPopUp = shiftNotes.getText();
+                        SimpleUtils.pass("Get shift notes on i icon popup successfully! The shift name is:"+shiftNotesOnIIconPopUp);
                     }
                     String shiftTime = "";
                     String totalHrs = "";
