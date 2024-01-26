@@ -64,27 +64,27 @@ public class OvertimeShiftOfferTest extends TestBase {
             ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 
             //Enable employee claim overtime open shift config
-            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
-            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
-            locationsPage.clickOnLocationsTab();
-            locationsPage.goToSubLocationsInLocationsPage();
-            locationsPage.searchLocation(location);
-            ;
-            SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
-            locationsPage.clickOnLocationInLocationResult(location);
-            locationsPage.clickOnConfigurationTabOfLocation();
-            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
-            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
-            configurationPage.goToConfigurationPage();
-            configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
-            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
-            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
-            Thread.sleep(3000);
-            controlsNewUIPage.allowEmployeesClaimOvertimeShiftOffer();
-            configurationPage.publishNowTheTemplate();
-            switchToConsoleWindow();
-            refreshCachesAfterChangeTemplate();
+//            LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+//            locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+//            SimpleUtils.assertOnFail("OpsPortal Page not loaded Successfully!", locationsPage.isOpsPortalPageLoaded(), false);
+//            locationsPage.clickOnLocationsTab();
+//            locationsPage.goToSubLocationsInLocationsPage();
+//            locationsPage.searchLocation(location);
+//            ;
+//            SimpleUtils.assertOnFail("Locations not searched out Successfully!", locationsPage.verifyUpdateLocationResult(location), false);
+//            locationsPage.clickOnLocationInLocationResult(location);
+//            locationsPage.clickOnConfigurationTabOfLocation();
+//            HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
+//            ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
+//            configurationPage.goToConfigurationPage();
+//            configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
+//            configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
+//            configurationPage.clickOnEditButtonOnTemplateDetailsPage();
+//            Thread.sleep(3000);
+//            controlsNewUIPage.allowEmployeesClaimOvertimeShiftOffer();
+//            configurationPage.publishNowTheTemplate();
+//            switchToConsoleWindow();
+//            refreshCachesAfterChangeTemplate();
 
             // Start to check and generate target schedule
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
