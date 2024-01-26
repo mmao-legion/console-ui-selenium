@@ -1229,8 +1229,8 @@ public class ActivityTest extends TestBase {
         profileNewUIPage.clickOnUserProfileImage();
         profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
         String tmFullName2 = profileNewUIPage.getUserProfileName().get("fullName");
-        String firstName2 = tmFullName.split(" ")[0];
-        String lastName2 = tmFullName.split(" ")[1];
+        String firstName2 = tmFullName2.split(" ")[0];
+        String lastName2 = tmFullName2.split(" ")[1];
         String jobTitle2 = profileNewUIPage.getJobTitleFromProfilePage();
         loginPage.logOut();
 
