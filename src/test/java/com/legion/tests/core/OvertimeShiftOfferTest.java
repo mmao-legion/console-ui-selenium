@@ -196,7 +196,6 @@ public class OvertimeShiftOfferTest extends TestBase {
             shiftOperatePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
             shiftOperatePage.closeViewStatusContainer();
             loginPage.logOut();
-            refreshPage();
             Thread.sleep(3000);
             //login with TM.
             loginAsDifferentRole(AccessRoles.TeamMember.getValue());
@@ -237,6 +236,150 @@ public class OvertimeShiftOfferTest extends TestBase {
             String warningMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newShifts.get(0)).toString();
             SimpleUtils.assertOnFail("The weekly OT violation message display incorrectly in i icon popup! ",
                     warningMessage.contains("5.0 hrs weekly overtime"), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated = "Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "")
+    @TestName(description = "Should be able to claim the clopening shift offer by TM")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+    public void verifyAllowClaimClopeningShiftOfferAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        try {
+            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
+            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
+            MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+            ControlsPage controlsPage = pageFactory.createConsoleControlsPage();
+            ControlsNewUIPage controlsNewUIPage = pageFactory.createControlsNewUIPage();
+
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            String firstNameOfTM = profileNewUIPage.getNickNameFromProfile();
+            loginPage.logOut();
+
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+
+
+            // Start to check and generate target schedule
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            // Delete open shifts.
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+            scheduleMainPage.selectShiftTypeFilterByText("Open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
+            scheduleMainPage.clickOnFilterBtn();
+            scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstNameOfTM);
+
+            // To handle the assignment failures when delete TM's shifts and reassign
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            int shiftsCountBefore = 0;
+
+            String workRoleOfTM = "Team Member Corporate-Theatre";
+
+            // Create and assign shift to consume the available shift hours for the TM
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectMultipleOrSpecificWorkDay(2, true);
+            newShiftPage.moveSliderAtCertainPoint("9pm", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("11pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.selectWorkRole(workRoleOfTM);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByName(firstNameOfTM);
+            newShiftPage.clickOnCreateOrNextBtn();
+            scheduleMainPage.saveSchedule();
+            shiftsCountBefore = shiftOperatePage.countShiftsByUserName(firstNameOfTM);
+
+            //create an clopening shift
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            newShiftPage.clickOnDayViewAddNewShiftButton();
+            newShiftPage.customizeNewShiftPage();
+            newShiftPage.clearAllSelectedDays();
+            newShiftPage.selectMultipleOrSpecificWorkDay(3, true);
+            newShiftPage.moveSliderAtCertainPoint("6am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+            newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+            newShiftPage.selectWorkRole(workRoleOfTM);
+            newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+            newShiftPage.clickOnCreateOrNextBtn();
+            newShiftPage.searchTeamMemberByNameAndAssignOrOfferShift(firstNameOfTM, true);
+            newShiftPage.clickOnCreateOrNextBtn();
+            scheduleMainPage.saveSchedule();
+            createSchedulePage.publishActiveSchedule();
+
+            // Offer overtime shift in non-edit mode
+            shiftOperatePage.clickOnProfileIconOfOpenShift();
+            shiftOperatePage.verifyTMInTheOfferList(firstNameOfTM, "offered");
+            shiftOperatePage.closeViewStatusContainer();
+            loginPage.logOut();
+            Thread.sleep(3000);
+            //login with TM.
+            loginAsDifferentRole(AccessRoles.TeamMember.getValue());
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            smartCardPage.clickLinkOnSmartCardByName("View Shifts");
+            SimpleUtils.assertOnFail("Didn't get open shift offer!", scheduleShiftTablePage.getShiftsCount()>=1, false);
+
+            // Claim clopening shift
+            mySchedulePage.clickOnShiftByIndex(0);
+            mySchedulePage.claimTheOfferedOpenShift("View Offer");
+            loginPage.logOut();
+
+            // Login as SM and approve claim request from TM
+            loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+            SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            ActivityPage activityPage = pageFactory.createConsoleActivityPage();
+            activityPage.verifyActivityBellIconLoaded();
+            activityPage.verifyClickOnActivityIcon();
+            activityPage.clickActivityFilterByIndex(ActivityTest.indexOfActivityType.ShiftOffer.getValue(), ActivityTest.indexOfActivityType.ShiftOffer.name());
+            activityPage.verifyActivityOfShiftOffer(firstNameOfTM, location);
+            activityPage.approveOrRejectShiftOfferRequestOnActivity(firstNameOfTM, ActivityTest.approveRejectAction.Approve.getValue());
+            activityPage.closeActivityWindow();
+            // Double check if the approved shift offer has been assigned to the TM
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Succerssfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            List<WebElement> newShifts = scheduleShiftTablePage.getOneDayShiftByName(2, firstNameOfTM);
+            String warningMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newShifts.get(0)).toString();
+            SimpleUtils.assertOnFail("The weekly OT violation message display incorrectly in i icon popup! But the actaul is "+warningMessage,
+                    warningMessage.contains("Clopening (<12.0)"), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
