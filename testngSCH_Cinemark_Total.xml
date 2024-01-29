@@ -922,6 +922,8 @@ SCH-5862-->
                     <include name="verifyBreaksOnEditShiftPageForNonRecurringShiftsAsInternalAdmin" />
                     <include name="verifyShiftNameAndNotesForRecurringShiftsAsInternalAdmin" />
                     <include name="verifyShiftNameAndNotesForNonRecurringShiftsAsInternalAdmin" />
+                    <include name="verifyShiftInfoDisplayCorrectlyForRecurringShiftsAsInternalAdmin" />
+                    <include name="verifyShiftInfoDisplayCorrectlyForNonRecurringShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

@@ -739,7 +739,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private List<WebElement> infoContainers;
     @FindBy (css = "[ng-if-start=\"shift.name\"]")
     private WebElement shiftName;
-    @FindBy (xpath = "//div[contains(@ng-if-start,'shift.notes')]/following-sibling::div/div")
+    @FindBy (xpath = "//div[contains(@ng-if-start,'showShiftNotes')]/following-sibling::div/div")
     private WebElement shiftNotes;
     @FindBy (css = "[ng-repeat=\"break in mealBreaks\"] span")
     private WebElement mealBreakTimeInIIcon;
@@ -4834,5 +4834,28 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             segments.add(segmentInfo);
         }
         return segments;
+    }
+
+
+    @FindBy(className = "sch-shift-hover-recurring")
+    private WebElement recurringHeader;
+    @Override
+    public boolean checkIfTheRecurringHeaderOnIIconPopupDisplayOrNot(int index) throws Exception {
+        boolean isExist = false;
+        if (!isElementLoaded(popOverContent, 5)){
+            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
+            clickTheElement(infoIcon);
+            if (isElementLoaded(popOverContent, 5)){
+                SimpleUtils.pass("Info icon popup display successfully!");
+            } else
+                SimpleUtils.fail("Info icon popup fail to load", false);
+        }
+        if (isElementEnabled(recurringHeader, 5)){
+            isExist = true;
+            SimpleUtils.report("The recurring header display on i icon popup! ");
+        } else
+            SimpleUtils.report("The recurring header doesn't display on i icon popup! ");
+
+        return isExist;
     }
 }

@@ -991,4 +991,180 @@ public class SmartTemplateTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the shift info display correctly on shift info tooltip for recurring shifts")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyShiftInfoDisplayCorrectlyForRecurringShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            goToSchedulePageScheduleTab();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            goToSmartTemplatePage();
+            smartTemplatePage.clickOnResetBtn();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole1 = workRoles.get(0).get("optionName");
+            String shiftName = "RecurringShifts";
+            String shiftNote = "RecurringShiftsNote";
+            String startTime = "9:00am";
+            String endTime = "5:00pm";
+//            List<String> selectedTM = new ArrayList<>();
+//            selectedTM.add("Kerstin Hahn");
+            smartTemplatePage.clickOnEditBtn();
+            //Create one group of recurring shifts
+            List<String> selectedTM = smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRole1, shiftName, "", startTime, endTime, 2,
+                    Arrays.asList(0,1,2,3,4,5),
+                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", true);
+
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
+            //Check the shift name and notes been added successfully
+            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+
+            //Verify the header in i tooltip of recurring shifts
+            SimpleUtils.assertOnFail("The recurring header should display on recurring shift's i icon popup! ", scheduleShiftTablePage.
+                    checkIfTheRecurringHeaderOnIIconPopupDisplayOrNot(0), false);
+            //Verify the employee name in i tooltip of recurring shifts
+            String expectedEmployeeName = selectedTM.get(0);
+            String actualEmployeeName = shiftInfo1.get(0)+ " "+ shiftInfo1.get(5);
+            SimpleUtils.assertOnFail("The expected employee name is: "+expectedEmployeeName
+                            +" The actual employee name is: "+actualEmployeeName+"!",
+                    expectedEmployeeName.equalsIgnoreCase(actualEmployeeName), false);
+            //Verify the Work Role names in i tooltip of recurring shifts
+            String actualWorkRoleName = shiftInfo1.get(4);
+            SimpleUtils.assertOnFail("The expected work role is: "+workRole1
+                            +" The actual work role is: "+actualWorkRoleName+"!",
+                    workRole1.equalsIgnoreCase(actualWorkRoleName), false);
+            //Verify the shift times in i tooltip of recurring shifts
+            String expectedShiftTime = startTime+"-"+endTime;
+            String actualShiftTime = shiftInfo1.get(2);
+            SimpleUtils.assertOnFail("The expected shift time is: "+expectedShiftTime
+                            +" The actual shift time is: "+actualShiftTime+"!",
+                    expectedShiftTime.equalsIgnoreCase(actualShiftTime), false);
+            //Verify the break info (break included) in i tooltip of recurring shifts
+            String expectedMealBreakTime = "12:45 PM - 1:15 PM";
+            String expectedRestBreakTime = "11:15 AM - 11:30 AM";
+            String actualMealBreakTime = shiftInfo1.get(11);
+            String actualRestBreakTime = shiftInfo1.get(12);
+            SimpleUtils.assertOnFail("The expected meal break is: "+expectedMealBreakTime
+                            +" The actual meal break is: "+actualMealBreakTime+"!",
+                    expectedMealBreakTime.equalsIgnoreCase(actualMealBreakTime), false);
+            SimpleUtils.assertOnFail("The expected rest break is: "+expectedRestBreakTime
+                            +" The actual rest break is: "+actualRestBreakTime+"!",
+                    expectedRestBreakTime.equalsIgnoreCase(actualRestBreakTime), false);
+            //Verify the Shift Segments in i tooltip of recurring shifts
+            //Verify the Shift daily hours | shift weekly hours this week in i tooltip of recurring shifts
+            String expectedDailyHours = "7.5 Hrs";
+            String expectedWeeklyHours = "45 Hrs";
+            String actualDailyHours = shiftInfo1.get(8);
+            String actalWeeklyHours = shiftInfo1.get(7);
+            SimpleUtils.assertOnFail("The expected daily hours is: "+expectedDailyHours
+                            +" The actual daily hours is: "+actualDailyHours+"!",
+                    expectedDailyHours.equalsIgnoreCase(actualDailyHours), false);
+            SimpleUtils.assertOnFail("The expected weekly hours is: "+expectedWeeklyHours
+                            +" The actual weekly hours is: "+actalWeeklyHours+"!",
+                    actalWeeklyHours.contains(expectedWeeklyHours), false);
+            //Verify the Shift Name and Notes in i tooltip of recurring shifts
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            SimpleUtils.assertOnFail("Shift Notes is not updated!", shiftNote.equalsIgnoreCase(shiftInfo1.get(10)), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the shift info display correctly on shift info tooltip for non-recurring shifts")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyShiftInfoDisplayCorrectlyForNonRecurringShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            goToSchedulePageScheduleTab();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            goToSmartTemplatePage();
+            smartTemplatePage.clickOnResetBtn();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole1 = workRoles.get(0).get("optionName");
+            String shiftName = "No Pattern";
+            String shiftNote = "NonRecurringShiftsNote";
+            String startTime = "9:00am";
+            String endTime = "5:00pm";
+//            List<String> selectedTM = new ArrayList<>();
+//            selectedTM.add("Kerstin Hahn");
+            smartTemplatePage.clickOnEditBtn();
+            //Create one group of recurring shifts
+            List<String> selectedTM = smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRole1, shiftName, "", startTime, endTime, 2,
+                    Arrays.asList(0,1,2,3,4,5),
+                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", false);
+
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
+            //Check the shift name and notes been added successfully
+            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+
+            //Verify the header in i tooltip of recurring shifts
+            SimpleUtils.assertOnFail("The recurring header should not display on recurring shift's i icon popup! ", !scheduleShiftTablePage.
+                    checkIfTheRecurringHeaderOnIIconPopupDisplayOrNot(0), false);
+            //Verify the employee name in i tooltip of recurring shifts
+            String expectedEmployeeName = selectedTM.get(0);
+            String actualEmployeeName = shiftInfo1.get(0)+ " "+ shiftInfo1.get(5);
+            SimpleUtils.assertOnFail("The expected employee name is: "+expectedEmployeeName
+                            +" The actual employee name is: "+actualEmployeeName+"!",
+                    expectedEmployeeName.equalsIgnoreCase(actualEmployeeName), false);
+            //Verify the Work Role names in i tooltip of recurring shifts
+            String actualWorkRoleName = shiftInfo1.get(4);
+            SimpleUtils.assertOnFail("The expected work role is: "+workRole1
+                            +" The actual work role is: "+actualWorkRoleName+"!",
+                    workRole1.equalsIgnoreCase(actualWorkRoleName), false);
+            //Verify the shift times in i tooltip of recurring shifts
+            String expectedShiftTime = startTime+"-"+endTime;
+            String actualShiftTime = shiftInfo1.get(2);
+            SimpleUtils.assertOnFail("The expected shift time is: "+expectedShiftTime
+                            +" The actual shift time is: "+actualShiftTime+"!",
+                    expectedShiftTime.equalsIgnoreCase(actualShiftTime), false);
+            //Verify the break info (break included) in i tooltip of recurring shifts
+            String expectedMealBreakTime = "12:45 PM - 1:15 PM";
+            String expectedRestBreakTime = "11:15 AM - 11:30 AM";
+            String actualMealBreakTime = shiftInfo1.get(11);
+            String actualRestBreakTime = shiftInfo1.get(12);
+            SimpleUtils.assertOnFail("The expected meal break is: "+expectedMealBreakTime
+                            +" The actual meal break is: "+actualMealBreakTime+"!",
+                    expectedMealBreakTime.equalsIgnoreCase(actualMealBreakTime), false);
+            SimpleUtils.assertOnFail("The expected rest break is: "+expectedRestBreakTime
+                            +" The actual rest break is: "+actualRestBreakTime+"!",
+                    expectedRestBreakTime.equalsIgnoreCase(actualRestBreakTime), false);
+            //Verify the Shift Segments in i tooltip of recurring shifts
+            //Verify the Shift daily hours | shift weekly hours this week in i tooltip of recurring shifts
+            String expectedDailyHours = "7.5 Hrs";
+            String expectedWeeklyHours = "45 Hrs";
+            String actualDailyHours = shiftInfo1.get(8);
+            String actalWeeklyHours = shiftInfo1.get(7);
+            SimpleUtils.assertOnFail("The expected daily hours is: "+expectedDailyHours
+                            +" The actual daily hours is: "+actualDailyHours+"!",
+                    expectedDailyHours.equalsIgnoreCase(actualDailyHours), false);
+            SimpleUtils.assertOnFail("The expected weekly hours is: "+expectedWeeklyHours
+                            +" The actual weekly hours is: "+actalWeeklyHours+"!",
+                    actalWeeklyHours.contains(expectedWeeklyHours), false);
+            //Verify the Shift Name and Notes in i tooltip of recurring shifts
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            SimpleUtils.assertOnFail("Shift Notes is not updated!", shiftNote.equalsIgnoreCase(shiftInfo1.get(10)), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
