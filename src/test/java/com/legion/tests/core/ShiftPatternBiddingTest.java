@@ -328,7 +328,7 @@ public class ShiftPatternBiddingTest extends TestBase {
             loginPage.logOut();
             loginPage.loginToLegionWithCredential(username, password);
             loginPage.logOut();
-            Thread.sleep(60000);
+            Thread.sleep(120000);
 //            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 //            loginPage.logOut();
 //            refreshPage();
@@ -362,7 +362,7 @@ public class ShiftPatternBiddingTest extends TestBase {
             bidShiftPatternBiddingPage.clickSubmitButton();
             loginPage.logOut();
 //            refreshPage();
-            Thread.sleep(60000);
+            Thread.sleep(120000);
             loginAsDifferentRole(AccessRoles.TeamMember3.getValue());
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
@@ -417,7 +417,7 @@ public class ShiftPatternBiddingTest extends TestBase {
             bidShiftPatternBiddingPage.clickSubmitButton();
             loginPage.logOut();
 //            refreshPage();
-            Thread.sleep(5000);
+            Thread.sleep(60000);
             loginAsDifferentRole(AccessRoles.TeamMember6.getValue());
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");

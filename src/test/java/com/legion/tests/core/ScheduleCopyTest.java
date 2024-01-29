@@ -12,6 +12,7 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.SimpleUtils;
+import org.openqa.selenium.By;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -208,6 +209,8 @@ public class ScheduleCopyTest extends TestBase {
             // Click on Next button successfully, schedule will be created
             createSchedulePage.clickNextButtonOnCreateScheduleWindow();
             createSchedulePage.verifyTheScheduleSuccessMessage(weekInfo);
+            createSchedulePage.checkoutSchedule();
+            SimpleUtils.pass("Schedule Generated Successfully!");
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(),false);
         }

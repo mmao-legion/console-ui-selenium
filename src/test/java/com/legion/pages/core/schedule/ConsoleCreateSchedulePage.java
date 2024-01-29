@@ -48,7 +48,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
     private WebElement editScheduleButton;
     @FindBy(css = "div.sch-view-dropdown-summary-content-item-heading.ng-binding")
     private WebElement analyzePopupLatestVersionLabel;
-    @FindBy(css = "button[ng-click=\"goToSchedule()\"]:not([disabled])")
+   // @FindBy(css = "button[ng-click=\"goToSchedule()\"]:not([disabled])")
+    @FindBy(id = "legion_cons_Schedule_Schedule_CreateSchedule_CheckOutTheSchedule_btn")
     private WebElement checkOutTheScheduleButton;
     @FindBy(css = "button.btn-success")
     private WebElement upgradeAndGenerateScheduleBtn;
@@ -2178,7 +2179,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
             }
             weekStartDay = weekStartDay.replace(weekStartDay.split(" ")[0], startDayMonthFullName).trim();
             weekEndDay = weekEndDay.replace(weekEndDay.split(" ")[0], endDayMonthFullName).trim();
-            String expectedCreateSuccessfulMessage = weekStartDay+ " - "+ weekEndDay+" Schedule has been created!";
+            String expectedCreateSuccessfulMessage = "Schedule: " +weekStartDay+ " - "+ weekEndDay +", 2024";
             if (isElementLoaded(scheduleSuccessMessage, 5)){
                 SimpleUtils.assertOnFail("The schedule success message display incorrectly! the expected is:"+expectedCreateSuccessfulMessage
                                 + " the actual is:"+scheduleSuccessMessage.getText(),

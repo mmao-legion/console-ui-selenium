@@ -1410,6 +1410,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 		}
 		createSchedulePage.createScheduleForNonDGFlowNewUI();
+		String workRole = shiftOperatePage.getRandomWorkRole();
 		scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 		scheduleMainPage.clickOnFilterBtn();
 		scheduleMainPage.selectShiftTypeFilterByText("Action Required");
@@ -1421,7 +1422,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		Thread.sleep(5000);
 		newShiftPage.customizeNewShiftPage();
 		newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-		newShiftPage.selectWorkRole("");
+		newShiftPage.selectWorkRole(workRole);
 		newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
 		newShiftPage.clickOnCreateOrNextBtn();
 		scheduleMainPage.saveSchedule();
@@ -1470,6 +1471,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
 			}
 			createSchedulePage.createScheduleForNonDGFlowNewUI();
+			String workRole = shiftOperatePage.getRandomWorkRole();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 			scheduleMainPage.clickOnFilterBtn();
 			scheduleMainPage.selectShiftTypeFilterByText("Action Required");
@@ -1482,7 +1484,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			Thread.sleep(3000);
 			newShiftPage.customizeNewShiftPage();
 			newShiftPage.moveSliderAtCertainPoint("11am", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-			newShiftPage.selectWorkRole("");
+			newShiftPage.selectWorkRole(workRole);
 			newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.OpenShift.getValue());
 			newShiftPage.clickOnCreateOrNextBtn();
 			scheduleMainPage.saveSchedule();

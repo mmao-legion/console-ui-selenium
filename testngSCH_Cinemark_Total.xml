@@ -731,6 +731,7 @@ SCH-5862-->
             <class name="com.legion.tests.core.OvertimeShiftOfferTest">
                 <methods>
                     <include name="verifyAllowClaimOvertimeShiftOfferAsTeamMember" />
+                    <include name="verifyAllowClaimClopeningShiftOfferAsTeamMember" />
                 </methods>
             </class>
         </classes>
