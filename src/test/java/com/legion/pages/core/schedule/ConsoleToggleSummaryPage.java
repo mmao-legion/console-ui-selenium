@@ -114,7 +114,7 @@ public class ConsoleToggleSummaryPage extends BasePage implements ToggleSummaryP
                 Integer.valueOf(((int) shiftEndTimeDouble) + schedulePoliciesBufferHours.get("closingBufferHours")).toString();
     }
 
-    @FindBy(css = "lg-dropdown-menu[actions=\"moreActions\"]")
+    @FindBy(css = "lg-dropdown-menu[actions=\"moreActions\"] button")
     private WebElement scheduleAdminDropDownBtn;
 
     @FindBy(css = "div[ng-repeat=\"action in actions\"]")
@@ -123,11 +123,12 @@ public class ConsoleToggleSummaryPage extends BasePage implements ToggleSummaryP
     public void toggleSummaryView() throws Exception {
         String toggleSummaryViewOptionText = "Toggle Summary View";
         if (isElementLoaded(scheduleAdminDropDownBtn, 10)) {
-            click(scheduleAdminDropDownBtn);
+            clickTheElement(scheduleAdminDropDownBtn);
             if (scheduleAdminDropDownOptions.size() > 0) {
                 for (WebElement scheduleAdminDropDownOption : scheduleAdminDropDownOptions) {
                     if (scheduleAdminDropDownOption.getText().toLowerCase().contains(toggleSummaryViewOptionText.toLowerCase())) {
                         click(scheduleAdminDropDownOption);
+                        break;
                     }
                 }
             } else
