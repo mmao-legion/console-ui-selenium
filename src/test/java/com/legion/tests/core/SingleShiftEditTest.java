@@ -1265,6 +1265,7 @@ public class SingleShiftEditTest extends TestBase {
                     && restBreakCount==1, false);
 
             //Verify the meal and rest breaks time are display correctly in Edit column
+
             Map<String, String> breakTimesOnSingleEditPage = editShiftPage.getMealBreakTimes().get(0);
             String breakStartTime = breakTimesOnSingleEditPage.get("mealStartTime");
             String breakEndTime = breakTimesOnSingleEditPage.get("mealEndTime");

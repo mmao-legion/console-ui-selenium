@@ -404,11 +404,20 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         }
     }
 
+
+    @FindBy (xpath = "//*[contains(@name,'nameOverride')]//parent::span")
+    private WebElement shiftNameOverwriteCheckbox;
+    @FindBy (xpath = "//*[contains(@name,'notesOverride')]//parent::span")
+    private WebElement shiftNotesOverwriteCheckbox;
     @Override
     public void inputShiftName(String shiftName) throws Exception {
-        WebElement shiftNameInputSection = getSpecificElementByTypeAndColumn(sectionType.ShiftName.getType(), "Edited");
-        WebElement input = shiftNameInputSection.findElement(By.cssSelector("[placeholder=\"Shift Name (Optional)\"]"));
-        input.clear();
+        if (isElementLoaded(shiftNameOverwriteCheckbox, 5)){
+            checkOrUncheckShiftNameOverwriteCheckbox(true);
+        }
+//        WebElement shiftNameInputSection = getSpecificElementByTypeAndColumn(sectionType.ShiftName.getType(), "Edited");
+        WebElement input = getDriver().findElement(By.cssSelector("[placeholder=\"Shift Name (Optional)\"]"));
+        input.sendKeys(Keys.CONTROL, "a");
+        input.sendKeys(Keys.DELETE);
         input.sendKeys(shiftName);
         if (input.getAttribute("value").equals(shiftName)) {
             SimpleUtils.pass("Input the string in Shift Name successfully!");
@@ -419,9 +428,13 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public void inputShiftNotes(String shiftNote) throws Exception {
-        WebElement shiftNotesSection = getSpecificElementByTypeAndColumn(sectionType.ShiftNotes.getType(), "Edited");
-        WebElement input = shiftNotesSection.findElement(By.name("notes"));
-        input.clear();
+        if (isElementLoaded(shiftNotesOverwriteCheckbox, 5)){
+            checkOrUncheckShiftNotesOverwriteCheckbox(true);
+        }
+//        WebElement shiftNotesSection = getSpecificElementByTypeAndColumn(sectionType.ShiftNotes.getType(), "Edited");
+        WebElement input = getDriver().findElement(By.cssSelector("[placeholder=\"Shift Notes (Optional)\"]"));
+        input.sendKeys(Keys.CONTROL, "a");
+        input.sendKeys(Keys.DELETE);
         input.sendKeys(shiftNote);
         if (input.getAttribute("value").equals(shiftNote)) {
             SimpleUtils.pass("Input the string in Shift Notes successfully!");
@@ -1199,5 +1212,63 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
             }
         }else
             SimpleUtils.fail("The Automatically schedule optimized break(s) fail to load! ", false);
+    }
+
+    public void checkOrUncheckShiftNameOverwriteCheckbox (boolean isCheck) throws Exception {
+        if(isElementLoaded(shiftNameOverwriteCheckbox, 5)) {
+            if (isCheck){
+                if(shiftNameOverwriteCheckbox.getAttribute("class").contains("checked")){
+                    SimpleUtils.pass("Shift name overwrite checkbox already been checked! ");
+                } else {
+                    click(shiftNameOverwriteCheckbox);
+                    waitForSeconds(2);
+                    if(shiftNameOverwriteCheckbox.getAttribute("class").contains("checked")){
+                        SimpleUtils.pass("Shift name overwrite checkbox been checked successfully! ");
+                    } else
+                        SimpleUtils.fail("Fail to check the shift name overwrite checkbox", false);
+                }
+            } else {
+                if(shiftNameOverwriteCheckbox.getAttribute("class").contains("checked")){
+                    click(shiftNameOverwriteCheckbox);
+                    if(!shiftNameOverwriteCheckbox.getAttribute("class").contains("checked")){
+                        SimpleUtils.pass("Shift name overwrite checkbox been unchecked successfully! ");
+                    } else
+                        SimpleUtils.fail("Fail to uncheck the shift name overwrite checkbox", false);
+
+                } else {
+                    SimpleUtils.pass("Shift name overwrite checkbox already been unchecked! ");
+                }
+            }
+        } else
+            SimpleUtils.fail("The shift name overwrite checkbox on Edit shift page fail to load! ", false);
+    }
+
+    public void checkOrUncheckShiftNotesOverwriteCheckbox (boolean isCheck) throws Exception {
+        if(isElementLoaded(shiftNotesOverwriteCheckbox, 5)) {
+            if (isCheck){
+                if(shiftNotesOverwriteCheckbox.getAttribute("class").contains("checked")){
+                    SimpleUtils.pass("Shift Notes overwrite checkbox already been checked! ");
+                } else {
+                    click(shiftNotesOverwriteCheckbox);
+                    waitForSeconds(2);
+                    if(shiftNotesOverwriteCheckbox.getAttribute("class").contains("checked")){
+                        SimpleUtils.pass("Shift Notes overwrite checkbox been checked successfully! ");
+                    } else
+                        SimpleUtils.fail("Fail to check the shift Notes overwrite checkbox", false);
+                }
+            } else {
+                if(shiftNotesOverwriteCheckbox.getAttribute("class").contains("checked")){
+                    click(shiftNotesOverwriteCheckbox);
+                    if(!shiftNotesOverwriteCheckbox.getAttribute("class").contains("checked")){
+                        SimpleUtils.pass("Shift Notes overwrite checkbox been unchecked successfully! ");
+                    } else
+                        SimpleUtils.fail("Fail to uncheck the shift Notes overwrite checkbox", false);
+
+                } else {
+                    SimpleUtils.pass("Shift Notes overwrite checkbox already been unchecked! ");
+                }
+            }
+        } else
+            SimpleUtils.fail("The shift Notes overwrite checkbox on Edit shift page fail to load! ", false);
     }
 }

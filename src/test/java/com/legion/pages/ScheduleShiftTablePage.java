@@ -182,4 +182,5 @@ public interface ScheduleShiftTablePage {
     public void rightClickOnSelectedShiftInDayView(int index) throws Exception;
     public boolean verifyCopyAndMoveWarningMessageInConfirmPage(String expectedMessage, String action) throws Exception;
     public List<HashMap<String, String>> getSegmentFromInfoPopupByIndex(int index);
+    public boolean checkIfTheRecurringHeaderOnIIconPopupDisplayOrNot(int index) throws Exception;
 }
