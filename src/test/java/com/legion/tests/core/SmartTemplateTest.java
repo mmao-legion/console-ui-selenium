@@ -180,7 +180,8 @@ public class SmartTemplateTest extends TestBase {
             smartTemplatePage.clickOnResetBtn();
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
             ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
-            String workRole1 = workRoles.get(0).get("optionName");
+//            String workRole1 = workRoles.get(0).get("optionName");
+            String workRole1 = "Cafe";
             String shiftName = "RecurringShifts";
             String shiftNote = "RecurringShiftsNote";
             String startTime = "9:00pm";
@@ -309,7 +310,8 @@ public class SmartTemplateTest extends TestBase {
             smartTemplatePage.clickOnResetBtn();
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
             ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
-            String workRole1 = workRoles.get(0).get("optionName");
+//            String workRole1 = workRoles.get(0).get("optionName");
+            String workRole1 = "Cafe";
             String shiftName = "No Pattern";
             String shiftNote = "NonRecurringShiftsNote";
             String startTime = "9:00pm";

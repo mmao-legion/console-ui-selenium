@@ -73,7 +73,7 @@ public class AdvanceStaffingRuleTest  extends TestBase {
             HashMap<String, String> mealRestBreaks = new HashMap<String, String>();
             List<String> indexes = new ArrayList<String>();
 
-            if (location.equalsIgnoreCase("2707484 Spring Hill")){
+            if (location.equalsIgnoreCase("2707487 Winter Haven")){
                 workRoleName1 = "CSR";
                 workRoleName2 = "Assistant Manager";
             }
