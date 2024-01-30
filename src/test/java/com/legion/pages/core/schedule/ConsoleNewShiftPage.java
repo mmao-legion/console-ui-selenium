@@ -626,6 +626,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
     }
 
+
     @Override
     public List<String> getWorkRoleList() throws Exception {
         List<String> workRoles = new ArrayList<>();

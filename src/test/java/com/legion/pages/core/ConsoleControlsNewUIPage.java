@@ -2939,7 +2939,7 @@ public class ConsoleControlsNewUIPage extends BasePage implements ControlsNewUIP
 				}
 			}
 		} else {
-			SimpleUtils.fail("No option found for: Allow employees claim open shift at overtime rate?", false);
+			SimpleUtils.fail("No option found for: Allow employees to claim open shift at overtime rate?", false);
 		}
 	}
 

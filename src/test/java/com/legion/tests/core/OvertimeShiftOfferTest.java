@@ -186,6 +186,40 @@ public class OvertimeShiftOfferTest extends TestBase {
                 scheduleMainPage.saveSchedule();
             }
 
+            if (enterprise.equalsIgnoreCase("circlek")) {
+                workRoleOfTM = "CSR";
+
+                // Create and assign shift to consume the available shift hours for the TM
+                newShiftPage.clickOnDayViewAddNewShiftButton();
+                newShiftPage.customizeNewShiftPage();
+                newShiftPage.clearAllSelectedDays();
+                newShiftPage.selectMultipleOrSpecificWorkDay(5, false);
+                newShiftPage.moveSliderAtCertainPoint("9am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+                newShiftPage.moveSliderAtCertainPoint("5pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+                newShiftPage.selectWorkRole(workRoleOfTM);
+                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+                newShiftPage.clickOnCreateOrNextBtn();
+                newShiftPage.searchTeamMemberByName(firstNameOfTM);
+                newShiftPage.clickOnCreateOrNextBtn();
+                scheduleMainPage.saveSchedule();
+                shiftsCountBefore = shiftOperatePage.countShiftsByUserName(firstNameOfTM);
+
+                //create an overtime shift
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                newShiftPage.clickOnDayViewAddNewShiftButton();
+                newShiftPage.customizeNewShiftPage();
+                newShiftPage.clearAllSelectedDays();
+                newShiftPage.selectMultipleOrSpecificWorkDay(6, true);
+                newShiftPage.moveSliderAtCertainPoint("9am", ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
+                newShiftPage.moveSliderAtCertainPoint("5pm", ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+                newShiftPage.selectWorkRole(workRoleOfTM);
+                newShiftPage.clickRadioBtnStaffingOption(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue());
+                newShiftPage.clickOnCreateOrNextBtn();
+                newShiftPage.searchTeamMemberByNameAndAssignOrOfferShift(firstNameOfTM, true);
+                newShiftPage.clickOnCreateOrNextBtn();
+                scheduleMainPage.saveSchedule();
+            }
+
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleMainPage.saveSchedule();
