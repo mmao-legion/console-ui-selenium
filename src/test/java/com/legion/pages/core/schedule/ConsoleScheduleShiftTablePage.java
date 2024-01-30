@@ -739,7 +739,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private List<WebElement> infoContainers;
     @FindBy (css = "[ng-if-start=\"shift.name\"]")
     private WebElement shiftName;
-    @FindBy (xpath = "//div[contains(@ng-if-start,'showShiftNotes')]/following-sibling::div/div")
+    @FindBy (xpath = "//div[contains(@ng-if-start,'shift.notes')]/following-sibling::div/div")
     private WebElement shiftNotes;
     @FindBy (css = "[ng-repeat=\"break in mealBreaks\"] span")
     private WebElement mealBreakTimeInIIcon;
