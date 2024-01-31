@@ -543,7 +543,8 @@ public class SmartTemplateTest extends TestBase {
             smartTemplatePage.clickOnResetBtn();
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
             ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
-            String workRole1 = workRoles.get(0).get("optionName");
+//            String workRole1 = workRoles.get(0).get("optionName");
+            String workRole1 = "Cafe";
             String shiftName = "RecurringShifts";
             String shiftNote = "RecurringShiftsNote";
             String startTime = "9:00am";
@@ -688,8 +689,9 @@ public class SmartTemplateTest extends TestBase {
             ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
             smartTemplatePage.clickOnEditBtn();
             //Create one group of recurring shifts
-            String workRoleOfNonRecurring = workRoles.get(1).get("optionName");
+//            String workRoleOfNonRecurring = workRoles.get(1).get("optionName");
             String shiftNameOfNonRecurring = "No Pattern";
+            String workRoleOfNonRecurring = "Cafe";
             String shiftNoteOfNonRecurring = "NonRecurringShiftsNote";
             String startTimeOfNonRecurring = "9:00am";
             String endTimeOfNonRecurring = "5:00pm";
@@ -831,7 +833,8 @@ public class SmartTemplateTest extends TestBase {
             ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
             smartTemplatePage.clickOnEditBtn();
             //Create one group of non recurring shifts
-            String workRoleOfNonRecurring = workRoles.get(1).get("optionName");
+//            String workRoleOfNonRecurring = workRoles.get(1).get("optionName");
+            String workRoleOfNonRecurring = "Cafe";
             String shiftName = "No Pattern";
             String shiftNote = "NonRecurringShiftsNote";
             String startTimeOfNonRecurring = "9:00am";
@@ -919,7 +922,8 @@ public class SmartTemplateTest extends TestBase {
             smartTemplatePage.clickOnResetBtn();
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
             ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
-            String workRole1 = workRoles.get(0).get("optionName");
+//            String workRole1 = workRoles.get(0).get("optionName");
+            String workRole1 = "Cafe";
             String shiftName = "RecurringShifts";
             String shiftNote = "RecurringShiftsNote";
             String startTime = "9:00am";
@@ -1011,7 +1015,7 @@ public class SmartTemplateTest extends TestBase {
             smartTemplatePage.clickOnResetBtn();
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
             ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
-            String workRole1 = workRoles.get(0).get("optionName");
+            String workRole1 = "Cafe";
             String shiftName = "RecurringShifts";
             String shiftNote = "RecurringShiftsNote";
             String startTime = "9:00am";
@@ -1099,7 +1103,8 @@ public class SmartTemplateTest extends TestBase {
             smartTemplatePage.clickOnResetBtn();
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
             ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
-            String workRole1 = workRoles.get(0).get("optionName");
+//            String workRole1 = workRoles.get(0).get("optionName");
+            String workRole1 = "Cafe";
             String shiftName = "No Pattern";
             String shiftNote = "NonRecurringShiftsNote";
             String startTime = "9:00am";
