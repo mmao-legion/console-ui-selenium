@@ -2180,10 +2180,12 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
             weekStartDay = weekStartDay.replace(weekStartDay.split(" ")[0], startDayMonthFullName).trim();
             weekEndDay = weekEndDay.replace(weekEndDay.split(" ")[0], endDayMonthFullName).trim();
             String expectedCreateSuccessfulMessage = "Schedule: " +weekStartDay+ " - "+ weekEndDay +", 2024";
+            String expectedCreateSuccessfulMessage2 =weekStartDay+ " - "+ weekEndDay+" Schedule has been created!";
             if (isElementLoaded(scheduleSuccessMessage, 5)){
                 SimpleUtils.assertOnFail("The schedule success message display incorrectly! the expected is:"+expectedCreateSuccessfulMessage
                                 + " the actual is:"+scheduleSuccessMessage.getText(),
-                        scheduleSuccessMessage.getText().equals(expectedCreateSuccessfulMessage), false);
+                        scheduleSuccessMessage.getText().equals(expectedCreateSuccessfulMessage)||
+                                scheduleSuccessMessage.getText().equals(expectedCreateSuccessfulMessage2), false);
             }else
                 SimpleUtils.fail("The schedule success message fail to load! ", false);
         }

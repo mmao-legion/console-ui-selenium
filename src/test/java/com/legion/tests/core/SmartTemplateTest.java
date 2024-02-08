@@ -935,7 +935,8 @@ public class SmartTemplateTest extends TestBase {
                     ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", true);
 
             scheduleMainPage.saveSchedule();
-
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
             //Check the shift name and notes been added successfully
             List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
             SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
@@ -946,7 +947,7 @@ public class SmartTemplateTest extends TestBase {
 
             //Edit the recurring shift pattern
             smartTemplatePage.clickOnEditBtn();
-            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
+//            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
             HashSet<Integer> indexes = new HashSet<>();
             indexes.add(0);
             String action = "Edit";

@@ -243,7 +243,7 @@ public class OvertimeShiftOfferTest extends TestBase {
             mySchedulePage.clickOnShiftByIndex(0);
             mySchedulePage.claimTheOfferedOpenShift("View Offer");
             loginPage.logOut();
-
+            Thread.sleep(10000);
             // Login as SM and approve claim request from TM
             loginAsDifferentRole(AccessRoles.StoreManager.getValue());
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
