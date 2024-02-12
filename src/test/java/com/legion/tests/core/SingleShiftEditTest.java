@@ -300,6 +300,7 @@ public class SingleShiftEditTest extends TestBase {
             scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
             ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
             String workRole1 = workRoles.get(0).get("optionName");
+            System.out.println("Printing work roles for understanding "+ workRole1);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             newShiftPage.clickOnDayViewAddNewShiftButton();
             List<String> workRoleList = newShiftPage.getWorkRoleList();

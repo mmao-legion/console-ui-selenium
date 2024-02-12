@@ -614,12 +614,26 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             WebElement elm = getDriver().findElements(By.cssSelector(".react-select__value-container")).get(0);
             elm.click();
             waitForSeconds(2);
-            String locatorStr = "//div[contains(@class, 'react-select__menu')]//*[text()='" + workRoles + "']";
+            workRoles=workRoles.toLowerCase();
+            String [] a = workRoles.split(" ");
+            String n = "";
+            String word = "";
+            for (int i = 0; i < a.length; i++) {
+                String first = a[i].substring(0, 1).toUpperCase();
+                String sec = a[i].substring(1);
+
+                n = first+sec;
+                word=word+" "+n;
+               System.out.println(word);
+            }
+            // System.out.println(word.trim());
+            String roles = word.trim();
+            String locatorStr = "//div[contains(@class, 'react-select__menu')]//*[text()='" + roles + "']";
             WebElement targetWorkRole = getDriver().findElement(By.xpath(locatorStr));
             targetWorkRole.click();
             waitForSeconds(2);
             String selectedWorkRoleOption = elm.getAttribute("innerText");
-            Assert.assertTrue(selectedWorkRoleOption.contains(workRoles), "Selected work role: " + selectedWorkRoleOption);
+            Assert.assertTrue(selectedWorkRoleOption.contains(roles), "Selected work role: " + selectedWorkRoleOption);
         } else {
             SimpleUtils.fail("Work Role button is not clickable", false);
         }
@@ -637,6 +651,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             if (listWorkRoles.size() > 0) {
                 for (WebElement listWorkRole : listWorkRoles) {
                     workRoles.add(listWorkRole.getText().toLowerCase());
+
                 }
             } else {
                 SimpleUtils.fail("Work Roles size are empty", false);
@@ -647,6 +662,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             if (dropDownListOnNewCreateShiftPage.size() > 0) {
                 for (WebElement listWorkRole : dropDownListOnNewCreateShiftPage) {
                     workRoles.add(listWorkRole.getText().toLowerCase());
+
                 }
             } else {
                 SimpleUtils.fail("Work Roles size are empty", false);
