@@ -609,7 +609,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             } else {
                 SimpleUtils.fail("Work Roles size are empty", false);
             }*/
-        else if (areListElementVisible(btnWorkRoles, 25)) {
+        /*else if (areListElementVisible(btnWorkRoles, 25)) {
             waitForSeconds(2);
             WebElement elm = getDriver().findElements(By.cssSelector(".react-select__value-container")).get(0);
             elm.click();
@@ -634,7 +634,20 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             waitForSeconds(2);
             String selectedWorkRoleOption = elm.getAttribute("innerText");
             Assert.assertTrue(selectedWorkRoleOption.contains(roles), "Selected work role: " + selectedWorkRoleOption);
-        } else {
+        }*/
+        else if (areListElementVisible(btnWorkRoles, 25)) {
+            waitForSeconds(2);
+            WebElement elm = getDriver().findElements(By.cssSelector(".react-select__value-container")).get(0);
+            elm.click();
+            waitForSeconds(2);
+            String locatorStr = "//div[contains(@class, 'react-select__menu')]//*[text()='" + workRoles + "']";
+            WebElement targetWorkRole = getDriver().findElement(By.xpath(locatorStr));
+            targetWorkRole.click();
+            waitForSeconds(2);
+            String selectedWorkRoleOption = elm.getAttribute("innerText");
+            Assert.assertTrue(selectedWorkRoleOption.contains(workRoles), "Selected work role: " + selectedWorkRoleOption);
+        }
+        else {
             SimpleUtils.fail("Work Role button is not clickable", false);
         }
 
