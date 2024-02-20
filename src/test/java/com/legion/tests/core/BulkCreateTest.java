@@ -1387,6 +1387,7 @@ public class BulkCreateTest extends TestBase {
             }
 
             String workRole = shiftOperatePage.getRandomWorkRole();
+            scheduleMainPage.selectWorkRoleFilterByText(workRole, true);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
