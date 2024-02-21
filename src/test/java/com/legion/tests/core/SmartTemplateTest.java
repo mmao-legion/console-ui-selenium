@@ -120,6 +120,7 @@ public class SmartTemplateTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             goToSmartTemplatePage();
+            smartTemplatePage.clickOnResetBtn();
             String shiftPatternName1 = "GM SP1";
             String shiftPatternName2 = "EM SP1";
             String shiftPatternName3 = "TM SP1";

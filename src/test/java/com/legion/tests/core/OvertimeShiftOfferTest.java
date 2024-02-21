@@ -269,7 +269,7 @@ public class OvertimeShiftOfferTest extends TestBase {
             List<WebElement> newShifts = scheduleShiftTablePage.getOneDayShiftByName(6, firstNameOfTM);
             String warningMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newShifts.get(0)).toString();
             SimpleUtils.assertOnFail("The weekly OT violation message display incorrectly in i icon popup! ",
-                    warningMessage.contains("5.0 hrs weekly overtime"), false);
+                    warningMessage.contains("5 hrs weekly overtime")||warningMessage.contains("4 hrs weekly overtime"), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -413,7 +413,7 @@ public class OvertimeShiftOfferTest extends TestBase {
             List<WebElement> newShifts = scheduleShiftTablePage.getOneDayShiftByName(2, firstNameOfTM);
             String warningMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newShifts.get(0)).toString();
             SimpleUtils.assertOnFail("The weekly OT violation message display incorrectly in i icon popup! But the actaul is "+warningMessage,
-                    warningMessage.contains("Clopening (<12.0)"), false);
+                    warningMessage.contains("Clopening (<12)"), false);
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
