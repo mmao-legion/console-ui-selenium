@@ -640,6 +640,16 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             WebElement elm = getDriver().findElements(By.cssSelector(".react-select__value-container")).get(0);
             elm.click();
             waitForSeconds(2);
+            //Capitalize first letter of each word of workRoles, e.g. change "event manager" to "Event Manager"
+            System.out.println("work role is: " + workRoles);
+            String[] w = workRoles.split(" ");
+            workRoles="";
+            for (String s: w
+                 ) {
+                s = s.substring(0, 1).toUpperCase() + s.substring(1);
+                workRoles = workRoles + s + " ";
+            }
+            workRoles =  workRoles.trim();
             String locatorStr = "//div[contains(@class, 'react-select__menu')]//*[text()='" + workRoles + "']";
             WebElement targetWorkRole = getDriver().findElement(By.xpath(locatorStr));
             targetWorkRole.click();
