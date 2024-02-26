@@ -133,23 +133,23 @@ public class ConsoleSmartTemplatePage extends BasePage implements SmartTemplateP
     @Override
     public void checkOrUnCheckRecurringShift(boolean isCheck){
         if(isCheck){
-            if (MyThreadLocal.getDriver().findElement(By.xpath("//div[@id=\"create-new-shift-react\"]/div/div/form/div/div/div[4]/div[2]/label/span"))
+            if (MyThreadLocal.getDriver().findElement(By.xpath("//span[contains(text(), \"Recurring Shift\")]//parent::label/span[1]"))
                     .getAttribute("class").contains("checked")){
                 SimpleUtils.pass("Recurring shift already been checked! ");
             } else{
-                click(MyThreadLocal.getDriver().findElement(By.xpath("//div[@id=\"create-new-shift-react\"]/div/div/form/div/div/div[4]/div[2]/label/span/input")));
+                click(MyThreadLocal.getDriver().findElement(By.xpath("//span[contains(text(), \"Recurring Shift\")]//parent::label/span[1]/input")));
                 waitForSeconds(2);
-                if (MyThreadLocal.getDriver().findElement(By.xpath("//div[@id=\"create-new-shift-react\"]/div/div/form/div/div/div[4]/div[2]/label/span"))
+                if (MyThreadLocal.getDriver().findElement(By.xpath("//span[contains(text(), \"Recurring Shift\")]//parent::label/span[1]"))
                         .getAttribute("class").contains("checked")){
                     SimpleUtils.pass("Recurring shift been checked successfully! ");
                 }
             }
         } else {
-            if (MyThreadLocal.getDriver().findElement(By.xpath("//div[@id=\"create-new-shift-react\"]/div/div/form/div/div/div[4]/div[2]/label/span"))
+            if (MyThreadLocal.getDriver().findElement(By.xpath("//span[contains(text(), \"Recurring Shift\")]//parent::label/span[1]"))
                     .getAttribute("class").contains("checked")){
-                click(MyThreadLocal.getDriver().findElement(By.xpath("//div[@id=\"create-new-shift-react\"]/div/div/form/div/div/div[4]/div[2]/label/span/input")));
+                click(MyThreadLocal.getDriver().findElement(By.xpath("//span[contains(text(), \"Recurring Shift\")]//parent::label/span[1]/input")));
                 waitForSeconds(2);
-                if (!MyThreadLocal.getDriver().findElement(By.xpath("//div[@id=\"create-new-shift-react\"]/div/div/form/div/div/div[4]/div[2]/label/span"))
+                if (!MyThreadLocal.getDriver().findElement(By.xpath("//span[contains(text(), \"Recurring Shift\")]//parent::label/span[1]"))
                         .getAttribute("class").contains("checked")){
                     SimpleUtils.pass("Recurring shift been unchecked successfully! ");
                 }

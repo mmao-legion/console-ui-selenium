@@ -757,7 +757,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 //        waitForSeconds(10);
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
-            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover")));
+//            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover")));
+            click(weekShifts.get(index));
             String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
             waitForSeconds(3);
 //            String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
@@ -775,8 +776,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.pass("Get user job title successfully! The job tile is: "+ jobTitle);
                 String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
                 SimpleUtils.pass("Get shift time in shift card successfully! The shift time is: "+ shiftTimeWeekView);
-                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
-                clickTheElement(infoIcon);
+                click(weekShifts.get(index));
                 String shiftNameOnIIconPopUp = "";
                 String shiftNotesOnIIconPopUp = "";
                 if (isElementLoaded(shiftName, 5)){
@@ -831,8 +831,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 } else
                     lastName = "open";
                 String jobTitle = "";
-                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
-                clickTheElement(infoIcon);
+//                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
+//                clickTheElement(infoIcon);
+                click(weekShifts.get(index));
                 String workRole = shiftJobTitleAsWorkRole.getText().trim();
                 String shiftTime = "";
                 if (areListElementVisible(infoContainers, 10)) {
@@ -880,8 +881,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             waitForSeconds(2);
             String jobTitle = weekShiftsFromAnotherLocation.get(index).findElement(By.cssSelector(".rows .week-schedule-role-name")).getText();
             String shiftTimeWeekView = weekShiftsFromAnotherLocation.get(index).findElement(By.className("week-schedule-shift-time")).getText();
-            WebElement infoIcon = weekShiftsFromAnotherLocation.get(index).findElement(By.className("week-schedule-shift-open-popover"));
-            clickTheElement(infoIcon);
+//            WebElement infoIcon = weekShiftsFromAnotherLocation.get(index).findElement(By.className("week-schedule-shift-open-popover"));
+//            clickTheElement(infoIcon);
+            click(weekShiftsFromAnotherLocation.get(index));
             String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
             if (isElementLoaded(shiftDuration, 10) && isElementLoaded(shiftTotalHrs, 10)) {
                 String shiftTime = shiftDuration.getText();
@@ -1085,7 +1087,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 clickTheElement(shift.findElement(By.className("day-view-shift-right-top-icons")));
                 waitForSeconds(2);
             } else
-                clickTheElement(shift.findElement(By.className("week-schedule-shift-open-popover")));
+                click(shift);
+//                clickTheElement(shift.findElement(By.className("week-schedule-shift-open-popover")));
 
         } else {
             SimpleUtils.fail("Selected shift is null!",true);
@@ -1134,7 +1137,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 click(shift.findElement(By.cssSelector(".day-view-shift-right-top-icons img")));
                 waitForSeconds(2);
             } else
-                click(shift.findElement(By.cssSelector("img.week-schedule-shift-open-popover")));
+                click(shift);
+//                click(shift.findElement(By.cssSelector("img.week-schedule-shift-open-popover")));
             if (isElementLoaded(infoTextFromInfoIcon, 5)){
                 return infoTextFromInfoIcon.getText();
             } else
@@ -1212,7 +1216,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     iIcon = shiftWeekView.findElement(By.cssSelector("div.day-view-shift-right-top-icons img"));
                     waitForSeconds(2);
                 } else
-                    iIcon = shiftWeekView.findElement(By.cssSelector("img.week-schedule-shift-open-popover"));
+                    iIcon = shiftWeekView;
+//                    iIcon = shiftWeekView.findElement(By.cssSelector("img.week-schedule-shift-open-popover"));
                 if(iIcon.getAttribute("src").contains("danger")) {
                     click(iIcon);
                     if (isElementLoaded(popOverContent, 5)){
@@ -1251,7 +1256,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 click(shift.findElement(By.cssSelector(".day-view-shift-right-top-icons img")));
                 waitForSeconds(2);
             } else
-                click(shift.findElement(By.cssSelector("img.week-schedule-shift-open-popover")));
+                click(shift);
+//                click(shift.findElement(By.cssSelector("img.week-schedule-shift-open-popover")));
             if (isElementLoaded(popOverContent, 5)){
                 if (areListElementVisible(complianceMessageInInfoIconPopup, 5) && complianceMessageInInfoIconPopup.size()>0){
                     for (int i=0; i< complianceMessageInInfoIconPopup.size(); i++){
@@ -2457,8 +2463,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<String> openShiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
             String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
-            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
-            clickTheElement(infoIcon);
+//            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
+//            clickTheElement(infoIcon);
+            click(weekShifts.get(index));
             String workRole = shiftJobTitleAsWorkRole.getText().trim();
             if (isElementLoaded(shiftDuration, 10)) {
                 String shiftTime = shiftDuration.getText();
@@ -4825,7 +4832,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     public List<HashMap<String, String>> getSegmentFromInfoPopupByIndex(int index){
         List<HashMap<String, String>> segments = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
-            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover")));
+//            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover")));
+            click(weekShifts.get(index));
         } else if (areListElementVisible(dayViewAvailableShifts, 5)
                 && index <dayViewAvailableShifts.size()){
             click(dayViewAvailableShifts.get(index).findElement(By.cssSelector(".day-view-shift-right-top-icons img")));
@@ -4849,8 +4857,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     public boolean checkIfTheRecurringHeaderOnIIconPopupDisplayOrNot(int index) throws Exception {
         boolean isExist = false;
         if (!isElementLoaded(popOverContent, 5)){
-            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
-            clickTheElement(infoIcon);
+//            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
+//            clickTheElement(infoIcon);
+            click(weekShifts.get(index));
             if (isElementLoaded(popOverContent, 5)){
                 SimpleUtils.pass("Info icon popup display successfully!");
             } else
