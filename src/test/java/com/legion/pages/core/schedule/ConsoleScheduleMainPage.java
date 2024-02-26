@@ -2449,7 +2449,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
 
     @Override
     public void clickOnFilterBtn() throws Exception {
-        closeShiftInfoPopup(); // handle If the shift info pop covered the shift filter input box
+//        closeShiftInfoPopup(); // handle If the shift info pop covered the shift filter input box
         if (isElementLoaded(filterButton,30)) {
             clickTheElement(filterButton);
             waitForSeconds(2);
