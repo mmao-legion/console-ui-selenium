@@ -1176,4 +1176,206 @@ public class SmartTemplateTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify recurring shifts been change to non-recurring shifts")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyRecurringShiftsBeenChangeToNonRecurringShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            goToSchedulePageScheduleTab();
+            BasePage basePage = new BasePage();
+            String activeWeek = basePage.getActiveWeekText();
+            String startOfWeek = activeWeek.split(" ")[3] + " " + activeWeek.split(" ")[4];
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            goToSmartTemplatePage();
+            smartTemplatePage.clickOnResetBtn();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+//            String workRole1 = workRoles.get(0).get("optionName");
+            String workRole1 = "Cafe";
+            String shiftName = "RecurringShifts";
+            String shiftNote = "RecurringShiftsNote";
+            String startTime = "9:00am";
+            String endTime = "5:00pm";
+//            List<String> selectedTM = new ArrayList<>();
+//            selectedTM.add("Kerstin Hahn");
+            smartTemplatePage.clickOnEditBtn();
+            //Create one group of recurring shifts
+            List<String> selectedTM = smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRole1, shiftName, "", startTime, endTime, 2,
+                    Arrays.asList(0,1,2,3,4,5),
+                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", true);
+
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
+
+            smartTemplatePage.clickOnEditBtn();
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(0);
+            String action = "Edit";
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            //Change recurring shift to non-recurring shift
+            smartTemplatePage.checkOrUnCheckRecurringShift(false);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            //Check the recurring shifts name been change to no pattern
+            ArrayList<HashMap<String,String>> patterns = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            List<String> patternNames = new ArrayList<>();
+            for (HashMap<String, String> pattern : patterns) {
+                patternNames.add(pattern.get("optionName"));
+            }
+            if (!patternNames.contains(shiftName.toLowerCase())) {
+                SimpleUtils.pass("The shift pattern shifts can show in smart template! ");
+            } else
+                SimpleUtils.fail("Shift pattern shifts fail to show in smart template! ", false);
+            String noPatternName = "No Pattern";
+            if (patternNames.contains(noPatternName.toLowerCase())) {
+                SimpleUtils.pass("The shift pattern shifts can show in smart template! ");
+            } else
+                SimpleUtils.fail("Shift pattern shifts fail to show in smart template! ", false);
+            //Check the shifts cannot be selected as a group
+            smartTemplatePage.clickOnEditBtn();
+            indexes.add(0);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            editShiftPage.verifyTheTitleOfEditShiftsWindow(1, startOfWeek);
+            editShiftPage.clickOnCancelButton();
+
+            //Go to previous week
+            smartTemplatePage.clickOnBackBtn();
+            smartTemplatePage.clickOnBackBtn();
+            scheduleCommonPage.navigateToNextWeek();
+            isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            goToSmartTemplatePage();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+            patterns.clear();
+            patternNames.clear();
+            patterns = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            for (HashMap<String, String> pattern : patterns) {
+                patternNames.add(pattern.get("optionName"));
+            }
+            if (!patternNames.contains(shiftName.toLowerCase())
+                    && !patternNames.contains(noPatternName.toLowerCase())) {
+                SimpleUtils.pass("The shift pattern shifts not show in future week smart template! ");
+            } else
+                SimpleUtils.fail("Shift pattern shifts should not show in future week smart template! ", false);
+
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify non-recurring shifts been change to recurring shifts")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyNonRecurringShiftsBeenChangeToRecurringShiftsAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            goToSchedulePageScheduleTab();
+            BasePage basePage = new BasePage();
+            String activeWeek = basePage.getActiveWeekText();
+            String startOfWeek = activeWeek.split(" ")[3] + " " + activeWeek.split(" ")[4];
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            goToSmartTemplatePage();
+            smartTemplatePage.clickOnResetBtn();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+//            String workRole1 = workRoles.get(0).get("optionName");
+            String workRole1 = "Cafe";
+            String shiftName = "No Pattern";
+            String shiftNote = "NonRecurringShiftsNote";
+            String startTime = "9:00am";
+            String endTime = "5:00pm";
+//            List<String> selectedTM = new ArrayList<>();
+//            selectedTM.add("Kerstin Hahn");
+            smartTemplatePage.clickOnEditBtn();
+            //Create one group of recurring shifts
+            List<String> selectedTM = smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRole1, shiftName, "", startTime, endTime, 1,
+                    Arrays.asList(0),
+                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", false);
+
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
+
+            smartTemplatePage.clickOnEditBtn();
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(0);
+            String action = "Edit";
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            //Change recurring shift to non-recurring shift
+            smartTemplatePage.checkOrUnCheckRecurringShift(true);
+            String recurringShiftName = "RecurringShifts";
+            editShiftPage.inputShiftName(recurringShiftName);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            //Check the recurring shifts name been change to no pattern
+            ArrayList<HashMap<String,String>> patterns = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            List<String> patternNames = new ArrayList<>();
+            for (HashMap<String, String> pattern : patterns) {
+                patternNames.add(pattern.get("optionName"));
+            }
+            if (!patternNames.contains(shiftName.toLowerCase())) {
+                SimpleUtils.pass("The shift pattern shifts can show in smart template! ");
+            } else
+                SimpleUtils.fail("Shift pattern shifts fail to show in smart template! ", false);
+
+            if (patternNames.contains(recurringShiftName.toLowerCase())) {
+                SimpleUtils.pass("The shift pattern shifts can show in smart template! ");
+            } else
+                SimpleUtils.fail("Shift pattern shifts fail to show in smart template! ", false);
+            //Check the shifts cannot be selected as a group
+            smartTemplatePage.clickOnEditBtn();
+            indexes.add(0);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            editShiftPage.verifyTheTitleOfEditShiftsWindow(1, startOfWeek);
+            editShiftPage.clickOnCancelButton();
+
+            //Go to previous week
+            smartTemplatePage.clickOnBackBtn();
+            smartTemplatePage.clickOnBackBtn();
+            scheduleCommonPage.navigateToNextWeek();
+            isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            goToSmartTemplatePage();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+            patterns.clear();
+            patterns = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            for (HashMap<String, String> pattern : patterns) {
+                patternNames.add(pattern.get("optionName"));
+            }
+            if (!patternNames.contains(shiftName.toLowerCase())
+                    && patternNames.contains(recurringShiftName.toLowerCase())) {
+                SimpleUtils.pass("The shift pattern shifts not show in future week smart template! ");
+            } else
+                SimpleUtils.fail("Shift pattern shifts should not show in future week smart template! ", false);
+
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
