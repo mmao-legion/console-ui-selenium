@@ -3,6 +3,7 @@ package com.legion.pages.core.schedule;
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.core.GroupByDayPartsTest;
+import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.JsonUtil;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -1265,6 +1266,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             SimpleUtils.fail("Shift fail to load", false);
         // Actions actions = new Actions(getDriver());
         // actions.moveByOffset(0, 0).click().build().perform();
+        if (isElementLoaded(popOverContent, 5)) {
+            //To close the i icon popup
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+        }
         return complianceMessages;
     }
 
