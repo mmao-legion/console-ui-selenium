@@ -228,9 +228,9 @@ public class ConsoleSmartTemplatePage extends BasePage implements SmartTemplateP
             if (tmName != null && !tmName.isEmpty()) {
                 newShiftPage.searchTeamMemberByName(tmName);
             } else {
-                shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
+//                shiftOperatePage.switchSearchTMAndRecommendedTMsTab();
                 for (int i = 0; i < shiftPerDay; i++) {
-                    selectedTMs.add(newShiftPage.selectTeamMembers());
+                    selectedTMs.add(newShiftPage.searchAndGetTMNameWithOutInput());
                 }
             }
             newShiftPage.clickOnCreateOrNextBtn();
