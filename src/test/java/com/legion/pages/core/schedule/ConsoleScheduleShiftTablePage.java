@@ -1371,7 +1371,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (areListElementVisible(shiftsInWeekView, 5)) {
             for (int i = 0; i < shiftsInWeekView.size(); i++) {
                 try {
-                    WebElement plusIcon = shiftsInWeekView.get(i).findElement(By.cssSelector("img[src*=\"added-shift\"]"));
+                    WebElement plusIcon = shiftsInWeekView.get(i).findElement(By.cssSelector("[class=\"shift-container week-schedule-shift-wrapper wip-light edit \"]"));
                     if (plusIcon != null) {
                         indexes.add(i);
                         SimpleUtils.pass("Get the index: " + i + " successfully!");
