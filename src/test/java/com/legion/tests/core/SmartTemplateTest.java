@@ -1026,7 +1026,7 @@ public class SmartTemplateTest extends TestBase {
 //            selectedTM.add("Kerstin Hahn");
             smartTemplatePage.clickOnEditBtn();
             //Create one group of recurring shifts
-            List<String> selectedTM = smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRole1, shiftName, "", startTime, endTime, 2,
+            List<String> selectedTM = smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRole1, shiftName, "", startTime, endTime, 1,
                     Arrays.asList(0,1,2,3,4,5),
                     ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", true);
 
@@ -1115,7 +1115,7 @@ public class SmartTemplateTest extends TestBase {
 //            selectedTM.add("Kerstin Hahn");
             smartTemplatePage.clickOnEditBtn();
             //Create one group of recurring shifts
-            List<String> selectedTM = smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRole1, shiftName, "", startTime, endTime, 2,
+            List<String> selectedTM = smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRole1, shiftName, "", startTime, endTime, 1,
                     Arrays.asList(0,1,2,3,4,5),
                     ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, "", false);
 
