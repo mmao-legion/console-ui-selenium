@@ -2,6 +2,7 @@ package com.legion.pages.core.schedule;
 
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
+import com.legion.pages.core.ConsoleSmartTemplatePage;
 import com.legion.utils.FileDownloadVerify;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
@@ -961,6 +962,8 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         String shiftTypeFilterKey = "shifttype";
         HashMap<String, ArrayList<WebElement>> availableFilters = getAvailableFilters();
         ArrayList<WebElement> shiftTypeFilters = null;
+        SmartCardPage smartCardPage = new ConsoleSmartCardPage();
+        int shiftOfferCount = smartCardPage.getCountFromSmartCardByName("OPEN SHIFTS");
         int bothSize = 0;
         int noneSize = 0;
         if (availableFilters.size() > 0) {
@@ -968,7 +971,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             unCheckFilters(shiftTypeFilters);
             waitForSeconds(2);
             if (areListElementVisible(wholeWeekShifts, 5)) {
-                noneSize = wholeWeekShifts.size();
+                noneSize = wholeWeekShifts.size()+shiftOfferCount;
             }
             checkFilters(shiftTypeFilters);
             waitForSeconds(2);

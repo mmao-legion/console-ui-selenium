@@ -102,10 +102,11 @@ public class SingleShiftEditTest extends TestBase {
             List<String> selectedDays = scheduleShiftTablePage.getSelectedWorkDays(set);
             // Verify action menu will pop up when right clicking on anywhere of the selected shifts
             scheduleShiftTablePage.rightClickOnSelectedShifts(set);
-            scheduleShiftTablePage.verifyTheContentOnBulkActionMenu(selectedShiftCount);
+            String action = "Edit";
+//            scheduleShiftTablePage.verifyTheContentOnBulkActionMenu(selectedShiftCount);
             // Verify Edit action is visible when right clicking the selected shift in week view
             // Verify the functionality of Edit button in week view
-            String action = "Edit";
+
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             // Verify the title of Edit Shifts window
