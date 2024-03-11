@@ -28,10 +28,17 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     private List<WebElement> carouselCards;
 
     @FindBy(css = "div.card-carousel-arrow.card-carousel-arrow-left")
-    private WebElement smartcardArrowLeft;
+    public WebElement smartcardArrowLeft;
 
     @FindBy(css = "div.card-carousel-arrow.card-carousel-arrow-right")
     private WebElement smartcardArrowRight;
+
+    @FindBy(xpath = "//div[contains(text(), 'Hard stop violation')]/../h1")
+    public WebElement xShiftsOnHardStopSartCard;
+
+    @FindBy(xpath = "//div[contains(text(), 'Hard stop violation')]/../..//span[contains(text(), 'View Shifts')]")
+    public WebElement viewShiftsLinkOnHardStopSartCard;
+
     @Override
     public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
         HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();

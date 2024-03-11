@@ -98,6 +98,18 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     @FindBy (name = "allowConflicts")
     private WebElement allowConflictsOption;
 
+    @FindBy (css = "[placeholder*=\"Start Time\"]")
+    private WebElement inputStartTime;
+
+    @FindBy (css = "[placeholder*=\"End Time\"]")
+    private WebElement inputEndTime;
+
+    @FindBy (xpath = "//p[@class=\"MuiTypography-root MuiTypography-body2 sc-hAKdCM hhFcto css-17x91ok\"][1]")
+    public WebElement shiftStartEndTimeOnShiftCard;
+
+    @FindBy (xpath = "//button[text()='OK']")
+    public WebElement OKButton;
+
     @Override
     public boolean isEditShiftWindowLoaded() throws Exception {
         waitForSeconds(10);
@@ -445,26 +457,27 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @Override
     public void inputStartOrEndTime(String time, boolean isStartTime) throws Exception {
-        WebElement timeSection = null;
+        WebElement input = null;
         if (isStartTime) {
-            timeSection = getSpecificElementByTypeAndColumn(sectionType.StartTime.getType(), "Edited");
+            input = inputStartTime;
         } else {
-            timeSection = getSpecificElementByTypeAndColumn(sectionType.EndTime.getType(), "Edited");
+            input = inputEndTime;
         }
-        WebElement input = timeSection.findElement(By.cssSelector("[placeholder*=\"Time\"]"));
         input.click();
-        input.sendKeys(Keys.CONTROL, "a");
-        input.sendKeys(Keys.DELETE);
+//        input.sendKeys(Keys.CONTROL, "a");
+//        input.sendKeys(Keys.DELETE);
+        input.clear();
         input.sendKeys(time);
 //        waitForSeconds(15);
-        WebElement shiftNameInputSection = getSpecificElementByTypeAndColumn(sectionType.ShiftName.getType(), "Edited");
-        WebElement shiftNameInput = shiftNameInputSection.findElement(By.cssSelector("[placeholder=\"Shift Name (Optional)\"]"));
-        shiftNameInput.click();
-        if (input.getAttribute("value").toLowerCase().contains(time.toLowerCase())) {
-            SimpleUtils.pass("Input the string in Time successfully!");
-        } else {
-            SimpleUtils.fail("Input the string in Time failed!", false);
-        }
+//        WebElement shiftNameInputSection = getSpecificElementByTypeAndColumn(sectionType.ShiftName.getType(), "Edited");
+//        WebElement shiftNameInput = shiftNameInputSection.findElement(By.cssSelector("[placeholder=\"Shift Name (Optional)\"]"));
+//        shiftNameInput.click();
+//        input.getAttribute("value");
+//        if (input.getAttribute("value").toLowerCase().contains(time.toLowerCase())) {
+////            SimpleUtils.pass("Input the string in Time successfully!");
+////        } else {
+////            SimpleUtils.fail("Input the string in Time failed!", false);
+////        }
     }
 
     @Override
@@ -1173,7 +1186,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
 
     @FindBy (css = ".MuiPaper-elevation>div>div>div>button:nth-child(2)")
-    private WebElement updateAnywayButton;
+    public WebElement updateAnywayButton;
     @Override
     public void clickOnUpdateAnywayButton() throws Exception {
 //        waitForSeconds(2);

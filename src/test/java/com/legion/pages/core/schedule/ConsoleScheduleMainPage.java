@@ -87,16 +87,34 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     private WebElement btnCancelOnSchedulePage;
 
     @FindBy(css = "[ng-click=\"controlPanel.fns.publishConfirmation($event, false)\"]")
-    private WebElement publishButton;
+    public WebElement publishButton;
 
     @FindBy(css = "[ng-click=\"controlPanel.fns.publishConfirmation($event, true)\"]")
-    private WebElement republishButton;
+    public WebElement republishButton;
 
     @FindBy(css = ".sch-publish-confirm-btn")
     private WebElement confirmPublishBtn;
 
     @FindBy(css = "select.ng-valid-required")
     private WebElement scheduleGroupByButton;
+
+    @FindBy(xpath = "//img[@class='week-schedule-shift-open-popover' and contains(@src, 'hard-stop-icon')]")
+    public WebElement hardStopIconOnShiftCard;
+
+    @FindBy(xpath = "//span[contains(text(), 'with hard stop violations')]")
+    public WebElement publishTooltipWhenHaveHardStop;
+
+    @FindBy(xpath = "//span[contains(@class, 'publish-disabled') and contains(text(), 'Clear Filter')]")
+    public WebElement clearFilterLinkOnPublishTooltip;
+
+    @FindBy(xpath = "//span[@class='publish-disabled-popup-link ng-binding' and contains(text(), 'View Shifts')]")
+    public WebElement viewShiftLinkOnPublishTooltip;
+
+    @FindBy(xpath = "//div[@class='week-schedule-shift-right-top-icons']/img[contains(@src, 'hard-stop-icon')]")
+    public List<WebElement>  shiftWithHardStop;
+
+    @FindBy(xpath = "//lg-button[@label=\"Republish\" or @label=\"Publish\"]/button[@disabled=\"disabled\"]")
+    public WebElement  unclickablePublishRepublishButton;
 
     public void clickOnScheduleAnalyzeButton() throws Exception {
         if (isElementLoaded(analyze)) {
@@ -216,11 +234,11 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             // When Status is finalized, look for extra popup.
             clickTheElement(editScheduleButton);
             waitForSeconds(5);
-            if(isElementLoaded(popupAlertPremiumPay,15) ) {
+            if(isElementLoaded(popupAlertPremiumPay,5) ) {
                 SimpleUtils.pass("Edit button is clickable and Alert(premium pay pop-up) is appeared on Screen");
                 waitForSeconds(4);
                 // Validate CANCEL and EDIT ANYWAY Buttons are enabled.
-                if(isElementEnabled(btnEditAnyway,10) && isElementEnabled(btnCancelOnAlertPopup,10)){
+                if(isElementEnabled(btnEditAnyway,5) && isElementEnabled(btnCancelOnAlertPopup,5)){
                     SimpleUtils.pass("CANCEL And EDIT ANYWAY Buttons are enabled on Alert Pop up");
                     SimpleUtils.report("Click on EDIT ANYWAY button and check for next save and cancel buttons");
                     clickTheElement(btnEditAnyway);
@@ -229,7 +247,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                 }
                 waitForSeconds(5);
             }
-            if (isElementLoaded(maybeLaterBtn, 20)) {
+            if (isElementLoaded(maybeLaterBtn, 5)) {
                 clickTheElement(maybeLaterBtn);
             }
             if(checkSaveButton() && checkCancelButton()) {

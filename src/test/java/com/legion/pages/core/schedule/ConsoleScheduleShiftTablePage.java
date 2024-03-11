@@ -33,6 +33,16 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(css = ".sch-day-view-shift")
     private List<WebElement> dayViewAvailableShifts;
 
+    @FindBy(xpath = "//span[contains(text(), 'Clopening (<')]")
+    public WebElement clopeningViolationMessageInShiftInfoPopUp;
+
+    @FindBy(xpath = "//span[contains(text(), 'Max days per week')]")
+    public WebElement maxDaysPerWeekViolationMessageInShiftInfoPopUp;
+
+    @FindBy(xpath = "//h1[@class=\"period-name ng-binding ng-scope\"]")
+    public WebElement blankPlaceToDismissPopup;
+
+
     @Override
     public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception {
         List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
@@ -511,7 +521,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(className = "week-schedule-shift-wrapper")
     private List<WebElement> shiftsWeekView;
     @FindBy(css = "[id=\"schedule-grid-react-wrapper\"] [class=\"rows\"] .week-schedule-worker-name")
-    private List<WebElement> namesWeekView;
+    public List<WebElement> namesWeekView;
     @FindBy(css = ".sch-day-view-shift-worker-name")
     private List<WebElement> namesDayView;
     @FindBy(css = ".right-shift-box")

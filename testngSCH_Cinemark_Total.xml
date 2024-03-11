@@ -258,6 +258,7 @@
                     <include name="validateTheScheduledHrsOnScheduleSmartCardWillChangedAccordinglyBySelectFilterInDayViewAsInternalAdmin" />
                     <include name="validateTMCanViewTeamScheduleAfterGenerateScheduleAsInternalAdmin" />
                     <include name="validateSMCanViewScheduleInManagerAndEmployeeViewAfterGenerateScheduleAsInternalAdmin" />
+                    <include name="hardStopComplianceSetupEnhancementAsInternalAdminHardStopTrigger" />
                   </methods>
               </class>
           </classes>
