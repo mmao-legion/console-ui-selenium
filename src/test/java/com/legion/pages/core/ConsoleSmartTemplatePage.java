@@ -38,7 +38,7 @@ public class ConsoleSmartTemplatePage extends BasePage implements SmartTemplateP
     private WebElement editButton;
     @Override
     public void clickOnEditBtn(){
-        if (isElementEnabled(editButton, 5)){
+        if (isElementEnabled(editButton, 15)){
             clickTheElement(editButton);
         } else
             SimpleUtils.fail("The edit smart template button fail to load! ", false);
