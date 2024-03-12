@@ -492,7 +492,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
             String clearFilterTxt =viewShift.getText();
             SimpleUtils.report("clear filter is" + clearFilterTxt);
             if (clearFilterBtnTextDefault.equals(clearFilterTxt)) {
-                click(viewShift);
+                clickTheElement(viewShift);
                 SimpleUtils.pass("clear filter button is clickable");
                 String filterText = getDriver().findElement(By.cssSelector("lg-filter > div > input-field > ng-form > div")).getText();
                 if (filterText.equals("")) {

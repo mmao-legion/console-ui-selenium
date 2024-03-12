@@ -3727,9 +3727,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     public void rightClickOnSelectedShifts(HashSet<Integer> selectedIndex) throws Exception {
         if (selectedIndex.size() > 0) {
             List<WebElement> names = null;
-            if (areListElementVisible(namesWeekView, 10)) {
+            if (areListElementVisible(namesWeekView, 15)) {
                 names = namesWeekView;
-            } else if (areListElementVisible(shiftOuterInDayView, 10)) {
+            } else if (areListElementVisible(shiftOuterInDayView, 15)) {
                 names = shiftOuterInDayView;
             }
             Actions action = new Actions(getDriver());
