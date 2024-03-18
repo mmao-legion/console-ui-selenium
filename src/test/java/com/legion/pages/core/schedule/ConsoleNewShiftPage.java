@@ -640,6 +640,16 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             WebElement elm = getDriver().findElements(By.cssSelector(".react-select__value-container")).get(0);
             elm.click();
             waitForSeconds(2);
+            //Capitalize first letter of each word of workRoles, e.g. change "event manager" to "Event Manager"
+            System.out.println("work role is: " + workRoles);
+            String[] w = workRoles.split(" ");
+            workRoles="";
+            for (String s: w
+                 ) {
+                s = s.substring(0, 1).toUpperCase() + s.substring(1);
+                workRoles = workRoles + s + " ";
+            }
+            workRoles =  workRoles.trim();
             String locatorStr = "//div[contains(@class, 'react-select__menu')]//*[text()='" + workRoles + "']";
             WebElement targetWorkRole = getDriver().findElement(By.xpath(locatorStr));
             targetWorkRole.click();
@@ -1598,7 +1608,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
                 newSelectedTM = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
                 SimpleUtils.report("Recommended option not available on page");
             }
-        } else if (isElementLoaded(textSearch, 10)) {
+        } else if (isElementLoaded(textSearch, 10) || isElementLoaded(textSearchOnNewCreateShiftPage, 10)) {
             newSelectedTM = searchAndGetTMName(propertySearchTeamMember.get("AssignTeamMember"));
         } else {
             SimpleUtils.fail("Select Team member option and Recommended options are not available on page", false);
@@ -3461,5 +3471,93 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.pass("Click add segment button successfully! ");
         } else
             SimpleUtils.fail("The add segment button is not loaded on new or edit shift page! ", false);
+    }
+
+
+    public String searchAndGetTMNameWithOutInput() throws Exception {
+        String searchInput = propertySearchTeamMember.get("AssignTeamMember");
+        NewShiftPage newShiftPage = new ConsoleNewShiftPage();
+        String[] searchAssignTeamMember = searchInput.split(",");
+        String selectedTMName = null;
+        if (isElementLoaded(textSearch, 5) && isElementLoaded(searchIcon, 5)) {
+            for (int i = 0; i < searchAssignTeamMember.length; i++) {
+                String[] searchTM = searchAssignTeamMember[i].split("\\.");
+                textSearch.sendKeys(searchTM[0]);
+                click(searchIcon);
+                waitForSeconds(5);
+                selectedTMName = newShiftPage.selectAndGetTheSelectedTM();
+                if (!selectedTMName.equals("")) {
+                    break;
+                } else {
+                    textSearch.clear();
+                }
+            }
+            if (selectedTMName == null || selectedTMName.isEmpty()) {
+                SimpleUtils.fail("Not able to found Available TMs in SearchResult", false);
+            }
+        } else if (isElementLoaded(textSearchOnNewCreateShiftPage, 10)) {
+            for (String s : searchAssignTeamMember) {
+
+                if (!areListElementVisible(searchResultsOnNewCreateShiftPage, 5)){
+                    String[] searchTM = s.split("\\.");
+                    String searchText = searchTM[0];
+                    textSearchOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+                    textSearchOnNewCreateShiftPage.sendKeys(Keys.DELETE);
+                    textSearchOnNewCreateShiftPage.clear();
+                    textSearchOnNewCreateShiftPage.sendKeys(searchText);
+                    waitForSeconds(3);
+                }
+
+                if (areListElementVisible(searchResultsOnNewCreateShiftPage, 5)) {
+                    int index = 0;
+                    if (areListElementVisible(searchTableColumns, 5)) {
+                        for (int i = 0; i < searchTableColumns.size(); i++) {
+                            if (searchTableColumns.get(i).getText().trim().toLowerCase().equalsIgnoreCase("status")) {
+                                index = i;
+                                break;
+                            }
+                        }
+                    }
+                    for (WebElement searchResult: searchResultsOnNewCreateShiftPage) {
+                        List<WebElement> allStatus= searchResult.findElements(By.cssSelector(".MuiGrid-item:nth-child("+ (index + 1) +")"));
+                        StringBuilder tmAllStatus = new StringBuilder();
+                        for (WebElement status: allStatus) {
+                            tmAllStatus.append(" ").append(status.getText());
+                        }
+                        if(!tmAllStatus.toString().contains("Assigned to this shift")){
+                            selectedTMName = searchResult.findElements(By.cssSelector("p.MuiTypography-body1")).get(0).getText();
+                            List<WebElement> assignAndOfferButtons = searchResult.findElements(By.tagName("button"));
+                            if (MyThreadLocal.getAssignTMStatus()) {
+                                clickTheElement(assignAndOfferButtons.get(0));
+                                SimpleUtils.report("Click Assign button successfully! ");
+                            } else {
+                                if (assignAndOfferButtons.size()==1) {
+                                    clickTheElement(assignAndOfferButtons.get(0));
+                                    SimpleUtils.report("Only one offer button and click Offer button successfully! ");
+                                } else {
+                                    clickTheElement(assignAndOfferButtons.get(1));
+                                    SimpleUtils.report("There are both assign and offer button, click offer button successfully! ");
+                                }
+                            }
+                            if (isElementEnabled(btnAssignAnyway, 5)) {
+                                click(btnAssignAnyway);
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (!selectedTMName.equals("")) {
+                    break;
+                }
+            }
+
+            if (selectedTMName == null || selectedTMName.isEmpty()) {
+                SimpleUtils.fail("Not able to found Available TMs in SearchResult", false);
+            }
+
+        }else {
+            SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+        }
+        return selectedTMName;
     }
 }

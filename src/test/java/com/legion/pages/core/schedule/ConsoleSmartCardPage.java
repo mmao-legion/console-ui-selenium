@@ -28,10 +28,17 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     private List<WebElement> carouselCards;
 
     @FindBy(css = "div.card-carousel-arrow.card-carousel-arrow-left")
-    private WebElement smartcardArrowLeft;
+    public WebElement smartcardArrowLeft;
 
     @FindBy(css = "div.card-carousel-arrow.card-carousel-arrow-right")
     private WebElement smartcardArrowRight;
+
+    @FindBy(xpath = "//div[contains(text(), 'Hard stop violation')]/../h1")
+    public WebElement xShiftsOnHardStopSartCard;
+
+    @FindBy(xpath = "//div[contains(text(), 'Hard stop violation')]/../..//span[contains(text(), 'View Shifts')]")
+    public WebElement viewShiftsLinkOnHardStopSartCard;
+
     @Override
     public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
         HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
@@ -485,7 +492,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
             String clearFilterTxt =viewShift.getText();
             SimpleUtils.report("clear filter is" + clearFilterTxt);
             if (clearFilterBtnTextDefault.equals(clearFilterTxt)) {
-                click(viewShift);
+                clickTheElement(viewShift);
                 SimpleUtils.pass("clear filter button is clickable");
                 String filterText = getDriver().findElement(By.cssSelector("lg-filter > div > input-field > ng-form > div")).getText();
                 if (filterText.equals("")) {

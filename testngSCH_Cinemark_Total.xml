@@ -258,6 +258,7 @@
                     <include name="validateTheScheduledHrsOnScheduleSmartCardWillChangedAccordinglyBySelectFilterInDayViewAsInternalAdmin" />
                     <include name="validateTMCanViewTeamScheduleAfterGenerateScheduleAsInternalAdmin" />
                     <include name="validateSMCanViewScheduleInManagerAndEmployeeViewAfterGenerateScheduleAsInternalAdmin" />
+                    <include name="hardStopComplianceSetupEnhancementAsInternalAdminHardStopTrigger" />
                   </methods>
               </class>
           </classes>
@@ -925,6 +926,8 @@ SCH-5862-->
                     <include name="verifyShiftNameAndNotesForNonRecurringShiftsAsInternalAdmin" />
                     <include name="verifyShiftInfoDisplayCorrectlyForRecurringShiftsAsInternalAdmin" />
                     <include name="verifyShiftInfoDisplayCorrectlyForNonRecurringShiftsAsInternalAdmin" />
+                    <include name="verifyRecurringShiftsBeenChangeToNonRecurringShiftsAsInternalAdmin" />
+                    <include name="verifyNonRecurringShiftsBeenChangeToRecurringShiftsAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

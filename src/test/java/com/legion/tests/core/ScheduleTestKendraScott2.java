@@ -14,7 +14,7 @@ import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.OpsPortaPageFactories.UserManagementPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.OpsPortal.OpsPortalConfigurationPage;
-import com.legion.pages.core.schedule.ConsoleEditShiftPage;
+import com.legion.pages.core.schedule.*;
 import com.legion.tests.core.OpsPortal.LocationsTest;
 import com.legion.utils.JsonUtil;
 import org.openqa.selenium.By;
@@ -10579,5 +10579,210 @@ public class ScheduleTestKendraScott2 extends TestBase {
 		} catch (Exception e){
 			SimpleUtils.fail(e.getMessage(), false);
 		}
+	}
+
+
+	@Automated(automated = "Automated")
+	@Owner(owner = "Samantha")
+	@Enterprise(name = "CinemarkWkdy_Enterprise")
+	@TestName(description = "Hard stop Compliance Setup Enhancement")
+	@Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
+	public void  hardStopComplianceSetupEnhancementAsInternalAdminHardStopTrigger(String username, String password, String browser, String location) throws Exception {
+		/*
+		1. Edit a shift and set shift lenght = 20, it will triger hard stops related to shift lenght or OT or daily work time.
+		2. Check Hard Stop smart card, filter is working fine and number on card is correct
+		3. Check publish button is not clickable, tooltips and filter on it is working fine
+		4. Schedule can publish after hard stops are resolved.
+		5. trigger 2 hard stop "Missed Meal Break" and "Meal Duration", verify it will stop user to proceed Editing
+		6. trigger 2 soft stop "Clopening" and "Max days per week", it should stop Publish/RePublish
+		 */
+		try {
+			DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
+			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			ConsoleScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
+			ConsoleEditShiftPage editShiftPage = new ConsoleEditShiftPage();
+			BasePage basePage = new BasePage();
+			ConsoleSmartCardPage smartCardPage = new ConsoleSmartCardPage();
+			ConsoleScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
+			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
+			LoginPage loginPage = pageFactory.createConsoleLoginPage();
+			LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
+			MySchedulePage mySchedulePage = pageFactory.createMySchedulePage();
+			ConsoleShiftOperatePage consoleShiftOperatePage = new ConsoleShiftOperatePage();
+
+			// Go to Schedule page, Schedule tab
+			goToSchedulePageScheduleTab();
+			// Create schedule if it is not created
+			boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (!isWeekGenerated) {
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			//check if there are shifts with hard stops, if not, create one
+			if(scheduleMainPage.shiftWithHardStop.size()==0){
+				//delete open shifts
+				scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+				scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+				scheduleMainPage.saveSchedule();
+				//edit a assigned shift
+				scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+				int selectedShiftCount = 1;
+				HashSet<Integer> set = scheduleShiftTablePage.verifyCanSelectMultipleShifts(selectedShiftCount);
+				scheduleShiftTablePage.rightClickOnSelectedShifts(set);
+				scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText("Edit");
+				//update start & end time to have 12hrs shit length
+				String inputStartTime = "5:00 AM";
+				editShiftPage.inputStartOrEndTime(inputStartTime, true);
+				String inputEndTime = "11:00 PM";
+				editShiftPage.inputStartOrEndTime(inputEndTime, false);
+				editShiftPage.clickOnUpdateButton();
+				editShiftPage.clickOnUpdateAnywayButton();
+				mySchedulePage.verifyThePopupMessageOnTop("Success");
+				scheduleMainPage.saveSchedule();
+				}
+			//get count from hard stop violation smart card, and compare with the actual number of shift.
+			WebElement xShiftsOnHardStopSartCard = smartCardPage.xShiftsOnHardStopSartCard;
+			String shiftNumberOnHardStopSmartCard = xShiftsOnHardStopSartCard.getText().split(" ")[0];
+			System.out.println(shiftNumberOnHardStopSmartCard);
+			SimpleUtils.assertOnFail("Count on smart card is: " + shiftNumberOnHardStopSmartCard + ". Number of actual shifts is: " + scheduleMainPage.shiftWithHardStop.size(),
+					Integer.parseInt(shiftNumberOnHardStopSmartCard) == scheduleMainPage.shiftWithHardStop.size(), false);
+			//verify Publish/Republish button is not clickable, and tooltip is correct
+			SimpleUtils.assertOnFail("Publish/RePublish button is still clickable!",
+					basePage.isElementDisplayed(scheduleMainPage.unclickablePublishRepublishButton), false);
+			basePage.mouseHover(scheduleMainPage.unclickablePublishRepublishButton);
+			boolean isToolTipCorrect;
+			if(scheduleMainPage.shiftWithHardStop.size()==1){
+				isToolTipCorrect = scheduleMainPage.publishTooltipWhenHaveHardStop.getText().equals("1 Shift with hard stop violations.");
+			}else{
+				isToolTipCorrect = scheduleMainPage.publishTooltipWhenHaveHardStop.getText().equals(scheduleMainPage.shiftWithHardStop.size() + " Shifts with hard stop violations.");
+			}
+			SimpleUtils.assertOnFail("Actural tooltip is: " + scheduleMainPage.publishTooltipWhenHaveHardStop.getText(),
+					isToolTipCorrect, false);
+			//verify View Shifts link & Clear Shift on tooltip is working fine
+			basePage.click(scheduleMainPage.viewShiftLinkOnPublishTooltip);
+			List<WebElement> allShifts = scheduleShiftTablePage.getAllAvailableShiftsInWeekView();
+			SimpleUtils.assertOnFail("Filter on Publish button is not working fine. All shifts after filter: " + allShifts.size() + ", Hard stop shifts: " + scheduleMainPage.shiftWithHardStop.size(),
+					allShifts.size()==scheduleMainPage.shiftWithHardStop.size(), false);
+			basePage.mouseHover(scheduleMainPage.unclickablePublishRepublishButton);
+			basePage.click(scheduleMainPage.clearFilterLinkOnPublishTooltip);
+			//Verify View Shifts linke on smart card is working fine
+			basePage.click(smartCardPage.viewShiftsLinkOnHardStopSartCard);
+			allShifts = scheduleShiftTablePage.getAllAvailableShiftsInWeekView();
+			SimpleUtils.assertOnFail("Filter on Hard Stop smart card is not working fine. All shifts after filter: " + allShifts.size() + ", Hard stop shifts: " + scheduleMainPage.shiftWithHardStop.size(),
+				allShifts.size()==scheduleMainPage.shiftWithHardStop.size(), false);
+			//Delete all hard stop shifts
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			int selectedShiftCount = scheduleMainPage.shiftWithHardStop.size();
+			HashSet<Integer> set = scheduleShiftTablePage.verifyCanSelectMultipleShifts(selectedShiftCount);
+			scheduleShiftTablePage.rightClickOnSelectedShifts(set);
+			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText("Delete");
+			scheduleMainPage.saveSchedule();
+			//verify after delete hardstop shift, schedule can publish
+			scheduleMainPage.publishOrRepublishSchedule();
+
+			//go to location 01052 to test hard stop "Missed Meal Break" and "Meal Duration", it will stop user to proceed Editing
+			locationSelectorPage.searchSpecificUpperFieldAndNavigateTo("01052");
+			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
+			isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (!isWeekGenerated) {
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			selectedShiftCount = scheduleMainPage.shiftWithHardStop.size();
+			System.out.println(selectedShiftCount);
+			if(selectedShiftCount>0){
+				set = scheduleShiftTablePage.verifyCanSelectMultipleShifts(selectedShiftCount);
+				scheduleShiftTablePage.rightClickOnSelectedShifts(set);
+				scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText("Delete");
+				scheduleMainPage.saveSchedule();
+			}
+			//edit a assigned shift to trigger "Missed Meal Break" and "Max days per week", it will stop user to publish/Republish schedule
+			selectedShiftCount = 1;
+			set = scheduleShiftTablePage.verifyCanSelectMultipleShifts(selectedShiftCount);
+			scheduleShiftTablePage.rightClickOnSelectedShifts(set);
+			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText("Edit");
+			editShiftPage.checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
+			editShiftPage.removeAllMealBreaks();
+			editShiftPage.clickOnUpdateButton();
+			getDriver().getPageSource().contains("Missed Meal Break");
+			SimpleUtils.assertOnFail("Update Anyway button should not dispaly if trigger a hard stop violation when Editing shift.",
+					!basePage.isElementLoaded(editShiftPage.updateAnywayButton,3), false);
+			//continue to trigger "Meal Duration"
+			editShiftPage.OKButton.click();
+			String shiftStartTime = editShiftPage.shiftStartEndTimeOnShiftCard.getText().substring(0,8);
+		    String startMealTime = shiftStartTime.substring(0,3) + "40" + shiftStartTime.substring(5,8) ;
+		    String endMealTime = shiftStartTime.substring(0,3) + "45" + shiftStartTime.substring(5,8) ;
+			System.out.println(startMealTime + "---" + endMealTime);
+			editShiftPage.clickOnAddMealBreakButton();
+			editShiftPage.inputMealBreakTimes(startMealTime, endMealTime,0);
+			editShiftPage.clickOnUpdateButton();
+			getDriver().getPageSource().contains("Meal Duration");
+			SimpleUtils.assertOnFail("Update Anyway button should not dispaly if trigger a hard stop violation when Editing shift.",
+				!basePage.isElementLoaded(editShiftPage.updateAnywayButton,3), false);
+			editShiftPage.OKButton.click();
+			editShiftPage.clickOnCancelButton();
+			scheduleMainPage.clickOnCancelButtonOnEditMode();
+
+			//go to location 00085 to test soft stop "Clopening" and "Max days per week", it should stop Publish/RePublish
+			locationSelectorPage.searchSpecificUpperFieldAndNavigateTo("00085");
+			goToSchedulePageScheduleTab();
+			scheduleCommonPage.navigateToNextWeek();
+			isWeekGenerated = createSchedulePage.isWeekGenerated();
+			if (isWeekGenerated) {
+				createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			} else {
+				createSchedulePage.createScheduleForNonDGFlowNewUI();
+			}
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			selectedShiftCount = scheduleMainPage.shiftWithHardStop.size();
+			System.out.println(selectedShiftCount);
+			if(selectedShiftCount>0){
+				set = scheduleShiftTablePage.verifyCanSelectMultipleShifts(selectedShiftCount);
+				scheduleShiftTablePage.rightClickOnSelectedShifts(set);
+				scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText("Delete");
+				scheduleMainPage.saveSchedule();
+				scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			}
+			//trigger Clopening soft stop, it should stop Publish/RePublish
+			createShiftsWithSpecificValues("Cook", "2 Consecutive days", "", "5:00am", "10:00pm",
+				1, Arrays.asList(0,1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "Robin M");
+			scheduleMainPage.saveSchedule();
+			basePage.click(smartCardPage.viewShiftsLinkOnHardStopSartCard);
+			basePage.click(scheduleShiftTablePage.namesWeekView.get(0));
+			basePage.waitUntilElementIsVisible(scheduleShiftTablePage.clopeningViolationMessageInShiftInfoPopUp);
+			SimpleUtils.assertOnFail("Clopenting violation is not triggered.",
+					basePage.isElementDisplayed(scheduleShiftTablePage.clopeningViolationMessageInShiftInfoPopUp), false);
+			//verify Publish/Republish button is not clickable
+			SimpleUtils.assertOnFail("Publish/RePublish button is still clickable!",
+					basePage.isElementDisplayed(scheduleMainPage.unclickablePublishRepublishButton), false);
+			basePage.click(smartCardPage.smartcardArrowLeft);
+			//Delete all hard stop shifts
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			allShifts = scheduleShiftTablePage.getAllAvailableShiftsInWeekView();
+			set = scheduleShiftTablePage.verifyCanSelectMultipleShifts(allShifts.size());
+			scheduleShiftTablePage.rightClickOnSelectedShifts(set);
+			scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText("Delete");
+			scheduleMainPage.saveSchedule();
+			//continue to trigger "Max days per week", it should stop Publish/RePublish
+			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+			createShiftsWithSpecificValues("Cook", "7 days", "", "5:00am", "10:00am",
+					1, Arrays.asList(0,1,2,3,4,5,6), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "Robin M");
+			scheduleMainPage.saveSchedule();
+			basePage.click(scheduleShiftTablePage.namesWeekView.get(0));
+			basePage.waitUntilElementIsVisible(scheduleShiftTablePage.maxDaysPerWeekViolationMessageInShiftInfoPopUp);
+			SimpleUtils.assertOnFail("Max days per week violation is not triggered.",
+					basePage.isElementDisplayed(scheduleShiftTablePage.maxDaysPerWeekViolationMessageInShiftInfoPopUp), false);
+			SimpleUtils.assertOnFail("Publish/RePublish button is still clickable!",
+					basePage.isElementDisplayed(scheduleMainPage.unclickablePublishRepublishButton), false);
+		} catch (Exception e){
+			SimpleUtils.fail(e.getMessage(), false);
+		}finally{
+			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+
 	}
 }
