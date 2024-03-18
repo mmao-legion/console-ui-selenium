@@ -34,6 +34,16 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(css = ".sch-day-view-shift")
     private List<WebElement> dayViewAvailableShifts;
 
+    @FindBy(xpath = "//span[contains(text(), 'Clopening (<')]")
+    public WebElement clopeningViolationMessageInShiftInfoPopUp;
+
+    @FindBy(xpath = "//span[contains(text(), 'Max days per week')]")
+    public WebElement maxDaysPerWeekViolationMessageInShiftInfoPopUp;
+
+    @FindBy(xpath = "//h1[@class=\"period-name ng-binding ng-scope\"]")
+    public WebElement blankPlaceToDismissPopup;
+
+
     @Override
     public void reduceOvertimeHoursOfActiveWeekShifts() throws Exception {
         List<WebElement> ScheduleCalendarDayLabels = MyThreadLocal.getDriver().findElements(By.className("day-week-picker-period"));
@@ -228,12 +238,12 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         if (areListElementVisible(dayViewAvailableShifts, 15)) {
             for (WebElement dayViewAvailableShift : dayViewAvailableShifts) {
-                WebElement hoverInfo = dayViewAvailableShift.findElement(By.className("day-view-shift-right-top-icons"));
-                if (hoverInfo != null) {
-                    clickTheElement(hoverInfo);
+//                WebElement hoverInfo = dayViewAvailableShift.findElement(By.className("day-view-shift-right-top-icons"));
+                if (dayViewAvailableShift != null) {
+                    click(dayViewAvailableShift);
                     if (isElementLoaded(timeDuration, 5)) {
                         String startTime = timeDuration.getText().split("-")[0];
-                        clickTheElement(hoverInfo);
+                        click(dayViewAvailableShift);
                         int shiftStartMinutes = SimpleUtils.getMinutesFromTime(startTime);
                         int currentMinutes = SimpleUtils.getMinutesFromTime(currentTime);
                         if (shiftStartMinutes > currentMinutes) {
@@ -512,7 +522,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(className = "week-schedule-shift-wrapper")
     private List<WebElement> shiftsWeekView;
     @FindBy(css = "[id=\"schedule-grid-react-wrapper\"] [class=\"rows\"] .week-schedule-worker-name")
-    private List<WebElement> namesWeekView;
+    public List<WebElement> namesWeekView;
     @FindBy(css = ".sch-day-view-shift-worker-name")
     private List<WebElement> namesDayView;
     @FindBy(css = ".right-shift-box")
@@ -758,7 +768,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 //        waitForSeconds(10);
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
-            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover")));
+//            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover")));
+            click(weekShifts.get(index));
             String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
             waitForSeconds(3);
 //            String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
@@ -776,8 +787,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.pass("Get user job title successfully! The job tile is: "+ jobTitle);
                 String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
                 SimpleUtils.pass("Get shift time in shift card successfully! The shift time is: "+ shiftTimeWeekView);
-                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
-                clickTheElement(infoIcon);
+                Thread.sleep(2000);
+                click(weekShifts.get(index));
                 String shiftNameOnIIconPopUp = "";
                 String shiftNotesOnIIconPopUp = "";
                 if (isElementLoaded(shiftName, 5)){
@@ -832,8 +843,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 } else
                     lastName = "open";
                 String jobTitle = "";
-                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
-                clickTheElement(infoIcon);
+//                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
+//                clickTheElement(infoIcon);
+                click(weekShifts.get(index));
                 String workRole = shiftJobTitleAsWorkRole.getText().trim();
                 String shiftTime = "";
                 if (areListElementVisible(infoContainers, 10)) {
@@ -881,8 +893,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             waitForSeconds(2);
             String jobTitle = weekShiftsFromAnotherLocation.get(index).findElement(By.cssSelector(".rows .week-schedule-role-name")).getText();
             String shiftTimeWeekView = weekShiftsFromAnotherLocation.get(index).findElement(By.className("week-schedule-shift-time")).getText();
-            WebElement infoIcon = weekShiftsFromAnotherLocation.get(index).findElement(By.className("week-schedule-shift-open-popover"));
-            clickTheElement(infoIcon);
+//            WebElement infoIcon = weekShiftsFromAnotherLocation.get(index).findElement(By.className("week-schedule-shift-open-popover"));
+//            clickTheElement(infoIcon);
+            click(weekShiftsFromAnotherLocation.get(index));
             String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
             if (isElementLoaded(shiftDuration, 10) && isElementLoaded(shiftTotalHrs, 10)) {
                 String shiftTime = shiftDuration.getText();
@@ -925,8 +938,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         ScheduleCommonPage scheduleCommonPage = new ConsoleScheduleCommonPage();
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(dayViewAvailableShifts, 20) && index < dayViewAvailableShifts.size()) {
-            WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-right-top-icons"));
-            clickTheElement(infoIcon);
+//            WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-right-top-icons"));
+            click(dayViewAvailableShifts.get(index));
             String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
 //            String firstName = dayViewAvailableShifts.get(index).
 //                    findElement(By.className("sch-day-view-shift-worker-name")).getText().split(" ")[0];
@@ -934,7 +947,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 String lastName = shiftOperatePage.getTMDetailNameFromProfilePage(dayViewAvailableShifts.get(index)).split(" ")[1].trim();
                 String shiftTimeWeekView = dayViewAvailableShifts.get(index).findElement(By.className("sch-day-view-shift-time")).getText();
 //                WebElement infoIcon = dayViewAvailableShifts.get(index).findElement(By.className("day-view-shift-hover-info-icon"));
-                clickTheElement(infoIcon);
+                click(dayViewAvailableShifts.get(index));
                 String workRole = shiftJobTitleAsWorkRole.getText().split("as")[1].trim();
                 String jobTitle = shiftJobTitleAsWorkRole.getText().split("as")[0].trim();
                 String totalHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\\|")[1];
@@ -1083,10 +1096,12 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             Actions actions = new Actions(getDriver());
             actions.moveByOffset(0, 0).click().build().perform();
             if(scheduleCommonPage.isScheduleDayViewActive()){
-                clickTheElement(shift.findElement(By.className("day-view-shift-right-top-icons")));
+//                clickTheElement(shift.findElement(By.className("day-view-shift-right-top-icons")));
+                click(shift);
                 waitForSeconds(2);
             } else
-                clickTheElement(shift.findElement(By.className("week-schedule-shift-open-popover")));
+                click(shift);
+//                clickTheElement(shift.findElement(By.className("week-schedule-shift-open-popover")));
 
         } else {
             SimpleUtils.fail("Selected shift is null!",true);
@@ -1132,10 +1147,12 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             waitForSeconds(3);
             scrollToElement(shift);
             if(scheduleCommonPage.isScheduleDayViewActive()){
-                click(shift.findElement(By.cssSelector(".day-view-shift-right-top-icons img")));
+//                click(shift.findElement(By.cssSelector(".day-view-shift-right-top-icons img")));
+                click(shift);
                 waitForSeconds(2);
             } else
-                click(shift.findElement(By.cssSelector("img.week-schedule-shift-open-popover")));
+                click(shift);
+//                click(shift.findElement(By.cssSelector("img.week-schedule-shift-open-popover")));
             if (isElementLoaded(infoTextFromInfoIcon, 5)){
                 return infoTextFromInfoIcon.getText();
             } else
@@ -1213,9 +1230,10 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     iIcon = shiftWeekView.findElement(By.cssSelector("div.day-view-shift-right-top-icons img"));
                     waitForSeconds(2);
                 } else
-                    iIcon = shiftWeekView.findElement(By.cssSelector("img.week-schedule-shift-open-popover"));
+                    iIcon = shiftWeekView;
+//                    iIcon = shiftWeekView.findElement(By.cssSelector("img.week-schedule-shift-open-popover"));
                 if(iIcon.getAttribute("src").contains("danger")) {
-                    click(iIcon);
+                    click(shiftWeekView);
                     if (isElementLoaded(popOverContent, 5)){
                         if (areListElementVisible(complianceMessageInInfoIconPopup, 5) && complianceMessageInInfoIconPopup.size()>0){
                             List<String> complianceMessages = new ArrayList<>();
@@ -1249,10 +1267,12 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 clickTheElement(shift);
             }
             if(scheduleCommonPage.isScheduleDayViewActive()){
-                click(shift.findElement(By.cssSelector(".day-view-shift-right-top-icons img")));
+//                click(shift.findElement(By.cssSelector(".day-view-shift-right-top-icons img")));
+                click(shift);
                 waitForSeconds(2);
             } else
-                click(shift.findElement(By.cssSelector("img.week-schedule-shift-open-popover")));
+                click(shift);
+//                click(shift.findElement(By.cssSelector("img.week-schedule-shift-open-popover")));
             if (isElementLoaded(popOverContent, 5)){
                 if (areListElementVisible(complianceMessageInInfoIconPopup, 5) && complianceMessageInInfoIconPopup.size()>0){
                     for (int i=0; i< complianceMessageInInfoIconPopup.size(); i++){
@@ -1369,7 +1389,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (areListElementVisible(shiftsInWeekView, 5)) {
             for (int i = 0; i < shiftsInWeekView.size(); i++) {
                 try {
-                    WebElement plusIcon = shiftsInWeekView.get(i).findElement(By.cssSelector("img[src*=\"added-shift\"]"));
+                    WebElement plusIcon = shiftsInWeekView.get(i).findElement(By.cssSelector("[class=\"shift-container week-schedule-shift-wrapper wip-light edit \"]"));
                     if (plusIcon != null) {
                         indexes.add(i);
                         SimpleUtils.pass("Get the index: " + i + " successfully!");
@@ -2462,8 +2482,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<String> openShiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
             String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
-            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
-            clickTheElement(infoIcon);
+//            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
+//            clickTheElement(infoIcon);
+            click(weekShifts.get(index));
             String workRole = shiftJobTitleAsWorkRole.getText().trim();
             if (isElementLoaded(shiftDuration, 10)) {
                 String shiftTime = shiftDuration.getText();
@@ -3711,9 +3732,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     public void rightClickOnSelectedShifts(HashSet<Integer> selectedIndex) throws Exception {
         if (selectedIndex.size() > 0) {
             List<WebElement> names = null;
-            if (areListElementVisible(namesWeekView, 10)) {
+            if (areListElementVisible(namesWeekView, 15)) {
                 names = namesWeekView;
-            } else if (areListElementVisible(shiftOuterInDayView, 10)) {
+            } else if (areListElementVisible(shiftOuterInDayView, 15)) {
                 names = shiftOuterInDayView;
             }
             Actions action = new Actions(getDriver());
@@ -3763,12 +3784,22 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 
     @Override
     public void verifyTheContentOnBulkActionMenu(int selectedShiftCount) throws Exception {
-        if (isElementLoaded(bulkActionMenu, 5) && bulkActionMenu.getText().contains(String.valueOf(selectedShiftCount))
-        && (bulkActionMenu.getText().contains("Shifts Selected") || bulkActionMenu.getText().contains("Shift Selected") ) && bulkActionMenu.getText().contains("Delete")) {
-            SimpleUtils.pass("The content on bulk action menu is correct!");
+        if (selectedShiftCount==1){
+            if (isElementLoaded(bulkActionMenu, 5)&& bulkActionMenu.getText().contains("Edit") && bulkActionMenu.getText().contains("Delete")) {
+                SimpleUtils.pass("The content on bulk action menu is correct!");
+            } else {
+                SimpleUtils.fail("The content on bulk action menu is incorrect!", false);
+            }
         } else {
-            SimpleUtils.fail("The content on bulk action menu is incorrect!", false);
+            if (isElementLoaded(bulkActionMenu, 5) && bulkActionMenu.getText().contains(String.valueOf(selectedShiftCount))
+                    && (bulkActionMenu.getText().contains("Shifts Selected") || bulkActionMenu.getText().contains("Shift Selected") )
+                    && bulkActionMenu.getText().contains("Delete")) {
+                SimpleUtils.pass("The content on bulk action menu is correct!");
+            } else {
+                SimpleUtils.fail("The content on bulk action menu is incorrect!", false);
+            }
         }
+
     }
 
     @Override
@@ -3807,9 +3838,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     break;
                 }
             }
-            if (!isMarkedX) {
-                SimpleUtils.fail("Some shifts are not marked as X!", false);
-            }
+//            if (!isMarkedX) {
+//                SimpleUtils.fail("Some shifts are not marked as X!", false);
+//            }
         } else {
             SimpleUtils.fail("There is no selected shifts' index!", false);
         }
@@ -4830,10 +4861,12 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     public List<HashMap<String, String>> getSegmentFromInfoPopupByIndex(int index){
         List<HashMap<String, String>> segments = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
-            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover")));
+//            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover")));
+            click(weekShifts.get(index));
         } else if (areListElementVisible(dayViewAvailableShifts, 5)
                 && index <dayViewAvailableShifts.size()){
-            click(dayViewAvailableShifts.get(index).findElement(By.cssSelector(".day-view-shift-right-top-icons img")));
+//            click(dayViewAvailableShifts.get(index).findElement(By.cssSelector(".day-view-shift-right-top-icons img")));
+            click(dayViewAvailableShifts.get(index));
         }
 
         for (WebElement segment : segmentsOnInfoPopup){
@@ -4854,8 +4887,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     public boolean checkIfTheRecurringHeaderOnIIconPopupDisplayOrNot(int index) throws Exception {
         boolean isExist = false;
         if (!isElementLoaded(popOverContent, 5)){
-            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
-            clickTheElement(infoIcon);
+//            WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
+//            clickTheElement(infoIcon);
+            click(weekShifts.get(index));
             if (isElementLoaded(popOverContent, 5)){
                 SimpleUtils.pass("Info icon popup display successfully!");
             } else

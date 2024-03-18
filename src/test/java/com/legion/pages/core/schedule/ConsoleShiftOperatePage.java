@@ -1532,7 +1532,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 SimpleUtils.fail("TM detail name fail to load!", false);
         } else
             SimpleUtils.fail("Profile page fail to load!", false);
-        clickTheElement(closeViewProfileContainer);
+        click(closeViewProfileContainer);
         return tmDetailName;
     }
 

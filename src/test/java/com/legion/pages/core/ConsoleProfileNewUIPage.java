@@ -3300,21 +3300,32 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 				}
 			}
 
-		} else if (checkIfReviewPreferencesInnerBoxDisplay()) {
+		}
+		else if (checkIfReviewPreferencesInnerBoxDisplay())
+		{
 			if (isElementLoaded(activateBtn, 5)) {
 				SimpleUtils.pass("User Profile page: The activate button in Actions section display correctly! ");
 			} else{
 				SimpleUtils.fail("User Profile page: The activate button in Action section failed to display! ", false);
 			}
-		}else if (isElementLoaded(onboardingStatusValue, 5)
-				&& onboardingStatusValue.getText().equalsIgnoreCase("Onboarded")){
-			scrollToBottom();
-			if (isElementLoaded(sendUsernameInActionsSection, 5) && isElementLoaded(resetPasswordInActionsSection, 5)){
-				SimpleUtils.pass("User Profile page: The Send Username and Reset Password buttons in Actions section display correctly! ");
-			} else {
-				SimpleUtils.fail("User Profile page: The Send Username and Reset Password buttons in Actions section failed to display !", false);
-			}
-		} else{
+		}
+
+		/* Below code/functionality of Send Username & Reset Password is no longer valid & is obsolete i.e. Line 3315 to 3325*/
+
+//		else if (isElementLoaded(onboardingStatusValue, 5)
+//				&& onboardingStatusValue.getText().equalsIgnoreCase("Onboarded"))
+//		{
+//			scrollToBottom();
+//			if (isElementLoaded(sendUsernameInActionsSection, 5) && isElementLoaded(resetPasswordInActionsSection, 5)){
+//				SimpleUtils.pass("User Profile page: The Send Username and Reset Password buttons in Actions section display correctly! ");
+//			}
+//			else {
+//				SimpleUtils.fail("User Profile page: The Send Username and Reset Password buttons in Actions section failed to display !", false);
+//			}
+//		}
+
+
+		else{
 			scrollToBottom();
 			if (isElementLoaded(suspendAccessButton, 5)){
 				SimpleUtils.pass("User Profile page: The Suspend Access buttons in Actions section display correctly! ");

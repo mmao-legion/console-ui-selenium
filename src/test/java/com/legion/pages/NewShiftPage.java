@@ -125,4 +125,5 @@ public interface NewShiftPage {
     public void removeSpecificCountSegments(int count);
     public List<HashMap<String, String>> getAllSegmentsOnNewOrEditPage ();
     public void clickOnAddSegmentBtnOnNewOrEditPage () throws Exception;
+    public String searchAndGetTMNameWithOutInput() throws Exception;
 }
