@@ -815,7 +815,6 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                         shiftHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\n")[0].split("\\|")[0].trim();
                     }
                 String lastName = shiftOperatePage.getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
-                Thread.sleep(3000);
                 SimpleUtils.pass("Get user last name successfully! The last name is: "+ lastName);
                     shiftInfo.add(firstName); //Index 0
                     shiftInfo.add(dayIndex); //Index 1
