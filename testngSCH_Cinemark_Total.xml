@@ -869,7 +869,7 @@ SCH-5862-->
             </class>
         </classes>
     </test>
-
+<!-- Confirmed with Nishant, we can comment out the shift bidding cases now
     <test name="Shift Pattern Bidding Test">
         <classes>
             <class name="com.legion.tests.core.ShiftPatternBiddingTest">
@@ -880,7 +880,7 @@ SCH-5862-->
             </class>
         </classes>
     </test>
-
+-->
     <test name="Seniority Relevant Testing">
         <classes>
             <class name="com.legion.tests.core.ScheduleSeniorityTest">

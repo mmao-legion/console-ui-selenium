@@ -789,9 +789,6 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             if (!firstName.equalsIgnoreCase("Open") && !firstName.equalsIgnoreCase("Unassigned")) {
                 String dayIndex = weekShifts.get(index).getAttribute("data-day-index");
                 SimpleUtils.pass("Get shift day index successfully! The day index is: "+ dayIndex);
-                String lastName = shiftOperatePage.getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
-                Thread.sleep(3000);
-                SimpleUtils.pass("Get user last name successfully! The last name is: "+ lastName);
                 String jobTitle = weekShifts.get(index).findElement(By.cssSelector(".rows .week-schedule-role-name")).getText();
                 SimpleUtils.pass("Get user job title successfully! The job tile is: "+ jobTitle);
                 String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
@@ -832,6 +829,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                         totalHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\n")[0].split("\\|")[1].trim();
                         shiftHrs = infoContainers.get(infoContainers.size() - 1).getText().split("\n")[0].split("\\|")[0].trim();
                     }
+                String lastName = shiftOperatePage.getTMDetailNameFromProfilePage(weekShifts.get(index)).split(" ")[1].trim();
+                SimpleUtils.pass("Get user last name successfully! The last name is: "+ lastName);
                     shiftInfo.add(firstName); //Index 0
                     shiftInfo.add(dayIndex); //Index 1
                     shiftInfo.add(shiftTime); //Index 2

@@ -1533,6 +1533,9 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         } else
             SimpleUtils.fail("Profile page fail to load!", false);
         click(closeViewProfileContainer);
+        if (!isElementEnabled(tmpProfileContainer, 3)) {
+            SimpleUtils.pass("The profile container been closed successfully!");
+        }
         return tmDetailName;
     }
 
