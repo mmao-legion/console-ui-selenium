@@ -777,10 +777,6 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 //            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover")));
             click(weekShifts.get(index));
             String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
-
-            waitForSeconds(3);
-            String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
-            waitForSeconds(5);
 //            String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
             if (firstName.equals("")) {
                 SimpleUtils.fail("Failed for getting user first name from shift info", false);
