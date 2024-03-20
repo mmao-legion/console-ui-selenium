@@ -769,12 +769,6 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 //        waitForSeconds(10);
         List<String> shiftInfo = new ArrayList<>();
         if (areListElementVisible(weekShifts, 20) && index < weekShifts.size()) {
-
-            //clickTheElement(weekShifts.get(index).findElement(By.className("sch-shift-hover visible"))); //incorrect className
-//            waitForSeconds(3);
-            click(weekShifts.get(index).findElement(By.xpath("//div[@class='second-row']")));
-
-//            clickTheElement(weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover")));
             click(weekShifts.get(index));
             String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[@class=\"hover-sub-container\"][1]/div[1]")).getText();
 //            String firstName = MyThreadLocal.getDriver().findElement(By.xpath("//div[contains(@class,'popover-content')]/shift-hover/div/div[1]/div[1]")).getText();
@@ -789,14 +783,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 SimpleUtils.pass("Get user job title successfully! The job tile is: "+ jobTitle);
                 String shiftTimeWeekView = weekShifts.get(index).findElement(By.className("week-schedule-shift-time")).getText();
                 SimpleUtils.pass("Get shift time in shift card successfully! The shift time is: "+ shiftTimeWeekView);
-
-                //WebElement infoIcon = weekShifts.get(index).findElement(By.xpath("//div[@class='second-row']")); //i icon is no longer present so clicked on shift to get info in below LOC
-                //clickTheElement(infoIcon); //this method is not working properly to click an element
-                click(weekShifts.get(index).findElement(By.xpath("//div[@class='second-row']")));
-
                 Thread.sleep(2000);
                 click(weekShifts.get(index));
-
                 String shiftNameOnIIconPopUp = "";
                 String shiftNotesOnIIconPopUp = "";
                 if (isElementLoaded(shiftName, 5)){
@@ -853,11 +841,6 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 } else
                     lastName = "open";
                 String jobTitle = "";
-
-//                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover")); //i icon is no longer present so clicked on shift to get info in below LOC
-//                clickTheElement(infoIcon); // this method is not working properly so used click() method
-                click(weekShifts.get(index).findElement(By.xpath("//div[@class='second-row']")));
-
 //                WebElement infoIcon = weekShifts.get(index).findElement(By.className("week-schedule-shift-open-popover"));
 //                clickTheElement(infoIcon);
                 click(weekShifts.get(index));
