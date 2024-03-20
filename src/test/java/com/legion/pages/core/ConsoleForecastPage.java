@@ -2553,7 +2553,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public boolean isDemandForecastEditButtonEnabled() throws Exception {
 		boolean isEnabled = true;
-		if (isElementLoaded(editForecastBtn, 10)) {
+		if (isElementLoaded(editForecastBtn, 20)) {
 			String tooltip = editForecastBtn.getAttribute("data-tootik");
 			String status = editForecastBtn.findElement(By.cssSelector("button")).getAttribute("disabled");
 			if (status!= null && !tooltip.equalsIgnoreCase("")
