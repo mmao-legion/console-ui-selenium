@@ -1013,16 +1013,18 @@ public class SingleShiftEditTest extends TestBase {
 
             // Go to Schedule page, Schedule tab
             goToSchedulePageScheduleTab();
-
             // Create schedule if it is not created
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (!isWeekGenerated) {
-                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
-            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
-            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
-            scheduleMainPage.saveSchedule();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            /*LOC 1024-1027 is redundant step as in LOC 1035 we are filtering based on Assigned so need to Delete Unassigned/Open Shifts. It increases script execution time and hence, commented out */
+            //scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+            //scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("open");
+            //scheduleMainPage.saveSchedule();
             scheduleMainPage.selectShiftTypeFilterByText("Assigned");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
@@ -1047,10 +1049,9 @@ public class SingleShiftEditTest extends TestBase {
             // Verify the shift notes can show on the info popup
             List<String> infoList1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
             SimpleUtils.assertOnFail("Failed to update the shift notes!", note.equalsIgnoreCase(infoList1.get(10)), false);
-
             scheduleMainPage.saveSchedule();
 
-            // Verify the shift notes is saved successfully
+            // Verify the shift notes is saved successfully & showing up for the Updated shift
             infoList1 = scheduleShiftTablePage.getTheShiftInfoByIndex(indexList.get(0));
             SimpleUtils.assertOnFail("Failed to update the shift notes!", note.equalsIgnoreCase(infoList1.get(10)), false);
         } catch (Exception e) {
