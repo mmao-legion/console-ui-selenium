@@ -445,12 +445,15 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         }
 //        WebElement shiftNotesSection = getSpecificElementByTypeAndColumn(sectionType.ShiftNotes.getType(), "Edited");
         WebElement input = getDriver().findElement(By.cssSelector("[placeholder=\"Shift Notes (Optional)\"]"));
-        input.sendKeys(Keys.CONTROL, "a");
-        input.sendKeys(Keys.DELETE);
+//        input.sendKeys(Keys.CONTROL+ "a"); //This is not working properly
+//        input.sendKeys(Keys.DELETE); //This is not working properly
         input.sendKeys(shiftNote);
-        if (input.getAttribute("value").equals(shiftNote)) {
+        if (input.getAttribute("value").equals(shiftNote))
+        {
             SimpleUtils.pass("Input the string in Shift Notes successfully!");
-        } else {
+        }
+        else
+        {
             SimpleUtils.fail("Input the string in Shift Notes failed!", false);
         }
     }
