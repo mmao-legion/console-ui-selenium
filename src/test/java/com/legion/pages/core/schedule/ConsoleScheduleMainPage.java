@@ -1909,7 +1909,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
                         } else
                             SimpleUtils.fail("In Week view: Location cannot be closed ", false);
                     } else if(groupByLocationToggles.get(randomIndex).getAttribute("class").contains("open")){
-                        scheduleShiftTitles.get(randomIndex).click();
+                        clickTheElement(scheduleShiftTitles.get(randomIndex));
                         if(groupByLocationToggles.get(randomIndex).getAttribute("class").contains("close")){
                             SimpleUtils.pass("In Week view: Location can be closed ");
                         } else
