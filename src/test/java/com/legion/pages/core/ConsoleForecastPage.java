@@ -146,7 +146,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@FindBy(css = "span.weather-forecast-temperature")
 	private List<WebElement> weatherTemperatures;
 
-	@FindBy(css = "//div[contains(text(),'Work role')]")
+	@FindBy(xpath = "//div[contains(text(),'Work Role')]")
 	private WebElement workRoleFilterTitle;
 
 	@FindBy(css = "[label=\"Work Role\"] div.lg-filter__category-items input-field.ng-isolate-scope")

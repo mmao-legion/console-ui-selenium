@@ -1380,7 +1380,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @Override
     public HashSet<Integer> getAddedShiftsIndexesByPlusIcon() throws Exception {
         HashSet<Integer> indexes = new HashSet<>();
-        if (areListElementVisible(shiftsInWeekView, 5)) {
+        if (areListElementVisible(shiftsInWeekView, 15)) {
             for (int i = 0; i < shiftsInWeekView.size(); i++) {
                 try {
                     WebElement plusIcon = shiftsInWeekView.get(i).findElement(By.cssSelector("[class=\"shift-container week-schedule-shift-wrapper wip-light edit \"]"));
