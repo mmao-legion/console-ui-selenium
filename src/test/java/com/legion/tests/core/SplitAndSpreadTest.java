@@ -256,7 +256,7 @@ public class SplitAndSpreadTest extends TestBase {
         SimpleUtils.assertOnFail("The second shift should have the violation", complianceMessage.contains("Split Shift (>60 mins between shifts)"), false);
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(2));
         SimpleUtils.assertOnFail("The thirrd shift should have the violation", complianceMessage.contains("Split Shift (>60 mins between shifts)"), false);
-
+        createSchedulePage.publishActiveSchedule();
         //verify split shift on the second and the third shifts violation after publishing.
         complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(0));
         SimpleUtils.assertOnFail("The first shift should not have the violation", !complianceMessage.contains("Split Shift (>60 mins between shifts)"), false);

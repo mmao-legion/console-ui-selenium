@@ -3748,8 +3748,8 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 allInfo.put("tmlocation", tmLocation);
                 //Get Employee ID
                 if (areListElementVisible(tmListHeaders, 5)
-                        && tmListHeaders.get(1).getText().equalsIgnoreCase("Employee ID")) {
-                    String employeeId = allTMsInSearchOrRecommendedList.get(i).findElement(By.xpath("./div[2]")).getText();
+                        && tmListHeaders.get(2).getText().equalsIgnoreCase("Employee ID")) {
+                    String employeeId = allTMsInSearchOrRecommendedList.get(i).findElement(By.xpath("./div[3]")).getText();
                     allInfo.put("employeeid", employeeId);
                 }
             }
