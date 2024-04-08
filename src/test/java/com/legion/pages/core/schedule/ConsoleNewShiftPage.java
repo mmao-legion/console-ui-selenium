@@ -2685,7 +2685,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
         return isLoaded;
     }
 
-    @FindBy(xpath = "//div[@id='create-new-shift-react']/div/div/form/div/div/div[9]/div[2]/div/p")
+    @FindBy(xpath = "//div[@id='legion_cons_Schedule_Schedule_CreateShift_Assignment_menu']//following-sibling::p")
     private WebElement assignmentWarningMessageOnNewShiftPage;
     public boolean checkIfAssignmentWarningMessageIsLoaded() throws Exception {
         boolean isLoaded = false;

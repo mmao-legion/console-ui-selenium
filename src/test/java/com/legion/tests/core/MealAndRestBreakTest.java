@@ -1136,7 +1136,7 @@ public class MealAndRestBreakTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchTeamMemberByName(nameOfTM);
             newShiftPage.clickOnOfferOrAssignBtn();
-
+            scheduleMainPage.saveSchedule();
             scheduleMainPage.searchShiftOnSchedulePage(nameOfTM);
             SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!",
                     shiftOperatePage.isMealBreakBlockDisplayed(0), false);
@@ -1148,7 +1148,7 @@ public class MealAndRestBreakTest extends TestBase {
 //                    shiftOperatePage.isMealBreaksLoaded(), false);
 //            shiftOperatePage.isMealBreaksLoaded();
 //            shiftOperatePage.clickCancelBtnOnMealBreakDialog();
-            scheduleMainPage.saveSchedule();
+
 
             scheduleMainPage.searchShiftOnSchedulePage(nameOfTM);
             SimpleUtils.assertOnFail("The Meal Break block is not displayed in the shift's box!", shiftOperatePage.isMealBreakBlockDisplayed(0), false);
