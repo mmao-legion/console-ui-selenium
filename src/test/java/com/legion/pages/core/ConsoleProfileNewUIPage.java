@@ -3227,6 +3227,25 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					SimpleUtils.pass("User Profile page: The fields in HR Profile Information section display correctly! ");
 				} else
 					SimpleUtils.fail("User Profile page: The fields in HR Profile Information section failed to display !", false);
+			}else if (fieldsInHRProfileInformationSection.size() == 12) {
+				/*for(int i=0;i<fieldsInHRProfileInformationSection.size();i++) {
+					System.out.println("Elm " +  i + ": " +fieldsInHRProfileInformationSection.get(i).getText() + "\n");
+				}*/
+				if (fieldsInHRProfileInformationSection.get(0).getText().equalsIgnoreCase("Name")
+						&& fieldsInHRProfileInformationSection.get(1).getText().equalsIgnoreCase("JOB TITLE")
+						&& fieldsInHRProfileInformationSection.get(2).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("HOME STORE")
+						&& fieldsInHRProfileInformationSection.get(3).findElement(By.cssSelector("span.highlight-when-help-mode-is-on")).getText().equalsIgnoreCase("EMPLOYEE ID")
+						&& fieldsInHRProfileInformationSection.get(4).getText().equalsIgnoreCase("EMPLOYMENT TYPE")
+						&& fieldsInHRProfileInformationSection.get(5).getText().equalsIgnoreCase("RATE")
+						&& fieldsInHRProfileInformationSection.get(6).getText().equalsIgnoreCase("DATE HIRED")
+						&& fieldsInHRProfileInformationSection.get(7).getText().equalsIgnoreCase("EMPLOYMENT STATUS")
+						&& fieldsInHRProfileInformationSection.get(8).getText().equalsIgnoreCase("EXEMPT")
+						&& fieldsInHRProfileInformationSection.get(9).getText().equalsIgnoreCase("ADDRESS")
+						&& fieldsInHRProfileInformationSection.get(10).getText().equalsIgnoreCase("MINOR")
+						&& fieldsInHRProfileInformationSection.get(11).getText().equalsIgnoreCase("CONTACT INFORMATION")) {
+					SimpleUtils.pass("User Profile page: The fields in HR Profile Information section display correctly! ");
+				} else
+					SimpleUtils.fail("User Profile page: The fields in HR Profile Information section failed to display !", false);
 			}else
 				SimpleUtils.fail("User Profile page: The fields in HR Profile Information section failed to display !", false);
 		} else
