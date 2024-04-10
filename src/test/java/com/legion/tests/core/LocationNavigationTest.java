@@ -117,13 +117,13 @@ public class LocationNavigationTest extends TestBase {
 
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             searchAndCheckTheUpperFields(upperFields1);
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()) , false);
 
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             searchAndCheckTheUpperFields(upperFields2);
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , false);
+            SimpleUtils.assertOnFail("Schedule page 'Forecast' sub tab not loaded Successfully!",
+                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue()) , false);
 
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
