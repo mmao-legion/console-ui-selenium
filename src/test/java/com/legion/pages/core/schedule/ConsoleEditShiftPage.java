@@ -1287,4 +1287,22 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         } else
             SimpleUtils.fail("The shift Notes overwrite checkbox on Edit shift page fail to load! ", false);
     }
+
+    @Override
+    public void inputShiftNotesForEmptyInput(String shiftNote) throws Exception {
+        if (isElementLoaded(shiftNotesOverwriteCheckbox, 5)){
+            checkOrUncheckShiftNotesOverwriteCheckbox(true);
+        }
+//        WebElement shiftNotesSection = getSpecificElementByTypeAndColumn(sectionType.ShiftNotes.getType(), "Edited");
+        WebElement input = getDriver().findElement(By.cssSelector("[placeholder=\"Shift Notes (Optional)\"]"));
+        input.sendKeys(shiftNote);
+        if (input.getAttribute("value").equals(shiftNote))
+        {
+            SimpleUtils.pass("Input the string in Shift Notes successfully!");
+        }
+        else
+        {
+            SimpleUtils.fail("Input the string in Shift Notes failed!", false);
+        }
+    }
 }

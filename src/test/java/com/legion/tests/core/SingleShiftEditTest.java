@@ -1042,7 +1042,7 @@ public class SingleShiftEditTest extends TestBase {
 
             // Verify can update the shift notes without selecting 2 options
             String note = "Test Shift Notes";
-            editShiftPage.inputShiftNotes(note);
+            editShiftPage.inputShiftNotesForEmptyInput(note);
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
 
