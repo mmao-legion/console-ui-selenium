@@ -5,6 +5,7 @@ import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.pages.core.schedule.ConsoleEditShiftPage;
+import com.legion.pages.core.schedule.ConsoleScheduleShiftTablePage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -1231,6 +1232,8 @@ public class SingleShiftEditTest extends TestBase {
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //Edit the shift again and check the breaks
+            indexes.clear();
+            indexes.add(scheduleShiftTablePage.getTheIndexOfEditedShift());
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
@@ -1328,6 +1331,7 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
             scheduleMainPage.saveSchedule();
+            scheduleMainPage.publishOrRepublishSchedule();
             scheduleCommonPage.clickOnDayView();
             scheduleCommonPage.navigateDayViewWithIndex(0);
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -1362,6 +1366,8 @@ public class SingleShiftEditTest extends TestBase {
             restBreakEndTime = "11:30 AM";
             editShiftPage.inputMealBreakTimes(mealBreakStartTime, mealBreakEndTime, 0);
             editShiftPage.inputRestBreakTimes(restBreakStartTime, restBreakEndTime, 0);
+            editShiftPage.inputStartOrEndTime("09:00 AM",true);
+            editShiftPage.inputStartOrEndTime("03:00 PM",false);
             mealBreakWarningMessages = editShiftPage.getMealBreakWarningMessage();
             restBreakWarningMessages = editShiftPage.getRestBreakWarningMessage();
             if (mealBreakWarningMessages.size()> 0 || restBreakWarningMessages.size() >0) {
@@ -1371,6 +1377,8 @@ public class SingleShiftEditTest extends TestBase {
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
             //Edit the shift again and check the breaks
+            indexes.clear();
+            indexes.add(scheduleShiftTablePage.getTheIndexOfEditedShift());
             scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
