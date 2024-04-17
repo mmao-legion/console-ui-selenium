@@ -681,7 +681,25 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
                     } else if (type.equals(sectionType.ShiftNotes.getType())) {
                         element = gridContainers.get(8).findElement(By.cssSelector(selector));
                     }
-                } else if (gridContainers.size() == 10) {
+                }
+                else if (gridContainers.size() == 7) {
+                    if (type.equals(sectionType.WorkRole.getType())) {
+                        element = gridContainers.get(0).findElement(By.cssSelector(selector));
+                    }  else if (type.equals(sectionType.StartTime.getType())) {
+                        element = gridContainers.get(1).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.EndTime.getType())) {
+                        element = gridContainers.get(2).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Date.getType())) {
+                        element = gridContainers.get(3).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.Assignment.getType())) {
+                        element = gridContainers.get(4).findElement(By.cssSelector(selector));
+                    } else if(type.equals(sectionType.ShiftName.getType())) {
+                        element = gridContainers.get(5).findElement(By.cssSelector(selector));
+                    } else if (type.equals(sectionType.ShiftNotes.getType())) {
+                        element = gridContainers.get(6).findElement(By.cssSelector(selector));
+                    }
+                }
+                else if (gridContainers.size() == 10) {
                     if (type.equals(sectionType.WorkRole.getType())) {
                         element = gridContainers.get(0).findElement(By.cssSelector(selector));
                     } else if (type.equals(sectionType.Breaks.getType())) {
