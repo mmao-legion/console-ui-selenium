@@ -2,9 +2,7 @@ package com.legion.pages.core;
 
 import com.legion.pages.*;
 import com.legion.pages.SmartTemplatePage;
-import com.legion.pages.core.schedule.ConsoleEditShiftPage;
-import com.legion.pages.core.schedule.ConsoleNewShiftPage;
-import com.legion.pages.core.schedule.ConsoleShiftOperatePage;
+import com.legion.pages.core.schedule.*;
 import com.legion.tests.core.ScheduleTestKendraScott2;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
@@ -52,13 +50,37 @@ public class ConsoleSmartTemplatePage extends BasePage implements SmartTemplateP
     @FindBy(css = "button.lgn-action-button-success")
     private WebElement okButtonOnConfirmResetModal;
     @Override
-    public void clickOnResetBtn(){
+    public void clickOnResetBtn() throws Exception {
         if (isElementEnabled(resetButton, 5)){
             clickTheElement(resetButton);
             if (isElementEnabled(okButtonOnConfirmResetModal, 5)){
                 clickTheElement(okButtonOnConfirmResetModal);
             }
             waitForSeconds(3);
+
+            //https://legiontech.atlassian.net/browse/SCH-14514
+            // the non-recurring shift cannot been removed by reset button since this bug, so need manually remove them
+            ScheduleMainPage scheduleMainPage = new ConsoleScheduleMainPage();
+            ScheduleShiftTablePage scheduleShiftTablePage = new ConsoleScheduleShiftTablePage();
+            SmartTemplatePage smartTemplatePage = new ConsoleSmartTemplatePage();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+            ArrayList<HashMap<String,String>> patterns = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            List<String> patternNames = new ArrayList<>();
+            boolean noPatternShiftExisting = false;
+            String noPattern = "No Pattern";
+            for (HashMap<String, String> pattern : patterns) {
+                patternNames.add(pattern.get("optionName"));
+            }
+            if (patternNames.contains(noPattern.toLowerCase())){
+                noPatternShiftExisting = true;
+            }
+            if (noPatternShiftExisting){
+                scheduleShiftTablePage.expandOnlyOneGroup(noPattern);
+                smartTemplatePage.clickOnEditBtn();
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("");
+                scheduleMainPage.saveSchedule();
+            }
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyAll.getValue());
         } else
             SimpleUtils.fail("The reset smart template button fail to load! ", false);
     }

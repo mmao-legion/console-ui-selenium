@@ -6,7 +6,7 @@ import java.util.List;
 public interface SmartTemplatePage {
     public void clickOnEditSmartTemplateBtn() throws Exception;
     public void clickOnEditBtn();
-    public void clickOnResetBtn();
+    public void clickOnResetBtn() throws Exception;
     public void checkOrUnCheckRecurringShift(boolean isCheck);
     public List<String> createShiftsWithWorkRoleTransition(List<HashMap<String, String>> segments, String shiftName,
                                                            int shiftPerDay, List<Integer> workDays, String assignment,
