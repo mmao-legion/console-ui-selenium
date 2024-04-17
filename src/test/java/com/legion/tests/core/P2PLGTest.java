@@ -1902,6 +1902,11 @@ public class P2PLGTest extends TestBase {
             if(!isActiveWeekGenerated){
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
+
+            else{
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
             scheduleMainPage.clickOnFilterBtn();
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("Location");
             /// Publish schedule
@@ -1950,6 +1955,9 @@ public class P2PLGTest extends TestBase {
             dashboardPage = pageFactory.createConsoleDashboardPage();
             SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!",dashboardPage.isDashboardPageLoaded() , false);
 
+            HashSet<Integer> SMindexes = new HashSet<>();
+            SMindexes.add(2);
+
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()) , true);
@@ -1971,15 +1979,15 @@ public class P2PLGTest extends TestBase {
             newShiftPage.addOpenShiftWithDefaultTime(shiftOperatePage.getRandomWorkRole(),childLocationNames.get(1));
 
             /// Edit shifts(include edit shift time, assign TM, delete...)
-            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(SMindexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             editShiftPage.inputStartOrEndTime("11:00 AM", false);
-            editShiftPage.inputStartOrEndTime("08:00 AM", true);
+            editShiftPage.inputStartOrEndTime("07:00 AM", true);
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
 
-            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(SMindexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             editShiftPage.clickOnAssignmentSelect();
