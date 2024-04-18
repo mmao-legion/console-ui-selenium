@@ -1973,10 +1973,11 @@ public class P2PLGTest extends TestBase {
 
             /// Add shifts in schedule
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-           // newShiftPage.addOpenShiftWithDefaultTime(shiftOperatePage.getRandomWorkRole(),childLocationNames.get(1));
-
+            newShiftPage.addOpenShiftWithDefaultTime(shiftOperatePage.getRandomWorkRole(),childLocationNames.get(1));
+            HashSet<Integer> SMindexes = new HashSet<>();
+            SMindexes.add(2);
             /// Edit shifts(include edit shift time, assign TM, delete...)
-            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(SMindexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             editShiftPage.inputStartOrEndTime("11:00 AM", false);
