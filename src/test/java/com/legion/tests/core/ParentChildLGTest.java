@@ -1912,6 +1912,11 @@ public class ParentChildLGTest extends TestBase {
             if(!isActiveWeekGenerated){
                 createSchedulePage.createScheduleForNonDGFlowNewUI();
             }
+
+            else{
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+                createSchedulePage.createScheduleForNonDGFlowNewUI();
+            }
             scheduleMainPage.clickOnFilterBtn();
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("Location");
             /// Publish schedule
@@ -1981,17 +1986,19 @@ public class ParentChildLGTest extends TestBase {
             newShiftPage.addOpenShiftWithDefaultTime(shiftOperatePage.getRandomWorkRole(),childLocationNames.get(1));
 
             /// Edit shifts(include edit shift time, assign TM, delete...)
-            indexes.add(0);
-            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            //indexes.add(0);
+            HashSet<Integer> SMindexes = new HashSet<>();
+            SMindexes.add(2);
+            scheduleShiftTablePage.rightClickOnSelectedShifts(SMindexes);
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             editShiftPage.inputStartOrEndTime("11:00 AM", false);
             editShiftPage.inputStartOrEndTime("08:00 AM", true);
-            editShiftPage.clickOnUpdateButton();
-            editShiftPage.clickOnUpdateAnywayButton();
+            //editShiftPage.clickOnUpdateButton();
+            //editShiftPage.clickOnUpdateAnywayButton();
 
-            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
-            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            //scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            //scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
             editShiftPage.clickOnAssignmentSelect();
             editShiftPage.selectSpecificOptionByText(assignOrOfferOption);
