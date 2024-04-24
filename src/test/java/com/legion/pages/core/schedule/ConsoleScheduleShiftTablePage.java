@@ -3898,6 +3898,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         List<WebElement> shiftsOnOneDay = getDriver().findElements(By.cssSelector("[data-day-index=\"" + dayIndex + "\"] .week-schedule-shift"));
         List<WebElement> selectedShifts = new ArrayList<>();
         List<String> selectedShiftTMNames = new ArrayList<>();
+        boolean altShifts = true;
 //        scrollToBottom();
         waitForSeconds(2);
         if (shiftsOnOneDay.size() >= shiftCount) {
@@ -3905,15 +3906,18 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
             action.keyDown(Keys.CONTROL).build().perform();
             for (WebElement element : shiftsOnOneDay) {
                 WebElement shiftName = element.findElement(By.cssSelector(".rows .week-schedule-worker-name"));
-                if (!selectedShiftTMNames.contains(shiftName.getText())) {
+                if (!selectedShiftTMNames.contains(shiftName.getText())&&altShifts) {
                     action.click(element);
                     selectedShifts.add(element);
                     selectedShiftTMNames.add(shiftName.getText());
                     SimpleUtils.pass("Bulk action: Click "+shiftName.getText()+"'s shift successfully! ");
+                    System.out.println("Name of TM is "+shiftName.getText());
+
                 }
                 if (selectedShifts.size() == shiftCount) {
                     break;
                 }
+                altShifts=!altShifts;
             }
             action.keyUp(Keys.CONTROL).build().perform();
             if (getDriver().findElements(By.cssSelector(".shift-selected-multi")).size() == shiftCount) {
@@ -4035,17 +4039,25 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
 //                && endElements.size() > 0
                 && weekDay!=null) {
             Actions action = new Actions(getDriver());
-            action.clickAndHold(selectedShifts.get(selectedShifts.size()-1)).build().perform();
-            if (endElements.size() == 0) {
-                scrollToElement(daySummaries.get(endIndex+7));
-                waitForSeconds(1);
-                action.moveToElement(daySummaries.get(endIndex+7));
-            }else {
-                scrollToElement(endElements.get(endElements.size()-1));
-                waitForSeconds(1);
-                action.moveToElement(endElements.get(endElements.size()-1));
-            }
-            action.release().build().perform();
+            action.sendKeys(Keys.ESCAPE).perform();
+            waitForSeconds(5);
+            selectedShifts.get(0).click();
+            action.keyDown(Keys.COMMAND).build().perform();;
+            selectedShifts.get(selectedShifts.size() - 1).click();
+            action.keyUp(Keys.COMMAND).build().perform();
+
+            action.clickAndHold(selectedShifts.get(selectedShifts.size() - 1)).build().perform();
+                if (endElements.size() == 0) {
+                    scrollToElement(daySummaries.get(endIndex + 7));
+                    waitForSeconds(1);
+                    action.moveToElement(daySummaries.get(endIndex + 7));
+                } else {
+                    scrollToElement(endElements.get(endElements.size() - 1));
+                    waitForSeconds(1);
+                    action.moveToElement(endElements.get(endElements.size() - 1));
+                }
+                action.release().build().perform();
+
 
 //            scrollToElement(endElements.get(endElements.size()-1));
 //            waitForSeconds(1);
@@ -4095,8 +4107,8 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     @FindBy(css = "[ng-click=\"config.mode = 'copy'\"] .tma-staffing-option-outer-circle")
     private WebElement copyShiftsRadioButton;
     public void selectMoveOrCopyBulkShifts (String moveOrCopy) throws Exception {
-        if (isElementLoaded(moveShiftsRadioButton, 5)
-                && isElementLoaded(copyShiftsRadioButton, 5)) {
+        if (isElementLoaded(moveShiftsRadioButton, 10)
+                && isElementLoaded(copyShiftsRadioButton, 10)) {
             if (moveOrCopy.equalsIgnoreCase("move")) {
                 if (moveShiftsRadioButton.findElement(By.tagName("div")).getAttribute("class").contains("ng-hide")) {
                     click(moveShiftsRadioButton);
@@ -4107,13 +4119,15 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                 } else
                     SimpleUtils.pass("Bulk action: Move shifts radio button already been selected!");
             }else {
-                if (copyShiftsRadioButton.findElement(By.tagName("div")).getAttribute("class").contains("ng-hide")) {
+                if (copyShiftsRadioButton.findElement(By.tagName("div")).getAttribute("class").contains("ng-hide"))
+                {
                     click(copyShiftsRadioButton);
                     if (!copyShiftsRadioButton.findElement(By.tagName("div")).getAttribute("class").contains("ng-hide")) {
                         SimpleUtils.pass("Bulk action: Select copy shifts radio button successfully!");
                     } else
                         SimpleUtils.fail("Bulk action: Fail to select copy shift radio button! ", false);
-                } else
+                }
+                else
                     SimpleUtils.pass("Bulk action: Copy shifts radio button already been selected!");
             }
         }else

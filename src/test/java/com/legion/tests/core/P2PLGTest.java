@@ -4317,6 +4317,7 @@ public class P2PLGTest extends TestBase {
 
             //Select move option
             scheduleShiftTablePage.selectMoveOrCopyBulkShifts("copy");
+
             scheduleShiftTablePage.enableOrDisableAllowComplianceErrorSwitch(true);
             scheduleShiftTablePage.enableOrDisableAllowConvertToOpenSwitch(true);
             scheduleShiftTablePage.clickConfirmBtnOnDragAndDropConfirmPage();
@@ -4324,8 +4325,8 @@ public class P2PLGTest extends TestBase {
             //Check the shift count after drag and drop
             int allShiftsCountAfter = scheduleShiftTablePage.getShiftsCount();
             int oneDayShiftsCountAfter = scheduleShiftTablePage.getOneDayShiftCountByIndex(2);
-            SimpleUtils.assertOnFail("The expected count are: "+allShiftsCountBefore+2 + " and "+ oneDayShiftsCountBefore+2
-                            + ", but the actual are: "+allShiftsCountAfter + " and "+ oneDayShiftsCountAfter,
+            SimpleUtils.assertOnFail("The expected count are: "+(allShiftsCountBefore+2) +" and "+ (oneDayShiftsCountBefore+2) +
+                             ", but the actual are: "+allShiftsCountAfter + " and "+ oneDayShiftsCountAfter,
                     allShiftsCountAfter == allShiftsCountBefore+2 && oneDayShiftsCountAfter == oneDayShiftsCountBefore+2, false);
             for (int i=0; i< selectedShiftCount;i++) {
                 SimpleUtils.assertOnFail("Bulk Drag and drop: the shifts fail to be copied! ",
