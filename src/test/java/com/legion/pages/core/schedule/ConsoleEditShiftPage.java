@@ -426,8 +426,9 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         if (isElementLoaded(shiftNameOverwriteCheckbox, 5)){
             checkOrUncheckShiftNameOverwriteCheckbox(true);
         }
-//        WebElement shiftNameInputSection = getSpecificElementByTypeAndColumn(sectionType.ShiftName.getType(), "Edited");
+
         WebElement input = getDriver().findElement(By.cssSelector("[placeholder=\"Shift Name (Optional)\"]"));
+        click(input);
         input.sendKeys(Keys.CONTROL, "a");
         input.sendKeys(Keys.DELETE);
         input.sendKeys(shiftName);
@@ -443,8 +444,8 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         if (isElementLoaded(shiftNotesOverwriteCheckbox, 5)){
             checkOrUncheckShiftNotesOverwriteCheckbox(true);
         }
-//        WebElement shiftNotesSection = getSpecificElementByTypeAndColumn(sectionType.ShiftNotes.getType(), "Edited");
         WebElement input = getDriver().findElement(By.cssSelector("[placeholder=\"Shift Notes (Optional)\"]"));
+        click(input);
         input.sendKeys(Keys.CONTROL+ "a"); //This is not working properly
         input.sendKeys(Keys.DELETE); //This is not working properly
         input.sendKeys(shiftNote);
