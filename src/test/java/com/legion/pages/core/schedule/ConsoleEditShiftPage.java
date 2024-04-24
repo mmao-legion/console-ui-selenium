@@ -988,6 +988,29 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
             SimpleUtils.report("There is no meal break buttons! ");
     }
 
+    @Override
+    public void removeMealBreaksByNumber(int number) {
+        if (areListElementVisible(removeMealBreakButtons, 3)& removeMealBreakButtons.size()>number){
+            for (int i=0; i< number; i++) {
+                scrollToElement(removeMealBreakButtons.get(removeMealBreakButtons.size()-1));
+                click(removeMealBreakButtons.get(removeMealBreakButtons.size()-1));
+                SimpleUtils.pass("Click the meal break button successfully! ");
+            }
+        } else
+            SimpleUtils.report("There is no meal break buttons! ");
+    }
+
+    @Override
+    public void removeRestBreaksByNumber(int number) {
+        if (areListElementVisible(removeRestBreakButtons, 3)& removeRestBreakButtons.size()>number){
+            for (int i=0; i< number; i++) {
+                scrollToElement(removeRestBreakButtons.get(removeRestBreakButtons.size()-1));
+                click(removeRestBreakButtons.get(removeRestBreakButtons.size()-1));
+                SimpleUtils.pass("Click the rest break button successfully! ");
+            }
+        } else
+            SimpleUtils.report("There is no rest break buttons! ");
+    }
 
     @Override
     public void removeAllRestBreaks() throws Exception {
