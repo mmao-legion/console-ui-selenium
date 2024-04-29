@@ -115,7 +115,10 @@ public class ScheduleTestKendraScott2 extends TestBase {
 	public enum staffingOption{
 		OpenShift("Auto"),
 		ManualShift("Manual"),
-		AssignTeamMemberShift("Assign Team Member");
+		AssignTeamMemberShift("Assign Team Member"),
+		AutoAssignShift("Auto assign"),
+		AssignToSpecificTMShift("Assign to Specific TM's");
+
 		private final String value;
 		staffingOption(final String newValue) {
             value = newValue;
