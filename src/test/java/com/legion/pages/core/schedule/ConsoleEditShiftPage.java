@@ -2,6 +2,7 @@ package com.legion.pages.core.schedule;
 
 import com.legion.pages.BasePage;
 import com.legion.pages.EditShiftPage;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -31,6 +32,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         Assignment("Assignment"),
         ShiftNotes("Shift Notes"),
         Breaks("Breaks");
+
         private final String type;
         sectionType(final String newType){
             type = newType;
@@ -109,6 +111,44 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
 
     @FindBy (xpath = "//button[text()='OK']")
     public WebElement OKButton;
+
+    @FindBy(xpath ="//div[@id='legion_cons_Schedule_Schedule_EditShifts_SelectAssignment']//div[@class='react-select__indicator react-select__dropdown-indicator css-tlfecz-indicatorContainer']//*[name()='svg']")
+    private WebElement assignmentDropDownOnNewCreateShiftPage;
+
+    @FindBy(xpath = "//div[@id='legion_cons_Schedule_Schedule_EditShifts_SelectAssignment']")
+    private List<WebElement> assignmentOptionsInDropDownList;
+
+    public void clickOnStaffingOption(String staffingOption) throws Exception {
+        scrollToBottom();
+        waitForSeconds(1);
+        if (isElementLoaded(assignmentDropDownOnNewCreateShiftPage, 5)) {
+            click(assignmentDropDownOnNewCreateShiftPage);
+            SimpleUtils.pass("Assignment button clicked Successfully");
+            if (assignmentOptionsInDropDownList.size() > 0) {
+                for (WebElement assignmentOptions : assignmentOptionsInDropDownList) {
+                    String option = assignmentOptions.getText().toLowerCase();
+                    if (staffingOption.toLowerCase().contains("auto")) {
+                        MyThreadLocal.setAssignTMStatus(true);
+                    } else
+                        MyThreadLocal.setAssignTMStatus(false);
+                    if (option.contains(staffingOption.toLowerCase())) {
+                        click(assignmentOptions);
+                        SimpleUtils.pass(option + " been selected Successfully!");
+                        break;
+                    } else if(!option.contains("auto") && !staffingOption.toLowerCase().contains("auto")) {
+                        click(assignmentOptions);
+                        SimpleUtils.pass(option + " been selected Successfully!");
+                        break;
+                    }else {
+                        SimpleUtils.report(option + " is not selected Successfully!");
+                    }
+                }
+            } else {
+                SimpleUtils.fail("Assignment options size are empty", false);
+            }
+        } else
+            SimpleUtils.fail("Assignment options fail to load on create shift page! ", false);
+    }
 
     @Override
     public boolean isEditShiftWindowLoaded() throws Exception {
@@ -367,6 +407,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
             SimpleUtils.fail("Assignment section on Edited column failed to load!", false);
         }
     }
+
 
     @Override
     public void selectSpecificOptionByText(String text) throws Exception {
@@ -683,6 +724,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
                         element = gridContainers.get(8).findElement(By.cssSelector(selector));
                     }
                 }
+
                 else if (gridContainers.size() == 7) {
                     if (type.equals(sectionType.WorkRole.getType())) {
                         element = gridContainers.get(0).findElement(By.cssSelector(selector));

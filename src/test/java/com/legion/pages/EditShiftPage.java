@@ -55,4 +55,7 @@ public interface EditShiftPage {
     public void clickOnUpdateAnywayButton() throws Exception;
     public void checkOrUncheckAutomaticallyScheduleOptimizedBreak(boolean isCheck) throws Exception;
     public void inputShiftNotesForEmptyInput(String shiftNote) throws Exception;
+
+    public void clickOnStaffingOption(String staffingOption) throws Exception;
+
 }

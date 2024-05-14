@@ -126,6 +126,7 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
 
 
 //    @FindBy(xpath = "//div[contains(@class,'legion-ui-react')]/div/form/div/div[1]/div[7]//div[contains(@class,'react-select__placeholder')]")
+
     @FindBy(xpath = "//div[contains(@id,\"legion_cons_Schedule_Schedule_CreateShift_Assignment_menu\")]/div/div[contains(@class,'react-select__value-container')]/div[1]")
     private WebElement assignmentDropDownOnNewCreateShiftPage;
     @FindBy(className = "react-select__option")
@@ -2754,6 +2755,9 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             shiftPerDayInputOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
             shiftPerDayInputOnNewCreateShiftPage.sendKeys(Keys.DELETE);
             shiftPerDayInputOnNewCreateShiftPage.sendKeys(String.valueOf(shiftPerDay));
+            shiftPerDayInputOnNewCreateShiftPage.sendKeys(Keys.BACK_SPACE);
+            clearTheText(shiftPerDayInputOnNewCreateShiftPage);
+
             SimpleUtils.report("Set Shift Per Day on New Create Shift page successfully! ");
         } else
             SimpleUtils.report("The Shift Per Day input is not loaded on New Create Shift page! ");
