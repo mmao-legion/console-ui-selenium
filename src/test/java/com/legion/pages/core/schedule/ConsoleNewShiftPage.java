@@ -2755,9 +2755,8 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             shiftPerDayInputOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
             shiftPerDayInputOnNewCreateShiftPage.sendKeys(Keys.DELETE);
             shiftPerDayInputOnNewCreateShiftPage.sendKeys(String.valueOf(shiftPerDay));
-            shiftPerDayInputOnNewCreateShiftPage.sendKeys(Keys.BACK_SPACE);
-            clearTheText(shiftPerDayInputOnNewCreateShiftPage);
-
+            //shiftPerDayInputOnNewCreateShiftPage.sendKeys(Keys.BACK_SPACE);
+           // clearTheText(shiftPerDayInputOnNewCreateShiftPage);
             SimpleUtils.report("Set Shift Per Day on New Create Shift page successfully! ");
         } else
             SimpleUtils.report("The Shift Per Day input is not loaded on New Create Shift page! ");
