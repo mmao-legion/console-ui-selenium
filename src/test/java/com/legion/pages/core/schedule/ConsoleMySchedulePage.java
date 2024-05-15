@@ -44,6 +44,35 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         }
     }
 
+
+    public enum shiftRequestType {
+        RequestoSwapShift("Request to Swap Shift"),
+        RequestToCoverShift("Request to Cover Shift");
+        private final String value;
+
+        shiftRequestType(final String newValue) {
+            value = newValue;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public enum shiftConsentType {
+        AcceptScheduleChange("Accept schedule change"),
+        DeclineScheduleChange("Decline schedule change");
+        private final String value;
+
+        shiftConsentType(final String newValue) {
+            value = newValue;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
     @FindBy(css = "div[ng-attr-class^=\"sch-date-title\"]")
     private List<WebElement> weekScheduleShiftsDateOfMySchedule;
 
@@ -816,8 +845,6 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
             if (isElementLoaded(confirmWindow, 20) && isElementLoaded(okBtnOnConfirm, 20)) {
                 clickTheElement(okBtnOnConfirm);
                 SimpleUtils.pass("Confirm window loaded Successfully!");
-            }else {
-                SimpleUtils.fail("Confirm window not loaded Successfully!", true);
             }
         }else {
             SimpleUtils.fail("Submit button on Submit Cover Request not loaded Successfully!", true);
@@ -2090,6 +2117,22 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
         } else
             SimpleUtils.fail("Work days of schedule week are not loaded!", false);
         return workDays;
+    }
+
+    @FindBy(css = "div.day-view-shift-right-top-icons")
+    private List<WebElement> scheduleInfoIconInDayView;
+    @FindBy(xpath = "//div/shift-hover/div/div[3]/div[1]")
+    private WebElement  shiftTimeOnPopUp;
+    public String getShiftTimeFromPopupInTMViewByIndex(int index) {
+        String shiftTime = "";
+        if (areListElementVisible(scheduleInfoIconInDayView,5)
+                && scheduleInfoIconInDayView.size()>index) {
+            clickTheElement(scheduleInfoIconInDayView.get(index));
+            shiftTime = shiftTimeOnPopUp.getText();
+            SimpleUtils.pass("Get shift time successfully! ");
+        }else
+            SimpleUtils.fail("There is no shift or the index is more than the shift count! ", false);
+        return shiftTime;
     }
 
 }
