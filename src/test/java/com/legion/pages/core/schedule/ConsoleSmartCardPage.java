@@ -19,6 +19,21 @@ import java.util.*;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
+
+    public enum smartCardNames {
+        ScheduleChange("Schedule Changed"),
+        ConsentRequired("Consent Required");
+        private final String value;
+
+        smartCardNames(final String name) {
+            value = name;
+        }
+        public String getValue() {
+            return value;
+        }
+    }
+
+
     public ConsoleSmartCardPage() {
         PageFactory.initElements(getDriver(), this);
     }
@@ -588,7 +603,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         if (areListElementVisible(smartCards, 5)) {
             for (WebElement smartCard : smartCards) {
                 WebElement title = smartCard.findElement(By.className("card-carousel-card-title"));
-                if (title != null && title.getText().trim().contains(cardName)) {
+                if (title != null && title.getText().trim().toLowerCase().contains(cardName.toLowerCase())) {
                     WebElement h1 = smartCard.findElement(By.tagName("h1"));
                     String h1Title = h1 == null ? "" : h1.getText();
                     if (h1Title.contains(" ")) {

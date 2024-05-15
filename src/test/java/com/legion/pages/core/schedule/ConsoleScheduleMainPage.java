@@ -2691,4 +2691,14 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
             SimpleUtils.fail("Work role filter box is not found!", false);
     }
 
+    @Override
+    public void clickSaveScheduleButtonOnly() throws Exception {
+        if (isElementEnabled(scheduleSaveBtn, 10)) {
+            scrollToElement(scheduleSaveBtn);
+            clickTheElement(scheduleSaveBtn);
+        }else {
+            SimpleUtils.fail("Schedule save button not found", false);
+        }
+    }
+
 }
