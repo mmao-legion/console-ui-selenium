@@ -63,7 +63,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 	@FindBy(css = "[class=\"lg-table lg-templates-table-improved ng-scope\"] .lg-templates-table-improved__grid-row.ng-scope")
 	private List<WebElement> templatesList;
 
-	@FindBy(css = "[class=\"lg-table lg-templates-table-improved ng-scope\"] button span.ng-binding")
+	@FindBy(css = "[class=\"lg-table lg-templates-table-improved ng-scope\"] button span span.ng-binding")
 	private List<WebElement> templateNameList;
 	@FindBy(css = "lg-eg-status[type='Draft']")
 	private List<WebElement> templateDraftStatusList;

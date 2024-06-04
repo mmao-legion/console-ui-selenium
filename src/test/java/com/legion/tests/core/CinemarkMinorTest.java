@@ -190,7 +190,7 @@ public class CinemarkMinorTest extends TestBase {
             teamPage.clickOnSchoolSessionStart();
             Calendar calendar = Calendar.getInstance();
             int month = calendar.get(Calendar.MONTH) + 1;
-            if (month < 6 || month==12) {
+            if (month <= 6 || month==12) {
                 //First half of the year
                 teamPage.selectSchoolSessionStartAndEndDate((Integer.parseInt(dayInfo.get("year")) - 1) + " Aug 1",
                         (Integer.parseInt(dayInfo.get("year"))) + " " + dayInfo.get("month") + " " + dayInfo.get("day"));

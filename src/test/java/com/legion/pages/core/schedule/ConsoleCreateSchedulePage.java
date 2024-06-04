@@ -786,7 +786,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
                     List<WebElement> trs = enterBudgetTable.findElements(By.tagName("tr"));
                     if (areListElementVisible(trs, 5) && trs.size() > 0) {
                         WebElement budget = trs.get(trs.size() - 1).findElement(By.cssSelector("td:nth-child(3)"));
-                        budgetHour = Float.parseFloat(budget == null ? "" : budget.getText());
+                        budgetHour = Float.parseFloat(budget == null ? "" : budget.getText().replace(",",""));
                         SimpleUtils.report("Enter Budget Window: Get the budget hour: " + budgetHour);
                     }
                 } catch (Exception e) {
@@ -1998,7 +1998,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
     @FindBy(css = "div.graph-description-item-value")
     private List<WebElement> copyScheduleGraphDescriptions;
-    @FindBy(css = ".generate-modal-week-container.selected text[y=\"21\"]")
+    @FindBy(css = ".generate-modal-week-container.selected text[y=\"55\"]")
     private WebElement estimatedLabelInSuggestedModalWeek;
     @FindBy(css = ".generate-modal-week-schedules-header-toggle")
     private WebElement selectAnotherWeekLink;
@@ -2061,8 +2061,8 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
             if (targetBudgetHrs>=0){
                 SimpleUtils.assertOnFail("The target budget hrs display incorrectly, the expected is:"+targetBudgetHrs
-                                +" the actual is: "+targetBudget.getText(),
-                        Float.parseFloat(targetBudget.getText().split(" ")[0]) == targetBudgetHrs, false);
+                                +" the actual is: "+targetBudget.getText().replace(",",""),
+                        Float.parseFloat(targetBudget.getText().replace(",","").split(" ")[0]) == targetBudgetHrs, false);
             }
             String graphDescription = "Guidance";
             String graphDescription1 = "Budget";
