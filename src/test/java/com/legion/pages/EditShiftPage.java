@@ -57,4 +57,5 @@ public interface EditShiftPage {
     public void inputShiftNotesForEmptyInput(String shiftNote) throws Exception;
     public void removeMealBreaksByNumber(int number);
     public void removeRestBreaksByNumber(int number);
+    public void clickOnStaffingOption(String staffingOption) throws Exception;
 }

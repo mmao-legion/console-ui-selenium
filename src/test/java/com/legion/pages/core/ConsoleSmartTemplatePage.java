@@ -201,7 +201,7 @@ public class ConsoleSmartTemplatePage extends BasePage implements SmartTemplateP
         ShiftOperatePage shiftOperatePage = new ConsoleShiftOperatePage();
 
         newShiftPage.clickOnDayViewAddNewShiftButton();
-        Thread.sleep(5000);
+        waitForSeconds(5);
         SimpleUtils.assertOnFail("New create shift page is not display! ",
                 newShiftPage.checkIfNewCreateShiftPageDisplay(), false);
         // Select work role
@@ -210,14 +210,17 @@ public class ConsoleSmartTemplatePage extends BasePage implements SmartTemplateP
         if (location != null && !location.isEmpty()) {
             newShiftPage.selectChildLocInCreateShiftWindow(location);
         }
-        // Set end time
-        if (endTime != null && !endTime.isEmpty()) {
-            newShiftPage.moveSliderAtCertainPoint(endTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
-        }
+
         // Set start time
         if (startTime != null && !startTime.isEmpty()) {
             newShiftPage.moveSliderAtCertainPoint(startTime, ScheduleTestKendraScott2.shiftSliderDroppable.StartPoint.getValue());
         }
+
+        // Set end time
+        if (endTime != null && !endTime.isEmpty()) {
+            newShiftPage.moveSliderAtCertainPoint(endTime, ScheduleTestKendraScott2.shiftSliderDroppable.EndPoint.getValue());
+        }
+
 //        //Set segments
 //        newShiftPage.addShiftSegments(segments, true);
         // Set shift name
@@ -246,7 +249,7 @@ public class ConsoleSmartTemplatePage extends BasePage implements SmartTemplateP
         }
         newShiftPage.clickOnCreateOrNextBtn();
         if (assignment.equals(ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue())
-                || assignment.equals(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue()) ) {
+                || assignment.equals(ScheduleTestKendraScott2.staffingOption.ManualShift.getValue()) ||assignment.equals(ScheduleTestKendraScott2.staffingOption.AssignToSpecificTMShift.getValue()) ) {
             if (tmName != null && !tmName.isEmpty()) {
                 newShiftPage.searchTeamMemberByName(tmName);
             } else {

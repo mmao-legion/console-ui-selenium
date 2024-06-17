@@ -232,4 +232,9 @@ public class ConsoleWebPageFactory implements PageFactory {
 	public SmartTemplatePage createSmartTemplatePage() {
 		return new ConsoleSmartTemplatePage();
 	}
+
+	@Override
+	public ScheduleAttestationPage createScheduleAttestationPage() {
+		return new ConsoleScheduleAttestationPage();
+	}
 }

@@ -2118,6 +2118,7 @@ public class TeamTestKendraScott2 extends TestBase{
 			String permissionSection = "Schedule";
 			String permission = "Edit Past Schedule";
 			String actionOn = "on";
+
 			//Go to the configuration page and set the labor budget and By Location
 				LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
 				locationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
@@ -2143,11 +2144,11 @@ public class TeamTestKendraScott2 extends TestBase{
 				controlsNewUIPage.turnOnOrOffSpecificPermissionForSpecificRoles(permissionSection,role,permission,actionOn);
 				cinemarkMinorPage.clickOnBtn(CinemarkMinorTest.buttonGroup.Save.getValue());
 				switchToConsoleWindow();
-			refreshCachesAfterChangeTemplate();
-			Thread.sleep(240000);
+			    refreshCachesAfterChangeTemplate();
+				Thread.sleep(120000); //updated wait time from 240000 to 120000
 
-			//Go to schedule page and re-generate the schedule for current & past weeks
-			CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
+				//Go to schedule page and re-generate the schedule for current & past weeks
+		    CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
 			ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
@@ -2159,7 +2160,6 @@ public class TeamTestKendraScott2 extends TestBase{
 			}
 			Thread.sleep(5000);
 			createSchedulePage.createScheduleForNonDGFlowNewUI();
-
 			scheduleCommonPage.clickOnWeekView();
 			scheduleCommonPage.navigateToPreviousWeek();
 			boolean isPreviousActiveWeekGenerated = createSchedulePage.isWeekGenerated();
@@ -2172,8 +2172,8 @@ public class TeamTestKendraScott2 extends TestBase{
 			//Login as SM, generate the schedule
 			LoginPage loginPage = pageFactory.createConsoleLoginPage();
 			loginPage.logOut();
-			Thread.sleep(240000);
-			loginAsDifferentRole(AccessRoles.StoreManager.getValue());
+			Thread.sleep(4000); //changed 240000 to 4000 as 240000 wait time was too long
+		    loginAsDifferentRole(AccessRoles.StoreManager.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
@@ -2195,14 +2195,40 @@ public class TeamTestKendraScott2 extends TestBase{
 			shiftOperatePage.convertAllShiftsToOpenInDayView(action);
 			scheduleMainPage.saveSchedule();
 
-			//Login as DM, generate the schedule
+			//Added below steps as for DM view, current & past week Schedule already had Open shift as converted by SM on above steps & DM was converting already Open shifts to Open on Day View , Schedule generation steps for DM login were missing
 			loginPage.logOut();
-			Thread.sleep(60000);
-			loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
+			Thread.sleep(4000);
+		    //Login as Internal Admin & generate the schedule as DM was using the already generated Schedule leveraged by SM in above steps
+			loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
 			SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
 			scheduleCommonPage.clickOnScheduleConsoleMenuItem();
 			scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+			SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+			scheduleCommonPage.clickOnWeekView();
+		boolean isActiveWeekGenerated1 = createSchedulePage.isWeekGenerated();
+		if (isActiveWeekGenerated1)
+		{
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		Thread.sleep(5000);
+		createSchedulePage.createScheduleForNonDGFlowNewUI();
+		scheduleCommonPage.clickOnWeekView();
+		scheduleCommonPage.navigateToPreviousWeek();
+		boolean isPreviousActiveWeekGenerated1 = createSchedulePage.isWeekGenerated();
+		if (isPreviousActiveWeekGenerated1) {
+			createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+		}
+		Thread.sleep(5000);
+		createSchedulePage.createScheduleForNonDGFlowNewUI();
+		loginPage.logOut();
+		Thread.sleep(4000);
 
+		//Login as DM view & perform the same steps as SM
+		loginAsDifferentRole(AccessRoles.DistrictManager.getValue());
+		SimpleUtils.assertOnFail("DashBoard Page not loaded Successfully!", dashboardPage.isDashboardPageLoaded(), false);
+		scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+		scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+		SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
 			//Switch to the DayView and convert one shift to the Open Shift.
 			scheduleCommonPage.clickOnDayView();
 			scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();

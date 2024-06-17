@@ -74,7 +74,7 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	private WebElement immediatePastToCurrentActiveWeek;
 
 //	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@class='number ng-binding']")
-	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='!hideForecast() && !hasAdjustableRoles']")
+	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='shouldShowConstrainedLaborForecast()']")
 	private WebElement laborSmartCardForecast;
 
 //	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='hasBudget()']")

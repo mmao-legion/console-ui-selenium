@@ -933,5 +933,14 @@ SCH-5862-->
         </classes>
     </test>
 
+    <test name="Schedule Attestation Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleAttestationTest">
+                <methods>
+                    <include name="verifyEmployeeCanAcceptAndDeclineTheAddNewShiftConsentAsTeamMember"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 
 </suite> <!-- Suite -->

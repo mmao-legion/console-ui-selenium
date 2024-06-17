@@ -2,6 +2,8 @@ package com.legion.tests.core;
 
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
+import com.legion.pages.core.ConsoleSmartTemplatePage;
+import com.legion.pages.core.schedule.ConsoleEditShiftPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -998,6 +1000,68 @@ public class SmartTemplateTest extends TestBase {
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Ashutosh")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify Auto Assign option of Assignment is working fine")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyAutoAssignOptionOfAssignmentIsWorkingFineAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            goToSchedulePageScheduleTab();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            goToSmartTemplatePage();
+            smartTemplatePage.clickOnResetBtn();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole1 = "Event Manager";
+            String shiftName = "AssignRecurringShiftPattern";
+            String shiftNote = "RecurringShiftsNote";
+            String startTime = "10:00am";
+            String endTime = "6:00pm";
+            smartTemplatePage.clickOnEditBtn();
+            //Create one group of recurring shifts
+            smartTemplatePage.createShiftsWithOutWorkRoleTransition(workRole1, shiftName, "", startTime, endTime, 1,
+                    Arrays.asList(0,1,2),
+                    ScheduleTestKendraScott2.staffingOption.AssignToSpecificTMShift.getValue(), shiftNote, "", true);
+
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
+            //Check the shift name and notes been added successfully
+            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(0);
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            SimpleUtils.assertOnFail("Shift Notes is not updated!", shiftNote.equalsIgnoreCase(shiftInfo1.get(10)), false);
+
+            //Edit the recurring shift pattern
+            smartTemplatePage.clickOnEditBtn();
+//            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
+            HashSet<Integer> indexes = new HashSet<>();
+            indexes.add(0);
+            String action = "Edit";
+            scheduleShiftTablePage.rightClickOnSelectedShifts(indexes);
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            editShiftPage.clickOnStaffingOption(ScheduleTestKendraScott2.staffingOption.AutoAssignShift.getValue());
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+
+            smartTemplatePage.clickOnBackBtn();
+
+            isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+               if(!isActiveWeekGenerated){
+                    createSchedulePage.createScheduleForNonDGFlowNewUI();
+                            }
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
+
+       } catch (Exception e) {
+           SimpleUtils.fail(e.getMessage(), false);
+       }
     }
 
 

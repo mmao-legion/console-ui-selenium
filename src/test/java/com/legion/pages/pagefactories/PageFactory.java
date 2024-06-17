@@ -119,4 +119,6 @@ public interface PageFactory {
     RulePage createRulePage();
 
     SmartTemplatePage createSmartTemplatePage();
+
+    ScheduleAttestationPage createScheduleAttestationPage();
 }
