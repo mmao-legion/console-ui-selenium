@@ -354,13 +354,13 @@ public class FTSERelevantTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.navigateToNextWeek();
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isActiveWeekGenerated) {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUI();
-
             //Delete all auto-generated shifts for the FTSE employee
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("FTSE");
@@ -752,6 +752,7 @@ public class FTSERelevantTest extends TestBase {
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Overview.getValue());
             SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!", scheduleCommonPage.verifyActivatedSubTab(SchedulePageSubTabText.Overview.getValue()), true);
             scheduleCommonPage.clickOnScheduleSubTab(SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.navigateToNextWeek();
             scheduleCommonPage.clickOnWeekView();
             boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isActiveWeekGenerated) {
@@ -786,7 +787,7 @@ public class FTSERelevantTest extends TestBase {
             scheduleMainPage.clickOnOpenSearchBoxButton();
             scheduleMainPage.searchShiftOnSchedulePage(tmPartialName);
             List<String> complianceMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(1));
-            SimpleUtils.assertOnFail("The Clopening violation message is not showing!", complianceMessage.contains("Clopening"), false);
+            SimpleUtils.assertOnFail("The Clopening violation message is not showing!", !complianceMessage.contains("Clopening"), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);

@@ -1446,7 +1446,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
         waitForSeconds(2);
         if (isElementLoaded(dropdownToggle,10)){
             click(dropdownToggle);
-            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()==5 ){
+            if (areListElementVisible(dropdownMenuFormDropdownToggle,10)&&dropdownMenuFormDropdownToggle.size()>=5){
                 waitForSeconds(3);
                 click(dropdownMenuFormDropdownToggle.get(2));
                 SimpleUtils.pass("Toggle Summary View has been clicked!");
