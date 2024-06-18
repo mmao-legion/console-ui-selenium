@@ -834,7 +834,7 @@ public class OpsPortalConfigurationPage extends BasePage implements Configuratio
 			searchTemplateInputBox.sendKeys(templateName);
 			searchTemplateInputBox.sendKeys(Keys.ENTER);
 			waitForSeconds(2);
-			if (templateNameList.size() > 0)
+			if (areListElementVisible(templateNameList, 20) && templateNameList.size() > 0)
 				exsiting = true;
 
 		}

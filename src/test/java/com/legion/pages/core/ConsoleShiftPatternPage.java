@@ -1,7 +1,9 @@
 package com.legion.pages.core;
 
 import com.legion.pages.BasePage;
+import com.legion.pages.EditShiftPage;
 import com.legion.pages.ShiftPatternPage;
+import com.legion.pages.core.schedule.ConsoleEditShiftPage;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -91,9 +93,9 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
     private List<WebElement> addShiftBtns;
     @FindBy (css = "[modal-title=\"Create New Shift\"]")
     private WebElement createNewShiftWindow;
-    @FindBy (css = "h6+div>.MuiGrid-container>div:nth-child(2)")
+    @FindBy (css = ".MuiGrid-container>div:nth-child(2)>div:nth-child(1)")
     private List<WebElement> columnValueContainers;
-    @FindBy (css = "h6+div>.MuiGrid-container>div:nth-child(1)")
+    @FindBy (css = ".MuiGrid-container .MuiGrid-grid-xs-2>div:nth-child(1)")
     private List<WebElement> columnTitleContainers;
     @FindBy (css = "[ng-click=\"close()\"]")
     private WebElement cancelOnPopup;
@@ -103,7 +105,7 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
     private List<WebElement> warningMsgs;
     @FindBy (css = "[style=\"border-top: none;\"] div")
     private List<WebElement> breakWarnings;
-    @FindBy (css = "h6+div>.MuiGrid-container>div:nth-child(2)")
+    @FindBy (css = ".MuiGrid-container>div:nth-child(2)>div:nth-child(1)")
     private List<WebElement> sections;
     @FindBy (id = "legion_cons_Schedule_Schedule_CreateShift_ShiftName_field")
     private WebElement shiftNameInput;
@@ -132,22 +134,22 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
         if (name.equalsIgnoreCase(sectionType.WorkRole.getType())) {
             return sections.get(0);
         }
-        if (name.equalsIgnoreCase(sectionType.ShiftName.getType())) {
+        if (name.equalsIgnoreCase(sectionType.Breaks.getType())) {
             return sections.get(1);
         }
-        if (name.equalsIgnoreCase(sectionType.Description.getType())) {
+        if (name.equalsIgnoreCase(sectionType.ShiftName.getType())) {
             return sections.get(2);
         }
-        if (name.equalsIgnoreCase(sectionType.StartTime.getType())) {
+        if (name.equalsIgnoreCase(sectionType.Description.getType())) {
             return sections.get(3);
         }
-        if (name.equalsIgnoreCase(sectionType.EndTime.getType())) {
+        if (name.equalsIgnoreCase(sectionType.StartTime.getType())) {
             return sections.get(4);
         }
-        if (name.equalsIgnoreCase(sectionType.Days.getType())) {
+        if (name.equalsIgnoreCase(sectionType.EndTime.getType())) {
             return sections.get(5);
         }
-        if (name.equalsIgnoreCase(sectionType.Breaks.getType())) {
+        if (name.equalsIgnoreCase(sectionType.Days.getType())) {
             return sections.get(6);
         }
         if (name.equalsIgnoreCase(sectionType.ShiftNotes.getType())) {
@@ -184,10 +186,10 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
                 }
             }
         }
-        WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
-        List<WebElement> mealAndRest = breakSection.findElements(By.cssSelector(".MuiGrid-grid-xs-true"));
-        WebElement mealSection = mealAndRest.get(0);
-        WebElement restSection = mealAndRest.get(1);
+//        WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
+//        List<WebElement> mealAndRest = breakSection.findElements(By.cssSelector(".MuiGrid-grid-xs-true"));
+        WebElement mealSection = breakSections.get(0);
+        WebElement restSection = breakSections.get(1);
         List<WebElement> mealInputs = mealSection.findElements(By.tagName("input"));
         List<WebElement> restInputs = restSection.findElements(By.tagName("input"));
         if (!mealInputs.get(0).getAttribute("value").equalsIgnoreCase(String.valueOf(mealStartOffset)) || !mealInputs
@@ -206,36 +208,51 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
         }
         return "";
     }
-
+    @FindBy (css = ".MuiGrid-spacing-xs-2 >div:nth-child(2) [data-testid=\"AddOutlinedIcon\"]")
+    private List<WebElement> addBreakButton;
+    @FindBy (xpath = "//*[contains(@data-testid,'AddOutlinedIcon')]/parent::span")
+    private WebElement addRestBreakButton;
     @Override
     public void clickOnAddMealOrRestBreakBtn(boolean isMeal) throws Exception {
-        WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
-        WebElement addButton = null;
+//        WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
+//        WebElement addButton = null;
         int index = 0;
         if (isMeal) {
             index = 1;
         } else {
             index = 2;
         }
-        addButton = getDriver().findElements(By.cssSelector(".add-break-button-title")).get(index - 1);
-        clickTheElement(addButton);
-        if (areListElementVisible(breakSection.findElements(By.cssSelector("div>div:nth-child(" + index + ") input")),
-                3) && isElementLoaded(breakSection.findElement(By.cssSelector("div>div:nth-child(" + index + ") td>svg")), 3)) {
+//        addButton = getDriver().findElements(By.cssSelector(".add-break-button-title")).get(index - 1);
+        if (isMeal)
+            click(addBreakButton.get(0));
+        else {
+            if (addBreakButton.size()==1){
+                click(addBreakButton.get(0));
+            } else
+                click(addBreakButton.get(1));
+        }
+
+        if (areListElementVisible(breakSections.get(index-1).findElements(By.cssSelector("div>div:nth-child(1) input")),
+                3) && isElementLoaded(breakSections.get(index-1).findElement(By.cssSelector("td>svg")), 3)) {
             SimpleUtils.pass("Click on Add break button successfully!");
         } else {
             SimpleUtils.fail("Break Section: inputs and close button failed to show!", false);
         }
     }
 
+    @FindBy (css = ".MuiGrid-spacing-xs-2 >div:nth-child(1) [data-testid=\"CancelRoundedIcon\"]")
+    private List<WebElement> removeMealBreakButtons;
+    @FindBy (css = ".MuiGrid-spacing-xs-2 >div:nth-child(2) [data-testid=\"CancelRoundedIcon\"]")
+    private List<WebElement> removeRestBreakButtons;
     @Override
     public void deleteTheBreakByNumber(boolean isMeal, int number) throws Exception {
-        WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
-        List<WebElement> mealAndRest = breakSection.findElements(By.cssSelector(".MuiGrid-grid-xs-true"));
+//        WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
+//        List<WebElement> mealAndRest = breakSection.findElements(By.cssSelector(".MuiGrid-grid-xs-true"));
         WebElement section = null;
         if (isMeal) {
-            section = mealAndRest.get(0);
+            section = breakSections.get(0);
         } else {
-            section = mealAndRest.get(1);
+            section = breakSections.get(1);
         }
         List<WebElement> deleteButtons = section.findElements(By.cssSelector("td>svg"));
         if (deleteButtons.size() >= number) {
@@ -243,28 +260,39 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
         }
     }
 
+    @FindBy (css = ".MuiGrid-container>div:nth-child(2)>div:nth-child(2)>div")
+    private List<WebElement> breakSections;
     @Override
     public void inputShiftOffsetAndBreakDuration(int startOffset, int breakDuration, int number, boolean isMeal) throws Exception {
-        WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
-        List<WebElement> mealAndRest = breakSection.findElements(By.cssSelector(".MuiGrid-grid-xs-true"));
+//        WebElement breakSection = getSpecificSectionByName(sectionType.Breaks.getType());
+//        List<WebElement> mealAndRest = breakSection.findElements(By.cssSelector(".MuiGrid-grid-xs-true"));
+        EditShiftPage editShiftPage = new ConsoleEditShiftPage();
         WebElement section = null;
         if (isMeal) {
-            section = mealAndRest.get(0);
+            section = breakSections.get(0);
         } else {
-            section = mealAndRest.get(1);
+            section = breakSections.get(1);
         }
         List<WebElement> inputs = section.findElements(By.tagName("input"));
         if (number == 1) {
             if (inputs.size() == 0) {
+//                if(isMeal)
+//                    editShiftPage.clickOnAddMealBreakButton();
+//                else
+//                    editShiftPage.clickOnAddRestBreakButton();
                 clickOnAddMealOrRestBreakBtn(isMeal);
                 waitForSeconds(1);
                 inputs = section.findElements(By.tagName("input"));
             }
             clearTheText(inputs.get(0));
             inputs.get(0).click();
+            inputs.get(0).sendKeys(Keys.CONTROL, "a");
+            inputs.get(0).sendKeys(Keys.DELETE);
             inputs.get(0).sendKeys(String.valueOf(startOffset));
             clearTheText(inputs.get(1));
             inputs.get(1).click();
+            inputs.get(1).sendKeys(Keys.CONTROL, "a");
+            inputs.get(1).sendKeys(Keys.DELETE);
             inputs.get(1).sendKeys(String.valueOf(breakDuration));
         }
         if (number == 2) {
@@ -273,9 +301,13 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
             }
             clearTheText(inputs.get(2));
             inputs.get(2).click();
+            inputs.get(2).sendKeys(Keys.CONTROL, "a");
+            inputs.get(2).sendKeys(Keys.DELETE);
             inputs.get(2).sendKeys(String.valueOf(startOffset));
             clearTheText(inputs.get(3));
             inputs.get(3).click();
+            inputs.get(3).sendKeys(Keys.CONTROL, "a");
+            inputs.get(3).sendKeys(Keys.DELETE);
             inputs.get(3).sendKeys(String.valueOf(breakDuration));
         }
     }
@@ -438,12 +470,12 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
         if (isElementLoaded(createNewShiftWindow, 3) && areListElementVisible(columnTitleContainers, 3)
         && areListElementVisible(columnValueContainers, 3) && columnTitleContainers.size() == 8 &&
         columnValueContainers.size() == 8 && columnTitleContainers.get(0).getText().equalsIgnoreCase(sectionType.WorkRole.getType())
-        && columnTitleContainers.get(1).getText().equalsIgnoreCase(sectionType.ShiftName.getType()) &&
-                columnTitleContainers.get(2).getText().equalsIgnoreCase(sectionType.Description.getType()) &&
-                columnTitleContainers.get(3).getText().equalsIgnoreCase(sectionType.StartTime.getType()) &&
-                columnTitleContainers.get(4).getText().equalsIgnoreCase(sectionType.EndTime.getType()) &&
-                columnTitleContainers.get(5).getText().equalsIgnoreCase(sectionType.Days.getType()) &&
-                columnTitleContainers.get(6).getText().equalsIgnoreCase(sectionType.Breaks.getType()) &&
+        && columnTitleContainers.get(1).getText().equalsIgnoreCase(sectionType.Breaks.getType()) &&
+                columnTitleContainers.get(2).getText().equalsIgnoreCase(sectionType.ShiftName.getType()) &&
+                columnTitleContainers.get(3).getText().equalsIgnoreCase(sectionType.Description.getType()) &&
+                columnTitleContainers.get(4).getText().equalsIgnoreCase(sectionType.StartTime.getType()) &&
+                columnTitleContainers.get(5).getText().equalsIgnoreCase(sectionType.EndTime.getType()) &&
+                columnTitleContainers.get(6).getText().equalsIgnoreCase(sectionType.Days.getType()) &&
                 columnTitleContainers.get(7).getText().equalsIgnoreCase(sectionType.ShiftNotes.getType()) &&
         isElementLoaded(cancelOnPopup, 3) && isElementLoaded(createOnPopup, 3)) {
             SimpleUtils.pass("The content on Create New Shift window is correct!");

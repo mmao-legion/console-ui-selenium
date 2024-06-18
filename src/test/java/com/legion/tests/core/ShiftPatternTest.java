@@ -31,6 +31,7 @@ public class ShiftPatternTest extends TestBase {
     private NewShiftPage newShiftPage;
     private ConfigurationPage configurationPage;
     private ShiftPatternPage shiftPatternPage;
+    private EditShiftPage editShiftPage;
 
     @Override
     @BeforeMethod()
@@ -48,6 +49,7 @@ public class ShiftPatternTest extends TestBase {
             newShiftPage = pageFactory.createNewShiftPage();
             configurationPage = pageFactory.createOpsPortalConfigurationPage();
             shiftPatternPage = pageFactory.createConsoleShiftPatternPage();
+            editShiftPage = pageFactory.createEditShiftPage();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -70,6 +72,7 @@ public class ShiftPatternTest extends TestBase {
             configurationPage.clickOnConfigurationCrad("Scheduling Rules");
             configurationPage.isTemplateListPageShow();
             String templateName = "TemplateName-ForAuto";
+            configurationPage.searchTemplate(templateName);
             configurationPage.archiveOrDeleteTemplate(templateName);
             String workRole = "General Manager";
 
@@ -167,45 +170,41 @@ public class ShiftPatternTest extends TestBase {
             }
             shiftPatternPage.inputStartOrEndTime("5", "0", "p", false);
             // Verify the functionality of Add meal break button
-            shiftPatternPage.clickOnAddMealOrRestBreakBtn(true);
+            editShiftPage.clickOnAddMealBreakButton();
             // Verify the shift offset and duration cannot be empty
             shiftPatternPage.clickOnCreateButton();
             warnings = shiftPatternPage.getBreakWarnings();
-            if (warnings.contains("Start Offset should not be empty") && warnings.contains("Break Duration should not be empty")) {
+            if (warnings.contains("Break Duration must be > 0")
+//                    warnings.contains("Start Offset should not be empty") && warnings.contains("Break Duration should not be empty")
+            ) {
                 SimpleUtils.pass("Shift offset and break duration warning show correctly!");
             } else {
                 SimpleUtils.fail("Shift offset and break duration warnings failed to show!", false);
             }
             // Verify the functionality of x button in meal break section
-            shiftPatternPage.deleteTheBreakByNumber(true, 1);
+//            shiftPatternPage.deleteTheBreakByNumber(true, 1);
+            editShiftPage.removeMealBreaksByNumber(1);
             // Verify the functionality of Add rest break button
-            shiftPatternPage.clickOnAddMealOrRestBreakBtn(false);
+            editShiftPage.clickOnAddRestBreakButton();
+//            shiftPatternPage.clickOnAddMealOrRestBreakBtn(false);
             // Verify the shift offset and duration cannot be empty
             shiftPatternPage.clickOnCreateButton();
             warnings = shiftPatternPage.getBreakWarnings();
-            if (warnings.contains("Start Offset should not be empty") && warnings.contains("Break Duration should not be empty")) {
-                SimpleUtils.pass("Shift offset and break duration warning show correctly!");
-            } else {
-                SimpleUtils.fail("Shift offset and break duration warnings failed to show!", false);
-            }
-            // Verify the functionality of Add rest break button
-            shiftPatternPage.clickOnAddMealOrRestBreakBtn(false);
-            // Verify the shift offset and duration cannot be empty
-            shiftPatternPage.clickOnCreateButton();
-            warnings = shiftPatternPage.getBreakWarnings();
-            if (warnings.contains("Start Offset should not be empty") && warnings.contains("Break Duration should not be empty")) {
+            if (warnings.contains("Break Duration must be > 0")) {
                 SimpleUtils.pass("Shift offset and break duration warning show correctly!");
             } else {
                 SimpleUtils.fail("Shift offset and break duration warnings failed to show!", false);
             }
             // Verify the functionality of x button in rest break section
-            shiftPatternPage.deleteTheBreakByNumber(false, 1);
+//            shiftPatternPage.deleteTheBreakByNumber(false, 1);
+            editShiftPage.removeRestBreaksByNumber(1);
             // Verify can input the shift offset and break duration
-            shiftPatternPage.clickOnAddMealOrRestBreakBtn(false);
+            editShiftPage.clickOnAddRestBreakButton();
             shiftPatternPage.inputShiftOffsetAndBreakDuration(5, 5, 1, true);
             // Verify the warning message "Start Offset must be in 5 minute increments" in meal break section
-            shiftPatternPage.deleteTheBreakByNumber(true, 1);
+            editShiftPage.removeMealBreaksByNumber(1);
             shiftPatternPage.inputShiftOffsetAndBreakDuration(1, 1, 1, true);
+            shiftPatternPage.clickOnCreateButton();
             warnings = shiftPatternPage.getBreakWarnings();
             if (warnings.contains("Start Offset must be in 5 minute increments") && warnings.contains("Break Duration must be in 5 minute increments")) {
                 SimpleUtils.pass("Start Offset and Break Duration warning shows!");
@@ -214,8 +213,10 @@ public class ShiftPatternTest extends TestBase {
             }
             // Verify the warning message "Break cannot start after the end of the shift" in meal break section
             // Verify the warning message "Break cannot go beyond the shift" in meal break section
-            shiftPatternPage.deleteTheBreakByNumber(true, 1);
+//            shiftPatternPage.deleteTheBreakByNumber(true, 1);
+            editShiftPage.removeMealBreaksByNumber(1);
             shiftPatternPage.inputShiftOffsetAndBreakDuration(480, 10, 1, true);
+            shiftPatternPage.clickOnCreateButton();
             warnings = shiftPatternPage.getBreakWarnings();
             if (warnings.contains("Break cannot start after the end of the shift") && warnings.contains("Break cannot go beyond the shift")) {
                 SimpleUtils.pass("Break cannot start after the end of the shift and cannot go beyond the shift warning shows!");
@@ -226,6 +227,7 @@ public class ShiftPatternTest extends TestBase {
             // Verify the warning message "Break cannot go beyond the shift" in rest break section
             shiftPatternPage.deleteTheBreakByNumber(false, 1);
             shiftPatternPage.inputShiftOffsetAndBreakDuration(480, 10, 1, false);
+            shiftPatternPage.clickOnCreateButton();
             warnings = shiftPatternPage.getBreakWarnings();
             if (warnings.contains("Break cannot start after the end of the shift") && warnings.contains("Break cannot go beyond the shift")) {
                 SimpleUtils.pass("Break cannot start after the end of the shift and cannot go beyond the shift warning shows!");
@@ -237,6 +239,7 @@ public class ShiftPatternTest extends TestBase {
             shiftPatternPage.inputShiftOffsetAndBreakDuration(60, 30, 1, true);
             shiftPatternPage.deleteTheBreakByNumber(false, 1);
             shiftPatternPage.inputShiftOffsetAndBreakDuration(60, 15, 1, false);
+            shiftPatternPage.clickOnCreateButton();
             warnings = shiftPatternPage.getBreakWarnings();
             if (warnings.contains("Break is overlapping with another one")) {
                 SimpleUtils.pass("Break is overlapping with another one warning shows!");
@@ -267,6 +270,7 @@ public class ShiftPatternTest extends TestBase {
             shiftPatternPage.clickOnPencilIcon(2);
             SimpleUtils.assertOnFail("Create New Shift window is not loaded!", shiftPatternPage.isCreateNewShiftWindowLoaded(), false);
             // Verify the edits should persist
+            editShiftPage.checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
             shiftPatternPage.verifyTheEditedValuePersist(shiftName, description, startTime, endTime, workDays, mealStartOffset, mealDuration,
                     restStartOffset, restDuration, shiftNotes);
             // Verify the content in week section when selecting more days
@@ -290,9 +294,8 @@ public class ShiftPatternTest extends TestBase {
             selectedDays = shiftPatternPage.selectWorkDays(workDays);
             shiftPatternPage.inputStartOrEndTime("9", "0", "a", true);
             shiftPatternPage.inputStartOrEndTime("5", "0", "p", false);
-            shiftPatternPage.clickOnAddMealOrRestBreakBtn(true);
+            editShiftPage.checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
             shiftPatternPage.inputShiftOffsetAndBreakDuration(mealStartOffset, mealDuration, 1, true);
-            shiftPatternPage.clickOnAddMealOrRestBreakBtn(false);
             shiftPatternPage.inputShiftOffsetAndBreakDuration(restStartOffset, restDuration, 1, false);
             shiftPatternPage.clickOnCreateButton();
             // Verify the title of the staffing rule after clicking on check button
@@ -346,13 +349,14 @@ public class ShiftPatternTest extends TestBase {
             List<String> selectedDays = shiftPatternPage.selectWorkDays(workDays);
             shiftPatternPage.inputStartOrEndTime("9", "0", "a", true);
             shiftPatternPage.inputStartOrEndTime("5", "0", "p", false);
-            shiftPatternPage.clickOnAddMealOrRestBreakBtn(true);
+//            shiftPatternPage.clickOnAddMealOrRestBreakBtn(true);
             int mealStartOffset = 60;
             int mealDuration = 30;
             int restStartOffset = 180;
             int restDuration = 15;
+            editShiftPage.checkOrUncheckAutomaticallyScheduleOptimizedBreak(false);
             shiftPatternPage.inputShiftOffsetAndBreakDuration(mealStartOffset, mealDuration, 1, true);
-            shiftPatternPage.clickOnAddMealOrRestBreakBtn(false);
+//            shiftPatternPage.clickOnAddMealOrRestBreakBtn(false);
             shiftPatternPage.inputShiftOffsetAndBreakDuration(restStartOffset, restDuration, 1, false);
             shiftPatternPage.clickOnCreateButton();
             configurationPage.verifyCheckMarkButtonOnAdvanceStaffingRulePage();
@@ -361,7 +365,7 @@ public class ShiftPatternTest extends TestBase {
             System.out.println(rules.get(0));
             System.out.println(expectedRule);
             SimpleUtils.assertOnFail("The title of the rule is incorrect!", rules.get(0).contains(expectedRule), false);
-            configurationPage.clickOnSaveButtonOnScheduleRulesListPage();
+            locationsPage.clickOnSaveButton();
             // Verify can save the changes from location level
             locationsPage.clickOnSaveButton();
             // Verify the shift pattern rule is saved successfully

@@ -827,16 +827,16 @@ SCH-5862-->
         </classes>
     </test>
 
-<!--SCH-9134    <test name="Shift Pattern Test">
-            <classes>
-                <class name="com.legion.tests.core.ShiftPatternTest">
-                    <methods>
-                        <include name="verifyCreatingShiftPatternFromSchedulingRulesTemplateAsInternalAdmin" />
-                        &lt;!&ndash;                    <include name="verifyCreatingShiftPatternFromLocationLevelTemplateAsInternalAdmin" Blocked by SCH-8313/>&ndash;&gt;
-                    </methods>
-                </class>
-            </classes>
-    </test>-->
+    <test name="Shift Pattern Test">
+        <classes>
+            <class name="com.legion.tests.core.ShiftPatternTest">
+                <methods>
+                    <include name="verifyCreatingShiftPatternFromSchedulingRulesTemplateAsInternalAdmin" />
+                    <include name="verifyCreatingShiftPatternFromLocationLevelTemplateAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
 
 <!--    <test name="Team Page Test">
         <classes>
