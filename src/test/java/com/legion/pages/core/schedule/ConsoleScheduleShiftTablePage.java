@@ -753,9 +753,9 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
     private WebElement shiftName;
     @FindBy (css = ".notes-container__text")
     private WebElement shiftNotes;
-    @FindBy (css = "[ng-repeat=\"break in mealBreaks\"] span")
+    @FindBy (xpath = "//img[@ng-if=\"break.type === 'Meal'\"]/parent::div/span")
     private WebElement mealBreakTimeInIIcon;
-    @FindBy (css = "[ng-repeat=\"break in restBreaks\"] span")
+    @FindBy (xpath = "//img[@ng-if=\"break.type === 'Rest'\"]/parent::div/span")
     private WebElement restBreakTimeInIIcon;
 
     @Override
