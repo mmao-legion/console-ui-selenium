@@ -2,6 +2,7 @@ package com.legion.tests.core;
 
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.OpsPortaPageFactories.LocationsPage;
 import com.legion.pages.core.OpsPortal.OpsPortalLocationsPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
@@ -293,12 +294,20 @@ public class ConsolidatingFiltersTest extends TestBase {
                 controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption(option);
 
             } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
+                locationsPage.clickOnLocationsTab();
+                locationsPage.goToSubLocationsInLocationsPage();
+                locationsPage.searchLocation(location);               ;
+                SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
+                locationsPage.clickOnLocationInLocationResult(location);
+                locationsPage.clickOnConfigurationTabOfLocation();
+                HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
                 OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
                 opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
                 ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.goToConfigurationPage();
                 configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
-                configurationPage.clickOnSpecifyTemplateName("Cinemark Base Template", "edit");
+                configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
                 configurationPage.clickOnEditButtonOnTemplateDetailsPage();
                 configurationPage.updateConvertUnassignedShiftsToOpenWhenCreatingScheduleSettingOption(option);
                 configurationPage.updateConvertUnassignedShiftsToOpenWhenCopyingScheduleSettingOption(option);
