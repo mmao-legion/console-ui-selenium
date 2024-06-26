@@ -239,7 +239,7 @@ public class ConsoleMySchedulePage extends BasePage implements MySchedulePage {
     @FindBy(className = "modal-dialog")
     private WebElement claimConfirmPopup;
 
-    @FindBy(css = "[ng-click=\"accept()\"]")
+    @FindBy(css = "[ng-click=\"claim()\"]")
     private WebElement acceptBtn;
 
     @Override

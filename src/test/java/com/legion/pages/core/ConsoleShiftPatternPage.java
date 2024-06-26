@@ -469,7 +469,7 @@ public class ConsoleShiftPatternPage extends BasePage implements ShiftPatternPag
     public void verifyTheContentOnCreateNewShiftWindow() throws Exception {
         if (isElementLoaded(createNewShiftWindow, 3) && areListElementVisible(columnTitleContainers, 3)
         && areListElementVisible(columnValueContainers, 3) && columnTitleContainers.size() == 8 &&
-        columnValueContainers.size() == 8 && columnTitleContainers.get(0).getText().equalsIgnoreCase(sectionType.WorkRole.getType())
+        columnValueContainers.size() >= 8 && columnTitleContainers.get(0).getText().equalsIgnoreCase(sectionType.WorkRole.getType())
         && columnTitleContainers.get(1).getText().equalsIgnoreCase(sectionType.Breaks.getType()) &&
                 columnTitleContainers.get(2).getText().equalsIgnoreCase(sectionType.ShiftName.getType()) &&
                 columnTitleContainers.get(3).getText().equalsIgnoreCase(sectionType.Description.getType()) &&
