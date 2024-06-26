@@ -489,6 +489,7 @@ public abstract class TestBase {
         LocationSelectorPage locationSelectorPage = pageFactory.createLocationSelectorPage();
         locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(location);
         loginPage.closeIntroductionMode();
+        loginPage.closeNotificationCenter();
 //        changeUpperFieldsAccordingToEnterprise(locationSelectorPage);
 //        locationSelectorPage.changeLocation(location);
         boolean isLoginDone = loginPage.isLoginDone();

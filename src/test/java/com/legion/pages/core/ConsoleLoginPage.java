@@ -417,4 +417,14 @@ public class ConsoleLoginPage extends BasePage implements LoginPage {
 		}else
 			SimpleUtils.report("There is no THE SCHEDULE EDIT MENU mode display!");
 	}
+
+	@FindBy(css = "button[aria-label=\"Close\"]")
+	private WebElement closeNotificationCenterButton;
+	@Override
+	public void closeNotificationCenter() throws Exception {
+		if (isElementLoaded(closeNotificationCenterButton,5)) {
+			clickTheElement(closeNotificationCenterButton);
+		}else
+			SimpleUtils.report("There is no Introduction mode display!");
+	}
 }

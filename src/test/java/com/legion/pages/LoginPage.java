@@ -27,4 +27,5 @@ public interface LoginPage {
     public void verifyLegionTermsOfService() throws Exception;
     public void closeIntroductionMode() throws Exception;
     public void closeTheScheduleEditMenuMode() throws Exception;
+    public void closeNotificationCenter() throws Exception;
 }
