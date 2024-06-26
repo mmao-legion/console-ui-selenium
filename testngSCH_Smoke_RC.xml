@@ -111,6 +111,7 @@
                 <methods>
                     <include name="verifyTheContentOfBreaksSectionsAsInternalAdmin" />
                     <include name="verifyChangingAssignmentOnSingleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyTheSingleEditShiftsWindowForRegularLocationCanBeSavedAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
