@@ -2136,4 +2136,75 @@ public class SingleShiftEditTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    //Automated https://legiontech.atlassian.net/browse/OPS-8417
+    @Automated(automated ="Automated")
+    @Owner(owner = "Ashutosh")
+//    @Enterprise(name = "Vailqacn_Enterprise")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the content on Edit Single Shifts window for regular location")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyTheSingleEditShiftsWindowForRegularLocationCanBeSavedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+
+            // Go to Schedule page, Schedule tab
+            goToSchedulePageScheduleTab();
+
+            // Create schedule if it is not created
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Unassigned");
+            scheduleMainPage.saveSchedule();
+
+            //With Stoneman's help,created multiple entries for Cafe workRole in ScheduleRoleConfig table
+            String workRole = "Cafe";
+
+            BasePage basePage = new BasePage();
+            String activeWeek = basePage.getActiveWeekText();
+            String startOfWeek = activeWeek.split(" ")[3] + " " + activeWeek.split(" ")[4];
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            createShiftsWithSpecificValues(workRole, "", "", "9:00am", "04:00pm",
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", "");
+            scheduleMainPage.saveSchedule();
+            Thread.sleep(10000);
+
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole1 = workRoles.get(0).get("optionName");
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
+            HashSet<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
+
+            scheduleShiftTablePage.rightClickOnSelectedShifts(shiftIndexes);
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
+
+            // Verify can update the shift name without selecting 2 options
+            String shiftName = "This is the shift name";
+            editShiftPage.inputShiftName(shiftName);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+
+            // Verify the shift name can show on the info popup
+            List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            // Verify the shift name is saved successfully
+            scheduleMainPage.saveSchedule();
+            mySchedulePage.verifyThePopupMessageOnTop("Success");
+
+            shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
