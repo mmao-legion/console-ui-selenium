@@ -727,7 +727,7 @@ public class SplitAndSpreadTest extends TestBase {
 
             List<String> messageFromInfoIconPopup = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift.get(1));
             SimpleUtils.assertOnFail("The spread of hours violation message display incorrectly in i icon popup! The actual message is: "+ messageFromInfoIconPopup,
-                    messageFromInfoIconPopup.contains("Spread of hours (>600 between start and end)"), false);
+                    messageFromInfoIconPopup.contains("Spread of hours (>600 mins between start and end)"), false);
 
 
         } catch (Exception e) {
@@ -826,7 +826,7 @@ public class SplitAndSpreadTest extends TestBase {
             if (newAddedShift != null) {
                 String warningMessage = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).toString();
                 SimpleUtils.assertOnFail("The spread of hours violation message display incorrectly in i icon popup! The actual is:"+ warningMessage,
-                        warningMessage.contains("Spread of hours (>600 between start and end)"), false);
+                        warningMessage.contains("Spread of hours (>600 mins between start and end)"), false);
             } else
                 SimpleUtils.fail("Get new added shift failed! ", false);
 
