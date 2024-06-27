@@ -1998,7 +1998,7 @@ public class ConsoleCreateSchedulePage extends BasePage implements CreateSchedul
 
     @FindBy(css = "div.graph-description-item-value")
     private List<WebElement> copyScheduleGraphDescriptions;
-    @FindBy(css = ".generate-modal-week-container.selected text[y=\"55\"]")
+    @FindBy(css = ".generate-modal-week-container.selected text[y=\"21\"]")
     private WebElement estimatedLabelInSuggestedModalWeek;
     @FindBy(css = ".generate-modal-week-schedules-header-toggle")
     private WebElement selectAnotherWeekLink;

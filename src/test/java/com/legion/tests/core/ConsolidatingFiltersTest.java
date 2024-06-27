@@ -294,6 +294,9 @@ public class ConsolidatingFiltersTest extends TestBase {
                 controlsNewUIPage.updateConvertUnassignedShiftsToOpenSettingOption(option);
 
             } else if (getDriver().getCurrentUrl().contains(propertyMap.get("CinemarkWkdy_Enterprise"))) {
+                OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
+                opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
+                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 LocationsPage locationsPage = pageFactory.createOpsPortalLocationsPage();
                 locationsPage.clickOnLocationsTab();
                 locationsPage.goToSubLocationsInLocationsPage();
@@ -302,9 +305,6 @@ public class ConsolidatingFiltersTest extends TestBase {
                 locationsPage.clickOnLocationInLocationResult(location);
                 locationsPage.clickOnConfigurationTabOfLocation();
                 HashMap<String, String> templateTypeAndName = locationsPage.getTemplateTypeAndNameFromLocation();
-                OpsPortalLocationsPage opsPortalLocationsPage = (OpsPortalLocationsPage) pageFactory.createOpsPortalLocationsPage();
-                opsPortalLocationsPage.clickModelSwitchIconInDashboardPage(LocationsTest.modelSwitchOperation.OperationPortal.getValue());
-                ConfigurationPage configurationPage = pageFactory.createOpsPortalConfigurationPage();
                 configurationPage.goToConfigurationPage();
                 configurationPage.clickOnConfigurationCrad("Schedule Collaboration");
                 configurationPage.clickOnSpecifyTemplateName(templateTypeAndName.get("Schedule Collaboration"), "edit");
