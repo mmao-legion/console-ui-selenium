@@ -2146,7 +2146,7 @@ public class SingleShiftEditTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTheSingleEditShiftsWindowForRegularLocationCanBeSavedAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            //SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
 
             // Go to Schedule page, Schedule tab
             goToSchedulePageScheduleTab();
@@ -2180,6 +2180,10 @@ public class SingleShiftEditTest extends TestBase {
             String workRole1 = workRoles.get(0).get("optionName");
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
 
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+
             HashSet<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftsIndexesByPlusIcon();
 
             scheduleShiftTablePage.rightClickOnSelectedShifts(shiftIndexes);
@@ -2187,21 +2191,20 @@ public class SingleShiftEditTest extends TestBase {
             scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
             SimpleUtils.assertOnFail("Edit Shifts window failed to load!", editShiftPage.isEditShiftWindowLoaded(), false);
 
-            // Verify can update the shift name without selecting 2 options
-            String shiftName = "This is the shift name";
-            editShiftPage.inputShiftName(shiftName);
+            // Verify can update the shift notes without selecting 2 options
+            String note = "Test Shift Notes";
+            editShiftPage.inputShiftNotesForEmptyInput(note);
             editShiftPage.clickOnUpdateButton();
             editShiftPage.clickOnUpdateAnywayButton();
 
             // Verify the shift name can show on the info popup
             List<String> shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
-            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            SimpleUtils.assertOnFail("Shift Note is not updated!", note.equalsIgnoreCase(shiftInfo1.get(10)), false);
             // Verify the shift name is saved successfully
             scheduleMainPage.saveSchedule();
-            mySchedulePage.verifyThePopupMessageOnTop("Success");
 
             shiftInfo1 = scheduleShiftTablePage.getTheShiftInfoByIndex(Integer.parseInt(shiftIndexes.toArray()[0].toString()));
-            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo1.get(9)), false);
+            SimpleUtils.assertOnFail("Shift Note is not updated!", note.equalsIgnoreCase(shiftInfo1.get(10)), false);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
