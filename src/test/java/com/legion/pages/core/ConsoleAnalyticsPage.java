@@ -5,6 +5,7 @@ import static com.legion.utils.MyThreadLocal.getDriver;
 import java.util.HashMap;
 import java.util.List;
 
+import com.legion.utils.MyThreadLocal;
 import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -18,7 +19,33 @@ import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.utils.SimpleUtils;
 
 public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
-	
+
+	public enum reportTabs {
+		Reports("Reports"),
+		Extracts("Extracts"),
+		ReportGenerator("Report Generator");
+		private final String value;
+
+		reportTabs(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
+
+	public enum extractNames {
+		ScheduleChangePremiumExtract("Schedule Change Premium Extract");
+		private final String value;
+		extractNames(final String newValue) {
+			value = newValue;
+		}
+
+		public String getValue() {
+			return value;
+		}
+	}
 	 @FindBy(css="div.console-navigation-item-label.Analytics")
 	 private WebElement consoleAnalyticsPageTabElement;
 	 
@@ -590,5 +617,30 @@ public class ConsoleAnalyticsPage extends BasePage implements AnalyticsPage{
 		} else
 			SimpleUtils.report("The tab: "+ reportsTabName+" is not selected! ");
 		return isSelected;
+	}
+
+
+
+	@FindBy (css = "div.table-responsive tbody tr")
+	private List<WebElement> extractRows;
+	@Override
+	public void mouseHoverAndExportExtractByName(String extractName) throws Exception {
+		if (areListElementVisible(extractRows, 5)) {
+			for (WebElement extractRow : extractRows) {
+				WebElement text = extractRow.findElement(By.className("sch-kpi-title-text"));
+				if (text != null && text.getText().equalsIgnoreCase(extractName)) {
+					mouseToElement(text);
+					WebElement exportBtn = extractRow.findElement(By.className("sch-kpi-action-text"));
+					if (exportBtn != null) {
+						moveToElementAndClick(exportBtn);
+						break;
+					} else {
+						SimpleUtils.fail("Analytics: Failed to find the Export button for extract: " + extractName, false);
+					}
+				}
+			}
+		} else {
+			SimpleUtils.fail("Analytics: Extract rows not loaded Successfully!", false);
+		}
 	}
 }

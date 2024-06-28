@@ -1048,4 +1048,19 @@ public class ConsoleActivityPage extends BasePage implements ActivityPage {
 			SimpleUtils.fail("Failed to find open shift group request in activity!", false);
 		return isRequestFolded;
 	}
+
+
+	@Override
+	public List<String> getScheduleChangeActivity(String requestUserName) throws Exception {
+		List<String> scheduleChangeData = new ArrayList<>();
+		if (areListElementVisible(activityCards, 5)) {
+			for (WebElement activityCard: activityCards){
+				WebElement message = activityCard.findElement(By.cssSelector(".notification-container .notification-content-message"));
+				if (message != null && message.getText().contains(requestUserName) && message.getText().contains("schedule change")) {
+					scheduleChangeData.add(message.getText());
+				}
+			}
+		}
+		return scheduleChangeData;
+	}
 }
