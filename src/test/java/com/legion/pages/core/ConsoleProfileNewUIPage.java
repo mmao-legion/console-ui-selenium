@@ -4388,7 +4388,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 		for (int dayIndex = 0; dayIndex < 7; dayIndex++) {
 			if (areListElementVisible(myAvailabilityDayOfWeekRows, 5) && myAvailabilityDayOfWeekRows.size() == 7) {
 				dayRow = myAvailabilityDayOfWeekRows.get(dayIndex);
-				List<WebElement> emptyAvailabilitiesInTheDay = dayRow.findElements(By.cssSelector("div.cursor-empty"));
+				List<WebElement> emptyAvailabilitiesInTheDay = dayRow.findElements(By.cssSelector("div.cursor-alien"));
 				for (int i = 0; i < 2; i++) {
 					click(emptyAvailabilitiesInTheDay.get(i));
 				}
