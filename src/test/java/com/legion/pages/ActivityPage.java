@@ -47,4 +47,5 @@ public interface ActivityPage{
     public void approveOrRejectOpenShiftGroupRequestOnActivity(int requestNum, String action) throws Exception;
     public void verifyContentOfOpenShiftGroupRequestOnActivity(String shiftGroupTitle, String shiftExpiryDate, ArrayList<String> specificDate, String shiftStartNEndTime, String workRole, String location) throws Exception;
     public boolean isOpenShiftGroupRequestFolded() throws Exception;
+    public List<String> getScheduleChangeActivity(String requestUserName) throws Exception;
 }

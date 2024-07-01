@@ -36,4 +36,6 @@ public interface AnalyticsPage {
 	public void mouseHoverAndRefreshByName(String reportName) throws Exception;
 
 	public boolean isSpecificReportsTabBeenSelected(String reportsTabName) throws Exception;
+
+	public void mouseHoverAndExportExtractByName(String extractName) throws Exception;
 }
