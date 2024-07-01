@@ -615,6 +615,8 @@ public class DragAndDropTest extends TestBase {
             // Delete all the shifts that are assigned to the team member on Step #1
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             String workRole = shiftOperatePage.getRandomWorkRole();
 
             // Create 2 new shifts for this TM on Monday and Tuesday
