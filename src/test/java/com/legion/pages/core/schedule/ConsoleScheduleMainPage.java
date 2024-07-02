@@ -2312,7 +2312,7 @@ public class ConsoleScheduleMainPage extends BasePage implements ScheduleMainPag
     public void verifyLocationFilterInLeft(boolean isLG) throws Exception {
         if (isElementLoaded(filterPopup,5)) {
             if (isLG) {
-                if (filterLabels.size() == 4 && filterLabels.get(0).getText().equals("LOCATION"))
+                if (filterLabels.size() == 5 && filterLabels.get(0).getText().equals("LOCATION"))
                     SimpleUtils.pass("Schedule Page: 'LOCATION' displays in left when current env is LG");
                 else
                     SimpleUtils.fail("Schedule Page: 'LOCATION' is not in the left when current env is LG",false);

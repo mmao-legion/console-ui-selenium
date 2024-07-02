@@ -2122,7 +2122,7 @@ public class ScheduleTestKendraScott2 extends TestBase {
 			analyzePage.clickOnAnalyzeBtn("history");
 			String version0 = "0.0";
 			String version1 = "0.1";
-			String version2 = "1.1";
+			String version2 = "1.0";
 			analyzePage.verifyScheduleVersion(version0);
 			analyzePage.closeAnalyzeWindow();
 			//make edits and save
