@@ -15,4 +15,8 @@ public interface SmartTemplatePage {
     public List<String> createShiftsWithOutWorkRoleTransition(String workRole, String shiftName, String location, String startTime,
                                                               String endTime, int shiftPerDay, List<Integer> workDays, String assignment,
                                                               String shiftNotes, String tmName, boolean recurringShift) throws Exception;
+
+    public List<String> createShiftsWithSpecifiedTM(String workRole, String shiftName, String location, String startTime,
+                                             String endTime, int shiftPerDay, List<Integer> workDays, String assignment,
+                                             String shiftNotes, String tmName, boolean recurringShift) throws Exception;
 }
