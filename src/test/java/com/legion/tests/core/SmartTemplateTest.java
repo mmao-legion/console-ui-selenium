@@ -1512,9 +1512,6 @@ public class SmartTemplateTest extends TestBase {
             Assert.assertEquals(hardstopviolationCount, 1);
             int requireReviewCount = smartCardPage.getCountFromSmartCardByName(cardName1);
             Assert.assertEquals(requireReviewCount, 2);
-//            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
-//            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
-
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
         }
