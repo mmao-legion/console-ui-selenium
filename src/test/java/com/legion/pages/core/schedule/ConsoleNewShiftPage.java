@@ -9,7 +9,6 @@ import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -3562,5 +3561,33 @@ public class ConsoleNewShiftPage extends BasePage implements NewShiftPage{
             SimpleUtils.fail("Search text not editable and icon are not clickable", false);
         }
         return selectedTMName;
+    }
+
+    @Override
+    public void searchTeamMemberInSmartTemplate(String name) throws Exception {
+        if (isElementLoaded(backButtonOnNewCreateShiftPage, 10)) {
+                if (isElementLoaded(textSearchOnNewCreateShiftPage, 5)) {
+                    textSearchOnNewCreateShiftPage.sendKeys(Keys.CONTROL, "a");
+                    textSearchOnNewCreateShiftPage.sendKeys(Keys.DELETE);
+                    textSearchOnNewCreateShiftPage.sendKeys(name);
+                    if (areListElementVisible(searchResultsOnNewCreateShiftPage, 30)) {
+                        for (WebElement searchResult : searchResultsOnNewCreateShiftPage) {
+                            if (areListElementVisible(getTMScheduledStatusElementsOnNewCreateShiftPage(), 5)) {
+                                String statusMessage = "";
+                                for (WebElement status: getTMScheduledStatusElementsOnNewCreateShiftPage()) {
+                                    statusMessage = statusMessage + status.getText() + "\n";
+                                }
+                                MyThreadLocal.setMessageOfTMScheduledStatus(statusMessage);
+                            }
+                        }
+                    }else {
+                        SimpleUtils.fail("Failed to find the team member!", false);
+                    }
+                }else {
+                    SimpleUtils.fail("Search text not editable and icon are not clickable", false);
+                }
+            } else{
+            SimpleUtils.fail("Search team member tab fail to load! ", false);
+        }
     }
 }

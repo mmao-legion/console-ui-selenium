@@ -10,8 +10,10 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -1437,6 +1439,81 @@ public class SmartTemplateTest extends TestBase {
             } else
                 SimpleUtils.fail("Shift pattern shifts should not show in future week smart template! ", false);
 
+
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Eric")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify min shift length in SPG template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyMinShiftLengthInSPGTemplateAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        try {
+            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
+            LoginPage loginPage = pageFactory.createConsoleLoginPage();
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            String tmName = profileNewUIPage.getUserProfileName().get("fullName");
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            goToSchedulePageScheduleTab();
+            BasePage basePage = new BasePage();
+            String activeWeek = basePage.getActiveWeekText();
+            String startOfWeek = activeWeek.split(" ")[3] + " " + activeWeek.split(" ")[4];
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if(isActiveWeekGenerated){
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            goToSmartTemplatePage();
+            smartTemplatePage.clickOnResetBtn();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+
+            //Create shift which length is less than 1hr
+            String workRole1 = "Cafe";
+            String shiftName = "TestMinShiftLength";
+            String shiftNote = "TestMinShiftLength";
+            String startTime = "9:00am";
+            String endTime = "9:30am";
+            smartTemplatePage.clickOnEditBtn();
+            List<String> selectedTM = smartTemplatePage.createShiftsWithSpecifiedTM(workRole1, shiftName, "", startTime, endTime, 1,
+                    Arrays.asList(0),
+                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, tmName, false);
+            SimpleUtils.assertOnFail("There should have minor warning message display as: Shift length < 1 hrs (manual limit) ",
+                    shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Shift length < 1 hrs (manual limit)"), false);
+            MyThreadLocal.setMessageOfTMScheduledStatus(null);
+            shiftOperatePage.clickAssignBtnOnCreateShiftDialog(tmName);
+            newShiftPage.clickOnCreateOrNextBtn();
+
+            //Create shift which length is less than 4hrs
+            startTime = "10:00am";
+            endTime = "1:00pm";
+            selectedTM = smartTemplatePage.createShiftsWithSpecifiedTM(workRole1, shiftName, "", startTime, endTime, 1,
+                    Arrays.asList(0),
+                    ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), shiftNote, tmName, false);
+            SimpleUtils.assertOnFail("There should have minor warning message display as: Shift length < 4 hrs",
+                    shiftOperatePage.getTheMessageOfTMScheduledStatus().contains("Shift length < 4 hrs"), false);
+            shiftOperatePage.clickAssignBtnOnCreateShiftDialog(tmName);
+            newShiftPage.clickOnCreateOrNextBtn();
+            scheduleMainPage.saveSchedule();
+            smartTemplatePage.clickOnBackBtn();
+            createSchedulePage.clickCreateScheduleButton();
+            createSchedulePage.checkoutSchedule();
+            SimpleUtils.pass("Schedule Generated Successfully!");
+            scheduleMainPage.clickOnOpenSearchBoxButton();
+            scheduleMainPage.searchShiftOnSchedulePage(tmName);
+            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
+            String cardName = "ACTION REQUIRED";
+            String cardName1 = "COMPLIANCE";
+            int hardstopviolationCount = smartCardPage.getCountFromSmartCardByName(cardName);
+            Assert.assertEquals(hardstopviolationCount, 1);
+            int requireReviewCount = smartCardPage.getCountFromSmartCardByName(cardName1);
+            Assert.assertEquals(requireReviewCount, 2);
+//            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyPattern.getValue());
+//            scheduleShiftTablePage.expandOnlyOneGroup(shiftName);
 
         } catch (Exception e) {
             SimpleUtils.fail(e.getMessage(), false);
