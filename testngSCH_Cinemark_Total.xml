@@ -929,6 +929,7 @@ SCH-5862-->
                     <include name="verifyShiftInfoDisplayCorrectlyForNonRecurringShiftsAsInternalAdmin" />
                     <include name="verifyRecurringShiftsBeenChangeToNonRecurringShiftsAsInternalAdmin" />
                     <include name="verifyNonRecurringShiftsBeenChangeToRecurringShiftsAsInternalAdmin" />
+                    <include name="verifyMinShiftLengthInSPGTemplateAsTeamMember" />
                 </methods>
             </class>
         </classes>
