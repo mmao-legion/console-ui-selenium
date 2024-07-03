@@ -126,6 +126,5 @@ public interface NewShiftPage {
     public List<HashMap<String, String>> getAllSegmentsOnNewOrEditPage ();
     public void clickOnAddSegmentBtnOnNewOrEditPage () throws Exception;
     public String searchAndGetTMNameWithOutInput() throws Exception;
-
     public void searchTeamMemberInSmartTemplate(String name) throws Exception;
 }
