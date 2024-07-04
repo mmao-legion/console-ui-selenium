@@ -654,7 +654,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 			}
 		}
 		waitForSeconds(3);
-		if (areListElementVisible(rowDataInOverviewPage,10)){
+		if (areListElementVisible(rowDataInOverviewPage,15)){
 			for (int i=0;i<rowDataInOverviewPage.size();i++){
 				String[] temp1 = rowDataInOverviewPage.get(i).getText().split("\n");
 				String[] temp2 = Arrays.copyOf(temp1,8);
