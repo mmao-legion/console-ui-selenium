@@ -32,7 +32,7 @@
   <!--                  <include name="verifyTheFunctionalityOfPeerLocationsInTheScheduleOverviewPageAsInternalAdmin" />
                     <include name="verifyCanCreateScheduleForAllPeerLocationsAsInternalAdmin" />
                     <include name="verifyTheActionForEachPeerLocationsInDifferentStatusAsInternalAdmin" /> need rerun-->
-                    <!--                    <include name="verifyCopyOrMoveShiftsToSubLocationsInSameDayUsingLocationGroupAsInternalAdmin" Blocked by SCH-7077 />-->
+                    <include name="verifyCopyOrMoveShiftsToSubLocationsInSameDayUsingLocationGroupAsInternalAdmin"/>
                     <!--                   <include name="verifyTheStatusOfP2PInDMViewsAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7076-->
                     <!--                    <include name="verifyDataMatchInDistrictSummaryWidgetOnDashboardInRegionViewWhenItIncludesLGAsInternalAdmin" />
                                         <include name="verifyDataMatchInLocationSummaryWidgetOnDashboardInDMViewWhenItIncludesLGAsInternalAdmin" />Need more time to check-->
@@ -132,8 +132,8 @@
 <!--                    <include name="verifyEmployeesCanSwapShiftsForParentChildLGAsTeamMember" />
                     <include name="verifyEmployeesCanClaimCoverRequestForParentChildLGAsTeamMember" /> Need more time check-->
                     <include name="verifyDragAndDropShiftToSameLocationForParentChildLGScheduleAsInternalAdmin" />
-<!--                    <include name="verifyDragAndDropShiftToDifferentLocationForParentChildLGScheduleAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8614-->
-                    <!--                       <include name="verifyDragAndDropEmployeeToSameLocationForParentChildLGScheduleAsInternalAdmin" />Need more time check-->
+                    <include name="verifyDragAndDropShiftToDifferentLocationForParentChildLGScheduleAsInternalAdmin" />
+                    <include name="verifyDragAndDropEmployeeToSameLocationForParentChildLGScheduleAsInternalAdmin" />
                     <include name="verifyDragAndDropEmployeeToDifferentLocationForParentChildLGScheduleAsInternalAdmin" />
                 </methods>
             </class>
@@ -209,7 +209,7 @@
                     <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
                     <include name="verifyActionRequiredSmartCardDisplayCorrectlyWhenScheduleCreatedByCopyPartialAsInternalAdmin" />
                     <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenEnableScheduleShowFullNamesToggleAsTeamMember" />
- <!--                   <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember" /> change toggle need time to effect -->
+ <!--                   <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember" /> Toggle already GA, only need to check the scenaria of toggle on -->
                     <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
                     <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
 <!--                    <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334-->
@@ -222,7 +222,6 @@
                     <include name="verifyDeleteShiftInDayViewAsInternalAdmin" />-->
                     <include name="verifyTheItemsAfterClickTheShiftInDayViewAsInternalAdmin" />
                     <!--                   <include name="verifyShiftsCanBeDraggedInDayViewAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5728 -->
-                    <!--                    <include name="verifyOvernightShiftsCanBeDraggedToOtherDayAsInternalAdmin" /> will move to the overnight test file-->
              <!--       <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" /> change toggle need time to effect -->
                     <!--                    <include name="verifyTheShiftTimesConsistentOnInputAndShiftCardAsInternalAdmin" />
                                                           <include name="verifyTheShiftTimeCanBeSetMoreThan24HrsThatSetByShiftTimeInputAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6247

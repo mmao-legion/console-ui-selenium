@@ -67,6 +67,12 @@ public class OvernightTest extends TestBase {
             configurationPage.publishNowTheTemplate();
             Thread.sleep(3000);
             switchToConsoleWindow();
+            goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
             refreshCachesAfterChangeTemplate();
             //waiting for the cache
             int j =0;
@@ -78,17 +84,9 @@ public class OvernightTest extends TestBase {
             LoginPage loginPage = pageFactory.createConsoleLoginPage();
             loginPage.logOut();
             loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
-            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), true);
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            goToSchedulePageScheduleTab();
             scheduleCommonPage.navigateToNextWeek();
-            Thread.sleep(5000);
-            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-            if (isActiveWeekGenerated) {
-                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-            }
+
             Thread.sleep(5000);
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange("12:00AM", "12:00AM");
             int i = 0;
