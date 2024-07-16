@@ -209,7 +209,7 @@
                     <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
                     <include name="verifyActionRequiredSmartCardDisplayCorrectlyWhenScheduleCreatedByCopyPartialAsInternalAdmin" />
                     <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenEnableScheduleShowFullNamesToggleAsTeamMember" />
- <!--                   <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember" /> change toggle need time to effect -->
+ <!--                   <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember" /> Toggle already GA, only need to check the scenaria of toggle on -->
                     <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
                     <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
 <!--                    <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334-->
