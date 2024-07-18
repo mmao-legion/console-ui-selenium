@@ -2747,7 +2747,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
 
     @FindBy(css = "[search-results=\"workerSearchResult\"] [ng-class=\"swapStatusClass(worker)\"]")
     private List<WebElement> tmScheduledStatus;
-    @FindBy(css = ".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(1) .MuiGrid-item")
+    @FindBy(css = ".MuiFormControl-root+div>div>div:nth-child(1) span")
     private List<WebElement> searchTableColumns;
     @Override
     public String getTheMessageOfTMScheduledStatus() throws Exception {
@@ -2784,7 +2784,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
                 }
             }
         }
-        return getDriver().findElements(By.cssSelector(".MuiTabs-root+div>div>div:nth-child(2)>div>div:nth-child(2) .MuiGrid-item:nth-child("
+        return getDriver().findElements(By.cssSelector(".MuiFormControl-root+div>div>div:nth-child(2) .MuiGrid-item:nth-child("
         + (index + 1) + ")"));
     }
 
