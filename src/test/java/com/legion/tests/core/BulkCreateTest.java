@@ -993,7 +993,8 @@ public class BulkCreateTest extends TestBase {
             SimpleUtils.assertOnFail("The new shift's notes display incorrectly, the expected is:"+ shiftNotes
                             + " the actual is: "+ shiftNotesOfNewShift,
                     shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
-
+            goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
             //Verify the auto assignment workflow with more than one shift for more than one days
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
