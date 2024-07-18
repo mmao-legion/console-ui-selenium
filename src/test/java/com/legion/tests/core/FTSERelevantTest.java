@@ -2324,7 +2324,7 @@ public class FTSERelevantTest extends TestBase {
             newShiftPage.clickOnCreateOrNextBtn();
             newShiftPage.searchText(tmPartialName);
             newShiftPage.clickClearAssignmentsLink();
-            Boolean colourMatch2 = greyIcon.equals(newShiftPage.getTMAvailableColourForAssignedShift());
+            Boolean colourMatch2 = greenIcon.equals(newShiftPage.getTMAvailableColourForAssignedShift());
             SimpleUtils.assertOnFail("The available icon's colour is incorrect!", colourMatch2,false);
             Thread.sleep(3000);
 
