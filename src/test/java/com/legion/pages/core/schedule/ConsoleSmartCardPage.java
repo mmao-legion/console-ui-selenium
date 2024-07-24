@@ -57,7 +57,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     @Override
     public HashMap<String, Float> getScheduleLabelHoursAndWages() throws Exception {
         HashMap<String, Float> scheduleHoursAndWages = new HashMap<String, Float>();
-        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("[ng-if*=\"isTitleBasedBudget()\"] .card-carousel-card"));
+        WebElement budgetedScheduledLabelsDivElement = MyThreadLocal.getDriver().findElement(By.cssSelector("[id=\"legion_cons_Schedule_Schedule_ScheduleVersion_card\"] .card-carousel-card"));
         if(isElementEnabled(budgetedScheduledLabelsDivElement,5))
         {
 //			Thread.sleep(2000);
