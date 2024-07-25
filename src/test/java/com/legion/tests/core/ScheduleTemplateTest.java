@@ -462,7 +462,6 @@ public class ScheduleTemplateTest extends TestBase {
                     scheduleShiftTablePage.getShiftsNumberByName(firstName)==employeeShiftCount, false );
 
             shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
-            Thread.sleep(5000);
             shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
             shiftStartTime = shiftInfo.get(6).split("-")[0].trim();
             shiftEndTime = shiftInfo.get(6).split("-")[1].trim();
@@ -483,7 +482,6 @@ public class ScheduleTemplateTest extends TestBase {
             SimpleUtils.assertOnFail("The updated shift failed display in master template! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstName)==employeeShiftCount, false );
             shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
-            Thread.sleep(5000);
             shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
             shiftStartTime = shiftInfo.get(6).split("-")[0].trim();
             shiftEndTime = shiftInfo.get(6).split("-")[1].trim();
@@ -500,7 +498,6 @@ public class ScheduleTemplateTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( sheduleStartTime, scheduleEndTime);
             SimpleUtils.assertOnFail("The updated shift failed display in master template! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstName)==employeeShiftCount, false );
-            Thread.sleep(5000);
             shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
             shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
             shiftStartTime = shiftInfo.get(6).split("-")[0].trim();
