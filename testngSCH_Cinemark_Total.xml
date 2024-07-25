@@ -742,8 +742,11 @@ SCH-5862-->
         <classes>
             <class name="com.legion.tests.core.ScheduleTemplateTest">
                 <methods>
-                    <include name="validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin" />
+                    <include name="validateTheAssignShiftsWorkFlowInEditScheduleTemplateAsInternalAdmin" />
                     <include name="verifyTMCanAcknowledgeTheNotificationAfterScheduleTemplateLocationAsTeamMember" />
+                    <include name="verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember" />
+                    <include name="verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember" />
+                    <include name="verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleAsTeamMember" />
                 </methods>
             </class>
         </classes>
