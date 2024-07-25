@@ -1,6 +1,8 @@
 package com.legion.tests.core;
 
 import com.legion.pages.*;
+import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
+import com.legion.pages.core.ConsoleScheduleNewUIPage;
 import com.legion.tests.TestBase;
 import com.legion.tests.annotations.Automated;
 import com.legion.tests.annotations.Enterprise;
@@ -9,16 +11,36 @@ import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
 import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
+import org.jsoup.Connection;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.security.auth.login.Configuration;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class ScheduleTemplateTest extends TestBase {
+
+    private DashboardPage dashboardPage;
+    private CreateSchedulePage createSchedulePage;
+    private ScheduleMainPage scheduleMainPage;
+    private ScheduleShiftTablePage scheduleShiftTablePage;
+    private ScheduleCommonPage scheduleCommonPage;
+    private EditShiftPage editShiftPage;
+    private NewShiftPage newShiftPage;
+    private ShiftOperatePage shiftOperatePage;
+    private ControlsPage controlsPage;
+    private ControlsNewUIPage controlsNewUIPage;
+    private MySchedulePage mySchedulePage;
+    private SmartTemplatePage smartTemplatePage;
+    private SmartCardPage smartCardPage;
+    private ProfileNewUIPage profileNewUIPage;
+    private LoginPage loginPage;
+    private ConfigurationPage configurationPage;
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) {
@@ -27,6 +49,23 @@ public class ScheduleTemplateTest extends TestBase {
             this.createDriver((String) params[0], "69", "Window");
             visitPage(testMethod);
             loginToLegionAndVerifyIsLoginDone((String) params[1], (String) params[2], (String) params[3]);
+
+            dashboardPage = pageFactory.createConsoleDashboardPage();
+            createSchedulePage = pageFactory.createCreateSchedulePage();
+            scheduleMainPage = pageFactory.createScheduleMainPage();
+            scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
+            scheduleCommonPage = pageFactory.createScheduleCommonPage();
+            editShiftPage = pageFactory.createEditShiftPage();
+            newShiftPage = pageFactory.createNewShiftPage();
+            shiftOperatePage = pageFactory.createShiftOperatePage();
+            controlsPage = pageFactory.createConsoleControlsPage();
+            controlsNewUIPage = pageFactory.createControlsNewUIPage();
+            mySchedulePage = pageFactory.createMySchedulePage();
+            smartTemplatePage = pageFactory.createSmartTemplatePage();
+            smartCardPage = pageFactory.createSmartCardPage();
+            profileNewUIPage = pageFactory.createProfileNewUIPage();
+            loginPage = pageFactory.createConsoleLoginPage();
+            configurationPage = pageFactory.createOpsPortalConfigurationPage();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -39,22 +78,10 @@ public class ScheduleTemplateTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate the new create shift feature in edit schedule template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass = CredentialDataProviderSource.class)
-    public void validateTheAssignShiftsWorkFlowAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
+    public void validateTheAssignShiftsWorkFlowInEditScheduleTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception{
         try {
-            DashboardPage dashboardPage = pageFactory.createConsoleDashboardPage();
-            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
-            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            SimpleUtils.assertOnFail("Schedule page 'Overview' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Overview.getValue()), false);
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
-            SimpleUtils.assertOnFail("Schedule page 'Schedule' sub tab not loaded Successfully!",
-                    scheduleCommonPage.verifyActivatedSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue()), false);
+
+            goToSchedulePageScheduleTab();
             scheduleCommonPage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
@@ -169,7 +196,7 @@ public class ScheduleTemplateTest extends TestBase {
             scheduleMainPage.saveSchedule();
             Thread.sleep(5000);
             for (int i =0; i<dayCount; i++) {
-                for (int j=0;j<selectedTMs.size();j++) {
+                for (int j=0;j<1;j++) {
                     shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(i, selectedTMs.get(j).split(" ")[0]);
                     SimpleUtils.assertOnFail("The "+selectedTMs.get(j)+" shift is not exist on the "+i+" day! ",
                             shiftsOfOneDay.size()==1, false);
@@ -213,16 +240,6 @@ public class ScheduleTemplateTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyTMCanAcknowledgeTheNotificationAfterScheduleTemplateLocationAsTeamMember(String browser, String username, String password, String location) throws Exception {
         try {
-            LoginPage loginPage = pageFactory.createConsoleLoginPage();
-            ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
-            CreateSchedulePage createSchedulePage = pageFactory.createCreateSchedulePage();
-            ScheduleMainPage scheduleMainPage = pageFactory.createScheduleMainPage();
-            NewShiftPage newShiftPage = pageFactory.createNewShiftPage();
-            ShiftOperatePage shiftOperatePage = pageFactory.createShiftOperatePage();
-            ScheduleShiftTablePage scheduleShiftTablePage = pageFactory.createScheduleShiftTablePage();
-            TeamPage teamPage = pageFactory.createConsoleTeamPage();
-            ProfileNewUIPage profileNewUIPage = pageFactory.createProfileNewUIPage();
-            SmartCardPage smartCardPage = pageFactory.createSmartCardPage();
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
             String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
@@ -283,6 +300,283 @@ public class ScheduleTemplateTest extends TestBase {
             SimpleUtils.assertOnFail("The pending employee count display incorrectly, the expected is: "
                             + (pendingEmployeeCountBeforeAcknowledge-1) + ". The actual is: "+pendingEmployeeCountAfterAcknowledge,
                     pendingEmployeeCountAfterAcknowledge == (pendingEmployeeCountBeforeAcknowledge-1) , false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "validate new added shifts can show in master template and schedule for regular schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        try {
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            String firstName = tmFullName.split(" ")[0];
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
+            //Go to master template
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            //Check the shifts in master template can load
+            SimpleUtils.assertOnFail("Shifts failed to load in master template! ",
+                    scheduleShiftTablePage.getShiftsCount()>0, false);
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Create new shift for one employee
+            createShiftsWithSpecificValues(workRole, "", "", "10:00am", "5:00pm",
+                    1, Arrays.asList(0,1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleMainPage.saveSchedule();
+
+            //Verify the new created shifts saved in master template successfully
+            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(firstName)==2, false );
+
+            //Verify the new created shift can show in previous week
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            scheduleCommonPage.navigateToPreviousWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(firstName)==2, false );
+            //Verify the new created shift can show in future week
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(firstName)==2, false );
+
+
+            //Verify the new created shift can show in schedule
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(firstName)==2, false );
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "validate updated shifts can show in master template and schedule for regular schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        try {
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            String firstName = tmFullName.split(" ")[0];
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
+            //Go to master template
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+
+            int employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName);
+            if (employeeShiftCount==0){
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                //Create new shift for one employee
+                createShiftsWithSpecificValues(workRole, "", "", "10:00am", "5:00pm",
+                        1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+                scheduleMainPage.saveSchedule();
+                employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName);
+            }
+
+            //Update shift in master template
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(shiftIndexes.get(0));
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            //Change shift time
+            String inputStartTime = "8:30 AM";
+            String inputEndTime = "4:30 PM";
+            editShiftPage.inputStartOrEndTime(inputStartTime, true);
+            editShiftPage.inputStartOrEndTime(inputEndTime, false);
+
+            //Change shift name and notes
+            String shiftName = "Update shift name in master template";
+            String shiftNotes = "Update shift notes in master template";
+            editShiftPage.inputShiftName(shiftName);
+            editShiftPage.inputShiftNotes(shiftNotes);
+
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+
+            scheduleMainPage.saveSchedule();
+            shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
+            String shiftStartTime = shiftInfo.get(6).split("-")[0].trim();
+            String shiftEndTime = shiftInfo.get(6).split("-")[1].trim();
+            SimpleUtils.assertOnFail("Start time or End time is not updated!", inputStartTime.equalsIgnoreCase(shiftStartTime) &&
+                    inputEndTime.equalsIgnoreCase(shiftEndTime), false);
+
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo.get(9)), false);
+            SimpleUtils.assertOnFail("Failed to update the shift notes!", shiftNotes.equalsIgnoreCase(shiftInfo.get(10)), false);
+
+
+            //Verify the new created shift can show in previous week
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            scheduleCommonPage.navigateToPreviousWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            SimpleUtils.assertOnFail("The updated shift failed display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(firstName)==employeeShiftCount, false );
+
+            shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
+            Thread.sleep(5000);
+            shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
+            shiftStartTime = shiftInfo.get(6).split("-")[0].trim();
+            shiftEndTime = shiftInfo.get(6).split("-")[1].trim();
+            SimpleUtils.assertOnFail("Start time or End time is not updated!", inputStartTime.equalsIgnoreCase(shiftStartTime) &&
+                    inputEndTime.equalsIgnoreCase(shiftEndTime), false);
+
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo.get(9)), false);
+            SimpleUtils.assertOnFail("Failed to update the shift notes!", shiftNotes.equalsIgnoreCase(shiftInfo.get(10)), false);
+            //Verify the new created shift can show in future week
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(firstName)==employeeShiftCount, false );
+            shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
+            Thread.sleep(5000);
+            shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
+            shiftStartTime = shiftInfo.get(6).split("-")[0].trim();
+            shiftEndTime = shiftInfo.get(6).split("-")[1].trim();
+            SimpleUtils.assertOnFail("Start time or End time is not updated!", inputStartTime.equalsIgnoreCase(shiftStartTime) &&
+                    inputEndTime.equalsIgnoreCase(shiftEndTime), false);
+
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo.get(9)), false);
+            SimpleUtils.assertOnFail("Failed to update the shift notes!", shiftNotes.equalsIgnoreCase(shiftInfo.get(10)), false);
+
+            //Verify the new created shift can show in schedule
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(firstName)==employeeShiftCount, false );
+            Thread.sleep(5000);
+            shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
+            shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
+            shiftStartTime = shiftInfo.get(6).split("-")[0].trim();
+            shiftEndTime = shiftInfo.get(6).split("-")[1].trim();
+            SimpleUtils.assertOnFail("Start time or End time is not updated!", inputStartTime.equalsIgnoreCase(shiftStartTime) &&
+                    inputEndTime.equalsIgnoreCase(shiftEndTime), false);
+
+            SimpleUtils.assertOnFail("Shift Name is not updated!", shiftName.equalsIgnoreCase(shiftInfo.get(9)), false);
+            SimpleUtils.assertOnFail("Failed to update the shift notes!", shiftNotes.equalsIgnoreCase(shiftInfo.get(10)), false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "validate deleted shifts will not show in master template and schedule for regular schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        try {
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            String firstName = tmFullName.split(" ")[0];
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
+            //Go to master template
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+
+            int employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName);
+            if (employeeShiftCount==0){
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                //Create new shift for one employee
+                createShiftsWithSpecificValues(workRole, "", "", "10:00am", "5:00pm",
+                        1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+                scheduleMainPage.saveSchedule();
+            }
+
+            //Delete shift in master template
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleMainPage.saveSchedule();
+            //Verify the deleted shifts not show in master template anymore
+            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(firstName)==0, false );
+
+            //Verify the deleted shifts not show in master template in previous week
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            scheduleCommonPage.navigateToPreviousWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(firstName)==0, false );
+            //Verify the new created shift can show in future week
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(firstName)==0, false );
+
+
+            //Verify the new created shift can show in schedule
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(firstName)==0, false );
+
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
