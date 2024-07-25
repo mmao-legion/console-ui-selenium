@@ -371,7 +371,9 @@ public class ScheduleTemplateTest extends TestBase {
 
             //Verify the new created shift can show in schedule
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
+            String sheduleStartTime = "06:00AM";
+            String scheduleEndTime = "11:00PM";
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( sheduleStartTime, scheduleEndTime);
             SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstName)==2, false );
 
@@ -478,7 +480,7 @@ public class ScheduleTemplateTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
-            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+            SimpleUtils.assertOnFail("The updated shift failed display in master template! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstName)==employeeShiftCount, false );
             shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
             Thread.sleep(5000);
@@ -493,8 +495,10 @@ public class ScheduleTemplateTest extends TestBase {
 
             //Verify the new created shift can show in schedule
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
-            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+            String sheduleStartTime = "06:00AM";
+            String scheduleEndTime = "11:00PM";
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( sheduleStartTime, scheduleEndTime);
+            SimpleUtils.assertOnFail("The updated shift failed display in master template! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstName)==employeeShiftCount, false );
             Thread.sleep(5000);
             shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
@@ -551,7 +555,7 @@ public class ScheduleTemplateTest extends TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
             scheduleMainPage.saveSchedule();
             //Verify the deleted shifts not show in master template anymore
-            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+            SimpleUtils.assertOnFail("The deleted shift should not display in master template! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstName)==0, false );
 
             //Verify the deleted shifts not show in master template in previous week
@@ -562,7 +566,7 @@ public class ScheduleTemplateTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
-            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+            SimpleUtils.assertOnFail("The deleted shift should not display in master template! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstName)==0, false );
             //Verify the new created shift can show in future week
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
@@ -573,14 +577,16 @@ public class ScheduleTemplateTest extends TestBase {
                 createSchedulePage.unGenerateActiveScheduleScheduleWeek();
             }
             smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
-            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+            SimpleUtils.assertOnFail("The deleted shift should not display in master template! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstName)==0, false );
 
 
             //Verify the new created shift can show in schedule
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
-            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange( "06:00AM", "11:00PM");
-            SimpleUtils.assertOnFail("The new created shift failed display in master template! ",
+            String sheduleStartTime = "06:00AM";
+            String scheduleEndTime = "11:00PM";
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange(sheduleStartTime, scheduleEndTime);
+            SimpleUtils.assertOnFail("The deleted shift should not display in master template! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstName)==0, false );
 
         } catch (Exception e){
