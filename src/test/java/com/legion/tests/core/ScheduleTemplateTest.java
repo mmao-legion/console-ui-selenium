@@ -196,7 +196,7 @@ public class ScheduleTemplateTest extends TestBase {
             scheduleMainPage.saveSchedule();
             Thread.sleep(5000);
             for (int i =0; i<dayCount; i++) {
-                for (int j=0;j<1;j++) {
+                for (int j=0;j<selectedTMs.size();j++) {
                     shiftsOfOneDay = scheduleShiftTablePage.getOneDayShiftByName(i, selectedTMs.get(j).split(" ")[0]);
                     SimpleUtils.assertOnFail("The "+selectedTMs.get(j)+" shift is not exist on the "+i+" day! ",
                             shiftsOfOneDay.size()==1, false);
@@ -336,7 +336,9 @@ public class ScheduleTemplateTest extends TestBase {
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             //Create new shift for one employee
-            createShiftsWithSpecificValues(workRole, "", "", "10:00am", "5:00pm",
+            String shiftStartTime= "10:00am";
+            String shiftEndTime = "5:00pm";
+            createShiftsWithSpecificValues(workRole, "", "", shiftStartTime, shiftEndTime,
                     1, Arrays.asList(0,1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
             scheduleMainPage.saveSchedule();
 
@@ -405,7 +407,9 @@ public class ScheduleTemplateTest extends TestBase {
             if (employeeShiftCount==0){
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 //Create new shift for one employee
-                createShiftsWithSpecificValues(workRole, "", "", "10:00am", "5:00pm",
+                String shiftStartTime= "10:00am";
+                String shiftEndTime = "5:00pm";
+                createShiftsWithSpecificValues(workRole, "", "", shiftStartTime, shiftEndTime,
                         1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
                 scheduleMainPage.saveSchedule();
                 employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName);
@@ -535,7 +539,9 @@ public class ScheduleTemplateTest extends TestBase {
             if (employeeShiftCount==0){
                 scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
                 //Create new shift for one employee
-                createShiftsWithSpecificValues(workRole, "", "", "10:00am", "5:00pm",
+                String shiftStartTime= "10:00am";
+                String shiftEndTime = "5:00pm";
+                createShiftsWithSpecificValues(workRole, "", "", shiftStartTime, shiftEndTime,
                         1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
                 scheduleMainPage.saveSchedule();
             }
