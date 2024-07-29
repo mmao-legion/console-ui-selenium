@@ -598,7 +598,7 @@ public class ScheduleTemplateTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify master template shift adheres to the meal and rest break template based on the association ")
+    @TestName(description = "Verify master template shift adheres to the meal and rest break template based on the association")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyMasterTemplateShiftAdheresToTheMealAndRestBreakTemplateAsTeamMember(String browser, String username, String password, String location) throws Exception {
         try {
