@@ -458,7 +458,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     @FindBy(css = "[src=\"img/legion/schedule/shift-info-danger.png\"]")
     private List<WebElement> complianceShitShowIcon;
 
-    @FindBy(css = "card-carousel-card[ng-if*='compliance'] span")
+    @FindBy(xpath = "//div[contains(text(), \"Compliance\")]/parent::div/parent::ng-transclude/parent::div[@class=\"card-carousel-card card-carousel-card-smart-card-required smart-card-small \"]//span")
     private WebElement viewShift;
 
     @FindBy(css = "[ng-click=\"$ctrl.openFilter()\"]")

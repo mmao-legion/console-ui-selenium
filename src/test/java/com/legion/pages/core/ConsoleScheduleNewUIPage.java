@@ -5221,7 +5221,7 @@ public class ConsoleScheduleNewUIPage extends BasePage implements SchedulePage {
     @FindBy(css = "img[ng-if='hasViolateCompliance(line, scheduleWeekDay)'] ")
     private List<WebElement> complianceInfoIcon;
 
-    @FindBy(css = "card-carousel-card[ng-if*='compliance'] span")
+    @FindBy(xpath = "//div[contains(text(), \"Compliance\")]/parent::div/parent::ng-transclude/parent::div[@class=\"card-carousel-card card-carousel-card-smart-card-required smart-card-small \"]//span")
     private WebElement viewShift;
     @FindBy(css = "img[ng-if='hasViolateCompliance(shift)']")
     private List<WebElement> complianceInfoIconDayView;
