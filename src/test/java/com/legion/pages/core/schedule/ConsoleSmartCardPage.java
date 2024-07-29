@@ -472,7 +472,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         return false;
     }
 
-    @FindBy(css = "[ng-if=\"scheduleSmartCard.complianceViolations\"] div.card-carousel-card")
+    @FindBy(xpath = "//div[contains(text(), \"Compliance\")]/parent::div/parent::ng-transclude/parent::div[@class=\"card-carousel-card card-carousel-card-smart-card-required smart-card-small \"]")
     private WebElement complianceSmartcardHeader;
     @Override
     public boolean verifyComplianceShiftsSmartCardShowing() throws Exception {
