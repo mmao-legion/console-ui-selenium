@@ -747,6 +747,8 @@ SCH-5862-->
                     <include name="verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember" />
                     <include name="verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember" />
                     <include name="verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleAsTeamMember" />
+                    <include name="verifyChangedMealAndRestBreakConsistentInMasterTemplateAndScheduleAsTeamMember" />
+                    <include name="verifyMasterTemplateShiftAdheresToTheMealAndRestBreakTemplateAsTeamMember" />
                 </methods>
             </class>
         </classes>
