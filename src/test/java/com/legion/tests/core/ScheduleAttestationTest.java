@@ -211,7 +211,7 @@ public class ScheduleAttestationTest extends TestBase {
                     ActivityTest.indexOfActivityType.Schedule.name());
             List<String> scheduleChangeActivityMessages = activityPage.getScheduleChangeActivity(tmFullName);
             String expectedMessage1 = tmFullName+" accepted an added hours schedule change for "+workRole+" shift on "
-                    +fullMonth1+ " "+day1+", "+year+".";
+                    +fullMonth1+ " "+day1+", "+year+" .";
             String expectedMessage2 = tmFullName+" declined an added hours schedule change for "+workRole+" shift on "
                     +fullMonth2+ " "+day2+", "+year+" with the note:"+declineNotes+" .";
             SimpleUtils.assertOnFail("The expected message is "+expectedMessage1+" "+expectedMessage2
@@ -468,7 +468,7 @@ public class ScheduleAttestationTest extends TestBase {
 //            String workRole = "General Manager";
             List<String> scheduleChangeActivityMessages = activityPage.getScheduleChangeActivity(tmFullName);
             String expectedMessage1 = tmFullName+" accepted a deleted shift schedule change for "+workRole+" shift on "
-                    +fullMonth1+ " "+day1+", "+year+".";
+                    +fullMonth1+ " "+day1+", "+year+" .";
             String expectedMessage2 = tmFullName+" declined a deleted shift schedule change for "+workRole+" shift on "
                     +fullMonth2+ " "+day2+", "+year+" with the note:"+declineNotes+" .";
             SimpleUtils.assertOnFail("The expected message is "+expectedMessage1+" "+expectedMessage2
