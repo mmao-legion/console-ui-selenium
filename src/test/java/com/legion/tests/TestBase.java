@@ -323,7 +323,6 @@ public abstract class TestBase {
 //                    options.addArguments("headless");
                     options.addArguments("--headless", "--disable-gpu", "--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage");
                     options.addArguments("window-size=1200x600");
-                    options.addArguments("--lang=en-US");
                     runScriptOnHeadlessOrBrowser(options);
                 } else {
                     runScriptOnHeadlessOrBrowser(options);
@@ -709,7 +708,6 @@ public abstract class TestBase {
         prefs.put("password_manager_enabled", false);
         options.setExperimentalOption("prefs", prefs);
         options.addArguments("disable-logging", "silent", "ignore-certificate-errors");
-        options.addArguments("--lang=en-US");
         options.setExperimentalOption("useAutomationExtension", false);
         options.setExperimentalOption("excludeSwitches",
                 Collections.singletonList("enable-automation"));
