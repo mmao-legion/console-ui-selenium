@@ -754,6 +754,16 @@ SCH-5862-->
         </classes>
     </test>
 
+    <test name="Master Template P2P Test">
+        <classes>
+            <class name="com.legion.tests.core.MasterTemplateP2PTest">
+                <methods>
+                    <include name="verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 
     <test name="Work Role Test">
         <classes>
