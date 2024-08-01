@@ -792,7 +792,7 @@ public class ScheduleTemplateTest extends TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            //Create new shift for one employee
+            //Create two shifts for one employee in same day and make sure they will trigger Daily OT
             String shiftStartTime1= "8:00am";
             String shiftEndTime1 = "4:00pm";
             createShiftsWithSpecificValues(workRole, "", "", shiftStartTime1, shiftEndTime1,
@@ -802,6 +802,8 @@ public class ScheduleTemplateTest extends TestBase {
             createShiftsWithSpecificValues(workRole, "", "", shiftStartTime2, shiftEndTime2,
                     1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
             scheduleMainPage.saveSchedule();
+
+            //Check the daily OT display correctly in master template
             List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
             List<String> violations = scheduleShiftTablePage.
                     getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(1)));
@@ -809,6 +811,7 @@ public class ScheduleTemplateTest extends TestBase {
             SimpleUtils.assertOnFail("The OT violation display incorrect, the actual is:"+violations.toString(),
                     violations.contains(otViolation), false);
 
+            //Check the daily OT display correctly in schedule
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             SimpleUtils.assertOnFail("The OT shifts of"+firstName+" not display in schedule! ",
@@ -849,13 +852,14 @@ public class ScheduleTemplateTest extends TestBase {
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-            //Create new shift for one employee
+            //Create multiple shifts for one employee on multiple days, make sure they will trigger weekly OT
             String shiftStartTime1= "8:00am";
             String shiftEndTime1 = "4:00pm";
             createShiftsWithSpecificValues(workRole, "", "", shiftStartTime1, shiftEndTime1,
                     1, Arrays.asList(0,1,2,3,4,5), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
 
             scheduleMainPage.saveSchedule();
+            //Check the weekly OT display correctly in master template
             List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
             List<String> violations = scheduleShiftTablePage.
                     getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(shiftIndexes.size()-1)));
@@ -863,6 +867,7 @@ public class ScheduleTemplateTest extends TestBase {
             SimpleUtils.assertOnFail("The OT violation display incorrect, the actual is:"+violations.toString(),
                     violations.contains(otViolation), false);
 
+            ////Check the weekly OT display correctly in schedule
             configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             SimpleUtils.assertOnFail("The OT shifts of"+firstName+" not display in schedule! ",
