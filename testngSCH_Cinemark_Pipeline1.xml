@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite verbose ="0" thread-count="6" name="LegionTest" parallel="tests" configfailurepolicy="continue">
+    <parameter name="environment" value="QA"/>
+    <parameter name="testRail" value="Yes"/>
+    <parameter name="testRailRunName" value="RC_AutomationRegressionRuns"/>
+    <listeners>
+        <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
+    </listeners>
+
+    <test name="Prepare Settings Test">
+        <classes>
+            <class name="com.legion.tests.core.PrepareSettingsTest">
+                <methods>
+                    <include name="prepareSettingsInOPTemplateAsInternalAdmin"/>
+<!--                    <include name="verifyCanPrepareDynamicEmployeeGroupsNTemplatesAsInternalAdmin" Blocked by new feature/>-->
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Schedule Test KendraScott2">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTestKendraScott2">
+                <methods>
+<!--                    <include name="verifyTheFunctionalityOfDailyOTAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-10337-->
+                    <include name="verifyTheBufferHoursDisplayInScheduleAsInternalAdmin"/>
+                    <include name="verifySearchBarOnSchedulePageInWeekViewAsInternalAdmin" />
+                    <include name="verifySearchBarOnSchedulePageInDayViewAsInternalAdmin" />
+                    <include name="verifyActionRequiredSmartCardDisplayCorrectlyWhenScheduleCreatedByCopyPartialAsInternalAdmin" />
+                    <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenEnableScheduleShowFullNamesToggleAsTeamMember" />
+ <!--                   <include name="verifyTheFullNamesOnShiftInDayAndWeekViewWhenDisableScheduleShowFullNamesToggleAsTeamMember" /> Toggle already GA, only need to check the scenaria of toggle on -->
+                    <include name="verifyGroupByAllFilterInDayViewAsInternalAdmin" />
+                    <include name="verifyViewProfileInContextMenuInDayViewAsInternalAdmin" />
+<!--                    <include name="verifyChangeShiftRoleInContextMenuInDayViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8334-->
+                    <!--                     <include name="verifyAssignTMInDayViewAsInternalAdmin" />
+                                        <include name="verifyConvertToOpenShiftInDayViewAsInternalAdmin" />
+                                        <include name="verifyEditShiftNotesInDayViewAsInternalAdmin" />
+                                        <include name="verifyScheduledHoursAndNumberOfShiftsInOffersWhenTheTMIsScheduledIn2LocationsAsInternalAdmin" />
+                                                          <include name="verifyEditShiftTimeInDayViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5700
+                    <include name="verifyEditMealBreakTimeInDayViewAsInternalAdmin" />
+                    <include name="verifyDeleteShiftInDayViewAsInternalAdmin" />-->
+                    <include name="verifyTheItemsAfterClickTheShiftInDayViewAsInternalAdmin" />
+                    <!--                   <include name="verifyShiftsCanBeDraggedInDayViewAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-5728 -->
+             <!--       <include name="verifyScheduleEditShiftTimeNewAbswitchAsInternalAdmin" /> change toggle need time to effect -->
+                    <!--                    <include name="verifyTheShiftTimesConsistentOnInputAndShiftCardAsInternalAdmin" />
+                                                          <include name="verifyTheShiftTimeCanBeSetMoreThan24HrsThatSetByShiftTimeInputAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6247
+                    <include name="verifyTheShiftTimeCannotBeEarlierOrLaterThanOperatingHoursAsInternalAdmin" />
+                    <include name="verifyTheNextDayCheckboxOnEditShiftTimePageAsInternalAdmin" />-->
+                    <include name="verifyOpenShiftsDisplayWhenGroupingByJobTitleAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfMinTimeBetweenShiftsAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfMaxShiftsPerDayAsInternalAdmin" />
+                    <!-- <include name="verifyTMOverTimeStatusAsInternalAdmin" /> -->
+                    <!-- <include name="verifyTMClopeningStatusAsInternalAdmin" /> -->
+                    <!--    <include name="verifyThePublishedScheduleShouldNotChangeToDraftAfterAutoFillOpenShiftsAsInternalAdmin" />  https://legiontech.atlassian.net/browse/SCH-6842-->
+                    <include name="verifyEditOperatingHoursUnderMoreActionsAsInternalAdmin" />
+                    <include name="verifyEditOpeHoursDisabledAsInternalAdmin" />
+                    <include name="verifyTheFunctionalityOfEditOpeHoursAsInternalAdmin" />
+                    <include name="verifyTheSaveFunctionOnEditOpeHoursDialogAsInternalAdmin" />
+                    <include name="verifyTurnOnWeekOTViolationAsInternalAdmin" />
+                            <include name="verifyTurnOffWeekOTViolationAsInternalAdmin" />
+                            <include name="VerifyTheViewTeamSchedulePermissionDisplayAsInternalAdmin" />
+                    <!--         <include name="VerifyTheViewTeamSchedulePermissionTurnOffAsInternalAdmin" />
+                            <include name="VerifyTheViewTeamSchedulePermissionTurnOnAsInternalAdmin" />   The effective time is too long to run, no any useful method now -->
+                    <!--          <include name="VerifyTheUsersWithDifferentViewTeamSchedulePermissionAsInternalAdmin" />
+                            <include name="VerifyTheCoverSwapWorkingWithoutViewTeamPermissionAsInternalAdmin" /> The code is not merged into RC yet -->
+                     <include name="verifyRecommendTabHasTMsAsInternalAdmin" />
+<!--                    <include name="verifyPleaseConfirmMessageOnWarningModalAsInternalAdmin" /> //https://legiontech.atlassian.net/browse/SCH-12072 remove the second for violation -->
+                    <!--  <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
+                           <include name="verifyTheCanadaCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
+                           <include name="verifyTheIrelandCurrencySignDisplayAlignWithCountryAsInternalAdmin" />
+                           <include name="verifyTheSouthAfricaCurrencySignDisplayAlignWithCountryAsInternalAdmin" />  The effective time of the configuration is not fixed -->
+                    <include name="VerifyTheScheduleVersionUnchangedWithUnmodifiedSaveAsInternalAdmin" />
+                    <!-- <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOnAsInternalAdmin" />
+                <include name="VerifyConfirmOpeHrsDisplayWhenManageWorkingHrsPermissionTurnOffAsInternalAdmin" />   The effective time is too long to run, no any useful method now -->
+                    <include name="validateTheScheduledHrsOnScheduleSmartCardWillChangedAccordinglyBySelectFilterInWeekViewAsInternalAdmin" />
+                    <include name="validateTheScheduledHrsOnScheduleSmartCardWillChangedAccordinglyBySelectFilterInDayViewAsInternalAdmin" />
+                    <include name="validateTMCanViewTeamScheduleAfterGenerateScheduleAsInternalAdmin" />
+                    <include name="validateSMCanViewScheduleInManagerAndEmployeeViewAfterGenerateScheduleAsInternalAdmin" />
+                    <include name="hardStopComplianceSetupEnhancementAsInternalAdminHardStopTrigger" />
+                  </methods>
+              </class>
+          </classes>
+      </test>
+
+      <test name="Scheduling OP Enabled Test">
+          <classes>
+              <class name="com.legion.tests.core.SchedulingOPEnabledTest">
+                  <methods>
+  <!--                    <include name="verifyScheduleFunctionalityWeekViewAsInternalAdmin" />   Blocked by SCH-5036 -->
+<!--                    <include name="verifyBudgetHourInDMViewSchedulePageForNonDGFlowAsInternalAdmin" />-->
+                    <include name="verifyAssignTMWarningForTMIsAlreadyScheduledAsInternalAdmin"/>
+                    <include name="verifySmartCardForScheduleNotPublishAsInternalAdmin" />
+                    <include name="verifyNumberOnSmartCardForScheduleNotPublishAsInternalAdmin" />
+                      <!--                  <include name="verifyUnpublishedEditsTextOnDashboardAndOverviewPageAsInternalAdmin" />-->
+                    <include name="verifyComplianceSmartCardFunctionalityAsInternalAdmin" />
+<!--                    <include name="verifyScheduleFunctionalityScheduleSmartCardAsStoreManager" /> https://legiontech.atlassian.net/browse/SCH-5994 -->
+<!--                    <include name="verifyOffersGeneratedForOpenShiftsAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6149-->
+ <!--                   <include name="viewAndFilterScheduleWithGroupByJobTitleInWeekView" />
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleInDayView" />-->
+                    <include name="viewAndFilterScheduleWithGroupByJobTitleFilterCombinationInWeekViewAsStoreManager" />
+ <!--                   <include name="verifySchedulesWidgetsAsStoreManager" />-->
+<!--                    <include name="verifyCommonUIOfWidgetsAsStoreManager" /> https://legiontech.atlassian.net/browse/SCH-6542-->
+<!--                    <include name="verifyScheduleFunctionalityForecastAsStoreManager" /> https://legiontech.atlassian.net/browse/SCH-6396-->
+<!--                    <include name="verifyScheduleLaborForeCastFunctionalityAsInternalAdmin" Blocked by bug: SCH-5896/>-->
+                    <include name="validateWeatherSmartCardOnForecastPageAsInternalAdmin" />
+                    <include name="verifyTheContentOfNewProfilePageAsInternalAdmin" />
+ <!--                   <include name="verifyTheContentOfNewProfilePageInTMViewAsTeamMember" />-->
+<!--                    <include name="verifyTheTeamFunctionalityInWorkPreferencesAsStoreManager" Blocked by bug: SCH-3934/>-->
+ <!--                   <include name="verifyTheTeamFunctionalityInRosterForSort" />
+                    <include name="verifyScheduleFunctionalityOverviewAsStoreManager" />-->
+<!--                    <include name="verifyTheNotificationOfWorkPreferencesAsTeamMember" Blocked by SCH-5574/>-->
+    <!--                <include name="verifyDashboardFunctionalityAsTeamMember" />-->
+                    <include name="verifyWorkPreferenceDetailsByUpdatingTheInformationAsTeamMember" />
+                    <include name="verificationOfMySchedulePageAsTeamMember" />
+                    <include name="verifyProfilePictureFunctionalityAsTeamMember" />
+                    <include name="verifyInfoIconFunctionalityAsTeamMember" />
+                    <include name="verifyOpenShiftScheduleSmartCardAsTeamMember" />
+<!--                    <include name="verifyTheFunctionalityOfClaimOpenShiftAsTeamLead" /> -->
+                    <include name="verifyTheFeatureOfFilterAsInternalAdmin" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingAdminAccessAsInternalAdmin" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingSMAccessAsStoreManager" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingTLAccessAsTeamLead" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingTMAccessAsTeamMember" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingDMAccessAsDistrictManager" />
+                    <include name="verifyTheLeftNavigationMenuOnLoginUsingCAAccessAsCustomerAdmin" />
+<!--                    <include name="verifyAutoPublishSettingAsInternalAdmin" />-->
+<!--                    <include name="verifyAutoPublishSettingCanBeSavedAsInternalAdmin" />-->
+                    <include name="verifyWorkRoleConfigurationAsInternalAdmin" />
+                    <include name="verifyWorkRoleInFilterAsInternalAdmin" />
+                    <include name="verifyWorkRoleInScheduleAsInternalAdmin" />
+               <!--     <include name="verifyWorkRoleInStaffAsInternalAdmin" />  sch-5793-->
+                    <include name="verifyWorkRoleInLaborGuidanceAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="TeamTab Test KendraScott2">
+        <classes>
+            <class name="com.legion.tests.core.TeamTestKendraScott2">
+                <methods>
+<!--                    <include name="verifyAbilityToHideInviteButtonAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5674-->
+<!--                    <include name="verifyUpcomingShiftsWhenTMHasAccessToMultipleLocationsAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-5657-->
+                    <include name="verifyCanUpdateTheHRConfigInIntegrationAsInternalAdmin" />
+                    <include name="validateErrorMessageWhenThereIsRecurringPendingAvailabilityRequestAsStoreManager" />
+                    <!--                    <include name="validateErrorMessageWhenThereIsNoRecurringPendingAvailabilityRequestAsStoreManager" Blocked by SCH-5388/>-->
+<!--                    <include name="verifyTheButtonsForEmployeeInDifferentStatusAsInternalAdmin" Blocked by SCH-5660/>-->
+                    <include name="validateTheAvailableLeftHrsDisplayAs0WhenDeleteAllAvailabilitiesAsTeamMember" />
+                    <include name="validateTheAvailableLeftHrsDisplayAs168WhenAddFullAvailabilitiesAsTeamMember" />
+                    <include name="validateTheAvailableLeftHrsDisplayCorrectlyWhenUpdateAvailabilitiesAsTeamMember" />
+                    <include name="validateTheAvailableLeftHrsWhenTMHasShiftsOnTheWeekAsTeamMember" />
+                    <include name="validateTimeOffOnAvailabilityTableAsTeamMember" />
+                    <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWithScheduledShiftAsTeamMember" />
+<!--                    <include name="validateTheScheduledShiftAndHrsOnAvailabilityTableWillChangedAccordinglyAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-8602-->
+                    <include name="validateTheScheduledShiftAndHrsOnAvailabilityTablWhenThereIsNoShiftBeenScheduledAsTeamMember" />
+                    <include name="validateTheApprovedOrRejectedAvailabilitiesRequestShouldNotBeAbleToOperateAsTeamMember" />
+                    <include name="validateManagersCanConvertToOpenShiftAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="Seventh Consecutive Day Test">
+        <classes>
+            <class name="com.legion.tests.core.SeventhConsecutiveDayTest">
+                <methods>
+                    <!-- enable 7thConsecutive OT Toggle -->
+                    <include name="verifyConsecutiveOTSettingAsInternalAdmin" />
+                    <!--Always-->
+<!--                    <include name="verifyViolationWhenSetConsecutiveOTSettingAsAlwaysAsInternalAdmin" /> Need Fix-->
+                    <include name="verifyTMCannotReceiveAutoOpenShiftOfferWithConsecutiveOTViolationAsTeamMember" />
+                    <!--                    <include name="verifySMCannotApproveAutoOpenShiftActivityWithConsecutiveOTViolationAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-6149-->
+                    <!--                    <include name="verifyTMCannotAcceptAutoOpenShiftActivityWithConsecutiveOTViolationAsTeamMember" />
+                                        <include name="verifyTMCannotAcceptManualOpenShiftOfferWithConsecutiveOTViolationAsTeamMember" />https://legiontech.atlassian.net/browse/SCH-6149-->
+                    <include name="verifyTMWillNotDisplayInSwapRequestListWhenHasOTViolationAsTeamMember" />
+                    <!--                    <include name="verifyTMCannotAcceptTheShiftSwapRequestThatHasOTViolationAsTeamMember" />https://legiontech.atlassian.net/browse/SCH-6149-->
+                    <include name="verifyTMWillNotDisplayInCoverRequestListWhenHasOTViolationAsTeamMember" />
+                    <!--                    <include name="verifyTMCannotAcceptTheShiftCoverRequestThatHasOTViolationAsTeamMember" />https://legiontech.atlassian.net/browse/SCH-6149-->
+                    <!--WorkweekLessThan40Hrs-->
+                    <!--                    <include name="verifyViolationWhenSetConsecutiveOTSettingAsWorkweekLessThan40HrsAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6172-->
+                    <!--                     <include name="verifyViolationWhen7thConsecutiveDayShiftHourExceedDTPayHrsAsInternalAdmin" />Need fix-->
+                                        <!--                    <include name="verifyViolationWhen7thConsecutiveDayShiftHourNotExceedDTPayHrsAsInternalAdmin" />Need fix-->
+                    <!--                    <include name="verifyViolationWhenShiftHoursExceedWeeklyDTHoursAsInternalAdmin" /> -->
+<!--                    <include name="verifyViolationWhenDisable7thConsecutiveDayDTSettingAsInternalAdmin" /> Need fix-->
+
+                    <!-- disable 7th Consecutive OT Toggle and Consecutive DT -->
+                    <include name="verify7thConsecutiveDayViolationWillNotDisplayWhenDisableTheRuleAsInternalAdmin" />
+
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="Schedule Template Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleTemplateTest">
+                <methods>
+                    <include name="validateTheAssignShiftsWorkFlowInEditScheduleTemplateAsInternalAdmin" />
+                    <include name="verifyTMCanAcknowledgeTheNotificationAfterScheduleTemplateLocationAsTeamMember" />
+                    <include name="verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember" />
+                    <include name="verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember" />
+                    <include name="verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleAsTeamMember" />
+                    <include name="verifyChangedMealAndRestBreakConsistentInMasterTemplateAndScheduleAsTeamMember" />
+                    <include name="verifyMasterTemplateShiftAdheresToTheMealAndRestBreakTemplateAsTeamMember" />
+                    <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerDailyOTAsTeamMember" />
+                    <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerWeeklyOTAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="Work Role Test">
+        <classes>
+            <class name="com.legion.tests.core.WorkRoleTest">
+                <methods>
+                    <include name="verifyFunctionalityOfDisplayOrderAsInternalAdmin" />
+                    <include name="verifyWorkRoleDisplayOrderInConsoleAsInternalAdmin" />
+                    <include name="verifyTheColorOfTheShiftInTMViewConsistentWithManagerViewAsTeamMember" />
+<!--                    <include name="verifyTheRemovedWorkRoleShouldNotBeCopiedAsInternalAdmin" />-->
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Meal And Rest Breaks Test">
+        <classes>
+            <class name="com.legion.tests.core.MealAndRestBreakTest">
+                <methods>
+                    <!--                    <include name="verifyEditBreaksOptionIsAvailableAsInternalAdmin" Old Flow/>-->
+                    <!--                    <include name="verifyTheFunctionalityOfEditBreaksWeekViewAsInternalAdmin" Old Flow/>-->
+                    <!--                    <include name="verifyTheFunctionalityOfEditBreaksDayViewAsInternalAdmin" Old Flow/>-->
+                    <!--                    <include name="verifyTurnOnMealBreakSettingAsInternalAdmin" /> -->
+                    <include name="VerifyAssignShiftMealBreakAsInternalAdmin" />
+                    <include name="VerifyOpenShiftMealBreakAsInternalAdmin" />
+                    <!--                    <include name="verifyTheMealPlacementViolationAsInternalAdmin" /> -->
+                    <!--                    <include name="verifySettingsAreAppliedAsInternalAdmin" Blocked by new feature/>-->
+                    <include name="verifyMissedMealBreakWhenUsingTemplateAsInternalAdmin" />
+                    <include name="verifyMealDurationWhenUsingTemplateAsInternalAdmin" />
+                    <!--                    <include name="verifyMealPlacementWhenUsingTemplateAsInternalAdmin" />-->
+                    <include name="verifyMissedRestBreakWhenUsingTemplateAsInternalAdmin" />
+                    <include name="verifyShortRestBreakWhenUsingTemplateAsInternalAdmin" />
+                    <!--                    <include name="verifyRestTimeNotIdealWhenUsingTemplateAsInternalAdmin" />-->
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite> <!-- Suite -->

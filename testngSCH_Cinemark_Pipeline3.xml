@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite verbose ="0" thread-count="6" name="LegionTest" parallel="tests" configfailurepolicy="continue">
+    <parameter name="environment" value="QA"/>
+    <parameter name="testRail" value="Yes"/>
+    <parameter name="testRailRunName" value="RC_AutomationRegressionRuns"/>
+    <listeners>
+        <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
+    </listeners>
+
+
+    <test name="Cinemark Minor Test">
+        <classes>
+            <class name="com.legion.tests.core.CinemarkMinorTest">
+                <methods>
+                    <!--                           <include name="verifyTurnOnAndSetMinorRuleAsInternalAdmin" />Due to new template -->
+                    <include name="verifyMinorProfilePageWhenTheTMDoesNotHaveMinorRuleTemplateAssociatedAsInternalAdmin" />
+                    <include name="prepareTheCalendarForAllMinorsAsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheNonSchoolWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge16Or17AsInternalAdmin" />
+
+<!--                    <include name="verifyTheSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
+
+<!--                    <include name="verifyTheSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
+<!--                    <include name="verifyTheNoSchoolTodayAndNoSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
+<!--                    <include name="verifyTheNoSchoolTodayAndSchoolTomorrowSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
+<!--                    <include name="verifyTheSummerDaySettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
+<!--                    <include name="verifyTheSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
+<!--                    <include name="verifyTheNonSchoolWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
+<!--                    <include name="verifyTheSummerWeekSettingsForTheMinorsOfAge14Or15AsInternalAdmin" />-->
+                    <include name="verifySMCanSelectACalendarForMinorAsInternalAdmin" />
+                    <!--                   <include name=" verifyDefaultValueOfAMinorWithoutACalendarAsInternalAdmin" />Debug -->
+<!--                    <include name="verifySchoolCalendarListAsInternalAdmin" Blocked by SCH-7481/>-->
+                    <include name="verifyCreateCalendarAsInternalAdmin" />
+                    <include name="verifyAddDatesForBreaksAsInternalAdmin" />
+                    <!-- blocked by cache                   <include name="verifyTurnOffMinorRuleAsInternalAdmin" /> -->
+                    <!--  <include name="verifyTurnOnAndSetMinorRuleEmptyAsInternalAdmin" Need fix/> -->
+                    <!-- blocked by cache                   <include name="verifyAccessToEditCalendarsAsInternalAdmin" /> -->
+                    <include name="verifySchoolCalendarDefaultMonthAsInternalAdmin" />
+                    <include name="verifyTheMainCalendarInfoOnThePageAsInternalAdmin" />
+                    <include name="verifyAutoScheduleRespectTheMinorsRulesAsInternalAdmin" />
+<!--                    <include name="verifyRecommendationRespectTheMinorsRulesAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-9782-->
+                    <include name="verifyMinorProfilePageWhenMinorsHasBeenAssignedMinorRuleTemplateOnOPAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="Upperfield Test">
+        <classes>
+            <class name="com.legion.tests.core.UpperfieldTest">
+                <methods>
+                    <!-- Added by Mary -->
+                    <include name="verifyRegionViewNavigationAsInternalAdmin" />
+                    <include name="verifyBUViewNavigationAsInternalAdmin" />
+                    <!--                         <include name="verifyAnalyticsTableOnComplianceInBUViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-5518 -->
+                    <!--                     <include name="verifyAnalyticsTableOnComplianceInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518 -->
+                    <include name="verifyComplianceFunctionalityOnComplianceInBUViewAsInternalAdmin" />
+                    <include name="verifyComplianceFunctionalityOnComplianceInRegionViewAsInternalAdmin" />
+                    <!--                        <include name="verifyRefreshFeatureOnComplianceInBUViewAsInternalAdmin" />
+                                            <include name="verifyRefreshFeatureOnComplianceInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-4525 -->
+                    <include name="verifyRegionListAndSubRegionOnComplianceInBUViewAsInternalAdmin" />
+                    <include name="verifyDistrictListAndSubDistrictOnComplianceInBUViewAsInternalAdmin" />
+<!--                    <include name="verifyTotalViolationHrsOnComplianceInBUViewAsInternalAdmin" /> need more investigate-->
+<!--                    <include name="verifyTotalViolationHrsOnComplianceInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-8703-->
+                    <include name="verifyTotalLocationsWithViolationCardInComplianceBUViewAsInternalAdmin" />
+                    <include name="verifyTotalLocationsWithViolationCardInComplianceRegionViewAsInternalAdmin" />
+                    <include name="verifyTopViolationsCardInComplianceBUViewAsInternalAdmin" />
+                    <include name="verifyTopViolationsCardInComplianceRegionViewAsInternalAdmin" />
+                    <include name="verifyAnalyticTableInTimesheetBUViewAsInternalAdmin" />
+                    <include name="verifyAnalyticTableInTimesheetRegionViewAsInternalAdmin" />
+                    <!--                       <include name="verifyRegionListAndSubRegionOnTimesheetInBUViewAsInternalAdmin" />
+                                           <include name="verifyRegionListAndSubRegionOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-4525-->
+                    <include name="verifyTimesheetFunctionalityInBUViewAsInternalAdmin" />
+                    <include name="verifyTimesheetFunctionalityInRegionViewAsInternalAdmin" />
+                    <!--                        <include name="verifyRefreshFeatureOnTimesheetInBUViewAsInternalAdmin" />
+                                            <include name="verifyRefreshFeatureOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/SCH-5058 -->
+                    <!--                        <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInBUViewAsInternalAdmin" />
+                                            <include name="verifyTIMESHEETAPPROVALRATEOnTimesheetInRegionViewAsInternalAdmin" /> Blocked by https://legiontech.atlassian.net/browse/TA-5507-->
+                    <include name="verifyUnplannedClocksOnTimesheetInBUViewAsInternalAdmin" />
+                    <include name="verifyUnplannedClocksOnTimesheetInRegionViewAsInternalAdmin" />
+                    <!--                    <include name="verifyUnplannedClocksSmartCardOnTimesheetInBUViewAsInternalAdmin" />
+                                        <include name="verifyUnplannedClocksSmartCardOnTimesheetInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6131-->
+                    <!--                    <include name="verifyAnalyticsTableOnScheduleInBUViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
+                    <!--                    <include name="verifyAnalyticsTableOnScheduleInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-5518-->
+                    <!--                   <include name="verifyRegionSummaryOnScheduleInBUViewAsInternalAdmin" />
+                                       <include name="verifyRegionSummaryOnScheduleInRegionViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-6541 -->
+                    <include name="verifyScheduleStatusOnScheduleInBUViewAsInternalAdmin" />
+                    <include name="verifyScheduleStatusOnScheduleInRegionViewAsInternalAdmin" />
+                    <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInBUViewAsInternalAdmin" />
+                    <include name="verifyTheAvailabilityOfRegionListAndSubRegionOnScheduleInRegionViewAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+  <test name="Bulk Create Test">
+        <classes>
+            <class name="com.legion.tests.core.BulkCreateTest">
+                <methods>
+                    <include name="validateAllItemsDisplayOnTheFirstPageOfCreateShiftModalAsInternalAdmin" />
+                    <include name="validateAllItemsOnTheSelectTMPageAsInternalAdmin" /> <!--  need run on 24hrs ops env-->
+                    <include name="validateTheWarningMessageOfTheItemsOnFirstPageOfCreateShiftModalAsInternalAdmin" />
+                    <include name="validateAssignOrOfferTMsInSearchAndRecommendedTabsAsInternalAdmin" />
+                    <include name="validateAssignShiftsForEachDaySwitchAsInternalAdmin" />
+                    <include name="verifyAssignShiftByEachDaysAsInternalAdmin" />
+                    <include name="validateTheAutoAssignmentWorkFlowAsInternalAdmin" />
+                    <include name="validateTheOfferTMsWorkFlowAsInternalAdmin" />
+                    <include name="validateOfferShiftByEachDaysAsInternalAdmin" />
+                    <include name="validateTheAssignAndOfferWorkFlowAsInternalAdmin" />
+                    <include name="validateTheAssignShiftsWorkFlowAsInternalAdmin" />
+                    <include name="validateTheShiftsCanBeCreatedAfterUpdateShiftInfoAsInternalAdmin" />
+                    <include name="validateTheNextDayCheckBoxOnCreateShiftModalAsInternalAdmin" />
+                    <include name="validateShiftsCanBeCreatedByNewUIByDifferentAccessRolesAsInternalAdmin" />
+                    <include name="verifyTheEmployeeIDDisplayCorrectlyOnSelectTMPageAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="Consolidating Filters Test">
+        <classes>
+            <class name="com.legion.tests.core.ConsolidatingFiltersTest">
+                <methods>
+                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+<!--                    <include name="verifyComplianceReviewInWeekViewAndDayViewAsInternalAdmin" /> https://legiontech.atlassian.net/browse/SCH-7872-->
+                    <include name="verifyActionRequiredInWeekViewAndDayViewAsInternalAdmin" />
+                    <include name="verifyShiftTypeContentInFilterWithoutLGAsInternalAdmin" />
+                    <!--                    <include name="verifyComplianceReviewWithLGAsInternalAdmin" /> LG cannot be generated -->
+                    <include name="validateTheOptionsOfScheduleFilterShouldBeInAlphabeticalAndNumbericalOrderAsInternalAdmin" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Accrual Time Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleAccrualTimeTest">
+                <methods>
+                    <include name="verifyAccrualLimitOverrideConfigsAsInternalAdmin"/>
+                    <include name="verifyAccrualLimitTimeOffReasonConfigsAsInternalAdmin"/>
+                    <include name="verifyTimeOffReasonListSyncAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="Bulk Delete and Edit Test">
+        <classes>
+            <class name="com.legion.tests.core.BulkDeleteNEditTest">
+                <methods>
+                    <include name="verifyDeleteMultipleShiftsInWeekViewAsInternalAdmin" />
+                    <include name="verifyDeleteMultipleShiftsInDayViewAsInternalAdmin" />
+                    <include name="verifyTheContentOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <!--                    <include name="verifyTheEditedColumnOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-9842/>-->
+                    <!--                    <include name="verifyChangingShiftNameOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: https://legiontech.atlassian.net/browse/SCH-6997/>-->
+                    <!--                    <include name="verifyChangingStartTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
+                    <!--                    <include name="verifyChangingEndTimeOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7443/>-->
+                    <!--                    <include name="verifyChangingDateOnMultipleEditShiftsWindowAsInternalAdmin" Blocked by bug: SCH-7592/>-->
+                    <include name="verifyChangingAssignmentOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <include name="verifyChangingShiftNotesOnMultipleEditShiftsWindowAsInternalAdmin" />
+                    <!-- <include name="verifyErrorMessageOfStartAndEndTimeOnBulkEditAsInternalAdmin" />   Blocked by bug: SCH-8623 -->
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="Schedule Acknowledgement Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleAcknowledgementTest">
+                <methods>
+                    <include name="verifyTMCanAcknowledgeTheNotificationAfterPublishTheScheduleAsTeamMember" />
+                    <include name="verifySMCanAcknowledgeTheNotificationAfterPublishTheScheduleAsStoreManager" />
+                    <!--                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterEditShiftsAsTeamMember" /> SCH-8334-->
+                    <!--                    <include name="verifyEmployeeCanAcknowledgeTheNotificationAfterDragAndDropShiftsAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-8614-->
+                    <!--                   <include name="verifyEmployeeCanAcknowledgeTheNotificationFromNonHomeLocationWhenHomeScheduleIsPublishedAsTeamMemberOtherLocation1" /> need fix-->
+                    <!--                   <include name="verifyEmployeeCanAcknowledgeTheNotificationFromNonHomeLocationWhenHomeScheduleIsNotPublishedAsTeamMemberOtherLocation1" /> need more time-->
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Seniority Relevant Testing">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleSeniorityTest">
+                <methods>
+                    <include name="verifySeniorityConfigsOnSchedulingPolicyPageAsInternalAdmin" />
+                    <include name="verifySeniorityOrderOnSchedulingPolicyPageAsInternalAdmin" />
+                    <include name="verifySeniorityNotDisplayWhenToggleTurnOffForSearchingAsInternalAdmin" />
+                    <include name="verifySeniorityNotDisplayWhenToggleTurnOffForRecommendAsInternalAdmin" />
+                    <!-- <include name="verifySeniorityDisplayWhenToggleTurnOnForSearchingAsInternalAdmin" />
+                    <include name="verifySeniorityAlwaysDisplayOnSearchingDialogAsInternalAdmin" />
+                      <include name="verifySeniorityDisplayWhenToggleTurnOnForRecommendAsInternalAdmin" />
+                    <include name="verifyAscendingOfSeniorityForSearchingAsInternalAdmin" />
+                    <include name="verifyAscendingOfSeniorityForRecommendAsInternalAdmin" />
+                    <include name="verifyDescendingOfSeniorityForSearchingAsInternalAdmin" /> Blocked by SCH-9554  -->
+                    <!--  <include name="verifyDescendingOfSeniorityForRecommendAsInternalAdmin" />  Blocked by SCH-8613 -->
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="Schedule Attestation Test">
+        <classes>
+            <class name="com.legion.tests.core.ScheduleAttestationTest">
+                <methods>
+                    <include name="verifyEmployeeCanAcceptAndDeclineTheAddNewShiftConsentAsTeamMember"/>
+                    <include name="verifyEmployeeCanAcceptAndDeclineTheDeletedShiftConsentAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite> <!-- Suite -->
