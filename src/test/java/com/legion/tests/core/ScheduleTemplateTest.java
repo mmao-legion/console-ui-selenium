@@ -764,4 +764,120 @@ public class ScheduleTemplateTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the Master Template is loading when employee has multiple shifts in same day triggering Daily OT in the Template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyMasterTemplateIsLoadingWhenShiftsTriggerDailyOTAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        try {
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            String firstName = tmFullName.split(" ")[0];
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
+            //Go to master template
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Create two shifts for one employee in same day and make sure they will trigger Daily OT
+            String shiftStartTime1= "8:00am";
+            String shiftEndTime1 = "4:00pm";
+            createShiftsWithSpecificValues(workRole, "", "", shiftStartTime1, shiftEndTime1,
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            String shiftStartTime2= "6:00pm";
+            String shiftEndTime2 = "9:00pm";
+            createShiftsWithSpecificValues(workRole, "", "", shiftStartTime2, shiftEndTime2,
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleMainPage.saveSchedule();
+
+            //Check the daily OT display correctly in master template
+            List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
+            List<String> violations = scheduleShiftTablePage.
+                    getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(1)));
+            String otViolation = "2.5 hrs daily overtime";
+            SimpleUtils.assertOnFail("The OT violation display incorrect, the actual is:"+violations.toString(),
+                    violations.contains(otViolation), false);
+
+            //Check the daily OT display correctly in schedule
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            SimpleUtils.assertOnFail("The OT shifts of"+firstName+" not display in schedule! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(firstName)==2, false );
+            violations = scheduleShiftTablePage.
+                    getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(1)));
+            SimpleUtils.assertOnFail("The OT violation display incorrect, the actual is:"+violations.toString(),
+                    violations.contains(otViolation), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the Master Template is loading when employee has multiple shifts in same day triggering Weekly OT in the Template")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyMasterTemplateIsLoadingWhenShiftsTriggerWeeklyOTAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        try {
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            String firstName = tmFullName.split(" ")[0];
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
+            //Go to master template
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Create multiple shifts for one employee on multiple days, make sure they will trigger weekly OT
+            String shiftStartTime1= "8:00am";
+            String shiftEndTime1 = "4:00pm";
+            createShiftsWithSpecificValues(workRole, "", "", shiftStartTime1, shiftEndTime1,
+                    1, Arrays.asList(0,1,2,3,4,5), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+
+            scheduleMainPage.saveSchedule();
+            //Check the weekly OT display correctly in master template
+            List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
+            List<String> violations = scheduleShiftTablePage.
+                    getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(shiftIndexes.size()-1)));
+            String otViolation = "5 hrs weekly overtime";
+            SimpleUtils.assertOnFail("The OT violation display incorrect, the actual is:"+violations.toString(),
+                    violations.contains(otViolation), false);
+
+            ////Check the weekly OT display correctly in schedule
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            SimpleUtils.assertOnFail("The OT shifts of"+firstName+" not display in schedule! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(firstName)==6, false );
+            violations = scheduleShiftTablePage.
+                    getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(shiftIndexes.size()-1)));
+            SimpleUtils.assertOnFail("The OT violation display incorrect, the actual is:"+violations.toString(),
+                    violations.contains(otViolation), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
 }
