@@ -603,7 +603,7 @@ public abstract class TestBase {
         } else if (workDays.size() > 1) {
             newShiftPage.clearAllSelectedDays();
             for (int i : workDays) {
-                newShiftPage.selectMultipleOrSpecificWorkDay(workDays.get(i), true);
+                newShiftPage.selectMultipleOrSpecificWorkDay(i, true);
             }
         }
         // Select the assignment
