@@ -766,6 +766,16 @@ SCH-5862-->
         </classes>
     </test>
 
+    <test name="Master Template PCLG Test">
+        <classes>
+            <class name="com.legion.tests.core.MasterTemplatePCLGTest">
+                <methods>
+                    <include name="verifyNewAddedShiftsForPCLGCanShowInMasterTemplateAndScheduleAsTeamMember" />
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 
     <test name="Work Role Test">
         <classes>
