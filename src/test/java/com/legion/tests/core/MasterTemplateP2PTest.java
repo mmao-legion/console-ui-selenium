@@ -103,7 +103,6 @@ public class MasterTemplateP2PTest extends TestBase {
             //Create new shift for one employee
             String shiftStartTime= "10:00am";
             String shiftEndTime = "5:00pm";
-            // String workRole = "Event Manager";
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), shiftStartTime, shiftEndTime,
                     1, Arrays.asList(0,1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
