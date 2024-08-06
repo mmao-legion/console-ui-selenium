@@ -555,6 +555,33 @@ public abstract class TestBase {
         }
     }
 
+    public List<String> getUsernameAndPwd(String roleName) throws Exception {
+        List<String> usernameAndPwd = new ArrayList<>();
+        try {
+            Object[][] credentials = null;
+            StackTraceElement[] stacks = (new Throwable()).getStackTrace();
+            String simpleClassName = stacks[1].getFileName().replace(".java", "");
+            String fileName = "UsersCredentials.json";
+            if (System.getProperty("env")!=null && System.getProperty("env").toLowerCase().contains("rel")){
+                fileName = "Release"+MyThreadLocal.getEnterprise()+fileName;
+            } else {
+                fileName = MyThreadLocal.getEnterprise() + fileName;
+            }
+            HashMap<String, Object[][]> userCredentials = SimpleUtils.getEnvironmentBasedUserCredentialsFromJson(fileName);
+            if (userCredentials.containsKey(roleName + "Of" + simpleClassName)) {
+                credentials = userCredentials.get(roleName + "Of" + simpleClassName);
+            } else {
+                credentials = userCredentials.get(roleName);
+            }
+            usernameAndPwd.add(String.valueOf(credentials[0][0]));
+            usernameAndPwd.add(String.valueOf(credentials[0][1]));
+
+        } catch (Exception e) {
+            SimpleUtils.fail("Failed to get the username and password!", false);
+        }
+        return usernameAndPwd;
+    }
+
     protected void goToSchedulePageScheduleTab() throws Exception {
         // Go to Schedule page, Schedule tab
         ScheduleCommonPage scheduleCommonPage = pageFactory.createScheduleCommonPage();
