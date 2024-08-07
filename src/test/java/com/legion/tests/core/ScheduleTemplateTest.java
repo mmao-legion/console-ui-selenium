@@ -1026,7 +1026,7 @@ public class ScheduleTemplateTest extends TestBase {
             String timeOffExplanationText = "Sample Explanation Text For master template testing";
             String timeOffStatus = profileNewUIPage.getTimeOffRequestStatus(ActivityTest.timeOffReasonType.JuryDuty.getValue(), timeOffExplanationText, ptoDateWithOutYear, ptoDateWithOutYear);
             if (!timeOffStatus.equalsIgnoreCase("approved")) {
-                profileNewUIPage.cancelAllTimeOff();
+                profileNewUIPage.rejectAllTimeOff();
                 //Go to team page and create time off for tm
                 profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.JuryDuty.getValue(), timeOffExplanationText, ptomDate, 0);
                 teamPage.approvePendingTimeOffRequest();
