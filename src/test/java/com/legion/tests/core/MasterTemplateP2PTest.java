@@ -153,7 +153,7 @@ public class MasterTemplateP2PTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Eric")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "validate updated shifts can show in master template and schedule for regular schedule")
+    @TestName(description = "validate updated shifts can show in master template and schedule for P2P schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
