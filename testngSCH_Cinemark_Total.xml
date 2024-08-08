@@ -751,6 +751,8 @@ SCH-5862-->
                     <include name="verifyMasterTemplateShiftAdheresToTheMealAndRestBreakTemplateAsTeamMember" />
                     <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerDailyOTAsTeamMember" />
                     <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerWeeklyOTAsTeamMember" />
+                    <include name="verifyMealBreakTimingPersistsOnBulkEditShiftAsTeamMember" />
+                    <include name="verifyPreassignedShiftOfTMGetsConvertedToOpenWhenTMIsOnPTOAsTeamMember2" />
                 </methods>
             </class>
         </classes>

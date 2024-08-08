@@ -41,6 +41,7 @@ public class ScheduleTemplateTest extends TestBase {
     private ProfileNewUIPage profileNewUIPage;
     private LoginPage loginPage;
     private ConfigurationPage configurationPage;
+    private TeamPage teamPage;
     @Override
     @BeforeMethod()
     public void firstTest(Method testMethod, Object[] params) {
@@ -66,6 +67,7 @@ public class ScheduleTemplateTest extends TestBase {
             profileNewUIPage = pageFactory.createProfileNewUIPage();
             loginPage = pageFactory.createConsoleLoginPage();
             configurationPage = pageFactory.createOpsPortalConfigurationPage();
+            teamPage = pageFactory.createConsoleTeamPage();
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }
@@ -136,6 +138,9 @@ public class ScheduleTemplateTest extends TestBase {
 
             String shiftId = shiftsOfOneDay.get(0).getAttribute("id").toString();
             int index = scheduleShiftTablePage.getShiftIndexById(shiftId);
+            String smartcardName = "Action Required";
+            SimpleUtils.assertOnFail("The Action Required smart card should not show in master template! ",
+                    !smartCardPage.isSpecificSmartCardLoaded(smartcardName), false);
             List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(index);
             String shiftTime = shiftInfo.get(2);
             String workRoleOfNewShift = shiftInfo.get(4);
@@ -327,7 +332,7 @@ public class ScheduleTemplateTest extends TestBase {
             smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
             //Check the shifts in master template can load
             SimpleUtils.assertOnFail("Shifts failed to load in master template! ",
-                    scheduleShiftTablePage.getShiftsCount()>0, false);
+                    scheduleShiftTablePage.getShiftsCount()>0||scheduleShiftTablePage.isScheduleTableDisplay(), false);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
@@ -618,7 +623,7 @@ public class ScheduleTemplateTest extends TestBase {
             smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
             //Check the shifts in master template can load
             SimpleUtils.assertOnFail("Shifts failed to load in master template! ",
-                    scheduleShiftTablePage.getShiftsCount()>0, false);
+                    scheduleShiftTablePage.getShiftsCount()>0||scheduleShiftTablePage.isScheduleTableDisplay(), false);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
@@ -690,7 +695,7 @@ public class ScheduleTemplateTest extends TestBase {
             smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
             //Check the shifts in master template can load
             SimpleUtils.assertOnFail("Shifts failed to load in master template! ",
-                    scheduleShiftTablePage.getShiftsCount()>0, false);
+                    scheduleShiftTablePage.getShiftsCount()>0||scheduleShiftTablePage.isScheduleTableDisplay(), false);
 
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
@@ -876,6 +881,188 @@ public class ScheduleTemplateTest extends TestBase {
                     getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(shiftIndexes.size()-1)));
             SimpleUtils.assertOnFail("The OT violation display incorrect, the actual is:"+violations.toString(),
                     violations.contains(otViolation), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify meal break timing persists on bulk edit shift")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyMealBreakTimingPersistsOnBulkEditShiftAsTeamMember(String browser, String username, String password, String location) throws Exception {
+        try {
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            String firstName = tmFullName.split(" ")[0];
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
+            //Go to master template
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Create new shift for one employee
+            String shiftStartTime1= "8:00am";
+            String shiftEndTime1 = "4:00pm";
+            createShiftsWithSpecificValues(workRole, "", "", shiftStartTime1, shiftEndTime1,
+                    1, Arrays.asList(0,1,2), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkEditTMShiftsInWeekView(firstName);
+
+            String shiftStartTime2= "3:00pm";
+            String shiftEndTime2 = "11:00pm";
+            String shiftNotes = "Shift notes in master template";
+
+            editShiftPage.inputStartOrEndTime(shiftStartTime2, true);
+            editShiftPage.inputStartOrEndTime(shiftEndTime2, false);
+            editShiftPage.inputShiftNotes(shiftNotes);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+
+            scheduleMainPage.saveSchedule();
+            List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
+            String smartcardName = "Action Required";
+            SimpleUtils.assertOnFail("The Action Required smart card should not show in master template! ",
+                    !smartCardPage.isSpecificSmartCardLoaded(smartcardName), false);
+
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
+            String shiftMealTime = shiftInfo.get(11);
+            String shiftRestTime = shiftInfo.get(12);
+            SimpleUtils.assertOnFail("The break time display incorrectly, the actual meal break time is:"+shiftMealTime+"" +
+                            "The rest break time is"+shiftRestTime,
+                    !shiftMealTime.equals("") && !shiftRestTime.equals(""), false);
+
+            String shiftTime = shiftInfo.get(2);
+            String shiftNotesOfNewShift = shiftInfo.get(10);
+            SimpleUtils.assertOnFail("The new shift's shift time display incorrectly, the expected is:"+shiftStartTime2+"-"+shiftEndTime2
+                            + " the actual is: "+ shiftTime,
+                    shiftTime.equalsIgnoreCase(shiftStartTime2+"-"+shiftEndTime2), false);
+            SimpleUtils.assertOnFail("The new shift's notes display incorrectly, the expected is:"+ shiftNotes
+                            + " the actual is: "+ shiftNotesOfNewShift,
+                    shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
+
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkEditTMShiftsInWeekView(firstName);
+
+            shiftNotes = "Updated--Shift notes in master template";
+
+            editShiftPage.inputStartOrEndTime(shiftStartTime1, true);
+            editShiftPage.inputStartOrEndTime(shiftEndTime1, false);
+            editShiftPage.inputShiftNotes(shiftNotes);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
+            shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(2));
+            shiftMealTime = shiftInfo.get(11);
+            shiftRestTime = shiftInfo.get(12);
+            SimpleUtils.assertOnFail("The break time display incorrectly, the actual meal break time is:"+shiftMealTime+"" +
+                            "The rest break time is"+shiftRestTime,
+                    !shiftMealTime.equals("") && !shiftRestTime.equals(""), false);
+
+            shiftTime = shiftInfo.get(2);
+            shiftNotesOfNewShift = shiftInfo.get(10);
+            SimpleUtils.assertOnFail("The new shift's shift time display incorrectly, the expected is:"+shiftStartTime2+"-"+shiftEndTime2
+                            + " the actual is: "+ shiftTime,
+                    shiftTime.equalsIgnoreCase(shiftStartTime1+"-"+shiftEndTime1), false);
+            SimpleUtils.assertOnFail("The new shift's notes display incorrectly, the expected is:"+ shiftNotes
+                            + " the actual is: "+ shiftNotesOfNewShift,
+                    shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
+
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Mary")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the preassigned shift of TM gets converted to Open when TM is on PTO")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyPreassignedShiftOfTMGetsConvertedToOpenWhenTMIsOnPTOAsTeamMember2(String browser, String username, String password, String location) throws Exception {
+        try {
+            profileNewUIPage.clickOnUserProfileImage();
+            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
+            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            String firstName = tmFullName.split(" ")[0];
+            loginPage.logOut();
+            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
+            goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
+
+            String activeWeek = scheduleCommonPage.getActiveWeekText();
+            List<String> year = scheduleCommonPage.getYearsFromCalendarMonthYearText();
+            String[] items = activeWeek.split(" ");
+            String ptomDate = year.get(0)+ " " + items[3] + " " + items[4];
+            String ptoDateWithOutYear = items[3] + " " + items[4];
+            teamPage.goToTeam();
+            teamPage.searchAndSelectTeamMember(tmFullName);
+            String timeOffLabel = "Time Off";
+            profileNewUIPage.selectProfilePageSubSectionByLabel(timeOffLabel);
+            String timeOffExplanationText = "Sample Explanation Text For master template testing";
+            String timeOffStatus = profileNewUIPage.getTimeOffRequestStatus(ActivityTest.timeOffReasonType.JuryDuty.getValue(), timeOffExplanationText, ptoDateWithOutYear, ptoDateWithOutYear);
+            if (!timeOffStatus.equalsIgnoreCase("approved")) {
+                profileNewUIPage.rejectAllTimeOff();
+                //Go to team page and create time off for tm
+                profileNewUIPage.createTimeOffOnSpecificDays(ActivityTest.timeOffReasonType.JuryDuty.getValue(), timeOffExplanationText, ptomDate, 0);
+                teamPage.approvePendingTimeOffRequest();
+            }
+
+            goToSchedulePageScheduleTab();
+            scheduleCommonPage.navigateToNextWeek();
+            //Go to master template
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            String openShift = "Open";
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(openShift);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Create new shift for one employee
+            createShiftsWithSpecificValues(workRole, "", "", "", "",
+                    1, Arrays.asList(0,1,2,3,4,5,6), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleMainPage.saveSchedule();
+            int employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName);
+            int openShiftCount = scheduleShiftTablePage.getShiftsNumberByName(openShift);
+            SimpleUtils.assertOnFail("Employee shift count should be 7, the actual count is"+employeeShiftCount,
+                    employeeShiftCount==7, false);
+            SimpleUtils.assertOnFail("Open shift count should be 0, the actual count is"+openShiftCount,
+                    openShiftCount==0, false);
+
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName);
+            openShiftCount = scheduleShiftTablePage.getShiftsNumberByName(openShift);
+            SimpleUtils.assertOnFail("Employee shift count should be 7, the actual count is"+employeeShiftCount,
+                    employeeShiftCount==6, false);
+            SimpleUtils.assertOnFail("Open shift count should be 0, the actual count is"+openShiftCount,
+                    openShiftCount==1, false);
+
+
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

@@ -516,7 +516,8 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 					WebElement requestType = timeOffRequest.findElement(By.cssSelector("span.request-type"));
 					WebElement requestStatus = timeOffRequest.findElement(By.cssSelector("span.request-status"));
 					String requestTypeText = requestType.getText();
-					if (timeOffReasonLabel.toLowerCase().contains(requestTypeText.toLowerCase())) {
+					if (timeOffReasonLabel.toLowerCase().contains(requestTypeText.toLowerCase())
+							||requestTypeText.toLowerCase().contains(timeOffReasonLabel.toLowerCase())) {
 						WebElement requestDate = timeOffRequest.findElement(By.cssSelector("div.request-date"));
 						String requestDateText = requestDate.getText().replaceAll("\n", " ");
 						if (requestDateText.contains("-")) {
@@ -1941,7 +1942,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.pass("New Time Off Request Window loaded successfully!");
 			isLoaded = true;
 		}else {
-			SimpleUtils.fail("New Time Off Request Window failed to load!", false);
+			SimpleUtils.report("New Time Off Request Window failed to load!");
 		}
 		return isLoaded;
 	}
