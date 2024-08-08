@@ -763,6 +763,7 @@ SCH-5862-->
             <class name="com.legion.tests.core.MasterTemplateP2PTest">
                 <methods>
                     <include name="verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember" />
+                    <include name="verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
