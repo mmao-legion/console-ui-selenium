@@ -828,7 +828,6 @@ public class MasterTemplatePCLGTest extends TestBase {
             SimpleUtils.assertOnFail("Open shift count should be 0, the actual count is"+openShiftCount,
                     openShiftCount==1, false);
 
-
         } catch (Exception e){
             SimpleUtils.fail(e.getMessage(), false);
         }

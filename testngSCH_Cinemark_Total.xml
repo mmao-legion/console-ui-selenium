@@ -781,6 +781,7 @@ SCH-5862-->
                     <include name="verifyMasterTemplateForPCLGIsLoadingWhenShiftsTriggerDailyOTAsInternalAdmin" />
                     <include name="verifyMasterTemplateForPCLGIsLoadingWhenShiftsTriggerWeeklyOTAsInternalAdmin" />
                     <include name="verifyMealBreakTimingForPCLGPersistsOnBulkEditShiftAsInternalAdmin" />
+                    <include name="verifyPreassignedShiftOfTMForPCLGGetsConvertedToOpenWhenTMIsOnPTOAsTeamMember2" />
                 </methods>
             </class>
         </classes>
