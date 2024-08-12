@@ -773,7 +773,15 @@ SCH-5862-->
         <classes>
             <class name="com.legion.tests.core.MasterTemplatePCLGTest">
                 <methods>
-                    <include name="verifyNewAddedShiftsForPCLGCanShowInMasterTemplateAndScheduleAsTeamMember" />
+                    <include name="verifyNewAddedShiftsForPCLGCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
+                    <include name="verifyUpdatedShiftsForPCLGCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
+                    <include name="verifyDeletedShiftsForPCLGWillNotShowInMasterTemplateAndScheduleAsInternalAdmin" />
+                    <include name="verifyMasterTemplateShiftForPCLGAdheresToTheMealAndRestBreakTemplateAsInternalAdmin" />
+                    <include name="verifyChangedMealAndRestBreakConsistentInMasterTemplateForPCLGAndScheduleAsInternalAdmin" />
+                    <include name="verifyMasterTemplateForPCLGIsLoadingWhenShiftsTriggerDailyOTAsInternalAdmin" />
+                    <include name="verifyMasterTemplateForPCLGIsLoadingWhenShiftsTriggerWeeklyOTAsInternalAdmin" />
+                    <include name="verifyMealBreakTimingForPCLGPersistsOnBulkEditShiftAsInternalAdmin" />
+                    <include name="verifyPreassignedShiftOfTMForPCLGGetsConvertedToOpenWhenTMIsOnPTOAsTeamMember2" />
                 </methods>
             </class>
         </classes>
