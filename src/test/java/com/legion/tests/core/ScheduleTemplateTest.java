@@ -1,5 +1,6 @@
 package com.legion.tests.core;
 
+import com.legion.api.login.LoginAPI;
 import com.legion.pages.*;
 import com.legion.pages.OpsPortaPageFactories.ConfigurationPage;
 import com.legion.pages.core.ConsoleScheduleNewUIPage;
@@ -241,14 +242,12 @@ public class ScheduleTemplateTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Validate employee can acknowledge the notification for schedule template location")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyTMCanAcknowledgeTheNotificationAfterScheduleTemplateLocationAsTeamMember(String browser, String username, String password, String location) throws Exception {
+    public void verifyTMCanAcknowledgeTheNotificationAfterScheduleTemplateLocationAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
-            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
             String firstName = tmFullName.split(" ")[0];
-            loginPage.logOut();
-            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             goToSchedulePageScheduleTab();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
@@ -314,14 +313,12 @@ public class ScheduleTemplateTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "validate new added shifts can show in master template and schedule for regular schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember(String browser, String username, String password, String location) throws Exception {
+    public void verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
-            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
             String firstName = tmFullName.split(" ")[0];
-            loginPage.logOut();
-            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             goToSchedulePageScheduleTab();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
@@ -391,14 +388,12 @@ public class ScheduleTemplateTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "validate updated shifts can show in master template and schedule for regular schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember(String browser, String username, String password, String location) throws Exception {
+    public void verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
-            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
             String firstName = tmFullName.split(" ")[0];
-            loginPage.logOut();
-            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             goToSchedulePageScheduleTab();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
@@ -407,18 +402,18 @@ public class ScheduleTemplateTest extends TestBase {
             String workRole = scheduleMainPage.getStaffWorkRoles().get(scheduleMainPage.getStaffWorkRoles().size()-1);
             //Go to master template
             smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
-
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(firstName);
+            scheduleMainPage.saveSchedule();
             int employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName);
-            if (employeeShiftCount==0){
-                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
-                //Create new shift for one employee
-                String shiftStartTime= "10:00am";
-                String shiftEndTime = "5:00pm";
-                createShiftsWithSpecificValues(workRole, "", "", shiftStartTime, shiftEndTime,
-                        1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
-                scheduleMainPage.saveSchedule();
-                employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName);
-            }
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Create new shift for one employee
+            String shiftStartTime= "10:00am";
+            String shiftEndTime = "5:00pm";
+            createShiftsWithSpecificValues(workRole, "", "", shiftStartTime, shiftEndTime,
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleMainPage.saveSchedule();
+            employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName);
 
             //Update shift in master template
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
@@ -444,8 +439,8 @@ public class ScheduleTemplateTest extends TestBase {
             scheduleMainPage.saveSchedule();
             shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
             List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
-            String shiftStartTime = shiftInfo.get(6).split("-")[0].trim();
-            String shiftEndTime = shiftInfo.get(6).split("-")[1].trim();
+            shiftStartTime = shiftInfo.get(6).split("-")[0].trim();
+            shiftEndTime = shiftInfo.get(6).split("-")[1].trim();
             SimpleUtils.assertOnFail("Start time or End time is not updated!", inputStartTime.equalsIgnoreCase(shiftStartTime) &&
                     inputEndTime.equalsIgnoreCase(shiftEndTime), false);
 
@@ -526,14 +521,12 @@ public class ScheduleTemplateTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "validate deleted shifts will not show in master template and schedule for regular schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleAsTeamMember(String browser, String username, String password, String location) throws Exception {
+    public void verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
-            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
             String firstName = tmFullName.split(" ")[0];
-            loginPage.logOut();
-            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             goToSchedulePageScheduleTab();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
@@ -605,14 +598,12 @@ public class ScheduleTemplateTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify master template shift adheres to the meal and rest break template based on the association")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyMasterTemplateShiftAdheresToTheMealAndRestBreakTemplateAsTeamMember(String browser, String username, String password, String location) throws Exception {
+    public void verifyMasterTemplateShiftAdheresToTheMealAndRestBreakTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
-            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
             String firstName = tmFullName.split(" ")[0];
-            loginPage.logOut();
-            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             goToSchedulePageScheduleTab();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
@@ -677,14 +668,12 @@ public class ScheduleTemplateTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify changed meal and rest break timing consistent in master template and schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyChangedMealAndRestBreakConsistentInMasterTemplateAndScheduleAsTeamMember(String browser, String username, String password, String location) throws Exception {
+    public void verifyChangedMealAndRestBreakConsistentInMasterTemplateAndScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
-            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
             String firstName = tmFullName.split(" ")[0];
-            loginPage.logOut();
-            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             goToSchedulePageScheduleTab();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
@@ -776,14 +765,12 @@ public class ScheduleTemplateTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the Master Template is loading when employee has multiple shifts in same day triggering Daily OT in the Template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyMasterTemplateIsLoadingWhenShiftsTriggerDailyOTAsTeamMember(String browser, String username, String password, String location) throws Exception {
+    public void verifyMasterTemplateIsLoadingWhenShiftsTriggerDailyOTAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
-            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
             String firstName = tmFullName.split(" ")[0];
-            loginPage.logOut();
-            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             goToSchedulePageScheduleTab();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
@@ -836,14 +823,12 @@ public class ScheduleTemplateTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the Master Template is loading when employee has multiple shifts in same day triggering Weekly OT in the Template")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyMasterTemplateIsLoadingWhenShiftsTriggerWeeklyOTAsTeamMember(String browser, String username, String password, String location) throws Exception {
+    public void verifyMasterTemplateIsLoadingWhenShiftsTriggerWeeklyOTAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
-            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
             String firstName = tmFullName.split(" ")[0];
-            loginPage.logOut();
-            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             goToSchedulePageScheduleTab();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
@@ -893,14 +878,12 @@ public class ScheduleTemplateTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify meal break timing persists on bulk edit shift")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyMealBreakTimingPersistsOnBulkEditShiftAsTeamMember(String browser, String username, String password, String location) throws Exception {
+    public void verifyMealBreakTimingPersistsOnBulkEditShiftAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
-            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
             String firstName = tmFullName.split(" ")[0];
-            loginPage.logOut();
-            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             goToSchedulePageScheduleTab();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
             if (isWeekGenerated) {
@@ -998,14 +981,13 @@ public class ScheduleTemplateTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "Verify the preassigned shift of TM gets converted to Open when TM is on PTO")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyPreassignedShiftOfTMGetsConvertedToOpenWhenTMIsOnPTOAsTeamMember2(String browser, String username, String password, String location) throws Exception {
+    public void verifyPreassignedShiftOfTMGetsConvertedToOpenWhenTMIsOnPTOAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-            profileNewUIPage.clickOnUserProfileImage();
-            profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
-            String tmFullName = profileNewUIPage.getUserProfileName().get("fullName");
+
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember2.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
             String firstName = tmFullName.split(" ")[0];
-            loginPage.logOut();
-            loginAsDifferentRole(AccessRoles.InternalAdmin.getValue());
             goToSchedulePageScheduleTab();
             scheduleCommonPage.navigateToNextWeek();
             boolean isWeekGenerated = createSchedulePage.isWeekGenerated();

@@ -258,6 +258,8 @@
                     <include name="validateTMCanViewTeamScheduleAfterGenerateScheduleAsInternalAdmin" />
                     <include name="validateSMCanViewScheduleInManagerAndEmployeeViewAfterGenerateScheduleAsInternalAdmin" />
                     <include name="hardStopComplianceSetupEnhancementAsInternalAdminHardStopTrigger" />
+                    <!-- unselect Continuous Operation -->
+                    <include name="verifyShiftWhenDisableContinuousOperationOptionAsInternalAdmin" />
                   </methods>
               </class>
           </classes>
@@ -698,8 +700,6 @@ SCH-5862-->
                     <include name="verifyShiftWhenEnableContinuousOperationOptionAsInternalAdmin" />
         <!--            <include name="verifyTheShiftThatOverlappingWithPreviousWeekShiftCannotBeCreatedAsInternalAdmin" /> SCH-6732-->
                     <include name="verifyShiftCanBeDragToPreviousDayAsInternalAdmin" />
-                    <!-- unselect Continuous Operation -->
-                    <include name="verifyShiftWhenDisableContinuousOperationOptionAsInternalAdmin" />
     <!--                <include name="verifyTMWithOutBadgeCannotClaimTheShiftWithWorkRoleThatRequiredBadgeAsTeamMember" /> https://legiontech.atlassian.net/browse/SCH-7699-->
 
                 </methods>
@@ -743,16 +743,16 @@ SCH-5862-->
             <class name="com.legion.tests.core.ScheduleTemplateTest">
                 <methods>
                     <include name="validateTheAssignShiftsWorkFlowInEditScheduleTemplateAsInternalAdmin" />
-                    <include name="verifyTMCanAcknowledgeTheNotificationAfterScheduleTemplateLocationAsTeamMember" />
-                    <include name="verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember" />
-                    <include name="verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember" />
-                    <include name="verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleAsTeamMember" />
-                    <include name="verifyChangedMealAndRestBreakConsistentInMasterTemplateAndScheduleAsTeamMember" />
-                    <include name="verifyMasterTemplateShiftAdheresToTheMealAndRestBreakTemplateAsTeamMember" />
-                    <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerDailyOTAsTeamMember" />
-                    <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerWeeklyOTAsTeamMember" />
-                    <include name="verifyMealBreakTimingPersistsOnBulkEditShiftAsTeamMember" />
-                    <include name="verifyPreassignedShiftOfTMGetsConvertedToOpenWhenTMIsOnPTOAsTeamMember2" />
+                    <include name="verifyTMCanAcknowledgeTheNotificationAfterScheduleTemplateLocationAsInternalAdmin" />
+                    <include name="verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
+                    <include name="verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
+                    <include name="verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleAsInternalAdmin" />
+                    <include name="verifyChangedMealAndRestBreakConsistentInMasterTemplateAndScheduleAsInternalAdmin" />
+                    <include name="verifyMasterTemplateShiftAdheresToTheMealAndRestBreakTemplateAsInternalAdmin" />
+                    <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerDailyOTAsInternalAdmin" />
+                    <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerWeeklyOTAsInternalAdmin" />
+                    <include name="verifyMealBreakTimingPersistsOnBulkEditShiftAsInternalAdmin" />
+                    <include name="verifyPreassignedShiftOfTMGetsConvertedToOpenWhenTMIsOnPTOAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
