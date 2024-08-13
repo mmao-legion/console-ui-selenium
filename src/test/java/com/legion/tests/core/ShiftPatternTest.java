@@ -329,6 +329,7 @@ public class ShiftPatternTest extends TestBase {
             SimpleUtils.assertOnFail("Locations not searched out Successfully!",  locationsPage.verifyUpdateLocationResult(location), false);
             locationsPage.clickOnLocationInLocationResult(location);
             locationsPage.clickOnConfigurationTabOfLocation();
+            locationsPage.clickActionsForTemplate("Scheduling Rules", "Reset");
             String workRole = "Event Manager";
 
             // Verify can click on Edit button from Scheduling Rules section
