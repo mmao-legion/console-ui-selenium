@@ -440,7 +440,7 @@ public class MasterTemplatePCLGTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Ashutosh")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify changed meal and rest break timing consistent in master template and schedule")
+    @TestName(description = "Verify changed meal and rest break timing consistent in master template and schedule for PCLG")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyChangedMealAndRestBreakConsistentInMasterTemplateForPCLGAndScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -540,7 +540,7 @@ public class MasterTemplatePCLGTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Ashutosh")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify the Master Template is loading when employee has multiple shifts in same day triggering Daily OT in the Template")
+    @TestName(description = "Verify the Master Template is loading when employee has multiple shifts in same day triggering Daily OT in the Template for PCLG")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyMasterTemplateForPCLGIsLoadingWhenShiftsTriggerDailyOTAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -599,7 +599,7 @@ public class MasterTemplatePCLGTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Ashutosh")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify the Master Template is loading when employee has multiple shifts in same day triggering Weekly OT in the Template")
+    @TestName(description = "Verify the Master Template is loading when employee has multiple shifts in same day triggering Weekly OT in the Template for PCLG")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyMasterTemplateForPCLGIsLoadingWhenShiftsTriggerWeeklyOTAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -654,7 +654,7 @@ public class MasterTemplatePCLGTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Ashutosh")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify meal break timing persists on bulk edit shift")
+    @TestName(description = "Verify meal break timing persists on bulk edit shift for PCLG")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyMealBreakTimingForPCLGPersistsOnBulkEditShiftAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
@@ -759,7 +759,7 @@ public class MasterTemplatePCLGTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Ashutosh")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
-    @TestName(description = "Verify the preassigned shift of TM gets converted to Open when TM is on PTO")
+    @TestName(description = "Verify the preassigned shift of TM gets converted to Open when TM is on PTO for PCLG")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyPreassignedShiftOfTMForPCLGGetsConvertedToOpenWhenTMIsOnPTOAsTeamMember2(String browser, String username, String password, String location) throws Exception {
         try {
