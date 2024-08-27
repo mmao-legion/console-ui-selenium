@@ -3613,7 +3613,7 @@ public class ConsoleShiftOperatePage extends BasePage implements ShiftOperatePag
         boolean mealBreakBlockDisplay = true;
         if (areListElementVisible(dayViewAvailableShifts, 10)) {
             try {
-                WebElement mealBreakBlock = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[ng-repeat=\"break in breaks\"]"));
+                WebElement mealBreakBlock = dayViewAvailableShifts.get(index).findElement(By.cssSelector("[class=\"break ng-scope\"]"));
                 if (isElementLoaded(mealBreakBlock)) {
                     SimpleUtils.report("The Meal Break is displayed in the shift box!");
                 }

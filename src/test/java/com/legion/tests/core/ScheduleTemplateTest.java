@@ -458,10 +458,10 @@ public class ScheduleTemplateTest extends TestBase {
             smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
             SimpleUtils.assertOnFail("The updated shift failed display in master template! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstName)==employeeShiftCount, false );
+            shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
             String smartcardName = "Action Required";
             SimpleUtils.assertOnFail("The Action Required smart card should not show in master template! ",
                     !smartCardPage.isSpecificSmartCardLoaded(smartcardName), false);
-            shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
             shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
             shiftStartTime = shiftInfo.get(6).split("-")[0].trim();
             shiftEndTime = shiftInfo.get(6).split("-")[1].trim();
@@ -481,9 +481,9 @@ public class ScheduleTemplateTest extends TestBase {
             smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
             SimpleUtils.assertOnFail("The updated shift failed display in master template! ",
                     scheduleShiftTablePage.getShiftsNumberByName(firstName)==employeeShiftCount, false );
+            shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
             SimpleUtils.assertOnFail("The Action Required smart card should not show in master template! ",
                     !smartCardPage.isSpecificSmartCardLoaded(smartcardName), false);
-            shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(firstName);
             shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
             shiftStartTime = shiftInfo.get(6).split("-")[0].trim();
             shiftEndTime = shiftInfo.get(6).split("-")[1].trim();

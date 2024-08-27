@@ -1395,7 +1395,8 @@ public class CinemarkMinorTest extends TestBase {
                     actualMessage.toLowerCase().contains(expectMessage.toLowerCase()), false);
         } else
             SimpleUtils.fail("Get new added shift failed! ", false);
-
+        scheduleCommonPage.clickOnDayView();
+        scheduleCommonPage.clickOnWeekView();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.clickOnFilterBtn();
@@ -1454,7 +1455,8 @@ public class CinemarkMinorTest extends TestBase {
                     scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(newAddedShift).contains("Minor daily max "+scheduleMaxHours+" hrs"), false);
         } else
             SimpleUtils.fail("Get new added shift failed", false);
-
+        scheduleCommonPage.clickOnDayView();
+        scheduleCommonPage.clickOnWeekView();
         scheduleMainPage.clickOnFilterBtn();
         scheduleMainPage.clickOnClearFilterOnFilterDropdownPopup();
         scheduleMainPage.clickOnFilterBtn();
