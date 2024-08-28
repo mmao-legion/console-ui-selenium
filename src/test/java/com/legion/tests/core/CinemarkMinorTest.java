@@ -1793,6 +1793,8 @@ public class CinemarkMinorTest extends TestBase {
 
         //to close the i icon popup
         createSchedulePage.publishActiveSchedule();
+        scheduleCommonPage.clickOnDayView();
+        scheduleCommonPage.clickOnWeekView();
         smartCardPage.verifyClearFilterFunction();
         //Create new shift with shift hours is more than minor setting for TM1
         scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
