@@ -762,8 +762,13 @@ SCH-5862-->
         <classes>
             <class name="com.legion.tests.core.MasterTemplateP2PTest">
                 <methods>
-                    <include name="verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember" />
-                    <include name="verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
+                    <include name="verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleForP2PAsTeamMember" />
+                    <include name="verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleForP2PAsInternalAdmin" />
+                    <include name="verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleForP2PAsInternalAdmin" />
+                    <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerDailyOTForP2PAsInternalAdmin" />
+                    <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerWeeklyOTForP2PAsInternalAdmin" />
+                    <include name="verifyChangedMealAndRestBreakConsistentInMasterTemplateAndScheduleForP2PAsInternalAdmin" />
+                    <include name="verifyMealBreakTimingPersistsOnBulkEditShiftForP2PAsInternalAdmin" />
                 </methods>
             </class>
         </classes>

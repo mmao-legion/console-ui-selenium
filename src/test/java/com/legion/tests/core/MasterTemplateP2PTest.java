@@ -74,7 +74,7 @@ public class MasterTemplateP2PTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "validate new added shifts can show in master template and schedule for P2P schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsTeamMember(String browser, String username, String password, String location) throws Exception {
+    public void verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleForP2PAsTeamMember(String browser, String username, String password, String location) throws Exception {
         try {
             profileNewUIPage.clickOnUserProfileImage();
             profileNewUIPage.selectProfileSubPageByLabelOnProfileImage("My Profile");
@@ -155,7 +155,7 @@ public class MasterTemplateP2PTest extends TestBase {
     @Enterprise(name = "CinemarkWkdy_Enterprise")
     @TestName(description = "validate updated shifts can show in master template and schedule for P2P schedule")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleForP2PAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             //using API to get name of the TM
             List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
@@ -289,4 +289,405 @@ public class MasterTemplateP2PTest extends TestBase {
             SimpleUtils.fail(e.getMessage(), false);
         }
     }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Eric")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "validate deleted shifts will not show in master template and schedule for P2P schedule")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleForP2PAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            //using API to get name of the TM
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            //Go to master template
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole = workRoles.get(0).get("optionName");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmFullName);
+            scheduleMainPage.saveSchedule();
+
+            int employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(tmFullName);
+            if (employeeShiftCount==0){
+                scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+                //Create new shift for one employee
+                String shiftStartTime= "10:00am";
+                String shiftEndTime = "5:00pm";
+                List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
+                createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), shiftStartTime, shiftEndTime,
+                        1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+                createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime, shiftEndTime,
+                        1, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+                scheduleMainPage.saveSchedule();
+            }
+
+            //Delete shift in master template
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmFullName);
+            scheduleMainPage.saveSchedule();
+            //Verify the deleted shifts not show in master template anymore
+            SimpleUtils.assertOnFail("The deleted shift should not display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(tmFullName)==0, false );
+
+            //Verify the deleted shifts not show in master template in previous week
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            scheduleCommonPage.navigateToPreviousWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            SimpleUtils.assertOnFail("The deleted shift should not display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(tmFullName)==0, false );
+            //Verify the new created shift can show in future week
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            scheduleCommonPage.navigateToNextWeek();
+            scheduleCommonPage.navigateToNextWeek();
+            isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            SimpleUtils.assertOnFail("The deleted shift should not display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(tmFullName)==0, false );
+
+
+            //Verify the new created shift can show in schedule
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            String sheduleStartTime = "06:00AM";
+            String scheduleEndTime = "11:00PM";
+            createSchedulePage.createScheduleForNonDGFlowNewUIWithGivingTimeRange(sheduleStartTime, scheduleEndTime);
+            SimpleUtils.assertOnFail("The deleted shift should not display in master template! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(tmFullName)==0, false );
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Eric")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the Master Template is loading when employee has multiple shifts in same day triggering Daily OT in the Template for P2P")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyMasterTemplateIsLoadingWhenShiftsTriggerDailyOTForP2PAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            //using API to get name of the TM
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            //Go to master template
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole = workRoles.get(0).get("optionName");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmFullName);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Create two shifts for one employee in same day and make sure they will trigger Daily OT
+            String shiftStartTime1= "8:00am";
+            String shiftEndTime1 = "4:00pm";
+            List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
+            createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), shiftStartTime1, shiftEndTime1,
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            String shiftStartTime2= "6:00pm";
+            String shiftEndTime2 = "9:00pm";
+            createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime2, shiftEndTime2,
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleMainPage.saveSchedule();
+
+            //Check the daily OT display correctly in master template
+            List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(tmFullName);
+            List<String> violations = scheduleShiftTablePage.
+                    getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(1)));
+            String otViolation = "2.5 hrs daily overtime";
+//            SimpleUtils.assertOnFail("The OT violation display incorrect, the actual is:"+violations.toString(),
+//                    violations.contains(otViolation), false);
+
+            //Check the daily OT display correctly in schedule
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            SimpleUtils.assertOnFail("The OT shifts of"+tmFullName+" not display in schedule! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(tmFullName)==2, false );
+            violations = scheduleShiftTablePage.
+                    getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(1)));
+            SimpleUtils.assertOnFail("The OT violation display incorrect, the actual is:"+violations.toString(),
+                    violations.contains(otViolation), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Eric")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify the Master Template is loading when employee has multiple shifts in same day triggering Weekly OT in the Template for P2P")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyMasterTemplateIsLoadingWhenShiftsTriggerWeeklyOTForP2PAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            //using API to get name of the TM
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            //Go to master template
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole = workRoles.get(0).get("optionName");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmFullName);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Create multiple shifts for one employee on multiple days, make sure they will trigger weekly OT
+            String shiftStartTime1= "8:00am";
+            String shiftEndTime1 = "4:00pm";
+            List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
+            createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), shiftStartTime1, shiftEndTime1,
+                    1, Arrays.asList(5), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime1, shiftEndTime1,
+                    1, Arrays.asList(0,1,2,3,4), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleMainPage.saveSchedule();
+            //Check the weekly OT display correctly in master template
+            List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(tmFullName);
+            List<String> violations = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(shiftIndexes.size()-1)));
+            String otViolation = "5 hrs weekly overtime";
+//            SimpleUtils.assertOnFail("The OT violation display incorrect, the actual is:"+violations.toString(),
+//                    violations.contains(otViolation), false);
+
+            ////Check the weekly OT display correctly in schedule
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            SimpleUtils.assertOnFail("The OT shifts of"+tmFullName+" not display in schedule! ",
+                    scheduleShiftTablePage.getShiftsNumberByName(tmFullName)==6, false );
+            violations = scheduleShiftTablePage.
+                    getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(0)));
+            SimpleUtils.assertOnFail("The OT violation display incorrect, the actual is:"+violations.toString(),
+                    violations.contains(otViolation), false);
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Eric")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify changed meal and rest break timing consistent in master template and schedule for P2P")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyChangedMealAndRestBreakConsistentInMasterTemplateAndScheduleForP2PAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            //using API to get name of the TM
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            //Go to master template
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole = workRoles.get(0).get("optionName");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmFullName);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Create new shift for one employee
+            String shiftStartTime= "8:00am";
+            String shiftEndTime = "4:00pm";
+            String mealBreakStartTime = "11:45 am";
+            String mealBreakEndTime = "12:15 pm";
+            String restBreakStartTime = "10:15 am";
+            String restBreakEndTime = "10:30 am";
+            List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
+            createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), shiftStartTime, shiftEndTime,
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime, shiftEndTime,
+                    1, Arrays.asList(1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleMainPage.saveSchedule();
+            List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(tmFullName);
+            String smartcardName = "Action Required";
+            SimpleUtils.assertOnFail("The Action Required smart card should not show in master template! ",
+                    !smartCardPage.isSpecificSmartCardLoaded(smartcardName), false);
+
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
+            String shiftMealTime = shiftInfo.get(11);
+            String shiftRestTime = shiftInfo.get(12);
+            SimpleUtils.assertOnFail("The meal break time display incorrectly, the actual meal break time is:"+shiftMealTime,
+                    shiftMealTime.contains(mealBreakStartTime)
+                            && shiftMealTime.contains(mealBreakEndTime), false);
+            SimpleUtils.assertOnFail("The rest break time display incorrectly, the actual rest break time is:"+shiftRestTime,
+                    shiftRestTime.contains(restBreakStartTime)
+                            && shiftRestTime.contains(restBreakEndTime), false);
+
+            //Update breaks in master template
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.rightClickOnSelectedShiftInDayView(shiftIndexes.get(0));
+            String action = "Edit";
+            scheduleShiftTablePage.clickOnBtnOnBulkActionMenuByText(action);
+            String updatedMealBreakStartTime = "8:15 am";
+            String updatedMealBreakEndTime = "8:45 am";
+            String updateRestBreakStartTime = "3:15 pm";
+            String updateRestBreakEndTime = "3:30 pm";
+            editShiftPage.inputMealBreakTimes(updatedMealBreakStartTime, updatedMealBreakEndTime, 0);
+            editShiftPage.inputRestBreakTimes(updateRestBreakStartTime, updateRestBreakEndTime, 0);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+
+            scheduleMainPage.saveSchedule();
+
+            shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
+            shiftMealTime = shiftInfo.get(11);
+            shiftRestTime = shiftInfo.get(12);
+            SimpleUtils.assertOnFail("The meal break time display incorrectly, the actual meal break time is:"+shiftMealTime,
+                    shiftMealTime.contains(updatedMealBreakStartTime)
+                            && shiftMealTime.contains(updatedMealBreakEndTime), false);
+            SimpleUtils.assertOnFail("The rest break time display incorrectly, the actual rest break time is:"+shiftRestTime,
+                    shiftRestTime.contains(updateRestBreakStartTime)
+                            && shiftRestTime.contains(updateRestBreakEndTime), false);
+
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(tmFullName);
+            shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
+            shiftMealTime = shiftInfo.get(11);
+            shiftRestTime = shiftInfo.get(12);
+            SimpleUtils.assertOnFail("The meal break time display incorrectly, the actual meal break time is:"+shiftMealTime,
+                    shiftMealTime.contains(updatedMealBreakStartTime)
+                            && shiftMealTime.contains(updatedMealBreakEndTime), false);
+            SimpleUtils.assertOnFail("The rest break time display incorrectly, the actual rest break time is:"+shiftRestTime,
+                    shiftRestTime.contains(updateRestBreakStartTime)
+                            && shiftRestTime.contains(updateRestBreakEndTime), false);
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Eric")
+    @Enterprise(name = "CinemarkWkdy_Enterprise")
+    @TestName(description = "Verify meal break timing persists on bulk edit shift for P2P")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyMealBreakTimingPersistsOnBulkEditShiftForP2PAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+            //using API to get name of the TM
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
+            String tmFullName = names.get(0) + " "+ names.get(1);
+            goToSchedulePageScheduleTab();
+            boolean isWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            //Go to master template
+            smartCardPage.clickViewTemplateLinkOnMasterTemplateSmartCard();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyWorkRole.getValue());
+            ArrayList<HashMap<String,String>> workRoles = scheduleShiftTablePage.getGroupByOptionsStyleInfo();
+            String workRole = workRoles.get(0).get("optionName");
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView(tmFullName);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            //Create new shift for one employee
+            String shiftStartTime1= "8:00am";
+            String shiftEndTime1 = "4:00pm";
+            List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
+            createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), shiftStartTime1, shiftEndTime1,
+                    1, Arrays.asList(0,1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime1, shiftEndTime1,
+                    1, Arrays.asList(2,3), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleMainPage.saveSchedule();
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkEditTMShiftsInWeekView(tmFullName);
+
+            String shiftStartTime2= "3:00pm";
+            String shiftEndTime2 = "11:00pm";
+            String shiftNotes = "Shift notes in master template";
+
+            editShiftPage.inputStartOrEndTime(shiftStartTime2, true);
+            editShiftPage.inputStartOrEndTime(shiftEndTime2, false);
+            editShiftPage.inputShiftNotes(shiftNotes);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+
+            scheduleMainPage.saveSchedule();
+            List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(tmFullName);
+            String smartcardName = "Action Required";
+            SimpleUtils.assertOnFail("The Action Required smart card should not show in master template! ",
+                    !smartCardPage.isSpecificSmartCardLoaded(smartcardName), false);
+
+            List<String> shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(0));
+            String shiftMealTime = shiftInfo.get(11);
+            String shiftRestTime = shiftInfo.get(12);
+            SimpleUtils.assertOnFail("The break time display incorrectly, the actual meal break time is:"+shiftMealTime+"" +
+                            "The rest break time is"+shiftRestTime,
+                    !shiftMealTime.equals("") && !shiftRestTime.equals(""), false);
+
+            String shiftTime = shiftInfo.get(2);
+            String shiftNotesOfNewShift = shiftInfo.get(10);
+            SimpleUtils.assertOnFail("The new shift's shift time display incorrectly, the expected is:"+shiftStartTime2+"-"+shiftEndTime2
+                            + " the actual is: "+ shiftTime,
+                    shiftTime.equalsIgnoreCase(shiftStartTime2+"-"+shiftEndTime2), false);
+            SimpleUtils.assertOnFail("The new shift's notes display incorrectly, the expected is:"+ shiftNotes
+                            + " the actual is: "+ shiftNotesOfNewShift,
+                    shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
+
+            configurationPage.clickOnBackBtnOnTheTemplateDetailAndListPage();
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
+            scheduleShiftTablePage.bulkEditTMShiftsInWeekView(tmFullName);
+
+            shiftNotes = "Updated--Shift notes in master template";
+
+            editShiftPage.inputStartOrEndTime(shiftStartTime1, true);
+            editShiftPage.inputStartOrEndTime(shiftEndTime1, false);
+            editShiftPage.inputShiftNotes(shiftNotes);
+            editShiftPage.clickOnUpdateButton();
+            editShiftPage.clickOnUpdateAnywayButton();
+            scheduleMainPage.saveSchedule();
+            shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(tmFullName);
+            shiftInfo = scheduleShiftTablePage.getTheShiftInfoByIndex(shiftIndexes.get(2));
+            shiftMealTime = shiftInfo.get(11);
+            shiftRestTime = shiftInfo.get(12);
+            SimpleUtils.assertOnFail("The break time display incorrectly, the actual meal break time is:"+shiftMealTime+"" +
+                            "The rest break time is"+shiftRestTime,
+                    !shiftMealTime.equals("") && !shiftRestTime.equals(""), false);
+
+            shiftTime = shiftInfo.get(2);
+            shiftNotesOfNewShift = shiftInfo.get(10);
+            SimpleUtils.assertOnFail("The new shift's shift time display incorrectly, the expected is:"+shiftStartTime2+"-"+shiftEndTime2
+                            + " the actual is: "+ shiftTime,
+                    shiftTime.equalsIgnoreCase(shiftStartTime1+"-"+shiftEndTime1), false);
+            SimpleUtils.assertOnFail("The new shift's notes display incorrectly, the expected is:"+ shiftNotes
+                            + " the actual is: "+ shiftNotesOfNewShift,
+                    shiftNotes.equalsIgnoreCase(shiftNotesOfNewShift), false);
+
+
+        } catch (Exception e){
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
 }
