@@ -541,7 +541,6 @@ public class MasterTemplatePCLGTest extends TestBase {
         }
     }
 
-
     @Automated(automated ="Automated")
     @Owner(owner = "Ashutosh")
     @Enterprise(name = "CinemarkWkdy_Enterprise")
@@ -550,7 +549,7 @@ public class MasterTemplatePCLGTest extends TestBase {
     public void verifyMasterTemplateForPCLGIsLoadingWhenShiftsTriggerDailyOTAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             //using API to get name of the TM
-            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember2.getValue());
             List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
             String tmFullName = names.get(0) + " "+ names.get(1);
             goToSchedulePageScheduleTab();
@@ -571,18 +570,17 @@ public class MasterTemplatePCLGTest extends TestBase {
             String shiftEndTime1 = "4:00pm";
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), shiftStartTime1, shiftEndTime1,
-                    1, Arrays.asList(0, 1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
             String shiftStartTime2= "6:00pm";
             String shiftEndTime2 = "9:00pm";
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime2, shiftEndTime2,
-                    1, Arrays.asList(0, 1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+                    1, Arrays.asList(0), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
 
             //Check the daily OT display correctly in master template
             List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(tmFullName);
-            List<String> violations = scheduleShiftTablePage.
-                    getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(1)));
+            List<String> violations = scheduleShiftTablePage.getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(1)));
             String otViolation = "2.5 hrs daily overtime";
             SimpleUtils.assertOnFail("The OT violation display incorrect, the actual is:"+violations.toString(),
                     violations.contains(otViolation), false);
@@ -610,7 +608,7 @@ public class MasterTemplatePCLGTest extends TestBase {
     public void verifyMasterTemplateForPCLGIsLoadingWhenShiftsTriggerWeeklyOTAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             //using API to get name of the TM
-            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember2.getValue());
             List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
             String tmFullName = names.get(0) + " "+ names.get(1);
             goToSchedulePageScheduleTab();
@@ -631,9 +629,9 @@ public class MasterTemplatePCLGTest extends TestBase {
             String shiftEndTime1 = "4:00pm";
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), shiftStartTime1, shiftEndTime1,
-                    1, Arrays.asList(0, 1,2), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+                    1, Arrays.asList(5), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime1, shiftEndTime1,
-                    1, Arrays.asList(3,4,5), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+                    1, Arrays.asList(0,1,2,3,4), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
             scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
             //Check the weekly OT display correctly in master template
