@@ -108,6 +108,7 @@ public class MasterTemplatePCLGTest extends TestBase {
                     1, Arrays.asList(0,1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime, shiftEndTime,
                     1, Arrays.asList(2,3), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
 
             //Verify the new created shifts saved in master template successfully
@@ -181,6 +182,7 @@ public class MasterTemplatePCLGTest extends TestBase {
                         1, Arrays.asList(0,1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
                 createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime, shiftEndTime,
                         1, Arrays.asList(2,3), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
                 scheduleMainPage.saveSchedule();
                 employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(tmFullName);
             }
@@ -316,6 +318,7 @@ public class MasterTemplatePCLGTest extends TestBase {
                         1, Arrays.asList(0, 1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
                 createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime, shiftEndTime,
                         1, Arrays.asList(2, 3), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+                scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
                 scheduleMainPage.saveSchedule();
                 employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(tmFullName);
             }
@@ -403,6 +406,7 @@ public class MasterTemplatePCLGTest extends TestBase {
                     1, Arrays.asList(0, 1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime, shiftEndTime,
                     1, Arrays.asList(2, 3), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
             //employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(firstName);
             String smartcardName = "Action Required";
@@ -476,6 +480,7 @@ public class MasterTemplatePCLGTest extends TestBase {
                     1, Arrays.asList(0, 1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime, shiftEndTime,
                     1, Arrays.asList(2, 3), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
             List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(tmFullName);
             String smartcardName = "Action Required";
@@ -571,6 +576,7 @@ public class MasterTemplatePCLGTest extends TestBase {
             String shiftEndTime2 = "9:00pm";
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime2, shiftEndTime2,
                     1, Arrays.asList(0, 1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
 
             //Check the daily OT display correctly in master template
@@ -628,6 +634,7 @@ public class MasterTemplatePCLGTest extends TestBase {
                     1, Arrays.asList(0, 1,2), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime1, shiftEndTime1,
                     1, Arrays.asList(3,4,5), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
             //Check the weekly OT display correctly in master template
             List<Integer> shiftIndexes = scheduleShiftTablePage.getAddedShiftIndexes(tmFullName);
@@ -683,6 +690,7 @@ public class MasterTemplatePCLGTest extends TestBase {
                     1, Arrays.asList(0, 1), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(1), shiftStartTime1, shiftEndTime1,
                     1, Arrays.asList(2, 3), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
             scheduleMainPage.clickOnEditButtonNoMaterScheduleFinalizedOrNot();
             scheduleShiftTablePage.bulkEditTMShiftsInWeekView(tmFullName);
@@ -811,6 +819,7 @@ public class MasterTemplatePCLGTest extends TestBase {
             List<String> childLocationNames = scheduleMainPage.getSpecificFilterNames("location");
             createShiftsWithSpecificValues(workRole, "", childLocationNames.get(0), shiftStartTime1, shiftEndTime1,
                     1, Arrays.asList(0, 1,2,3,4,5,6), ScheduleTestKendraScott2.staffingOption.AssignTeamMemberShift.getValue(), "", tmFullName);
+            scheduleShiftTablePage.bulkDeleteTMShiftsInWeekView("Open");
             scheduleMainPage.saveSchedule();
             int employeeShiftCount = scheduleShiftTablePage.getShiftsNumberByName(tmFullName);
             int openShiftCount = scheduleShiftTablePage.getShiftsNumberByName(openShift);
