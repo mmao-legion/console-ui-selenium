@@ -3916,7 +3916,7 @@ public class ConsoleProfileNewUIPage extends BasePage implements ProfileNewUIPag
 			SimpleUtils.fail("Profile Page: 'My Availability section' Day of Week Rows not loaded.", false);
 
 		//Click first two empty availabilities
-		List<WebElement> emptyAvailabilitiesInTheDay = dayRow.findElements(By.cssSelector("div.cursor-empty"));
+		List<WebElement> emptyAvailabilitiesInTheDay = dayRow.findElements(By.cssSelector("div.hour-cell-ghost-boundary"));
 		for (int i =0; i< 10; i++) {
 			click(emptyAvailabilitiesInTheDay.get(i));
 		}
