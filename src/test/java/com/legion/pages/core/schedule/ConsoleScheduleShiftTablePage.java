@@ -2718,7 +2718,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         if (areListElementVisible(weekShifts, 10)) {
             for (int i = 0; i < weekShifts.size(); i++) {
                 try {
-                    WebElement editedShift = weekShifts.get(i).findElement(By.cssSelector("[src*=\"edited-shift-week.png\"]"));
+                    WebElement editedShift = weekShifts.get(i).findElement(By.cssSelector("[src*=\"edited-shift.svg\"]"));
                     index = i;
                     SimpleUtils.pass("Schedule Week View: Get the index of the edited shift successfully: " + i);
                     break;
@@ -2729,7 +2729,7 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
         } else if (areListElementVisible(shiftsInDayView,10)) {
             for (int i = 0; i < shiftsInDayView.size(); i++) {
                 try {
-                    WebElement editedShift = shiftsInDayView.get(i).findElement(By.xpath("./../../../preceding-sibling::div[1]")).findElement(By.cssSelector(".sch-day-view-right-gutter-img"));
+                    WebElement editedShift = shiftsInDayView.get(i).findElement(By.xpath("./../../preceding-sibling::div[1]")).findElement(By.cssSelector(".sch-day-view-right-gutter-img"));
                     index = i;
                     SimpleUtils.pass("Schedule Day View: Get the index of the edited shift successfully: " + i);
                     break;
