@@ -77,7 +77,7 @@ public class MasterTemplatePCLGTest extends TestBase {
     public void verifyNewAddedShiftsForPCLGCanShowInMasterTemplateAndScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             //using API to get name of the TM
-            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember2.getValue());
             List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
             String tmFullName = names.get(0) + " "+ names.get(1);
             goToSchedulePageScheduleTab();
@@ -159,7 +159,7 @@ public class MasterTemplatePCLGTest extends TestBase {
     public void verifyUpdatedShiftsForPCLGCanShowInMasterTemplateAndScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             //using API to get name of the TM
-            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember2.getValue());
             List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
             String tmFullName = names.get(0) + " "+ names.get(1);
             goToSchedulePageScheduleTab();
@@ -295,7 +295,7 @@ public class MasterTemplatePCLGTest extends TestBase {
     public void verifyDeletedShiftsForPCLGWillNotShowInMasterTemplateAndScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             //using API to get name of the TM
-            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember2.getValue());
             List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
             String tmFullName = names.get(0) + " "+ names.get(1);
             goToSchedulePageScheduleTab();
@@ -375,7 +375,7 @@ public class MasterTemplatePCLGTest extends TestBase {
     public void verifyMasterTemplateShiftForPCLGAdheresToTheMealAndRestBreakTemplateAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             //using API to get name of the TM
-            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember2.getValue());
             List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
             String tmFullName = names.get(0) + " "+ names.get(1);
             goToSchedulePageScheduleTab();
@@ -449,7 +449,7 @@ public class MasterTemplatePCLGTest extends TestBase {
     public void verifyChangedMealAndRestBreakConsistentInMasterTemplateForPCLGAndScheduleAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             //using API to get name of the TM
-            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember2.getValue());
             List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
             String tmFullName = names.get(0) + " "+ names.get(1);
             goToSchedulePageScheduleTab();
@@ -647,6 +647,7 @@ public class MasterTemplatePCLGTest extends TestBase {
             createSchedulePage.createScheduleForNonDGFlowNewUI();
             SimpleUtils.assertOnFail("The OT shifts of"+tmFullName+" not display in schedule! ",
                     scheduleShiftTablePage.getShiftsNumberByName(tmFullName)==6, false );
+            scheduleMainPage.selectGroupByFilter(ConsoleScheduleNewUIPage.scheduleGroupByFilterOptions.groupbyAll.getValue());
             violations = scheduleShiftTablePage.
                     getComplianceMessageFromInfoIconPopup(scheduleShiftTablePage.getTheShiftByIndex(shiftIndexes.get(shiftIndexes.size()-1)));
             SimpleUtils.assertOnFail("The OT violation display incorrect, the actual is:"+violations.toString(),
@@ -664,7 +665,7 @@ public class MasterTemplatePCLGTest extends TestBase {
     public void verifyMealBreakTimingForPCLGPersistsOnBulkEditShiftAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             //using API to get name of the TM
-            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember.getValue());
+            List<String> usernameAndPwd = getUsernameAndPwd(AccessRoles.TeamMember2.getValue());
             List<String> names = LoginAPI.getFirstNameAndLastNameFromLoginAPI(usernameAndPwd.get(0), usernameAndPwd.get(1));
             String tmFullName = names.get(0) + " "+ names.get(1);
             goToSchedulePageScheduleTab();
