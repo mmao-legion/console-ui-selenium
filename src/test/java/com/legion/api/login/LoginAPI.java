@@ -51,4 +51,19 @@ public class LoginAPI {
         jsonAsMap.put("passwordPlainText", password);
         return jsonAsMap;
     }
+
+    public static String getAccessTokenFromTokenAPI(String username, String password) {
+        String accessToken = "";
+        try {
+            HashMap<String, Object> jsonAsMap = new HashMap<>();
+            String sessionId = LoginAPI.getSessionIdFromLoginAPI(username, password);
+            Response response = given().log().all().header("sessionId", sessionId).param("apiType", "All").contentType(ContentType.JSON).body(jsonAsMap)
+                    .when().put(System.getProperty("env")+ "legion/apiInternal/updateToken").then().statusCode(200).extract().response();
+            // Extract the accessToken value from the JSON response
+            accessToken = response.jsonPath().getString("accessToken");
+        } catch (Exception e) {
+            SimpleUtils.report("Failed to launch update token API!");
+        }
+        return accessToken;
+    }
 }

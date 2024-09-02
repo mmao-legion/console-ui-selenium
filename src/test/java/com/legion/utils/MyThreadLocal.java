@@ -579,4 +579,10 @@ public class MyThreadLocal {
 	public static HashMap<String, Integer> getWeekDaysNDates() { return weekDaysNDates.get();}
 	public static void setNewCreateShiftUIStatus(Boolean value) { isNewCreateShiftUIEnabled.set(value);}
 	public static Boolean getNewCreateShiftUIStatus() { return  isNewCreateShiftUIEnabled.get();}
+
+	public static final ThreadLocal<String> accessToken = new ThreadLocal<>();
+
+	public static void setAccessToken(String value) { accessToken.set(value); }
+
+	public static String getAccessToken() { return accessToken.get(); }
 }

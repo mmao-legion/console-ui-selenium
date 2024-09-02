@@ -3,6 +3,7 @@ package com.legion.tests;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.Status;
 import com.google.common.collect.ImmutableMap;
+import com.legion.api.login.LoginAPI;
 import com.legion.pages.*;
 import com.legion.pages.core.ConsoleAdminPage;
 import com.legion.pages.pagefactories.ConsoleWebPageFactory;
@@ -13,6 +14,7 @@ import com.legion.test.testrail.APIException;
 import com.legion.test.testrail.TestRailOperation;
 import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.core.ScheduleTestKendraScott2;
+import com.legion.tests.data.Location;
 import com.legion.tests.testframework.ExtentReportManager;
 import com.legion.tests.testframework.ExtentTestManager;
 import com.legion.tests.testframework.LegionWebDriverEventListener;
@@ -135,10 +137,19 @@ public abstract class TestBase {
         }
     }
 
-    @Parameters({ "platform", "executionon", "runMode","testRail","testSuiteName","testRailRunName"})
+    public enum staffingOption{
+        SchedulingPolicyTemplate("SchedulingPolicy"),
+        BudgetTemplate("BudgetManagement");
+        private final String value;
+        staffingOption(final String newValue) {
+            value = newValue;
+        }
+        public String getValue() { return value; }
+    }
+    @Parameters({ "platform", "executionon", "runMode","testRail","testSuiteName","testRailRunName","apiusername","apipassword"})
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
-                            @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName, ITestContext context) throws Exception {
+                            @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName,String apiusername, String apipassword, ITestContext context) throws Exception {
 
         if (AllTestCaseIDList==null){
             AllTestCaseIDList = new ArrayList<Integer>();
@@ -177,6 +188,15 @@ public abstract class TestBase {
             }
             TestRailOperation.addTestRun();
         }
+
+        String accessToken = LoginAPI.getAccessTokenFromTokenAPI(apiusername,apipassword);
+        MyThreadLocal.setAccessToken(accessToken);
+        Location location = JsonUtil.getBusinessIdFromJson("src/test/java/com/legion/tests/data/Locations.json");
+        List<String> businessIds = location.getLocationNames();
+        Map<String, Object> parametersList = LegionRestAPI.getConfigTemplateNameForBusiness(businessIds, staffingOption.BudgetTemplate.getValue(),
+                apiusername, apipassword);
+        LegionRestAPI.postBudgetUpload(apiusername, apipassword, "Budget_updated.csv",
+                "src/test/java/com/legion/tests/data/budget_vailqacn_location_2.csv");
     }
 
     // Set the Desired Capabilities to launch the app in Andriod mobile

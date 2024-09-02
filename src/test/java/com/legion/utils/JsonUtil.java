@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.legion.tests.data.Location;
 
 /**
  * Yanming
@@ -146,6 +147,24 @@ public class JsonUtil {
             }
         }
         return jsonNewArray;
+    }
+
+    public static Location getBusinessIdFromJson(String pathname){
+        ObjectMapper objectMapper = new ObjectMapper();
+        Location location = null;
+
+        try {
+            // Read the JSON file and map it to the Location class
+            location = objectMapper.readValue(new File(pathname), Location.class);
+
+        } catch (JsonGenerationException e) {
+            System.err.println("The json configuration file is not valid. Please verify the file.");
+        } catch (IOException e) {
+            System.err.println("No configuration file available. Cannot Find file: " + pathname);
+        }
+
+        return location;
+
     }
 
 }

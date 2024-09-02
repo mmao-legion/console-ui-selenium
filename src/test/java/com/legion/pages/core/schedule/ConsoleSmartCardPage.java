@@ -942,4 +942,48 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
             SimpleUtils.fail("The Acknowledge Button On Acknowledge Notification Smart Card is not loaded correctly!", false);
         }
     }
+
+    @FindBy (xpath = "//span[contains(@class, 'card-carousel-link') and contains(text(), 'Enter Budget')]")
+    private WebElement linkEnterBudget;
+
+    public void clickOnEnterBudgetLink() throws Exception {
+        if (isElementEnabledAndVisible(linkEnterBudget, 5)) {
+            click(linkEnterBudget);
+            SimpleUtils.pass("Click on Enter Budget link Successfully");
+        }else{
+            SimpleUtils.fail("The Enter Budget Link is not present or enabled!", false);
+        }
+    }
+
+    @FindBy (css = "div.edit-budget")
+    private WebElement editBudgetPopUp;
+
+    @FindBy (css = "table.table-condensed")
+    private List<WebElement> tblBudgetRow;
+
+    public void checkBudgetPopUpPageOpen() throws Exception {
+        if (isElementEnabledAndVisible(editBudgetPopUp, 5)) {
+            SimpleUtils.pass("Edit Budget pop-up page open successfully!");
+        }else{
+            SimpleUtils.fail("Edit Budget pop-up page is not visible or Enabled!", false);
+        }
+    }
+
+    public boolean selectBudgetInput() throws Exception {
+        String budgetInput = null;
+        boolean flag = false;
+        if(areListElementVisible(tblBudgetRow,5) && tblBudgetRow.size() >0){
+            SimpleUtils.pass("Input Budget table is present on the page");
+            if(tblBudgetRow.size()==2 ){
+                budgetInput = "Weekly";
+                flag = true;
+            } else if (tblBudgetRow.size()>2) {
+                budgetInput = "Daily";
+                flag = true;
+            }
+        }else{
+            SimpleUtils.fail("Input Budget table are not visible on the page!", false);
+        }
+        return flag;
+    }
 }
