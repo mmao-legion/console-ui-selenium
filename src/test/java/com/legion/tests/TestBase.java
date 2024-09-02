@@ -149,7 +149,7 @@ public abstract class TestBase {
     @Parameters({ "platform", "executionon", "runMode","testRail","testSuiteName","testRailRunName","apiusername","apipassword"})
     @BeforeSuite
     public void startServer(@Optional String platform, @Optional String executionon,
-                            @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName,String apiusername, String apipassword, ITestContext context) throws Exception {
+                            @Optional String runMode, @Optional String testRail, @Optional String testSuiteName, @Optional String testRailRunName,@Optional String apiusername, @Optional String apipassword, ITestContext context) throws Exception {
 
         if (AllTestCaseIDList==null){
             AllTestCaseIDList = new ArrayList<Integer>();
@@ -189,14 +189,14 @@ public abstract class TestBase {
             TestRailOperation.addTestRun();
         }
 
-        String accessToken = LoginAPI.getAccessTokenFromTokenAPI(apiusername,apipassword);
+        /*String accessToken = LoginAPI.getAccessTokenFromTokenAPI(apiusername,apipassword);
         MyThreadLocal.setAccessToken(accessToken);
         Location location = JsonUtil.getBusinessIdFromJson("src/test/java/com/legion/tests/data/Locations.json");
         List<String> businessIds = location.getLocationNames();
         Map<String, Object> parametersList = LegionRestAPI.getConfigTemplateNameForBusiness(businessIds, staffingOption.BudgetTemplate.getValue(),
                 apiusername, apipassword);
         LegionRestAPI.postBudgetUpload(apiusername, apipassword, "Budget_updated.csv",
-                "src/test/java/com/legion/tests/data/budget_vailqacn_location_2.csv");
+                "src/test/java/com/legion/tests/data/budget_vailqacn_location_2.csv");*/
     }
 
     // Set the Desired Capabilities to launch the app in Andriod mobile
