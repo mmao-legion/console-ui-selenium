@@ -45,4 +45,8 @@ public interface SmartCardPage {
     public String getBudgetValueFromScheduleBudgetSmartCard() throws Exception;
     public boolean isBudgetHoursSmartCardIsLoad() throws Exception;
     public void clickOnAcknowledgeButtonOnAcknowledgeNotificationSmartCard () throws Exception;
+
+    public void checkBudgetPopUpPageOpen() throws Exception;
+    public void clickOnEnterBudgetLink() throws Exception;
+    public boolean selectBudgetInput() throws Exception;
 }

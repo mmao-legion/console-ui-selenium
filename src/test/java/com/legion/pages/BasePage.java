@@ -1159,4 +1159,25 @@ public class BasePage {
         }
         return isSort;
     }
+
+    public boolean isElementEnabledAndVisible(WebElement enabledElement, long timeOutInSeconds){
+        Wait<WebDriver> wait = new FluentWait<WebDriver>(
+                MyThreadLocal.getDriver()).withTimeout(ofSeconds(timeOutInSeconds))
+                .pollingEvery(ofSeconds(2))
+                .ignoring(org.openqa.selenium.NoSuchElementException.class);
+        Boolean element =false;
+
+        try {
+            element = wait.until(new Function<WebDriver, Boolean>() {
+                @Override
+                public Boolean apply(WebDriver driver) {
+                    return enabledElement.isDisplayed() && enabledElement.isEnabled();
+                }
+            });
+        } catch (org.openqa.selenium.NoSuchElementException | org.openqa.selenium.TimeoutException te) {
+            return false;
+        }
+
+        return element;
+    }
 }

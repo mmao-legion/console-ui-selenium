@@ -17,6 +17,8 @@
         <datatable.version>1.0.3</datatable.version>
         <tag-expressions.version>1.1.1</tag-expressions.version>
         <gherkin.version>5.1.0</gherkin.version>
+        <apiusername>nora+admin7@legion.co</apiusername>
+        <apipassword>legionco1</apipassword>
         <enterprise>Circlek</enterprise>
         <env>https://enterprise.rel.legion.work/</env>
         <testRail>No</testRail>
@@ -305,6 +307,8 @@
                     </suiteXmlFiles>
 
                     <systemPropertyVariables>
+                        <apiusername>${apiusername}</apiusername>
+                        <apipassword>${apipassword}</apipassword>
                         <env>${env}</env>
                         <enterprise>${enterprise}</enterprise>
                         <testRail>${testRail}</testRail>
