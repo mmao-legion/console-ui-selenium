@@ -116,4 +116,6 @@ public interface ForecastPage {
 	public List<String> getLaborWorkRoles() throws Exception;
 	public boolean isLaborBudgetEditBtnLoaded() throws Exception;
 	public boolean isDemandForecastEditButtonEnabled() throws Exception;
+	public String getLaborGuidanceOnSummarySmartCard() throws Exception;
+
 }

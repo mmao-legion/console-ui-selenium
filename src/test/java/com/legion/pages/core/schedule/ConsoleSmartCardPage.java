@@ -894,10 +894,22 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         return null;
     }
 
-
     @Override
     public String getBudgetValueFromScheduleBudgetSmartCard() throws Exception {
         if (isElementLoaded(scheduleSmartCard, 3)) {
+            WebElement ScheduleBudgetSmartCard = scheduleSmartCard.findElement(By.cssSelector("[ng-if=\"scheduleSmartCard.guidanceSummary !== null\"]"));
+            return ScheduleBudgetSmartCard.getText().trim();
+        }else{
+            SimpleUtils.fail("The Schedule Smart Card on the Schedule page is not loaded correctly!", false);
+        }
+        return null;
+    }
+
+    @FindBy(xpath = "//th[contains(text(),'Guidance')]")
+    private WebElement guidanceLabel;
+    @Override
+    public String getGuidanceValueFromScheduleBudgetSmartCard() throws Exception {
+        if (isElementLoaded(scheduleSmartCard, 3) && isElementEnabledAndVisible(guidanceLabel,3)){
             WebElement ScheduleBudgetSmartCard = scheduleSmartCard.findElement(By.cssSelector("[ng-if=\"scheduleSmartCard.guidanceSummary !== null\"]"));
             return ScheduleBudgetSmartCard.getText().trim();
         }else{

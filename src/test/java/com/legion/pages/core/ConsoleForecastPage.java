@@ -2505,6 +2505,38 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 		return null;
 	}
 
+	@FindBy(xpath = "//tbody/tr[3]/td[2]")
+	private WebElement laborSmartCardBudgeted;
+
+	@FindBy(xpath = "//tbody/tr[3]/td[3]")
+	private WebElement laborSmartCardNonBudgeted;
+	@Override
+	public String getLaborGuidanceOnSummarySmartCard() throws Exception {
+		String GuidanceValue = null ;
+		if(isElementEnabledAndVisible(laborSmartCardNonBudgeted, 15)&& isElementEnabledAndVisible(laborSmartCardBudgeted, 5))
+		{
+			String GuidanceValue1 = laborSmartCardBudgeted.getText().trim() ;
+			String  GuidanceValue2 = laborSmartCardNonBudgeted.getText().trim() ;
+			float f1 = Float.parseFloat(GuidanceValue1);
+			float f2 = Float.parseFloat(GuidanceValue2);
+			float f3 = (f1+f2);
+			if (f3 == (int) f3) {
+				GuidanceValue = String.valueOf((int) f3);
+			} else {
+				GuidanceValue = String.valueOf(f3);
+			}
+			return GuidanceValue;
+		}
+		if (isElementEnabledAndVisible(laborSmartCardBudgetWithAjustableRoles, 5)) {
+			SimpleUtils.fail("The budget in forecast page is loaded!", false);
+			return GuidanceValue;
+		}
+		else {
+			SimpleUtils.fail("The edited budget on forecast page is not loaded!", false);
+		}
+		return null;
+	}
+
 	@FindBy(css = "[id*=\"Chart_area\"]")
 	private WebElement demandForecastChart;
 	@Override

@@ -723,6 +723,20 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		return null;
 	}
 
+	@Override
+	public String getCurrentWeekGuidanceHours() throws Exception {
+		String guidanceHours;
+		WebElement currentWeek = overviewTableRows.get(0);
+		if (isElementLoaded(currentWeek)) {
+			guidanceHours = currentWeek.findElement(By.cssSelector("[ng-if*=\"!hasBudget\"]")).getText();
+			SimpleUtils.pass("Catch the guidance hours successfully!");
+			return guidanceHours;
+		}else{
+			SimpleUtils.fail("The current week is not listed on the first line",false);
+		}
+		return null;
+	}
+
 	@FindBy(css="[ng-class=\"warningTextClass(row)\"]")
 	List<WebElement> scheduleOverviewWeeksStatusWarningMessage;
 	@Override
