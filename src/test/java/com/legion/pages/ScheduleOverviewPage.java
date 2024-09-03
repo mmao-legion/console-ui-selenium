@@ -43,4 +43,6 @@ public interface ScheduleOverviewPage {
 	public String getCurrentWeekBudgetHours() throws Exception;
 	public List<String> getScheduleWeeksStatusWarningMessage() throws Exception;
 	public boolean isBudgetLabelShow() throws Exception;
+
+	public String getCurrentWeekGuidanceHours() throws Exception;
 }
