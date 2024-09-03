@@ -1027,9 +1027,6 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
                         budgetHour.clear();
 //                        DecimalFormat decimalFormat = new DecimalFormat("#.00");
 //                        String value = decimalFormat.format(random);
-                        System.out.println(forecastHourString);
-                        System.out.println(forecastHourFloat);
-                        System.out.println(random);
                         budgetHour.sendKeys(String.valueOf(random));
                         sumOfBudgetHours += Float.valueOf(random);
                         budgetForNonDGFlow.add(String.valueOf(random));
