@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite verbose ="0" thread-count="6" name="LegionTest" parallel="tests" configfailurepolicy="continue">
+    <parameter name="environment" value="QA"/>
+    <parameter name="testRail" value="Yes"/>
+    <parameter name="testRailRunName" value="RC_AutomationRegressionRuns"/>
+    <listeners>
+        <listener class-name="com.legion.tests.testframework.LegionTestListener"></listener>
+    </listeners>
+
+
+    <test name="Budget Daily For Regular Location Test">
+        <classes>
+            <class name="com.legion.tests.core.BudgetDailyForRegularLocationTest">
+                <methods>
+                    <include name="verifyBudgetValuesOnAllPagesForRegularLocationWhenEnableBudgetConfigAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+</suite> <!-- Suite -->
