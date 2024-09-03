@@ -714,7 +714,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		String budgetHours;
 		WebElement currentWeek = overviewTableRows.get(0);
 		if (isElementLoaded(currentWeek)) {
-			budgetHours = currentWeek.findElement(By.cssSelector("[ng-if = \"hasBudget\"] [ng-if = \"row.budgetHours\"]")).getText();
+			budgetHours = currentWeek.findElement(By.cssSelector("[ng-if*=\"hasBudget\"]")).getText();
 			SimpleUtils.pass("Catch the budget hours successfully!");
 			return budgetHours;
 		}else{
@@ -740,4 +740,24 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 		return weeksStatusWarningMessage;
 	}
+
+	@FindBy(css="[ng-if=\"viewGuidance()\"] span")
+	WebElement budgetGuidanceLabel;
+	@Override
+	public boolean isBudgetLabelShow() throws Exception{
+		boolean isBudgetLabelShow = false;
+		if (isElementEnabledAndVisible(budgetGuidanceLabel, 5)) {
+			if (budgetGuidanceLabel.getText().equalsIgnoreCase("Budget")){
+				isBudgetLabelShow = true;
+			} else if (budgetGuidanceLabel.getText().equalsIgnoreCase("Guidance")){
+				isBudgetLabelShow = false;
+			} else
+				SimpleUtils.fail("The budget label failed to load! It atual is:"+budgetGuidanceLabel.getText(), false);
+		}
+		else
+			SimpleUtils.fail("The budget/guidance label failed to load",false);
+
+		return isBudgetLabelShow;
+	}
+
 }

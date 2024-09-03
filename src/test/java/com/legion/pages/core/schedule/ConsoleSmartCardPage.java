@@ -13,6 +13,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -946,9 +947,15 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     @FindBy (xpath = "//span[contains(@class, 'card-carousel-link') and contains(text(), 'Enter Budget')]")
     private WebElement linkEnterBudget;
 
+    @FindBy (xpath = "//span[contains(@class, 'card-carousel-link') and contains(text(), 'Edit')]")
+    private WebElement editBudgetBtn;
+
     public void clickOnEnterBudgetLink() throws Exception {
         if (isElementEnabledAndVisible(linkEnterBudget, 5)) {
             click(linkEnterBudget);
+            SimpleUtils.pass("Click on Enter Budget link Successfully");
+        } else if (isElementEnabledAndVisible(editBudgetBtn, 5)){
+            click(editBudgetBtn);
             SimpleUtils.pass("Click on Enter Budget link Successfully");
         }else{
             SimpleUtils.fail("The Enter Budget Link is not present or enabled!", false);
@@ -958,7 +965,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     @FindBy (css = "div.edit-budget")
     private WebElement editBudgetPopUp;
 
-    @FindBy (css = "table.table-condensed")
+    @FindBy (css = "table.table-condensed tbody tr.table-row")
     private List<WebElement> tblBudgetRow;
 
     public void checkBudgetPopUpPageOpen() throws Exception {
@@ -985,5 +992,61 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
             SimpleUtils.fail("Input Budget table are not visible on the page!", false);
         }
         return flag;
+    }
+
+    public boolean isDailyBudgetInputDisplay(){
+        boolean flag = false;
+        if(areListElementVisible(tblBudgetRow,5) && tblBudgetRow.size() >0){
+            SimpleUtils.pass("Input Budget table is present on the page");
+            if(tblBudgetRow.size()==7 ){
+                flag = true;
+            }
+        }else{
+            SimpleUtils.fail("Daily Input Budget table are not visible on the page!", false);
+        }
+        return flag;
+    }
+
+    @FindBy (xpath = "//th[contains(text(), \"Total\")]/following-sibling::td[2]")
+    private WebElement totalBudgetHrs;
+    @FindBy(css = "[class =\"ok-action-text ng-binding\"]")
+    private WebElement applyBudgetBtn;
+    public List<String> inputRandomBudgetValue(){
+        List<String> budgetForNonDGFlow = new ArrayList<>();
+        Float sumOfBudgetHours = 0.00f;
+        if (areListElementVisible(tblBudgetRow, 5)) {
+            for (WebElement budgetRow : tblBudgetRow) {
+                try {
+                    WebElement forecastHour = budgetRow.findElement(By.cssSelector("td:nth-child(2)"));
+                    WebElement budgetHour = budgetRow.findElement(By.cssSelector("input[type=\"number\"]"));
+                    if (forecastHour != null && budgetHour != null) {
+                        String forecastHourString = "";
+                        forecastHourString = forecastHour.getText().trim().replaceAll("[a-zA-Z]", "");
+                        float forecastHourFloat = Float.valueOf(forecastHourString);
+                        int random = (int) (Math.random() * forecastHourFloat);
+                        budgetHour.clear();
+//                        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+//                        String value = decimalFormat.format(random);
+                        System.out.println(forecastHourString);
+                        System.out.println(forecastHourFloat);
+                        System.out.println(random);
+                        budgetHour.sendKeys(String.valueOf(random));
+                        sumOfBudgetHours += Float.valueOf(random);
+                        budgetForNonDGFlow.add(String.valueOf(random));
+                    }
+
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+            String totalBudget = totalBudgetHrs.getText().trim();
+            if (sumOfBudgetHours.equals(Float.valueOf(totalBudget))) {
+                budgetForNonDGFlow.add(sumOfBudgetHours.toString());
+                SimpleUtils.pass("Create Schedule - Enter Budget: The total budget value is consistent with the summary of the edited value");
+            } else
+                SimpleUtils.fail("Create Schedule - Enter Budget: The total budget value is inconsistent with the summary of the edited value, please check", true);
+        }
+        clickTheElement(applyBudgetBtn);
+        return budgetForNonDGFlow;
     }
 }

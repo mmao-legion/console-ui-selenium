@@ -42,4 +42,5 @@ public interface ScheduleOverviewPage {
 	public void clickOnViewGroupScheduleButton() throws Exception;
 	public String getCurrentWeekBudgetHours() throws Exception;
 	public List<String> getScheduleWeeksStatusWarningMessage() throws Exception;
+	public boolean isBudgetLabelShow() throws Exception;
 }

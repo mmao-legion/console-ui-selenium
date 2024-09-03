@@ -49,4 +49,7 @@ public interface SmartCardPage {
     public void checkBudgetPopUpPageOpen() throws Exception;
     public void clickOnEnterBudgetLink() throws Exception;
     public boolean selectBudgetInput() throws Exception;
+
+    public boolean isDailyBudgetInputDisplay();
+    public List<String> inputRandomBudgetValue();
 }

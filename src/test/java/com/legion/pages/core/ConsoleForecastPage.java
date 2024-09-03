@@ -80,6 +80,8 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 //	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='hasBudget()']")
 	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='hasBudget() && !hasDayPartFilterOn() && !hasAdjustableRoles']")
 	private WebElement laborSmartCardBudget;
+	@FindBy(xpath = "//td[contains(text(),'Hours')]//following-sibling::td[@ng-if='hasBudget() && !hasDayPartFilterOn() && hasAdjustableRoles']")
+	private WebElement laborSmartCardBudgetWithAjustableRoles;
 
 	@FindBy(xpath = "//div[contains(text(),'Holidays')]")
 	private WebElement holidaysSmartcardHeader;
@@ -2491,11 +2493,13 @@ public class ConsoleForecastPage extends BasePage implements ForecastPage {
 	@Override
 	public String getLaborBudgetOnSummarySmartCard() throws Exception {
 		String BudgetValue = null;
-		waitForSeconds(3);
-		if (isElementLoaded(laborSmartCardBudget, 30)) {
+		if (isElementEnabledAndVisible(laborSmartCardBudget, 15)) {
 			BudgetValue = laborSmartCardBudget.getText().trim();
 			return BudgetValue;
-		} else {
+		}if (isElementEnabledAndVisible(laborSmartCardBudgetWithAjustableRoles, 5)) {
+			BudgetValue = laborSmartCardBudgetWithAjustableRoles.getText().trim();
+			return BudgetValue;
+		}  else {
 			SimpleUtils.fail("The edited budget on forecast page is not loaded!", false);
 		}
 		return null;
