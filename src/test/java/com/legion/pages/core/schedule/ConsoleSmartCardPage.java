@@ -966,8 +966,8 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         if (isElementEnabledAndVisible(linkEnterBudget, 5)) {
             click(linkEnterBudget);
             SimpleUtils.pass("Click on Enter Budget link Successfully");
-        } else if (isElementEnabledAndVisible(editBudgetBtn, 5)){
-            click(editBudgetBtn);
+        } else if (isElementEnabled(editBudgetBtn, 5)){
+            clickTheElement(editBudgetBtn);
             SimpleUtils.pass("Click on Enter Budget link Successfully");
         }else{
             SimpleUtils.fail("The Enter Budget Link is not present or enabled!", false);
@@ -977,7 +977,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     @FindBy (css = "div.edit-budget")
     private WebElement editBudgetPopUp;
 
-    @FindBy (css = "table.table-condensed tbody tr.table-row")
+    @FindBy (xpath = "//div[contains(@class,'scroll-table')]//tbody/tr[not(contains(@class, 'head-row')) and contains(@class, 'table-row')]")
     private List<WebElement> tblBudgetRow;
 
     public void checkBudgetPopUpPageOpen() throws Exception {
@@ -1021,7 +1021,7 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
 
     @FindBy (xpath = "//th[contains(text(), \"Total\")]/following-sibling::td[2]")
     private WebElement totalBudgetHrs;
-    @FindBy(css = "[class =\"ok-action-text ng-binding\"]")
+    @FindBy(xpath = "//span[contains(text(), 'Apply Budget')]")
     private WebElement applyBudgetBtn;
     public List<String> inputRandomBudgetValue(){
         List<String> budgetForNonDGFlow = new ArrayList<>();
@@ -1048,14 +1048,43 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
                     continue;
                 }
             }
-            String totalBudget = totalBudgetHrs.getText().trim();
-            if (sumOfBudgetHours.equals(Float.valueOf(totalBudget))) {
-                budgetForNonDGFlow.add(sumOfBudgetHours.toString());
-                SimpleUtils.pass("Create Schedule - Enter Budget: The total budget value is consistent with the summary of the edited value");
-            } else
-                SimpleUtils.fail("Create Schedule - Enter Budget: The total budget value is inconsistent with the summary of the edited value, please check", true);
+            if (isElementEnabledAndVisible(totalBudgetHrs, 5)){
+                String totalBudget = totalBudgetHrs.getText().trim();
+                if (sumOfBudgetHours.equals(Float.valueOf(totalBudget))) {
+                    budgetForNonDGFlow.add(sumOfBudgetHours.toString());
+                    SimpleUtils.pass("Create Schedule - Enter Budget: The total budget value is consistent with the summary of the edited value");
+                } else
+                    SimpleUtils.fail("Create Schedule - Enter Budget: The total budget value is inconsistent with the summary of the edited value, please check", true);
+            }
         }
         clickTheElement(applyBudgetBtn);
         return budgetForNonDGFlow;
+    }
+
+    public boolean isWeeklyBudgetInputDisplayForRegularLocation(){
+        boolean flag = false;
+        if(areListElementVisible(tblBudgetRow,5) && tblBudgetRow.size() >0){
+            SimpleUtils.pass("Input Budget table is present on the page");
+            if(tblBudgetRow.size()==1 ){
+                flag = true;
+            }
+        }else{
+            SimpleUtils.fail("Daily Input Budget table are not visible on the page!", false);
+        }
+        return flag;
+    }
+
+
+    public boolean isWeeklyBudgetInputDisplayForLG(){
+        boolean flag = false;
+        if(areListElementVisible(tblBudgetRow,5) && tblBudgetRow.size() >0){
+            SimpleUtils.pass("Input Budget table is present on the page");
+            if(tblBudgetRow.size()>=1 && tblBudgetRow.size()<7){
+                flag = true;
+            }
+        }else{
+            SimpleUtils.fail("Daily Input Budget table are not visible on the page!", false);
+        }
+        return flag;
     }
 }

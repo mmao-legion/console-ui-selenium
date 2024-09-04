@@ -24,9 +24,31 @@
             <class name="com.legion.tests.core.BudgetWeeklyForRegularLocationTest">
                 <methods>
                     <include name="verifyBudgetValuesOnAllPagesForRegularLocationWhenWeeklyEnableBudgetConfigAsInternalAdmin"/>
+                    <include name="verifyBudgetValuesOnAllPagesForRegularLocationWhenEnableBudgetConfigAndWeeklyAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
     </test>
 
+
+    <test name="Budget weekly For P2PLG Test">
+        <classes>
+            <class name="com.legion.tests.core.BudgetWeeklyForP2PLGTest">
+                <methods>
+                    <include name="verifyBudgetValuesOnAllPagesForP2PChildLocationWhenEnableBudgetConfigAndWeeklyAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+
+    <test name="Budget weekly For PCLG Test">
+        <classes>
+            <class name="com.legion.tests.core.BudgetWeeklyForPCLGTest">
+                <methods>
+                    <include name="verifyBudgetValuesOnAllPagesForPCLGWhenEnableBudgetConfigAndWeeklyAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 </suite> <!-- Suite -->

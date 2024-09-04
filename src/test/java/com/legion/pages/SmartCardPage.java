@@ -54,4 +54,6 @@ public interface SmartCardPage {
     public List<String> inputRandomBudgetValue();
 
     public String getGuidanceValueFromScheduleBudgetSmartCard() throws Exception;
+    public boolean isWeeklyBudgetInputDisplayForRegularLocation();
+    public boolean isWeeklyBudgetInputDisplayForLG();
 }

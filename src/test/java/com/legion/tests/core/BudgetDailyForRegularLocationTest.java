@@ -73,7 +73,7 @@ public class BudgetDailyForRegularLocationTest extends TestBase {
             forecastPage.clickOnLabor();
 
             //Check edit budget button can load
-            SimpleUtils.assertOnFail("Child location disabled the labor budget edit button on week view!",
+            SimpleUtils.assertOnFail("Edit button fail to load on forecast smart card!",
                     forecastPage.isLaborBudgetEditBtnLoaded(),false);
 
             //Click edit budget button and check the daily budget display
