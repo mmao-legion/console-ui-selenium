@@ -19,4 +19,14 @@
         </classes>
     </test>
 
+    <test name="Guidance Weekly For Regular Location Test">
+        <classes>
+            <class name="com.legion.tests.core.BudgetWeeklyForRegularLocationTest">
+                <methods>
+                    <include name="verifyBudgetValuesOnAllPagesForRegularLocationWhenWeeklyEnableBudgetConfigAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->
