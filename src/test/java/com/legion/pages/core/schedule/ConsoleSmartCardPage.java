@@ -13,7 +13,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -1019,10 +1018,24 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         return flag;
     }
 
+    public boolean isChildBudgetInputDisplay(){
+        boolean flag = false;
+        if(areListElementVisible(childBudgetRow,5) && childBudgetRow.size() >0){
+            SimpleUtils.pass("Input Budget table is present on the page");
+                flag = true;
+        }else{
+            SimpleUtils.fail("Child Input Budget table are not visible on the page!", false);
+        }
+        return flag;
+    }
+
+    @FindBy (xpath = "//input[@type='number']")
+    private List<WebElement> childBudgetRow;
     @FindBy (xpath = "//th[contains(text(), \"Total\")]/following-sibling::td[2]")
     private WebElement totalBudgetHrs;
     @FindBy(xpath = "//span[contains(text(), 'Apply Budget')]")
     private WebElement applyBudgetBtn;
+
     public List<String> inputRandomBudgetValue(){
         List<String> budgetForNonDGFlow = new ArrayList<>();
         Float sumOfBudgetHours = 0.00f;
@@ -1075,16 +1088,29 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
     }
 
 
-    public boolean isWeeklyBudgetInputDisplayForLG(){
+    public boolean isWeeklyBudgetInputDisplayForLG() {
         boolean flag = false;
-        if(areListElementVisible(tblBudgetRow,5) && tblBudgetRow.size() >0){
+        if (areListElementVisible(tblBudgetRow, 5) && tblBudgetRow.size() > 0) {
             SimpleUtils.pass("Input Budget table is present on the page");
-            if(tblBudgetRow.size()>=1 && tblBudgetRow.size()<7){
+            if (tblBudgetRow.size() >= 1 && tblBudgetRow.size() < 7) {
                 flag = true;
             }
-        }else{
+        } else {
             SimpleUtils.fail("Daily Input Budget table are not visible on the page!", false);
         }
         return flag;
+    }
+    public int inputRandomBudgetValueWithChildLocation(){
+        int sum = 0;
+        if (areListElementVisible(childBudgetRow, 5)) {
+            for (WebElement budgetRow : childBudgetRow) {
+                int budgetNumber = (new Random()).nextInt(200);
+                budgetRow.clear();
+                budgetRow.sendKeys(String.valueOf(budgetNumber));
+                sum = sum + budgetNumber;
+            }
+        }
+        clickTheElement(applyBudgetBtn);
+        return sum;
     }
 }

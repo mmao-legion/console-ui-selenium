@@ -41,6 +41,15 @@
         </classes>
     </test>
 
+    <test name="Guidance Weekly For PCLG Location Test">
+        <classes>
+            <class name="com.legion.tests.core.VailBudgetPCLGTest">
+                <methods>
+                    <include name="verifyBudgetInPCLGAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
 
     <test name="Budget weekly For PCLG Test">
         <classes>
@@ -51,4 +60,5 @@
             </class>
         </classes>
     </test>
+
 </suite> <!-- Suite -->
