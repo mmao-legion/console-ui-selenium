@@ -13,7 +13,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -1019,10 +1018,24 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         return flag;
     }
 
+    public boolean isChildBudgetInputDisplay(){
+        boolean flag = false;
+        if(areListElementVisible(childBudgetRow,5) && childBudgetRow.size() >0){
+            SimpleUtils.pass("Input Budget table is present on the page");
+                flag = true;
+        }else{
+            SimpleUtils.fail("Child Input Budget table are not visible on the page!", false);
+        }
+        return flag;
+    }
+
+    @FindBy (xpath = "//input[@type='number']")
+    private List<WebElement> childBudgetRow;
     @FindBy (xpath = "//th[contains(text(), \"Total\")]/following-sibling::td[2]")
     private WebElement totalBudgetHrs;
-    @FindBy(css = "[class =\"ok-action-text ng-binding\"]")
+    @FindBy(xpath = "//span[contains(text(), 'Apply Budget')]")
     private WebElement applyBudgetBtn;
+
     public List<String> inputRandomBudgetValue(){
         List<String> budgetForNonDGFlow = new ArrayList<>();
         Float sumOfBudgetHours = 0.00f;
@@ -1057,5 +1070,19 @@ public class ConsoleSmartCardPage extends BasePage implements SmartCardPage {
         }
         clickTheElement(applyBudgetBtn);
         return budgetForNonDGFlow;
+    }
+
+    public int inputRandomBudgetValueWithChildLocation(){
+        int sum = 0;
+        if (areListElementVisible(childBudgetRow, 5)) {
+            for (WebElement budgetRow : childBudgetRow) {
+                int budgetNumber = (new Random()).nextInt(200);
+                budgetRow.clear();
+                budgetRow.sendKeys(String.valueOf(budgetNumber));
+                sum = sum + budgetNumber;
+            }
+        }
+        clickTheElement(applyBudgetBtn);
+        return sum;
     }
 }
