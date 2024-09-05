@@ -97,6 +97,7 @@ public class BudgetDailyForRegularLocationTest extends TestBase {
 
             //Check the budget hrs on budget smart card same as on forecast smart card
             smartCardPage.isBudgetHoursSmartCardIsLoad();
+            smartCardPage.isSmartCardScrolledToRightActive();
             String weeklyBudgetSmartCard = "Weekly Budget";
             String budgetValueOnWeeklyBudgetSmartCard = smartCardPage.getBudgetValueFromWeeklyBudgetSmartCard(weeklyBudgetSmartCard).split(" ")[0];
             SimpleUtils.assertOnFail("The budget value on forecast smart card is: "+budgetValueOnForecastSmartCard

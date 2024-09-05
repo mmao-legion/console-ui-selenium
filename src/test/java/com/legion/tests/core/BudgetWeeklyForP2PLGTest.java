@@ -67,7 +67,7 @@ public class BudgetWeeklyForP2PLGTest extends TestBase {
     @TestName(description = "Verify the budget values display correct on all pages for p2p child location when enable display budget config with weekly budget")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyBudgetValuesOnAllPagesForP2PChildLocationWhenEnableBudgetConfigAndWeeklyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
-//        try {
+        try {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
@@ -102,14 +102,15 @@ public class BudgetWeeklyForP2PLGTest extends TestBase {
             //Go to schedule page
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 
-//            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
-//            if (isActiveWeekGenerated) {
-//                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
-//            }
-//            createSchedulePage.createScheduleForNonDGFlowNewUI();
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
 
             //Check the budget hrs on budget smart card same as on forecast smart card
             smartCardPage.isBudgetHoursSmartCardIsLoad();
+            smartCardPage.isSmartCardScrolledToRightActive();
             String weeklyBudgetSmartCard = "Weekly Budget";
             String budgetValueOnWeeklyBudgetSmartCard = smartCardPage.getBudgetValueFromWeeklyBudgetSmartCard(weeklyBudgetSmartCard).split(" ")[0];
             SimpleUtils.assertOnFail("The budget value on forecast smart card is: "+budgetValueOnForecastSmartCard
@@ -164,8 +165,8 @@ public class BudgetWeeklyForP2PLGTest extends TestBase {
             SimpleUtils.assertOnFail("The budget value on overview page is:"+budgetValueOnDashboardPage
                             + ". The budget value on schedule smart card is: "+budgetValueOnScheduleSmartCard,
                     budgetValueOnDashboardPage.equals(budgetValueOnScheduleSmartCard), false);
-//        } catch (Exception e) {
-//            SimpleUtils.fail(e.getMessage(), false);
-//        }
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
     }
 }
