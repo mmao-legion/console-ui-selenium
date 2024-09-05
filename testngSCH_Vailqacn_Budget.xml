@@ -36,6 +36,7 @@
             <class name="com.legion.tests.core.BudgetWeeklyForP2PLGTest">
                 <methods>
                     <include name="verifyBudgetValuesOnAllPagesForP2PChildLocationWhenEnableBudgetConfigAndWeeklyAsInternalAdmin"/>
+                    <include name="verifyCannotEditBudgetOnP2PParentLevelWhenEnableDisplayBudgetConfigAndWeeklyAsInternalAdmin" />
                 </methods>
             </class>
         </classes>
