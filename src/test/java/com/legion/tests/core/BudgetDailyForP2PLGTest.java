@@ -15,8 +15,9 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
-public class BudgetWeeklyForPCLGTest extends TestBase {
+public class BudgetDailyForP2PLGTest extends TestBase {
     private DashboardPage dashboardPage;
     private CreateSchedulePage createSchedulePage;
     private ScheduleMainPage scheduleMainPage;
@@ -63,15 +64,23 @@ public class BudgetWeeklyForPCLGTest extends TestBase {
     @Automated(automated ="Automated")
     @Owner(owner = "Mary")
     @Enterprise(name = "Vailqacn_Enterprise")
-    @TestName(description = "Verify the budget values display correct on all pages for parent child LG when enable display budget config with weekly budget")
+    @TestName(description = "Verify the budget values display correct on all pages for P2P Child Location when enable display budget config")
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
-    public void verifyBudgetValuesOnAllPagesForPCLGWhenEnableBudgetConfigAndWeeklyAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+    public void verifyBudgetValuesOnAllPagesForP2PChildLocationWhenEnableBudgetConfigAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
-            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
 
+            //Get child location
+            List<String> locations = forecastPage.getAllLocationsFromFilter();
+            int index = (new Random()).nextInt(locations.size());
+            String childLocation = locations.get(index);
+
+            //Navigate to the child location
+            locationSelectorPage.searchSpecificUpperFieldAndNavigateTo(childLocation);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
             // Go to Forecast page, Schedule tab
             forecastPage.clickOnLabor();
 
@@ -81,11 +90,11 @@ public class BudgetWeeklyForPCLGTest extends TestBase {
 
             //Click edit budget button and check the daily budget display
             smartCardPage.clickOnEnterBudgetLink();
-            SimpleUtils.assertOnFail("Weekly Input Budget table are not visible on the page!",
-                    smartCardPage.isWeeklyBudgetInputDisplayForLG(),false);
+            SimpleUtils.assertOnFail("Daily Input Budget table are not visible on the page!",
+                    smartCardPage.isDailyBudgetInputDisplay(),false);
 
             //Input budget for every day and save
-            smartCardPage.inputRandomBudgetValueWithChildLocation();
+            smartCardPage.inputRandomBudgetValue();
             //Get the budget value on forecast smart card
             String budgetValueOnForecastSmartCard = forecastPage.getLaborBudgetOnSummarySmartCard();
 
@@ -116,13 +125,13 @@ public class BudgetWeeklyForPCLGTest extends TestBase {
             //Click edit budget button and check the daily budget display
             smartCardPage.clickOnEnterBudgetLink();
             SimpleUtils.assertOnFail("Daily Input Budget table are not visible on the page!",
-                    smartCardPage.isWeeklyBudgetInputDisplayForLG(),false);
+                    smartCardPage.isDailyBudgetInputDisplay(),false);
             //Input budget for every day and save
-            int budgetValuesOnEditBudgetPage = smartCardPage.inputRandomBudgetValueWithChildLocation();
+            List<String> budgetValuesOnEditBudgetPage = smartCardPage.inputRandomBudgetValue();
             //Get the budget value on schedule page
             budgetValueOnScheduleSmartCard = smartCardPage.getBudgetValueFromScheduleBudgetSmartCard();
             budgetValueOnWeeklyBudgetSmartCard = smartCardPage.getBudgetValueFromWeeklyBudgetSmartCard(weeklyBudgetSmartCard).split(" ")[0];
-            String budgetTotalValueOnEditBudgetPage = String.valueOf(budgetValuesOnEditBudgetPage);
+            String budgetTotalValueOnEditBudgetPage = String.valueOf((int)Float.parseFloat(budgetValuesOnEditBudgetPage.get(budgetValuesOnEditBudgetPage.size()-1).split(" ")[0]));
             SimpleUtils.assertOnFail("The budget value on edit budget page is:"+budgetTotalValueOnEditBudgetPage+
                     "The budget value on weekly budget smart card is: "+budgetValueOnWeeklyBudgetSmartCard
                             + ". The budget value on schedule smart card is: "+budgetValueOnScheduleSmartCard,
