@@ -1,13 +1,11 @@
 package com.legion.pages.core;
 
-import static com.legion.utils.MyThreadLocal.failedComment;
 import static com.legion.utils.MyThreadLocal.getDriver;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.legion.utils.JsonUtil;
-import cucumber.api.java.ro.Si;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
@@ -19,13 +17,13 @@ import com.legion.pages.BasePage;
 import com.legion.pages.ScheduleOverviewPage;
 import com.legion.utils.SimpleUtils;
 
-public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOverviewPage{
+public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOverviewPage {
 
 	private static HashMap<String, String> parametersMap2 = JsonUtil.getPropertiesFromJsonFile("src/test/resources/ControlsPageLocationDetail.json");
-	@FindBy(className="schedule-status-title")
+	@FindBy(className = "schedule-status-title")
 	private List<WebElement> scheduleOverviewWeeksStatus;
 
-	@FindBy(className="activity-props")
+	@FindBy(className = "activity-props")
 	private List<WebElement> scheduleOverviewActivityInfo;
 
 	@FindBy(css = "div.week.background-current-week-legend-calendar")
@@ -37,7 +35,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	@FindBy(css = "div.fx-center.left-banner")
 	private List<WebElement> overviewPageScheduleWeekDurations;
 
-	@FindBy(css="div.week.ng-scope")
+	@FindBy(css = "div.week.ng-scope")
 	private List<WebElement> overviewscheduledWeeks;
 
 	@FindBy(className = "schedule-table-row")
@@ -81,7 +79,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	}
 
 	@Override
-	public List<String> getScheduleWeeksStatus() throws Exception{
+	public List<String> getScheduleWeeksStatus() throws Exception {
 		List<String> overviewScheduleWeeksStatus = new ArrayList<String>();
 		if (loadScheduleTableInOverview()) {
 			if (scheduleOverviewWeeksStatus.size() != 0) {
@@ -89,9 +87,8 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 					overviewScheduleWeeksStatus.add(overviewWeekStatus.getText());
 				}
 			}
-		}
-		else
-			SimpleUtils.fail("The schedule view table failed to load",false);
+		} else
+			SimpleUtils.fail("The schedule view table failed to load", false);
 
 		return overviewScheduleWeeksStatus;
 	}
@@ -209,13 +206,12 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 			} else
 				SimpleUtils.fail("The duration of weeks are not loaded! ", false);
 		}
-				return overviewWeeksDuration;
-		}
+		return overviewWeeksDuration;
+	}
 
 	//Check each week until weeks are 'Not Available' DateAndDay are correct on overview page
 	@Override
-	public Boolean verifyDateAndDayForEachWeekUntilNotAvailable() throws Exception
-	{
+	public Boolean verifyDateAndDayForEachWeekUntilNotAvailable() throws Exception {
 		/**
 		 * wait for week list load
 		 */
@@ -225,79 +221,69 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		String scheduleWeekStatusToVerify = "Not Available";
 		List<String> overviewPageScheduledWeekStatus = getScheduleWeeksStatus();
 		List<String> currentAndUpcomingActiveWeeksDaysOnCalendar = getCurrentAndUpcomingActiveWeeksDaysOnCalendar();
-		for(String scheduleWeekStatus : overviewPageScheduledWeekStatus)
-		{ 
+		for (String scheduleWeekStatus : overviewPageScheduledWeekStatus) {
 			String[] calenderWeekDates = currentAndUpcomingActiveWeeksDaysOnCalendar.get(index).split(",");
 			String calendarWeekStartDate = calenderWeekDates[0];
 			String scheduleWeekStartDate = getOverviewPageWeeksDuration().get(index).get("durationWeekStartDay").split(" ")[1];
 			String calendarWeekEndDate = calenderWeekDates[calenderWeekDates.length - 1];
 			String scheduleWeekEndDate = getOverviewPageWeeksDuration().get(index).get("durationWeekEndDay").split(" ")[1];
-			
-			if(scheduleWeekStatus.contains(scheduleWeekStatusToVerify)) {
-				SimpleUtils.pass("Overview Page: Week Status found as 'Not Available' for Week Duration-'" 
-						+ getOverviewPageWeeksDuration().get(index).get("durationWeekStartDay") +" - "	
-							+ getOverviewPageWeeksDuration().get(index).get("durationWeekEndDay") +"'");
+
+			if (scheduleWeekStatus.contains(scheduleWeekStatusToVerify)) {
+				SimpleUtils.pass("Overview Page: Week Status found as 'Not Available' for Week Duration-'"
+						+ getOverviewPageWeeksDuration().get(index).get("durationWeekStartDay") + " - "
+						+ getOverviewPageWeeksDuration().get(index).get("durationWeekEndDay") + "'");
 				break;
 			}
-			
-			if(isScheduleDurationStartDayMatchesWithCalendarWeekStartDay(calendarWeekStartDate, scheduleWeekStartDate))
-			{
-				SimpleUtils.pass("Current Week start date:'"+ calendarWeekStartDate +"' on Overview calendar and Overview current schedule duration start date:'" + scheduleWeekStartDate + "' matched!");
-				if(isScheduleDurationEndDayMatchesWithCalendarWeekEndDay(calendarWeekEndDate, scheduleWeekEndDate)) {
-					SimpleUtils.pass("Current Week end date:'"+ calendarWeekEndDate +"' on Overview calendar and Overview current schedule duration end Date:'" + scheduleWeekEndDate + "' matched!");
+
+			if (isScheduleDurationStartDayMatchesWithCalendarWeekStartDay(calendarWeekStartDate, scheduleWeekStartDate)) {
+				SimpleUtils.pass("Current Week start date:'" + calendarWeekStartDate + "' on Overview calendar and Overview current schedule duration start date:'" + scheduleWeekStartDate + "' matched!");
+				if (isScheduleDurationEndDayMatchesWithCalendarWeekEndDay(calendarWeekEndDate, scheduleWeekEndDate)) {
+					SimpleUtils.pass("Current Week end date:'" + calendarWeekEndDate + "' on Overview calendar and Overview current schedule duration end Date:'" + scheduleWeekEndDate + "' matched!");
 					weekMatched = weekMatched + 1;
+				} else {
+					SimpleUtils.fail("Current Week end date:'" + calendarWeekEndDate + "' on Overview calendar and Overview current schedule week duration end Date:'" + scheduleWeekEndDate + "' not matched!", true);
 				}
-				else {
-					SimpleUtils.fail("Current Week end date:'"+ calendarWeekEndDate +"' on Overview calendar and Overview current schedule week duration end Date:'" + scheduleWeekEndDate + "' not matched!", true);
-				}
+			} else {
+				SimpleUtils.fail("Current Week start date::'" + calendarWeekStartDate + "' on Overview calendar and Overview current schedule week duration start date:'" + scheduleWeekStartDate + "' not matched!", true);
 			}
-			else {
-				SimpleUtils.fail("Current Week start date::'"+ calendarWeekStartDate +"' on Overview calendar and Overview current schedule week duration start date:'" + scheduleWeekStartDate + "' not matched!", true);	
-			}
-			
+
 			index = index + 1;
 		}
-		if(index != 0)
+		if (index != 0)
 			return true;
 		else
 			return false;
 	}
-	
+
 	//Click on each week to open schedule page and ensure the DayAndDate on schedule page matches the DayAndDate on overview page
-	public Boolean verifyDayAndDateOnSchedulePageMatchesDayAndDateOnOverviewPage() throws Exception
-	{
+	public Boolean verifyDayAndDateOnSchedulePageMatchesDayAndDateOnOverviewPage() throws Exception {
 		return false;
 	}
-	
+
 	@Override
-	public List<String> getCurrentAndUpcomingActiveWeeksDaysOnCalendar() throws Exception
-	{
+	public List<String> getCurrentAndUpcomingActiveWeeksDaysOnCalendar() throws Exception {
 		List<String> calendarWeeksOnOverviewPage = new ArrayList<String>();
 		Boolean isCurrentWeekStart = false;
 		int daysInWeek = 7;
 		String currentWeekDaysOnCalendarAsString = "";
-		if(overviewscheduledWeeks.size() != 0) {
-			for(WebElement overviewscheduledWeek : overviewscheduledWeeks) {
-				if(overviewscheduledWeek.getAttribute("class").toString().contains("background-current-week-legend-calendar"))
+		if (overviewscheduledWeeks.size() != 0) {
+			for (WebElement overviewscheduledWeek : overviewscheduledWeeks) {
+				if (overviewscheduledWeek.getAttribute("class").toString().contains("background-current-week-legend-calendar"))
 					isCurrentWeekStart = true;
-				if(isCurrentWeekStart)
-				{
+				if (isCurrentWeekStart) {
 					String[] weekDaysOnCalendar = overviewscheduledWeek.getText().split("\n");
-					for(String weekDay : weekDaysOnCalendar)
-					{
+					for (String weekDay : weekDaysOnCalendar) {
 						weekDay = weekDay.toString().trim();
-						if(weekDay.length() != 0)
-						{
-							if(weekDay.length() == 1)
+						if (weekDay.length() != 0) {
+							if (weekDay.length() == 1)
 								weekDay = "0" + weekDay;
-							if(currentWeekDaysOnCalendarAsString != "")
+							if (currentWeekDaysOnCalendarAsString != "")
 								currentWeekDaysOnCalendarAsString = currentWeekDaysOnCalendarAsString + "," + weekDay;
 							else
 								currentWeekDaysOnCalendarAsString = weekDay;
 						}
 					}
-					if(currentWeekDaysOnCalendarAsString.split(",").length == daysInWeek)
-					{
+					if (currentWeekDaysOnCalendarAsString.split(",").length == daysInWeek) {
 						calendarWeeksOnOverviewPage.add(currentWeekDaysOnCalendarAsString);
 						currentWeekDaysOnCalendarAsString = "";
 					}
@@ -306,59 +292,49 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		}
 		return calendarWeeksOnOverviewPage;
 	}
-	
-	
-	public Boolean isScheduleDurationStartDayMatchesWithCalendarWeekStartDay(String calendarWeekStartDate, String scheduleWeekStartDate)
-	{
-		if(calendarWeekStartDate.equals(scheduleWeekStartDate)) {
+
+
+	public Boolean isScheduleDurationStartDayMatchesWithCalendarWeekStartDay(String calendarWeekStartDate, String scheduleWeekStartDate) {
+		if (calendarWeekStartDate.equals(scheduleWeekStartDate)) {
 			return true;
 		}
 		return false;
 	}
-	
-	public Boolean isScheduleDurationEndDayMatchesWithCalendarWeekEndDay(String calendarWeekEndDate, String scheduleWeekEndDate)
-	{
-		if(calendarWeekEndDate.equals(scheduleWeekEndDate)) {
-				return true;
-			}
+
+	public Boolean isScheduleDurationEndDayMatchesWithCalendarWeekEndDay(String calendarWeekEndDate, String scheduleWeekEndDate) {
+		if (calendarWeekEndDate.equals(scheduleWeekEndDate)) {
+			return true;
+		}
 		return false;
 	}
-	
+
 	@Override
-	public void clickOnCurrentWeekToOpenSchedule() throws Exception
-	{
+	public void clickOnCurrentWeekToOpenSchedule() throws Exception {
 		int currentWeekIndex = 0;
-		if(currentWeeksOnCalendar.size() != 0)
-		{
+		if (currentWeeksOnCalendar.size() != 0) {
 			click(currentWeeksOnCalendar.get(currentWeekIndex));
-			if(overviewTableRows.size() != 0)
-			{
+			if (overviewTableRows.size() != 0) {
 				click(overviewTableRows.get(currentWeekIndex));
 				SimpleUtils.pass("user can click on Schedule week which will navigate to Schedule page");
-			}
-			else {
+			} else {
 				SimpleUtils.fail("Overview page Schedule table not loaded successfully!", false);
 			}
-		}
-		else {
+		} else {
 			SimpleUtils.fail("Current Week Not loaded on Overview calendar!", false);
 		}
 	}
-	
-	public String getOverviewCalenderWeekDays() throws Exception 
-	{
+
+	public String getOverviewCalenderWeekDays() throws Exception {
 		String weekDays = "";
-		if(overviewPageCalendarWeekdays.size() != 0) {
-			for(int index = 0; index < 7; index++)
-			{
-				if(weekDays != "")
+		if (overviewPageCalendarWeekdays.size() != 0) {
+			for (int index = 0; index < 7; index++) {
+				if (weekDays != "")
 					weekDays = weekDays + "," + overviewPageCalendarWeekdays.get(index).getText();
 				else
 					weekDays = overviewPageCalendarWeekdays.get(index).getText();
 			}
-		}
-		else {
-			SimpleUtils.fail("Overview Page: Calendar week days not found!",true);
+		} else {
+			SimpleUtils.fail("Overview Page: Calendar week days not found!", true);
 		}
 		return weekDays;
 	}
@@ -367,7 +343,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	public List<WebElement> getOverviewScheduleWeeks() {
 		waitForSeconds(5);
 		List<WebElement> overviewWeekList = new ArrayList<>();
-		if(areListElementVisible(overviewTableRows,15) && areListElementVisible(overviewScheduleWeekList)){
+		if (areListElementVisible(overviewTableRows, 15) && areListElementVisible(overviewScheduleWeekList)) {
 			overviewWeekList = overviewScheduleWeekList;
 		} else {
 			SimpleUtils.fail("Overview Page: Week List not loaded Successfully!", false);
@@ -375,13 +351,13 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 		return overviewWeekList;
 	}
 
-	public void clickScheduleDraftAndGuidanceStatus(List<String> overviewScheduleWeeksStatus){
+	public void clickScheduleDraftAndGuidanceStatus(List<String> overviewScheduleWeeksStatus) {
 
-		for(int i=0;i<overviewScheduleWeeksStatus.size();i++){
-			if(overviewScheduleWeeksStatus.get(i).contains("Finalized") ||
+		for (int i = 0; i < overviewScheduleWeeksStatus.size(); i++) {
+			if (overviewScheduleWeeksStatus.get(i).contains("Finalized") ||
 					overviewScheduleWeeksStatus.get(i).contains("Published") ||
-					overviewScheduleWeeksStatus.get(i).contains("Draft")&&
-					overviewScheduleWeeksStatus.get(i+1).contains("Guidance")){
+					overviewScheduleWeeksStatus.get(i).contains("Draft") &&
+							overviewScheduleWeeksStatus.get(i + 1).contains("Guidance")) {
 			}
 
 		}
@@ -389,13 +365,10 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 
 	@Override
-	public ArrayList<String> getOverviewCalendarMonthsYears() throws Exception
-	{
+	public ArrayList<String> getOverviewCalendarMonthsYears() throws Exception {
 		ArrayList<String> overviewCalendarMonthsYearsText = new ArrayList<String>();
-		if(overviewCalendarMonthsYears.size() != 0)
-		{
-			for(WebElement overviewCalendarMonthYear : overviewCalendarMonthsYears)
-			{
+		if (overviewCalendarMonthsYears.size() != 0) {
+			for (WebElement overviewCalendarMonthYear : overviewCalendarMonthsYears) {
 				overviewCalendarMonthsYearsText.add(overviewCalendarMonthYear.getText().replace("\n", ""));
 			}
 		}
@@ -408,16 +381,15 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	public LinkedHashMap<String, Float> getWeekHoursByWeekElement(WebElement overViewWeek) {
 		LinkedHashMap<String, Float> weekHours = new LinkedHashMap<String, Float>();
 		List<WebElement> weekHoursElement = overViewWeek.findElements(By.cssSelector("span.text-hours"));
-		if(weekHoursElement.size() == 4)
-		{
+		if (weekHoursElement.size() == 4) {
 			float guidanceHours = Float.valueOf(convertToZeroIfIsNotNumeric(
-					weekHoursElement.get(0).getText().split(" ")[0].replace(",","")));
+					weekHoursElement.get(0).getText().split(" ")[0].replace(",", "")));
 			float scheduledHours = Float.valueOf(convertToZeroIfIsNotNumeric(
-					weekHoursElement.get(1).getText().split(" ")[0].replace(",","")));
+					weekHoursElement.get(1).getText().split(" ")[0].replace(",", "")));
 			float otherHours = Float.valueOf(convertToZeroIfIsNotNumeric(
-					weekHoursElement.get(2).getText().split(" ")[0].replace(",","")));
+					weekHoursElement.get(2).getText().split(" ")[0].replace(",", "")));
 			float projectedHours = Float.valueOf(convertToZeroIfIsNotNumeric(
-					weekHoursElement.get(3).getText().split(" ")[0].replace(",","")));
+					weekHoursElement.get(3).getText().split(" ")[0].replace(",", "")));
 			weekHours.put("guidanceHours", guidanceHours);
 			weekHours.put("scheduledHours", scheduledHours);
 			weekHours.put("otherHours", otherHours);
@@ -425,11 +397,11 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 		} else if (weekHoursElement.size() == 3) {
 			float guidanceHours = Float.valueOf(convertToZeroIfIsNotNumeric(
-					weekHoursElement.get(0).getText().split(" ")[0].replace(",","")));
+					weekHoursElement.get(0).getText().split(" ")[0].replace(",", "")));
 			float scheduledHours = Float.valueOf(convertToZeroIfIsNotNumeric(
-					weekHoursElement.get(1).getText().split(" ")[0].replace(",","")));
+					weekHoursElement.get(1).getText().split(" ")[0].replace(",", "")));
 			float otherHours = Float.valueOf(convertToZeroIfIsNotNumeric(
-					weekHoursElement.get(2).getText().split(" ")[0].replace(",","")));
+					weekHoursElement.get(2).getText().split(" ")[0].replace(",", "")));
 			weekHours.put("guidanceHours", guidanceHours);
 			weekHours.put("scheduledHours", scheduledHours);
 			weekHours.put("otherHours", otherHours);
@@ -450,22 +422,22 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	@Override
 	public boolean loadScheduleOverview() throws Exception {
 		// TODO Auto-generated method stub
-		boolean flag=false;
-		if(isElementLoaded(consoleSchedulePageTabElement, 15)){
+		boolean flag = false;
+		if (isElementLoaded(consoleSchedulePageTabElement, 15)) {
 			consoleSchedulePageTabElement.click();
-			if(isElementLoaded(calendar, 15)){
+			if (isElementLoaded(calendar, 15)) {
 				flag = true;
 				SimpleUtils.pass("Calendar on Schedule Overview Loaded Successfully!");
-			}else{
+			} else {
 				SimpleUtils.fail("Calendar on Schedule Overview Not Loaded Successfully!", false);
 			}
-			if(isElementLoaded(scheduleTable, 60)){
+			if (isElementLoaded(scheduleTable, 60)) {
 				flag = true;
 				SimpleUtils.pass("Schedule Table on Schedule Overview Loaded Successfully!");
-			}else{
+			} else {
 				SimpleUtils.fail("Schedule Table on Schedule Overview Not Loaded Successfully!", false);
 			}
-		}else{
+		} else {
 			SimpleUtils.fail("ScheduleTab left navigation menu not found", true);
 		}
 		return flag;
@@ -483,24 +455,24 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	@Override
 	public boolean loadScheduleTableInOverview() throws Exception {
 		// check the schedule table loaded in overview page
-		boolean flag=false;
-		if(isElementLoaded(consoleSchedulePageTabElement, 10)){
+		boolean flag = false;
+		if (isElementLoaded(consoleSchedulePageTabElement, 10)) {
 			consoleSchedulePageTabElement.click();
 			waitForSeconds(5);
-			int tryT=3;
-			while (tryT>0){
-				if(isElementLoaded(scheduleTable, 10)){
+			int tryT = 3;
+			while (tryT > 0) {
+				if (isElementLoaded(scheduleTable, 10)) {
 					flag = true;
 					SimpleUtils.pass("Schedule Table on Schedule Overview Loaded Successfully!");
 					break;
-				}else{
+				} else {
 					SimpleUtils.fail("Schedule Table on Schedule Overview Not Loaded Successfully!", false);
 					tryT--;
 					loadScheduleTableInOverview();
 				}
 			}
 //
-		}else{
+		} else {
 			SimpleUtils.fail("ScheduleTab left navigation menu not found", true);
 		}
 		return flag;
@@ -508,13 +480,13 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 	//added by Nishant
 
-	public void clickOnGuidanceBtnOnOverview(int index){
-		if(areListElementVisible(weeklyScheduleDateElements, 30)
-				&& weeklyScheduleDateElements.size()!=0){
+	public void clickOnGuidanceBtnOnOverview(int index) {
+		if (areListElementVisible(weeklyScheduleDateElements, 30)
+				&& weeklyScheduleDateElements.size() != 0) {
 			click(weeklyScheduleDateElements.get(index));
 			waitForSeconds(4);
-		}else{
-			SimpleUtils.fail("Click on Guidance On Schedule Overview Page",false);
+		} else {
+			SimpleUtils.fail("Click on Guidance On Schedule Overview Page", false);
 		}
 	}
 
@@ -523,24 +495,21 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	private List<WebElement> calendarWeeks;
 
 	@Override
-	public int getScheduleOverviewWeeksCountCanBeCreatInAdvance()
-	{
+	public int getScheduleOverviewWeeksCountCanBeCreatInAdvance() {
 		boolean isPastWeek = true;
 		float scheduleWeekCountToBeCreated = 0;
-		for(WebElement week : calendarWeeks)
-		{
+		for (WebElement week : calendarWeeks) {
 			float currentWeekCount = 1;
-			if(week.getAttribute("class").contains("current-week"))
+			if (week.getAttribute("class").contains("current-week"))
 				isPastWeek = false;
 			int weekDayCount = week.getText().split("\n").length;
-			if(weekDayCount < 7)
+			if (weekDayCount < 7)
 				currentWeekCount = (float) 0.5;
 			boolean isCurrentWeekLocked = false;
-			if(week.getAttribute("class").contains("week-locked"))
+			if (week.getAttribute("class").contains("week-locked"))
 				isCurrentWeekLocked = true;
 
-			if(!isPastWeek && !isCurrentWeekLocked)
-			{
+			if (!isPastWeek && !isCurrentWeekLocked) {
 				scheduleWeekCountToBeCreated = (scheduleWeekCountToBeCreated + currentWeekCount);
 			}
 
@@ -552,31 +521,30 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	@Override
 	public String getOverviewWeekDuration(WebElement webElement) throws Exception {
 		String weekDurationText = "";
-		if(isElementLoaded(webElement)) {
+		if (isElementLoaded(webElement)) {
 			WebElement weekdurationElement = webElement.findElement(By.cssSelector("div.left-banner"));
-			if(isElementLoaded(weekdurationElement))
+			if (isElementLoaded(weekdurationElement))
 				weekDurationText = weekdurationElement.getText().replace("\n", " ");
 			else
 				SimpleUtils.fail("Overview Page: Unable to get Week Duration.", true);
-		}
-		else
+		} else
 			SimpleUtils.fail("Overview Page: Unable to get Week Duration.", true);
 		return weekDurationText;
 	}
 
-	public void clickOverviewTab(){
-		if(isElementEnabled(overviewTab,5)){
+	public void clickOverviewTab() {
+		if (isElementEnabled(overviewTab, 5)) {
 			click(overviewTab);
 			SimpleUtils.pass("Clicked on Overview tab successfully");
-		}else{
-			SimpleUtils.fail("Not able to click on Overview tab successfully",false);
+		} else {
+			SimpleUtils.fail("Not able to click on Overview tab successfully", false);
 		}
 	}
 
 	@Override
 	public boolean isCurrent2MonthCalendarVisible() throws Exception {
 		boolean flag = false;
-		if (areListElementVisible(overviewCalendar, 5) &overviewCalendar.size()==3) {
+		if (areListElementVisible(overviewCalendar, 5) & overviewCalendar.size() == 3) {
 			ArrayList<String> monthYearInCalendar = getOverviewCalendarMonthsYears();
 			ArrayList<Date> monthYearInCalendar2 = new ArrayList<>();
 			SimpleDateFormat dft = new SimpleDateFormat("MM yyyy", Locale.ENGLISH);
@@ -595,19 +563,19 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 				flag = true;
 			} else {
 				flag = false;
-				SimpleUtils.fail("month calendar is not current or future +2 ",true);
+				SimpleUtils.fail("month calendar is not current or future +2 ", true);
 			}
 
 		} else
-			SimpleUtils.fail("calendar show error",true);
-			return flag;
+			SimpleUtils.fail("calendar show error", true);
+		return flag;
 	}
 
 	@Override
 	public boolean isCurrentDateRed() throws Exception {
 		String expectColor = "#fb7800";
-		if (isElementLoaded(currentDateInCal,5)) {
-			String color =  Color.fromString(currentDateInCal.getCssValue("color")).asHex();
+		if (isElementLoaded(currentDateInCal, 5)) {
+			String color = Color.fromString(currentDateInCal.getCssValue("color")).asHex();
 			if (color.equals(expectColor)) {
 				SimpleUtils.pass("Current Date is in Red color");
 				return true;
@@ -619,7 +587,7 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 	@Override
 	public void verifyNavigation() throws Exception {
 		ArrayList<String> monthYearInCalendar = getOverviewCalendarMonthsYears();
-		if (isElementLoaded(arrowLeftInCal,10)) {
+		if (isElementLoaded(arrowLeftInCal, 10)) {
 			click(arrowLeftInCal);
 			ArrayList<String> monthYearInCalendarAftBack = getOverviewCalendarMonthsYears();
 			if (!monthYearInCalendarAftBack.equals(monthYearInCalendar)) {
@@ -632,36 +600,37 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 				SimpleUtils.pass("\">\" button is enabled and navigating to future month calendar");
 			}
 			click(arrowLeftInCal);
-		}else
-			SimpleUtils.fail("arrow in calendar load faild",true);
+		} else
+			SimpleUtils.fail("arrow in calendar load faild", true);
 	}
 
 
 	//added by haya.  return a List has 4 week's data including last week
-	@FindBy (css = ".row-fx.schedule-table-row.ng-scope")
+	@FindBy(css = ".row-fx.schedule-table-row.ng-scope")
 	private List<WebElement> rowDataInOverviewPage;
-	@FindBy (xpath = "//div[contains(@class,\"background-current-week-legend-calendar\")]/preceding-sibling::div[1]")
+	@FindBy(xpath = "//div[contains(@class,\"background-current-week-legend-calendar\")]/preceding-sibling::div[1]")
 	private WebElement lastWeekNavigation;
-	@FindBy (css = "i.fa-angle-left")
+	@FindBy(css = "i.fa-angle-left")
 	private WebElement leftAngle;
+
 	@Override
 	public List<String> getOverviewData() throws Exception {
 		List<String> resultList = new ArrayList<String>();
-		if(isElementLoaded(leftAngle,10)){
+		if (isElementLoaded(leftAngle, 10)) {
 			click(leftAngle);
-			if (isElementLoaded(lastWeekNavigation,10)){
+			if (isElementLoaded(lastWeekNavigation, 10)) {
 				click(lastWeekNavigation);// click on last in overview page
 			}
 		}
 		waitForSeconds(3);
-		if (areListElementVisible(rowDataInOverviewPage,15)){
-			for (int i=0;i<rowDataInOverviewPage.size();i++){
+		if (areListElementVisible(rowDataInOverviewPage, 15)) {
+			for (int i = 0; i < rowDataInOverviewPage.size(); i++) {
 				String[] temp1 = rowDataInOverviewPage.get(i).getText().split("\n");
-				String[] temp2 = Arrays.copyOf(temp1,8);
+				String[] temp2 = Arrays.copyOf(temp1, 8);
 				resultList.add(Arrays.toString(temp2));
 			}
 		} else {
-			SimpleUtils.fail("data on schedules widget fail to load!",false);
+			SimpleUtils.fail("data on schedules widget fail to load!", false);
 		}
 		return resultList;
 	}
@@ -690,19 +659,20 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 
 
 	public void clickOnLastWeek() throws Exception {
-		if(isElementLoaded(leftAngle,10)){
+		if (isElementLoaded(leftAngle, 10)) {
 			click(leftAngle);
 		}
-		if (isElementLoaded(lastWeekNavigation,10)){
+		if (isElementLoaded(lastWeekNavigation, 10)) {
 			click(lastWeekNavigation);// click on last in overview page
 		}
 	}
 
 
-	@FindBy (css = "[label=\"View Group Schedule\"] button")
+	@FindBy(css = "[label=\"View Group Schedule\"] button")
 	private WebElement viewGroupScheduleButton;
+
 	public void clickOnViewGroupScheduleButton() throws Exception {
-		if(isElementLoaded(viewGroupScheduleButton,10)){
+		if (isElementLoaded(viewGroupScheduleButton, 10)) {
 			click(viewGroupScheduleButton);
 			SimpleUtils.pass("Click on View Group Schedule Button successfully! ");
 		} else
@@ -717,11 +687,39 @@ public class ConsoleScheduleOverviewPage extends BasePage implements ScheduleOve
 			budgetHours = currentWeek.findElement(By.cssSelector("[ng-if*=\"hasBudget\"]")).getText();
 			SimpleUtils.pass("Catch the budget hours successfully!");
 			return budgetHours;
-		}else{
-			SimpleUtils.fail("The current week is not listed on the first line",false);
+		} else {
+			SimpleUtils.fail("The current week is not listed on the first line", false);
 		}
 		return null;
 	}
+
+	@FindBy(css = ".analytics-new-table-group-row-open")
+	private List<WebElement> schedulesInP2PParent;
+
+	@FindBy(xpath = "//div[contains(@class,'analytics-new-table-group-row-open')]/div[4]")
+	private List<WebElement> budgetHoursInP2PPage;
+
+	@Override
+	public String getCurrentWeekBudgetHoursAtP2PParentLocation(String locationName, String specificWeek) throws Exception {
+		if (areListElementVisible(schedulesInP2PParent, 10)
+				&& schedulesInP2PParent.size() > 0
+				&& areListElementVisible(budgetHoursInP2PPage, 10)
+				&& budgetHoursInP2PPage.size() > 0
+				&& schedulesInP2PParent.size() == budgetHoursInP2PPage.size()) {
+			float sum = 0.0f;
+			// Loop through each row
+			for (int i = 0; i < schedulesInP2PParent.size(); i++) {
+
+				// Loop through each cell in the current row
+				for (int j = i; j <= i; j++) {
+					// Get the cell text and print it
+					String cellText = budgetHoursInP2PPage.get(j).getText();
+					sum += Float.parseFloat(cellText);
+				}
+			}
+			return String.valueOf(sum);
+		}
+		return null;}
 
 	@Override
 	public String getCurrentWeekGuidanceHours() throws Exception {
