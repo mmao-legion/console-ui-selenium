@@ -137,11 +137,11 @@ public class LegionRestAPI {
 		}
 		return statusCode;
 	}
-	public static int postBudgetUpload(String username, String password, String filename, String path){
+	public static int postBudgetUpload(String filename, String path){
 		int statusCode = 0;
 		try{
 			String requestURL = System.getProperty("env")+ "legion/integration/test/testUploadBudgetData";
-			String sessionId = LoginAPI.getSessionIdFromLoginAPI(username, password);
+			String sessionId = LoginAPI.getSessionIdFromLoginAPI(System.getProperty("apiusername"), System.getProperty("apipassword"));
 			Map<String, Object> requestParams = new HashMap<>();
 			Map<String, Object> requestHeaders = new HashMap<>();
 			requestParams.put("isTest", false);

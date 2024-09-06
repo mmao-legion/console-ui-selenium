@@ -7,6 +7,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
@@ -169,13 +170,10 @@ public class BudgetWeeklyForPCLGTest extends TestBase {
     @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
     public void verifyBudgetIsUploadedViaAPIAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
         try {
-        int statuscode = postBudgetUpload(username, password, "budget_vailqacn_location_2.csv", "src/test/java/com/legion/tests/data/budget_vailqacn_location_2.csv");
+        int statuscode = postBudgetUpload("budget_vailqacn_location_2.csv", "src/test/java/com/legion/tests/data/budget_vailqacn_location_2.csv");
         if(statuscode==200) {
             SimpleUtils.assertOnFail("Failed to upload budget via API", true, false);
         }
-
-            //Getting logged out after the API is executed Relogin to the application
-            loginToLegionAndVerifyIsLoginDone(username,password,location);
             SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
