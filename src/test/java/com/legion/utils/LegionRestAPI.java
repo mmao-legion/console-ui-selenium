@@ -137,7 +137,8 @@ public class LegionRestAPI {
 		}
 		return statusCode;
 	}
-	public static void postBudgetUpload(String username, String password, String filename, String path){
+	public static int postBudgetUpload(String username, String password, String filename, String path){
+		int statusCode = 0;
 		try{
 			String requestURL = System.getProperty("env")+ "legion/integration/test/testUploadBudgetData";
 			String sessionId = LoginAPI.getSessionIdFromLoginAPI(username, password);
@@ -147,11 +148,11 @@ public class LegionRestAPI {
 			requestParams.put("encrypted", false);
 			requestParams.put("fileName", filename);
 			requestHeaders.put("sessionId", sessionId);
-			postLegionAPIWithFileUpload(requestURL, requestParams, requestHeaders, path);
+			statusCode = postLegionAPIWithFileUpload(requestURL, requestParams, requestHeaders, path);
 		}catch (Exception e) {
 			System.err.println(e.getMessage());
 			SimpleUtils.fail(e.getMessage(), true);
 		}
+		return statusCode;
 	}
-	
 }
