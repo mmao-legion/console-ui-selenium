@@ -7,6 +7,7 @@ import com.legion.tests.annotations.Enterprise;
 import com.legion.tests.annotations.Owner;
 import com.legion.tests.annotations.TestName;
 import com.legion.tests.data.CredentialDataProviderSource;
+import com.legion.utils.MyThreadLocal;
 import com.legion.utils.SimpleUtils;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
@@ -15,6 +16,8 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.legion.utils.LegionRestAPI.postBudgetUpload;
 
 public class BudgetWeeklyForPCLGTest extends TestBase {
     private DashboardPage dashboardPage;
@@ -128,6 +131,97 @@ public class BudgetWeeklyForPCLGTest extends TestBase {
                             + ". The budget value on schedule smart card is: "+budgetValueOnScheduleSmartCard,
                     budgetTotalValueOnEditBudgetPage.equals(budgetValueOnScheduleSmartCard)
                     && budgetTotalValueOnEditBudgetPage.equals(budgetValueOnWeeklyBudgetSmartCard), false);
+
+            //Go to overview page
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            //Check the budget display instead of Guidance
+            SimpleUtils.assertOnFail("The budget label fail to load! ",
+                    scheduleOverviewPage.isBudgetLabelShow(), false);
+
+            //Check the budget value same with the value on schedule page
+            String budgetValueOnOverviewPage = scheduleOverviewPage.getCurrentWeekBudgetHours().split(" ")[0];
+            SimpleUtils.assertOnFail("The budget value on overview page is:"+budgetValueOnOverviewPage
+                            + ". The budget value on schedule smart card is: "+budgetValueOnScheduleSmartCard,
+                    budgetValueOnOverviewPage.equals(budgetValueOnScheduleSmartCard), false);
+            //Go to dashboard page
+            dashboardPage.clickOnDashboardConsoleMenu();
+            dashboardPage.clickOnRefreshButtonOnSMDashboard();
+            //Check the budget display instead of Guidance
+            SimpleUtils.assertOnFail("The budget label fail to load! ",
+                    scheduleOverviewPage.isBudgetLabelShow(), false);
+            //Check the budget value same with the value on schedule page
+            List<WebElement> scheduleOverViewWeeks = scheduleOverviewPage.getOverviewScheduleWeeks();
+            HashMap<String, Float> overviewData = scheduleOverviewPage.getWeekHoursByWeekElement(scheduleOverViewWeeks.get(1));
+
+            String budgetValueOnDashboardPage = String.valueOf((int)Float.parseFloat(overviewData.get("guidanceHours").toString()));
+
+            SimpleUtils.assertOnFail("The budget value on overview page is:"+budgetValueOnDashboardPage
+                            + ". The budget value on schedule smart card is: "+budgetValueOnScheduleSmartCard,
+                    budgetValueOnDashboardPage.equals(budgetValueOnScheduleSmartCard), false);
+        } catch (Exception e) {
+            SimpleUtils.fail(e.getMessage(), false);
+        }
+    }
+
+    @Automated(automated ="Automated")
+    @Owner(owner = "Ashutosh")
+    @Enterprise(name = "Vailqacn_Enterprise")
+    @TestName(description = "Verify the budget can be uploaded via API for parent child LG when enable display budget config with weekly budget")
+    @Test(dataProvider = "legionTeamCredentialsByRoles", dataProviderClass= CredentialDataProviderSource.class)
+    public void verifyBudgetIsUploadedViaAPIAsInternalAdmin(String browser, String username, String password, String location) throws Exception {
+        try {
+        int statuscode = postBudgetUpload("budget_vailqacn_location_2.csv", "src/test/java/com/legion/tests/data/budget_vailqacn_location_2.csv");
+        if(statuscode==200) {
+            SimpleUtils.assertOnFail("Failed to upload budget via API", true, false);
+        }
+            SimpleUtils.assertOnFail("Dashboard page not loaded successfully!", dashboardPage.isDashboardPageLoaded(), false);
+            scheduleCommonPage.clickOnScheduleConsoleMenuItem();
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Forecast.getValue());
+
+            // Go to Forecast page, Schedule tab
+            forecastPage.clickOnLabor();
+
+            //Check edit budget button can load
+            SimpleUtils.assertOnFail("Edit button fail to load on forecast smart card!",
+                    forecastPage.isLaborBudgetEditBtnLoaded(),false);
+
+            //Click edit budget button and check the daily budget display
+            smartCardPage.clickOnEnterBudgetLink();
+            SimpleUtils.assertOnFail("Weekly Input Budget table are not visible on the page!",
+                    smartCardPage.isWeeklyBudgetInputDisplayForLG(),false);
+
+            //Get the budget value on forecast smart card
+            String budgetValueOnForecastSmartCard = forecastPage.getLaborBudgetOnSummarySmartCard();
+
+            //Go to schedule page
+            scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
+
+            boolean isActiveWeekGenerated = createSchedulePage.isWeekGenerated();
+            if (isActiveWeekGenerated) {
+                createSchedulePage.unGenerateActiveScheduleScheduleWeek();
+            }
+            createSchedulePage.createScheduleForNonDGFlowNewUI();
+
+            //Check the budget hrs on budget smart card same as on forecast smart card
+            smartCardPage.isBudgetHoursSmartCardIsLoad();
+            smartCardPage.isSmartCardScrolledToRightActive();
+            String weeklyBudgetSmartCard = "Weekly Budget";
+            String budgetValueOnWeeklyBudgetSmartCard = smartCardPage.getBudgetValueFromWeeklyBudgetSmartCard(weeklyBudgetSmartCard).split(" ")[0];
+            SimpleUtils.assertOnFail("The budget value on forecast smart card is: "+budgetValueOnForecastSmartCard
+                            + ". The budget value on weekly budget smart card is: "+budgetValueOnWeeklyBudgetSmartCard,
+                    budgetValueOnForecastSmartCard.equals(budgetValueOnWeeklyBudgetSmartCard), false);
+
+            //Check the budget hrs on schedule smart card same as on forecast smart card
+            String budgetValueOnScheduleSmartCard = smartCardPage.getBudgetValueFromScheduleBudgetSmartCard();
+            SimpleUtils.assertOnFail("The budget value on forecast smart card is: "+budgetValueOnForecastSmartCard
+                            + ". The budget value on schedule smart card is: "+budgetValueOnScheduleSmartCard,
+                    budgetValueOnForecastSmartCard.equals(budgetValueOnScheduleSmartCard), false);
+
+            //Click edit budget button and check the daily budget display
+            smartCardPage.clickOnEnterBudgetLink();
+            SimpleUtils.assertOnFail("Daily Input Budget table are not visible on the page!",
+                    smartCardPage.isWeeklyBudgetInputDisplayForLG(),false);
 
             //Go to overview page
             scheduleCommonPage.clickOnScheduleConsoleMenuItem();
