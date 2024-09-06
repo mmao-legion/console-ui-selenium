@@ -150,7 +150,7 @@ public class BudgetWeeklyForRegularLocationTest extends TestBase {
                     smartCardPage.isWeeklyBudgetInputDisplayForRegularLocation(),false);
 
             //Input budget for every day and save
-            smartCardPage.inputRandomBudgetValue();
+            smartCardPage.inputRandomBudgetValueWithChildLocation();
             //Get the budget value on forecast smart card
             String budgetValueOnForecastSmartCard = forecastPage.getLaborBudgetOnSummarySmartCard();
 
@@ -165,6 +165,7 @@ public class BudgetWeeklyForRegularLocationTest extends TestBase {
 
             //Check the budget hrs on budget smart card same as on forecast smart card
             smartCardPage.isBudgetHoursSmartCardIsLoad();
+            smartCardPage.isSmartCardScrolledToRightActive();
             String weeklyBudgetSmartCard = "Weekly Budget";
             String budgetValueOnWeeklyBudgetSmartCard = smartCardPage.getBudgetValueFromWeeklyBudgetSmartCard(weeklyBudgetSmartCard).split(" ")[0];
             SimpleUtils.assertOnFail("The budget value on forecast smart card is: "+budgetValueOnForecastSmartCard
@@ -182,11 +183,11 @@ public class BudgetWeeklyForRegularLocationTest extends TestBase {
             SimpleUtils.assertOnFail("Daily Input Budget table are not visible on the page!",
                     smartCardPage.isWeeklyBudgetInputDisplayForRegularLocation(),false);
             //Input budget for every day and save
-            List<String> budgetValuesOnEditBudgetPage = smartCardPage.inputRandomBudgetValue();
+            int budgetValuesOnEditBudgetPage = smartCardPage.inputRandomBudgetValueWithChildLocation();
             //Get the budget value on schedule page
             budgetValueOnScheduleSmartCard = smartCardPage.getBudgetValueFromScheduleBudgetSmartCard();
             budgetValueOnWeeklyBudgetSmartCard = smartCardPage.getBudgetValueFromWeeklyBudgetSmartCard(weeklyBudgetSmartCard).split(" ")[0];
-            String budgetTotalValueOnEditBudgetPage = String.valueOf((int)Float.parseFloat(budgetValuesOnEditBudgetPage.get(budgetValuesOnEditBudgetPage.size()-1).split(" ")[0]));
+            String budgetTotalValueOnEditBudgetPage = String.valueOf(budgetValuesOnEditBudgetPage);
             SimpleUtils.assertOnFail("The budget value on edit budget page is:"+budgetTotalValueOnEditBudgetPage+
                             "The budget value on weekly budget smart card is: "+budgetValueOnWeeklyBudgetSmartCard
                             + ". The budget value on schedule smart card is: "+budgetValueOnScheduleSmartCard,

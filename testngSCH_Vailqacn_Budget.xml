@@ -19,6 +19,26 @@
         </classes>
     </test>
 
+    <test name="Budget Daily For P2PLG Test">
+        <classes>
+            <class name="com.legion.tests.core.BudgetDailyForP2PLGTest">
+                <methods>
+                    <include name="verifyBudgetValuesOnAllPagesForP2PChildLocationWhenEnableBudgetConfigAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
+    <test name="Budget Daily For PCLG Test">
+        <classes>
+            <class name="com.legion.tests.core.BudgetDailyForPCLGTest">
+                <methods>
+                    <include name="verifyBudgetValuesOnAllPagesForPCLGWhenEnableBudgetConfigAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
     <test name="Guidance Weekly For Regular Location Test">
         <classes>
             <class name="com.legion.tests.core.BudgetWeeklyForRegularLocationTest">
