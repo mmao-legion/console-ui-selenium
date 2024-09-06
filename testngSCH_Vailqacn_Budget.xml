@@ -62,4 +62,14 @@
         </classes>
     </test>
 
+    <test name="Budget For P2P Parent Test">
+        <classes>
+            <class name="com.legion.tests.core.VailBudgetP2PTest">
+                <methods>
+                    <include name="verifyNoEditBudgetPageOnP2PParentLevelWhenEnableDisplayBudgetConfigAndWeeklyAsInternalAdmin"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+
 </suite> <!-- Suite -->

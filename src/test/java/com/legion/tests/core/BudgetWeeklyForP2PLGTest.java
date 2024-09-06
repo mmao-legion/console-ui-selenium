@@ -286,7 +286,7 @@ public class BudgetWeeklyForP2PLGTest extends TestBase {
             //Go to schedule page
             scheduleCommonPage.clickOnScheduleSubTab(ScheduleTestKendraScott2.SchedulePageSubTabText.Schedule.getValue());
 
-            //Check the budget hrs on budget smart card same as on forecast smart card
+            //No Weekly or Daily Budget Smart card
             boolean p2pNoBudgetSmartCard = smartCardPage.isBudgetHoursSmartCardIsLoad();
             if (!p2pNoBudgetSmartCard) {
                 SimpleUtils.report("No Weekly Budget smart card");
