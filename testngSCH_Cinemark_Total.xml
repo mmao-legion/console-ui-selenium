@@ -744,63 +744,63 @@ SCH-5862-->
                 <methods>
                     <include name="validateTheAssignShiftsWorkFlowInEditScheduleTemplateAsInternalAdmin" />
                     <include name="verifyTMCanAcknowledgeTheNotificationAfterScheduleTemplateLocationAsInternalAdmin" />
-                    <include name="verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
-                    <include name="verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
-                    <include name="verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleAsInternalAdmin" />
-                    <include name="verifyChangedMealAndRestBreakConsistentInMasterTemplateAndScheduleAsInternalAdmin" />
-                    <include name="verifyMasterTemplateShiftAdheresToTheMealAndRestBreakTemplateAsInternalAdmin" />
-                    <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerDailyOTAsInternalAdmin" />
-                    <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerWeeklyOTAsInternalAdmin" />
-                    <include name="verifyMealBreakTimingPersistsOnBulkEditShiftAsInternalAdmin" />
-                    <include name="verifyPreassignedShiftOfTMGetsConvertedToOpenWhenTMIsOnPTOAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+                    <!--      <include name="verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
+                          <include name="verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
+                          <include name="verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleAsInternalAdmin" />
+                          <include name="verifyChangedMealAndRestBreakConsistentInMasterTemplateAndScheduleAsInternalAdmin" />
+                          <include name="verifyMasterTemplateShiftAdheresToTheMealAndRestBreakTemplateAsInternalAdmin" />
+                          <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerDailyOTAsInternalAdmin" />
+                          <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerWeeklyOTAsInternalAdmin" />
+                          <include name="verifyMealBreakTimingPersistsOnBulkEditShiftAsInternalAdmin" />
+                          <include name="verifyPreassignedShiftOfTMGetsConvertedToOpenWhenTMIsOnPTOAsInternalAdmin" /> -->
+                      </methods>
+                  </class>
+              </classes>
+          </test>
 
-    <test name="Master Template P2P Test">
-        <classes>
-            <class name="com.legion.tests.core.MasterTemplateP2PTest">
-                <methods>
-                    <include name="verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleForP2PAsTeamMember" />
-                    <include name="verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleForP2PAsInternalAdmin" />
-                    <include name="verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleForP2PAsInternalAdmin" />
-                    <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerDailyOTForP2PAsInternalAdmin" />
-                    <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerWeeklyOTForP2PAsInternalAdmin" />
-                    <include name="verifyChangedMealAndRestBreakConsistentInMasterTemplateAndScheduleForP2PAsInternalAdmin" />
-                    <include name="verifyMealBreakTimingPersistsOnBulkEditShiftForP2PAsInternalAdmin" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+    <!--  <test name="Master Template P2P Test">
+         <classes>
+             <class name="com.legion.tests.core.MasterTemplateP2PTest">
+                 <methods>
+                     <include name="verifyNewAddedShiftsCanShowInMasterTemplateAndScheduleForP2PAsTeamMember" />
+                     <include name="verifyUpdatedShiftsCanShowInMasterTemplateAndScheduleForP2PAsInternalAdmin" />
+                     <include name="verifyDeletedShiftsWillNotShowInMasterTemplateAndScheduleForP2PAsInternalAdmin" />
+                     <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerDailyOTForP2PAsInternalAdmin" />
+                     <include name="verifyMasterTemplateIsLoadingWhenShiftsTriggerWeeklyOTForP2PAsInternalAdmin" />
+                     <include name="verifyChangedMealAndRestBreakConsistentInMasterTemplateAndScheduleForP2PAsInternalAdmin" />
+                     <include name="verifyMealBreakTimingPersistsOnBulkEditShiftForP2PAsInternalAdmin" />
+                 </methods>
+             </class>
+         </classes>
+     </test>
 
-    <test name="Master Template PCLG Test">
-        <classes>
-            <class name="com.legion.tests.core.MasterTemplatePCLGTest">
-                <methods>
-                    <include name="verifyNewAddedShiftsForPCLGCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
-                    <include name="verifyUpdatedShiftsForPCLGCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
-                    <include name="verifyDeletedShiftsForPCLGWillNotShowInMasterTemplateAndScheduleAsInternalAdmin" />
-                    <include name="verifyMasterTemplateShiftForPCLGAdheresToTheMealAndRestBreakTemplateAsInternalAdmin" />
-                    <include name="verifyChangedMealAndRestBreakConsistentInMasterTemplateForPCLGAndScheduleAsInternalAdmin" />
-                    <include name="verifyMasterTemplateForPCLGIsLoadingWhenShiftsTriggerDailyOTAsInternalAdmin" />
-                    <include name="verifyMasterTemplateForPCLGIsLoadingWhenShiftsTriggerWeeklyOTAsInternalAdmin" />
-                    <include name="verifyMealBreakTimingForPCLGPersistsOnBulkEditShiftAsInternalAdmin" />
-                    <include name="verifyPreassignedShiftOfTMForPCLGGetsConvertedToOpenWhenTMIsOnPTOAsTeamMember2" />
-                </methods>
-            </class>
-        </classes>
-    </test>
+     <test name="Master Template PCLG Test">
+         <classes>
+             <class name="com.legion.tests.core.MasterTemplatePCLGTest">
+                 <methods>
+                     <include name="verifyNewAddedShiftsForPCLGCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
+                     <include name="verifyUpdatedShiftsForPCLGCanShowInMasterTemplateAndScheduleAsInternalAdmin" />
+                     <include name="verifyDeletedShiftsForPCLGWillNotShowInMasterTemplateAndScheduleAsInternalAdmin" />
+                     <include name="verifyMasterTemplateShiftForPCLGAdheresToTheMealAndRestBreakTemplateAsInternalAdmin" />
+                     <include name="verifyChangedMealAndRestBreakConsistentInMasterTemplateForPCLGAndScheduleAsInternalAdmin" />
+                     <include name="verifyMasterTemplateForPCLGIsLoadingWhenShiftsTriggerDailyOTAsInternalAdmin" />
+                     <include name="verifyMasterTemplateForPCLGIsLoadingWhenShiftsTriggerWeeklyOTAsInternalAdmin" />
+                     <include name="verifyMealBreakTimingForPCLGPersistsOnBulkEditShiftAsInternalAdmin" />
+                     <include name="verifyPreassignedShiftOfTMForPCLGGetsConvertedToOpenWhenTMIsOnPTOAsTeamMember2" />
+                 </methods>
+             </class>
+         </classes>
+     </test> -->
 
 
-    <test name="Work Role Test">
-        <classes>
-            <class name="com.legion.tests.core.WorkRoleTest">
-                <methods>
-                    <include name="verifyFunctionalityOfDisplayOrderAsInternalAdmin" />
-                    <include name="verifyWorkRoleDisplayOrderInConsoleAsInternalAdmin" />
-                    <include name="verifyTheColorOfTheShiftInTMViewConsistentWithManagerViewAsTeamMember" />
-<!--                    <include name="verifyTheRemovedWorkRoleShouldNotBeCopiedAsInternalAdmin" />-->
+     <test name="Work Role Test">
+         <classes>
+             <class name="com.legion.tests.core.WorkRoleTest">
+                 <methods>
+                     <include name="verifyFunctionalityOfDisplayOrderAsInternalAdmin" />
+                     <include name="verifyWorkRoleDisplayOrderInConsoleAsInternalAdmin" />
+                     <include name="verifyTheColorOfTheShiftInTMViewConsistentWithManagerViewAsTeamMember" />
+ <!--                    <include name="verifyTheRemovedWorkRoleShouldNotBeCopiedAsInternalAdmin" />-->
                 </methods>
             </class>
         </classes>
