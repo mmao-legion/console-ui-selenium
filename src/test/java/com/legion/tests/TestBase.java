@@ -26,10 +26,7 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.appium.java_client.service.local.flags.GeneralServerFlag;
 import org.json.JSONException;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -188,7 +185,6 @@ public abstract class TestBase {
             }
             TestRailOperation.addTestRun();
         }
-
         /*String accessToken = LoginAPI.getAccessTokenFromTokenAPI(apiusername,apipassword);
         MyThreadLocal.setAccessToken(accessToken);
         Location location = JsonUtil.getBusinessIdFromJson("src/test/java/com/legion/tests/data/Locations.json");
@@ -341,6 +337,7 @@ public abstract class TestBase {
                 ChromeOptions options = new ChromeOptions();
                 if (propertyMap.get("isHeadlessBrowser").equalsIgnoreCase("true")) {
 //                    options.addArguments("headless");
+                    options.setPageLoadStrategy(PageLoadStrategy.NONE);
                     options.addArguments("--headless", "--disable-gpu", "--no-sandbox", "--disable-setuid-sandbox", "--disable-dev-shm-usage");
                     options.addArguments("window-size=1200x600");
                     runScriptOnHeadlessOrBrowser(options);
