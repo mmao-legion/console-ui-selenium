@@ -894,13 +894,13 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
         if (areListElementVisible(gridContainers, 3)) {
             if (gridContainers.size() == 9) {
                 if (gridContainers.get(0).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Work Role")
-                        && gridContainers.get(7).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Name")
-                        && gridContainers.get(3).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Start Time")
-                        && gridContainers.get(4).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("End Time")
-                        && gridContainers.get(1).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Breaks")
+                        && gridContainers.get(1).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Start Time")
+                        && gridContainers.get(2).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("End Time")
+                        && gridContainers.get(3).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Breaks")
                         && gridContainers.get(5).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Date")
-                        && gridContainers.get(6).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Assignment")
-                        && gridContainers.get(8).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Notes")) {
+                        && gridContainers.get(6).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().contains("Assignment")
+                        && gridContainers.get(7).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().contains("Shift Name")
+                        && gridContainers.get(8).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().contains("Shift Notes")){
                     SimpleUtils.pass("'Work Role', 'Shift Name', 'Start Time', 'End Time', 'Breaks', 'Date', 'Assignment', 'Shift Notes' " +
                             "sections are loaded successfully!");
                 } else {
@@ -908,14 +908,14 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
                 }
             } else if (gridContainers.size() == 10) {
                 if (gridContainers.get(0).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Work Role")
-                        && gridContainers.get(8).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Name")
-                        && gridContainers.get(3).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Location")
-                        && gridContainers.get(4).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Start Time")
-                        && gridContainers.get(5).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("End Time")
-                        && gridContainers.get(1).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Breaks")
+                        && gridContainers.get(1).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Start Time")
+                        && gridContainers.get(2).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("End Time")
+                        && gridContainers.get(3).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Breaks")
+                        && gridContainers.get(5).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Location")
                         && gridContainers.get(6).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Date")
-                        && gridContainers.get(7).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Assignment")
-                        && gridContainers.get(9).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().equals("Shift Notes")) {
+                        && gridContainers.get(7).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().contains("Assignment")
+                        && gridContainers.get(8).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().contains("Shift Name")
+                        && gridContainers.get(9).findElement(By.cssSelector(".MuiGrid-item:nth-child(1)")).getText().contains("Shift Notes")) {
                     SimpleUtils.pass("'Work Role', 'Shift Name', 'Location', 'Start Time', 'End Time', 'Breaks', 'Date', 'Assignment', 'Shift Notes' " +
                             "sections are loaded successfully for Location Group!");
                 } else {
@@ -1283,7 +1283,7 @@ public class ConsoleEditShiftPage extends BasePage implements EditShiftPage {
     }
 
 
-    @FindBy (css = "span.MuiCheckbox-colorPrimary")
+    @FindBy (xpath = "//*[contains(@name,'hasUserEditedMealBreak')]//parent::span")
     private WebElement automaticallyScheduleOptimizedBreak;
     @Override
     public void checkOrUncheckAutomaticallyScheduleOptimizedBreak(boolean isCheck) throws Exception {

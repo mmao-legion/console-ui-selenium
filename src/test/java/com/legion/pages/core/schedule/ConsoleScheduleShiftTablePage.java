@@ -3864,9 +3864,11 @@ public class ConsoleScheduleShiftTablePage extends BasePage implements ScheduleS
                     }
             }
             if (shiftIndexes.size()>0) {
+                List<Integer> list = new ArrayList<>(shiftIndexes);
+                Collections.sort(list);
                 //Select the shifts
                 Actions action = new Actions(getDriver());
-                for (int i : shiftIndexes) {
+                for (int i : list) {
                     scrollToElement(shiftsWeekView.get(i));
                     waitForSeconds(1);
                     action.keyDown(Keys.CONTROL).build().perform();
